@@ -1,0 +1,169 @@
+<form class="form" id="form" action="/api/">
+  <div class="form-group">
+    <div class="row">
+      <div class="col-md-4">
+        <table class="table mmp-form">
+          <tr class="heading">
+            <td colspan="2">General</td>
+          </tr>
+          <tr>
+            <td class="key"><label for="channel">Channel</label></td>
+            <td>
+              <select class="form-control" id="channel" name="channel">
+                <option value="ExampleChannel">ExampleChannel</option>
+              </select>
+            </td>
+          </tr>
+          <tr>
+            <td class="key"><label for="theme">Theme</label></td>
+            <td>
+              <select class="form-control" id="theme" name="theme">
+                <option value="DocumentationTheme">Documentation Theme</option>
+                <option value="DocumentationDebugTheme">Documentation Theme + Debug</option>
+                <option value="SvgOnlyTheme">SVG Only Theme</option>
+                <option value="SvgOnlyDebugTheme">SVG Only Theme + Debug</option>
+              </select>
+            </td>
+          </tr>
+          <tr>
+            <td class="key"><label for="pattern">Pattern</label></td>
+            <td>
+              <select class="form-control" id="pattern" name="pattern">
+                <option value="ExamplePattern">Example Pattern</option>
+                <option value="JoostBodyBlock">Joost Body Block</option>
+                <option value="LayoutTest">Layout Test</option>
+              </select>
+            </td>
+          </tr>
+        </table>
+      </div>
+      <div class="col-md-4">
+        <table class="table mmp-form">
+          <tr class="heading">
+            <td colspan="2">Measurements</td>
+          </tr>
+          <tr>
+            <td class="key"><label for="cc">Chest Circumference</label></td>
+            <td><input class="form-control" type="number" id="cc" name="cc" value="108"></td>
+          </tr>
+          <tr>
+            <td class="key"><label for="cbntw">Center back neck to waist</label></td>
+            <td><input class="form-control" type="number" id="cbntw" name="cbntw" value="48"></td>
+          </tr>
+          <tr>
+            <td class="key"><label for="ab">Across back</label></td>
+            <td><input class="form-control" type="number" id="ab" name="ab" value="45"></td>
+          </tr>
+          <tr>
+            <td class="key"><label for="nc">Neck circumference</label></td>
+            <td><input class="form-control" type="number" id="nc" name="nc" value="42"></td>
+          </tr>
+          <tr>
+            <td class="key"><label for="hc">Hips circumference</label></td>
+            <td><input class="form-control" type="number" id="hc" name="hc" value="95"></td>
+          </tr>
+          <tr>
+            <td class="key"><label for="hc">Hips circumference</label></td>
+            <td><input class="form-control" type="number" id="hc" name="hc" value="95"></td>
+          </tr>
+          <tr>
+            <td class="key"><label for="nwttw">Natural waist to trouser waist</label></td>
+            <td><input class="form-control" type="number" id="nwttw" name="nwttw" value="17.5"></td>
+          </tr>
+          <tr>
+            <td class="key"><label for="ubc">Upper biceps circumference</label></td>
+            <td><input class="form-control" type="number" id="ubc" name="ubc" value="33.5"></td>
+          </tr>
+          <tr>
+            <td class="key"><label for="ubc">Shoulder length</label></td>
+            <td><input class="form-control" type="number" id="sl" name="sl" value="15"></td>
+          </tr>
+          <tr>
+            <td class="key"><label for="ss">Shoulder slope</label></td>
+            <td><input class="form-control" type="number" id="ss" name="ss" value="5.5"></td>
+          </tr>
+          <tr>
+            <td class="key"><label for="ab">Across back</label></td>
+            <td><input class="form-control" type="number" id="ab" name="ab" value="45"></td>
+          </tr>
+          <tr>
+            <td class="key"><label for="slw">Sleeve length to wrist</label></td>
+            <td><input class="form-control" type="number" id="slw" name="slw" value="70"></td>
+          </tr>
+          <tr>
+            <td class="key"><label for="wc">Wrist circumference</label></td>
+            <td><input class="form-control" type="number" id="wc" name="wc" value="19"></td>
+          </tr>
+        </table>
+      </div>
+      <div class="col-md-4">
+        <table class="table mmp-form">
+          <tr class="heading">
+            <td colspan="2">Options</td>
+          </tr>
+          <tr>
+            <td class="key"><label for="opt_cfe">Cuff ease</label></td>
+            <td><input class="form-control" type="number" id="opt_cfe" name="opt_cfe" value="4.5"></td>
+          </tr>
+          <tr>
+            <td class="key"><label for="opt_be">Biceps ease</label></td>
+            <td><input class="form-control" type="number" id="opt_be" name="opt_be" value="3"></td>
+          </tr>
+          <tr>
+            <td class="key"><label for="opt_se">Sleevecap ease</label></td>
+            <td><input class="form-control" type="number" id="opt_se" name="opt_se" value="0.5"></td>
+          </tr>
+          <tr>
+            <td class="key"><label for="opt_ce">Collar ease</label></td>
+            <td><input class="form-control" type="number" id="opt_ce" name="opt_ce" value="1.5"></td>
+          </tr>
+          <tr>
+            <td class="key"><label for="opt_bnc">Back neck cutout</label></td>
+            <td><input class="form-control" type="number" id="opt_bnc" name="opt_bnc" value="2"></td>
+          </tr>
+          <tr>
+            <td class="key"><label for="opt_che">Chest ease</label></td>
+            <td><input class="form-control" type="number" id="opt_che" name="opt_che" value="8"></td>
+          </tr>
+          <tr>
+            <td class="key"><label for="opt_sf">Stretch factor</label></td>
+            <td><input class="form-control" type="number" id="opt_sf" name="opt_sf" value="90"></td>
+          </tr>
+          <tr>
+            <td class="key"><label for="opt_ssw">Shoulder strap width</label></td>
+            <td><input class="form-control" type="number" id="opt_ssw" name="opt_ssw" value="4"></td>
+          </tr>
+          <tr>
+            <td class="key"><label for="opt_ssp">Shoulder strap placement</label></td>
+            <td><input class="form-control" type="number" id="opt_ssp" name="opt_ssp" value="40"></td>
+          </tr>
+          <tr>
+            <td class="key"><label for="opt_nd">Neckline drop</label></td>
+            <td><input class="form-control" type="number" id="opt_nd" name="opt_nd" value="12.5"></td>
+          </tr>
+          <tr>
+            <td class="key"><label for="opt_nb">Neckline bend</label></td>
+            <td><input class="form-control" type="number" id="opt_nb" name="opt_nb" value="100"></td>
+          </tr>
+          <tr>
+            <td class="key"><label for="opt_bb">Backline bend</label></td>
+            <td><input class="form-control" type="number" id="opt_bb" name="opt_bb" value="30"></td>
+          </tr>
+          <tr>
+            <td class="key"><label for="opt_lb">Length bonus</label></td>
+            <td><input class="form-control" type="number" id="opt_lb" name="opt_lb" value="30"></td>
+          </tr>
+          <tr>
+          <tr>
+            <td class="key"><label for="opt_ad">Armhome drop</label></td>
+            <td><input class="form-control" type="number" id="opt_ad" name="opt_ad" value="0"></td>
+          </tr>
+          <tr>
+            <td colspan="2"><button type="submit" class="btn btn-primary btn-lg margin-top-xl btn-block">Submit request</button></td>
+          </tr>
+        </table>
+      </div>
+    </form>
+  </div>
+</div>
+

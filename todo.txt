@@ -1,0 +1,5 @@
+- Add support for S Q T and A commands in SVG path
+- load supported path commands from config file
+- flatter transforms in single matric to allow correct boundary calculation
+- add sodipodi tag to allow for page colours? (see if it will print that colour or not)
+

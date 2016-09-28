@@ -1,0 +1,12 @@
+
+<!-- Start of group #patternScaleContainer -->
+<g id="patternScaleContainer"  transform=" scale(3.54330709 ) " >
+    <!-- Start of group #test -->
+    <g id="test"  transform=" translate(52 69) " >
+        <path id="2" class="" d=" M  100,0  L  100,100 " />
+        <path id="3" class="" d=" M  100,100  C  0,100  0,0  50,50  z " />
+        <path id="4" class="" d=" M  100,100  L  0,0 " />
+    </g>
+    <!-- End of group #test -->
+</g>
+<!-- End of group #patternScaleContainer -->

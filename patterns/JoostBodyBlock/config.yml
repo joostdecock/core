@@ -1,0 +1,12 @@
+info:
+  name: "Body Block Joost"
+  version: "2.0"
+  date: 20160925
+  author: "Joost De Cock"
+  email: "joost@decock.org"
+  company: "freesewing.org"
+  link: "freesewing.org/pattern/joost-body-block/"
+parts:
+  base: "Basis block"
+  body: "Front & Back block"
+  sleeve: "Sleeve block"

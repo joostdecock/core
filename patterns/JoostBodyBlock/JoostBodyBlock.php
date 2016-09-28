@@ -1,0 +1,191 @@
+<?php
+
+namespace Freesewing\Patterns;
+
+/**
+ * Freesewing\Patterns\JoostBodyBlock class.
+ *
+ * @author Joost De Cock <joost@decock.org>
+ * @copyright 2016 Joost De Cock
+ * @license http://opensource.org/licenses/GPL-3.0 GNU General Public License, Version 3
+ */
+class JoostBodyBlock extends Pattern
+{
+    private $config_file = __DIR__.'/config.yml';
+    public $parts = array();
+    private $collarShapeFactor = 1;
+    private $sleevecapShapeFactor = 1;
+    private $armholeSeamLength = 0;
+
+    public function __construct()
+    {
+        $this->config = \Freesewing\Yamlr::loadConfig($this->config_file);
+
+        return $this;
+    }
+
+    public function draft($model)
+    {
+        $this->armholeDepth = 200 + ($model->getMeasurement('shoulderSlope')/2 - 27.5) + ($model->getMeasurement('upperBicepsCircumference')/10);
+        foreach ($this->config['parts'] as $part => $title) {
+            $this->addPart($part);
+            $this->parts[$part]->setTitle($title);
+            $method = 'draft'.ucwords($part);
+            $this->$method($model);
+        }
+        $this->parts['base']->setRender(false);
+    }
+
+    private function draftBase($model) 
+    {
+        $collarWidth = ($model->getMeasurement('neckCircumference')/3.1415) / 2 + 5;
+        $collarDepth = $this->collarShapeFactor * ($model->getMeasurement('neckCircumference') + $this->getOption('collarEase')) / 5 - 8;
+        
+        $p = $this->parts['base'];
+        
+        $p->newPoint( 0 , 0,   0 );
+        $p->newPoint( 1 , 0, $this->getOption('backNeckCutout'), 'Point 1, Center back neck point' );
+        $p->newPoint( 2 , 0, $p->y(1) + $this->armholeDepth );
+        $p->newPoint( 3 , 0, $p->y(1) + $model->getMeasurement('centerBackNeckToWaist') );
+        $p->newPoint( 5 , $model->getMeasurement('chestCircumference')/4 + $this->getOption('chestEase')/4, $p->y(2) );
+        $p->newPoint( 6 , $p->x(5), $p->y(0) );
+        $p->newPoint( 7 , $p->x(5), $p->y(3) );
+        $p->newPoint( 9 , $collarWidth, $p->y(1) );
+        $p->newPoint( 10 , $p->x(9), $p->y(1) - $this->getOption('backNeckCutout') );
+        $p->newPoint( 11 , 0, $p->y(1) + $p->deltaY(1,2)/2 );
+        $p->newPoint( 12 , $model->getMeasurement('acrossBack')/2, $p->y(11) );
+        $p->newPoint( 13 , 0, $p->y(0) + $model->getMeasurement('shoulderSlope')/2 );
+        $p->newPoint( 14 , $p->x(12), $p->y(13) );
+        $p->newPoint( 15 , $p->x(12), $p->y(2) );
+        $p->newPoint( 16 , $p->x(9) + sqrt(pow($model->getMeasurement('shoulderLength'),2) - pow($model->getMeasurement('shoulderSlope')/2,2)), $p->y(13) );
+        $p->newPoint( 17 , 0, $p->y(1) + $collarDepth);
+        $p->addPoint( 18 , $p->shift(15, 45, 30) );
+        $p->newPoint( 50 , $p->x(15)/2, $p->y(2)-20 );
+        $p->newPoint( 101 , 0.8 * $p->deltaX(1,9), $p->y(1) );
+        $p->addPoint( 121 , $p->shift(12, 90, 40) );
+        $p->addPoint( 122 , $p->shift(12, -90, 40) );
+        $p->newPoint( 171 , $p->x(101), $p->y(17) );
+        $p->addPoint( 181 , $p->shift(18, 135, 25) );
+        $p->addPoint( 182 , $p->Shift(18, -45, 25) );
+        $p->addPoint( 501 , $p->shift(5, 180, 10) );
+        $p->addPoint( 161 , $p->shift(16, $p->angle(10,16)+90, 10) );
+        $p->newPoint( 200 , 0, $model->getMeasurement('centerBackNeckToWaist') + $model->getMeasurement('naturalWaistToTrouserWaist') + $this->getOption('backNeckCutout'), 'Trouser waist height');
+}
+
+    private function draftBody($model) 
+    {
+        $this->clonePoints('base', 'body');
+        
+        $p = $this->parts['body'];
+       
+        $mirrorThese = array(1,2,3,5,6,7,9,10,11,12,13,14,15,16,17,18,101,121,122,161,171,181,182,200,501);
+        foreach($mirrorThese as $key) {
+            $p->addPoint(-1*$key, $p->flipX($key, $p->x(5)) );
+        }
+        $p->newPoint( 201, $p->x(5), $p->y(200) );
+        $frontextra = 5; // Cutting out armhole a bit deeper at the front
+        $p->addPoint( -12 , $p->shift(-12, 0, $frontextra) );
+        $p->addPoint( -121 , $p->shift(-121, 0, $frontextra) );
+        $p->addPoint( -122 , $p->shift(-122, 0, $frontextra) );
+        // Need to figure out what curve the back pitch point will intersect with
+        $backArmPitchY = $p->y(15) - 110; // FIXME, need to check why 110 was used here
+        if($backArmPitchY == $p->y(12) ) { // Smack between curves
+            $p->newPoint( 20, $p->x(12), $p->y(12), 'Back pitch point'); 
+        } 
+        else if($backArmPitchY < $p->y(12) ) {
+            $p->addPoint( 20, $p->curveCrossesY(12, 121, 161, 16, $backArmPitchY) ); // Top curve
+        }
+        else if($backArmPitchY > $p->y(12) ) {
+            $p->addPoint( 20, $p->curveCrossesY(18, 181, 122, 12, $backArmPitchY) ); // Bottom curve
+        }
+        $p->addPoint( 2066601, $p->shift(20,90,2.5), 'Back pitch point Top Notch');
+        $p->addPoint( 2066602, $p->shift(20,-90,2.5), 'Back pitch point Bottom Notch');
+        // Need to figure out what curve the front pitch point will intersect with
+        $frontarmpitchY = $p->y(-15) - 80; // FIXME, need to check why 80 was used here
+        if($frontarmpitchY == $p->y(-12) ) {
+            $p->newPoint( -20, $p->x(-12), $p->y(-12), 'Front pitch point'); // Smack between curves
+        }
+        else if($frontarmpitchY < $p->y(-12) ) {
+            $p->addPoint( -20, $p->curveCrossesY(-12, -121, -161, -16, $frontarmpitchY) ); // Top curve
+        }
+        else if($frontarmpitchY > $p->y(-12) ) {
+            $p->addPoint( -20, $p->curveCrossesY(-18, -181, -122, -12, $frontarmpitchY) ); // Bottom curve
+        }
+
+        $frontPath = 'M 1 L 200 L 201 L 5 C 501 182 18 C 181 122 12 C 121 161 16 L 10 C 10 101 1 z';
+        $backPath = 'M -17 L -200 L 201 L -5 C -501 -182 -18 C -181 -122 -12 C -121 -161 -16 L -10 C -9 -171 -17 z';
+        $pathOptions = ['class' => 'cutline'];
+        
+        $p->newPath('front', $frontPath, $pathOptions);
+        $p->newPath('back', $backPath, $pathOptions);
+
+
+        // Storing the armhole curve length
+        $this->armholeSeamLength = ( $p->curveLen(16, 161, 121, 12) + $p->curveLen(12, 122, 181, 18) + $p->curveLen(18, 182, 501, 5) ) * 2; 
+    }
+    
+    private function draftSleeve($model) 
+    {
+        $p = $this->parts['sleeve'];
+        
+        $aseam = ($this->armholeSeamLength + $this->getOption('sleevecapEase')) * $this->sleevecapShapeFactor;
+        
+        $p->newPoint( 1 , 0, 0 );
+        $p->newPoint( 2 , $p->x(1), $model->getMeasurement('sleeveLengthToWrist') );
+        $p->newPoint( 3 , $model->getMeasurement('upperBicepsCircumference') + $this->getOption('bicepsEase'), 0 ); 
+        $p->newPoint( 2030 , $p->x(3), $p->y(2) );
+        $p->newPoint( 4 , $p->x(3)/2, 0 ); 
+        $p->newPoint( 401 , $p->x(3)/4, 0); 
+        $p->newPoint( 402 , $p->x(3)*0.75, 0 ); 
+        $p->newPoint( 5 , $p->x(1), $aseam/3 ); 
+        $p->newPoint( 6 , $p->x(3), $p->y(5) ); 
+        $p->newPoint( 7 , $p->x(401), $p->y(5) ); 
+        $p->newPoint( 8 , $p->x(402), $p->y(5) ); 
+        $p->newPoint( 50 , $p->x(4), $p->y(5) ); 
+        $p->newPoint( 51 , $p->x(4)-50, $p->y(50)+50 ); 
+        $p->newPoint( 52 , $p->x(51), $p->y(51)+70 ); 
+        $p->newPoint( 701 , $p->x(7), $aseam/6 - 15, 'Back Pitch Point');
+        // I am moving this 5mm out for some extra room
+        $p->newPoint( 801 , $p->x(8) + 5, $aseam/6, 'Front Pitch Point');
+        // Angles of the segments of the sleevecap
+        $angle5701 = $p->angle(5,701);
+        $angle4701 = $p->angle(4,701);
+        $angle6801 = $p->angle(6,801);
+        $angle4801 = $p->angle(4,801);
+        $p->addPoint( 5701 , $p->shiftTowards(5,701, $p->distance(5,701)/2) );
+        $p->addPoint( 57011 , $p->shift(5701, $angle5701+90, 5) );
+        $p->addPoint( 4701 , $p->shiftTowards(4, 701, $p->distance(4,701)/2) );
+        $p->addPoint( 47011 , $p->shift(4701, $angle4701+90, 15) );
+        $p->addPoint( 6801 , $p->shiftTowards(6, 801, $p->distance(6,801)/2) );
+        $p->addPoint( 68011 , $p->shift(6801, $angle6801-90, 15) );
+        $p->addPoint( 4801 , $p->shiftTowards(4, 801, $p->distance(4,801)/2) );
+        $p->addPoint( 48011 , $p->shift(4801, $angle4801-90, 23) );
+
+        $p->addPoint( 57012 , $p->shift(57011, $angle5701,  25) );
+        $p->addPoint( 57013 , $p->shift(57011, $angle5701, -25) );
+        $p->addPoint( 47012 , $p->shift(47011, $angle4701,  25) );
+        $p->addPoint( 47013 , $p->shift(47011, $angle4701, -25) );
+        $p->addPoint( 68012 , $p->shift(68011, $angle6801,  25) );
+        $p->addPoint( 68013 , $p->shift(68011, $angle6801, -25) );
+        $p->addPoint( 48012 , $p->shift(48011, $angle4801,  25) );
+        $p->addPoint( 48013 , $p->shift(48011, $angle4801, -25) );
+ 
+        $p->addPoint( 41 , $p->shift(4, 0, -25) );
+        $p->addPoint( 42 , $p->shift(4, 0, 25) );
+        $p->addPoint( 43 , $p->shiftAlong(4, 42, 48012, 48011, 5) );
+
+        $p->newPoint( 11 , $p->x(1), $p->y(5) + $p->distance(2,5)/2 - 25, 'Elbow point');
+        $p->newPoint( 12 , $p->x(3), $p->y(11) );
+        $width = $model->getMeasurement('wristCircumference') + $this->getOption('cuffEase');
+        $p->newPoint( 21 , $p->x(4) - $width/2, $p->y(2) );
+        $p->addPoint( 22 , $p->flipX(21,$p->x(4)) );
+        $p->addPoint( 23 , $p->linesCross(11, 12, 5, 21) );
+        $p->addPoint( 24 , $p->linesCross(11, 12, 6, 22) );
+        
+        $sleevePath = "M 5 C 5 57012 57011 C 57013 701 701 C 701 47013 47011 C 47012 41 4 C 42 48012 48011 C 48013 801 801 C 801 68013 68011 C 68012 6 6 L 22 L 21 z";
+        $pathOptions = ['class' => 'cutline'];
+        
+        $p->newPath('sleeve', $sleevePath, $pathOptions);
+    }
+
+}

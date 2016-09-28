@@ -1,0 +1,31 @@
+<marker inkscape:stockid="Arrow2Mend" orient="auto" refY="0.0" refX="0.0" id="Arrow2Mend" style="overflow:visible;">
+  <path id="path3622"
+     style="font-size:12.0;fill-rule:evenodd;stroke-width:1.625;stroke-linejoin:round;fill:#5C3566;stroke:#5C3566;"
+     d="M 8.7185878,4.0337352 L -2.2072895,0.016013256 L 8.7185884,-4.0017078 C 6.9730900,-1.6296469 6.9831476,1.6157441 8.7185878,4.0337352 z "
+     transform="scale(0.6) rotate(180) translate(0,0)" />
+</marker>
+<marker inkscape:stockid="Arrow2Mstart" orient="auto" refY="0.0" refX="0.0" id="Arrow2Mstart" style="overflow:visible">
+  <path id="path3619"
+     style="font-size:12.0;fill-rule:evenodd;stroke-width:1.625;stroke-linejoin:round;fill:#5C3566;stroke:#5C3566;"
+     d="M 8.7185878,4.0337352 L -2.2072895,0.016013256 L 8.7185884,-4.0017078 C 6.9730900,-1.6296469 6.9831476,1.6157441 8.7185878,4.0337352 z "
+     transform="scale(0.6) translate(0,0)" />
+</marker>
+<pattern patternUnits="userSpaceOnUse" width="11" height="11" id="pattern-notch">
+  <g id="notch">
+    <circle id="notch-dot" cx="0" cy="0" r="2.5" stroke="none" fill="#d9534f" fill-opacity="1" />
+  </g>
+</pattern>
+<pattern patternUnits="userSpaceOnUse" width="11" height="11" id="pattern-buttonhole">
+  <g id="buttonhole">
+    <path id="buttonhole-1" style="stroke-width:2;stroke-linecap:butt;fill:none;stroke:#5C3566;" d="M -1.4,-6 l 2.8,0 M -1.4,6 l 2.8,0" />
+    <path id="buttonhole-2" style="stroke-width:0.8;stroke-linecap:round;fill:none;stroke:#5C3566;" d="M -1,-6 l 0,12 M 1,-6 l 0,12" />
+    <path id="buttonhole-3" style="stroke-width:0.2;stroke-linecap:round;fill:none;stroke:#5C3566;" d="M -1.2,-1.2 l 2.4,2.4 M 1.2,-1.2 l -2.4,2.4" />
+  </g>
+</pattern>
+<pattern patternUnits="userSpaceOnUse" width="11" height="11" id="pattern-button">
+  <g id="button">
+    <path id="button-line-1" style="stroke-width:0.5;stroke-linejoin:round;fill:none;stroke:#5C3566;" d="m -2,-2 l 4,4 m -4,0 l 4,-4" />
+    <circle id="button-outline-1" cx="0" cy="0" r="4" stroke="#5c3566" fill="none" fill-opacity="1" stroke-width="0.3 "/>
+    <circle id="button-outline-2" cx="0" cy="0" r="5" stroke="#5c3566" fill="none" fill-opacity="1" stroke-width="0.7" />
+  </g>
+</pattern>

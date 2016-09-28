@@ -1,0 +1,8 @@
+defaults:
+    channel: ExampleChannel
+    theme: ExampleTheme
+    pattern: ExamplePattern
+    partMargin: 10
+renderers:
+    svg: SvgRenderbot
+    js: JsRenderbot

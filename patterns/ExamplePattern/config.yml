@@ -1,0 +1,11 @@
+info:
+  name: "Sample pattern"
+  version: "2.0"
+  date: 20160906
+  author: "Joost De Cock"
+  email: "joost@decock.org"
+  company: "freesewing.org"
+parts:
+  square: "A simple square"
+options:
+  square_size: 100

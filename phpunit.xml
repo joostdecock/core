@@ -1,0 +1,25 @@
+<phpunit
+    bootstrap="vendor/autoload.php"
+    colors="true"
+    verbose="true"
+    >
+    <testsuites>
+        <testsuite name="Freesewing Test Suite">
+            <directory suffix="Test.php">./tests/src/</directory>
+            <directory suffix="Test.php">./tests/themes/</directory>
+            <directory suffix="Test.php">./tests/channels/</directory>
+        </testsuite>
+    </testsuites>
+    <filter>
+        <whitelist processUncoveredFilesFromWhitelist="true">
+            <directory suffix=".php">./src</directory>
+            <directory suffix=".php">./channels</directory>
+            <directory suffix=".php">./patterns</directory>
+            <directory suffix=".php">./themes</directory>
+        </whitelist>
+    </filter>
+    <logging>
+        <log type="coverage-html" target="coverage" title="Freesewing"
+            charset="UTF-8" yui="true" highlight="true"/>
+    </logging>
+</phpunit>

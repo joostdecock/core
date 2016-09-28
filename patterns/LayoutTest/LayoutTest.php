@@ -30,8 +30,10 @@ class LayoutTest extends Pattern
             $p->newPoint(2, $w,  0);
             $p->newPoint(3, $w, $h);
             $p->newPoint(4,  0, $h);
+            $p->newPoint(5,  $w/2, 5);
+            $p->newPoint(6,  $w/2, $h-5);
             
-            $p->newPath('box', 'M 1 L 2 L 3 L 4 z');
+            $p->newPath('box', 'M 1 L 2 L 3 L 4 z M 5 L 6');
         }
     }
 

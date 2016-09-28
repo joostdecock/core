@@ -53,8 +53,24 @@ class GrowingPacker extends Packer
             $space = $this->findSpace($block->down, $w, $h);
             if ($space) return $space;
         }
-        else if (($w <= $block->w) && ($h <= $block->h)) return $block;
-        else return null;
+        else {
+            if (($w <= $block->w) && ($h <= $block->h)) return $block;
+            /* 
+            $this->rotate($block);
+            if (($w <= $block->w) && ($h <= $block->h)) return $block;
+            $this->rotate($block);
+            */
+        }
+        return null;
+    }
+
+    private function rotate(&$block)
+    {
+        $h = $block->h;
+        $block->h = $block->w;
+        $block->w = $h;
+        if($block->rotated) $block->rotated(false);
+        else $block->rotated(true);
     }
    
     private function splitSpace(&$space, $w, $h)
@@ -76,9 +92,10 @@ class GrowingPacker extends Packer
     {
         $canGrowDown = ($w <= $this->boundingBox->w);
         $canGrowRight = ($h <= $this->boundingBox->h);
-       
-        $shouldGrowRight = $canGrowRight && ($this->boundingBox->h >= ($this->boundingBox->w + $w));
-        $shouldGrowDown = $canGrowDown && ($this->boundingBox->w >= ($this->boundingBox->h + $h));
+
+        // aim for 1/sqrt(2) ratio 
+        $shouldGrowRight = $canGrowRight && ($this->boundingBox->h*sqrt(2) >= ($this->boundingBox->w + $w));
+        $shouldGrowDown = $canGrowDown && ($this->boundingBox->w >= ($this->boundingBox->h + $h)*sqrt(2));
     
         if ($shouldGrowRight)     return $this->growRight($w, $h);
         else if ($shouldGrowDown) return $this->growDown($w, $h);

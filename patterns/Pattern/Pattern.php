@@ -173,6 +173,12 @@ class Pattern
         foreach ($layoutBlocks as $key => $layoutBlock) {
             $transform = new \Freesewing\Transform('translate', $layoutBlock->fit->x, $layoutBlock->fit->y);
             $this->parts[$key]->addTransform('#layout', $transform);
+            if($layoutBlock->fit->rotated) {
+                $transform = new \Freesewing\Transform('translate', $layoutBlock->h, 0);
+                $this->parts[$key]->addTransform('#layoutRotateTranslate', $transform);
+                $transform = new \Freesewing\Transform('rotate', 0, 0, 90);
+                $this->parts[$key]->addTransform('#layoutRotate', $transform);
+            }
         }
     }
 

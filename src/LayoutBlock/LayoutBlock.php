@@ -15,6 +15,7 @@ class LayoutBlock
     public $y = null;
     public $w = null;
     public $h = null;
+    public $rotated = false;
     public $used = false;
 
     public function position($x, $y)
@@ -32,5 +33,10 @@ class LayoutBlock
     public function used($used=true) 
     {
         $this->used = $used;
+    }
+    
+    public function rotated($rotated=true) 
+    {
+        $this->rotated = $rotated;
     }
 }

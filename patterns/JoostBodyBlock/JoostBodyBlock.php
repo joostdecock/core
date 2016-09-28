@@ -33,6 +33,8 @@ class JoostBodyBlock extends Pattern
             $method = 'draft'.ucwords($part);
             $this->$method($model);
         }
+        $this->tweakCollar($model);
+        $this->tweakSleeve($model);
         $this->parts['base']->setRender(false);
     }
 
@@ -118,17 +120,13 @@ class JoostBodyBlock extends Pattern
         
         $p->newPath('front', $frontPath, $pathOptions);
         $p->newPath('back', $backPath, $pathOptions);
-
-
-        // Storing the armhole curve length
-        $this->armholeSeamLength = ( $p->curveLen(16, 161, 121, 12) + $p->curveLen(12, 122, 181, 18) + $p->curveLen(18, 182, 501, 5) ) * 2; 
     }
     
     private function draftSleeve($model) 
     {
         $p = $this->parts['sleeve'];
         
-        $aseam = ($this->armholeSeamLength + $this->getOption('sleevecapEase')) * $this->sleevecapShapeFactor;
+        $aseam = ($this->armholeLen() + $this->getOption('sleevecapEase')) * $this->sleevecapShapeFactor;
         
         $p->newPoint( 1 , 0, 0 );
         $p->newPoint( 2 , $p->x(1), $model->getMeasurement('sleeveLengthToWrist') );
@@ -187,5 +185,111 @@ class JoostBodyBlock extends Pattern
         
         $p->newPath('sleeve', $sleevePath, $pathOptions);
     }
+    
+    private function tweakCollar($model) {
+        $this->collarIteration = 1;
+        $this->checkCollarDelta($model);
+        $this->d('      Calculating collar opening with '.$this->getOption('collarEase').'mm collar ease.');
+        while(abs($this->collarDelta) > 0.5 && $this->collarIteration < 150) {
+            $this->d("      Iteration ".$this->collarIteration.", collar opening length is ".$this->collarDelta." mm off");
+            $this->fitCollar($model);
+            $this->checkCollarDelta($model);
+        }
+        if($this->collarIteration>149) $this->d("      Iteration ".$this->collarIteration.", collar opening length is ".$this->collarDelta." mm off. I'm not happy, but it will have to do.");
+        else $this->d("      Iteration ".$this->collarIteration." collar opening length is ".$this->collarDelta." mm off. I'm happy.");
+    }
 
+    private function fitCollar($model) 
+    {
+        $this->collarIteration++;
+        if($this->collarDelta > 0) $this->collarShapeFactor = $this->collarShapeFactor * 0.97; 
+        else $this->collarShapeFactor = $this->collarShapeFactor * 1.03; 
+        $this->draftBase($model);
+        $this->draftBody($model);
+    }
+    
+    private function tweakSleeve($model) 
+    {
+        $this->sleeveIteration = 1;
+        $this->checkSleevecapDelta();
+        $this->d('      Calculating sleevecap opening with '.$this->getOption('sleevecapEase').'mm sleevecap ease.');
+        while(abs($this->sleevecapDelta)>0.5 && $this->sleeveIteration < 150) {
+            $this->d("      Iteration ".$this->sleeveIteration.", sleevecap length is ".$this->sleevecapDelta." mm off");
+            $this->fitSleeve($model);
+            $this->checkSleevecapDelta();
+        }
+        if($this->sleeveIteration>149) $this->d("      Iteration ".$this->sleeveIteration.", sleevecap length is ".$this->sleevecapDelta." mm off. I'm not happy, but it will have to do.");
+        else $this->d("      Iteration ".$this->sleeveIteration." collar opening length is ".$this->sleevecapDelta." mm off. I'm happy.");
+    }
+
+
+    private function fitSleeve($model) 
+    {
+        $this->sleeveIteration++;
+        if($this->sleeveIteration > 18) {
+            if($this->sleevecapDelta > 0) $this->sleevecapShapeFactor = $this->sleevecapShapeFactor * 0.9; 
+            else $this->sleevecapShapeFactor = $this->sleevecapShapeFactor * 1.1; 
+        }
+        else if($this->sleeveIteration > 10) {
+            if($this->sleevecapDelta > 0) $this->sleevecapShapeFactor = $this->sleevecapShapeFactor * 0.95; 
+            else $this->sleevecapShapeFactor = $this->sleevecapShapeFactor * 1.05; 
+        } 
+        else {
+            if($this->sleevecapDelta > 0) $this->sleevecapShapeFactor = $this->sleevecapShapeFactor * 0.99; 
+            else $this->sleevecapShapeFactor = $this->sleevecapShapeFactor * 1.01; 
+        }
+        $this->draftSleeve($model);
+    }
+
+    private function sleevecapLen() 
+    {
+        $sleeve = $this->parts['sleeve'];
+    
+        return  
+            $sleeve->curveLen(5, 5, 57012, 57011) + 
+            $sleeve->curveLen(57011, 57013, 701, 701) + 
+            $sleeve->curveLen(701, 701, 47013, 47011) + 
+            $sleeve->curveLen(47011, 47012, 41, 4) +
+            $sleeve->curveLen(4, 42, 48012, 48011) +
+            $sleeve->curveLen(48011, 48013, 801, 801) +
+            $sleeve->curveLen(801, 801, 68013, 68011) +
+            $sleeve->curveLen(68011, 68012, 6, 6); 
+    }
+
+    private function armholeLen() 
+    {
+        $body = $this->parts['body'];
+   
+        return (
+            $body->curveLen(16, 161, 121, 12) + 
+            $body->curveLen(12, 122, 181, 18) + 
+            $body->curveLen(18, 182, 501, 5) 
+        ) * 2; 
+    }
+    
+    private function collarLen() 
+    {
+        $body = $this->parts['body'];
+        
+        return (
+            $body->curveLen(10, 9, 171, 17) + 
+            $body->curveLen(1, 101, 10, 10)  
+        ) * 2;
+    }
+
+    private function checkSleevecapDelta() 
+    {
+        $this->sleevecapDelta = round($this->sleevecapLen() - ($this->armholeLen() + $this->getOption('sleevecapEase')), 2);
+    }
+    
+    private function checkCollarDelta($model) 
+    {
+        $this->collarDelta = round($this->collarLen() - ($model->getMeasurement('neckCircumference') + $this->getOption('collarEase')), 2);
+    }
+
+    private function d($msg)
+    {
+        if(is_array($msg)) $msg = print_r($msg,1);
+        $this->d[] = $msg;
+    }
 }

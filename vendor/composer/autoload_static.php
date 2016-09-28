@@ -138,6 +138,8 @@ class ComposerStaticInit6d3c91d11fabeb58ed862308abf0796d
         'Freesewing\\SvgDefs' => __DIR__ . '/../..' . '/src/SvgDefs/SvgDefs.php',
         'Freesewing\\SvgDocument' => __DIR__ . '/../..' . '/src/SvgDocument/SvgDocument.php',
         'Freesewing\\SvgRenderbot' => __DIR__ . '/../..' . '/src/SvgRenderbot/SvgRenderbot.php',
+        'Freesewing\\SvgScript' => __DIR__ . '/../..' . '/src/SvgScript/SvgScript.php',
+        'Freesewing\\Text' => __DIR__ . '/../..' . '/src/Text/Text.php',
         'Freesewing\\Themes\\DocumentationDebugTheme' => __DIR__ . '/../..' . '/themes/DocumentationDebugTheme/DocumentationDebugTheme.php',
         'Freesewing\\Themes\\DocumentationTheme' => __DIR__ . '/../..' . '/themes/DocumentationTheme/DocumentationTheme.php',
         'Freesewing\\Themes\\SvgOnlyDebugTheme' => __DIR__ . '/../..' . '/themes/SvgOnlyDebugTheme/SvgOnlyDebugTheme.php',

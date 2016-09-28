@@ -15,6 +15,7 @@ class SvgDocument
     public $headerComments;
     public $svgAttributes;
     public $css;
+    public $script;
     public $defs;
     public $footerComments;
 
@@ -22,12 +23,14 @@ class SvgDocument
         \Freesewing\SvgComments $headerComments,
         \Freesewing\SvgAttributes $svgAttributes,
         \Freesewing\SvgCss $css,
+        \Freesewing\SvgScript $script,
         \Freesewing\SvgDefs $defs,
         \Freesewing\SvgComments $footerComments)
     {
         $this->headerComments = $headerComments;
         $this->svgAttributes = $svgAttributes;
         $this->css = $css;
+        $this->script = $script;
         $this->defs = $defs;
         $this->footerComments = $footerComments;
     }
@@ -38,6 +41,7 @@ class SvgDocument
             $this->headerComments->load().
             $this->svgAttributes->load().
             $this->css->load().
+            $this->script->load().
             $this->defs->load().
             $this->svgBody.
             "\n\n</svg>\n\n".

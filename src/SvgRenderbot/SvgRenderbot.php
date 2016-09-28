@@ -93,6 +93,10 @@ class SvgRenderbot
                         $svg .= $this->renderSnippet($snippet, $part);
                     }
 
+                    foreach ($part->texts as $text) {
+                        $svg .= $this->renderText($text, $part);
+                    }
+
                     $svg .= $this->closeGroup();
                 }
             }
@@ -141,5 +145,29 @@ class SvgRenderbot
         $svg .= '</use>';
 
         return $svg;
+    }
+    
+    /*
+     * Returns SVG code for text
+     */
+    private function renderText($text, $part)
+    {
+        $anchor = $text->getAnchor();
+        $svg = $this->nl();
+        $svg .=  '<text x="'.$anchor->getX().'" y="'.$anchor->getY().'" ';
+        if(!isset($text->attributes['id'])) $svg .= 'id="'.$this->getUid().'" ';
+        $svg .= $this->flattenAttributes($text->getAttributes());
+        $svg .= '>'.$text->getText().'</text>';
+
+        return $svg;
+    }
+    
+    private function flattenAttributes($array)
+    {
+        $attributes = '';
+        foreach($array as $key => $value) {
+            $attributes .= "$key=\"$value\" ";
+        }
+        return $attributes;
     }
 }

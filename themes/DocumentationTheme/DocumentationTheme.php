@@ -17,14 +17,6 @@ class DocumentationTheme extends Theme
     public function themeResponse($apiHandler)
     {
 
-        /*
-        $response = new \Freesewing\Response();
-        $response->setFormat('raw');
-        $response->setBody("{$apiHandler->svgDocument}");
-
-        return $response;
-        */
-
         ob_start();
         \Kint::$maxLevels = 0;
         \Kint::dump($apiHandler);

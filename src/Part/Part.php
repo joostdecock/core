@@ -13,6 +13,7 @@ class Part
 {
     public $points = array();
     public $snippets = array();
+    public $texts = array();
     public $paths = array();
     public $transforms = array();
     public $title = null;
@@ -62,6 +63,15 @@ class Part
         $this->addSnippet($key, $snippet);
     }
     
+    public function newText($key, $anchor, $msg, $attributes=null)
+    {
+        $text = new \Freesewing\Text();
+        $text->setAnchor($anchor);
+        $text->setText($msg);
+        $text->setAttributes($attributes);
+        $this->addText($key, $text);
+    }
+    
     public function createPoint($x, $y, $description=null)
     {
         $point = new \Freesewing\Point($key); 
@@ -79,6 +89,12 @@ class Part
     public function addSnippet($key, \Freesewing\Snippet $snippet)
     {
         $this->snippets[$key] = $snippet;
+    }
+
+    
+    public function addText($key, \Freesewing\Text $text)
+    {
+        $this->texts[$key] = $text;
     }
 
     public function addPath($key, \Freesewing\Path $path)

@@ -101,6 +101,7 @@ class ApiHandler
             new \Freesewing\SvgComments(),
             new \Freesewing\SvgAttributes(),
             new \Freesewing\SvgCss(),
+            new \Freesewing\SvgScript(),
             new \Freesewing\SvgDefs(),
             new \Freesewing\SvgComments()
         );

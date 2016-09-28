@@ -15,7 +15,6 @@ class JoostBodyBlock extends Pattern
     public $parts = array();
     private $collarShapeFactor = 1;
     private $sleevecapShapeFactor = 1;
-    private $armholeSeamLength = 0;
 
     public function __construct()
     {
@@ -36,6 +35,14 @@ class JoostBodyBlock extends Pattern
         $this->tweakCollar($model);
         $this->tweakSleeve($model);
         $this->parts['base']->setRender(false);
+        
+        //clean up
+        unset($this->collarShapeFactor);
+        unset($this->sleevecapShapeFactor);
+        unset($this->collarIteration);
+        unset($this->sleeveIteration);
+        unset($this->collarDelta);
+        unset($this->sleevecapDelta);
     }
 
     private function draftBase($model) 

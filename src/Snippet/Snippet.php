@@ -14,6 +14,7 @@ class Snippet
     public $anchor;
     public $reference = null;
     public $description = null;
+    public $attributes;
 
     public function setAnchor(\Freesewing\Point $anchor)
     {
@@ -43,5 +44,15 @@ class Snippet
     public function getDescription()
     {
         return $this->description;
+    }
+    
+    public function setAttributes($attributes)
+    {
+        $this->attributes = $attributes;
+    }
+
+    public function getAttributes()
+    {
+        return $this->attributes;
     }
 }

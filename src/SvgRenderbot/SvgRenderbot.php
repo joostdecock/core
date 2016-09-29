@@ -136,7 +136,10 @@ class SvgRenderbot
     {
         $anchor = $snippet->getAnchor();
         $svg = $this->nl();
-        $svg .=  '<use x="'.$anchor->getX().'" y="'.$anchor->getY().'" xlink:href="#'.$snippet->getReference().'" id="'.$this->getUid().'" >';
+        $svg .=  '<use x="'.$anchor->getX().'" y="'.$anchor->getY().'" xlink:href="#'.$snippet->getReference().'" ';
+        if(!isset($snippet->attributes['id'])) $svg .= 'id="'.$this->getUid().'" ';
+        $svg .= $this->flattenAttributes($snippet->getAttributes());
+        $svg .= '>';
         $this->indent();
         $svg .= $this->nl();
         $svg .= '<title>'.$snippet->getDescription().'</title>';

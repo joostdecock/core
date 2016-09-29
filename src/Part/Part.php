@@ -54,12 +54,13 @@ class Part
         $this->addPoint($key, $point);
     }
     
-    public function newSnippet($key, $reference, $anchor, $description=null)
+    public function newSnippet($key, $reference, $anchor, $attributes=null, $description=null)
     {
         $snippet = new \Freesewing\Snippet(); 
         $snippet->setReference($reference);
         $snippet->setAnchor($anchor);
         $snippet->setDescription($description);
+        $snippet->setAttributes($attributes);
         $this->addSnippet($key, $snippet);
     }
     

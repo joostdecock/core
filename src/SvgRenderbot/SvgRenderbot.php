@@ -115,7 +115,6 @@ class SvgRenderbot
         $pathstring = $path->getPath();
         $points = $part->points;
         $patharray = explode(' ', $pathstring);
-        $options = $path->getOptions();
         $svg = '';
         foreach ($patharray as $p) {
             $p = rtrim($p);
@@ -125,8 +124,10 @@ class SvgRenderbot
                 $svg .= ' '.$points[$p]->x.','.$points[$p]->y.' ';
             }
         }
+        $attributes = $path->getAttributes();
+        if(!isset($attributes['id'])) $attributes['id'] = $this->getUid();
 
-        return $this->nl().'<path id="'.$this->getUid().'" class="'.$options['class'].'" d="'.$svg.'" />';
+        return $this->nl().'<path '.$this->flattenAttributes($attributes).' d="'.$svg.'" />';
     }
     
     /*

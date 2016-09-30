@@ -43,11 +43,10 @@ class ExamplePattern extends Pattern
         $p->newPoint(4,   0, 100);
         $p->newPoint(5,  50,  50);
 
-        $outline = new \Freesewing\Path();
-        $outline->setPath('M 3 C 4 1 5 z');
-        $outline->setOptions(['class' => 'cutline']);
-
-        $p->addPath('outline', $outline);
+        $p->newPath('outline', 'M 3 C 4 1 5 z', ['class' => 'cutline']);
+        $p->offsetPath('outline');
+        $p->newPath('outline2', 'M 3 C 5 1 4 z', ['class' => 'cutline']);
+        $p->offsetPath('outline2');
 
         $p->newPoint('center', 150, 50); 
         $p->newPoint(120, $p->x('center'), $p->y('center') - 40);
@@ -59,10 +58,7 @@ class ExamplePattern extends Pattern
             $clockPath .= "M $i L center ";
         }
         
-        $clock = new \Freesewing\Path();
-        $clock->setPath($clockPath);
-        $clock->setOptions(['class' => 'cutline']);
-        $p->addPath('clock', $clock);
+        $p->newPath('clock', $clockPath, ['class' => 'cutline']);
         
         $clockpath2 = '';
         $p->addPoint('center2', $p->shift('center', 0, 50));
@@ -74,9 +70,6 @@ class ExamplePattern extends Pattern
             $clockPath2 .= "M $i.2 L center2 ";
         }
         
-        $clock2 = new \Freesewing\Path();
-        $clock2->setPath($clockPath2);
-        $clock2->setOptions(['class' => 'cutline']);
-        $p->addPath('clock2', $clock2);
+        $p->newPath('clock2', $clockPath2, ['class' => 'cutline']);
     }
 }

@@ -71,13 +71,11 @@ class SvgOnlyDebugTheme extends Theme
                     $curveSteps++;
                 }
                 else $type = 'path-point';
-            $title = $this->debugPointDescription($key,$part->points[$key]);
-            $attr = ['id' => "point-$key", 'onmouseover' => "pointHover('point-$key')", 'onmouseout' => "pointUnhover('point-$key')"];
-            $part->newSnippet($key, $type, $part->points[$key], $attr, $title);
-            $attr = ['id' => "point-$key-tooltip", 'class' => 'tooltip', 'visibility' => 'hidden'];
-            $part->newText($key, $part->points[$key], $title, $attr);
-                //$part->newSnippet("debugPath$key", $type, $part->points[$key], ['id' => "point-$key"], $this->debugPointDescription($key,$part->points[$key]));
-                //$part->newText('point '.$key, $part->points[$key], "Point $key", ['id' => "point_$key", 'class' => 'tooltip', 'visibility' => 'hidden']);
+                $title = $this->debugPointDescription($key,$part->points[$key]);
+                $attr = ['id' => "point-$key", 'onmouseover' => "pointHover('point-$key')", 'onmouseout' => "pointUnhover('point-$key')"];
+                $part->newSnippet($key, $type, $part->points[$key], $attr, $title);
+                $attr = ['id' => "point-$key-tooltip", 'class' => 'tooltip', 'visibility' => 'hidden'];
+                $part->newText($key, $part->points[$key], $title, $attr);
                 $previous = $key;
             }
         }

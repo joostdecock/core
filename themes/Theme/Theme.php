@@ -40,4 +40,8 @@ class Theme
 
         return $response;
     }
+
+    public function cleanUp()
+    {
+    }
 }

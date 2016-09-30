@@ -86,6 +86,9 @@ class ApiHandler
         endif;
 
         $this->response->send();
+
+        $this->pattern->cleanUp();
+        $this->theme->cleanUp();
         $this->channel->cleanUp();
     }
 

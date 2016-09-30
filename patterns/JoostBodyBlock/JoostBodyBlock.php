@@ -36,7 +36,13 @@ class JoostBodyBlock extends Pattern
         $this->tweakSleeve($model);
         $this->parts['base']->setRender(false);
         
-        //clean up
+        $this->finalizeBody($model);
+        $this->finalizeSleeve($model);
+        
+       }
+
+    public function cleanUp()
+    {
         unset($this->collarShapeFactor);
         unset($this->sleevecapShapeFactor);
         unset($this->collarIteration);
@@ -120,15 +126,30 @@ class JoostBodyBlock extends Pattern
         else if($frontarmpitchY > $p->y(-12) ) {
             $p->addPoint( -20, $p->curveCrossesY(-18, -181, -122, -12, $frontarmpitchY) ); // Bottom curve
         }
-
+    }
+    
+    private function finalizeBody($model) 
+    {
+        $p = $this->parts['body'];
+        
         $frontPath = 'M 1 L 200 L 201 L 5 C 501 182 18 C 181 122 12 C 121 161 16 L 10 C 10 101 1 z';
         $backPath = 'M -17 L -200 L 201 L -5 C -501 -182 -18 C -181 -122 -12 C -121 -161 -16 L -10 C -9 -171 -17 z';
         $pathOptions = ['class' => 'cutline'];
         
         $p->newPath('front', $frontPath, $pathOptions);
         $p->newPath('back', $backPath, $pathOptions);
+        
+        $p->newPoint( 'titleAnchor', $p->x(9), $p->y(12) ); 
+        $attr = ['id' => "body-title", 'class' => 'title'];
+        $p->newText('title', $p->points['titleAnchor'], $p->title, $attr);
+        
+        $p->newSnippet('scalebox', 'scalebox', $p->points['titleAnchor']);
+        $p->newPoint( 'logoAnchor', $p->x(9), $p->y(12)+200 ); 
+        $p->newSnippet('logo', 'logo', $p->points['logoAnchor']);
+        $p->offsetPath('front');
+        $p->offsetPath('back');
     }
-    
+
     private function draftSleeve($model) 
     {
         $p = $this->parts['sleeve'];
@@ -187,10 +208,21 @@ class JoostBodyBlock extends Pattern
         $p->addPoint( 23 , $p->linesCross(11, 12, 5, 21) );
         $p->addPoint( 24 , $p->linesCross(11, 12, 6, 22) );
         
+    }
+    
+    private function finalizeSleeve($model) 
+    {
+        $p = $this->parts['sleeve'];
+        
         $sleevePath = "M 5 C 5 57012 57011 C 57013 701 701 C 701 47013 47011 C 47012 41 4 C 42 48012 48011 C 48013 801 801 C 801 68013 68011 C 68012 6 6 L 22 L 21 z";
         $pathOptions = ['class' => 'cutline'];
         
         $p->newPath('sleeve', $sleevePath, $pathOptions);
+        
+        $p->newPoint( 'titleAnchor', $p->x(4), $p->y(5) ); 
+        $attr = ['id' => "body-title", 'class' => 'title'];
+        $p->newText('title', $p->points['titleAnchor'], $p->title, $attr);
+        $p->offsetPath('sleeve');
     }
     
     private function tweakCollar($model) {

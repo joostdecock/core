@@ -12,8 +12,9 @@ namespace Freesewing;
 class Path
 {
     public $path = null;
-    public $options = array();
+    public $attributes = array();
     public $boundary = null;
+    public $direction;
 
 
     public function setPath($path)
@@ -27,14 +28,25 @@ class Path
         return $this->path;
     }
 
-    public function setOptions($options)
+    public function setDirection($direction)
     {
-        $this->options = $options;
+        if($direction == 'ccw') $this->direction =  'ccw';
+        else $this->direction =  'cw';
     }
 
-    public function getOptions()
+    public function getDirection()
     {
-        return $this->options;
+        return $this->direction;
+    }
+
+    public function setAttributes($attributes)
+    {
+        $this->attributes = $attributes;
+    }
+
+    public function getAttributes()
+    {
+        return $this->attributes;
     }
 
     public function findBoundary($part)

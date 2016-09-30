@@ -37,11 +37,11 @@ class Part
         return $this->title;
     }
 
-    public function newPath($key, $pathString, $options=null)
+    public function newPath($key, $pathString, $attributes=null)
     {
         $path = new \Freesewing\Path();
         $path->setPath($pathString);
-        $path->setOptions($options);
+        $path->setAttributes($attributes);
         $this->addPath($key, $path);
     }
     
@@ -138,8 +138,94 @@ class Part
         $this->boundary->setBottomRight($bottomRight);
     }
 
+    public function offsetPath($key, $offset=10)
+    {
+        $path = $this->paths[$key];
+        $direction = $this->findPathDirection($key);
+        $path->setDirection($direction);
+    }
 
-    /* macros start here */
+    private function findPathDirection($key)
+    {
+        $path = $this->paths[$key];
+        // I love curves, but not here
+        $straightPath = $this->straightenCurves($path->getPath());
+        
+        // Strip out empties and reset keys
+        $pathArray = array_values($this->stripEmptyArrayItems(explode(' ', $straightPath)));
+        
+        $first = true; 
+        $second = true; 
+        $angle = 0;
+        
+        foreach ($pathArray as $key => $p) {
+            $p = rtrim($p);
+            if ($p != '' && $path->isAllowedPathCommand($p)) {
+                $command = $p;
+                if(strtolower($command) == 'z') {
+                    $absoluteAngle = $this->angle($previousPoint, $firstPoint);
+                    $relativeAngle = $absoluteAngle - $previousAbsoluteAngle;
+                    if($relativeAngle > 180) $relativeAngle = -360+$relativeAngle;
+                    if($relativeAngle < -180) $relativeAngle = 360+$relativeAngle;
+                    $angle += $relativeAngle + ($startingAngle - $absoluteAngle);
+                }
+            } 
+            else {
+                if($first) {
+                    $firstPoint = $p;
+                    $first = false; 
+                }
+                if($command == 'L') {
+                    $absoluteAngle = $this->angle($previousPoint, $p);
+                    $relativeAngle = $absoluteAngle - $previousAbsoluteAngle;
+                    if($relativeAngle > 180) $relativeAngle = -360+$relativeAngle;
+                    if($relativeAngle < -180) $relativeAngle = 360+$relativeAngle;
+                    if($second) $startingAngle = $absoluteAngle;
+                    if(!$second) $angle += $relativeAngle;
+                    $second = false;
+                }
+                $previousPoint = $p;
+            }
+            if(@isset($absoluteAngle)) $previousAbsoluteAngle = $absoluteAngle;
+        }
+        if($angle<0) return 'cw';
+        else return 'ccw';
+    }
+
+    private function straightenCurves($pathString)
+    {
+        $pathArray = $this->stripEmptyArrayItems(explode('C', $pathString));
+        if(count($pathArray) == 1) return $pathString; // No curves
+        $path = '';
+        $first = true;
+        foreach ($pathArray as $key => $chunk) {
+            $chunk = rtrim($chunk);
+            if($first) { // Start is always a move
+                $path .= $chunk;
+                $first = false;
+            } 
+            else {
+                $chunkArray = $this->stripEmptyArrayItems(explode(' ', $chunk));
+                $path .= ' L '.array_shift($chunkArray).' L '.array_shift($chunkArray).' L '.array_shift($chunkArray).' ';
+                $path .= implode(' ',$chunkArray);
+            }
+        }
+
+        return $path;
+    }
+
+    private function stripEmptyArrayItems($array)
+    {
+        foreach($array as $key => $value) {
+            if(rtrim($value) != '') $return[$key] = $value;
+        }
+        return $return;
+    }
+
+    /* 
+     * macros start here 
+     *
+     **/
 
     private function loadPoint($key)
     {

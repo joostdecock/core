@@ -167,6 +167,10 @@ class Pattern
         $this->packer->fit($this->layoutBlocks);
         $this->layoutTransforms($this->layoutBlocks);
     }
+    
+    public function cleanUp()
+    {
+    }
 
     private function layoutTransforms($layoutBlocks)
     {

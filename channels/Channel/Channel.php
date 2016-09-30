@@ -28,6 +28,5 @@ class Channel
 
     public function cleanUp()
     {
-        return true;
     }
 }

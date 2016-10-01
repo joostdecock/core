@@ -146,6 +146,7 @@ class ComposerStaticInit6d3c91d11fabeb58ed862308abf0796d
         'Freesewing\\Themes\\SvgOnlyTheme' => __DIR__ . '/../..' . '/themes/SvgOnlyTheme/SvgOnlyTheme.php',
         'Freesewing\\Themes\\Theme' => __DIR__ . '/../..' . '/themes/Theme/Theme.php',
         'Freesewing\\Transform' => __DIR__ . '/../..' . '/src/Transform/Transform.php',
+        'Freesewing\\Utils' => __DIR__ . '/../..' . '/src/Utils/Utils.php',
         'Freesewing\\Yamlr' => __DIR__ . '/../..' . '/src/Yamlr/Yamlr.php',
         'PHPUnit\\Framework\\TestCase' => __DIR__ . '/..' . '/phpunit/phpunit/src/ForwardCompatibility/TestCase.php',
         'PHPUnit_Exception' => __DIR__ . '/..' . '/phpunit/phpunit/src/Exception.php',

@@ -63,6 +63,7 @@ return array(
     'Freesewing\\Themes\\SvgOnlyTheme' => $baseDir . '/themes/SvgOnlyTheme/SvgOnlyTheme.php',
     'Freesewing\\Themes\\Theme' => $baseDir . '/themes/Theme/Theme.php',
     'Freesewing\\Transform' => $baseDir . '/src/Transform/Transform.php',
+    'Freesewing\\Utils' => $baseDir . '/src/Utils/Utils.php',
     'Freesewing\\Yamlr' => $baseDir . '/src/Yamlr/Yamlr.php',
     'PHPUnit\\Framework\\TestCase' => $vendorDir . '/phpunit/phpunit/src/ForwardCompatibility/TestCase.php',
     'PHPUnit_Exception' => $vendorDir . '/phpunit/phpunit/src/Exception.php',

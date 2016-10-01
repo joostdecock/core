@@ -149,10 +149,7 @@ class Part
     {
         $path = $this->paths[$key];
         // I love curves, but not here
-        $straightPath = $this->straightenCurves($path->getPath());
-        
-        // Strip out empties and reset keys
-        $pathArray = array_values($this->stripEmptyArrayItems(explode(' ', $straightPath)));
+        $pathArray = Utils::asScrubbedArray($this->straightenCurves($path->getPath()));
         
         $first = true; 
         $second = true; 
@@ -194,7 +191,7 @@ class Part
 
     private function straightenCurves($pathString)
     {
-        $pathArray = $this->stripEmptyArrayItems(explode('C', $pathString));
+        $pathArray = Utils::asScrubbedArray($pathString, 'C');
         if(count($pathArray) == 1) return $pathString; // No curves
         $path = '';
         $first = true;
@@ -205,7 +202,7 @@ class Part
                 $first = false;
             } 
             else {
-                $chunkArray = $this->stripEmptyArrayItems(explode(' ', $chunk));
+                $chunkArray = Utils::asScrubbedArray($chunk);
                 $path .= ' L '.array_shift($chunkArray).' L '.array_shift($chunkArray).' L '.array_shift($chunkArray).' ';
                 $path .= implode(' ',$chunkArray);
             }

@@ -55,7 +55,7 @@ class Path
             /* 
              * breaking path into array 
              **/
-            $pathAsArray = $pathObject->asArray();
+            $pathAsArray = Utils::asScrubbedArray($pathObject->getPath());
             foreach ($pathAsArray as $index => $data) {
                 /* 
                  * Are we dealing with a command or point index?
@@ -210,10 +210,4 @@ class Path
             return false;
         }
     }
-
-    private function asArray()
-    {
-        return explode(' ', $this->path);
-    }
-
 }

@@ -210,4 +210,32 @@ class Path
             return false;
         }
     }
+    
+    public function breakUp() 
+    {
+        $array = Utils::asScrubbedArray($this->getPath());
+        foreach($array as $i => $step) {
+            if($step == 'M') {
+                $ongoing = 'M '.$array[$i+1];
+                $move = true;
+            } 
+            else {
+                if($step == 'L') {
+                    if(!$move) $ongoing = "M $previous";
+                    $paths[] = [ 'type' => 'L', 'path' => $ongoing.' L '.$array[$i+1] ];
+                }
+                else if($step == 'C') {
+                    if(!$move) $ongoing = "M $previous";
+                    $paths[] = [ 'type' => 'C', 'path' => $ongoing.' C '.$array[$i+1].' '.$array[$i+2].' '.$array[$i+3] ];
+                }
+                else if(strtolower($step) == 'z') {
+                    if($previous != $array[1]) $paths[] = [ 'type' => 'L', 'path' => "M $previous L ".$array[1] ];
+                }
+                unset($ongoing);
+                $move = false;
+            }
+            $previous = $step;
+        }
+        return $paths;
+    }
 }

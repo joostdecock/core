@@ -138,17 +138,66 @@ class Part
         $this->boundary->setBottomRight($bottomRight);
     }
 
-    public function offsetPath($key, $offset=10)
+    public function offsetPath($key, $distance=10)
     {
         $path = $this->paths[$key];
         $direction = $this->findPathDirection($key);
         $path->setDirection($direction);
+        $this->pathOffset($path, $distance);
     }
 
+    private function pathOffset($path, $distance)
+    {
+        $path->chunks = $path->breakUp();
+        foreach($path->chunks as &$chunk) {
+            if($chunk['type'] == 'L') $this->offsetLine($chunk['path'], $path->direction, $distance);
+            else if($chunk['type'] == 'C') $this->offsetLine($chunk['path'], $path->direction, $distance);
+        }
+    }
+    
+    private function offsetLine($line, $direction, $distance)
+    {
+        $points = Utils::asScrubbedArray($line); 
+        $from = $points[1];
+        $to = $points[3];
+        $offset = $this->getLineOffsetPoints($from, $to, $direction, $distance);
+        
+        $this->addPoint("$from$to-$from", $offset['from']);
+        $this->addPoint("$from$to-$to", $offset['to']);
+        $this->newPath($line, "M $from$to-$from L $from$to-$to");
+    }
+
+    private function getLineOffsetPoints($from, $to, $direction, $distance)
+    {
+        $angle = $this->angle($from, $to);
+        if($direction == 'cw') $angle -= 90;
+        else $angle += 90;
+        return [
+            'to' => $this->shift($from, $angle, $distance),
+            'from' => $this->shift($to, $angle, $distance),
+        ];
+    }
+
+    private function offsetCurve($line)
+    {
+        $points = Utils::asScrubbedArray($line); 
+        $from = $points[1];
+        $cp1 = $points[3];
+        $cp2 = $points[4];
+        $to = $points[5];
+        $offsetA = $this->getLineOffsetPoints($from, $cp1, $direction, $distance);
+        $offsetB = $this->getLineOffsetPoints($to, $cp2, $direction, $distance);
+        
+        $this->addPoint("$from$cp1-$from", $offsetA['from']);
+        $this->addPoint("$from$cp1-$cp1", $offsetA['to']);
+        $this->addPoint("$to$cp2-$to", $offsetB['from']);
+        $this->addPoint("$to$cp2-$cp2", $offsetB['to']);
+        $this->newPath("$from$cp1$cp2$to", "M $from C $cp1 $cp2 $to");
+    }
+    
     private function findPathDirection($key)
     {
         $path = $this->paths[$key];
-        // I love curves, but not here
         $pathArray = Utils::asScrubbedArray($this->straightenCurves($path->getPath()));
         
         $first = true; 

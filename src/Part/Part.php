@@ -141,18 +141,24 @@ class Part
     public function offsetPath($key, $distance=10)
     {
         $path = $this->paths[$key];
-        $direction = $this->findPathDirection($key);
-        $path->setDirection($direction);
-        $this->pathOffset($path, $distance);
+        $path->setDirection($this->findPathDirection($key));
+        
+        $this->offsetStack = $this->pathOffsetAsStack(new \Freesewing\Stack(), $path, $distance);
+
+        foreach($this->offsetStack as $key => &$entry) {
+            if($entry['type'] == 'curve') {
+                //$entry['worst'] = $this->findWorstOffset($entry);
+            }
+        }
     }
 
-    private function pathOffset($path, $distance)
+    private function pathOffsetAsStack($stack, $path, $distance)
     {
-        $path->chunks = $path->breakUp();
-        foreach($path->chunks as &$chunk) {
-            if($chunk['type'] == 'L') $this->offsetLine($chunk['path'], $path->direction, $distance);
-            if($chunk['type'] == 'C') $this->offsetCurve($chunk['path'], $path->direction, $distance);
+        foreach($path->breakUp() as &$chunk) {
+            if($chunk['type'] == 'L') $stack->push($this->offsetLine($chunk['path'], $path->direction, $distance));
+            if($chunk['type'] == 'C') $stack->push($this->offsetCurve($chunk['path'], $path->direction, $distance));
         }
+        return $stack;
     }
     
     private function offsetLine($line, $direction, $distance)
@@ -169,6 +175,7 @@ class Part
         $this->addPoint($fromId, $offset[0]);
         $this->addPoint($toId, $offset[1]);
         $this->newPath("pathoffset-$pathId", "M $fromId L $toId");
+        return [ 0 => ['type' => 'line', 'key' => "pathoffset-$pathId", 'original' => [$from, $to], 'offset' => [$fromId, $toId]]];
     }
 
     private function getLineOffsetPoints($from, $to, $direction, $distance)
@@ -235,8 +242,54 @@ class Part
         $this->addPoint($toId, $offset[3]);
         $pathString = "M $fromId C $cp1Id $cp2Id $toId";
         $this->newPath("pathoffset-$pathId", $pathString);
+        
+        $return = [ 0 => ['type' => 'curve', 'key' => "pathoffset-$pathId", 'original' => [$from, $cp1, $cp2, $to], 'offset' => [$fromId, $cp1Id, $cp2Id, $toId]]];
+        $score = $this->findWorstOffsetPoint($return, $distance);
+        if($score > 5) {
+            
+        }
+        return $return;
     }
     
+    private function findWorstOffsetPoint($entry, $distance)
+    {
+         // HERE 
+        $origFrom = $this->loadPoint($entry['original'][0]);
+        $origCp1 = $this->loadPoint($entry['original'][1]);
+        $origCp2 = $this->loadPoint($entry['original'][2]);
+        $origTo = $this->loadPoint($entry['original'][3]);
+
+        $offsetFrom = $this->loadPoint($entry['offset'][0]);
+        $offsetCp1 = $this->loadPoint($entry['offset'][1]);
+        $offsetCp2 = $this->loadPoint($entry['offset'][2]);
+        $offsetTo = $this->loadPoint($entry['offset'][3]);
+
+        $this->newPoint('#offsetHelperOrig', 0, 0);
+        $this->newPoint('#offsetHelperOffset', 0, 0);
+
+        $worstDelta = 0;
+        for ($i = 0; $i < 100; $i++) {
+            $t = $i / 100;
+            $xOrig = $this->bezierPoint($t, $origFrom->getX(), $origCp1->getX(), $origCp2->getX(), $origTo->getX());
+            $yOrig = $this->bezierPoint($t, $origFrom->getY(), $origCp1->getY(), $origCp2->getY(), $origTo->getY());
+            $xOffset = $this->bezierPoint($t, $offsetFrom->getX(), $offsetCp1->getX(), $offsetCp2->getX(), $offsetTo->getX());
+            $yOffset = $this->bezierPoint($t, $offsetFrom->getY(), $offsetCp1->getY(), $offsetCp2->getY(), $offsetTo->getY());
+            
+            $this->points['#offsetHelperOrig']->setX($xOrig);
+            $this->points['#offsetHelperOrig']->setY($yOrig);
+            $this->points['#offsetHelperOffset']->setX($xOffset);
+            $this->points['#offsetHelperOffset']->setY($yOffset);
+           
+            $offset = $this->distance('#offsetHelperOrig', '#offsetHelperOffset');
+            $delta = abs($offset/($distance/100) -100);
+            if($delta>$worstDelta) {
+                $worstDelta = round($delta,2);
+                $worstIndex = $i;
+            }
+        }
+        return ['score' => $worstDelta, 'index' => $worstIndex];
+    }
+
     private function findPathDirection($key)
     {
         $path = $this->paths[$key];
@@ -798,11 +851,11 @@ class Part
         return $a;
     }
 
-    private function cubicBezierDelta($start, $cp1, $cp2, $end, $split,$STEPS=1000) {
-        $start = $this->loadPoint($start);
+    private function cubicBezierDelta($from, $cp1, $cp2, $to, $split) {
+        $from = $this->loadPoint($from);
         $cp1 = $this->loadPoint($cp1);
         $cp2 = $this->loadPoint($cp2);
-        $end = $this->loadPoint($end);
+        $to = $this->loadPoint($to);
         $split = $this->loadPoint($split);
         /* 
           Approximate delta (between 0 and 1) of a point 'split' on 
@@ -814,10 +867,10 @@ class Part
         */	
         $best_t = NULL;
         $best_distance = 100000000;
-        for ($i = 0; $i <= $STEPS; $i++) {
-          $t = $i / $STEPS;
-          $x = $this->bezierPoint($t, $start->getX(), $cp1->getX(), $cp2->getX(), $end->getX());
-          $y = $this->bezierPoint($t, $start->getY(), $cp1->getY(), $cp2->getY(), $end->getY());
+        for ($i = 0; $i <= $this->steps; $i++) {
+          $t = $i / $this->steps;
+          $x = $this->bezierPoint($t, $from->getX(), $cp1->getX(), $cp2->getX(), $to->getX());
+          $y = $this->bezierPoint($t, $from->getY(), $cp1->getY(), $cp2->getY(), $to->getY());
           $distance = hopLen($split, array($x,$y));
           if($distance<$best_distance) {
             $best_t = $t;
@@ -827,21 +880,53 @@ class Part
         return $best_t;
     }
 
-    function splitArc($start,$cp1,$cp2,$end,$split) {
-        $t = cubicBezierDelta($start,$cp1,$cp2,$end,$split);
-        $start = $this->loadPoint($start);
+    public function addSplitCurve($prefix, $from,$cp1,$cp2,$to,$split,$splitOnDelta=false) {
+        $points = $this->splitCurve($from,$cp1,$cp2,$to,$split,$splitOnDelta);
+        $this->addPoint($prefix.'1', $points[0]);
+        $this->addPoint($prefix.'2', $points[1]);
+        $this->addPoint($prefix.'3', $points[2]);
+        $this->addPoint($prefix.'4', $points[3]);
+        $this->addPoint($prefix.'5', $points[4]);
+        $this->addPoint($prefix.'6', $points[5]);
+        $this->addPoint($prefix.'7', $points[6]);
+        $this->addPoint($prefix.'8', $points[7]);
+    }
+
+    public function splitCurve($from,$cp1,$cp2,$to,$split,$splitOnDelta=false) {
+        if($splitOnDelta) $t = $split;
+        else $t = cubicBezierDelta($from,$cp1,$cp2,$to,$split);
+
+        $curve1 = $this->calculateSplitCurvePoints($from,$cp1,$cp2,$to,$t);
+        $t = 1-$t;
+        $curve2 = $this->calculateSplitCurvePoints($to,$cp2,$cp1,$from,$t);
+
+        return [
+            $curve1[0],
+            $curve1[1],
+            $curve1[2],
+            $curve1[3],
+            $curve2[0],
+            $curve2[1],
+            $curve2[2],
+            $curve2[3],
+        ];
+    }
+
+    private function calculateSplitCurvePoints($from,$cp1,$cp2,$to,$t)
+    {
+        $from = $this->loadPoint($from);
         $cp1 = $this->loadPoint($cp1);
         $cp2 = $this->loadPoint($cp2);
-        $end = $this->loadPoint($end);
+        $to = $this->loadPoint($to);
     
-        $x1 = $start[0];
-        $y1 = $start[1];
-        $x2 = $cp1[0];
-        $y2 = $cp1[1];
-        $x3 = $cp2[0];
-        $y3 = $cp2[1];
-        $x4 = $end[0];
-        $y4 = $end[1];
+        $x1 = $from->getX();
+        $y1 = $from->getY();
+        $x2 = $cp1->getX();
+        $y2 = $cp1->getY();
+        $x3 = $cp2->getX();
+        $y3 = $cp2->getY();
+        $x4 = $to->getX();
+        $y4 = $to->getY();
     
         $x12 = ($x2-$x1)*$t+$x1;
         $y12 = ($y2-$y1)*$t+$y1;
@@ -860,15 +945,26 @@ class Part
     
         $x1234 = ($x234-$x123)*$t+$x123;
         $y1234 = ($y234-$y123)*$t+$y123;
-    
-        return array(
-                 array($x1, $y1), 
-                 array($x12, $y12), 
-                 array($x123, $y123), 
-                 array($x1234, $y1234)
-               ); 
+
+        $cp1 = new \Freesewing\Point();
+        $cp2 = new \Freesewing\Point();
+        $to = new \Freesewing\Point();
+        
+        $cp1->setX($x12);
+        $cp1->setY($y12);
+        $cp2->setX($x123);
+        $cp2->setY($y123);
+        $to->setX($x1234);
+        $to->setY($y1234);
+
+        return [
+            $from,
+            $cp1,
+            $cp2,
+            $to,
+        ];
     }
-    
+
     /** returns distance for controle point to make a circle
     * Note that circle is not perfect, but close enough
     * Takes radius of circle as input

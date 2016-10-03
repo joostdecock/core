@@ -48,6 +48,7 @@ return array(
     'Freesewing\\Point' => $baseDir . '/src/Point/Point.php',
     'Freesewing\\Response' => $baseDir . '/src/Response/Response.php',
     'Freesewing\\Snippet' => $baseDir . '/src/Snippet/Snippet.php',
+    'Freesewing\\Stack' => $baseDir . '/src/Stack/Stack.php',
     'Freesewing\\SvgAttributes' => $baseDir . '/src/SvgAttributes/SvgAttributes.php',
     'Freesewing\\SvgBlock' => $baseDir . '/src/SvgBlock/SvgBlock.php',
     'Freesewing\\SvgComments' => $baseDir . '/src/SvgComments/SvgComments.php',

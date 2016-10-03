@@ -131,6 +131,7 @@ class ComposerStaticInit6d3c91d11fabeb58ed862308abf0796d
         'Freesewing\\Point' => __DIR__ . '/../..' . '/src/Point/Point.php',
         'Freesewing\\Response' => __DIR__ . '/../..' . '/src/Response/Response.php',
         'Freesewing\\Snippet' => __DIR__ . '/../..' . '/src/Snippet/Snippet.php',
+        'Freesewing\\Stack' => __DIR__ . '/../..' . '/src/Stack/Stack.php',
         'Freesewing\\SvgAttributes' => __DIR__ . '/../..' . '/src/SvgAttributes/SvgAttributes.php',
         'Freesewing\\SvgBlock' => __DIR__ . '/../..' . '/src/SvgBlock/SvgBlock.php',
         'Freesewing\\SvgComments' => __DIR__ . '/../..' . '/src/SvgComments/SvgComments.php',

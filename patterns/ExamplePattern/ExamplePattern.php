@@ -36,7 +36,7 @@ class ExamplePattern extends Pattern
     {
         $size = $this->config['options']['square_size'];
         $p = $this->parts['square'];
-        
+
         $p->newPoint(1,   0,   0);
         $p->newPoint(2, 100,   0);
         $p->newPoint(3, $p->x(2), 100);
@@ -44,9 +44,13 @@ class ExamplePattern extends Pattern
         $p->newPoint(5,  50,  50);
 
         $p->newPath('outline', 'M 3 C 4 1 5 z', ['class' => 'cutline']);
-        $p->offsetPath('outline');
-        $p->newPath('outline2', 'M 3 C 5 1 4 z', ['class' => 'cutline']);
-        $p->offsetPath('outline2');
+        //$p->offsetPath('outline');
+        //$p->newPath('outline2', 'M 3 C 5 1 4 z', ['class' => 'cutline']);
+        //$p->offsetPath('outline2');
+
+        $grabbag = $p->addSplitCurve('s',3,5,1,4,0.6,1);
+        $p->newPath('splitA', 'M s1 C s2 s3 s4 z', ['class' => 'cutline']);
+        $p->newPath('splitB', 'M s5 C s6 s7 s8 z', ['class' => 'cutline']);
 
         $p->newPoint('center', 150, 50); 
         $p->newPoint(120, $p->x('center'), $p->y('center') - 40);

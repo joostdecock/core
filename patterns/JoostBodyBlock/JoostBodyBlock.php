@@ -128,7 +128,7 @@ class JoostBodyBlock extends Pattern
     {
         $p = $this->parts['body'];
         
-        $frontPath = 'M 1 L 200 L 201 L 5 C 501 182 18 C 181 122 12 C 121 161 16 L 10 C 10 101 1 z';
+        $frontPath = 'M 200 L 201 L 5 C 501 182 18 C 181 122 12 C 121 161 16 L 10 C 10 101 1 z';
         $backPath = 'M -17 L -200 L 201 L -5 C -501 -182 -18 C -181 -122 -12 C -121 -161 -16 L -10 C -9 -171 -17 z';
         $pathOptions = ['class' => 'cutline'];
         

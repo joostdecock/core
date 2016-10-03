@@ -151,7 +151,7 @@ class Part
         $path->chunks = $path->breakUp();
         foreach($path->chunks as &$chunk) {
             if($chunk['type'] == 'L') $this->offsetLine($chunk['path'], $path->direction, $distance);
-            else if($chunk['type'] == 'C') $this->offsetLine($chunk['path'], $path->direction, $distance);
+            if($chunk['type'] == 'C') $this->offsetCurve($chunk['path'], $path->direction, $distance);
         }
     }
     
@@ -162,9 +162,13 @@ class Part
         $to = $points[3];
         $offset = $this->getLineOffsetPoints($from, $to, $direction, $distance);
         
-        $this->addPoint("$from$to-$from", $offset['from']);
-        $this->addPoint("$from$to-$to", $offset['to']);
-        $this->newPath($line, "M $from$to-$from L $from$to-$to");
+        $fromId = hash('crc32', $line.$from);
+        $toId = hash('crc32', $line.$to);
+        $pathId = hash('crc32', $line);
+
+        $this->addPoint($fromId, $offset[0]);
+        $this->addPoint($toId, $offset[1]);
+        $this->newPath("pathoffset-$pathId", "M $fromId L $toId");
     }
 
     private function getLineOffsetPoints($from, $to, $direction, $distance)
@@ -173,26 +177,64 @@ class Part
         if($direction == 'cw') $angle -= 90;
         else $angle += 90;
         return [
-            'to' => $this->shift($from, $angle, $distance),
-            'from' => $this->shift($to, $angle, $distance),
+            $this->shift($from, $angle, $distance),
+            $this->shift($to, $angle, $distance),
         ];
     }
 
-    private function offsetCurve($line)
+    private function getCurveOffsetPoints($from, $cp1, $cp2, $to, $direction, $distance)
+    {
+        if ($from == $cp1) $halfA = $this->getNonCubicCurveOffsetPoints('cp1', $from, $cp1, $cp2, $to, $direction, $distance);
+        else $halfA = $this->getLineOffsetPoints($from, $cp1, $direction, $distance);
+        if ($cp2 == $to) $halfB = $this->getNonCubicCurveOffsetPoints('cp2', $from, $cp1, $cp2, $to, $direction, $distance);
+        else $halfB = $this->getLineOffsetPoints($cp2, $to, $direction, $distance);
+        return [
+            $halfA[0],
+            $halfA[1],
+            $halfB[0],
+            $halfB[1],
+        ];
+    }
+    
+    private function getNonCubicCurveOffsetPoints($missing, $from, $cp1, $cp2, $to, $direction, $distance)
+    {
+        if($missing == 'cp1') {
+            $almostTheSamePoint = $this->addPoint('#shifthelper', $this->shiftAlong($from, $cp1, $cp2, $to, 0.5));
+            $angle = $this->angle($from, '#shifthelper');
+            $p = $from;
+        }
+        else {
+            $almostTheSamePoint = $this->addPoint('#shifthelper', $this->shiftAlong($to, $cp2, $cp1, $from, 0.5));
+            $angle = $this->angle('#shifthelper', $to);
+            $p = $to;
+        }
+        if($direction == 'cw') $angle -= 90;
+        else $angle += 90;
+        
+        $offset = $this->shift($p, $angle, $distance);
+        return [ $offset, $offset ];
+    }
+
+    private function offsetCurve($line, $direction, $distance)
     {
         $points = Utils::asScrubbedArray($line); 
         $from = $points[1];
         $cp1 = $points[3];
         $cp2 = $points[4];
         $to = $points[5];
-        $offsetA = $this->getLineOffsetPoints($from, $cp1, $direction, $distance);
-        $offsetB = $this->getLineOffsetPoints($to, $cp2, $direction, $distance);
         
-        $this->addPoint("$from$cp1-$from", $offsetA['from']);
-        $this->addPoint("$from$cp1-$cp1", $offsetA['to']);
-        $this->addPoint("$to$cp2-$to", $offsetB['from']);
-        $this->addPoint("$to$cp2-$cp2", $offsetB['to']);
-        $this->newPath("$from$cp1$cp2$to", "M $from C $cp1 $cp2 $to");
+        $offset = $this->getCurveOffsetPoints($from, $cp1, $cp2, $to, $direction, $distance);
+        $fromId = hash('crc32', $line.$from);
+        $cp1Id = hash('crc32', $line.$cp1);
+        $cp2Id = hash('crc32', $line.$cp2);
+        $toId = hash('crc32', $line.$to);
+        $pathId = hash('crc32', $line);
+        $this->addPoint($fromId, $offset[0]);
+        $this->addPoint($cp1Id, $offset[1]);
+        $this->addPoint($cp2Id, $offset[2]);
+        $this->addPoint($toId, $offset[3]);
+        $pathString = "M $fromId C $cp1Id $cp2Id $toId";
+        $this->newPath("pathoffset-$pathId", $pathString);
     }
     
     private function findPathDirection($key)

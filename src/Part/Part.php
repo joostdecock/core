@@ -19,6 +19,7 @@ class Part
     public $title = null;
     public $boundary = array();
     public $render = true;
+    public $maxOffsetTolerance = 5;
 
     private $steps = 1000;
 
@@ -143,17 +144,53 @@ class Part
         $path = $this->paths[$key];
         $path->setDirection($this->findPathDirection($key));
         
-        $this->offsetStack = $this->pathOffsetAsStack(new \Freesewing\Stack(), $path, $distance);
+        $stack = $this->pathOffsetAsStack($path, $distance);
+        $this->aStack = $stack;
+        $this->fillPathStackGaps($stack);
 
-        foreach($this->offsetStack as $key => &$entry) {
-            if($entry['type'] == 'curve') {
-                //$entry['worst'] = $this->findWorstOffset($entry);
-            }
-        }
     }
 
-    private function pathOffsetAsStack($stack, $path, $distance)
+    private function fillPathStackGaps($stack)
     {
+        $chunks = count($stack->items);
+        $count = 1;
+        foreach($stack->items as $chunk) {
+            $id = Utils::getUid('#po_');
+            if($count == $chunks) $next = $stack->items[0];
+            else $next = $stack->items[$count];
+            if($chunk['type'] == 'line' && $next['type'] == 'line') {
+                if($this->distance($chunk['offset'][1], $next['offset'][0]) > 0.25) {
+                    $this->addPoint( $id , $this->linesCross($chunk['offset'][0], $chunk['offset'][1],  $next['offset'][0],  $next['offset'][1]) );
+                    $pathString = 'M '.$chunk['offset'][1]." L $id L ". $next['offset'][0];
+                }
+            } 
+            else if($chunk['type'] == 'line' && $next['type'] == 'curve') {
+                if($this->distance($chunk['offset'][1], $next['offset'][0]) > 0.25) {
+                    $this->addPoint( '#po_helper' , $this->shiftAlong($next['offset'][0], $next['offset'][1],  $next['offset'][2],  $next['offset'][3], 0.5) );
+                    $this->addPoint( $id , $this->linesCross($chunk['offset'][0], $chunk['offset'][1],  '#po_helper',  $next['offset'][0]) );
+                    $pathString = 'M '.$chunk['offset'][1]." L $id L ". $next['offset'][0]; 
+                }
+            } 
+            else if($chunk['type'] == 'curve' && $next['type'] == 'line') {
+                if($this->distance($chunk['offset'][1], $next['offset'][0]) > 0.25) {
+                    $this->addPoint( '#po_helper' , $this->shiftAlong($chunk['offset'][3], $chunk['offset'][2],  $chunk['offset'][1],  $chunk['offset'][0], 0.5) );
+                    $this->addPoint( $id , $this->linesCross($chunk['offset'][3], '#po_helper', $next['offset'][0], $next['offset'][1]) );
+                    $pathString = 'M '.$chunk['offset'][3]." L $id L ". $next['offset'][0]; 
+                }
+            } 
+            else if($chunk['type'] == 'curve' && $next['type'] == 'curve') {
+                if($this->distance($chunk['offset'][1], $next['offset'][0]) > 0.25) {
+                    $pathString = 'M '.$chunk['offset'][3].' L '. $next['offset'][0]; 
+                }
+            }
+            $this->newPath($id, $pathString); //REMOVE
+            $count++;
+        } 
+    }
+
+    private function pathOffsetAsStack($path, $distance)
+    {
+        $stack = new \Freesewing\Stack();
         foreach($path->breakUp() as &$chunk) {
             if($chunk['type'] == 'L') $stack->push($this->offsetLine($chunk['path'], $path->direction, $distance));
             if($chunk['type'] == 'C') $stack->push($this->offsetCurve($chunk['path'], $path->direction, $distance));
@@ -168,13 +205,13 @@ class Part
         $to = $points[3];
         $offset = $this->getLineOffsetPoints($from, $to, $direction, $distance);
         
-        $fromId = hash('crc32', $line.$from);
-        $toId = hash('crc32', $line.$to);
-        $pathId = hash('crc32', $line);
+        $fromId = Utils::getUid('#po_');
+        $toId = Utils::getUid('#po_');
+        $pathId = Utils::getUid('#po_');
 
         $this->addPoint($fromId, $offset[0]);
         $this->addPoint($toId, $offset[1]);
-        $this->newPath("pathoffset-$pathId", "M $fromId L $toId");
+        $this->newPath("pathoffset-$pathId", "M $fromId L $toId"); //REMOVE
         return [ 0 => ['type' => 'line', 'key' => "pathoffset-$pathId", 'original' => [$from, $to], 'offset' => [$fromId, $toId]]];
     }
 
@@ -222,36 +259,45 @@ class Part
         return [ $offset, $offset ];
     }
 
-    private function offsetCurve($line, $direction, $distance)
+    private function offsetCurve($curve, $direction, $distance)
     {
-        $points = Utils::asScrubbedArray($line); 
+        $points = Utils::asScrubbedArray($curve); 
         $from = $points[1];
         $cp1 = $points[3];
         $cp2 = $points[4];
         $to = $points[5];
         
         $offset = $this->getCurveOffsetPoints($from, $cp1, $cp2, $to, $direction, $distance);
-        $fromId = hash('crc32', $line.$from);
-        $cp1Id = hash('crc32', $line.$cp1);
-        $cp2Id = hash('crc32', $line.$cp2);
-        $toId = hash('crc32', $line.$to);
-        $pathId = hash('crc32', $line);
+        $fromId = Utils::getUid('#po_');
+        $cp1Id  = Utils::getUid('#po_'); 
+        $cp2Id  = Utils::getUid('#po_'); 
+        $toId   = Utils::getUid('#po_');
+        $pathId = Utils::getUid('#po_'); 
+
         $this->addPoint($fromId, $offset[0]);
         $this->addPoint($cp1Id, $offset[1]);
         $this->addPoint($cp2Id, $offset[2]);
         $this->addPoint($toId, $offset[3]);
         $pathString = "M $fromId C $cp1Id $cp2Id $toId";
-        $this->newPath("pathoffset-$pathId", $pathString);
+        $this->newPath("pathoffset-$pathId", $pathString);//REMOVE
         
-        $return = [ 0 => ['type' => 'curve', 'key' => "pathoffset-$pathId", 'original' => [$from, $cp1, $cp2, $to], 'offset' => [$fromId, $cp1Id, $cp2Id, $toId]]];
-        $score = $this->findWorstOffsetPoint($return, $distance);
-        if($score > 5) {
-            
+        $chunks[] = ['type' => 'curve', 'key' => "pathoffset-$pathId", 'original' => [$from, $cp1, $cp2, $to], 'offset' => [$fromId, $cp1Id, $cp2Id, $toId]];
+        $tolerance = $this->offsetTolerance($chunks[0], $distance);
+        if($tolerance['score'] > $this->maxOffsetTolerance) {
+            $splitId = Utils::getUid('#po_');
+            $this->addSplitCurve($splitId.'-', $from, $cp1, $cp2, $to, $tolerance['index'],1);
+            unset($chunks);
+            $subDivide = $this->offsetCurve("M $splitId-1 C $splitId-2 $splitId-3 $splitId-4", $direction, $distance);
+            foreach($subDivide as $chunk) $chunks[] = $chunk;
+            $subDivide = $this->offsetCurve("M $splitId-8 C $splitId-7 $splitId-6 $splitId-5", $direction, $distance);
+            foreach($subDivide as $chunk) $chunks[] = $chunk;
         }
-        return $return;
+        return $chunks;
     }
+
+   
     
-    private function findWorstOffsetPoint($entry, $distance)
+    private function offsetTolerance($entry, $distance)
     {
          // HERE 
         $origFrom = $this->loadPoint($entry['original'][0]);
@@ -264,8 +310,8 @@ class Part
         $offsetCp2 = $this->loadPoint($entry['offset'][2]);
         $offsetTo = $this->loadPoint($entry['offset'][3]);
 
-        $this->newPoint('#offsetHelperOrig', 0, 0);
-        $this->newPoint('#offsetHelperOffset', 0, 0);
+        $this->newPoint('#po_orig', 0, 0);
+        $this->newPoint('#po_offset', 0, 0);
 
         $worstDelta = 0;
         for ($i = 0; $i < 100; $i++) {
@@ -275,16 +321,16 @@ class Part
             $xOffset = $this->bezierPoint($t, $offsetFrom->getX(), $offsetCp1->getX(), $offsetCp2->getX(), $offsetTo->getX());
             $yOffset = $this->bezierPoint($t, $offsetFrom->getY(), $offsetCp1->getY(), $offsetCp2->getY(), $offsetTo->getY());
             
-            $this->points['#offsetHelperOrig']->setX($xOrig);
-            $this->points['#offsetHelperOrig']->setY($yOrig);
-            $this->points['#offsetHelperOffset']->setX($xOffset);
-            $this->points['#offsetHelperOffset']->setY($yOffset);
+            $this->points['#po_orig']->setX($xOrig);
+            $this->points['#po_orig']->setY($yOrig);
+            $this->points['#po_offset']->setX($xOffset);
+            $this->points['#po_offset']->setY($yOffset);
            
-            $offset = $this->distance('#offsetHelperOrig', '#offsetHelperOffset');
+            $offset = $this->distance('#po_orig', '#po_offset');
             $delta = abs($offset/($distance/100) -100);
             if($delta>$worstDelta) {
                 $worstDelta = round($delta,2);
-                $worstIndex = $i;
+                $worstIndex = $t;
             }
         }
         return ['score' => $worstDelta, 'index' => $worstIndex];
@@ -592,13 +638,13 @@ class Part
         
         // If line is vertical, handle this special case
         if($point1->getX() == $point2->getX()) { 
-            $slope = getSlope($key3, $key4);
+            $slope = $this->getSlope($key3, $key4);
             $i = $point3->getY()  -  ( $slope * $point3->getX() );
             $x = $point1->getX();
             $y =  $slope * $x + $i;
         }
         elseif( $point3->getX() == $point4->getX() ) { 
-            $slope = getSlope($key1, $key2);
+            $slope = $this->getSlope($key1, $key2);
             $i = $point1->getY()  -  ( $slope * $point1->getX() );
             $x = $point3->getX();
             $y =  $slope * $x + $i;

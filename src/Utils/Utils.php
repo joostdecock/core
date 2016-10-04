@@ -19,4 +19,9 @@ class Utils
         }
         return $return;
     }
+
+    public static function getUid($prefix='')
+    {
+        return uniqid($prefix);
+    }
 }

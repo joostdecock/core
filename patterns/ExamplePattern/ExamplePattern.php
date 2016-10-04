@@ -48,7 +48,7 @@ class ExamplePattern extends Pattern
         //$p->newPath('outline2', 'M 3 C 5 1 4 z', ['class' => 'cutline']);
         //$p->offsetPath('outline2');
 
-        $grabbag = $p->addSplitCurve('s',3,5,1,4,0.6,1);
+        $p->addSplitCurve('s',3,5,1,4,0.6,1);
         $p->newPath('splitA', 'M s1 C s2 s3 s4 z', ['class' => 'cutline']);
         $p->newPath('splitB', 'M s5 C s6 s7 s8 z', ['class' => 'cutline']);
 

@@ -142,8 +142,8 @@ class JoostBodyBlock extends Pattern
         $p->newSnippet('scalebox', 'scalebox', $p->points['titleAnchor']);
         $p->newPoint( 'logoAnchor', $p->x(9), $p->y(12)+200 ); 
         $p->newSnippet('logo', 'logo', $p->points['logoAnchor']);
-        $p->offsetPath('front');
-        $p->offsetPath('back');
+        $p->offsetPath('fsa', 'front', 10);
+        $p->offsetPath('bsa', 'back', 10);
     }
 
     private function draftSleeve($model) 
@@ -218,7 +218,7 @@ class JoostBodyBlock extends Pattern
         $p->newPoint( 'titleAnchor', $p->x(4), $p->y(5) ); 
         $attr = ['id' => "body-title", 'class' => 'title'];
         $p->newText('title', $p->points['titleAnchor'], $p->title, $attr);
-        $p->offsetPath('sleeve');
+        $p->offsetPath('ssa', 'sleeve');
     }
     
     private function tweakCollar($model) {

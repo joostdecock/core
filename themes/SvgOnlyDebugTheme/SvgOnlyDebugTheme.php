@@ -15,7 +15,7 @@ class SvgOnlyDebugTheme extends Theme
     {
         foreach($pattern->parts as $partKey => $part) {
             if($part->render) {
-                $this->debugPaths($part);
+                if(!isset($_REQUEST['only'])) $this->debugPaths($part);
                 $this->debugPoints($part);
             }
         }
@@ -24,7 +24,11 @@ class SvgOnlyDebugTheme extends Theme
     private function debugPoints($part)
     {
         foreach($part->points as $key => $point) {
-            $this->debugPoint($key, $point, $part);
+            if(isset($_REQUEST['only'])) {
+                $only = \Freesewing\Utils::asScrubbedArray($_REQUEST['only']); 
+                if(in_array($key, $only)) $this->debugPoint($key, $point, $part);
+            }
+            else $this->debugPoint($key, $point, $part);
         }
     }
 
@@ -33,8 +37,7 @@ class SvgOnlyDebugTheme extends Theme
         if(!isset($this->pointsThemed[$key])) {
             $title = $this->debugPointDescription($key,$point);
             $attr = ['id' => "point-$key", 'onmouseover' => "pointHover('point-$key')", 'onmouseout' => "pointUnhover('point-$key')"];
-            $part->newSnippet($key, 'point', $point, $attr, $title);
-            $attr = ['id' => "point-$key-tooltip", 'class' => 'tooltip', 'visibility' => 'hidden'];
+            $part->newSnippet($key, 'point', $point, $attr, $title); $attr = ['id' => "point-$key-tooltip", 'class' => 'tooltip', 'visibility' => 'hidden'];
             $part->newText($key, $point, $title, $attr);
         }
     }

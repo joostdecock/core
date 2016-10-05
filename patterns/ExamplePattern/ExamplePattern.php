@@ -34,46 +34,19 @@ class ExamplePattern extends Pattern
 
     private function draftSquare()
     {
-        $size = $this->config['options']['square_size'];
+        //$size = $this->config['options']['square_size'];
         $p = $this->parts['square'];
 
         $p->newPoint(1,   0,   0);
         $p->newPoint(2, 100,   0);
-        $p->newPoint(3, $p->x(2), 100);
-        $p->newPoint(4,   0, 100);
-        $p->newPoint(5,  50,  50);
+        $p->newPoint(3, 100, 100);
+        $p->newPoint(4, 0, 100);
+        $p->newPoint(5, 50, 50);
 
-        $p->newPath('outline', 'M 3 C 4 1 5 z', ['class' => 'cutline']);
-        //$p->offsetPath('outline');
-        //$p->newPath('outline2', 'M 3 C 5 1 4 z', ['class' => 'cutline']);
-        //$p->offsetPath('outline2');
+//        $p->newPath('outline', 'M 1 L 2 C 5 5 3 L 4 C 5 5 1 z', ['class' => 'cutline']);
+        $p->newPath('outline', 'M 1 L 4 C 5 5 3 L 2 L 5 z ', ['class' => 'cutline']);
+        //$p->newPath('outline', 'M 1 L 2 L 3 z', ['class' => 'cutline']);
+        $p->offsetPath('offset', 'outline', 10);
 
-        $p->addSplitCurve('s',3,5,1,4,0.6,1);
-        $p->newPath('splitA', 'M s1 C s2 s3 s4 z', ['class' => 'cutline']);
-        $p->newPath('splitB', 'M s5 C s6 s7 s8 z', ['class' => 'cutline']);
-
-        $p->newPoint('center', 150, 50); 
-        $p->newPoint(120, $p->x('center'), $p->y('center') - 40);
-        $angle = 0;
-        $clockPath = 'M 120 L center ';
-        for($i=10;$i<120;$i+=10) {
-            $angle -= 30;
-            $p->addPoint($i, $p->rotate(120, 'center', $angle));
-            $clockPath .= "M $i L center ";
-        }
-        
-        $p->newPath('clock', $clockPath, ['class' => 'cutline']);
-        
-        $clockpath2 = '';
-        $p->addPoint('center2', $p->shift('center', 0, 50));
-        for($i=10;$i<130;$i+=10) {
-            
-            $point = $p->rotate($i, 'center', -15);
-            $point->setX($point->getX()+50);
-            $p->addPoint($i.'.2', $point);
-            $clockPath2 .= "M $i.2 L center2 ";
-        }
-        
-        $p->newPath('clock2', $clockPath2, ['class' => 'cutline']);
     }
 }

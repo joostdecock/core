@@ -1,0 +1,17 @@
+function pointHover(id) {
+    var point = document.getElementById(id);
+    var cx = point.getAttribute('x');
+    var cy = point.getAttribute('y');
+    var scale = 2;
+    cx = cx-scale*cx;
+    cy = cy-scale*cy;
+    point.setAttribute("transform", 'matrix('+scale+', 0, 0, '+scale+', '+cx+', '+cy+')');
+    var tooltip = document.getElementById(id+'-tooltip');
+    tooltip.setAttribute("visibility", 'visible');
+  }
+  function pointUnhover(id) {
+    var point = document.getElementById(id);
+    point.setAttribute("transform", '');
+    var tooltip = document.getElementById(id+'-tooltip');
+    tooltip.setAttribute("visibility", 'hidden');
+  }

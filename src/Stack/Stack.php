@@ -23,6 +23,6 @@ class Stack
         foreach($this->items as $key => $item) {
             if($item == $search) $targetKey = $key;
         }
-        if($targetKey) array_splice($this->items, $targetKey, 1, $replace); 
+        if($targetKey !== false) array_splice($this->items, $targetKey, 1, $replace); 
     }
 }

@@ -23,10 +23,11 @@ class JoostBodyBlock extends Pattern
 
     public function draft($model)
     {
-        $this->helpers = array();
-        $this->helpers['armholeDepth'] = 200 + ($model->getMeasurement('shoulderSlope')/2 - 27.5) + ($model->getMeasurement('upperBicepsCircumference')/10);
-        $this->helpers['collarShapeFactor'] = 1;
-        $this->helpers['sleevecapShapeFactor'] = 1;
+        $this->help = array();
+        $this->help['armholeDepth'] = 200 + ($model->getMeasurement('shoulderSlope')/2 - 27.5) + ($model->getMeasurement('upperBicepsCircumference')/10);
+        $this->help['collarShapeFactor'] = 1;
+        $this->help['sleevecapShapeFactor'] = 1;
+        /*
         foreach ($this->config['parts'] as $part => $title) {
             $this->addPart($part);
             $this->parts[$part]->setTitle($title);
@@ -35,52 +36,80 @@ class JoostBodyBlock extends Pattern
         }
         $this->tweakCollar($model);
         $this->tweakSleeve($model);
-        $this->parts['base']->setRender(false);
+        //$this->parts['base']->setRender(false);
         
         $this->finalizeBody($model);
         $this->finalizeSleeve($model);
+         */
+        $this->addPart('base');
+        $this->draftBase($model);
         
        }
 
     public function cleanUp()
     {
-        unset($this->helpers);
+        unset($this->help);
     }
 
     private function draftBase($model) 
     {
         $collarWidth = ($model->getMeasurement('neckCircumference')/3.1415) / 2 + 5;
-        $collarDepth = $this->helpers['collarShapeFactor'] * ($model->getMeasurement('neckCircumference') + $this->getOption('collarEase')) / 5 - 8;
+        $collarDepth = $this->help['collarShapeFactor'] * (
+                $model->getMeasurement('neckCircumference') 
+                + $this->getOption('collarEase')
+            ) / 5 - 8;
         
         $p = $this->parts['base'];
+        $p->setTitle('Base');
+
+        // Center vertical axis
+        $p->newPoint( 1 ,   0,  $this->getOption('backNeckCutout'), 'Center back @ neck');
+        $p->newPoint( 2 ,   0,  $p->y(1) + $this->help['armholeDepth'], 'Center back @ armhole depth' );
+        $p->newPoint( 3 ,   0,  $p->y(1) + $model->getMeasurement('centerBackNeckToWaist'), 'Center back @ waist' );
+        $p->newPoint( 4 ,   0,  $model->getMeasurement('centerBackNeckToWaist') + $model->getMeasurement('naturalWaistToTrouserWaist') + $this->getOption('backNeckCutout') , 'Center back @ trouser waist');
         
-        $p->newPoint( 0 , 0,   0 );
-        $p->newPoint( 1 , 0, $this->getOption('backNeckCutout'), 'Point 1, Center back neck point' );
-        $p->newPoint( 2 , 0, $p->y(1) + $this->helpers['armholeDepth'] );
-        $p->newPoint( 3 , 0, $p->y(1) + $model->getMeasurement('centerBackNeckToWaist') );
-        $p->newPoint( 5 , $model->getMeasurement('chestCircumference')/4 + $this->getOption('chestEase')/4, $p->y(2) );
-        $p->newPoint( 6 , $p->x(5), $p->y(0) );
-        $p->newPoint( 7 , $p->x(5), $p->y(3) );
-        $p->newPoint( 9 , $collarWidth, $p->y(1) );
-        $p->newPoint( 10 , $p->x(9), $p->y(1) - $this->getOption('backNeckCutout') );
-        $p->newPoint( 11 , 0, $p->y(1) + $p->deltaY(1,2)/2 );
-        $p->newPoint( 12 , $model->getMeasurement('acrossBack')/2, $p->y(11) );
-        $p->newPoint( 13 , 0, $p->y(0) + $model->getMeasurement('shoulderSlope')/2 );
-        $p->newPoint( 14 , $p->x(12), $p->y(13) );
-        $p->newPoint( 15 , $p->x(12), $p->y(2) );
-        $p->newPoint( 16 , $p->x(9) + sqrt(pow($model->getMeasurement('shoulderLength'),2) - pow($model->getMeasurement('shoulderSlope')/2,2)), $p->y(13) );
-        $p->newPoint( 17 , 0, $p->y(1) + $collarDepth);
-        $p->addPoint( 18 , $p->shift(15, 45, 30) );
-        $p->newPoint( 50 , $p->x(15)/2, $p->y(2)-20 );
-        $p->newPoint( 101 , 0.8 * $p->deltaX(1,9), $p->y(1) );
-        $p->addPoint( 121 , $p->shift(12, 90, 40) );
-        $p->addPoint( 122 , $p->shift(12, -90, 40) );
-        $p->newPoint( 171 , $p->x(101), $p->y(17) );
-        $p->addPoint( 181 , $p->shift(18, 135, 25) );
-        $p->addPoint( 182 , $p->Shift(18, -45, 25) );
-        $p->addPoint( 501 , $p->shift(5, 180, 10) );
-        $p->addPoint( 161 , $p->shift(16, $p->angle(10,16)+90, 10) );
-        $p->newPoint( 200 , 0, $model->getMeasurement('centerBackNeckToWaist') + $model->getMeasurement('naturalWaistToTrouserWaist') + $this->getOption('backNeckCutout'), 'Trouser waist height');
+        // Side vertical axis
+        $p->newPoint( 5 , $model->getMeasurement('chestCircumference')/4 + $this->getOption('chestEase')/4, $p->y(2) , 'Quarter chest @ armhole depth' );
+        $p->newPoint( 6 , $p->x(5), $p->y(4), 'Quarter chest @ trouser waist' );
+        
+        // Back collar
+        $p->newPoint( 7 , $collarWidth, $p->y(1) , 'Half collar width @ center back' );
+        $p->newPoint( 8 , $p->x(7), $p->y(1) - $this->getOption('backNeckCutout'), 'Half collar width @ top of garment' );
+        
+        // Front collar
+        $p->newPoint( 9 , 0, $p->y(1) + $collarDepth, 'Center front collar depth');
+
+        // Armhole
+        $p->newPoint( 10 , $model->getMeasurement('acrossBack')/2, $p->y(1) + $p->deltaY(1,2)/2, 'Armhole pitch point' );
+        $p->newPoint( 11 , $p->x(10), $p->y(2) , 'Armhole pitch width @ armhole depth');
+        $p->newPoint( 12 , $p->x(7) + sqrt(pow($model->getMeasurement('shoulderLength'),2) - pow($model->getMeasurement('shoulderSlope')/2,2)), $model->getMeasurement('shoulderSlope')/2, 'Shoulder tip' );
+        $p->addPoint( 13 , $p->Shift(5, 180, $p->distance(11,5)/4) , 'Left curve control point for 5');
+        $p->addPoint( '.help1' , $p->shift(11, 45, 5), '45 degrees upwards' );
+        $p->addPoint( '.help2' , $p->linesCross(11, '.help1', 5, 10), 'Intersection');
+        $p->addPoint( 14 , $p->shiftTowards(11, '.help2', $p->distance(11, '.help2')/2), 'Point on armhole curve');
+        $p->addPoint( 15 , $p->shift(14, 135, 25), 'Top curve control point for 14' );
+        $p->addPoint( 16 , $p->Shift(14, -45, 25), 'Bottom control point for 14' );
+        $tmp =  $p->deltaY(12,10)/3;
+        $p->addPoint( 17 , $p->shift(10, 90, $tmp), 'Top curve control point for 10' );
+        $p->addPoint( 18 , $p->shift(10, -90, $tmp), 'Bottom curve control point for 10');
+        $p->addPoint( 19 , $p->shift(12, $p->angle(8,12)+90, 10), 'Bottom control point for 12' );
+
+        // Control point for collar
+        $p->addPoint( 20 , $p->shift(8, $p->angle(8,12)+90, $this->getOption('backNeckCutout')), 'Curvei control point for collar' );
+
+        // Paths
+        $path = 'M 1 L 2 L 3 L 4 L 6 L 5 C 13 16 14 C 15 18 10 C 17 19 12 L 8 C 20 1 1 z';
+        $p->newPath('outline', $path);
+        $path = 'M 9 C 20 20 8';
+        $p->newPath('vNeck', $path);
+
+        // Title anchor
+        $p->newPoint('titleAnchor', $p->x(10)/2, $p->y(10), 'Title anchor');
+        $attr = ['id' => "base-title", 'class' => 'title'];
+        $p->newText('title', $p->points['titleAnchor'], $p->title, $attr);
+        
+        // Seam allowance
+        $p->offsetPath('sa', 'outline');
 }
 
     private function draftBody($model) 
@@ -142,15 +171,13 @@ class JoostBodyBlock extends Pattern
         $p->newSnippet('scalebox', 'scalebox', $p->points['titleAnchor']);
         $p->newPoint( 'logoAnchor', $p->x(9), $p->y(12)+200 ); 
         $p->newSnippet('logo', 'logo', $p->points['logoAnchor']);
-        $p->offsetPath('fsa', 'front', 10);
-        $p->offsetPath('bsa', 'back', 10);
     }
 
     private function draftSleeve($model) 
     {
         $p = $this->parts['sleeve'];
         
-        $aseam = ($this->armholeLen() + $this->getOption('sleevecapEase')) * $this->helpers['sleevecapShapeFactor'];
+        $aseam = ($this->armholeLen() + $this->getOption('sleevecapEase')) * $this->help['sleevecapShapeFactor'];
         
         $p->newPoint( 1 , 0, 0 );
         $p->newPoint( 2 , $p->x(1), $model->getMeasurement('sleeveLengthToWrist') );
@@ -218,60 +245,59 @@ class JoostBodyBlock extends Pattern
         $p->newPoint( 'titleAnchor', $p->x(4), $p->y(5) ); 
         $attr = ['id' => "body-title", 'class' => 'title'];
         $p->newText('title', $p->points['titleAnchor'], $p->title, $attr);
-        $p->offsetPath('ssa', 'sleeve');
     }
     
     private function tweakCollar($model) {
-        $this->helpers['collarIteration'] = 1;
+        $this->help['collarIteration'] = 1;
         $this->checkCollarDelta($model);
         $this->log('      Calculating collar opening with '.$this->getOption('collarEase').'mm collar ease.');
-        while(abs($this->helpers['collarDelta']) > 0.5 && $this->helpers['collarIteration'] < 150) {
-            $this->log("      Iteration ".$this->helpers['collarIteration'].", collar opening length is ".$this->helpers['collarDelta']." mm off");
+        while(abs($this->help['collarDelta']) > 0.5 && $this->help['collarIteration'] < 150) {
+            $this->log("      Iteration ".$this->help['collarIteration'].", collar opening length is ".$this->help['collarDelta']." mm off");
             $this->fitCollar($model);
             $this->checkCollarDelta($model);
         }
-        if($this->helpers['collarIteration']>149) $this->log("      Iteration ".$this->helpers['collarIteration'].", collar opening length is ".$this->helpers['collarDelta']." mm off. I'm not happy, but it will have to do.");
-        else $this->log("      Iteration ".$this->helpers['collarIteration']." collar opening length is ".$this->helpers['collarDelta']." mm off. I'm happy.");
+        if($this->help['collarIteration']>149) $this->log("      Iteration ".$this->help['collarIteration'].", collar opening length is ".$this->help['collarDelta']." mm off. I'm not happy, but it will have to do.");
+        else $this->log("      Iteration ".$this->help['collarIteration']." collar opening length is ".$this->help['collarDelta']." mm off. I'm happy.");
     }
 
     private function fitCollar($model) 
     {
-        $this->helpers['collarIteration']++;
-        if($this->helpers['collarDelta'] > 0) $this->helpers['collarShapeFactor'] = $this->helpers['collarShapeFactor'] * 0.97; 
-        else $this->helpers['collarShapeFactor'] = $this->helpers['collarShapeFactor'] * 1.03; 
+        $this->help['collarIteration']++;
+        if($this->help['collarDelta'] > 0) $this->help['collarShapeFactor'] = $this->help['collarShapeFactor'] * 0.97; 
+        else $this->help['collarShapeFactor'] = $this->help['collarShapeFactor'] * 1.03; 
         $this->draftBase($model);
         $this->draftBody($model);
     }
     
     private function tweakSleeve($model) 
     {
-        $this->helpers['sleeveIteration'] = 1;
+        $this->help['sleeveIteration'] = 1;
         $this->checkSleevecapDelta();
         $this->log('      Calculating sleevecap opening with '.$this->getOption('sleevecapEase').'mm sleevecap ease.');
-        while(abs($this->helpers['sleevecapDelta'])>0.5 && $this->helpers['sleeveIteration'] < 150) {
-            $this->log("      Iteration ".$this->helpers['sleeveIteration'].", sleevecap length is ".$this->helpers['sleevecapDelta']." mm off");
+        while(abs($this->help['sleevecapDelta'])>0.5 && $this->help['sleeveIteration'] < 150) {
+            $this->log("      Iteration ".$this->help['sleeveIteration'].", sleevecap length is ".$this->help['sleevecapDelta']." mm off");
             $this->fitSleeve($model);
             $this->checkSleevecapDelta();
         }
-        if($this->helpers['sleeveIteration']>149) $this->log("      Iteration ".$this->helpers['sleeveIteration'].", sleevecap length is ".$this->helpers['sleevecapDelta']." mm off. I'm not happy, but it will have to do.");
-        else $this->log("      Iteration ".$this->helpers['sleeveIteration']." collar opening length is ".$this->helpers['sleevecapDelta']." mm off. I'm happy.");
+        if($this->help['sleeveIteration']>149) $this->log("      Iteration ".$this->help['sleeveIteration'].", sleevecap length is ".$this->help['sleevecapDelta']." mm off. I'm not happy, but it will have to do.");
+        else $this->log("      Iteration ".$this->help['sleeveIteration']." collar opening length is ".$this->help['sleevecapDelta']." mm off. I'm happy.");
     }
 
 
     private function fitSleeve($model) 
     {
-        $this->helpers['sleeveIteration']++;
-        if($this->helpers['sleeveIteration'] > 18) {
-            if($this->helpers['sleevecapDelta'] > 0) $this->helpers['sleevecapShapeFactor'] = $this->helpers['sleevecapShapeFactor'] * 0.9; 
-            else $this->helpers['sleevecapShapeFactor'] = $this->helpers['sleevecapShapeFactor'] * 1.1; 
+        $this->help['sleeveIteration']++;
+        if($this->help['sleeveIteration'] > 18) {
+            if($this->help['sleevecapDelta'] > 0) $this->help['sleevecapShapeFactor'] = $this->help['sleevecapShapeFactor'] * 0.9; 
+            else $this->help['sleevecapShapeFactor'] = $this->help['sleevecapShapeFactor'] * 1.1; 
         }
-        else if($this->helpers['sleeveIteration'] > 10) {
-            if($this->helpers['sleevecapDelta'] > 0) $this->helpers['sleevecapShapeFactor'] = $this->helpers['sleevecapShapeFactor'] * 0.95; 
-            else $this->helpers['sleevecapShapeFactor'] = $this->helpers['sleevecapShapeFactor'] * 1.05; 
+        else if($this->help['sleeveIteration'] > 10) {
+            if($this->help['sleevecapDelta'] > 0) $this->help['sleevecapShapeFactor'] = $this->help['sleevecapShapeFactor'] * 0.95; 
+            else $this->help['sleevecapShapeFactor'] = $this->help['sleevecapShapeFactor'] * 1.05; 
         } 
         else {
-            if($this->helpers['sleevecapDelta'] > 0) $this->helpers['sleevecapShapeFactor'] = $this->helpers['sleevecapShapeFactor'] * 0.99; 
-            else $this->helpers['sleevecapShapeFactor'] = $this->helpers['sleevecapShapeFactor'] * 1.01; 
+            if($this->help['sleevecapDelta'] > 0) $this->help['sleevecapShapeFactor'] = $this->help['sleevecapShapeFactor'] * 0.99; 
+            else $this->help['sleevecapShapeFactor'] = $this->help['sleevecapShapeFactor'] * 1.01; 
         }
         $this->draftSleeve($model);
     }
@@ -314,17 +340,17 @@ class JoostBodyBlock extends Pattern
 
     private function checkSleevecapDelta() 
     {
-        $this->helpers['sleevecapDelta'] = round($this->sleevecapLen() - ($this->armholeLen() + $this->getOption('sleevecapEase')), 2);
+        $this->help['sleevecapDelta'] = round($this->sleevecapLen() - ($this->armholeLen() + $this->getOption('sleevecapEase')), 2);
     }
     
     private function checkCollarDelta($model) 
     {
-        $this->helpers['collarDelta'] = round($this->collarLen() - ($model->getMeasurement('neckCircumference') + $this->getOption('collarEase')), 2);
+        $this->help['collarDelta'] = round($this->collarLen() - ($model->getMeasurement('neckCircumference') + $this->getOption('collarEase')), 2);
     }
 
     private function log($msg)
     {
         if(is_array($msg)) $msg = print_r($msg,1);
-        $this->helpers['log'][] = $msg;
+        $this->help['log'][] = $msg;
     }
 }

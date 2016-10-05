@@ -25,7 +25,7 @@ class SvgOnlyDebugTheme extends Theme
     {
         foreach($part->points as $key => $point) {
             if(isset($_REQUEST['only'])) {
-                $only = \Freesewing\Utils::asScrubbedArray($_REQUEST['only']); 
+                $only = \Freesewing\Utils::asScrubbedArray($_REQUEST['only'], ','); 
                 if(in_array($key, $only)) $this->debugPoint($key, $point, $part, $partKey);
             }
             else $this->debugPoint($key, $point, $part, $partKey);
@@ -44,7 +44,7 @@ class SvgOnlyDebugTheme extends Theme
 
     private function debugPointDescription($key, $point)
     {
-        return "Point $key (".$point->getX().','.$point->getY().')';
+        return $point->getDescription()." | Point $key (".$point->getX().','.$point->getY().')';
     }
 
     private function debugPaths($partKey, $part)

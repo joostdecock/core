@@ -1,11 +1,14 @@
+@import 'https://fonts.googleapis.com/css?family=Lato:700i';
 path { fill: none; stroke: #000000; stroke-opacity:1; stroke-width: 0.4; stroke-miterlimit:4; stroke-dashoffset:0; stroke-linecap:round; stroke-linejoin:round; }
 path.curvecontrol { fill: none; stroke: #5BC0DE; stroke-opacity:1; stroke-width: 0.2; stroke-miterlimit:4; stroke-dashoffset:0; stroke-linecap:round; stroke-linejoin:round; }
 path.sa { fill: none; stroke: #000000; stroke-dasharray:1,1; stroke-opacity:1; stroke-width: 0.2; stroke-miterlimit:4; stroke-dashoffset:0; stroke-linecap:round; stroke-linejoin:round; }
 path.marker { fill: none; stroke: #00FF00; stroke-opacity:1; stroke-width: 2; stroke-miterlimit:4; stroke-dashoffset:0; stroke-linecap:round; stroke-linejoin:round; }
 text.tooltip { fill:#D9534F; font-size:5; font-style:200; font-weight:400; text-align:center; text-anchor:start; fill-opacity:1; stroke:none; }
-    text.snippet-scalebox-headings tspan,
-    text.snippet-scalebox-instructions tspan,
-    text.snippet-scalebox-values tspan,
-    text.scalebox-hash tspan { font-size:4px; font-style:normal; font-variant:normal; font-weight:normal; font-stretch:normal; text-align:end; text-anchor:start; font-family:'Open Sans'; -inkscape-font-specification:'Open Sans'; fill:#000000; fill-opacity:1; }
-    text.snippet-scalebox-instructions tspan { font-size:3px; font-weight:normal; text-align:start; fill:#000000; fill-opacity:1; font-family:'Open Sans'; -inkscape-font-specification:'Open Sans'; }
-    text.snippet-scalebox-values tspan { font-size:4px; font-weight:normal; text-align:start; fill:#d9534f; font-family:'Open Sans'; -inkscape-font-specification:'Open Sans'; }
+text.snippet-scalebox-headings tspan,
+text.snippet-scalebox-instructions tspan,
+text.snippet-scalebox-values tspan,
+text.scalebox-hash tspan { font-size:4px; font-style:normal; font-variant:normal; font-weight:normal; font-stretch:normal; text-align:end; text-anchor:start; font-family:'Open Sans'; -inkscape-font-specification:'Open Sans'; fill:#000000; fill-opacity:1; }
+text.snippet-scalebox-instructions tspan { font-size:3px; font-weight:normal; text-align:start; fill:#000000; fill-opacity:1; font-family:'Open Sans'; -inkscape-font-specification:'Open Sans'; }
+text.snippet-scalebox-values tspan { font-size:4px; font-weight:normal; text-align:start; fill:#d9534f; font-family:'Open Sans'; -inkscape-font-specification:'Open Sans'; }
+text.title { font-size:14px; font-weight:normal; text-anchor:middle; fill:#333333; font-family:'Lato'; }
+

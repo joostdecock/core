@@ -213,7 +213,7 @@ class Part
         $this->newPath($key, $path, ['class' => 'sa']);
     }
 
-    private function newId($prefix='-i')
+    public function newId($prefix='-i')
     {
         if(isset($this->tmp['id'][$prefix])) {
             $this->tmp['id'][$prefix]++;

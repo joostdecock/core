@@ -15,29 +15,29 @@ class SvgOnlyDebugTheme extends Theme
     {
         foreach($pattern->parts as $partKey => $part) {
             if($part->render) {
-                if(!isset($_REQUEST['only'])) $this->debugPaths($part);
-                $this->debugPoints($part);
+                if(!isset($_REQUEST['only'])) $this->debugPaths($partKey, $part);
+                $this->debugPoints($partKey, $part);
             }
         }
     }
 
-    private function debugPoints($part)
+    private function debugPoints($partKey, $part)
     {
         foreach($part->points as $key => $point) {
             if(isset($_REQUEST['only'])) {
                 $only = \Freesewing\Utils::asScrubbedArray($_REQUEST['only']); 
-                if(in_array($key, $only)) $this->debugPoint($key, $point, $part);
+                if(in_array($key, $only)) $this->debugPoint($key, $point, $part, $partKey);
             }
-            else $this->debugPoint($key, $point, $part);
+            else $this->debugPoint($key, $point, $part, $partKey);
         }
     }
 
-    private function debugPoint($key, \Freesewing\Point $point, \Freesewing\Part $part)
+    private function debugPoint($key, \Freesewing\Point $point, \Freesewing\Part $part, $partKey)
     {
         if(!isset($this->pointsThemed[$key])) {
             $title = $this->debugPointDescription($key,$point);
-            $attr = ['id' => "point-$key", 'onmouseover' => "pointHover('point-$key')", 'onmouseout' => "pointUnhover('point-$key')"];
-            $part->newSnippet($key, 'point', $point, $attr, $title); $attr = ['id' => "point-$key-tooltip", 'class' => 'tooltip', 'visibility' => 'hidden'];
+            $attr = ['id' => "$partKey-$key", 'onmouseover' => "pointHover('$partKey-$key')", 'onmouseout' => "pointUnhover('$partKey-$key')"];
+            $part->newSnippet($key, 'point', $point, $attr, $title); $attr = ['id' => "$partKey-$key-tooltip", 'class' => 'tooltip', 'visibility' => 'hidden'];
             $part->newText($key, $point, $title, $attr);
         }
     }
@@ -47,14 +47,14 @@ class SvgOnlyDebugTheme extends Theme
         return "Point $key (".$point->getX().','.$point->getY().')';
     }
 
-    private function debugPaths($part)
+    private function debugPaths($partKey, $part)
     {
         foreach($part->paths as $path) {
-            $this->debugPath($path, $part);
+            $this->debugPath($path, $part, $partKey);
         }
     } 
         
-    private function debugPath($path, $part)
+    private function debugPath($path, $part, $partKey)
     {
         foreach (explode(' ', $path->path) as $key) {
             $key = rtrim($key);
@@ -75,9 +75,9 @@ class SvgOnlyDebugTheme extends Theme
                 }
                 else $type = 'path-point';
                 $title = $this->debugPointDescription($key,$part->points[$key]);
-                $attr = ['id' => "point-$key", 'onmouseover' => "pointHover('point-$key')", 'onmouseout' => "pointUnhover('point-$key')"];
-                $part->newSnippet($key, $type, $part->points[$key], $attr, $title);
-                $attr = ['id' => "point-$key-tooltip", 'class' => 'tooltip', 'visibility' => 'hidden'];
+                $attr = ['id' => "$partKey-$key", 'onmouseover' => "pointHover('$partKey-$key')", 'onmouseout' => "pointUnhover('$partKey-$key')"];
+                $part->newSnippet("$partKey-$key", $type, $part->points[$key], $attr, $title);
+                $attr = ['id' => "$partKey-$key-tooltip", 'class' => 'tooltip', 'visibility' => 'hidden'];
                 $part->newText($key, $part->points[$key], $title, $attr);
                 $previous = $key;
             }

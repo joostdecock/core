@@ -11,7 +11,7 @@ function pointHover(id) {
   }
   function pointUnhover(id) {
     var point = document.getElementById(id);
-    point.setAttribute("transform", '');
+    point.removeAttribute("transform", '');
     var tooltip = document.getElementById(id+'-tooltip');
     tooltip.setAttribute("visibility", 'hidden');
   }

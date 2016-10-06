@@ -34,7 +34,7 @@ class SvgOnlyDebugTheme extends Theme
 
     private function debugPoint($key, \Freesewing\Point $point, \Freesewing\Part $part, $partKey)
     {
-        if(!isset($this->pointsThemed[$key])) {
+        if(!isset($part->tmp['pointsThemed'][$key])) {
             $title = $this->debugPointDescription($key,$point);
             $attr = ['id' => "$partKey-$key", 'onmouseover' => "pointHover('$partKey-$key')", 'onmouseout' => "pointUnhover('$partKey-$key')"];
             $part->newSnippet($key, 'point', $point, $attr, $title); $attr = ['id' => "$partKey-$key-tooltip", 'class' => 'tooltip', 'visibility' => 'hidden'];
@@ -64,7 +64,7 @@ class SvgOnlyDebugTheme extends Theme
                 if($command == 'C') $curveSteps=1;
             } 
             elseif (is_object($part->points[$key])) {
-                $this->pointsThemed[$key] = true; // Store what points we've seen
+                $part->tmp['pointsThemed'][$key] = true; // Store what points we've seen
                 if($command == 'C') {
                     if($curveSteps == 3) $type = 'path-point';
                     else $type = 'path-curvecontrol';

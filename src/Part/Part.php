@@ -784,7 +784,7 @@ class Part
         $deltaX = $anchorX - $point->getX();
         $x = $anchorX + $deltaX;
         
-        return $this->createPoint($x, $point->getY(), "Point $key flipped around X coordinate $anchorX");
+        return $this->createPoint($x, $point->getY(), $point->getDescription());
     }
 
     /**

@@ -7,6 +7,6 @@ info:
   company: "freesewing.org"
   link: "freesewing.org/pattern/joost-body-block/"
 parts:
-  base: "Base block"
-  body: "Front & Back block"
-  sleeve: "Sleeve block"
+  backBlock: "Back block"
+  frontBlock: "Front block"
+  sleeveBlock: "Sleeve block"

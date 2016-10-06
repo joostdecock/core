@@ -29,7 +29,7 @@ class Pattern
     /**
      * @var int
      */
-    private $partMargin = 1;
+    private $partMargin = 5;
 
     public function getOption($key)
     {
@@ -170,6 +170,9 @@ class Pattern
     
     public function cleanUp()
     {
+        foreach($pattern->parts as $partKey => $part) {
+            unset($part->tmp);
+        }
     }
 
     private function layoutTransforms($layoutBlocks)

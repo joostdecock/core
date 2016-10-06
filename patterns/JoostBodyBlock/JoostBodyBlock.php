@@ -100,7 +100,7 @@ class JoostBodyBlock extends Pattern
 
         // Title anchor
         $p->newPoint('titleAnchor', $p->x(10)/2, $p->y(10), 'Title anchor');
-        $p->newText( 'title', $p->points['titleAnchor'], $p->title, [ 'id' => "base-title", 'class' => 'title' ]);
+        $p->newText( 'title', 'titleAnchor', $p->title, [ 'id' => "base-title", 'class' => 'title' ]);
     }
 
     private function draftFront($model) 
@@ -121,7 +121,7 @@ class JoostBodyBlock extends Pattern
         
         $p->addPoint('titleAnchor', $p->flipX('titleAnchor', $p->x(5)) );
         $attr = ['id' => "front-title", 'class' => 'title'];
-        $p->newText('title', $p->points['titleAnchor'], $p->title, $attr);
+        $p->newText('title', 'titleAnchor', $p->title, $attr);
     }
     
     private function draftSleeve($model) 
@@ -206,7 +206,10 @@ class JoostBodyBlock extends Pattern
         
         $p->newPoint('titleAnchor', $p->x(2), $this->parts['frontBlock']->y('titleAnchor') );
         $attr = ['id' => "sleeve-title", 'class' => 'title'];
-        $p->newText('title', $p->points['titleAnchor'], $p->title, $attr);
+        $p->newText('title', 'titleAnchor', $p->title, $attr);
+
+        $p->newText('test', 33, "This sleeve block is merely a starting point\nIt has not been matched to the armhole in the body", ['line-height' => 10, 'class' => 'align-center']);
+
     }
     
     private function armholeLen() 

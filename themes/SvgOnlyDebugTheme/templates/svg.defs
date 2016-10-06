@@ -11,6 +11,13 @@
     <path id="path-curvecontrol-square" style="fill:#FFFFFF;stroke:none; fill-opacity:0" d="M -2.5,-2.5 L 2.5,-2.5 L 2.5,2.5 L -2.5,2.5 z " />
     <circle id="path-curvecontrol-cirle" cx="0" cy="0" r="1.4" stroke="none" fill="#5BC0DE" fill-opacity="1" />
 </g>
+<marker orient="auto" refY="0.0" refX="0.0" id="noteArrow" style="overflow:visible;" >
+  <path
+     id="lineArrowPath"
+     style="fill: #134cc5; stroke: #134cc5; fill-rule:evenodd;stroke-width:1;stroke-linejoin:round;"
+     d="M 8.7185878,4.0337352 L -2.2072895,0.016013256 L 8.7185884,-4.0017078 C 6.9730900,-1.6296469 6.9831476,1.6157441 8.7185878,4.0337352 z "
+     transform="scale(0.6) rotate(180) translate(0,0)" />
+</marker>
 <g id="focus-point">
     <circle id="focus-point-outer" cx="0" cy="0" r="4" stroke="#5c3566" stroke-width="0.2" fill="none" />
     <circle id="focus-point-inner" cx="0" cy="0" r="2" stroke="none" fill="#5c3566" fill-opacity="0.8" />

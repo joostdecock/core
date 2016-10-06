@@ -38,6 +38,7 @@ return array(
     'Freesewing\\GrowingPacker' => $baseDir . '/src/GrowingPacker/GrowingPacker.php',
     'Freesewing\\LayoutBlock' => $baseDir . '/src/LayoutBlock/LayoutBlock.php',
     'Freesewing\\Model' => $baseDir . '/src/Model/Model.php',
+    'Freesewing\\Note' => $baseDir . '/src/Note/Note.php',
     'Freesewing\\Packer' => $baseDir . '/src/Packer/Packer.php',
     'Freesewing\\Part' => $baseDir . '/src/Part/Part.php',
     'Freesewing\\Path' => $baseDir . '/src/Path/Path.php',

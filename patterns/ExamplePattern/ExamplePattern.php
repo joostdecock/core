@@ -212,6 +212,22 @@ class ExamplePattern extends Pattern
 
         $p->newTextOnPath('test1', 'M 10 C 10 22 17 C 23 28 30 C 29 25 18 ', "This text follows a curved path, which is kinda cool for adding notes and other stuff to a pattern", ['line-height' => 12, 'class' => 'text-xs', 'dy' => -2]);
         $p->newTextOnPath('test2', 'M 10 C 10 22 17 C 23 28 30 C 29 25 18 ', "This is the same but bigger text placed under the curve", ['line-height' => 12, 'class' => 'text-sm', 'dy' => 6]);
+
+        $attr = ['line-height' => 4, 'class' => 'text-xs', 'dy' => -5];
+        $p->newNote('note1', 2,  "Note @\n pos 1", 1, 30, 2, $attr );
+        $p->newNote('note2', 2,  "Note @\n pos 2", 2, 30, 2, $attr );
+        $p->newNote('note3', 2,  "Note @\n pos 3", 3, 30, 2, $attr );
+        $p->newNote('note4', 2,  "Note @\n pos 4", 4, 30, 2, $attr );
+        $p->newNote('note5', 2,  "Note @\n pos 5", 5, 30, 2, $attr );
+        $p->newNote('note6', 2,  "Note @\n pos 6", 6, 30, 2, $attr );
+        $p->newNote('note7', 2,  "Note @\n pos 7", 7, 30, 2, $attr );
+        $p->newNote('note8', 2,  "Note @\n pos 8", 8, 30, 2, $attr );
+        $p->newNote('note9', 2,  "Note @\n pos 9", 9, 30, 2, $attr );
+        $p->newNote('note10', 2, "Note @\n pos 10", 10, 30, 2, $attr );
+        $p->newNote('note11', 2, "Note @\n pos 11", 11, 30, 2, $attr );
+        $p->newNote('note12', 2, "Note @\n pos 12", 12, 30, 2, $attr );
+    
+    
     }
     
     private function armholeLen() 

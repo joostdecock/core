@@ -85,21 +85,15 @@ class SvgRenderbot
                     }
                     $svg .= $this->openGroup($partKey, $transforms);
                     
-                    foreach ($part->paths as $path) {
-                        $svg .= $this->renderPath($path, $part);
-                    }
+                    if(@$part->paths) foreach ($part->paths as $path) $svg .= $this->renderPath($path, $part);
 
-                    foreach ($part->snippets as $snippet) {
-                        $svg .= $this->renderSnippet($snippet, $part);
-                    }
+                    if(@$part->snippets) foreach ($part->snippets as $snippet) $svg .= $this->renderSnippet($snippet, $part);
 
-                    foreach ($part->texts as $text) {
-                        $svg .= $this->renderText($text, $part);
-                    }
+                    if(@$part->texts) foreach ($part->texts as $text) $svg .= $this->renderText($text, $part);
 
-                    foreach ($part->textsOnPath as $textOnPath) {
-                        $svg .= $this->renderTextOnPath($textOnPath, $part);
-                    }
+                    if(@$part->textsOnPath) foreach ($part->textsOnPath as $textOnPath) $svg .= $this->renderTextOnPath($textOnPath, $part);
+                    
+                    if(@$part->notes) foreach ($part->notes as $note) $svg .= $this->renderNote($note, $part);
 
                     $svg .= $this->closeGroup();
                 }
@@ -175,7 +169,7 @@ class SvgRenderbot
         if(!isset($text->attributes['id'])) $svg .= 'id="'.$this->getUid().'" ';
         if(isset($text->attributes['line-height'])) $lineHeight = $text->attributes['line-height'];
         else  $lineHeight = 20;
-        $svg .= $this->flattenAttributes($text->getAttributes(), ['line-height', 'dx', 'dy']);
+        $svg .= $this->flattenAttributes($text->getAttributes(), ['line-height']);
         $svg .= '>';
         
         if($textOnPath !== false) { // Text on path
@@ -183,29 +177,34 @@ class SvgRenderbot
                 '<tspan '.$this->flattenAttributes($text->getAttributes()).'>'.$text->getText().'</tspan>'.
                 '</textPath>';
         } else { // Regular text
-            if(strpos($text->getText(), "\n") === false) $svg .= '<tspan>'.$text->getText().'</tspan>'; // Single line
-            else { // Multi line
-                $lines = explode("\n",$text->getText());
-                $attr = '';
-                $this->indent();
-                foreach($lines as $line) {
-                    $svg .= $this->nl()."<tspan $attr>$line</tspan>";
-                    $attr = 'x="'.$anchor->getX().'" dy="'.$lineHeight.'"';
-                }
-                $this->outdent();
+            $lines = explode("\n",$text->getText());
+            $attr = '';
+            $this->indent();
+            foreach($lines as $line) {
+                $svg .= $this->nl()."<tspan $attr>$line</tspan>";
+                $attr = 'x="'.$anchor->getX().'" dy="'.$lineHeight.'"';
             }
+            $this->outdent();
         }
         $svg .= '</text>';
         
         return $svg;
     }
-    
+
+    private function renderNote($note, $part)
+    {
+        $path = $note->getPath();
+        $svg = $this->renderPath($path, $part);
+        $svg .= $this->renderText($note, $part);
+        
+        return $svg;
+    }
+
     /*
      * Returns SVG code for text on path
      */
     private function renderTextOnPath($textOnPath, $part)
     {
-        return $this->renderText($textOnPath, $part, true);
         $path = $textOnPath->getPath();
         $id = $this->getUid();
         $path->setAttributes(['class' => 'textpath', 'id' => $id]);
@@ -234,8 +233,9 @@ class SvgRenderbot
         return $svg;
     }
     
-    private function flattenAttributes($array, $remove)
+    private function flattenAttributes($array, $remove=array())
     {
+        if(!is_array($array)) return null;
         $attributes = '';
         foreach($array as $key => $value) {
             if(!in_array($key, $remove)) $attributes .= "$key=\"$value\" ";

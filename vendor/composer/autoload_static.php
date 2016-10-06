@@ -121,6 +121,7 @@ class ComposerStaticInit6d3c91d11fabeb58ed862308abf0796d
         'Freesewing\\GrowingPacker' => __DIR__ . '/../..' . '/src/GrowingPacker/GrowingPacker.php',
         'Freesewing\\LayoutBlock' => __DIR__ . '/../..' . '/src/LayoutBlock/LayoutBlock.php',
         'Freesewing\\Model' => __DIR__ . '/../..' . '/src/Model/Model.php',
+        'Freesewing\\Note' => __DIR__ . '/../..' . '/src/Note/Note.php',
         'Freesewing\\Packer' => __DIR__ . '/../..' . '/src/Packer/Packer.php',
         'Freesewing\\Part' => __DIR__ . '/../..' . '/src/Part/Part.php',
         'Freesewing\\Path' => __DIR__ . '/../..' . '/src/Path/Path.php',

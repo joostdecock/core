@@ -69,11 +69,37 @@ class Part
     public function newText($key, $anchorKey, $msg, $attributes=null)
     {
         $text = new \Freesewing\Text();
-        if(!is_scalar($anchorKey)) debug_print_backtrace();
         $text->setAnchor($this->loadPoint($anchorKey));
         $text->setText($msg);
         $text->setAttributes($attributes);
         $this->addText($key, $text);
+    }
+
+    public function newNote($key, $anchorKey, $msg, $direction=3, $length=25, $offset=3, $attributes=null)
+    {
+        $note = new \Freesewing\Note();
+        
+        if ($direction >= 1 && $direction <= 12) $angle = -30 * $direction +90;
+        else $angle = 0;
+        $fromId = $this->newId('.note');
+        $this->addPoint($fromId, $this->shift($anchorKey, $angle, $offset));
+        $toId = $this->newId('.note');
+        $this->addPoint($toId, $this->shift($anchorKey, $angle, $length));
+        $path = new \Freesewing\Path();
+        $path->setPath("M $fromId L $toId");
+        $path->setAttributes(['class' =>'noteline']);
+        $note->setPath($path);
+        
+        $textAnchorId = $this->newId('.note');
+        $this->addPoint($textAnchorId, $this->shift($anchorKey, $angle, $length+5));
+        $anchor = $this->loadPoint($textAnchorId);
+        $note->setAnchor($anchor);
+        $note->setText($msg);
+        if(!isset($attributes['class'])) $attributes['class'] = "note note-$direction";
+        else $attributes['class'] .= " note note-$direction";
+        $note->setAttributes($attributes);
+
+        $this->addNote($key, $note);
     }
     
     public function newTextOnPath($key, $pathString, $msg, $attributes=null)
@@ -111,6 +137,11 @@ class Part
     public function addText($key, \Freesewing\Text $text)
     {
         $this->texts[$key] = $text;
+    }
+
+    public function addNote($key, \Freesewing\Note $note)
+    {
+        $this->notes[$key] = $note;
     }
 
     public function addTextOnPath($key, \Freesewing\TextOnPath $textOnPath)

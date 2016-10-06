@@ -41,7 +41,7 @@ class Pattern
         $this->options[$key] = $value;
     }
 
-    public function setWidth(int $width)
+    public function setWidth($width)
     {
         $this->width = $width;
     }
@@ -51,7 +51,7 @@ class Pattern
         return $this->width;
     }
 
-    public function setHeight(int $height)
+    public function setHeight($height)
     {
         $this->height = $height;
     }
@@ -61,7 +61,7 @@ class Pattern
         return $this->height;
     }
 
-    public function setPartMargin(int $margin)
+    public function setPartMargin($margin)
     {
         $this->partMargin = $margin;
     }
@@ -166,6 +166,8 @@ class Pattern
         $this->layoutBlocks = $this->layoutPreSort($this->parts);
         $this->packer->fit($this->layoutBlocks);
         $this->layoutTransforms($this->layoutBlocks);
+        $this->setWidth($this->packer->boundingBox->w);
+        $this->setHeight($this->packer->boundingBox->h);
     }
     
     public function cleanUp()

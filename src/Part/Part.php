@@ -14,6 +14,7 @@ class Part
     public $points = array();
     public $snippets = array();
     public $texts = array();
+    public $textsOnPath = array();
     public $paths = array();
     public $transforms = array();
     public $title = null;
@@ -65,13 +66,25 @@ class Part
         $this->addSnippet($key, $snippet);
     }
     
-    public function newText($key, $anchor, $msg, $attributes=null)
+    public function newText($key, $anchorKey, $msg, $attributes=null)
     {
         $text = new \Freesewing\Text();
-        $text->setAnchor($anchor);
+        if(!is_scalar($anchorKey)) debug_print_backtrace();
+        $text->setAnchor($this->loadPoint($anchorKey));
         $text->setText($msg);
         $text->setAttributes($attributes);
         $this->addText($key, $text);
+    }
+    
+    public function newTextOnPath($key, $pathString, $msg, $attributes=null)
+    {
+        $textOnPath = new \Freesewing\TextOnPath();
+        $path = new \Freesewing\Path();
+        $path->setPath($pathString);
+        $textOnPath->setPath($path);
+        $textOnPath->setText($msg);
+        $textOnPath->setAttributes($attributes);
+        $this->addTextOnPath($key, $textOnPath);
     }
     
     public function createPoint($x, $y, $description=null)
@@ -98,6 +111,11 @@ class Part
     public function addText($key, \Freesewing\Text $text)
     {
         $this->texts[$key] = $text;
+    }
+
+    public function addTextOnPath($key, \Freesewing\TextOnPath $textOnPath)
+    {
+        $this->textsOnPath[$key] = $textOnPath;
     }
 
     public function addPath($key, \Freesewing\Path $path)

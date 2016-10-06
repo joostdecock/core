@@ -108,8 +108,9 @@ class ApiHandler
             new \Freesewing\SvgDefs(),
             new \Freesewing\SvgComments()
         );
-        // FIXME
-        $this->svgDocument->svgAttributes->add("width =\"5000\"\nheight = \"5000\"");
+        $this->svgDocument->svgAttributes->add('width ="'.$this->pattern->getWidth()*3.54330709.'"');
+        $this->svgDocument->svgAttributes->add('height ="'.$this->pattern->getHeight()*3.54330709.'"');
+        
         // format specific themeing
         $this->theme->themeSvg($this->svgDocument);
         

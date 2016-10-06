@@ -97,6 +97,10 @@ class SvgRenderbot
                         $svg .= $this->renderText($text, $part);
                     }
 
+                    foreach ($part->textsOnPath as $textOnPath) {
+                        $svg .= $this->renderTextOnPath($textOnPath, $part);
+                    }
+
                     $svg .= $this->closeGroup();
                 }
             }
@@ -154,23 +158,87 @@ class SvgRenderbot
     /*
      * Returns SVG code for text
      */
-    private function renderText($text, $part)
+    private function renderText($text, $part, $textOnPath=false)
     {
-        $anchor = $text->getAnchor();
-        $svg = $this->nl();
-        $svg .=  '<text x="'.$anchor->getX().'" y="'.$anchor->getY().'" ';
+        if($textOnPath !== false) { // Text on path
+            $path = $text->getPath();
+            $id = $this->getUid();
+            $path->setAttributes(['class' => 'textpath', 'id' => $id]);
+            $svg = $this->renderPath($path, $part);
+            $svg .= $this->nl();
+            $svg .=  '<text ';
+        } else { // Regular text
+            $anchor = $text->getAnchor();
+            $svg = $this->nl();
+            $svg .=  '<text x="'.$anchor->getX().'" y="'.$anchor->getY().'" ';
+        }
         if(!isset($text->attributes['id'])) $svg .= 'id="'.$this->getUid().'" ';
-        $svg .= $this->flattenAttributes($text->getAttributes());
-        $svg .= '>'.$text->getText().'</text>';
-
+        if(isset($text->attributes['line-height'])) $lineHeight = $text->attributes['line-height'];
+        else  $lineHeight = 20;
+        $svg .= $this->flattenAttributes($text->getAttributes(), ['line-height', 'dx', 'dy']);
+        $svg .= '>';
+        
+        if($textOnPath !== false) { // Text on path
+            $svg .=  "<textPath xlink:href=\"#$id\">".
+                '<tspan '.$this->flattenAttributes($text->getAttributes()).'>'.$text->getText().'</tspan>'.
+                '</textPath>';
+        } else { // Regular text
+            if(strpos($text->getText(), "\n") === false) $svg .= '<tspan>'.$text->getText().'</tspan>'; // Single line
+            else { // Multi line
+                $lines = explode("\n",$text->getText());
+                $attr = '';
+                $this->indent();
+                foreach($lines as $line) {
+                    $svg .= $this->nl()."<tspan $attr>$line</tspan>";
+                    $attr = 'x="'.$anchor->getX().'" dy="'.$lineHeight.'"';
+                }
+                $this->outdent();
+            }
+        }
+        $svg .= '</text>';
+        
         return $svg;
     }
     
-    private function flattenAttributes($array)
+    /*
+     * Returns SVG code for text on path
+     */
+    private function renderTextOnPath($textOnPath, $part)
+    {
+        return $this->renderText($textOnPath, $part, true);
+        $path = $textOnPath->getPath();
+        $id = $this->getUid();
+        $path->setAttributes(['class' => 'textpath', 'id' => $id]);
+        $svg = $this->renderPath($path, $part);
+        $svg .= $this->nl();
+        $svg .=  '<textPath href="#'.$id.'" ';
+        if(!isset($textOnPath->attributes['id'])) $svg .= 'id="'.$this->getUid().'" ';
+        if(isset($textOnPath->attributes['line-height'])) $lineHeight = $textOnPath->attributes['line-height'];
+        else  $lineHeight = 20;
+        $svg .= $this->flattenAttributes($textOnPath->getAttributes(), ['line-height']);
+        $svg .= '>';
+        
+        if(strpos($textOnPath->getText(), "\n") === false) $svg .= $textOnPath->getText();
+        else {
+            $lines = explode("\n",$textOnPath->getText());
+            $attr = '';
+            $this->indent();
+            foreach($lines as $line) {
+                $svg .= $this->nl()."<tspan $attr>$line</tspan>";
+                $attr = ' dy="'.$lineHeight.'"';
+            }
+            $this->outdent();
+        }
+        $svg .= '</textPath>';
+        
+        return $svg;
+    }
+    
+    private function flattenAttributes($array, $remove)
     {
         $attributes = '';
         foreach($array as $key => $value) {
-            $attributes .= "$key=\"$value\" ";
+            if(!in_array($key, $remove)) $attributes .= "$key=\"$value\" ";
         }
         return $attributes;
     }

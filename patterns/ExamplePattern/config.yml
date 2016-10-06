@@ -1,11 +1,12 @@
 info:
-  name: "Sample pattern"
+  name: "Body Block Joost"
   version: "2.0"
-  date: 20160906
+  date: 20160925
   author: "Joost De Cock"
   email: "joost@decock.org"
   company: "freesewing.org"
+  link: "freesewing.org/pattern/joost-body-block/"
 parts:
-  square: "A simple square"
-options:
-  square_size: 100
+  backBlock: "Back block"
+  frontBlock: "Front block"
+  sleeveBlock: "Sleeve block"

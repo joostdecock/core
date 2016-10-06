@@ -58,6 +58,7 @@ return array(
     'Freesewing\\SvgRenderbot' => $baseDir . '/src/SvgRenderbot/SvgRenderbot.php',
     'Freesewing\\SvgScript' => $baseDir . '/src/SvgScript/SvgScript.php',
     'Freesewing\\Text' => $baseDir . '/src/Text/Text.php',
+    'Freesewing\\TextOnPath' => $baseDir . '/src/TextOnPath/TextOnPath.php',
     'Freesewing\\Themes\\DocumentationDebugTheme' => $baseDir . '/themes/DocumentationDebugTheme/DocumentationDebugTheme.php',
     'Freesewing\\Themes\\DocumentationTheme' => $baseDir . '/themes/DocumentationTheme/DocumentationTheme.php',
     'Freesewing\\Themes\\SvgOnlyDebugTheme' => $baseDir . '/themes/SvgOnlyDebugTheme/SvgOnlyDebugTheme.php',

@@ -38,7 +38,7 @@ class SvgOnlyDebugTheme extends Theme
             $title = $this->debugPointDescription($key,$point);
             $attr = ['id' => "$partKey-$key", 'onmouseover' => "pointHover('$partKey-$key')", 'onmouseout' => "pointUnhover('$partKey-$key')"];
             $part->newSnippet($key, 'point', $point, $attr, $title); $attr = ['id' => "$partKey-$key-tooltip", 'class' => 'tooltip', 'visibility' => 'hidden'];
-            $part->newText($key, $point, $title, $attr);
+            $part->newText($key, $key, $title, $attr);
         }
     }
 
@@ -78,7 +78,7 @@ class SvgOnlyDebugTheme extends Theme
                 $attr = ['id' => "$partKey-$key", 'onmouseover' => "pointHover('$partKey-$key')", 'onmouseout' => "pointUnhover('$partKey-$key')"];
                 $part->newSnippet("$partKey-$key", $type, $part->points[$key], $attr, $title);
                 $attr = ['id' => "$partKey-$key-tooltip", 'class' => 'tooltip', 'visibility' => 'hidden'];
-                $part->newText($key, $part->points[$key], $title, $attr);
+                $part->newText($key, $key, $title, $attr);
                 $previous = $key;
             }
         }

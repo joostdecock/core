@@ -56,6 +56,7 @@ class GrowingPacker extends Packer
         else {
             if (($w <= $block->w) && ($h <= $block->h)) return $block;
             /* 
+             * Rotating to see whether that works would be a nice add-on
             $this->rotate($block);
             if (($w <= $block->w) && ($h <= $block->h)) return $block;
             $this->rotate($block);

@@ -40,7 +40,7 @@ class JoostBodyBlock extends Pattern
         unset($this->help);
     }
 
-    private function loadParts()
+    public function loadParts()
     {
         foreach ($this->config['parts'] as $part => $title) {
             $this->addPart($part);
@@ -48,7 +48,7 @@ class JoostBodyBlock extends Pattern
         }
     }
 
-    private function draftBack($model) 
+    public function draftBack($model) 
     {
         $collarWidth = ($model->getMeasurement('neckCircumference')/3.1415) / 2 + 5;
         $collarDepth = $this->help['collarShapeFactor'] * (
@@ -91,7 +91,7 @@ class JoostBodyBlock extends Pattern
         $p->addPoint( 19 , $p->shift(12, $p->angle(8,12)+90, 10), 'Bottom control point for 12' );
 
         // Control points for collar
-        $p->addPoint( 20 , $p->shift(8, $p->angle(8,12)+90, $this->getOption('backNeckCutout')), 'Curvei control point for collar' );
+        $p->addPoint( 20 , $p->shift(8, $p->angle(8,12)+90, $this->getOption('backNeckCutout')), 'Curve control point for collar' );
         $p->newPoint( 21 , $p->x(8), $p->y(9));
 
         // Paths
@@ -103,7 +103,7 @@ class JoostBodyBlock extends Pattern
         $p->newText( 'title', 'titleAnchor', $p->title, [ 'id' => "base-title", 'class' => 'title' ]);
     }
 
-    private function draftFront($model) 
+    public function draftFront($model) 
     {
         $this->clonePoints('backBlock', 'frontBlock');
         $p = $this->parts['frontBlock'];
@@ -124,7 +124,7 @@ class JoostBodyBlock extends Pattern
         $p->newText('title', 'titleAnchor', $p->title, $attr);
     }
     
-    private function draftSleeve($model) 
+    public function draftSleeve($model) 
     {
         $p = $this->parts['sleeveBlock'];
         

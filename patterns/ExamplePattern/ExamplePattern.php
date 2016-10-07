@@ -11,15 +11,8 @@ namespace Freesewing\Patterns;
  */
 class ExamplePattern extends Pattern
 {
-    private $config_file = __DIR__.'/config.yml';
+    public $config_file = __DIR__.'/config.yml';
     public $parts = array();
-
-    public function __construct()
-    {
-        $this->config = \Freesewing\Yamlr::loadConfig($this->config_file);
-        
-        return $this;
-    }
 
     public function draft($model)
     {
@@ -208,7 +201,8 @@ class ExamplePattern extends Pattern
         $attr = ['id' => "sleeve-title", 'class' => 'title'];
         $p->newText('title', 'titleAnchor', $p->title, $attr);
 
-        $p->newText('test', 33, "Sample text line 1\nAnother line of text, this is line 2", ['line-height' => 12, 'class' => 'text-lg align-center']);
+        $p->newText('test', 33, "Sample text line 1\nAnother ".$this->unit(51.23)." line of text, this is line 2", ['line-height' => 12, 'class' => 'text-lg align-center']);
+        
 
         $p->newTextOnPath('test1', 'M 10 C 10 22 17 C 23 28 30 C 29 25 18 ', "This text follows a curved path, which is kinda cool for adding notes and other stuff to a pattern", ['line-height' => 12, 'class' => 'text-xs', 'dy' => -2]);
         $p->newTextOnPath('test2', 'M 10 C 10 22 17 C 23 28 30 C 29 25 18 ', "This is the same but bigger text placed under the curve", ['line-height' => 12, 'class' => 'text-sm', 'dy' => 6]);

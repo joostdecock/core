@@ -3,14 +3,16 @@
 namespace Freesewing\Themes;
 
 /**
- * Freesewing\Themes\SvgPaperless class.
+ * Freesewing\Themes\Paperless class.
  *
  * @author Joost De Cock <joost@decock.org>
  * @copyright 2016 Joost De Cock
  * @license http://opensource.org/licenses/GPL-3.0 GNU General Public License, Version 3
  */
-abstract class SvgPaperless extends Svg
+class Paperless extends Svg
 {
+    private $defs;
+
     public function isPaperless()
     {
         return true;
@@ -23,7 +25,7 @@ abstract class SvgPaperless extends Svg
 
     public function themePattern($pattern)
     {   
-        $units = $this->units;
+        $units = $pattern->getUnits();
         $templateDir = $this->templateDir();
         $this->defs = file_get_contents("$templateDir/grid.$units");
         foreach($pattern->parts as $key => $part) {

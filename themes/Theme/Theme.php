@@ -11,6 +11,8 @@ namespace Freesewing\Themes;
  */
 class Theme
 {
+    public $messages = array();
+
     public function renderAs() 
     {
         return [
@@ -21,6 +23,7 @@ class Theme
 
     public function themePattern($pattern)
     {
+        $this->messages = $pattern->getMessages();
     }
 
     public function themeSvg(\Freesewing\SvgDocument $svgDocument)
@@ -30,6 +33,7 @@ class Theme
         $svgDocument->svgAttributes->add(file_get_contents( "$templateDir/svg.attributes"));
         $svgDocument->css->add(file_get_contents(           "$templateDir/svg.css"));
         $svgDocument->defs->add(file_get_contents(          "$templateDir/svg.defs"));
+        $svgDocument->footerComments->add($this->messages);
         $svgDocument->footerComments->add(file_get_contents("$templateDir/footer.comments"));
     }
 

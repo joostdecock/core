@@ -9,7 +9,7 @@ namespace Freesewing\Patterns;
  * @copyright 2016 Joost De Cock
  * @license http://opensource.org/licenses/GPL-3.0 GNU General Public License, Version 3
  */
-class Pattern
+abstract class Pattern
 {
     public $paperless = false;
     /**
@@ -31,6 +31,34 @@ class Pattern
      * @var int
      */
     private $partMargin = 5;
+    private $units;
+    private $messages;
+    public $parts = array();
+
+    public function __construct()
+    {
+        $this->config = \Freesewing\Yamlr::loadConfig($this->config_file);
+        if($_REQUEST['unitsOut'] == 'imperial') $this->setUnits('imperial');
+        else $this->setUnits('metric');
+        return $this;
+    }
+
+    public function unit($val)
+    {
+        if($this->units == 'imperial') return round($val/25.4,2).'"';
+        else return round($val/10,2).'cm';
+    }
+
+    public function getUnits()
+    {
+        return $this->units;
+    }
+
+    public function setUnits($units)
+    {
+        if($units == 'imperial') $this->units = 'imperial';
+        else $this->units = 'metric';
+    }
 
     public function getOption($key)
     {
@@ -176,6 +204,16 @@ class Pattern
         foreach($pattern->parts as $partKey => $part) {
             unset($part->tmp);
         }
+    }
+
+    public function msg($msg)
+    {
+        $this->messages[] = $msg;
+    }
+
+    public function getMessages()
+    {
+        return implode("\n", $this->messages);
     }
 
     private function layoutTransforms($layoutBlocks)

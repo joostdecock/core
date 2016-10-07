@@ -16,6 +16,8 @@ class ExamplePattern extends Pattern
 
     public function draft($model)
     {
+        $this->msg('this is a test');
+        $this->msg('this is another test');
         $this->help = array();
         $this->help['armholeDepth'] = 200 + ($model->getMeasurement('shoulderSlope')/2 - 27.5) + ($model->getMeasurement('upperBicepsCircumference')/10);
         $this->help['collarShapeFactor'] = 1;

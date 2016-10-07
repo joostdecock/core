@@ -91,6 +91,7 @@ class Designer extends Theme
         $svgDocument->css->add(file_get_contents(__DIR__.'/templates/svg.css'));
         $svgDocument->script->add(file_get_contents(__DIR__.'/templates/svg.script'));
         $svgDocument->defs->add(file_get_contents(__DIR__.'/templates/svg.defs'));
+        $svgDocument->footerComments->add($this->getMessages());
         $svgDocument->footerComments->add(file_get_contents(__DIR__.'/templates/footer.comments'));
     }
     

@@ -25,11 +25,12 @@ class Theme
 
     public function themeSvg(\Freesewing\SvgDocument $svgDocument)
     {
-        $svgDocument->headerComments->add(file_get_contents(__DIR__.'/templates/header.comments'));
-        $svgDocument->svgAttributes->add(file_get_contents(__DIR__.'/templates/svg.attributes'));
-        $svgDocument->css->add(file_get_contents(__DIR__.'/templates/svg.css'));
-        $svgDocument->defs->add(file_get_contents(__DIR__.'/templates/svg.defs'));
-        $svgDocument->footerComments->add(file_get_contents(__DIR__.'/templates/footer.comments'));
+        $templateDir = $this->templateDir();
+        $svgDocument->headerComments->add(file_get_contents("$templateDir/header.comments"));
+        $svgDocument->svgAttributes->add(file_get_contents( "$templateDir/svg.attributes"));
+        $svgDocument->css->add(file_get_contents(           "$templateDir/svg.css"));
+        $svgDocument->defs->add(file_get_contents(          "$templateDir/svg.defs"));
+        $svgDocument->footerComments->add(file_get_contents("$templateDir/footer.comments"));
     }
 
     public function themeResponse($apiHandler)
@@ -43,5 +44,10 @@ class Theme
 
     public function cleanUp()
     {
+    }
+
+    public function templateDir()
+    {
+        return __DIR__.'/templates';
     }
 }

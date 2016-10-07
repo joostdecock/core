@@ -3,13 +3,13 @@
 namespace Freesewing\Themes;
 
 /**
- * Freesewing\Themes\SvgOnlyTheme class.
+ * Freesewing\Themes\Designer class.
  *
  * @author Joost De Cock <joost@decock.org>
  * @copyright 2016 Joost De Cock
  * @license http://opensource.org/licenses/GPL-3.0 GNU General Public License, Version 3
  */
-class SvgOnlyDebugTheme extends Theme
+class Designer extends Theme
 {
     public function themePattern($pattern)
     {
@@ -94,13 +94,8 @@ class SvgOnlyDebugTheme extends Theme
         $svgDocument->footerComments->add(file_get_contents(__DIR__.'/templates/footer.comments'));
     }
     
-    public function themeResponse($apiHandler)
+    public function templateDir()
     {
-
-        $response = new \Freesewing\Response();
-        $response->setFormat('svg');
-        $response->setBody("{$apiHandler->svgDocument}");
-
-        return $response;
+        return __DIR__.'/templates';
     }
 }

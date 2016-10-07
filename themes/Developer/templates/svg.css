@@ -1,0 +1,52 @@
+@import 'https://fonts.googleapis.com/css?family=Lato:700i|Open+Sans';
+path { fill: none; stroke: #000000; stroke-opacity:1; stroke-width: 0.4; stroke-miterlimit:4; stroke-dashoffset:0; stroke-linecap:round; stroke-linejoin:round; }
+path.curvecontrol { fill: none; stroke: #5BC0DE; stroke-opacity:1; stroke-width: 0.3; stroke-miterlimit:4; stroke-dashoffset:0; stroke-linecap:round; stroke-linejoin:round; }
+path.sa { fill: none; stroke: #000000; stroke-dasharray:1,1; stroke-opacity:1; stroke-width: 0.2; stroke-miterlimit:4; stroke-dashoffset:0; stroke-linecap:round; stroke-linejoin:round; }
+path.marker { fill: none; stroke: #00FF00; stroke-opacity:1; stroke-width: 2; stroke-miterlimit:4; stroke-dashoffset:0; stroke-linecap:round; stroke-linejoin:round; }
+path.textpath { fill: none; stroke: none; }
+path.noteline { fill: none; stroke: #134cc5; stroke-width: 0.6; marker-end:url(#noteArrow)}
+text {font-size: 8px; font-family:'Open Sans'; fill:#333333; text-anchor:start;}
+text.tooltip { font-size:5; }
+text.snippet-scalebox-headings tspan,
+text.snippet-scalebox-instructions tspan,
+text.snippet-scalebox-values tspan,
+text.scalebox-hash tspan { font-size:4px; }
+text.snippet-scalebox-instructions tspan { font-size:3px; }
+text.snippet-scalebox-values tspan { font-size:4px; fill:#5BC0DE; }
+text.title { font-size:14px; text-anchor:middle; fill:#333333; font-family:'Lato'; }
+text.text-xs {font-size: 4px;}
+text.text-sm {font-size: 6px;}
+text.text-lg {font-size: 10px;}
+text.align-center { text-anchor:middle; }
+text.note { fill: #134cc5; }
+text.note tspan { alignment-baseline: middle;}
+text.note-5, text.note-6, text.note-7, text.note-11, text.note-12, text.note-0, text.note-1 {text-anchor:middle;}
+text.note-8, text.note-9, text.note-10 {text-anchor:end;}
+path.arrow { fill: #134cc5; stroke: #134cc5; fill-rule:evenodd;stroke-width:1;stroke-linejoin:round; }
+rect.part { fill: none; stroke: none; fill:url(#Strips1_1); }
+rect.grid-metric { fill:url(#metricGrid); }
+rect.grid-imperial { fill:url(#imperialGrid); }
+path.gridline { fill: none; stroke: #999999; stroke-width: 0.8; }
+path.gridline-sm { fill: none; stroke: #cccccc; stroke-width: 0.3; stroke-dasharray:1,1; }
+path.gridline-xs { fill: none; stroke: #dddddd; stroke-width: 0.1; }
+text.grid {font-size: 6px;}
+/* generic classes below. Would be nice to just use these  and less */
+.point { fill: none;  stroke-width: 0.2; stroke: #999999;}
+
+.stroke-purple { stroke: #5C3566; }
+.fill-purple { fill: #5C3566; }
+
+.stroke-blue { stroke: #5BC0DE; }
+.fill-blue { fill: #5BC0DE; }
+
+.stroke-grey { stroke: #999999; }
+.fill-grey { fill: #999999; }
+
+.no-fill { fill: none; }
+.no-stroke { stroke: none; }
+
+.stroke-xs { stroke-width: 0.1; }
+.stroke-sm { stroke-width: 0.2; }
+.stroke { stroke-width: 0.4; }
+.stroke-lg { stroke-width: 0.7; }
+.stroke-xl { stroke-width: 1; }

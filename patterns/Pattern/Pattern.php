@@ -11,6 +11,7 @@ namespace Freesewing\Patterns;
  */
 class Pattern
 {
+    public $paperless = false;
     /**
      * @var array
      */

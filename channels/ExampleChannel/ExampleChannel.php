@@ -36,7 +36,7 @@ class ExampleChannel extends Channel
         foreach ($this->config['percentoptions'] as $key => $val) {
             $options[$val] = $requestData[$key] / 100;
         }
-
+    
         return $options;
     }
 }

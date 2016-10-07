@@ -58,12 +58,19 @@ class Part
     
     public function newSnippet($key, $reference, $anchor, $attributes=null, $description=null)
     {
-        $snippet = new \Freesewing\Snippet(); 
+        $snippet = new \Freesewing\SvgSnippet(); 
         $snippet->setReference($reference);
         $snippet->setAnchor($anchor);
         $snippet->setDescription($description);
         $snippet->setAttributes($attributes);
         $this->addSnippet($key, $snippet);
+    }
+    
+    public function newInclude($key, $content)
+    {
+        $include = new \Freesewing\SvgInclude(); 
+        $include->set($content);
+        $this->addInclude($key, $include);
     }
     
     public function newText($key, $anchorKey, $msg, $attributes=null)
@@ -128,9 +135,14 @@ class Part
         $this->points[$key] = $point;
     }
 
-    public function addSnippet($key, \Freesewing\Snippet $snippet)
+    public function addSnippet($key, \Freesewing\SvgSnippet $snippet)
     {
         $this->snippets[$key] = $snippet;
+    }
+
+    public function addInclude($key, \Freesewing\SvgInclude $include)
+    {
+        $this->includes[$key] = $include;
     }
 
     

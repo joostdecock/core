@@ -66,11 +66,16 @@ class ApiHandler
                 $this->channel->standardizePatternOptions($this->requestData)
             );
 
+            if(
+                method_exists($this->theme, 'isPaperless') 
+                && $this->theme->isPaperless()
+            ) $this->pattern->paperless = true;
+            
             $this->pattern->draft($this->model);
 
-            $this->theme->themePattern($this->pattern);
-
             $this->pattern->layout();
+            
+            $this->theme->themePattern($this->pattern);
 
             $this->renderAs = $this->theme->RenderAs();
             if ($this->renderAs['svg'] === true) $this->svgRender();

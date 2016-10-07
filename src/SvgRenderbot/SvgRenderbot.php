@@ -83,18 +83,9 @@ class SvgRenderbot
                     if (is_array($part->transforms) && count($part->transforms) > 0) {
                         $transforms = \Freesewing\Transform::asSvgParameter($part->transforms);
                     }
+                    
                     $svg .= $this->openGroup($partKey, $transforms);
-                    
-                    if(@$part->paths) foreach ($part->paths as $path) $svg .= $this->renderPath($path, $part);
-
-                    if(@$part->snippets) foreach ($part->snippets as $snippet) $svg .= $this->renderSnippet($snippet, $part);
-
-                    if(@$part->texts) foreach ($part->texts as $text) $svg .= $this->renderText($text, $part);
-
-                    if(@$part->textsOnPath) foreach ($part->textsOnPath as $textOnPath) $svg .= $this->renderTextOnPath($textOnPath, $part);
-                    
-                    if(@$part->notes) foreach ($part->notes as $note) $svg .= $this->renderNote($note, $part);
-
+                    $svg .= $this->renderPart($part);
                     $svg .= $this->closeGroup();
                 }
             }
@@ -102,6 +93,20 @@ class SvgRenderbot
 
         $svg .= $this->closeGroup();
 
+        return $svg;
+    }
+
+    private function renderPart($part)
+    {
+        $svg = $this->nl();
+    
+        if(@$part->includes) foreach ($part->includes as $include) $svg .= $include->get();
+        if(@$part->paths) foreach ($part->paths as $path) $svg .= $this->renderPath($path, $part);
+        if(@$part->snippets) foreach ($part->snippets as $snippet) $svg .= $this->renderSnippet($snippet, $part);
+        if(@$part->texts) foreach ($part->texts as $text) $svg .= $this->renderText($text, $part);
+        if(@$part->textsOnPath) foreach ($part->textsOnPath as $textOnPath) $svg .= $this->renderTextOnPath($textOnPath, $part);
+        if(@$part->notes) foreach ($part->notes as $note) $svg .= $this->renderNote($note, $part);
+        
         return $svg;
     }
 

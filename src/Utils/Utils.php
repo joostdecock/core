@@ -2,6 +2,7 @@
 
 namespace Freesewing;
 
+
 /**
  * Freesewing\Utils class.
  *
@@ -23,5 +24,10 @@ class Utils
     public static function getUid($prefix='')
     {
         return uniqid($prefix);
+    }
+
+    public static function translate($msg)
+    {
+        return Translator::trans($msg);
     }
 }

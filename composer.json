@@ -1,5 +1,6 @@
 {
     "require": {
+        "symfony/translation": "3.1.*",
         "symfony/yaml": "3.1.*",
         "raveren/kint": "1.*"
     },

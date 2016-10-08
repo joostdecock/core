@@ -104,7 +104,7 @@ class SvgRenderbot
         if(@$part->paths) foreach ($part->paths as $path) $svg .= $this->renderPath($path, $part);
         if(@$part->snippets) foreach ($part->snippets as $snippet) $svg .= $this->renderSnippet($snippet, $part);
         if(@$part->texts) foreach ($part->texts as $text) $svg .= $this->renderText($text, $part);
-        if(@$part->textsOnPath) foreach ($part->textsOnPath as $textOnPath) $svg .= $this->renderTextOnPath($textOnPath, $part);
+        if($part->textsOnPath) foreach ($part->textsOnPath as $textOnPath) $svg .= $this->renderTextOnPath($textOnPath, $part);
         if(@$part->notes) foreach ($part->notes as $note) $svg .= $this->renderNote($note, $part);
         
         return $svg;
@@ -210,32 +210,7 @@ class SvgRenderbot
      */
     private function renderTextOnPath($textOnPath, $part)
     {
-        $path = $textOnPath->getPath();
-        $id = $this->getUid();
-        $path->setAttributes(['class' => 'textpath', 'id' => $id]);
-        $svg = $this->renderPath($path, $part);
-        $svg .= $this->nl();
-        $svg .=  '<textPath href="#'.$id.'" ';
-        if(!isset($textOnPath->attributes['id'])) $svg .= 'id="'.$this->getUid().'" ';
-        if(isset($textOnPath->attributes['line-height'])) $lineHeight = $textOnPath->attributes['line-height'];
-        else  $lineHeight = 20;
-        $svg .= $this->flattenAttributes($textOnPath->getAttributes(), ['line-height']);
-        $svg .= '>';
-        
-        if(strpos($textOnPath->getText(), "\n") === false) $svg .= $textOnPath->getText();
-        else {
-            $lines = explode("\n",$textOnPath->getText());
-            $attr = '';
-            $this->indent();
-            foreach($lines as $line) {
-                $svg .= $this->nl()."<tspan $attr>$line</tspan>";
-                $attr = ' dy="'.$lineHeight.'"';
-            }
-            $this->outdent();
-        }
-        $svg .= '</textPath>';
-        
-        return $svg;
+        return $this->renderText($textOnPath, $part, true);
     }
     
     private function flattenAttributes($array, $remove=array())

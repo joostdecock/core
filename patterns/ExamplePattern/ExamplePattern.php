@@ -203,7 +203,9 @@ class ExamplePattern extends Pattern
         $attr = ['id' => "sleeve-title", 'class' => 'title'];
         $p->newText('title', 'titleAnchor', $p->title, $attr);
 
-        $p->newText('test', 33, "Sample text line 1\nAnother ".$this->unit(51.23)." line of text, this is line 2", ['line-height' => 12, 'class' => 'text-lg align-center']);
+        $msg = 'This is a test';
+
+        $p->newText('test', 33, $this->t($msg), ['line-height' => 12, 'class' => 'text-lg align-center']);
         
 
         $p->newTextOnPath('test1', 'M 10 C 10 22 17 C 23 28 30 C 29 25 18 ', "This text follows a curved path, which is kinda cool for adding notes and other stuff to a pattern", ['line-height' => 12, 'class' => 'text-xs', 'dy' => -2]);

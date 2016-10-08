@@ -38,9 +38,16 @@ abstract class Pattern
     public function __construct()
     {
         $this->config = \Freesewing\Yamlr::loadConfig($this->config_file);
-        if($_REQUEST['unitsOut'] == 'imperial') $this->setUnits('imperial');
+        if(@$_REQUEST['unitsOut'] == 'imperial') $this->setUnits('imperial');
         else $this->setUnits('metric');
         return $this;
+    }
+
+    public function getDirectory() 
+    {
+        $reflector = new \ReflectionClass(get_class($this));
+        $filename = $reflector->getFileName();
+        return dirname($filename);
     }
 
     public function unit($val)
@@ -216,6 +223,10 @@ abstract class Pattern
         return implode("\n", $this->messages);
     }
 
+    public function t($msg)
+    {
+        return $this->translator->trans($msg);
+    }
     private function layoutTransforms($layoutBlocks)
     {
         foreach ($layoutBlocks as $key => $layoutBlock) {

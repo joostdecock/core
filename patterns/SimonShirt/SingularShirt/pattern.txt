@@ -1,0 +1,84 @@
+Your {{.Pattern}} info leaflet.
+==============================
+
+The details of this pattern draft are included below for your records:
+
+
+
+                         The basics
+
+                            Pattern: {{.Pattern}}
+                              Model: {{.Model}}
+                          Reference: {{.Hash}}
+    
+   
+   
+                       Measurements
+
+                  Across back width: {{.Mabw}}cm
+               Biceps circumference: {{.Mbc}}cm
+  Center back neck to natural waist: {{.Mcbtnw}}cm
+                Chest circumference: {{.Mcc}}cm
+                      Natural waist: {{.Mnw}}cm
+     Natural waist to trouser waist: {{.Mnwttw}}cm
+                 Neck circumference: {{.Mnc}}cm
+                    Shoulder length: {{.Mshl}}cm
+                     Shoulder slope: {{.Mss}}cm
+           Shoulder to elbow length: {{.Mstel}}cm
+                      Sleeve length: {{.Msvl}}cm
+        Trouser waist circumference: {{.Mtwc}}cm
+                Wrist circumference: {{.Mwc}}cm
+
+
+
+                    Pattern options
+
+                     Sleevecap ease: {{.Ose}}cm
+                         Chest ease: {{.Oche}}cm
+                         Waist ease: {{.Owe}}cm
+                          Hips ease: {{.Ohe}}cm
+                        Biceps ease: {{.Obe}}cm
+                       Length bonus: {{.Olb}}cm
+                          Hem style: {{.Ohs}}
+                          Hem curve: {{.Ohc}}cm
+                          Hip flare: {{.Ohf}}cm
+                   Back neck cutout: {{.Obnc}}cm
+                        Collar ease: {{.Ocle}}cm
+                Button placket type: {{.Obpt}}
+               Button placket style: {{.Obps}}
+               Button placket width: {{.Obpw}}cm
+            Buttonhole placket type: {{.Obhpt}}
+           Buttonhole placket style: {{.Obhps}}
+           Buttonhole placket width: {{.Obhpw}}cm
+      Buttonhole placket fold width: {{.Obhpfw}}cm
+                      Front buttons: {{.Ofb}}
+                   Extra top button: {{.Oetb}}
+                 Button free length: {{.Obfl}}cm
+                         Split yoke: {{.Osy}}
+                 Collar stand width: {{.Ocsw}}cm
+                  Collar stand bend: {{.Ocsb}}cm
+                 Collar stand curve: {{.Ocsc}} degrees
+                         Collar gap: {{.Ocg}}cm
+                        Collar bend: {{.Ocb}}cm
+                       Collar flare: {{.Ocf}}cm
+                       Collar angle: {{.Oca}} degrees
+                        Collar roll: {{.Ocr}}cm
+                         Cuff style: {{.Ocs}}
+                         Cuf length: {{.Ocl}}cm
+                 Barrelcuff buttons: {{.Obb}}
+           Barrelcuff narrow button: {{.Obnb}}
+                          Cuff ease: {{.Ocfe}}cm
+                         Cuff drape: {{.Ocd}}cm
+               Sleeve placket width: {{.Ospw}}cm
+              Sleeve placket length: {{.Ospl}}cm
+
+              
+              
+              
+This email was sent because the {{.Pattern}} pattern has so many options that it's easy to forgot what you picked. 
+
+
+Love,
+Joost
+
+PS: This message was sent by a robot, but your replies will go to joost

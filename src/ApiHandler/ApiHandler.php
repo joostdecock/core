@@ -2,6 +2,9 @@
 
 namespace Freesewing;
 
+use Symfony\Component\Translation\Translator;
+use Symfony\Component\Translation\Loader\YamlFileLoader;
+
 /**
  * Freesewing\ApiHandler class.
  *
@@ -62,6 +65,7 @@ class ApiHandler
                 $this->channel->standardizeModelMeasurements($this->requestData)
             );
 
+            $this->pattern->translator = $this->getTranslator();
             $this->pattern->addOptions(
                 $this->channel->standardizePatternOptions($this->requestData)
             );
@@ -100,6 +104,20 @@ class ApiHandler
     public function getContext()
     {
         return $this->context;
+    }
+
+    private function getTranslator()
+    {
+        $translator = new Translator($this->getLocale());
+        $translator->setFallbackLocales(['en']);
+        $translator->addLoader('yaml', new YamlFileLoader());
+        
+        $patternDir = $this->pattern->getDirectory().'/translations';
+        
+        $translation = "$patternDir/messages.".$this->getLocale().'.yml';
+        if(is_readable($translation)) $translator->addResource('yaml', $translation, $this->getLocale());
+        
+        return $translator; 
     }
 
     private function svgRender() 
@@ -163,5 +181,17 @@ class ApiHandler
                 $this->context[$type] = $this->config['defaults'][$type];
             }
         }
+        $this->setLocale();
+    }
+    
+    private function setLocale()
+    {
+        if(isset($this->requestData['lang'])) $this->context['locale'] = strtolower($this->requestData['lang']);
+        else $this->context['locale'] = 'en';
+    }
+
+    private function getLocale()
+    {
+        return $this->context['locale'];
     }
 }

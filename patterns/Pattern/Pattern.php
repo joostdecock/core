@@ -38,6 +38,7 @@ abstract class Pattern
     public function __construct()
     {
         $this->config = \Freesewing\Yamlr::loadConfig($this->getConfigFile());
+        $this->loadParts();
         return $this;
     }
 
@@ -46,6 +47,14 @@ abstract class Pattern
         $reflector = new \ReflectionClass(get_class($this));
         $filename = $reflector->getFileName();
         return dirname($filename);
+    }
+
+    private function loadParts()
+    {
+        foreach ($this->config['parts'] as $part => $title) {
+            $this->addPart($part);
+            $this->parts[$part]->setTitle($title);
+        }
     }
 
     public function getTranslationsDir() 

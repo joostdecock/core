@@ -33,6 +33,7 @@ class Theme
         $svgDocument->svgAttributes->add(file_get_contents( "$templateDir/svg.attributes"));
         $svgDocument->css->add(file_get_contents(           "$templateDir/svg.css"));
         $svgDocument->defs->add(file_get_contents(          "$templateDir/svg.defs"));
+        $svgDocument->script->add(file_get_contents(          "$templateDir/svg.script"));
         $svgDocument->footerComments->add($this->messages);
         $svgDocument->footerComments->add(file_get_contents("$templateDir/footer.comments"));
     }

@@ -11,28 +11,22 @@ namespace Freesewing\Patterns;
  */
 class JoostBodyBlock extends Pattern
 {
-    private $config_file = __DIR__.'/config.yml';
-    public $parts = array();
-
-    public function __construct()
-    {
-        $this->config = \Freesewing\Yamlr::loadConfig($this->config_file);
-        
-        return $this;
-    }
 
     public function draft($model)
+    {
+        $this->loadHelp($model);
+
+        $this->draftBackBlock($model);
+        $this->draftFrontBlock($model);
+        $this->draftSleeveBlock($model);
+    }
+
+    public function loadHelp($model)
     {
         $this->help = array();
         $this->help['armholeDepth'] = 200 + ($model->getMeasurement('shoulderSlope')/2 - 27.5) + ($model->getMeasurement('upperBicepsCircumference')/10);
         $this->help['collarShapeFactor'] = 1;
         $this->help['sleevecapShapeFactor'] = 1;
-        
-        $this->loadParts();
-        
-        $this->draftBack($model);
-        $this->draftFront($model);
-        $this->draftSleeve($model);
     }
 
     public function cleanUp()
@@ -40,15 +34,7 @@ class JoostBodyBlock extends Pattern
         unset($this->help);
     }
 
-    public function loadParts()
-    {
-        foreach ($this->config['parts'] as $part => $title) {
-            $this->addPart($part);
-            $this->parts[$part]->setTitle($title);
-        }
-    }
-
-    public function draftBack($model) 
+    public function draftBackBlock($model) 
     {
         $collarWidth = ($model->getMeasurement('neckCircumference')/3.1415) / 2 + 5;
         $collarDepth = $this->help['collarShapeFactor'] * (
@@ -100,10 +86,10 @@ class JoostBodyBlock extends Pattern
 
         // Title anchor
         $p->newPoint('titleAnchor', $p->x(10)/2, $p->y(10), 'Title anchor');
-        $p->newText( 'title', 'titleAnchor', $p->title, [ 'id' => "base-title", 'class' => 'title' ]);
+        $p->newText( 'title', 'titleAnchor', $this->t($p->title), [ 'id' => "base-title", 'class' => 'title' ]);
     }
 
-    public function draftFront($model) 
+    public function draftFrontBlock($model) 
     {
         $this->clonePoints('backBlock', 'frontBlock');
         $p = $this->parts['frontBlock'];
@@ -121,10 +107,10 @@ class JoostBodyBlock extends Pattern
         
         $p->addPoint('titleAnchor', $p->flipX('titleAnchor', $p->x(5)) );
         $attr = ['id' => "front-title", 'class' => 'title'];
-        $p->newText('title', 'titleAnchor', $p->title, $attr);
+        $p->newText('title', 'titleAnchor', $this->t($p->title), $attr);
     }
     
-    public function draftSleeve($model) 
+    public function draftSleeveBlock($model) 
     {
         $p = $this->parts['sleeveBlock'];
         
@@ -206,9 +192,9 @@ class JoostBodyBlock extends Pattern
         
         $p->newPoint('titleAnchor', $p->x(2), $this->parts['frontBlock']->y('titleAnchor') );
         $attr = ['id' => "sleeve-title", 'class' => 'title'];
-        $p->newText('title', 'titleAnchor', $p->title, $attr);
+        $p->newText('title', 'titleAnchor', $this->t($p->title), $attr);
 
-        $p->newText('test', 33, "This sleeve block is merely a starting point\nIt has not been matched to the armhole in the body", ['line-height' => 10, 'class' => 'align-center']);
+        $p->newText('test', 33, $this->t('warning'), ['line-height' => 10, 'class' => 'align-center']);
 
     }
     

@@ -7,6 +7,8 @@ info:
     company: "freesewing.org"
     link: "freesewing.org/pattern/aiden-shirt/"
 parts:
+    frontBlock: "Front block"
+    backBlock: "Back block"
     front: Front
     back: Back
 

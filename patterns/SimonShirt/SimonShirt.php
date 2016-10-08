@@ -11,9 +11,6 @@ namespace Freesewing\Patterns;
  */
 class SimonShirt extends JoostBodyBlock
 {
-    private $config_file = __DIR__.'/config.yml';
-    public $parts = array();
-
     public function draft($model)
     {
         $this->msg('this is a test');

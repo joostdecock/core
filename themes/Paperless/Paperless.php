@@ -18,16 +18,11 @@ class Paperless extends Svg
         return true;
     }
 
-    public function templateDir()
-    {
-        return __DIR__.'/templates';
-    }
-
     public function themePattern($pattern)
     {   
         $units = $pattern->getUnits();
-        $templateDir = $this->templateDir();
-        $this->defs = file_get_contents("$templateDir/grid.$units");
+        $templateDir = $this->getTemplateDir();
+        $this->defs = file_get_contents("$templateDir/grid.".$units['out']);
         foreach($pattern->parts as $key => $part) {
             $id = $part->newId('grid');
             $this->defs .= "\n".'<pattern id="grid-'.$key.'" xlink:href="grid"></pattern>';
@@ -37,7 +32,7 @@ class Paperless extends Svg
 
     public function themeSvg(\Freesewing\SvgDocument $svgDocument)
         {
-            $templateDir = $this->templateDir();
+            $templateDir = $this->getTemplateDir();
             $svgDocument->headerComments->add(file_get_contents("$templateDir/header.comments"));
             $svgDocument->svgAttributes->add(file_get_contents( "$templateDir/svg.attributes"));
             $svgDocument->css->add(file_get_contents(           "$templateDir/svg.css"));

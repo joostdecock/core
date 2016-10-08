@@ -21,8 +21,4 @@ class Svg extends Theme
         return $response;
     }
     
-    public function templateDir()
-    {
-        return __DIR__.'/templates';
-    }
 }

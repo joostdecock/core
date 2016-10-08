@@ -28,7 +28,7 @@ class Theme
 
     public function themeSvg(\Freesewing\SvgDocument $svgDocument)
     {
-        $templateDir = $this->templateDir();
+        $templateDir = $this->getTemplateDir();
         $svgDocument->headerComments->add(file_get_contents("$templateDir/header.comments"));
         $svgDocument->svgAttributes->add(file_get_contents( "$templateDir/svg.attributes"));
         $svgDocument->css->add(file_get_contents(           "$templateDir/svg.css"));
@@ -50,8 +50,10 @@ class Theme
     {
     }
 
-    public function templateDir()
+    public function getTemplateDir() 
     {
-        return __DIR__.'/templates';
+        $reflector = new \ReflectionClass(get_class($this));
+        $filename = $reflector->getFileName();
+        return dirname($filename).'/templates';
     }
 }

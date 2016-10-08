@@ -65,7 +65,8 @@ class ApiHandler
                 $this->channel->standardizeModelMeasurements($this->requestData)
             );
 
-            $this->pattern->translator = $this->getTranslator();
+            $this->pattern->setTranslator($this->getTranslator());
+            $this->pattern->setUnits($this->context['units']);
             $this->pattern->addOptions(
                 $this->channel->standardizePatternOptions($this->requestData)
             );
@@ -185,12 +186,27 @@ class ApiHandler
             }
         }
         $this->setLocale();
+        $this->setUnits();
     }
     
     private function setLocale()
     {
         if(isset($this->requestData['lang'])) $this->context['locale'] = strtolower($this->requestData['lang']);
         else $this->context['locale'] = 'en';
+    }
+
+    private function setUnits()
+    {
+        if(isset($this->requestData['unitsIn']) && $this->requestData['unitsIn'] == 'imperial') {
+            $this->context['units']['in'] = 'imperial';
+        } else {
+            $this->context['units']['in'] = 'metric';
+        }
+        if(isset($this->requestData['unitsOut']) && $this->requestData['unitsOut'] == 'imperial') {
+            $this->context['units']['out'] = 'imperial';
+        } else {
+            $this->context['units']['out'] = 'metric';
+        }
     }
 
     private function getLocale()

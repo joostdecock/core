@@ -19,6 +19,7 @@ class Designer extends Theme
                 $this->debugPoints($partKey, $part);
             }
         }
+        $this->messages = $pattern->getMessages();
     }
 
     private function debugPoints($partKey, $part)
@@ -85,8 +86,4 @@ class Designer extends Theme
 
     }    
     
-    public function templateDir()
-    {
-        return __DIR__.'/templates';
-    }
 }

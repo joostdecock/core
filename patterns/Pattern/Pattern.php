@@ -37,34 +37,36 @@ abstract class Pattern
 
     public function __construct()
     {
-        $this->config = \Freesewing\Yamlr::loadConfig($this->config_file);
-        if(@$_REQUEST['unitsOut'] == 'imperial') $this->setUnits('imperial');
-        else $this->setUnits('metric');
+        $this->config = \Freesewing\Yamlr::loadConfig($this->getConfigFile());
         return $this;
+    }
+
+    private function getPatternDir() 
+    {
+        $reflector = new \ReflectionClass(get_class($this));
+        $filename = $reflector->getFileName();
+        return dirname($filename);
     }
 
     public function getTranslationsDir() 
     {
-        $reflector = new \ReflectionClass(get_class($this));
-        $filename = $reflector->getFileName();
-        return dirname($filename).'/translations';
+        return $this->getPatternDir().'/translations';
+    }
+
+    public function getConfigFile() 
+    {
+        return $this->getPatternDir().'/config.yml';
     }
 
     public function unit($val)
     {
-        if($this->units == 'imperial') return round($val/25.4,2).'"';
+        if($this->units['out'] == 'imperial') return round($val/25.4,2).'"';
         else return round($val/10,2).'cm';
     }
 
     public function getUnits()
     {
         return $this->units;
-    }
-
-    public function setUnits($units)
-    {
-        if($units == 'imperial') $this->units = 'imperial';
-        else $this->units = 'metric';
     }
 
     public function getOption($key)
@@ -221,6 +223,16 @@ abstract class Pattern
     public function getMessages()
     {
         return implode("\n", $this->messages);
+    }
+
+    public function setTranslator($translator)
+    {
+        $this->translator = $translator;
+    }
+
+    public function setUnits($units)
+    {
+        $this->units = $units;
     }
 
     public function t($msg)

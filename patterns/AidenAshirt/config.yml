@@ -1,25 +1,12 @@
 info:
-  name: "Simon Shirt"
-  version: "2.0"
-  date: 20161007
-  author: "Joost De Cock"
-  email: "joost@decock.org"
-  company: "freesewing.org"
-  link: "freesewing.org/pattern/simon-shirt/"
+    name: "Aiden A-Shirt"
+    version: "2.0"
+    date: 20161008
+    author: "Joost De Cock"
+    email: "joost@decock.org"
+    company: "freesewing.org"
+    link: "freesewing.org/pattern/aiden-shirt/"
 parts:
-  frontRight: "Front right"
-  frontLeft: "Front left"
-  yoke: "Yoke"
-  halfYoke: "Yoke"
-  back: "Back"
-  sleeve: "Sleeve"
-  collarStand: "Collar stand"
-  collar: "Collar"
-  underCollar: "Undercollar"
-  cuffGuard: "Cuff guard"
-  cuffPlacket: "Cuff placket"
-  barrellCuff: "barrelCuff"
-  frenchCuff: "frenchCuff"
-  buttonPlacket: "Button placket"
-  buttonholePlacket: "Buttonhole placket"
+    front: Front
+    back: Back
 

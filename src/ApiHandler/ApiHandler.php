@@ -112,11 +112,14 @@ class ApiHandler
         $translator->setFallbackLocales(['en']);
         $translator->addLoader('yaml', new YamlFileLoader());
         
-        $patternDir = $this->pattern->getDirectory().'/translations';
-        
-        $translation = "$patternDir/messages.".$this->getLocale().'.yml';
-        if(is_readable($translation)) $translator->addResource('yaml', $translation, $this->getLocale());
-        
+        $translation = $this->pattern->getTranslationsDir().'/messages.'.$this->getLocale().'.yml';
+        if(is_readable($translation)) {
+            $translator->addResource( 'yaml', $translation, $this->getLocale());
+        } else {
+            $translation = $this->pattern->getTranslationsDir().'/messages.en.yml';
+            $translator->addResource( 'yaml', $translation, 'en');
+        } 
+
         return $translator; 
     }
 

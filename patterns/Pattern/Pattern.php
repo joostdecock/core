@@ -43,11 +43,11 @@ abstract class Pattern
         return $this;
     }
 
-    public function getDirectory() 
+    public function getTranslationsDir() 
     {
         $reflector = new \ReflectionClass(get_class($this));
         $filename = $reflector->getFileName();
-        return dirname($filename);
+        return dirname($filename).'/translations';
     }
 
     public function unit($val)

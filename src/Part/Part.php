@@ -207,14 +207,14 @@ class Part
         $this->boundary->setBottomRight($bottomRight);
     }
 
-    public function offsetPath($newKey, $srcKey, $distance=10)
+    public function offsetPath($newKey, $srcKey, $distance=10, $render=false)
     {
         $path = $this->paths[$srcKey];
-       if ($this->findPathDirection($srcKey) == 'ccw') $distance *= -1; 
+        if ($this->findPathDirection($srcKey) == 'ccw') $distance *= -1; 
 
         $stack = $this->pathOffsetAsStack($path, $distance);
         $this->fillPathStackGaps($stack);
-        $this->pathStackToPath($newKey, $stack);
+        $this->pathStackToPath($newKey, $stack, $render);
         $this->purgePoints('.po');
     }
 
@@ -235,7 +235,7 @@ class Part
         return $newKey;
     }
 
-    private function pathStackToPath($key, $stack)
+    private function pathStackToPath($key, $stack, $render)
     {
         $chunks = count($stack->items);
         $count = 1;
@@ -297,6 +297,7 @@ class Part
             $count++;
         }
         $this->newPath($key, $path, ['class' => 'sa']);
+        if(!$render) $this->paths[$key]->setRender(false);
     }
 
     public function newId($prefix='-i')

@@ -2,7 +2,8 @@
 path { fill: none; stroke: #000000; stroke-opacity:1; stroke-width: 0.6; stroke-miterlimit:4; stroke-dashoffset:0; stroke-linecap:round; stroke-linejoin:round; }
 path.curvecontrol { fill: none; stroke: #5BC0DE; stroke-opacity:1; stroke-width: 0.3; stroke-miterlimit:4; stroke-dashoffset:0; stroke-linecap:round; stroke-linejoin:round; }
 path.sa { fill: none; stroke: #000000; stroke-dasharray:1,1.5; stroke-opacity:1; stroke-width: 0.4; stroke-miterlimit:4; stroke-dashoffset:0; stroke-linecap:round; stroke-linejoin:round; }
-path.marker { fill: none; stroke: #00FF00; stroke-opacity:1; stroke-width: 2; stroke-miterlimit:4; stroke-dashoffset:0; stroke-linecap:round; stroke-linejoin:round; }
+path.marker { fill: none; stroke: #00FF00; stroke-opacity:0.4; stroke-width: 2; stroke-miterlimit:4; stroke-dashoffset:0; stroke-linecap:round; stroke-linejoin:round; }
+path.tmp { fill: none; stroke: #FF0000; stroke-opacity:0.5; stroke-width: 1; stroke-miterlimit:4; stroke-dashoffset:0; stroke-linecap:round; stroke-linejoin:round; }
 path.textpath { fill: none; stroke: none; }
 path.noteline { fill: none; stroke: #134cc5; stroke-width: 0.6; marker-start:url(#noteArrow)}
 text {font-size: 8px; font-family:'Open Sans'; fill:#333333; text-anchor:start;}
@@ -25,11 +26,11 @@ text.note tspan { alignment-baseline: middle;}
 text.note-5, text.note-6, text.note-7, text.note-11, text.note-12, text.note-0, text.note-1 {text-anchor:middle;}
 text.note-8, text.note-9, text.note-10 {text-anchor:end;}
 path.arrow { fill: #134cc5; stroke: #134cc5; fill-rule:evenodd;stroke-width:1;stroke-linejoin:round; }
-rect.grid { fill: none; stroke: #dddddd; fill:url(#grid); }
-path.gridline { fill: none; stroke: #999999; stroke-width: 0.8; }
-path.gridline-sm { fill: none; stroke: #cccccc; stroke-width: 0.3; stroke-dasharray:1,1; }
-path.gridline-xs { fill: none; stroke: #dddddd; stroke-width: 0.1; }
-path.grainline { stroke: #5C3566; stroke-width: 0.5; marker-start:url(#lineArrowStart); marker-end:url(#lineArrowEnd)}
+rect.grid { fill: none; stroke: #aaaaaa; fill:url(#grid); }
+path.gridline { fill: none; stroke: #aaaaaa; stroke-width: 0.6; }
+path.gridline-sm { fill: none; stroke: #aaaaaa; stroke-width: 0.3; stroke-dasharray:1,1; }
+path.gridline-xs { fill: none; stroke: #aaaaaa; stroke-width: 0.05; }
+path.grainline { stroke: #5C3566; stroke-width: 0.5; marker-start:url(#lineArrowStart); marker-end:url(#lineArrowEnd); }
 path.linearrow {fill:#5C3566; stroke: none; }
 path.notearrow {fill:#134cc5; stroke: none; }
 text.grid {font-size: 6px;}

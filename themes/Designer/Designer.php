@@ -70,7 +70,7 @@ class Designer extends Theme
                     if($curveSteps == 3) $type = 'path-point';
                     else $type = 'path-curvecontrol';
                     if($curveSteps == 1 or $curveSteps == 3) {
-                        $part->newPath("svgDebug-pathcontrol-$key", "M $previous L $key", ['class' => 'curvecontrol']);
+                        $part->newPath("svgDebug-pathcontrol-$key", "M $previous L $key", ['class' => 'curve-control']);
                     } 
                     $curveSteps++;
                 }

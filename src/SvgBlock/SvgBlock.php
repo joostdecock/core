@@ -20,7 +20,7 @@ abstract class SvgBlock
         $data = '';
         if(is_array($this->data)) {
             foreach ($this->data as $origin) {
-                $data .= implode("\n    ", $origin);
+                $data .= implode("\n    ", $origin)."\n    ";
             }
         }
 

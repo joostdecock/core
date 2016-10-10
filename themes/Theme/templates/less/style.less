@@ -1,0 +1,216 @@
+@import 'variables';
+@import "@{font-import}";
+
+/* Reset */
+path,
+circle,
+rect {
+    fill: none;
+    stroke: none;
+}
+
+/* Paths */
+
+path { 
+    fill: none; 
+    stroke: @black;
+    stroke-opacity:1; 
+    stroke-width: @stroke;
+    stroke-linecap:round; 
+    stroke-linejoin:round; 
+}
+
+path.curve-control { 
+    stroke: @warning-color; 
+    stroke-width: @stroke-sm;
+}
+
+path.seamline { 
+    stroke-width: @stroke-lg;
+}
+
+path.seam-allowance { 
+    stroke-dasharray:1,1.5; 
+}
+
+path.marker { 
+    stroke: @warning-color; 
+    stroke-opacity: 0.4; 
+    stroke-width: @stroke-xxl;
+}
+
+path.text { fill: none; stroke: none; }
+
+path.note { 
+    stroke: @note-color;
+    stroke-width: @stroke-lg;
+    marker-start:url(#noteArrow)
+}
+
+
+
+/* Text */
+
+text {
+    font-size: @font-size;
+    font-family: @font-title;
+    fill: @black;
+    text-anchor:start;
+}
+
+text.snippet-scalebox-headings tspan,
+text.snippet-scalebox-instructions tspan,
+text.snippet-scalebox-values tspan,
+text.scalebox-hash tspan { 
+    font-size: @font-size-sm; 
+}
+
+text.snippet-scalebox-instructions tspan { 
+    font-size: @font-size-xs; 
+}
+
+text.snippet-scalebox-values tspan { 
+    font-size: @font-size-sm;
+    fill: @brand-color; 
+}
+
+text.part-nr { 
+    font-size: @font-size-nr; 
+    text-anchor:middle; 
+    fill: @black;
+    font-family: @font-title; 
+    transform: translate(0px, -16px); /* FIXME: How do we do this with LESS based on @font-size-nr? */
+}
+
+text.part-title { 
+    font-size: @font-size-title;
+    text-anchor:middle; 
+    fill: @black;
+    font-family: @font-title; 
+}
+
+text.part-msg { 
+    font-size: @font-size-lg;
+    text-anchor:middle; 
+    fill: @black; 
+    transform: translate(0, 8px ); /* FIXME: How do we do this with LESS based on @font-size-title? */
+}
+
+text.note { 
+    fill: @note-color; 
+}
+
+text.note tspan { 
+    alignment-baseline: middle;
+}
+
+text.note-5, 
+text.note-6,
+text.note-7, 
+text.note-11, 
+text.note-12, 
+text.note-0, 
+text.note-1 {
+    text-anchor:middle;
+}
+
+text.note-8, 
+text.note-9, 
+text.note-10 {
+    text-anchor:end;
+}
+
+path.arrow { 
+    stroke: @note-color;
+}
+
+path.grainline { 
+    stroke: @brand-color; 
+    marker-start: url(#brand-color-arrowStart); 
+    marker-end:url(#brand-color-arrowEnd)
+}
+ 
+path.double-arrow { 
+    marker-start: url(#note-color-arrowStart); 
+    marker-end:url(#note-color-arrowEnd)
+}
+
+
+
+/* Grid */
+
+rect.grid { 
+    fill: none; 
+    stroke: none; 
+    fill:url(#grid); 
+}
+path.gridline { 
+    stroke: @gray2; 
+    stroke-width: @stroke-lg; 
+}
+
+path.gridline-sm { 
+    stroke: @gray3; 
+    stroke-dasharray: 1,1; 
+}
+
+path.gridline-xs { 
+    stroke: @gray3; 
+    stroke-width: @stroke-xs; 
+}
+
+
+
+/* Debug */
+
+path.debug { 
+    stroke: @error-color; 
+    stroke-opacity: 0.4; 
+    stroke-width: @stroke-xxl;
+}
+
+.point { 
+    fill: none;  
+    stroke-width: @stroke-sm; 
+    stroke: @gray2;
+}
+
+
+
+/* Utility */
+
+.stroke-brand   { stroke: @brand-color;   }
+.stroke-note    { stroke: @note-color;    }
+.stroke-tip     { stroke: @tip-color;     }
+.stroke-warning { stroke: @warning-color; }
+.stroke-error   { stroke: @error-color;   }
+
+.fill-brand   { fill: @brand-color;   }
+.fill-note    { fill: @note-color;    }
+.fill-tip     { fill: @tip-color;     }
+.fill-warning { fill: @warning-color; }
+.fill-error   { fill: @error-color;   }
+
+.stroke-black { stroke: @black; }
+.stroke-gray1 { stroke: @gray1; }
+.stroke-gray2 { stroke: @gray2; }
+.stroke-gray3 { stroke: @gray3; }
+.stroke-gray4 { stroke: @gray4; }
+
+.fill-black { fill: @black; }
+.fill-gray1 { fill: @gray1; }
+.fill-gray2 { fill: @gray2; }
+.fill-gray3 { fill: @gray3; }
+.fill-gray4 { fill: @gray4; }
+
+.text-xs { font-size: @font-size-xs; }
+.text-sm { font-size: @font-size-sm; }
+.text-lg { font-size: @font-size-lg; }
+.text-xl { font-size: @font-size-xl; }
+
+.stroke-xs  { stroke-width: @stroke-xs; }
+.stroke-sm  { stroke-width: @stroke-sm; }
+.stroke-lg  { stroke-width: @stroke-lg; }
+.stroke-xl  { stroke-width: @stroke-xl; }
+.stroke-xxl { stroke-width: @stroke-xxl; }
+

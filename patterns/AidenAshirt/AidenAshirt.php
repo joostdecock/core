@@ -98,7 +98,7 @@ Cut one 6cm wide and '.round(getp('NECKHOLE_LEN'),0).'cm long trip to finish the
         // Moving chest point because stretch
         $p->newPoint( 5, ($model->getMeasurement('chestCircumference') + $this->getOption('chestEase')) /4 * $this->getOption('stretchFactor'), $p->y(5), 'Quarter chest @ armhole depth');
 
-        // Shoulders
+        // Shoulders | Point indexes starting at 100
         $p->newPoint( 100, $p->x(9), $p->y(1) + $this->getOption('necklineDrop'), 'Neck bottom @ CF');
         $p->addPoint( 101, $p->shiftTowards(8, 12, $p->distance(8, 12) * $this->getOption('shoulderStrapPlacement') * $this->getOption('stretchFactor')), 'Center of shoulder strap');
         $p->addPoint( 102, $p->shiftTowards(101, 12, $this->getOption('shoulderStrapWidth')/2), 'Shoulder strap edge on the shoulder side');
@@ -127,51 +127,63 @@ Cut one 6cm wide and '.round(getp('NECKHOLE_LEN'),0).'cm long trip to finish the
             $p->newPoint( 2, $p->x(2), $p->y(5), 'Center back @ armhole depth'); 
         }
 
-        // Points for 'cut on fold' line and grainline
-        $p->newPoint( 120, 0, $p->y(100) + 20, 'Cut on fold endpoint top');
-        $p->newPoint( 121, 20, $p->y(120), 'Cut on fold corner top');
-        $p->newPoint( 122, 0, $p->y(111) - 20, 'Cut on fold endpoint bottom');
-        $p->newPoint( 123, 20, $p->y(122), 'Cut on fold corner bottom');
-        $p->addPoint( 124, $p->shift(121, 0, 15), 'Grainline top');
-        $p->clonePoint(124, 'gridAnchor');
-        $p->addPoint( 125, $p->shift(123, 0, 15), 'Grainline bottom');
+        // Seamline 
+        $seamline = 'M 3 L 111 L 110 L 112 C 113 5 5 C 107 106 102 L 103 C 105 104 100 z';
+        $p->newPath('seamline', $seamline, ['class' => 'seamline']);
+
+        // Seam allowance | Point indexes from 200 upward
+        $p->offsetPath('offset', 'seamline', 10);
+        $p->addPoint( 200, $p->shift(111,-90,20), 'Hem allowance @ CF');
+        $p->addPoint( 201, $p->shift(110,-90,20), 'Hem allowance @ CF');
+        $p->addPoint( 201, $p->shift(201,0,10), 'Hem allowance @ side');
+        $p->newPath(
+            'sa', 
+            'M 111 L 200 L 201 L sal8 C saccp11 sacend1 sacend1 L 5 M 102 L sal13 L sal14 L 103',
+            ['class' => 'seam-allowance']
+        );
+
+        // Instructions | Point indexes from 300 upward 
+        // Cut on fold line and grainline
+        $p->newPoint( 300, 0, $p->y(100) + 20, 'Cut on fold endpoint top');
+        $p->newPoint( 301, 20, $p->y(300), 'Cut on fold corner top');
+        $p->newPoint( 302, 0, $p->y(111) - 20, 'Cut on fold endpoint bottom');
+        $p->newPoint( 303, 20, $p->y(302), 'Cut on fold corner bottom');
+        $p->addPoint( 304, $p->shift(301, 0, 15), 'Grainline top');
+        $p->clonePoint(304, 'gridAnchor');
+        $p->addPoint( 305, $p->shift(303, 0, 15), 'Grainline bottom');
+        
+        $p->newPath('cutOnFold', 'M 300 L 301 L 303 L 302', ['class' => 'double-arrow stroke-blue']);
+        $p->newTextOnPath('cutonfold', 'M 303 L 301', $this->t("Cut on fold"), ['line-height' => 12, 'class' => 'text-sm', 'dy' => -2]);
+        $p->newPath('grainline', 'M 304 L 305', ['class' => 'grainline']);
+        $p->newTextOnPath('grainline', 'M 305 L 304', $this->t("Grainline"), ['line-height' => 12, 'class' => 'text-sm', 'dy' => -2]);
         
         // Title
         $p->newPoint('titleAnchor', $p->x(5)*0.4, $p->x(5)+40, 'Title anchor');
         $p->addTitle('titleAnchor', 1, $this->t($p->title), $this->t('Cut 1 on fold'));
 
-        // Cut on fold and grainline
-        $p->newPath('cutOnFold', 'M 120 L 121 L 123 L 122', ['class' => 'grainline']);
-        $p->newTextOnPath('cutonfold', 'M 123 L 121', $this->t("Cut on fold"), ['line-height' => 12, 'class' => 'text-sm', 'dy' => -2]);
-        $p->newPath('grainline', 'M 124 L 125', ['class' => 'grainline']);
-        $p->newTextOnPath('grainline', 'M 125 L 124', $this->t("Grainline"), ['line-height' => 12, 'class' => 'text-sm', 'dy' => -2]);
-        
-        // Seamline 
-        $seamline = 'M 3 L 111 L 110 L 112 C 113 5 5 C 107 106 102 L 103 C 105 104 100 z';
-        $p->newPath('seamline', $seamline);
-    
         // Scalebox 
         $p->addPoint('scaleboxAnchor', $p->shift('titleAnchor', -90, 40));
         $p->newSnippet('scalebox', 'scalebox', 'scaleboxAnchor');
-
-        // Seam allowance 
-        $p->offsetPath('sa', 'seamline', 10);
-        $p->paths['sa']->setAttributes(['class' => 'marker']);
-        $saAttr = ['class' => 'sa'];
-        $p->newPath('sa-shoulder', 'M 103 L sa27 L sa26 L 102', $saAttr);
-        $p->addPoint( 130, $p->shift('sa5', -90, 10)); 
-        $p->addPoint( 131, $p->shift('sa7', -90, 10)); 
-        $p->addPoint( 132, $p->shift(112, 0, 10)); 
-        $p->newPath('sa-hemside', 'M 111 L 130 L 131 L 132 C sa9 sa11 sa11 L 5', $saAttr);
-
+        
+        // Notes
         $noteAttr = ['line-height' => 6, 'class' => 'text-sm']; 
-        $p->newNote(1, 101,  $this->t("Standard\nseam\nallowance"), 6, 10, -5, $noteAttr );
-        $p->newNote(2, 'sa40',  $this->t("HERENo\nseam\nallowance"), 5, 25, 10, $noteAttr );
-        $p->newNote(3, 'sa20',  $this->t("No\nseam\nallowance"), 7, 25, 10, $noteAttr );
-        $p->newNote(4, 132,  $this->t("Standard\nseam\nallowance"), 9, 25, 5, $noteAttr );
-        $p->newPoint( 'note5', $p->x(110)/2, $p->y(110));
-        $p->newNote(5, 'note5',  $this->t("Hem\nallowance")."\n(".$this->unit(20).')', 12, 25, -10, ['line-height' => 6, 'dy' => -20, 'class' => 'text-sm'] );
-    
+        $p->addPoint( 306, $p->shift(101, 180, 3), 'Note 1 anchor');
+        $p->newNote(1, 306,  $this->t("Standard\nseam\nallowance")."\n(".$this->unit(10).')', 6, 10, -5, $noteAttr );
+        
+        $p->addPoint( '.help1', $p->shift(100, 90, 20));
+        $p->addPoint( 307, $p->curveCrossesY(100, 104, 104, 103, $p->y('.help1')), 'Note 2 anchor');
+        $p->newNote(2, 307,  $this->t("No\nseam\nallowance"), 4, 15, 0, $noteAttr );
+        
+        $p->addPoint( 308, $p->curveCrossesY(5, 107, 106, 102, $p->y(301)), 'Note 3 anchor');
+        $p->newNote(3, 308,  $this->t("No\nseam\nallowance"), 8, 15, 0, $noteAttr );
+
+        $p->newNote(4, 112,  $this->t("Standard\nseam\nallowance")."\n(".$this->unit(10).')', 9, 15, -5, $noteAttr );
+        
+        //$p->newNote(2, 'sa40',  $this->t("HERENo\nseam\nallowance"), 5, 25, 10, $noteAttr );
+        //$p->newNote(3, 'sa20',  $this->t("No\nseam\nallowance"), 7, 25, 10, $noteAttr );
+        //$p->newNote(4, 132,  $this->t("Standard\nseam\nallowance"), 9, 25, 5, $noteAttr );
+        //$p->newPoint( 'note5', $p->x(110)/2, $p->y(110));
+        //$p->newNote(5, 'note5',  $this->t("Hem\nallowance")."\n(".$this->unit(20).')', 12, 25, -10, ['line-height' => 6, 'dy' => -20, 'class' => 'text-sm'] );
     
     }
 

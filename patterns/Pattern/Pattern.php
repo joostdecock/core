@@ -39,6 +39,9 @@ abstract class Pattern
     {
         $this->config = \Freesewing\Yamlr::loadConfig($this->getConfigFile());
         $this->loadParts();
+        $this->replace('__TITLE__', $this->config['info']['name']);
+        $this->replace('__VERSION__', $this->config['info']['version']);
+        $this->replace('__DATE__', date('l j F Y'));
         return $this;
     }
 
@@ -233,6 +236,16 @@ abstract class Pattern
     {
         return implode("\n", $this->messages);
     }
+    
+    public function replace($search, $replace)
+    {
+        $this->replacements[$search] = $replace;
+    }
+    
+    public function getReplacements()
+    {
+        return $this->replacements;
+    }
 
     public function setTranslator($translator)
     {
@@ -266,7 +279,7 @@ abstract class Pattern
     {
         $order = array();
         foreach ($parts as $key => $part) {
-            $order[$key] = $part->boundary->maxSize;
+            if($part->render) $order[$key] = $part->boundary->maxSize;
         }
         arsort($order);
         foreach ($order as $key => $maxSize) {

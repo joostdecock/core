@@ -20,8 +20,6 @@ class ExamplePattern extends Pattern
         $this->help['collarShapeFactor'] = 1;
         $this->help['sleevecapShapeFactor'] = 1;
         
-        $this->loadParts();
-        
         $this->draftBack($model);
         $this->draftFront($model);
         $this->draftSleeve($model);
@@ -30,14 +28,6 @@ class ExamplePattern extends Pattern
     public function cleanUp()
     {
         unset($this->help);
-    }
-
-    private function loadParts()
-    {
-        foreach ($this->config['parts'] as $part => $title) {
-            $this->addPart($part);
-            $this->parts[$part]->setTitle($title);
-        }
     }
 
     private function draftBack($model) 

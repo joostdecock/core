@@ -12,48 +12,47 @@
     <circle cx="0" cy="0" r="1.4" class="no-stroke fill-blue" />
 </g>
 <marker orient="auto" refY="0.0" refX="0.0" id="noteArrow" style="overflow:visible;" >
-  <path
-     id="lineArrowPath"
-     class="arrow"
-     d="M 8.7185878,4.0337352 L -2.2072895,0.016013256 L 8.7185884,-4.0017078 C 6.9730900,-1.6296469 6.9831476,1.6157441 8.7185878,4.0337352 z "
-     transform="scale(0.6) rotate(180) translate(0,0)" />
+    <path
+        class="notearrow"
+        d="M 0,0 L 9,-3, C 8,-2 8,2  9, 3 z"
+    />
 </marker>
-<pattern id="metricGrid" height="100" width="100" patternUnits="userSpaceOnUse" >
-    <path class="gridline" d="M 0 0 L 0 100 L 100 100" />
-    <path class="gridline-sm" d="M 50 0 L 50 100 M 0 50 L 100 50" />
-    <path class="gridline-xs" d="M 10 0 L 10 100 M 20 0 L 20 100 M 30 0 L 30 100 M 40 0 L 40 100 M 60 0 L 60 100 M 70 0 L 70 100 M 80 0 L 80 100 M 90 0 L 90 100" />
-    <path class="gridline-xs" d="M 0 10 L 100 10 M 0 20 L 100 20 M 0 30 L 100 30 M 0 40 L 100 40 M 0 60 L 100 60 M 0 70 L 100 70 M 0 80 L 100 80 M 0 90 L 100 90" />
-</pattern>
-<pattern id="imperialGrid" height="25.4" width="25.4" patternUnits="userSpaceOnUse" >
-    <path class="gridline" d="M 0 0 L 0 25.4 L 25.4 25.4" />
-    <path class="gridline-sm" d="M 12.7 0 L 12.7 25.4 M 0 12.7 L 25.4 12.7" />
-    <path class="gridline-xs" d="M 3.175 0 L 3.175 25.4 M 6.32 0 L 6.35 25.4 M 9.525 0 L 9.525 25.4 M 15.875 0 L 15.875 25.4 M 19.05 0 L 19.05 25.4 M 22.225 0 L 22.225 25.4" />
-    <path class="gridline-xs" d="M 0 3.175 L 25.4 3.175 M 0 6.32 L 25.4 6.35 M 0 9.525 L 25.4 9.525 M 0 15.875 L 25.4 15.875 M 0 19.05 L 25.4 19.05 M 0 22.225 L 25.4 22.225" />
-</pattern>
+<marker orient="auto" refY="0.0" refX="0.0" id="lineArrowStart" style="overflow:visible;" >
+  <path
+     class="linearrow"
+     d="M 0,0 L 12,-4, C 10,-2 10,2  12, 4 z"
+  />
+</marker>
+<marker orient="auto" refY="0.0" refX="0.0" id="lineArrowEnd" style="overflow:visible;" >
+  <path
+     class="linearrow"
+     d="M 0,0 L -12,-4, C -10,-2 -10,2  -12, 4 z"
+  />
+</marker>
 <g id="scalebox">
-    <rect y="0" x="0" height="50.8" width="101.6" style="fill:#000000;fill-opacity:1;stroke:none" />
-    <rect style="fill:#ffffff;fill-opacity:1;stroke:none" width="100" height="50" x="0.4" y="0.4" />
-    <text y="3" x="0" class="snippet-scalebox-headings">
-        <tspan x="2" dy="5">Pattern:</tspan>
-        <tspan x="2" dy="5">Version:</tspan>
-        <tspan x="2" dy="5">User:</tspan>
-        <tspan x="2" dy="5">Model:</tspan>
-        <tspan x="2" dy="5">Date:</tspan>
-        <tspan x="2" dy="5">Reference:</tspan>
+    <rect y="0" x="-50.8" height="50.8" width="101.6" style="fill:#000000;fill-opacity:1;stroke:none" />
+    <rect style="fill:#ffffff;fill-opacity:1;stroke:none" width="100" height="50" x="-50.4" y="0.4" />
+    <text y="3" x="-50.8" class="snippet-scalebox-headings">
+        <tspan x="-47" dy="5">Pattern:</tspan>
+        <tspan x="-47" dy="5">Version:</tspan>
+        <tspan x="-47" dy="5">User:</tspan>
+        <tspan x="-47" dy="5">Model:</tspan>
+        <tspan x="-47" dy="5">Date:</tspan>
+        <tspan x="-47" dy="5">Reference:</tspan>
     </text>
     <text y="0" x="0" class="snippet-scalebox-instructions">
-        <tspan x="2" y="42">The (white) inside of this box should measure 10 by 5 cm</tspan>
-        <tspan x="2" dy="5">The (black) outside of this box should measure 4 by 2 inch</tspan>
+        <tspan x="-48" y="42">The (white) inside of this box should measure 10 by 5 cm</tspan>
+        <tspan x="-48" dy="5">The (black) outside of this box should measure 4 by 2 inch</tspan>
     </text>
-    <text x="0" y="3" class="snippet-scalebox-values">
-        <tspan x="22" dy="5" >AidenAshirt</tspan>
-        <tspan x="22" dy="5">1.1</tspan>
-        <tspan x="22" dy="5">developer name</tspan>
-        <tspan x="22" dy="5">developer model</tspan>
-        <tspan x="22" dy="5">Friday 30th of September 2016</tspan>
+    <text x="-50.8" y="3" class="snippet-scalebox-values">
+        <tspan x="-25" dy="5" >__TITLE__</tspan>
+        <tspan x="-25" dy="5">__VERSION__</tspan>
+        <tspan x="-25" dy="5">__USER__</tspan>
+        <tspan x="-25" dy="5">__MODEL__</tspan>
+        <tspan x="-25" dy="5">__DATE__</tspan>
     </text>
         <text x="0" y="0" class="scalebox-hash">
-        <tspan x="22" y="33">DeveloperHash-NotSaved-NotDownloadable</tspan>
+        <tspan x="-25" y="33">__REFERENCE__</tspan>
     </text>
 </g>
 <g id="logo">

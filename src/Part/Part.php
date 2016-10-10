@@ -56,11 +56,11 @@ class Part
         $this->addPoint($key, $point);
     }
     
-    public function newSnippet($key, $reference, $anchor, $attributes=null, $description=null)
+    public function newSnippet($key, $reference, $anchorKey, $attributes=null, $description=null)
     {
         $snippet = new \Freesewing\SvgSnippet(); 
         $snippet->setReference($reference);
-        $snippet->setAnchor($anchor);
+        $snippet->setAnchor($this->loadPoint($anchorKey));
         $snippet->setDescription($description);
         $snippet->setAttributes($attributes);
         $this->addSnippet($key, $snippet);
@@ -80,6 +80,12 @@ class Part
         $text->setText($msg);
         $text->setAttributes($attributes);
         $this->addText($key, $text);
+    }
+
+    public function addTitle($anchorKey, $nr, $title, $msg) {
+        $this->newText('partNumber', $anchorKey, $nr, ['class' => 'part-nr']);
+        $this->newText('partTitle', $anchorKey, $title, ['class' => 'part-title']);
+        $this->newText('partMsg', $anchorKey, $msg, ['class' => 'part-msg']);
     }
 
     public function newNote($key, $anchorKey, $msg, $direction=3, $length=25, $offset=3, $attributes=null)
@@ -569,7 +575,7 @@ class Part
      *
      **/
 
-    private function clonePoint($sourceKey, $targetKey)
+    public function clonePoint($sourceKey, $targetKey)
     {
         $this->points[$targetKey] = $this->points[$sourceKey];
     }

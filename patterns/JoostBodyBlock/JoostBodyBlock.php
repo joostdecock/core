@@ -94,6 +94,23 @@ class JoostBodyBlock extends Pattern
         $this->clonePoints('backBlock', 'frontBlock');
         $p = $this->parts['frontBlock'];
        
+        $frontExtra = 5; // Cutting out armhole a bit deeper at the front
+        $p->addPoint( 10 , $p->shift(10, 180, $frontExtra) );
+        $p->addPoint( 17 , $p->shift(17, 180, $frontExtra) );
+        $p->addPoint( 18 , $p->shift(18, 180, $frontExtra) );
+        
+        $path = 'M 9 L 2 L 3 L 4 L 6 L 5 C 13 16 14 C 15 18 10 C 17 19 12 L 8 C 20 21 9 z';
+        $p->newPath('outline', $path);
+        
+        $attr = ['id' => "front-title", 'class' => 'title'];
+        $p->newText('title', 'titleAnchor', $this->t($p->title), $attr);
+    }
+    
+    public function olddraftFrontBlock($model) 
+    {
+        $this->clonePoints('backBlock', 'frontBlock');
+        $p = $this->parts['frontBlock'];
+       
         // Mirorring half defined in base
         for($i=1; $i<=21; $i++) $p->addPoint($i, $p->flipX($i, $p->x(5)) );
 

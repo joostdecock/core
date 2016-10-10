@@ -38,7 +38,7 @@ class Designer extends Theme
         if(!isset($part->tmp['pointsThemed'][$key])) {
             $title = $this->debugPointDescription($key,$point);
             $attr = ['id' => "$partKey-$key", 'onmouseover' => "pointHover('$partKey-$key')", 'onmouseout' => "pointUnhover('$partKey-$key')"];
-            $part->newSnippet($key, 'point', $point, $attr, $title); $attr = ['id' => "$partKey-$key-tooltip", 'class' => 'tooltip', 'visibility' => 'hidden'];
+            $part->newSnippet($key, 'point', $key, $attr, $title); $attr = ['id' => "$partKey-$key-tooltip", 'class' => 'tooltip', 'visibility' => 'hidden'];
             $part->newText($key, $key, $title, $attr);
         }
     }
@@ -77,7 +77,7 @@ class Designer extends Theme
                 else $type = 'path-point';
                 $title = $this->debugPointDescription($key,$part->points[$key]);
                 $attr = ['id' => "$partKey-$key", 'onmouseover' => "pointHover('$partKey-$key')", 'onmouseout' => "pointUnhover('$partKey-$key')"];
-                $part->newSnippet("$partKey-$key", $type, $part->points[$key], $attr, $title);
+                $part->newSnippet("$partKey-$key", $type, $key, $attr, $title);
                 $attr = ['id' => "$partKey-$key-tooltip", 'class' => 'tooltip', 'visibility' => 'hidden'];
                 $part->newText($key, $key, $title, $attr);
                 $previous = $key;

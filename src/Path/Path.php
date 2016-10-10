@@ -15,7 +15,18 @@ class Path
     public $attributes = array();
     public $boundary = null;
     public $direction;
+    public $render = true;
 
+
+    public function setRender($bool)
+    {
+        $this->render = $bool;
+    }
+
+    public function getRender()
+    {
+        return $this->render;
+    }
 
     public function setPath($path)
     {

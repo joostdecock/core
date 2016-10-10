@@ -24,21 +24,18 @@ class Paperless extends Svg
         $templateDir = $this->getTemplateDir();
         $this->defs = file_get_contents("$templateDir/grid.".$units['out']);
         foreach($pattern->parts as $key => $part) {
-            $id = $part->newId('grid');
-            $this->defs .= "\n".'<pattern id="grid-'.$key.'" xlink:href="grid"></pattern>';
-            $this->addGridToPart($part);
+            if($part->render) {
+                $id = $part->newId('grid');
+                $this->defs .= "\n".'<pattern id="grid-'.$key.'" xlink:href="grid"></pattern>';
+                $this->addGridToPart($part);
+            }
         }
     }
 
     public function themeSvg(\Freesewing\SvgDocument $svgDocument)
         {
-            $templateDir = $this->getTemplateDir();
-            $svgDocument->headerComments->add(file_get_contents("$templateDir/header.comments"));
-            $svgDocument->svgAttributes->add(file_get_contents( "$templateDir/svg.attributes"));
-            $svgDocument->css->add(file_get_contents(           "$templateDir/svg.css"));
-            $svgDocument->defs->add(file_get_contents(          "$templateDir/svg.defs"));
+            $this->loadTemplates($svgDocument);
             $svgDocument->defs->add($this->defs);
-            $svgDocument->footerComments->add(file_get_contents("$templateDir/footer.comments"));
     }
 
     private function addGridToPart($part, $units='metric')
@@ -46,7 +43,19 @@ class Paperless extends Svg
         $topLeft = $part->boundary->getTopLeft(); 
         $w = $part->boundary->width;
         $h = $part->boundary->height;
-        $part->newInclude('gridrect', '<rect x="'.$topLeft->getX().'" y="'.$topLeft->getY().'" height="'.$h.'" width="'.$w.'" class="part grid" />');
+        if(0 && isset($part->points['gridAnchor'])) {
+            $x = $part->points['gridAnchor']->getX() - $topLeft->getX();
+            $y = $part->points['gridAnchor']->getY() - $topLeft->getY();
+            $transX = $topLeft->getX() - $x;
+            $transY = $topLeft->getY() - $y;
+            print_r($topLeft);
+        } else {
+            $x = 0;
+            $y = 0;
+            $transX = $topLeft->getX();
+            $transY = $topLeft->getY();
+        }
+        $part->newInclude('gridrect', '<rect x="'.$x.'" y="'.$y.'" height="'.$h.'" width="'.$w.'" class="part grid" transform="translate('.$transX.','.$transY.')"/>');
     }
 }
 

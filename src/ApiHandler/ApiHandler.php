@@ -86,8 +86,11 @@ class ApiHandler
             if ($this->renderAs['svg'] === true) $this->svgRender();
             if ($this->renderAs['js'] === true) $this->jsRender();
             
-            $this->response = $this->theme->themeResponse($this); 
-        
+            $this->response = $this->theme->themeResponse($this);
+            
+            // Last minute replacements on entire response body
+            $this->response->setBody($this->replace($this->response->getBody(), $this->pattern->getReplacements())); 
+            
         else: // channel->isValidRequest() !== true
             $this->response = $this->bailOut(
                 'bad_request',
@@ -143,6 +146,14 @@ class ApiHandler
         
         // render SVG
         $this->svgDocument->setSvgBody($this->svgRenderbot->render($this->pattern));
+    }
+
+    private function replace($svg, $replacements)
+    {
+        if(is_array($replacements)) {
+            $svg = str_replace(array_keys($replacements), array_values($replacements), $svg);
+        }
+        return $svg;
     }
 
     private function bailOut($status, $info)

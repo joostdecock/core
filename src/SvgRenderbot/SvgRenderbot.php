@@ -92,7 +92,7 @@ class SvgRenderbot
         endif;
 
         $svg .= $this->closeGroup();
-
+        
         return $svg;
     }
 
@@ -115,6 +115,7 @@ class SvgRenderbot
      */
     private function renderPath($path, $part)
     {
+        if($path->getRender() === false) return '';
         $pathstring = $path->getPath();
         $points = $part->points;
         $patharray = explode(' ', $pathstring);
@@ -178,7 +179,7 @@ class SvgRenderbot
         $svg .= '>';
         
         if($textOnPath !== false) { // Text on path
-            $svg .=  "<textPath xlink:href=\"#$id\">".
+            $svg .=  "<textPath xlink:href=\"#$id\" startOffset=\"50%\">".
                 '<tspan '.$this->flattenAttributes($text->getAttributes()).'>'.$text->getText().'</tspan>'.
                 '</textPath>';
         } else { // Regular text

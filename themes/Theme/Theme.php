@@ -9,7 +9,7 @@ namespace Freesewing\Themes;
  * @copyright 2016 Joost De Cock
  * @license http://opensource.org/licenses/GPL-3.0 GNU General Public License, Version 3
  */
-class Theme
+abstract class Theme
 {
     public $messages = array();
 
@@ -28,14 +28,19 @@ class Theme
 
     public function themeSvg(\Freesewing\SvgDocument $svgDocument)
     {
+        $this->loadTemplates($svgDocument);
+    }
+
+    public function loadTemplates($svgDocument) 
+    {
         $templateDir = $this->getTemplateDir();
-        $svgDocument->headerComments->add(file_get_contents("$templateDir/header.comments"));
-        $svgDocument->svgAttributes->add(file_get_contents( "$templateDir/svg.attributes"));
-        $svgDocument->css->add(file_get_contents(           "$templateDir/svg.css"));
-        $svgDocument->defs->add(file_get_contents(          "$templateDir/svg.defs"));
-        $svgDocument->script->add(file_get_contents(          "$templateDir/svg.script"));
+        $svgDocument->headerComments->add(file_get_contents("$templateDir/header-comments"));
+        $svgDocument->svgAttributes->add(file_get_contents( "$templateDir/svg-attributes"));
+        $svgDocument->css->add(file_get_contents(           "$templateDir/style.css"));
+        $svgDocument->defs->add(file_get_contents(          "$templateDir/svg-defs"));
+        $svgDocument->script->add(file_get_contents(          "$templateDir/script.js"));
         $svgDocument->footerComments->add($this->messages);
-        $svgDocument->footerComments->add(file_get_contents("$templateDir/footer.comments"));
+        $svgDocument->footerComments->add(file_get_contents("$templateDir/footer-comments"));
     }
 
     public function themeResponse($apiHandler)

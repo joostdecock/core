@@ -19,8 +19,10 @@ text.note tspan{alignment-baseline:middle}
 text.note-5,text.note-6,text.note-7,text.note-11,text.note-12,text.note-0,text.note-1{text-anchor:middle}
 text.note-8,text.note-9,text.note-10{text-anchor:end}
 path.arrow{stroke:#5bc0de}
-path.grainline{stroke:#5c3566;marker-start:url(#brand-color-arrowStart);marker-end:url(#brand-color-arrowEnd)}
+path.grainline{stroke:#5c3566;stroke-width:1;marker-start:url(#brand-color-arrowStart);marker-end:url(#brand-color-arrowEnd)}
+path.single-arrow{marker-start:url(#note-color-arrowStart)}
 path.double-arrow{marker-start:url(#note-color-arrowStart);marker-end:url(#note-color-arrowEnd)}
+path.textpath{stroke:none;fille:none}
 rect.grid{fill:none;stroke:none;fill:url(#grid)}
 path.gridline{stroke:#999;stroke-width:.6}
 path.gridline-sm{stroke:#ccc;stroke-dasharray:1,1}

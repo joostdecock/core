@@ -138,7 +138,7 @@ Cut one 6cm wide and '.round(getp('NECKHOLE_LEN'),0).'cm long trip to finish the
         $p->addPoint( 201, $p->shift(201,0,10), 'Hem allowance @ side');
         $p->newPath(
             'sa', 
-            'M 111 L 200 L 201 L sal8 C saccp11 sacend1 sacend1 L 5 M 102 L sal13 L sal14 L 103',
+            'M 111 L 200 L 201 L sal8 C saccp11 sacend1 sacend1 L 5 M 102 L sal14 L sal15 L 103',
             ['class' => 'seam-allowance']
         );
 
@@ -152,10 +152,10 @@ Cut one 6cm wide and '.round(getp('NECKHOLE_LEN'),0).'cm long trip to finish the
         $p->clonePoint(304, 'gridAnchor');
         $p->addPoint( 305, $p->shift(303, 0, 15), 'Grainline bottom');
         
-        $p->newPath('cutOnFold', 'M 300 L 301 L 303 L 302', ['class' => 'double-arrow stroke-blue']);
-        $p->newTextOnPath('cutonfold', 'M 303 L 301', $this->t("Cut on fold"), ['line-height' => 12, 'class' => 'text-sm', 'dy' => -2]);
+        $p->newPath('cutOnFold', 'M 300 L 301 L 303 L 302', ['class' => 'double-arrow stroke-note stroke-lg']);
+        $p->newTextOnPath('cutonfold', 'M 303 L 301', $this->t("Cut on fold"), ['line-height' => 12, 'class' => 'text-sm fill-note', 'dy' => -2]);
         $p->newPath('grainline', 'M 304 L 305', ['class' => 'grainline']);
-        $p->newTextOnPath('grainline', 'M 305 L 304', $this->t("Grainline"), ['line-height' => 12, 'class' => 'text-sm', 'dy' => -2]);
+        $p->newTextOnPath('grainline', 'M 305 L 304', $this->t("Grainline"), ['line-height' => 12, 'class' => 'text-sm fill-brand', 'dy' => -2]);
         
         // Title
         $p->newPoint('titleAnchor', $p->x(5)*0.4, $p->x(5)+40, 'Title anchor');
@@ -179,11 +179,17 @@ Cut one 6cm wide and '.round(getp('NECKHOLE_LEN'),0).'cm long trip to finish the
 
         $p->newNote(4, 112,  $this->t("Standard\nseam\nallowance")."\n(".$this->unit(10).')', 9, 15, -5, $noteAttr );
         
-        //$p->newNote(2, 'sa40',  $this->t("HERENo\nseam\nallowance"), 5, 25, 10, $noteAttr );
-        //$p->newNote(3, 'sa20',  $this->t("No\nseam\nallowance"), 7, 25, 10, $noteAttr );
-        //$p->newNote(4, 132,  $this->t("Standard\nseam\nallowance"), 9, 25, 5, $noteAttr );
-        //$p->newPoint( 'note5', $p->x(110)/2, $p->y(110));
-        //$p->newNote(5, 'note5',  $this->t("Hem\nallowance")."\n(".$this->unit(20).')', 12, 25, -10, ['line-height' => 6, 'dy' => -20, 'class' => 'text-sm'] );
+        $p->newPoint( 309, $p->x(110)/2, $p->y(110), 'Note 5 anchor');
+        $p->newNote(4, 309,  $this->t("Hem allowance")."\n(".$this->unit(20).')', 12, 15, -10, ['line-height' => 6, 'class' => 'text-sm', 'dy' => -4] );
+        
+        if($this->theme == 'Paperless' || $this->theme == 'Designer' || $this->theme == 'Developer') {
+            $p->offsetPathString('help1', 'M 5 C 107 106 102', -3, 1);
+            //$p->newPath('armhole', '', ['class' => 'marker']);
+            
+                //$p->paths['armhole']->setAttributes(['class' => 'grainline']);
+
+        
+        }
     
     }
 

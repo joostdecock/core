@@ -13,16 +13,11 @@ class Paperless extends Svg
 {
     private $defs;
 
-    public function isPaperless()
-    {
-        return true;
-    }
-
     public function themePattern($pattern)
     {   
         $units = $pattern->getUnits();
         $templateDir = $this->getTemplateDir();
-        $this->defs = file_get_contents("$templateDir/grid.".$units['out']);
+        $this->defs = file_get_contents("$templateDir/defs/grid.".$units['out']);
         foreach($pattern->parts as $key => $part) {
             if($part->render) {
                 $id = $part->newId('grid');

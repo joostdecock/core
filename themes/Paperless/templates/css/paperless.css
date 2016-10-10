@@ -1,0 +1,4 @@
+rect.grid{fill:none;stroke:none;fill:url(#grid)}
+path.gridline{stroke:#999;stroke-width:.6}
+path.gridline-sm{stroke:#ccc;stroke-dasharray:1,1}
+path.gridline-xs{stroke:#ccc;stroke-width:.1}

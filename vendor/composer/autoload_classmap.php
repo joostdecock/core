@@ -45,7 +45,6 @@ return array(
     'Freesewing\\Patterns\\AidenAshirt' => $baseDir . '/patterns/AidenAshirt/AidenAshirt.php',
     'Freesewing\\Patterns\\ExamplePattern' => $baseDir . '/patterns/ExamplePattern/ExamplePattern.php',
     'Freesewing\\Patterns\\JoostBodyBlock' => $baseDir . '/patterns/JoostBodyBlock/JoostBodyBlock.php',
-    'Freesewing\\Patterns\\LayoutTest' => $baseDir . '/patterns/LayoutTest/LayoutTest.php',
     'Freesewing\\Patterns\\Pattern' => $baseDir . '/patterns/Pattern/Pattern.php',
     'Freesewing\\Patterns\\SimonShirt' => $baseDir . '/patterns/SimonShirt/SimonShirt.php',
     'Freesewing\\Point' => $baseDir . '/src/Point/Point.php',

@@ -33,14 +33,15 @@ abstract class Theme
 
     public function loadTemplates($svgDocument) 
     {
-        $templateDir = $this->getTemplateDir();
-        $svgDocument->headerComments->add(file_get_contents("$templateDir/header-comments"));
-        $svgDocument->svgAttributes->add(file_get_contents( "$templateDir/svg-attributes"));
-        $svgDocument->css->add(file_get_contents(           "$templateDir/style.css"));
-        $svgDocument->defs->add(file_get_contents(          "$templateDir/svg-defs"));
-        $svgDocument->script->add(file_get_contents(          "$templateDir/script.js"));
+        $templates = $this->loadTemplateHierarchy();
+        foreach($templates['js'] as $js) $svgDocument->script->add($js);
+        foreach($templates['css'] as $css) $svgDocument->css->add($css);
+        foreach($templates['defs'] as $defs) $svgDocument->defs->add($defs);
+        foreach($templates['header'] as $comments) $svgDocument->headerComments->add($comments);
+        foreach($templates['footer'] as $comments) $svgDocument->headerComments->add($comments);
+        foreach($templates['attributes'] as $attr) $svgDocument->svgAttributes->add($attr);
+        
         $svgDocument->footerComments->add($this->messages);
-        $svgDocument->footerComments->add(file_get_contents("$templateDir/footer-comments"));
     }
 
     public function themeResponse($apiHandler)
@@ -54,6 +55,43 @@ abstract class Theme
 
     public function cleanUp()
     {
+    }
+
+    public function loadTemplateHierarchy() 
+    {
+        $locations = $this->getClassChain();
+        $templates = array();
+        foreach($locations as $location) {
+            if(is_readable("$location/config.yml")) {
+                $dir = "$location/templates";
+                $config = \Freesewing\Yamlr::loadConfig("$location/config.yml");
+                foreach($config['templates'] as $type => $entries) {
+                    foreach($entries as $entry) {
+                        if(!isset($templates[$type][$entry])) {
+                            $template = "$location/templates/$entry";
+                            if(is_readable($template)) $templates[$type][$entry] = file_get_contents($template);
+                        }
+                    }
+                }
+            }
+        }
+        
+        return $templates;
+    }
+    
+    public function getClassChain() 
+    {
+        $reflector = new \ReflectionClass(get_class($this));
+        $filename = $reflector->getFileName();
+        $locations[] = dirname($filename);
+        do {
+            $parent = $reflector->getParentClass();
+            $reflector = new \ReflectionClass($parent->name);
+            $filename = $reflector->getFileName();
+            $locations[] = dirname($filename);
+        } while ($parent->name != 'Freesewing\Themes\Theme');
+        
+        return $locations;
     }
 
     public function getTemplateDir() 

@@ -174,7 +174,7 @@ class SvgRenderbot
         }
         if(!isset($text->attributes['id'])) $svg .= 'id="'.$this->getUid().'" ';
         if(isset($text->attributes['line-height'])) $lineHeight = $text->attributes['line-height'];
-        else  $lineHeight = 20;
+        else  $lineHeight = 12;
         $svg .= $this->flattenAttributes($text->getAttributes(), ['line-height']);
         $svg .= '>';
         

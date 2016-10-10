@@ -1,0 +1,4 @@
+templates:
+    css: 
+        - "css/paperless.css"
+

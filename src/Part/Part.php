@@ -100,7 +100,7 @@ class Part
         $this->addPoint($toId, $this->shift($anchorKey, $angle, $length));
         $path = new \Freesewing\Path();
         $path->setPath("M $fromId L $toId");
-        $path->setAttributes(['class' =>'noteline']);
+        $path->setAttributes(['class' =>'note']);
         $note->setPath($path);
         
         $textAnchorId = $this->newId('.note');
@@ -207,6 +207,13 @@ class Part
         $this->boundary->setBottomRight($bottomRight);
     }
 
+    public function offsetPathString($newKey, $pathString, $distance=10, $render=false)
+    {
+        $this->newPath('.offsetHelper', $pathString);
+        $this->offsetPath($newKey, '.offsetHelper', $distance, $render);
+        
+    }
+
     public function offsetPath($newKey, $srcKey, $distance=10, $render=false)
     {
         $path = $this->paths[$srcKey];
@@ -214,7 +221,9 @@ class Part
 
         $stack = $this->pathOffsetAsStack($path, $distance);
         $this->fillPathStackGaps($stack);
-        $this->pathStackToPath($newKey, $stack, $render);
+        $pathString = $this->pathStackToPath($newKey, $stack, $render);
+        $this->newPath($newKey, $pathString, ['class' => 'sa']);
+        if(!$render) $this->paths[$newKey]->setRender(false);
         $this->purgePoints('.po');
     }
 
@@ -277,7 +286,7 @@ class Part
                         $this->cloneOffsetPoint($chunk['offset'][2], $prefix.'cp2').
                         ' '.
                         $this->cloneOffsetPoint($chunk['offset'][3], $prefix.'end').
-                        ' z';
+                        ' Z';
                 }
             } else { // All other steps
                 if($chunk['type'] == 'line') {
@@ -296,8 +305,10 @@ class Part
             }
             $count++;
         }
-        $this->newPath($key, $path, ['class' => 'sa']);
-        if(!$render) $this->paths[$key]->setRender(false);
+
+        echo $path;
+        return $path;
+
     }
 
     public function newId($prefix='-i')

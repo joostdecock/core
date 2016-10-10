@@ -1,0 +1,14 @@
+templates:
+    css: 
+        - "css/style.css"
+    defs: 
+        - "defs/base"
+        - "defs/scalebox"
+        - "defs/logo"
+    footer: 
+        - "comments/footer"
+    header: 
+        - "comments/header"
+    attributes: 
+        - "attributes/svg"
+

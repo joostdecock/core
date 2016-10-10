@@ -1,0 +1,21 @@
+@import 'variables';
+
+rect.grid { 
+    fill: none; 
+    stroke: none; 
+    fill:url(#grid); 
+}
+path.gridline { 
+    stroke: @gray2; 
+    stroke-width: @stroke-lg; 
+}
+
+path.gridline-sm { 
+    stroke: @gray3; 
+    stroke-dasharray: 1,1; 
+}
+
+path.gridline-xs { 
+    stroke: @gray3; 
+    stroke-width: @stroke-xs; 
+}

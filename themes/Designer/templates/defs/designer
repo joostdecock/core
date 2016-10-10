@@ -1,0 +1,12 @@
+<g id="point">
+    <circle cy="0" cx="0" r="3.6" class="stroke-gray2 stroke-sm" />
+    <path d="M -2.5,-2.5 L 2.5,2.5 M 2.5,-2.5 L -2.5,2.5" class="stroke-gray2" />
+</g>
+<g id="path-point">
+    <circle cx="0" cy="0" r="2"  class="stroke-brand stroke-lg" />
+    <circle cx="0" cy="0" r="0.8" class="fill-brand" />
+</g>
+<g id="path-curvecontrol">
+    <circle cy="0" cx="0" r="2" class="stroke-warning stroke-lg no-fill" />
+    <circle cx="0" cy="0" r="0.8" class="fill-warning" />
+</g>

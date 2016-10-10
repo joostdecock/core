@@ -65,17 +65,13 @@ class ApiHandler
                 $this->channel->standardizeModelMeasurements($this->requestData)
             );
 
+            $this->pattern->theme = $this->context['theme'];
             $this->pattern->setTranslator($this->getTranslator());
             $this->pattern->setUnits($this->context['units']);
             $this->pattern->addOptions(
                 $this->channel->standardizePatternOptions($this->requestData)
             );
 
-            if(
-                method_exists($this->theme, 'isPaperless') 
-                && $this->theme->isPaperless()
-            ) $this->pattern->paperless = true;
-            
             $this->pattern->draft($this->model);
 
             $this->pattern->layout();

@@ -11,6 +11,10 @@ namespace Freesewing\Themes;
  */
 class Designer extends Theme
 {
+    public function isDesigner()
+    {
+        return true;
+    }
     public function themePattern($pattern)
     {
         foreach($pattern->parts as $partKey => $part) {

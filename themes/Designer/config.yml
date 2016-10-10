@@ -1,0 +1,8 @@
+templates:
+    js: 
+        - "js/designer.js"
+    css: 
+        - "css/designer.css"
+    defs: 
+        - "defs/designer"
+

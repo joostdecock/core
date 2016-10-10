@@ -126,16 +126,24 @@ path.arrow {
 
 path.grainline { 
     stroke: @brand-color; 
+    stroke-width: @stroke-xl;
     marker-start: url(#brand-color-arrowStart); 
     marker-end:url(#brand-color-arrowEnd)
 }
  
+path.single-arrow { 
+    marker-start: url(#note-color-arrowStart); 
+}
+
 path.double-arrow { 
     marker-start: url(#note-color-arrowStart); 
     marker-end:url(#note-color-arrowEnd)
 }
 
-
+path.textpath {
+    stroke: none;
+    fille: none;
+}
 
 /* Grid */
 

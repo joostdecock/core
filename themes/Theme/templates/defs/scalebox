@@ -1,0 +1,26 @@
+<g id="scalebox">
+    <rect y="0" x="-50.8" height="50.8" width="101.6" style="fill:#000000;fill-opacity:1;stroke:none" />
+    <rect style="fill:#ffffff;fill-opacity:1;stroke:none" width="100" height="50" x="-50.4" y="0.4" />
+    <text y="3" x="-50.8" class="snippet-scalebox-headings">
+        <tspan x="-47" dy="5">Pattern:</tspan>
+        <tspan x="-47" dy="5">Version:</tspan>
+        <tspan x="-47" dy="5">User:</tspan>
+        <tspan x="-47" dy="5">Model:</tspan>
+        <tspan x="-47" dy="5">Date:</tspan>
+        <tspan x="-47" dy="5">Reference:</tspan>
+    </text>
+    <text y="0" x="0" class="snippet-scalebox-instructions">
+        <tspan x="-48" y="42">The (white) inside of this box should measure 10 by 5 cm</tspan>
+        <tspan x="-48" dy="5">The (black) outside of this box should measure 4 by 2 inch</tspan>
+    </text>
+    <text x="-50.8" y="3" class="snippet-scalebox-values">
+        <tspan x="-25" dy="5" >__TITLE__</tspan>
+        <tspan x="-25" dy="5">__VERSION__</tspan>
+        <tspan x="-25" dy="5">__USER__</tspan>
+        <tspan x="-25" dy="5">__MODEL__</tspan>
+        <tspan x="-25" dy="5">__DATE__</tspan>
+    </text>
+        <text x="0" y="0" class="scalebox-hash">
+        <tspan x="-25" y="33">__REFERENCE__</tspan>
+    </text>
+</g>

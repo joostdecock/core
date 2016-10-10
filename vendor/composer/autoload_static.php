@@ -139,7 +139,6 @@ class ComposerStaticInit6d3c91d11fabeb58ed862308abf0796d
         'Freesewing\\Patterns\\AidenAshirt' => __DIR__ . '/../..' . '/patterns/AidenAshirt/AidenAshirt.php',
         'Freesewing\\Patterns\\ExamplePattern' => __DIR__ . '/../..' . '/patterns/ExamplePattern/ExamplePattern.php',
         'Freesewing\\Patterns\\JoostBodyBlock' => __DIR__ . '/../..' . '/patterns/JoostBodyBlock/JoostBodyBlock.php',
-        'Freesewing\\Patterns\\LayoutTest' => __DIR__ . '/../..' . '/patterns/LayoutTest/LayoutTest.php',
         'Freesewing\\Patterns\\Pattern' => __DIR__ . '/../..' . '/patterns/Pattern/Pattern.php',
         'Freesewing\\Patterns\\SimonShirt' => __DIR__ . '/../..' . '/patterns/SimonShirt/SimonShirt.php',
         'Freesewing\\Point' => __DIR__ . '/../..' . '/src/Point/Point.php',

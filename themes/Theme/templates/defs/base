@@ -1,0 +1,15 @@
+<marker orient="auto" refY="0.0" refX="0.0" id="noteArrow" style="overflow:visible;" >
+    <path class="fill-note stroke-note" d="M 0,0 L 9,-3 C 8,-2 8,2  9, 3 z" />
+</marker>
+<marker orient="auto" refY="0.0" refX="0.0" id="brand-color-arrowStart" style="overflow:visible;" >
+  <path class="fill-brand stroke-brand" d="M 0,0 L 12,-4 C 10,-2 10,2  12, 4 z" />
+</marker>
+<marker orient="auto" refY="0.0" refX="0.0" id="brand-color-arrowEnd" style="overflow:visible;" >
+  <path class="fill-brand stroke-brand" d="M 0,0 L -12,-4 C -10,-2 -10,2  -12, 4 z" />
+</marker>
+<marker orient="auto" refY="0.0" refX="0.0" id="note-color-arrowStart" style="overflow:visible;" >
+  <path class="fill-note stroke-note" d="M 0,0 L 12,-4 C 10,-2 10,2  12, 4 z" />
+</marker>
+<marker orient="auto" refY="0.0" refX="0.0" id="note-color-arrowEnd" style="overflow:visible;" >
+  <path class="fill-note stroke-note" d="M 0,0 L -12,-4 C -10,-2 -10,2  -12, 4 z" />
+</marker>

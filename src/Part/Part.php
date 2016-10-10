@@ -215,7 +215,7 @@ class Part
         $stack = $this->pathOffsetAsStack($path, $distance);
         $this->fillPathStackGaps($stack);
         $this->pathStackToPath($newKey, $stack);
-        //$this->purgePoints('.po');
+        $this->purgePoints('.po');
     }
 
     private function purgePoints($prefix=false)
@@ -227,9 +227,10 @@ class Part
             }
         }
     }
-    private function cloneOffsetPoint($key, &$i) 
+    private function cloneOffsetPoint($key, $prefix='sa') 
     {
-        $newKey = $this->newId('sa');
+        //$newKey = $this->newId('sa');
+        $newKey = $this->newId($prefix);
         $this->clonePoint($key, $newKey);
         return $newKey;
     }
@@ -240,49 +241,57 @@ class Part
         $count = 1;
         $i=1;
         foreach($stack->items as $chunk) {
+            if(isset($chunk['subdivide']) && $chunk['subdivide']) $prefix = 'sasub';
+            else $prefix = 'sa';
             if($count == 1) { // First step
                 if($chunk['type'] == 'line') {
+                    $prefix .= 'fl';
                     $path = 'M '.
-                        $this->cloneOffsetPoint($chunk['offset'][0]).
+                        $this->cloneOffsetPoint($chunk['offset'][0], $prefix.'start').
                         ' L '.
-                        $this->cloneOffsetPoint($chunk['offset'][1]);
+                        $this->cloneOffsetPoint($chunk['offset'][1], $prefix.'end');
                 }
                 else if($chunk['type'] == 'curve') {
+                    $prefix .= 'fc';
                     $path = 'M '.
-                        $this->cloneOffsetPoint($chunk['offset'][0]).
+                        $this->cloneOffsetPoint($chunk['offset'][0], $prefix.'start').
                         ' C '.
-                        $this->cloneOffsetPoint($chunk['offset'][1]).
+                        $this->cloneOffsetPoint($chunk['offset'][1], $prefix.'cp1').
                         ' '.
-                        $this->cloneOffsetPoint($chunk['offset'][2]).
+                        $this->cloneOffsetPoint($chunk['offset'][2], $prefix.'cp2').
                         ' '.
-                        $this->cloneOffsetPoint($chunk['offset'][3]);
+                        $this->cloneOffsetPoint($chunk['offset'][3], $prefix.'end');
                 }
             } else if($count == $chunks-1) { // Last step
                 if($chunk['type'] == 'line') {
+                    $prefix .= 'll';
                     $path .= ' L '.
-                        $this->cloneOffsetPoint($chunk['offset'][1]).
+                        $this->cloneOffsetPoint($chunk['offset'][1], $prefix.'end').
                         ' z';
                 }
                 else if($chunk['type'] == 'curve') {
+                    $prefix .= 'lc';
                     $path .= ' C '.
-                        $this->cloneOffsetPoint($chunk['offset'][1]).
+                        $this->cloneOffsetPoint($chunk['offset'][1], $prefix.'cp1').
                         ' '.
-                        $this->cloneOffsetPoint($chunk['offset'][2]).
+                        $this->cloneOffsetPoint($chunk['offset'][2], $prefix.'cp2').
                         ' '.
-                        $this->cloneOffsetPoint($chunk['offset'][3]).
+                        $this->cloneOffsetPoint($chunk['offset'][3], $prefix.'end').
                         ' z';
                 }
             } else { // All other steps
                 if($chunk['type'] == 'line') {
-                    $path .= ' L ' . $this->cloneOffsetPoint($chunk['offset'][1]);
+                    $prefix .= 'l';
+                    $path .= ' L ' . $this->cloneOffsetPoint($chunk['offset'][1], $prefix);
                 }
                 else if($chunk['type'] == 'curve') {
+                    $prefix .= 'c';
                     $path .= ' C '.
-                        $this->cloneOffsetPoint($chunk['offset'][1]).
+                        $this->cloneOffsetPoint($chunk['offset'][1], $prefix.'cp1').
                         ' '.
-                        $this->cloneOffsetPoint($chunk['offset'][2]).
+                        $this->cloneOffsetPoint($chunk['offset'][2], $prefix.'cp2').
                         ' '.
-                        $this->cloneOffsetPoint($chunk['offset'][3]);
+                        $this->cloneOffsetPoint($chunk['offset'][3], $prefix.'end');
                 }
             }
             $count++;
@@ -354,6 +363,7 @@ class Part
             if($chunk['type'] == 'L') $stack->push($this->offsetLine($chunk['path'], $distance));
             if($chunk['type'] == 'C') $stack->push($this->offsetCurve($chunk['path'], $distance));
         }
+
         return $stack;
     }
     
@@ -414,7 +424,7 @@ class Part
         return [ $offset, $offset ];
     }
 
-    private function offsetCurve($curve, $distance)
+    private function offsetCurve($curve, $distance, $subdivide=false)
     {
         $points = Utils::asScrubbedArray($curve); 
         $from = $points[1];
@@ -435,15 +445,15 @@ class Part
         $this->addPoint($toId, $offset[3]);
         $pathString = "M $fromId C $cp1Id $cp2Id $toId";
         
-        $chunks[] = ['type' => 'curve', 'key' => $pathId, 'original' => [$from, $cp1, $cp2, $to], 'offset' => [$fromId, $cp1Id, $cp2Id, $toId]];
+        $chunks[] = ['type' => 'curve', 'key' => $pathId, 'original' => [$from, $cp1, $cp2, $to], 'offset' => [$fromId, $cp1Id, $cp2Id, $toId], 'subdivide' => $subdivide];
         $tolerance = $this->offsetTolerance($chunks[0], $distance);
         if($tolerance['score'] > $this->maxOffsetTolerance) {
             $splitId = $this->newId('.po');
             $this->addSplitCurve($splitId.'-', $from, $cp1, $cp2, $to, $tolerance['index'],1);
             unset($chunks);
-            $subDivide = $this->offsetCurve("M $splitId-1 C $splitId-2 $splitId-3 $splitId-4", $distance);
+            $subDivide = $this->offsetCurve("M $splitId-1 C $splitId-2 $splitId-3 $splitId-4", $distance, true);
             foreach($subDivide as $chunk) $chunks[] = $chunk;
-            $subDivide = $this->offsetCurve("M $splitId-8 C $splitId-7 $splitId-6 $splitId-5", $distance);
+            $subDivide = $this->offsetCurve("M $splitId-8 C $splitId-7 $splitId-6 $splitId-5", $distance, true);
             foreach($subDivide as $chunk) $chunks[] = $chunk;
         }
         return $chunks;
@@ -573,7 +583,8 @@ class Part
 
     private function loadPoint($key)
     {
-        return $this->points[$key];
+        if(isset($this->points[$key])) return $this->points[$key];
+        else throw new \InvalidArgumentException("Cannot load point $key, it does not exist");
     }
 
     /**

@@ -215,7 +215,7 @@ class Part
         $stack = $this->pathOffsetAsStack($path, $distance);
         $this->fillPathStackGaps($stack);
         $this->pathStackToPath($newKey, $stack);
-        $this->purgePoints('.po');
+        //$this->purgePoints('.po');
     }
 
     private function purgePoints($prefix=false)
@@ -240,8 +240,7 @@ class Part
         $count = 1;
         $i=1;
         foreach($stack->items as $chunk) {
-            ob_flush();
-            if($count == 1) {
+            if($count == 1) { // First step
                 if($chunk['type'] == 'line') {
                     $path = 'M '.
                         $this->cloneOffsetPoint($chunk['offset'][0]).
@@ -258,7 +257,7 @@ class Part
                         ' '.
                         $this->cloneOffsetPoint($chunk['offset'][3]);
                 }
-            } else if($count == $chunks-1) {
+            } else if($count == $chunks-1) { // Last step
                 if($chunk['type'] == 'line') {
                     $path .= ' L '.
                         $this->cloneOffsetPoint($chunk['offset'][1]).
@@ -273,9 +272,9 @@ class Part
                         $this->cloneOffsetPoint($chunk['offset'][3]).
                         ' z';
                 }
-            } else {
+            } else { // All other steps
                 if($chunk['type'] == 'line') {
-                    $path .= ' L ' . $this->cloneOffsetPoint($chunk['offset'][0]);
+                    $path .= ' L ' . $this->cloneOffsetPoint($chunk['offset'][1]);
                 }
                 else if($chunk['type'] == 'curve') {
                     $path .= ' C '.
@@ -310,46 +309,37 @@ class Part
             if($count == $chunks) $next = $array[0];
             else $next = $array[$count];
             if($chunk['type'] == 'line' && $next['type'] == 'line') {
-                if($this->distance($chunk['offset'][1], $next['offset'][0]) > 0.25) {
-                    $this->addPoint( $id , $this->linesCross($chunk['offset'][0], $chunk['offset'][1],  $next['offset'][0],  $next['offset'][1]) );
-                    $pathString = 'M '.$chunk['offset'][1]." L $id L ". $next['offset'][0];
-                    $new[] = $chunk;
-                    $new[] = ['type' => 'line', 'offset' => [$chunk['offset'][1], $id]];
-                    $new[] = ['type' => 'line', 'offset' => [$id, $next['offset'][0]]];
-                    $stack->replace($chunk, $new);
-                }
+                $this->addPoint( $id , $this->linesCross($chunk['offset'][0], $chunk['offset'][1],  $next['offset'][0],  $next['offset'][1]) );
+                $pathString = 'M '.$chunk['offset'][1]." L $id L ". $next['offset'][0];
+                $new[] = $chunk;
+                $new[] = ['type' => 'line', 'offset' => [$chunk['offset'][1], $id]];
+                $new[] = ['type' => 'line', 'offset' => [$id, $next['offset'][0]]];
+                $stack->replace($chunk, $new);
             } 
             else if($chunk['type'] == 'line' && $next['type'] == 'curve') {
-                if($this->distance($chunk['offset'][1], $next['offset'][0]) > 0.25) {
-                    $this->addPoint( '-po_helper' , $this->shiftAlong($next['offset'][0], $next['offset'][1],  $next['offset'][2],  $next['offset'][3], 0.5) );
-                    $this->addPoint( $id , $this->linesCross($chunk['offset'][0], $chunk['offset'][1],  '-po_helper',  $next['offset'][0]) );
-                    $pathString = 'M '.$chunk['offset'][1]." L $id L ". $next['offset'][0]; 
-                    $new[] = $chunk;
-                    $new[] = ['type' => 'line', 'offset' => [$chunk['offset'][1], $id]];
-                    $new[] = ['type' => 'line', 'offset' => [$id, $next['offset'][0]]];
-                    $stack->replace($chunk, $new);
-                }
+                $this->addPoint( '-po_helper' , $this->shiftAlong($next['offset'][0], $next['offset'][1],  $next['offset'][2],  $next['offset'][3], 0.5) );
+                $this->addPoint( $id , $this->linesCross($chunk['offset'][0], $chunk['offset'][1],  '-po_helper',  $next['offset'][0]) );
+                $pathString = 'M '.$chunk['offset'][1]." L $id L ". $next['offset'][0]; 
+                $new[] = $chunk;
+                $new[] = ['type' => 'line', 'offset' => [$chunk['offset'][1], $id]];
+                $new[] = ['type' => 'line', 'offset' => [$id, $next['offset'][0]]];
+                $stack->replace($chunk, $new);
             } 
             else if($chunk['type'] == 'curve' && $next['type'] == 'line') {
-                if($this->distance($chunk['offset'][1], $next['offset'][0]) > 0.25) {
-                    $this->addPoint( '-po_helper' , $this->shiftAlong($chunk['offset'][3], $chunk['offset'][2],  $chunk['offset'][1],  $chunk['offset'][0], 0.5) );
-                    $this->addPoint( $id , $this->linesCross($chunk['offset'][3], '-po_helper', $next['offset'][0], $next['offset'][1]) );
-                    $pathString = 'M '.$chunk['offset'][3]." L $id L ". $next['offset'][0]; 
-                    $new[] = $chunk;
-                    $new[] = ['type' => 'line', 'offset' => [$chunk['offset'][3], $id]];
-                    $new[] = ['type' => 'line', 'offset' => [$id, $next['offset'][0]]];
-                    $stack->replace($chunk, $new);
-                }
+                $this->addPoint( '-po_helper' , $this->shiftAlong($chunk['offset'][3], $chunk['offset'][2],  $chunk['offset'][1],  $chunk['offset'][0], 0.5) );
+                $this->addPoint( $id , $this->linesCross($chunk['offset'][3], '-po_helper', $next['offset'][0], $next['offset'][1]) );
+                $pathString = 'M '.$chunk['offset'][3]." L $id L ". $next['offset'][0]; 
+                $new[] = $chunk;
+                $new[] = ['type' => 'line', 'offset' => [$chunk['offset'][3], $id]];
+                $new[] = ['type' => 'line', 'offset' => [$id, $next['offset'][0]]];
+                $stack->replace($chunk, $new);
             } 
             else if($chunk['type'] == 'curve' && $next['type'] == 'curve') {
-                if($this->distance($chunk['offset'][1], $next['offset'][0]) > 0.25) {
-                    $pathString = 'M '.$chunk['offset'][3].' L '. $next['offset'][0]; 
-                    
-                    $new[] = $chunk;
-                    $new[] = ['type' => 'line', 'offset' => [$chunk['offset'][3], $next['offset'][0]]];
-                    $stack->replace($chunk, $new);
+                $pathString = 'M '.$chunk['offset'][3].' L '. $next['offset'][0]; 
+                $new[] = $chunk;
+                $new[] = ['type' => 'line', 'offset' => [$chunk['offset'][3], $next['offset'][0]]];
+                $stack->replace($chunk, $new);
                      
-                }
             }
             $count++;
             unset($new);
@@ -380,6 +370,7 @@ class Part
 
         $this->addPoint($fromId, $offset[0]);
         $this->addPoint($toId, $offset[1]);
+
         return [ 0 => ['type' => 'line', 'key' => $pathId, 'original' => [$from, $to], 'offset' => [$fromId, $toId]]];
     }
 

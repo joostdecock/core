@@ -37,7 +37,7 @@ class Designer extends Theme
     {
         if(!isset($part->tmp['pointsThemed'][$key])) {
             $title = $this->debugPointDescription($key,$point);
-            $attr = ['id' => "$partKey-$key", 'onmouseover' => "pointHover('$partKey-$key')", 'onmouseout' => "pointUnhover('$partKey-$key')"];
+            $attr = ['id' => "$partKey-$key", 'onmouseover' => "pointHover('$partKey-$key')"];
             $part->newSnippet($key, 'point', $key, $attr, $title); $attr = ['id' => "$partKey-$key-tooltip", 'class' => 'tooltip', 'visibility' => 'hidden'];
             $part->newText($key, $key, $title, $attr);
         }

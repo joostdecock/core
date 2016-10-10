@@ -8,8 +8,6 @@ function pointHover(id) {
     point.setAttribute("transform", 'matrix('+scale+', 0, 0, '+scale+', '+cx+', '+cy+')');
     var tooltip = document.getElementById(id+'-tooltip');
     tooltip.setAttribute("visibility", 'visible');
-}
-function pointUnhover(id) {
     setTimeout(function(){ 
         var point = document.getElementById(id);
         point.removeAttribute("transform", '');

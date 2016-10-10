@@ -79,6 +79,7 @@ class ExamplePattern extends Pattern
         // Paths
         $path = 'M 1 L 2 L 3 L 4 L 6 L 5 C 13 16 14 C 15 18 10 C 17 19 12 L 8 C 20 1 1 z';
         $p->newPath('outline', $path);
+        $p->offsetPath('sa', 'outline', 10);
 
         // Title anchor
         $p->newPoint('titleAnchor', $p->x(10)/2, $p->y(10), 'Title anchor');
@@ -100,6 +101,7 @@ class ExamplePattern extends Pattern
         
         $path = 'M 9 L 2 L 3 L 4 L 6 L 5 C 13 16 14 C 15 18 10 C 17 19 12 L 8 C 20 21 9 z';
         $p->newPath('outline', $path);
+        $p->offsetPath('sa', 'outline', 10);
         
         $p->addPoint('titleAnchor', $p->flipX('titleAnchor', $p->x(5)) );
         $attr = ['id' => "front-title", 'class' => 'title'];
@@ -185,6 +187,7 @@ class ExamplePattern extends Pattern
 
         $path = 'M 31 L -5 C -5 20 16 C 21 10 10 C 10 22 17 C 23 28 30 C 29 25 18 C 24 11 11 C 11 27 19 C 26 5 5 L 32 z';
         $p->newPath('outline', $path);
+        $p->offsetPath('sa', 'outline', -10);
         
         $p->newPoint('titleAnchor', $p->x(2), $this->parts['frontBlock']->y('titleAnchor') );
         $attr = ['id' => "sleeve-title", 'class' => 'title'];

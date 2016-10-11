@@ -42,7 +42,9 @@ class Designer extends Theme
         if(!isset($part->tmp['pointsThemed'][$key])) {
             $title = $this->debugPointDescription($key,$point);
             $attr = ['id' => "$partKey-$key", 'onmouseover' => "pointHover('$partKey-$key')"];
-            $part->newSnippet($key, 'point', $key, $attr, $title); $attr = ['id' => "$partKey-$key-tooltip", 'class' => 'tooltip', 'visibility' => 'hidden'];
+            if(substr($key,0,1) == '.' || strpos($key, 'volatile')) $type = 'volatile-point';
+            else $type = 'point';
+            $part->newSnippet($key, $type, $key, $attr, $title); $attr = ['id' => "$partKey-$key-tooltip", 'class' => 'tooltip', 'visibility' => 'hidden'];
             $part->newText($key, $key, $title, $attr);
         }
     }

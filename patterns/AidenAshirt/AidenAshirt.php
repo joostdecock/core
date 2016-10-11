@@ -136,11 +136,7 @@ Cut one 6cm wide and '.round(getp('NECKHOLE_LEN'),0).'cm long trip to finish the
         $p->addPoint( 200, $p->shift(111,-90,20), 'Hem allowance @ CF');
         $p->addPoint( 201, $p->shift(110,-90,20), 'Hem allowance @ CF');
         $p->addPoint( 201, $p->shift(201,0,10), 'Hem allowance @ side');
-        $p->newPath(
-            'sa', 
-            'M 111 L 200 L 201 L sal8 C saccp11 sacend1 sacend1 L 5 M 102 L sal14 L sal15 L 103',
-            ['class' => 'seam-allowance']
-        );
+//        $p->newPath( 'sa', 'M 111 L 200 L 201 L sal8 C saccp11 sacend1 sacend1 L 5 M 102 L sal14 L sal15 L 103', ['class' => 'seam-allowance']);
 
         // Instructions | Point indexes from 300 upward 
         // Cut on fold line and grainline

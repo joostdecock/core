@@ -1,4 +1,4 @@
-@import "https://fonts.googleapis.com/css?family=Lato:700|Open+Sans";
+@import "https://fonts.googleapis.com/css?family=Lato:700|Open+Sans+Condensed:300";
 path,circle,rect{fill:none;stroke:none}
 path{fill:none;stroke:#333;stroke-opacity:1;stroke-width:.3;stroke-linecap:round;stroke-linejoin:round}
 path.curve-control{stroke:#f57900;stroke-width:.2}
@@ -7,7 +7,7 @@ path.seam-allowance{stroke-dasharray:1,1.5}
 path.marker{stroke:#f57900;stroke-opacity:.4;stroke-width:2}
 path.text{fill:none;stroke:none}
 path.note{stroke:#5bc0de;stroke-width:.6;marker-start:url(#noteArrow)}
-text{font-size:5px;font-family:'Lato';fill:#333;text-anchor:start}
+text{font-size:5px;font-family:'Open Sans Condensed';fill:#333;text-anchor:start}
 text.snippet-scalebox-headings tspan,text.snippet-scalebox-instructions tspan,text.snippet-scalebox-values tspan,text.scalebox-hash tspan{font-size:4px}
 text.snippet-scalebox-instructions tspan{font-size:3px}
 text.snippet-scalebox-values tspan{font-size:4px;fill:#5c3566}
@@ -58,3 +58,8 @@ path.debug{stroke:#d9534f;stroke-opacity:.4;stroke-width:2}
 .stroke-lg{stroke-width:.6}
 .stroke-xl{stroke-width:1}
 .stroke-xxl{stroke-width:2}
+.font-xs{font-size:3px}
+.font-sm{font-size:4px}
+.font-lg{font-size:7px}
+.font-xl{font-size:9px}
+.font-xxl{font-size:12px}

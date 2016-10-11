@@ -1,3 +1,4 @@
 path.curve-control{stroke:#f57900;stroke-width:.2}
 path.debug{stroke:#d9534f;stroke-opacity:.4;stroke-width:2}
 .point{fill:none;stroke-width:.2;stroke:#999}
+text.tooltip{font-size:3px}

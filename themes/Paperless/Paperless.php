@@ -38,12 +38,15 @@ class Paperless extends Svg
         $topLeft = $part->boundary->getTopLeft(); 
         $w = $part->boundary->width;
         $h = $part->boundary->height;
-        if(0 && isset($part->points['gridAnchor'])) {
-            $x = $part->points['gridAnchor']->getX() - $topLeft->getX();
-            $y = $part->points['gridAnchor']->getY() - $topLeft->getY();
-            $transX = $topLeft->getX() - $x;
-            $transY = $topLeft->getY() - $y;
-            print_r($topLeft);
+        if(isset($part->points['gridAnchor'])) {
+            $anchorX = $part->points['gridAnchor']->getX();
+            $topLeftX = $topLeft->getX();
+            $anchorY = $part->points['gridAnchor']->getY();
+            $topLeftY = $topLeft->getY();
+            $x = $anchorX*-1 +  $topLeftX;
+            $y = $anchorY*-1 +  $topLeftY;
+            $transX = $anchorX;
+            $transY = $anchorY;
         } else {
             $x = 0;
             $y = 0;

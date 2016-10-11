@@ -100,6 +100,7 @@ Cut one 6cm wide and '.round(getp('NECKHOLE_LEN'),0).'cm long trip to finish the
 
         // Shoulders | Point indexes starting at 100
         $p->newPoint( 100, $p->x(9), $p->y(1) + $this->getOption('necklineDrop'), 'Neck bottom @ CF');
+        $p->clonePoint(100, 'gridAnchor');
         $p->addPoint( 101, $p->shiftTowards(8, 12, $p->distance(8, 12) * $this->getOption('shoulderStrapPlacement') * $this->getOption('stretchFactor')), 'Center of shoulder strap');
         $p->addPoint( 102, $p->shiftTowards(101, 12, $this->getOption('shoulderStrapWidth')/2), 'Shoulder strap edge on the shoulder side');
         $p->addPoint( 103, $p->shiftTowards(101, 8, $this->getOption('shoulderStrapWidth')/2), 'Shoulder strap edge on the neck side');
@@ -148,7 +149,6 @@ Cut one 6cm wide and '.round(getp('NECKHOLE_LEN'),0).'cm long trip to finish the
         $p->newPoint( 302, 0, $p->y(111) - 20, 'Cut on fold endpoint bottom');
         $p->newPoint( 303, 20, $p->y(302), 'Cut on fold corner bottom');
         $p->addPoint( 304, $p->shift(301, 0, 15), 'Grainline top');
-        $p->clonePoint(304, 'gridAnchor');
         $p->addPoint( 305, $p->shift(303, 0, 15), 'Grainline bottom');
         
         $p->newPath('cutOnFold', 'M 300 L 301 L 303 L 302', ['class' => 'double-arrow stroke-note stroke-lg']);

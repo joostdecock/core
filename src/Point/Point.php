@@ -13,12 +13,13 @@ class Point
 {
     public $x = null;
     public $y = null;
+    public $precision = 3;
     public $description = null;
 
     public function setX($x)
     {
         if (is_numeric($x)) {
-            $this->x = $x;
+            $this->x = round($x, $this->precision);
         } else {
             $x = 0;
         }
@@ -32,7 +33,7 @@ class Point
     public function setY($y)
     {
         if (is_numeric($y)) {
-            $this->y = $y;
+            $this->y = round($y, $this->precision);
         } else {
             $y = 0;
         }

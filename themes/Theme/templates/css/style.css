@@ -1,4 +1,4 @@
-@import "https://fonts.googleapis.com/css?family=Lato:700|Open+Sans+Condensed:300";
+@import "https://fonts.googleapis.com/css?family=Abril+Fatface|Open+Sans+Condensed:300";
 path,circle,rect{fill:none;stroke:none}
 path{fill:none;stroke:#333;stroke-opacity:1;stroke-width:.3;stroke-linecap:round;stroke-linejoin:round}
 path.curve-control{stroke:#f57900;stroke-width:.2}
@@ -11,23 +11,21 @@ text{font-size:5px;font-family:'Open Sans Condensed';fill:#333;text-anchor:start
 text.snippet-scalebox-headings tspan,text.snippet-scalebox-instructions tspan,text.snippet-scalebox-values tspan,text.scalebox-hash tspan{font-size:4px}
 text.snippet-scalebox-instructions tspan{font-size:3px}
 text.snippet-scalebox-values tspan{font-size:4px;fill:#5c3566}
-text.part-nr{font-size:24px;text-anchor:middle;fill:#333;font-family:'Lato';transform:translate(0, -16px);}
-text.part-title{font-size:14px;text-anchor:middle;fill:#333;font-family:'Lato'}
+text.part-nr{font-size:24px;text-anchor:middle;fill:#333;font-family:'Abril Fatface';transform:translate(0, -16px);}
+text.part-title{font-size:14px;text-anchor:middle;fill:#333;font-family:'Abril Fatface'}
 text.part-msg{font-size:7px;text-anchor:middle;fill:#333;transform:translate(0, 8px);}
 text.note{fill:#494ae9}
 text.note tspan{alignment-baseline:middle}
 text.note-5,text.note-6,text.note-7,text.note-11,text.note-12,text.note-0,text.note-1{text-anchor:middle}
 text.note-8,text.note-9,text.note-10{text-anchor:end}
 path.arrow{stroke:#494ae9}
-path.grainline{stroke:#5c3566;stroke-width:1;marker-start:url(#brand-color-arrowStart);marker-end:url(#brand-color-arrowEnd)}
-path.measure{stroke:#494ae9;stroke-width:.3;marker-start:url(#note-color-arrowStart);marker-end:url(#note-color-arrowEnd)}
+path.grainline{stroke:#666;stroke-width:1;marker-start:url(#gray1-arrowStart);marker-end:url(#gray1-arrowEnd)}
+path.measure-sm,path.measure-lg,path.measure{stroke:#494ae9;stroke-width:.3;marker-start:url(#note-color-arrowStart);marker-end:url(#note-color-arrowEnd)}
+path.measure-lg{stroke-width:.6}
+path.measure-sm{stroke-width:.2}
 path.single-arrow{marker-start:url(#note-color-arrowStart)}
 path.double-arrow{marker-start:url(#note-color-arrowStart);marker-end:url(#note-color-arrowEnd)}
 path.textpath{stroke:none;fille:none}
-rect.grid{fill:none;stroke:none;fill:url(#grid)}
-path.gridline{stroke:#999;stroke-width:.6}
-path.gridline-sm{stroke:#ccc;stroke-dasharray:1,1}
-path.gridline-xs{stroke:#ccc;stroke-width:.1}
 path.debug{stroke:#d9534f;stroke-opacity:.4;stroke-width:2}
 .point{fill:none;stroke-width:.2;stroke:#999}
 .stroke-brand{stroke:#5c3566}

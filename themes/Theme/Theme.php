@@ -34,14 +34,14 @@ abstract class Theme
     public function loadTemplates($svgDocument) 
     {
         $templates = $this->loadTemplateHierarchy();
-        foreach($templates['js'] as $js) $svgDocument->script->add($js);
-        foreach($templates['css'] as $css) $svgDocument->css->add($css);
-        foreach($templates['defs'] as $defs) $svgDocument->defs->add($defs);
-        foreach($templates['header'] as $comments) $svgDocument->headerComments->add($comments);
-        foreach($templates['footer'] as $comments) $svgDocument->headerComments->add($comments);
-        foreach($templates['attributes'] as $attr) $svgDocument->svgAttributes->add($attr);
+        if(isset($templates['js'])) foreach($templates['js'] as $js) $svgDocument->script->add($js);
+        if(isset($templates['css']))foreach($templates['css'] as $css) $svgDocument->css->add($css);
+        if(isset($templates['defs']))foreach($templates['defs'] as $defs) $svgDocument->defs->add($defs);
+        if(isset($templates['header']))foreach($templates['header'] as $comments) $svgDocument->headerComments->add($comments);
+        if(isset($templates['footer']))foreach($templates['footer'] as $comments) $svgDocument->headerComments->add($comments);
+        if(isset($templates['attributes']))foreach($templates['attributes'] as $attr) $svgDocument->svgAttributes->add($attr);
         
-        $svgDocument->footerComments->add($this->messages);
+        $svgDocument->footerComments->add(implode("\n",$this->messages));
     }
 
     public function themeResponse($apiHandler)

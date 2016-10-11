@@ -132,11 +132,14 @@ Cut one 6cm wide and '.round(getp('NECKHOLE_LEN'),0).'cm long trip to finish the
         $p->newPath('seamline', $seamline, ['class' => 'seamline']);
 
         // Seam allowance | Point indexes from 200 upward
-        $p->offsetPath('offset', 'seamline', 10);
+        $p->offsetPathString('sa1', 'M 102 L 103', 10);
+        $p->newPath('shoulderSA', 'M 102 L sa1-line-102TO103 L sa1-line-103TO102 L 103', ['class' => 'seam-allowance']);
         $p->addPoint( 200, $p->shift(111,-90,20), 'Hem allowance @ CF');
         $p->addPoint( 201, $p->shift(110,-90,20), 'Hem allowance @ CF');
         $p->addPoint( 201, $p->shift(201,0,10), 'Hem allowance @ side');
-//        $p->newPath( 'sa', 'M 111 L 200 L 201 L sal8 C saccp11 sacend1 sacend1 L 5 M 102 L sal14 L sal15 L 103', ['class' => 'seam-allowance']);
+        $p->offsetPathString('sideSA', 'M 110 L 112 C 113 5 5', 10, 1, ['class' => 'seam-allowance']);
+        $p->newPath('hemSA', 'M 111 L 200 L 201 L sideSA-line-110TO112 M 5 L sideSA-curve-5TO112', ['class' => 'seam-allowance']);
+
 
         // Instructions | Point indexes from 300 upward 
         // Cut on fold line and grainline
@@ -149,9 +152,9 @@ Cut one 6cm wide and '.round(getp('NECKHOLE_LEN'),0).'cm long trip to finish the
         $p->addPoint( 305, $p->shift(303, 0, 15), 'Grainline bottom');
         
         $p->newPath('cutOnFold', 'M 300 L 301 L 303 L 302', ['class' => 'double-arrow stroke-note stroke-lg']);
-        $p->newTextOnPath('cutonfold', 'M 303 L 301', $this->t("Cut on fold"), ['line-height' => 12, 'class' => 'text-sm fill-note', 'dy' => -2]);
+        $p->newTextOnPath('cutonfold', 'M 303 L 301', $this->t("Cut on fold"), ['line-height' => 12, 'class' => 'text-lg fill-note', 'dy' => -2]);
         $p->newPath('grainline', 'M 304 L 305', ['class' => 'grainline']);
-        $p->newTextOnPath('grainline', 'M 305 L 304', $this->t("Grainline"), ['line-height' => 12, 'class' => 'text-sm fill-brand', 'dy' => -2]);
+        $p->newTextOnPath('grainline', 'M 305 L 304', $this->t("Grainline"), ['line-height' => 12, 'class' => 'text-lg fill-brand', 'dy' => -2]);
         
         // Title
         $p->newPoint('titleAnchor', $p->x(5)*0.4, $p->x(5)+40, 'Title anchor');
@@ -162,12 +165,12 @@ Cut one 6cm wide and '.round(getp('NECKHOLE_LEN'),0).'cm long trip to finish the
         $p->newSnippet('scalebox', 'scalebox', 'scaleboxAnchor');
         
         // Notes
-        $noteAttr = ['line-height' => 6, 'class' => 'text-sm']; 
+        $noteAttr = ['line-height' => 7, 'class' => 'text-lg']; 
         $p->addPoint( 306, $p->shift(101, 180, 3), 'Note 1 anchor');
         $p->newNote(1, 306,  $this->t("Standard\nseam\nallowance")."\n(".$this->unit(10).')', 6, 10, -5, $noteAttr );
         
         $p->addPoint( '.help1', $p->shift(100, 90, 20));
-        $p->addPoint( 307, $p->curveCrossesY(100, 104, 104, 103, $p->y('.help1')), 'Note 2 anchor');
+        $p->addPoint( 307, $p->curveCrossesY(100, 104, 105, 103, $p->y('.help1')), 'Note 2 anchor');
         $p->newNote(2, 307,  $this->t("No\nseam\nallowance"), 4, 15, 0, $noteAttr );
         
         $p->addPoint( 308, $p->curveCrossesY(5, 107, 106, 102, $p->y(301)), 'Note 3 anchor');
@@ -175,16 +178,42 @@ Cut one 6cm wide and '.round(getp('NECKHOLE_LEN'),0).'cm long trip to finish the
 
         $p->newNote(4, 112,  $this->t("Standard\nseam\nallowance")."\n(".$this->unit(10).')', 9, 15, -5, $noteAttr );
         
-        $p->newPoint( 309, $p->x(110)/2, $p->y(110), 'Note 5 anchor');
-        $p->newNote(4, 309,  $this->t("Hem allowance")."\n(".$this->unit(20).')', 12, 15, -10, ['line-height' => 6, 'class' => 'text-sm', 'dy' => -4] );
+        $p->newPoint( 309, $p->x(110)-40, $p->y(110), 'Note 5 anchor');
+        $p->newNote(4, 309,  $this->t("Hem allowance")."\n(".$this->unit(20).')', 12, 15, -10, ['line-height' => 6, 'class' => 'text-lg', 'dy' => -4] );
         
         if($this->theme == 'Paperless' || $this->theme == 'Designer' || $this->theme == 'Developer') {
-            $p->offsetPathString('help1', 'M 5 C 107 106 102', -3, 1);
-            //$p->newPath('armhole', '', ['class' => 'marker']);
-            
-                //$p->paths['armhole']->setAttributes(['class' => 'grainline']);
 
+            $attr = ['class' => 'text-lg fill-note text-center', 'dy' => -6];
+            
+            $key = 'armholeUnits'; 
+            $path = 'M 102 C 106 107 5';
+            $p->offsetPathString($key, $path, -3, 1, ['class' => 'measure']);
+            $p->newTextOnPath($key, $path, $this->t('Curve length').': '.$this->unit($p->curveLen(5,107,106,102)), $attr);
+
+            $key = 'neckholeUnits'; 
+            $path = 'M 100 C 104 105 103';
+            $p->offsetPathString($key, $path, -3, 1, ['class' => 'measure']);
+            $p->newTextOnPath($key, $path, $this->t('Curve length').': '.$this->unit($p->curveLen(100,104,105,103)), $attr);
         
+            $key = 'sideSeamUnits'; 
+            $path = 'M 110 L 112 C 113 5 5';
+            $p->offsetPathString($key, $path, -3, 1, ['class' => 'measure']);
+            $p->newTextOnPath($key, $path, $this->t('Seam length').': '.$this->unit($p->curveLen(112,113,5,5)+$p->distance(110,112)), $attr);
+        
+            $key = 'hemUnits'; 
+            $path = 'M 111 L 110';
+            $p->offsetPathString($key, $path, -3, 1, ['class' => 'measure']);
+            $p->newTextOnPath($key, $path, $this->unit($p->distance(110,111)), $attr);
+            
+            $key = 'CBUnits'; 
+            $path = 'M 111 L 100';
+            $p->offsetPathString($key, $path, -13, 1, ['class' => 'measure']);
+            $p->newTextOnPath($key, $path, $this->unit($p->distance(100,111)), $attr);
+            
+            $key = 'StrapUnits'; 
+            $path = 'M 103 L 102';
+            $p->offsetPathString($key, $path, -20, 1, ['class' => 'measure']);
+            $p->newTextOnPath($key, $path, $this->unit($p->distance(102,103)), ['class' => 'text-lg fill-note text-center', 'dy' => -12]);
         }
     
     }

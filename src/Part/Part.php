@@ -207,14 +207,14 @@ class Part
         $this->boundary->setBottomRight($bottomRight);
     }
 
-    public function offsetPathString($newKey, $pathString, $distance=10, $render=false)
+    public function offsetPathString($newKey, $pathString, $distance=10, $render=false, $attributes=null)
     {
         $this->newPath('.offsetHelper', $pathString);
-        $this->offsetPath($newKey, '.offsetHelper', $distance, $render);
+        $this->offsetPath($newKey, '.offsetHelper', $distance, $render, $attributes);
         
     }
 
-    public function offsetPath($newKey, $srcKey, $distance=10, $render=false)
+    public function offsetPath($newKey, $srcKey, $distance=10, $render=false, $attributes=null)
     {
         $path = $this->paths[$srcKey];
 
@@ -222,7 +222,7 @@ class Part
         //print_r($stack);
         $stack = $this->fillPathStackGaps($stack, $path);
         $pathString = $this->pathStackToPath($newKey, $stack, $render, $path);
-        $this->newPath($newKey, $pathString, ['class' => 'sa']);
+        $this->newPath($newKey, $pathString, $attributes);
         if(!$render) $this->paths[$newKey]->setRender(false);
         $this->purgePoints($newKey.'.splitcurve');
     }
@@ -373,7 +373,7 @@ class Part
 
     private function getLineOffsetPoints($from, $to, $distance)
     {
-        $angle = $this->angle($from, $to) - 90;
+        $angle = $this->angle($from, $to) + 90;
         return [
             $this->shift($from, $angle, $distance),
             $this->shift($to, $angle, $distance),
@@ -398,12 +398,12 @@ class Part
     {
         if($missing == 'cp1') {
             $almostTheSamePoint = $this->addPoint('-shifthelper', $this->shiftAlong($from, $cp1, $cp2, $to, 0.5));
-            $angle = $this->angle($from, '-shifthelper') -90 ;
+            $angle = $this->angle($from, '-shifthelper') + 90 ;
             $p = $from;
         }
         else {
             $almostTheSamePoint = $this->addPoint('-shifthelper', $this->shiftAlong($to, $cp2, $cp1, $from, 0.5));
-            $angle = $this->angle('-shifthelper', $to) - 90;
+            $angle = $this->angle('-shifthelper', $to) + 90;
             $p = $to;
         }
         

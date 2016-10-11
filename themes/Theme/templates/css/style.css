@@ -6,7 +6,7 @@ path.seamline{stroke-width:.6}
 path.seam-allowance{stroke-dasharray:1,1.5}
 path.marker{stroke:#f57900;stroke-opacity:.4;stroke-width:2}
 path.text{fill:none;stroke:none}
-path.note{stroke:#5bc0de;stroke-width:.6;marker-start:url(#noteArrow)}
+path.note{stroke:#494ae9;stroke-width:.6;marker-start:url(#noteArrow)}
 text{font-size:5px;font-family:'Open Sans Condensed';fill:#333;text-anchor:start}
 text.snippet-scalebox-headings tspan,text.snippet-scalebox-instructions tspan,text.snippet-scalebox-values tspan,text.scalebox-hash tspan{font-size:4px}
 text.snippet-scalebox-instructions tspan{font-size:3px}
@@ -14,12 +14,13 @@ text.snippet-scalebox-values tspan{font-size:4px;fill:#5c3566}
 text.part-nr{font-size:24px;text-anchor:middle;fill:#333;font-family:'Lato';transform:translate(0, -16px);}
 text.part-title{font-size:14px;text-anchor:middle;fill:#333;font-family:'Lato'}
 text.part-msg{font-size:7px;text-anchor:middle;fill:#333;transform:translate(0, 8px);}
-text.note{fill:#5bc0de}
+text.note{fill:#494ae9}
 text.note tspan{alignment-baseline:middle}
 text.note-5,text.note-6,text.note-7,text.note-11,text.note-12,text.note-0,text.note-1{text-anchor:middle}
 text.note-8,text.note-9,text.note-10{text-anchor:end}
-path.arrow{stroke:#5bc0de}
+path.arrow{stroke:#494ae9}
 path.grainline{stroke:#5c3566;stroke-width:1;marker-start:url(#brand-color-arrowStart);marker-end:url(#brand-color-arrowEnd)}
+path.measure{stroke:#494ae9;stroke-width:.3;marker-start:url(#note-color-arrowStart);marker-end:url(#note-color-arrowEnd)}
 path.single-arrow{marker-start:url(#note-color-arrowStart)}
 path.double-arrow{marker-start:url(#note-color-arrowStart);marker-end:url(#note-color-arrowEnd)}
 path.textpath{stroke:none;fille:none}
@@ -30,12 +31,12 @@ path.gridline-xs{stroke:#ccc;stroke-width:.1}
 path.debug{stroke:#d9534f;stroke-opacity:.4;stroke-width:2}
 .point{fill:none;stroke-width:.2;stroke:#999}
 .stroke-brand{stroke:#5c3566}
-.stroke-note{stroke:#5bc0de}
+.stroke-note{stroke:#494ae9}
 .stroke-tip{stroke:#5cb85c}
 .stroke-warning{stroke:#f57900}
 .stroke-error{stroke:#d9534f}
 .fill-brand{fill:#5c3566}
-.fill-note{fill:#5bc0de}
+.fill-note{fill:#494ae9}
 .fill-tip{fill:#5cb85c}
 .fill-warning{fill:#f57900}
 .fill-error{fill:#d9534f}
@@ -63,3 +64,4 @@ path.debug{stroke:#d9534f;stroke-opacity:.4;stroke-width:2}
 .font-lg{font-size:7px}
 .font-xl{font-size:9px}
 .font-xxl{font-size:12px}
+.text-center{text-anchor:middle}

@@ -131,6 +131,13 @@ path.grainline {
     marker-end:url(#brand-color-arrowEnd)
 }
  
+path.measure { 
+    stroke: @note-color; 
+    stroke-width: @stroke;
+    marker-start: url(#note-color-arrowStart); 
+    marker-end:url(#note-color-arrowEnd)
+}
+ 
 path.single-arrow { 
     marker-start: url(#note-color-arrowStart); 
 }
@@ -227,4 +234,6 @@ path.debug {
 .font-lg  { font-size: @font-size-lg; }
 .font-xl  { font-size: @font-size-xl; }
 .font-xxl { font-size: @font-size-xxl; }
+
+.text-center { text-anchor:middle; }
 

@@ -154,6 +154,12 @@ class Path
         return $boundary;
     }
 
+    public function isClosed()
+    {
+        if(substr(trim(strtolower($this->getPath())),-2) == ' z') return true;
+        else return false;
+    }
+
     private function findBezierBoundary($start, $cp1, $cp2, $end)
     {
         for ($i = 0; $i <= 100; ++$i) {

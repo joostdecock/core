@@ -13,6 +13,23 @@ class SvgCss extends SvgBlock
 {
     public function load()
     {
-        return  "\n<style type=\"text/css\">\n    <![CDATA[\n    $this\n    ]]>\n</style>\n";
+        // Need to make sure @includes go at the top
+        return  "\n<style type=\"text/css\">\n    <![CDATA[\n".$this->sortCss()."\n    ]]>\n</style>\n";
+    }
+
+    private function sortCss()
+    {
+        $theseFirst = '';
+        $css = '';
+        $data = $this->getData();
+        if(is_array($data)) {
+            foreach ($data as $origin) {
+                foreach ($origin as $line) {
+                    if(substr(trim($line),0,1) == '@') $theseFirst .= "\n    $line";
+                    else $css .= "\n    $line";
+                }
+            }
+        }
+        return $theseFirst.$css;
     }
 }

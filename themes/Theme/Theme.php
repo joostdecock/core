@@ -24,6 +24,8 @@ abstract class Theme
     public function themePattern($pattern)
     {
         $this->messages = $pattern->getMessages();
+        $pattern->replace('__SCALEBOX_METRIC__', $pattern->t('__SCALEBOX_METRIC__'));
+        $pattern->replace('__SCALEBOX_IMPERIAL__', $pattern->t('__SCALEBOX_IMPERIAL__'));
     }
 
     public function themeSvg(\Freesewing\SvgDocument $svgDocument)
@@ -100,4 +102,18 @@ abstract class Theme
         $filename = $reflector->getFileName();
         return dirname($filename).'/templates';
     }
+
+    public function getTranslationFiles($locale, $altloc) 
+    {
+        $locations = $this->getClassChain();
+        $translations = array();
+        foreach($locations as $location) {
+            $locfile = "$location/translations/messages.$locale.yml";
+            $altfile = "$location/translations/messages.$altloc.yml";
+            if(is_readable($locfile)) $translations[$locale][] = $locfile;
+            if(is_readable($altfile)) $translations[$altloc][] = $altfile;
+        }
+        return $translations; 
+    }
+
 }

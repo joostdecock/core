@@ -8,9 +8,6 @@ path.marker{stroke:#f57900;stroke-opacity:.4;stroke-width:2}
 path.text{fill:none;stroke:none}
 path.note{stroke:#494ae9;stroke-width:.6;marker-start:url(#noteArrow)}
 text{font-size:5px;font-family:'Open Sans Condensed';fill:#333;text-anchor:start}
-text.snippet-scalebox-headings tspan,text.snippet-scalebox-instructions tspan,text.snippet-scalebox-values tspan,text.scalebox-hash tspan{font-size:4px}
-text.snippet-scalebox-instructions tspan{font-size:3px}
-text.snippet-scalebox-values tspan{font-size:4px;fill:#5c3566}
 text.part-nr{font-size:24px;text-anchor:middle;fill:#333;font-family:'Abril Fatface';transform:translate(0, -16px);}
 text.part-title{font-size:14px;text-anchor:middle;fill:#333;font-family:'Abril Fatface'}
 text.part-msg{font-size:7px;text-anchor:middle;fill:#333;transform:translate(0, 8px);}

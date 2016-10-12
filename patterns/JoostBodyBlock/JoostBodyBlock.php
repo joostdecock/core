@@ -47,6 +47,7 @@ class JoostBodyBlock extends Pattern
         // Center vertical axis
         $p->newPoint( 1 ,   0,  $this->getOption('backNeckCutout'), 'Center back @ neck');
         $p->newPoint( 2 ,   0,  $p->y(1) + $this->help['armholeDepth'], 'Center back @ armhole depth' );
+        $p->clonePoint(2, 'gridAnchor');
         $p->newPoint( 3 ,   0,  $p->y(1) + $model->getMeasurement('centerBackNeckToWaist'), 'Center back @ waist' );
         $p->newPoint( 4 ,   0,  $model->getMeasurement('centerBackNeckToWaist') + $model->getMeasurement('naturalWaistToTrouserWaist') + $this->getOption('backNeckCutout') , 'Center back @ trouser waist');
         
@@ -86,7 +87,8 @@ class JoostBodyBlock extends Pattern
 
         // Title anchor
         $p->newPoint('titleAnchor', $p->x(10)/2, $p->y(10), 'Title anchor');
-        $p->newText( 'title', 'titleAnchor', $this->t($p->title), [ 'id' => "base-title", 'class' => 'title' ]);
+        $p->addTitle('titleAnchor', 1, $this->t($p->title));
+        $p->newSnippet('logo', 'logo', 'titleAnchor');
     }
 
     public function draftFrontBlock($model) 
@@ -102,29 +104,8 @@ class JoostBodyBlock extends Pattern
         $path = 'M 9 L 2 L 3 L 4 L 6 L 5 C 13 16 14 C 15 18 10 C 17 19 12 L 8 C 20 21 9 z';
         $p->newPath('outline', $path);
         
-        $attr = ['id' => "front-title", 'class' => 'title'];
-        $p->newText('title', 'titleAnchor', $this->t($p->title), $attr);
-    }
-    
-    public function olddraftFrontBlock($model) 
-    {
-        $this->clonePoints('backBlock', 'frontBlock');
-        $p = $this->parts['frontBlock'];
-       
-        // Mirorring half defined in base
-        for($i=1; $i<=21; $i++) $p->addPoint($i, $p->flipX($i, $p->x(5)) );
-
-        $frontExtra = 5; // Cutting out armhole a bit deeper at the front
-        $p->addPoint( 10 , $p->shift(10, 0, $frontExtra) );
-        $p->addPoint( 17 , $p->shift(17, 0, $frontExtra) );
-        $p->addPoint( 18 , $p->shift(18, 0, $frontExtra) );
-        
-        $path = 'M 9 L 2 L 3 L 4 L 6 L 5 C 13 16 14 C 15 18 10 C 17 19 12 L 8 C 20 21 9 z';
-        $p->newPath('outline', $path);
-        
-        $p->addPoint('titleAnchor', $p->flipX('titleAnchor', $p->x(5)) );
-        $attr = ['id' => "front-title", 'class' => 'title'];
-        $p->newText('title', 'titleAnchor', $this->t($p->title), $attr);
+        $p->addTitle('titleAnchor', 1, $this->t($p->title));
+        $p->newSnippet('logo', 'logo', 'titleAnchor');
     }
     
     public function draftSleeveBlock($model) 
@@ -136,6 +117,7 @@ class JoostBodyBlock extends Pattern
         // Sleeve center
         $p->newPoint( 1 , 0, 0 , 'Origin (Center sleeve @ shoulder)');
         $p->newPoint( 2 , 0, $this->help['sleevecapSeamLength']/3, 'Center sleeve @ sleevecap start' );
+        $p->clonePoint(2, 'gridAnchor');
         $p->newPoint( 3 , 0, $model->getMeasurement('sleeveLengthToWrist') , 'Center sleeve @ wrist');
         
         // Sleeve half width
@@ -208,10 +190,11 @@ class JoostBodyBlock extends Pattern
         $p->newPath('outline', $path);
         
         $p->newPoint('titleAnchor', $p->x(2), $this->parts['frontBlock']->y('titleAnchor') );
-        $attr = ['id' => "sleeve-title", 'class' => 'title'];
-        $p->newText('title', 'titleAnchor', $this->t($p->title), $attr);
+        $p->addTitle('titleAnchor', 3, $this->t($p->title));
 
-        $p->newText('test', 33, $this->t('warning'), ['line-height' => 10, 'class' => 'align-center']);
+        $p->newText('test', 33, $this->t('warning'), ['line-height' => 10, 'class' => 'text-center text-xl']);
+
+        $p->newSnippet('logo', 'logo', 'titleAnchor');
 
     }
     

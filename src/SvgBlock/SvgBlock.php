@@ -27,6 +27,11 @@ abstract class SvgBlock
         return $data;
     }
 
+    public function getData()
+    {
+        return $this->data;
+    }
+
     public function add($data, $replace=null)
     {
         $caller = debug_backtrace()[0]['file'];

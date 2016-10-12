@@ -92,9 +92,10 @@ class AidenAshirt extends JoostBodyBlock
         // Title
         $p->newPoint('titleAnchor', $p->x(5)*0.4, $p->x(5)+40, 'Title anchor');
         $p->addTitle('titleAnchor', 1, $this->t($p->title), $this->t('Cut 1 on fold'));
+        $p->newSnippet('logo', 'logo', 'titleAnchor');
 
         // Scalebox 
-        $p->addPoint('scaleboxAnchor', $p->shift('titleAnchor', -90, 40));
+        $p->addPoint('scaleboxAnchor', $p->shift('titleAnchor', -90, 100));
         $p->newSnippet('scalebox', 'scalebox', 'scaleboxAnchor');
         
         // Notes
@@ -179,6 +180,7 @@ class AidenAshirt extends JoostBodyBlock
         // Title
         $p->newPoint('titleAnchor', $p->x(5)*0.4, $p->x(5)+40, 'Title anchor');
         $p->addTitle('titleAnchor', 2, $this->t($p->title), $this->t('Cut 1 on fold'));
+        $p->newSnippet('logo', 'logo', 'titleAnchor');
         
         // Seam allowance | Point indexes from 200 upward
         $p->newPath('shoulderSA', 'M 102 L sa1-line-102TO103 L sa1-line-103TO102 L 103', ['class' => 'seam-allowance']);
@@ -226,7 +228,7 @@ class AidenAshirt extends JoostBodyBlock
             $this->t("length").
             ": ".
             $this->unit($armholeLen).
-            "\n".
+            "\n&#160;\n".
             $this->t("Cut one strip to finish the neck opening").
             ":\n".
             $this->t("width").
@@ -237,7 +239,8 @@ class AidenAshirt extends JoostBodyBlock
             ": ".
             $this->unit($neckholeLen);
         
-        $p->newText('binding', 'scaleboxAnchor', $msg, ['class' => 'text fill-note', 'line-height' => 7]);
+        $p->newPoint('msgAnchor', $p->x(304)+30, $p->y('scaleboxAnchor'), 'Message anchor');
+        $p->newText('binding', 'msgAnchor', $msg, ['class' => 'text-lg fill-note', 'line-height' => 9]);
         
         if($this->theme == 'Paperless' || $this->theme == 'Designer' || $this->theme == 'Developer') {
 

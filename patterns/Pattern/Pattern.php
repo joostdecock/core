@@ -291,4 +291,32 @@ abstract class Pattern
         return $sorted;
     
     }
+    
+    public function getClassChain() 
+    {
+        $reflector = new \ReflectionClass(get_class($this));
+        $filename = $reflector->getFileName();
+        $locations[] = dirname($filename);
+        do {
+            $parent = $reflector->getParentClass();
+            $reflector = new \ReflectionClass($parent->name);
+            $filename = $reflector->getFileName();
+            $locations[] = dirname($filename);
+        } while ($parent->name != 'Freesewing\Patterns\Pattern');
+        
+        return $locations;
+    }
+
+    public function getTranslationFiles($locale, $altloc) 
+    {
+        $locations = $this->getClassChain();
+        $translations = array();
+        foreach($locations as $location) {
+            $locfile = "$location/translations/messages.$locale.yml";
+            $altfile = "$location/translations/messages.$altloc.yml";
+            if(is_readable($locfile)) $translations[$locale][] = $locfile;
+            if(is_readable($altfile)) $translations[$altloc][] = $altfile;
+        }
+        return $translations; 
+    }
 }

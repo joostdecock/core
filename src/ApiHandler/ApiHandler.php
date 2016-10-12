@@ -41,6 +41,8 @@ class ApiHandler
      */
     public $requestData;
 
+    private $fallbackLocale = 'en';
+
     public function __construct($data)
     {
         $this->config = \Freesewing\Yamlr::loadConfig($this::configFile);
@@ -108,17 +110,19 @@ class ApiHandler
 
     private function getTranslator()
     {
-        $translator = new Translator($this->getLocale());
-        $translator->setFallbackLocales(['en']);
+        $locale = $this->getLocale();
+        $altloc = $this->fallbackLocale;
+        $themeTranslations = $this->theme->getTranslationFiles($locale, $altloc);
+        $patternTranslations = $this->pattern->getTranslationFiles($locale, $altloc);
+        $translations[$locale] = array_merge($themeTranslations[$locale], $patternTranslations[$locale]);
+        $translations[$altloc] = array_merge($themeTranslations[$altloc], $patternTranslations[$altloc]);
+
+        $translator = new Translator($locale);
+        $translator->setFallbackLocales([$altloc]);
         $translator->addLoader('yaml', new YamlFileLoader());
-        
-        $translation = $this->pattern->getTranslationsDir().'/messages.'.$this->getLocale().'.yml';
-        if(is_readable($translation)) {
-            $translator->addResource( 'yaml', $translation, $this->getLocale());
-        } else {
-            $translation = $this->pattern->getTranslationsDir().'/messages.en.yml';
-            $translator->addResource( 'yaml', $translation, 'en');
-        } 
+
+        foreach($translations[$locale] as $tfile) $translator->addResource( 'yaml', $tfile, $locale);
+        foreach($translations[$altloc] as $tfile) $translator->addResource( 'yaml', $tfile, $altloc);
 
         return $translator; 
     }

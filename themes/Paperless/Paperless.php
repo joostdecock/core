@@ -53,6 +53,11 @@ class Paperless extends Svg
             $transX = $topLeft->getX();
             $transY = $topLeft->getY();
         }
+        // Grid margin
+        $x +=2;
+        $y +=2;
+        $h -=4;
+        $w -=4;
         $part->newInclude('gridrect', '<rect x="'.$x.'" y="'.$y.'" height="'.$h.'" width="'.$w.'" class="part grid" transform="translate('.$transX.','.$transY.')"/>');
     }
 }

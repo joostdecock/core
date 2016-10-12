@@ -3,7 +3,6 @@
 namespace Freesewing;
 
 use Symfony\Component\Yaml\Yaml;
-use Symfony\Component\Yaml\Exception\ParseException;
 
 /**
  * Freesewing\Yamlr class.
@@ -18,6 +17,7 @@ class Yamlr
     {
         // If Yaml file is not valid, Symphony will throw and exception
         $yaml = Yaml::parse(file_get_contents($file));
+
         return $yaml;
     }
 }

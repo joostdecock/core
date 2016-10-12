@@ -19,12 +19,12 @@ class TextOnPath
     {
         $this->path = $path;
     }
-    
+
     public function setText($text)
     {
         $this->text = $text;
     }
-    
+
     public function setAttributes($attributes)
     {
         $this->attributes = $attributes;
@@ -34,7 +34,7 @@ class TextOnPath
     {
         return $this->path;
     }
-    
+
     public function getText()
     {
         return $this->text;

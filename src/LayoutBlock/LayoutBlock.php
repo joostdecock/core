@@ -23,19 +23,19 @@ class LayoutBlock
         $this->x = $x;
         $this->y = $y;
     }
-    
-    public function size($w, $h) 
+
+    public function size($w, $h)
     {
         $this->w = $w;
         $this->h = $h;
     }
 
-    public function used($used=true) 
+    public function used($used = true)
     {
         $this->used = $used;
     }
-    
-    public function rotated($rotated=true) 
+
+    public function rotated($rotated = true)
     {
         $this->rotated = $rotated;
     }

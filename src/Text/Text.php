@@ -19,12 +19,12 @@ class Text
     {
         $this->anchor = $anchor;
     }
-    
+
     public function setText($text)
     {
         $this->text = $text;
     }
-    
+
     public function setAttributes($attributes)
     {
         $this->attributes = $attributes;
@@ -34,7 +34,7 @@ class Text
     {
         return $this->anchor;
     }
-    
+
     public function getText()
     {
         return $this->text;

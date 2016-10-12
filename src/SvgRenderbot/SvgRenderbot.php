@@ -50,7 +50,9 @@ class SvgRenderbot
 
     private function openGroup($id = false, $options = null)
     {
-        if ($id === false) $id = $this->getUid();
+        if ($id === false) {
+            $id = $this->getUid();
+        }
         $svg = $this->nl().
             "<!-- Start of group #$id -->".$this->nl().
             "<g id=\"$id\" $options>";
@@ -78,12 +80,12 @@ class SvgRenderbot
 
         if (isset($pattern->parts) && count($pattern->parts) > 0) :
             foreach ($pattern->parts as $partKey => $part) {
-                if($part->render) {
+                if ($part->render) {
                     $transforms = '';
                     if (is_array($part->transforms) && count($part->transforms) > 0) {
                         $transforms = \Freesewing\Transform::asSvgParameter($part->transforms);
                     }
-                    
+
                     $svg .= $this->openGroup($partKey, $transforms);
                     $svg .= $this->renderPart($part);
                     $svg .= $this->closeGroup();
@@ -92,21 +94,45 @@ class SvgRenderbot
         endif;
 
         $svg .= $this->closeGroup();
-        
+
         return $svg;
     }
 
     private function renderPart($part)
     {
         $svg = $this->nl();
-    
-        if(@$part->includes) foreach ($part->includes as $include) $svg .= $include->get();
-        if(@$part->paths) foreach ($part->paths as $path) $svg .= $this->renderPath($path, $part);
-        if(@$part->snippets) foreach ($part->snippets as $snippet) $svg .= $this->renderSnippet($snippet, $part);
-        if(@$part->texts) foreach ($part->texts as $text) $svg .= $this->renderText($text, $part);
-        if($part->textsOnPath) foreach ($part->textsOnPath as $textOnPath) $svg .= $this->renderTextOnPath($textOnPath, $part);
-        if(@$part->notes) foreach ($part->notes as $note) $svg .= $this->renderNote($note, $part);
-        
+
+        if (@$part->includes) {
+            foreach ($part->includes as $include) {
+                $svg .= $include->get();
+            }
+        }
+        if (@$part->paths) {
+            foreach ($part->paths as $path) {
+                $svg .= $this->renderPath($path, $part);
+            }
+        }
+        if (@$part->snippets) {
+            foreach ($part->snippets as $snippet) {
+                $svg .= $this->renderSnippet($snippet, $part);
+            }
+        }
+        if (@$part->texts) {
+            foreach ($part->texts as $text) {
+                $svg .= $this->renderText($text, $part);
+            }
+        }
+        if ($part->textsOnPath) {
+            foreach ($part->textsOnPath as $textOnPath) {
+                $svg .= $this->renderTextOnPath($textOnPath, $part);
+            }
+        }
+        if (@$part->notes) {
+            foreach ($part->notes as $note) {
+                $svg .= $this->renderNote($note, $part);
+            }
+        }
+
         return $svg;
     }
 
@@ -115,7 +141,9 @@ class SvgRenderbot
      */
     private function renderPath($path, $part)
     {
-        if($path->getRender() === false) return '';
+        if ($path->getRender() === false) {
+            return '';
+        }
         $pathstring = $path->getPath();
         $points = $part->points;
         $patharray = explode(' ', $pathstring);
@@ -129,11 +157,13 @@ class SvgRenderbot
             }
         }
         $attributes = $path->getAttributes();
-        if(!isset($attributes['id'])) $attributes['id'] = $this->getUid();
+        if (!isset($attributes['id'])) {
+            $attributes['id'] = $this->getUid();
+        }
 
         return $this->nl().'<path '.$this->flattenAttributes($attributes).' d="'.$svg.'" />';
     }
-    
+
     /*
      * Returns SVG code for a snippet
      */
@@ -141,8 +171,10 @@ class SvgRenderbot
     {
         $anchor = $snippet->getAnchor();
         $svg = $this->nl();
-        $svg .=  '<use x="'.$anchor->getX().'" y="'.$anchor->getY().'" xlink:href="#'.$snippet->getReference().'" ';
-        if(!isset($snippet->attributes['id'])) $svg .= 'id="'.$this->getUid().'" ';
+        $svg .= '<use x="'.$anchor->getX().'" y="'.$anchor->getY().'" xlink:href="#'.$snippet->getReference().'" ';
+        if (!isset($snippet->attributes['id'])) {
+            $svg .= 'id="'.$this->getUid().'" ';
+        }
         $svg .= $this->flattenAttributes($snippet->getAttributes());
         $svg .= '>';
         $this->indent();
@@ -154,46 +186,51 @@ class SvgRenderbot
 
         return $svg;
     }
-    
+
     /*
      * Returns SVG code for text
      */
-    private function renderText($text, $part, $textOnPath=false)
+    private function renderText($text, $part, $textOnPath = false)
     {
-        if($textOnPath !== false) { // Text on path
+        if ($textOnPath !== false) { // Text on path
             $path = $text->getPath();
             $id = $this->getUid();
             $path->setAttributes(['class' => 'textpath', 'id' => $id]);
             $svg = $this->renderPath($path, $part);
             $svg .= $this->nl();
-            $svg .=  '<text ';
+            $svg .= '<text ';
         } else { // Regular text
             $anchor = $text->getAnchor();
             $svg = $this->nl();
-            $svg .=  '<text x="'.$anchor->getX().'" y="'.$anchor->getY().'" ';
+            $svg .= '<text x="'.$anchor->getX().'" y="'.$anchor->getY().'" ';
         }
-        if(!isset($text->attributes['id'])) $svg .= 'id="'.$this->getUid().'" ';
-        if(isset($text->attributes['line-height'])) $lineHeight = $text->attributes['line-height'];
-        else  $lineHeight = 12;
+        if (!isset($text->attributes['id'])) {
+            $svg .= 'id="'.$this->getUid().'" ';
+        }
+        if (isset($text->attributes['line-height'])) {
+            $lineHeight = $text->attributes['line-height'];
+        } else {
+            $lineHeight = 12;
+        }
         $svg .= $this->flattenAttributes($text->getAttributes(), ['line-height']);
         $svg .= '>';
-        
-        if($textOnPath !== false) { // Text on path
-            $svg .=  "<textPath xlink:href=\"#$id\" startOffset=\"50%\">".
+
+        if ($textOnPath !== false) { // Text on path
+            $svg .= "<textPath xlink:href=\"#$id\" startOffset=\"50%\">".
                 '<tspan '.$this->flattenAttributes($text->getAttributes()).'>'.$text->getText().'</tspan>'.
                 '</textPath>';
         } else { // Regular text
-            $lines = explode("\n",$text->getText());
+            $lines = explode("\n", $text->getText());
             $attr = '';
             $this->indent();
-            foreach($lines as $line) {
+            foreach ($lines as $line) {
                 $svg .= $this->nl()."<tspan $attr>$line</tspan>";
                 $attr = 'x="'.$anchor->getX().'" dy="'.$lineHeight.'"';
             }
             $this->outdent();
         }
         $svg .= '</text>';
-        
+
         return $svg;
     }
 
@@ -202,7 +239,7 @@ class SvgRenderbot
         $path = $note->getPath();
         $svg = $this->renderPath($path, $part);
         $svg .= $this->renderText($note, $part);
-        
+
         return $svg;
     }
 
@@ -213,14 +250,19 @@ class SvgRenderbot
     {
         return $this->renderText($textOnPath, $part, true);
     }
-    
-    private function flattenAttributes($array, $remove=array())
+
+    private function flattenAttributes($array, $remove = array())
     {
-        if(!is_array($array)) return null;
-        $attributes = '';
-        foreach($array as $key => $value) {
-            if(!in_array($key, $remove)) $attributes .= "$key=\"$value\" ";
+        if (!is_array($array)) {
+            return null;
         }
+        $attributes = '';
+        foreach ($array as $key => $value) {
+            if (!in_array($key, $remove)) {
+                $attributes .= "$key=\"$value\" ";
+            }
+        }
+
         return $attributes;
     }
 }

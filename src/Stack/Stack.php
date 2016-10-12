@@ -15,14 +15,21 @@ class Stack
 
     public function push($items)
     {
-        foreach($items as $item) $this->items[] = $item;
+        foreach ($items as $item) {
+            $this->items[] = $item;
+        }
     }
 
-    public function replace($search, $replace) {
+    public function replace($search, $replace)
+    {
         $targetKey = false;
-        foreach($this->items as $key => $item) {
-            if($item == $search) $targetKey = $key;
+        foreach ($this->items as $key => $item) {
+            if ($item == $search) {
+                $targetKey = $key;
+            }
         }
-        if($targetKey !== false) array_splice($this->items, $targetKey, 1, $replace); 
+        if ($targetKey !== false) {
+            array_splice($this->items, $targetKey, 1, $replace);
+        }
     }
 }

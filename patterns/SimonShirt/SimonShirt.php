@@ -16,15 +16,14 @@ class SimonShirt extends JoostBodyBlock
         $this->msg('this is a test');
         $this->msg('this is another test');
         $this->help = array();
-        $this->help['armholeDepth'] = 200 + ($model->getMeasurement('shoulderSlope')/2 - 27.5) + ($model->getMeasurement('upperBicepsCircumference')/10);
+        $this->help['armholeDepth'] = 200 + ($model->getMeasurement('shoulderSlope') / 2 - 27.5) + ($model->getMeasurement('upperBicepsCircumference') / 10);
         $this->help['collarShapeFactor'] = 1;
         $this->help['sleevecapShapeFactor'] = 1;
-        
+
         $this->loadParts();
-        
+
         $this->draftBack($model);
         $this->draftFront($model);
         $this->draftSleeve($model);
     }
-
 }

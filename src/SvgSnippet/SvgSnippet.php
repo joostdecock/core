@@ -20,7 +20,7 @@ class SvgSnippet
     {
         $this->anchor = $anchor;
     }
-    
+
     public function setReference($reference)
     {
         $this->reference = $reference;
@@ -30,12 +30,12 @@ class SvgSnippet
     {
         $this->description = $description;
     }
-    
+
     public function getAnchor()
     {
         return $this->anchor;
     }
-    
+
     public function getReference()
     {
         return $this->reference;
@@ -45,7 +45,7 @@ class SvgSnippet
     {
         return $this->description;
     }
-    
+
     public function setAttributes($attributes)
     {
         $this->attributes = $attributes;

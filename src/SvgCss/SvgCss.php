@@ -22,14 +22,18 @@ class SvgCss extends SvgBlock
         $theseFirst = '';
         $css = '';
         $data = $this->getData();
-        if(is_array($data)) {
+        if (is_array($data)) {
             foreach ($data as $origin) {
                 foreach ($origin as $line) {
-                    if(substr(trim($line),0,1) == '@') $theseFirst .= "\n    $line";
-                    else $css .= "\n    $line";
+                    if (substr(trim($line), 0, 1) == '@') {
+                        $theseFirst .= "\n    $line";
+                    } else {
+                        $css .= "\n    $line";
+                    }
                 }
             }
         }
+
         return $theseFirst.$css;
     }
 }

@@ -18,12 +18,12 @@ class Note extends Text
     {
         $this->points = $points;
     }
-    
+
     public function setPath(\Freesewing\Path $path)
     {
         $this->path = $path;
     }
-    
+
     public function getPath()
     {
         return $this->path;

@@ -42,13 +42,15 @@ abstract class Pattern
         $this->replace('__TITLE__', $this->config['info']['name']);
         $this->replace('__VERSION__', $this->config['info']['version']);
         $this->replace('__DATE__', date('l j F Y'));
+
         return $this;
     }
 
-    private function getPatternDir() 
+    private function getPatternDir()
     {
         $reflector = new \ReflectionClass(get_class($this));
         $filename = $reflector->getFileName();
+
         return dirname($filename);
     }
 
@@ -60,20 +62,23 @@ abstract class Pattern
         }
     }
 
-    public function getTranslationsDir() 
+    public function getTranslationsDir()
     {
         return $this->getPatternDir().'/translations';
     }
 
-    public function getConfigFile() 
+    public function getConfigFile()
     {
         return $this->getPatternDir().'/config.yml';
     }
 
     public function unit($val)
     {
-        if($this->units['out'] == 'imperial') return round($val/25.4,2).'"';
-        else return round($val/10,2).'cm';
+        if ($this->units['out'] == 'imperial') {
+            return round($val / 25.4, 2).'"';
+        } else {
+            return round($val / 10, 2).'cm';
+        }
     }
 
     public function getUnits()
@@ -118,11 +123,11 @@ abstract class Pattern
 
     public function clonePoints($from, $into)
     {
-        foreach($this->parts[$from]->points as $key => $point) {
+        foreach ($this->parts[$from]->points as $key => $point) {
             $this->parts[$into]->addPoint($key, $point);
         }
     }
-    
+
     public function getPartMargin()
     {
         return $this->partMargin;
@@ -132,7 +137,7 @@ abstract class Pattern
     {
         if (isset($this->parts) && count($this->parts) > 0) {
             foreach ($this->parts as $part) {
-                if($part->render) {
+                if ($part->render) {
                     $offsetX = $part->boundary->topLeft->x * -1;
                     $offsetY = $part->boundary->topLeft->y * -1;
                     $transform = new \Freesewing\Transform('translate', $offsetX, $offsetY);
@@ -145,7 +150,7 @@ abstract class Pattern
     public function addBoundary()
     {
         foreach ($this->parts as $part) {
-            if($part->render) {
+            if ($part->render) {
                 if (!@is_object($topLeft)) {
                     $topLeft = new \Freesewing\Point(
                         $part->boundary->topLeft->x,
@@ -174,11 +179,12 @@ abstract class Pattern
         $this->boundary = new \Freesewing\Boundary($topLeft, $bottomRight);
     }
 
-    public function addPart($key) {
-        if(isset($this->parts[$key])) {
+    public function addPart($key)
+    {
+        if (isset($this->parts[$key])) {
             throw new \InvalidArgumentException("Duplicate part key: $key");
         } else {
-            if(is_numeric($key) || is_string($key)) {
+            if (is_numeric($key) || is_string($key)) {
                 $part = new \Freesewing\Part();
                 $this->parts[$key] = $part;
             }
@@ -189,7 +195,9 @@ abstract class Pattern
     {
         if (isset($this->parts) && count($this->parts) > 0) {
             foreach ($this->parts as $part) {
-              if($part->render) $part->addBoundary($this->partMargin);
+                if ($part->render) {
+                    $part->addBoundary($this->partMargin);
+                }
             }
         }
     }
@@ -211,7 +219,7 @@ abstract class Pattern
     {
         $this->addPartBoundaries();
         $this->pileParts();
-        
+
         $this->packer = new \Freesewing\GrowingPacker();
         $this->layoutBlocks = $this->layoutPreSort($this->parts);
         $this->packer->fit($this->layoutBlocks);
@@ -219,10 +227,10 @@ abstract class Pattern
         $this->setWidth($this->packer->boundingBox->w);
         $this->setHeight($this->packer->boundingBox->h);
     }
-    
+
     public function cleanUp()
     {
-        foreach($pattern->parts as $partKey => $part) {
+        foreach ($pattern->parts as $partKey => $part) {
             unset($part->tmp);
         }
     }
@@ -236,12 +244,12 @@ abstract class Pattern
     {
         return implode("\n", $this->messages);
     }
-    
+
     public function replace($search, $replace)
     {
         $this->replacements[$search] = $replace;
     }
-    
+
     public function getReplacements()
     {
         return $this->replacements;
@@ -266,7 +274,7 @@ abstract class Pattern
         foreach ($layoutBlocks as $key => $layoutBlock) {
             $transform = new \Freesewing\Transform('translate', $layoutBlock->fit->x, $layoutBlock->fit->y);
             $this->parts[$key]->addTransform('#layout', $transform);
-            if($layoutBlock->fit->rotated) {
+            if ($layoutBlock->fit->rotated) {
                 $transform = new \Freesewing\Transform('translate', $layoutBlock->h, 0);
                 $this->parts[$key]->addTransform('#layoutRotateTranslate', $transform);
                 $transform = new \Freesewing\Transform('rotate', 0, 0, 90);
@@ -279,7 +287,9 @@ abstract class Pattern
     {
         $order = array();
         foreach ($parts as $key => $part) {
-            if($part->render) $order[$key] = $part->boundary->maxSize;
+            if ($part->render) {
+                $order[$key] = $part->boundary->maxSize;
+            }
         }
         arsort($order);
         foreach ($order as $key => $maxSize) {
@@ -288,11 +298,11 @@ abstract class Pattern
             $layoutBlock->h = $parts[$key]->boundary->height;
             $sorted[$key] = $layoutBlock;
         }
+
         return $sorted;
-    
     }
-    
-    public function getClassChain() 
+
+    public function getClassChain()
     {
         $reflector = new \ReflectionClass(get_class($this));
         $filename = $reflector->getFileName();
@@ -303,20 +313,25 @@ abstract class Pattern
             $filename = $reflector->getFileName();
             $locations[] = dirname($filename);
         } while ($parent->name != 'Freesewing\Patterns\Pattern');
-        
+
         return $locations;
     }
 
-    public function getTranslationFiles($locale, $altloc) 
+    public function getTranslationFiles($locale, $altloc)
     {
         $locations = $this->getClassChain();
         $translations = array();
-        foreach($locations as $location) {
+        foreach ($locations as $location) {
             $locfile = "$location/translations/messages.$locale.yml";
             $altfile = "$location/translations/messages.$altloc.yml";
-            if(is_readable($locfile)) $translations[$locale][] = $locfile;
-            if(is_readable($altfile)) $translations[$altloc][] = $altfile;
+            if (is_readable($locfile)) {
+                $translations[$locale][] = $locfile;
+            }
+            if (is_readable($altfile)) {
+                $translations[$altloc][] = $altfile;
+            }
         }
-        return $translations; 
+
+        return $translations;
     }
 }

@@ -2,7 +2,6 @@
 
 namespace Freesewing;
 
-
 /**
  * Freesewing\Utils class.
  *
@@ -12,16 +11,19 @@ namespace Freesewing;
  */
 class Utils
 {
-    public static function asScrubbedArray($data, $separator=' ')
+    public static function asScrubbedArray($data, $separator = ' ')
     {
         $array = explode($separator, $data);
-        foreach($array as $value) {
-            if(rtrim($value) != '') $return[] = rtrim($value);
+        foreach ($array as $value) {
+            if (rtrim($value) != '') {
+                $return[] = rtrim($value);
+            }
         }
+
         return $return;
     }
 
-    public static function getUid($prefix='')
+    public static function getUid($prefix = '')
     {
         return uniqid($prefix);
     }

@@ -18,22 +18,25 @@ class Transform
 
     public function __construct($type, $x = null, $y = null, $angle = null)
     {
-        $allowedTypes = [ 
-            'translate', 
-            'scale', 
-            'rotate'
+        $allowedTypes = [
+            'translate',
+            'scale',
+            'rotate',
         ];
 
-        if(in_array($type, $allowedTypes)) $this->type = $type;
-        else throw new \InvalidArgumentException($type.' is not a supported transform type');
+        if (in_array($type, $allowedTypes)) {
+            $this->type = $type;
+        } else {
+            throw new \InvalidArgumentException($type.' is not a supported transform type');
+        }
 
         $numericParameters = [
             'x',
             'y',
             'angle',
         ];
-        
-        foreach($numericParameters as $parameter) {
+
+        foreach ($numericParameters as $parameter) {
             if (${$parameter} !== null) {
                 if (is_numeric(${$parameter})) {
                     $this->{$parameter} = ${$parameter};
@@ -44,12 +47,14 @@ class Transform
         }
 
         // We need at least x to be set
-        if(!isset($this->x)) throw new \InvalidArgumentException('Missing parameter x');
+        if (!isset($this->x)) {
+            throw new \InvalidArgumentException('Missing parameter x');
+        }
 
         // Extra check for rotate, requires all four parameters to be set
         if (
-            $this->type == 'rotate' 
-            and 
+            $this->type == 'rotate'
+            and
             !(isset($this->y) and isset($this->angle))
         ) {
             throw new \InvalidArgumentException('Missing parameter for rotate transform');

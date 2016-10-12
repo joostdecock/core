@@ -16,7 +16,6 @@ class Developer extends Theme
      */
     public function themeResponse($apiHandler)
     {
-
         ob_start();
         \Kint::$maxLevels = 0;
         \Kint::dump($apiHandler);
@@ -32,5 +31,4 @@ class Developer extends Theme
 
         return $response;
     }
-    
 }

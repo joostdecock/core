@@ -1,4 +1,5 @@
-<?php 
+<?php
+
 addModel('customer', array('id' => 'Drupal', 'added' => 'In input-api.php'));
 activateModel('customer');
 // Fuck inches, unitfactor is 10;
@@ -7,7 +8,7 @@ $UF = 10;
 // Measurements
 setm('ChestCircumference', $P['parameters']['MEASUREMENTS']['field_chest'] * $UF);
 setm('CenterBackNeckToWaist', $P['parameters']['MEASUREMENTS']['field_center_back_neck_to_waist'] * $UF);
-setm('HalfAcrossBack', $P['parameters']['MEASUREMENTS']['field_across_back_width'] * $UF /2);
+setm('HalfAcrossBack', $P['parameters']['MEASUREMENTS']['field_across_back_width'] * $UF / 2);
 setm('NeckCircumference', $P['parameters']['MEASUREMENTS']['field_neck_size'] * $UF);
 setm('WaistCircumference', $P['parameters']['MEASUREMENTS']['field_natural_waist'] * $UF);
 setm('HipsCircumference', $P['parameters']['MEASUREMENTS']['field_trouser_waist_circum'] * $UF);
@@ -61,18 +62,25 @@ setp('SLEEVE_PLACKET_WIDTH', $P['parameters']['OPTIONS']['sleeve_placket_width']
 setp('SLEEVE_PLACKET_LENGTH', $P['parameters']['OPTIONS']['sleeve_placket_length'] * $UF);
 
 // Not set but calculated
-if(getp('CUFF_DRAPE') <= 30) setp('CUFF_PLEATS',1);
-else setp('CUFF_PLEATS',2);
+if (getp('CUFF_DRAPE') <= 30) {
+    setp('CUFF_PLEATS', 1);
+} else {
+    setp('CUFF_PLEATS', 2);
+}
 // Armhole Depth (used to be a measurement) (using 55 as default shoulder slope)
-setp('ARMHOLE_DEPTH', 200+(getm('ShoulderSlope')/2-27.5)+(getm('UpperBicepsCircumference')/10));
-setp('GARMENT_LENGTH', getp('LENGTH_BONUS')+getm('CenterBackNeckToWaist')+getm('NaturalWaistToTrouserWaist'));
+setp('ARMHOLE_DEPTH', 200 + (getm('ShoulderSlope') / 2 - 27.5) + (getm('UpperBicepsCircumference') / 10));
+setp('GARMENT_LENGTH', getp('LENGTH_BONUS') + getm('CenterBackNeckToWaist') + getm('NaturalWaistToTrouserWaist'));
 $chest = getm('ChestCircumference') + getp('CHEST_EASE');
 $waist = getm('WaistCircumference') + getp('WAIST_EASE');
 $hips = getm('HipsCircumference') + getp('HIPS_EASE');
 $waist_re = $chest - $waist;
 $hips_re = $chest - $hips;
-if($hips_re <= 0) $hips_re = 0;
-if($waist_re <= 0) $waist_re = 0;
+if ($hips_re <= 0) {
+    $hips_re = 0;
+}
+if ($waist_re <= 0) {
+    $waist_re = 0;
+}
 setp('WAIST_REDUCTION', $waist_re);
 setp('HIPS_REDUCTION', $hips_re);
 

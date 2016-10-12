@@ -17,7 +17,6 @@ class Path
     public $direction;
     public $render = true;
 
-
     public function setRender($bool)
     {
         $this->render = $bool;
@@ -41,8 +40,11 @@ class Path
 
     public function setDirection($direction)
     {
-        if($direction == 'ccw') $this->direction =  'ccw';
-        else $this->direction =  'cw';
+        if ($direction == 'ccw') {
+            $this->direction = 'ccw';
+        } else {
+            $this->direction = 'cw';
+        }
     }
 
     public function getDirection()
@@ -63,33 +65,33 @@ class Path
     public function findBoundary($part)
     {
         foreach ($part->paths as $pathName => $pathObject) {
-            /* 
-             * breaking path into array 
+            /*
+             * breaking path into array
              **/
             $pathAsArray = Utils::asScrubbedArray($pathObject->getPath());
             foreach ($pathAsArray as $index => $data) {
-                /* 
+                /*
                  * Are we dealing with a command or point index?
                  **/
-                if ($this->isAllowedPathCommand($data)) { 
-                    /* 
+                if ($this->isAllowedPathCommand($data)) {
+                    /*
                      * This is a command
                      **/
                     $command = $data;
-                } 
-                if (!$this->isAllowedPathCommand($data)) { 
-                    /* 
+                }
+                if (!$this->isAllowedPathCommand($data)) {
+                    /*
                      * This is a point index
                      **/
                     $pointIndex = $data;
-                    if(!isset($part->points[$pointIndex])) {
-                        /* 
+                    if (!isset($part->points[$pointIndex])) {
+                        /*
                          * Reference to non-existing point. Bail out
                          **/
-                        throw new \InvalidArgumentException('SVG path references non-existing point ' . $pointIndex);
+                        throw new \InvalidArgumentException('SVG path references non-existing point '.$pointIndex);
                     }
                     if (!@is_object($topLeft)) {
-                        /* 
+                        /*
                          * Topleft is not set. In other words, this is the first point we look at
                          * store it as both the topLeft and bottomRight point of our path boundary
                          **/
@@ -100,29 +102,37 @@ class Path
                         $bottomRight->setX($part->points[$pointIndex]->x);
                         $bottomRight->setY($part->points[$pointIndex]->y);
                     } else {
-                        /* 
+                        /*
                          * Topleft has been set. Let's compare this point to the current topLeft and bottomRight
                          **/
                         switch ($command) {
                             case 'M':
                             case 'L':
-                                /* 
+                                /*
                                  * MoveTo and LineTo (M and L) are simple
                                  **/
-                                if ($part->points[$pointIndex]->getX() < $topLeft->getX()) $topLeft->setX($part->points[$pointIndex]->getX());
-                                if ($part->points[$pointIndex]->getY() < $topLeft->getY())  $topLeft->setY($part->points[$pointIndex]->getY());
-                                if ($part->points[$pointIndex]->getX() > $bottomRight->getX()) $bottomRight->setX($part->points[$pointIndex]->getX());
-                                if ($part->points[$pointIndex]->getY() > $bottomRight->getY()) $bottomRight->setY($part->points[$pointIndex]->getY());
+                                if ($part->points[$pointIndex]->getX() < $topLeft->getX()) {
+                                    $topLeft->setX($part->points[$pointIndex]->getX());
+                                }
+                                if ($part->points[$pointIndex]->getY() < $topLeft->getY()) {
+                                    $topLeft->setY($part->points[$pointIndex]->getY());
+                                }
+                                if ($part->points[$pointIndex]->getX() > $bottomRight->getX()) {
+                                    $bottomRight->setX($part->points[$pointIndex]->getX());
+                                }
+                                if ($part->points[$pointIndex]->getY() > $bottomRight->getY()) {
+                                    $bottomRight->setY($part->points[$pointIndex]->getY());
+                                }
                             break;
                             case 'C':
                                 // Bezier curves need a bit more work
-                                /* 
-                                 * Bezier curves need a bit more work. 
+                                /*
+                                 * Bezier curves need a bit more work.
                                  * We need to calculate their bounding box by stepping through them.
                                  * We need ther start and finish point + control points, and pass that to findBezierBoundary()
                                  **/
-                                if ($pathAsArray[$index - 1] == 'C') { 
-                                    /* 
+                                if ($pathAsArray[$index - 1] == 'C') {
+                                    /*
                                      * Only run this once per CurveTo command, which uses 4 points
                                      * They are disributed in our array like this
                                      *     [keyIndex - 2] = Start point
@@ -136,11 +146,19 @@ class Path
                                     $curveControlPoint1 = $part->points[$pathAsArray[$index]];
                                     $curveControlPoint2 = $part->points[$pathAsArray[$index + 1]];
                                     $curveEnd = $part->points[$pathAsArray[$index + 2]];
-                                    $bezierBoundary = $this->findBezierBoundary( $curveStart, $curveControlPoint1, $curveControlPoint2, $curveEnd);
-                                    if ($bezierBoundary->topLeft->getX() < $topLeft->getX()) $topLeft->setX($bezierBoundary->topLeft->getX());
-                                    if ($bezierBoundary->topLeft->getY() < $topLeft->getY()) $topLeft->setY($bezierBoundary->topLeft->getY());
-                                    if ($bezierBoundary->bottomRight->getX() > $bottomRight->getX()) $bottomRight->setX($bezierBoundary->bottomRight->getX());
-                                    if ($bezierBoundary->bottomRight->getY() > $bottomRight->getY()) $bottomRight->setY($bezierBoundary->bottomRight->getY());
+                                    $bezierBoundary = $this->findBezierBoundary($curveStart, $curveControlPoint1, $curveControlPoint2, $curveEnd);
+                                    if ($bezierBoundary->topLeft->getX() < $topLeft->getX()) {
+                                        $topLeft->setX($bezierBoundary->topLeft->getX());
+                                    }
+                                    if ($bezierBoundary->topLeft->getY() < $topLeft->getY()) {
+                                        $topLeft->setY($bezierBoundary->topLeft->getY());
+                                    }
+                                    if ($bezierBoundary->bottomRight->getX() > $bottomRight->getX()) {
+                                        $bottomRight->setX($bezierBoundary->bottomRight->getX());
+                                    }
+                                    if ($bezierBoundary->bottomRight->getY() > $bottomRight->getY()) {
+                                        $bottomRight->setY($bezierBoundary->bottomRight->getY());
+                                    }
                                 }
                             break;
                         }
@@ -151,13 +169,17 @@ class Path
         $boundary = new \Freesewing\Boundary();
         $boundary->setTopLeft($topLeft);
         $boundary->setBottomRight($bottomRight);
+
         return $boundary;
     }
 
     public function isClosed()
     {
-        if(substr(trim(strtolower($this->getPath())),-2) == ' z') return true;
-        else return false;
+        if (substr(trim(strtolower($this->getPath())), -2) == ' z') {
+            return true;
+        } else {
+            return false;
+        }
     }
 
     private function findBezierBoundary($start, $cp1, $cp2, $end)
@@ -200,6 +222,7 @@ class Path
         $boundary = new \Freesewing\Boundary();
         $boundary->setTopLeft($topLeft);
         $boundary->setBottomRight($bottomRight);
+
         return $boundary;
     }
 
@@ -211,7 +234,7 @@ class Path
             + 3.0 * $cp2 * (1.0 - $t) * $t * $t
             + $end * $t * $t * $t;
     }
-    
+
     public function isAllowedPathCommand($command)
     {
         $allowedPathCommands = [
@@ -227,32 +250,36 @@ class Path
             return false;
         }
     }
-    
-    public function breakUp() 
+
+    public function breakUp()
     {
         $array = Utils::asScrubbedArray($this->getPath());
-        foreach($array as $i => $step) {
-            if($step == 'M') {
-                $ongoing = 'M '.$array[$i+1];
+        foreach ($array as $i => $step) {
+            if ($step == 'M') {
+                $ongoing = 'M '.$array[$i + 1];
                 $move = true;
-            } 
-            else {
-                if($step == 'L') {
-                    if(!$move) $ongoing = "M $previous";
-                    $paths[] = [ 'type' => 'L', 'path' => $ongoing.' L '.$array[$i+1] ];
-                }
-                else if($step == 'C') {
-                    if(!$move) $ongoing = "M $previous";
-                    $paths[] = [ 'type' => 'C', 'path' => $ongoing.' C '.$array[$i+1].' '.$array[$i+2].' '.$array[$i+3] ];
-                }
-                else if(strtolower($step) == 'z') {
-                    if($previous != $array[1]) $paths[] = [ 'type' => 'L', 'path' => "M $previous L ".$array[1] ];
+            } else {
+                if ($step == 'L') {
+                    if (!$move) {
+                        $ongoing = "M $previous";
+                    }
+                    $paths[] = ['type' => 'L', 'path' => $ongoing.' L '.$array[$i + 1]];
+                } elseif ($step == 'C') {
+                    if (!$move) {
+                        $ongoing = "M $previous";
+                    }
+                    $paths[] = ['type' => 'C', 'path' => $ongoing.' C '.$array[$i + 1].' '.$array[$i + 2].' '.$array[$i + 3]];
+                } elseif (strtolower($step) == 'z') {
+                    if ($previous != $array[1]) {
+                        $paths[] = ['type' => 'L', 'path' => "M $previous L ".$array[1]];
+                    }
                 }
                 unset($ongoing);
                 $move = false;
             }
             $previous = $step;
         }
+
         return $paths;
     }
 }

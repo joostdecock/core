@@ -1,4 +1,5 @@
-<?php 
+<?php
+
 addModel('Joost', array('id' => 'joost', 'added' => 'In input-grade.php'));
   activateModel('Joost');
   setm('TrouserWaistCircumference', 1060);
@@ -16,10 +17,8 @@ addModel('MrHanne', array('id' => 'mrhanne', 'added' => 'In input-grade.php'));
   setm('TrouserWaistCircumference', 820);
   setm('UppermostLegCircumference', 535);
   setm('WaistlineToWaistlineCrossseamLength', 620);
-  
 
 setp('WAISTBAND_ELASTIC_WIDTH', 40);
 setp('SPEEDO_RISE', 35);
 setp('VERTICAL_STRETCH_FACTOR', 0.9);
 setp('HORIZONTAL_STRETCH_FACTOR', 0.8);
-

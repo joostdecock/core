@@ -54,7 +54,7 @@ class ApiHandler
     {
         $this->channel = $this->instantiateFromContext('channel');
         $this->pattern = $this->instantiateFromContext('pattern');
-        $this->theme   = $this->instantiateFromContext('theme');
+        $this->theme = $this->instantiateFromContext('theme');
 
         if (
             !isset($this->response)
@@ -63,33 +63,35 @@ class ApiHandler
         ) :
 
             $this->model = new \Freesewing\Model();
-            $this->model->addMeasurements(
+        $this->model->addMeasurements(
                 $this->channel->standardizeModelMeasurements($this->requestData)
             );
 
-            $this->pattern->theme = $this->context['theme'];
-            $this->pattern->setTranslator($this->getTranslator());
-            $this->pattern->setUnits($this->context['units']);
-            $this->pattern->addOptions(
+        $this->pattern->theme = $this->context['theme'];
+        $this->pattern->setTranslator($this->getTranslator());
+        $this->pattern->setUnits($this->context['units']);
+        $this->pattern->addOptions(
                 $this->channel->standardizePatternOptions($this->requestData)
             );
 
-            $this->pattern->draft($this->model);
+        $this->pattern->draft($this->model);
 
-            $this->pattern->layout();
-            
-            $this->theme->themePattern($this->pattern);
+        $this->pattern->layout();
 
-            $this->renderAs = $this->theme->RenderAs();
-            if ($this->renderAs['svg'] === true) $this->svgRender();
-            if ($this->renderAs['js'] === true) $this->jsRender();
-            
-            $this->response = $this->theme->themeResponse($this);
-            
+        $this->theme->themePattern($this->pattern);
+
+        $this->renderAs = $this->theme->RenderAs();
+        if ($this->renderAs['svg'] === true) {
+            $this->svgRender();
+        }
+        if ($this->renderAs['js'] === true) {
+            $this->jsRender();
+        }
+
+        $this->response = $this->theme->themeResponse($this);
+
             // Last minute replacements on entire response body
-            $this->response->setBody($this->replace($this->response->getBody(), $this->pattern->getReplacements())); 
-            
-        else: // channel->isValidRequest() !== true
+            $this->response->setBody($this->replace($this->response->getBody(), $this->pattern->getReplacements())); else: // channel->isValidRequest() !== true
             $this->response = $this->bailOut(
                 'bad_request',
                 'Request not valid for channel '.$this->context['channel']
@@ -121,13 +123,17 @@ class ApiHandler
         $translator->setFallbackLocales([$altloc]);
         $translator->addLoader('yaml', new YamlFileLoader());
 
-        foreach($translations[$locale] as $tfile) $translator->addResource( 'yaml', $tfile, $locale);
-        foreach($translations[$altloc] as $tfile) $translator->addResource( 'yaml', $tfile, $altloc);
+        foreach ($translations[$locale] as $tfile) {
+            $translator->addResource('yaml', $tfile, $locale);
+        }
+        foreach ($translations[$altloc] as $tfile) {
+            $translator->addResource('yaml', $tfile, $altloc);
+        }
 
-        return $translator; 
+        return $translator;
     }
 
-    private function svgRender() 
+    private function svgRender()
     {
         $this->svgRenderbot = new \Freesewing\SvgRenderbot();
         $this->svgDocument = new \Freesewing\SvgDocument(
@@ -138,28 +144,30 @@ class ApiHandler
             new \Freesewing\SvgDefs(),
             new \Freesewing\SvgComments()
         );
-        $this->svgDocument->svgAttributes->add('width ="'.$this->pattern->getWidth()*3.54330709.'"');
-        $this->svgDocument->svgAttributes->add('height ="'.$this->pattern->getHeight()*3.54330709.'"');
-        
+        $this->svgDocument->svgAttributes->add('width ="'.$this->pattern->getWidth() * 3.54330709.'"');
+        $this->svgDocument->svgAttributes->add('height ="'.$this->pattern->getHeight() * 3.54330709.'"');
+
         // format specific themeing
         $this->theme->themeSvg($this->svgDocument);
-        
+
         // render SVG
         $this->svgDocument->setSvgBody($this->svgRenderbot->render($this->pattern));
     }
 
     private function replace($svg, $replacements)
     {
-        if(is_array($replacements)) {
+        if (is_array($replacements)) {
             $svg = str_replace(array_keys($replacements), array_values($replacements), $svg);
         }
+
         return $svg;
     }
 
     private function bailOut($status, $info)
     {
-        if (isset($this->response)) return $this->response;
-        else {
+        if (isset($this->response)) {
+            return $this->response;
+        } else {
             $response = new \Freesewing\Response();
             $response->setStatus($status);
             $response->setBody([
@@ -184,6 +192,7 @@ class ApiHandler
                 'bad_request',
                 ucwords($type).' '.$this->context[$type].' not found'
             );
+
             return false;
         }
     }
@@ -191,29 +200,33 @@ class ApiHandler
     private function setContext()
     {
         foreach (['channel', 'pattern', 'theme'] as $type) {
-            if (isset($this->requestData[$type])) $this->context[$type] = $this->requestData[$type];
-            else {
+            if (isset($this->requestData[$type])) {
+                $this->context[$type] = $this->requestData[$type];
+            } else {
                 $this->context[$type] = $this->config['defaults'][$type];
             }
         }
         $this->setLocale();
         $this->setUnits();
     }
-    
+
     private function setLocale()
     {
-        if(isset($this->requestData['lang'])) $this->context['locale'] = strtolower($this->requestData['lang']);
-        else $this->context['locale'] = 'en';
+        if (isset($this->requestData['lang'])) {
+            $this->context['locale'] = strtolower($this->requestData['lang']);
+        } else {
+            $this->context['locale'] = 'en';
+        }
     }
 
     private function setUnits()
     {
-        if(isset($this->requestData['unitsIn']) && $this->requestData['unitsIn'] == 'imperial') {
+        if (isset($this->requestData['unitsIn']) && $this->requestData['unitsIn'] == 'imperial') {
             $this->context['units']['in'] = 'imperial';
         } else {
             $this->context['units']['in'] = 'metric';
         }
-        if(isset($this->requestData['unitsOut']) && $this->requestData['unitsOut'] == 'imperial') {
+        if (isset($this->requestData['unitsOut']) && $this->requestData['unitsOut'] == 'imperial') {
             $this->context['units']['out'] = 'imperial';
         } else {
             $this->context['units']['out'] = 'metric';

@@ -13,12 +13,10 @@ class Svg extends Theme
 {
     public function themeResponse($apiHandler)
     {
-
         $response = new \Freesewing\Response();
         $response->setFormat('svg');
         $response->setBody("{$apiHandler->svgDocument}");
 
         return $response;
     }
-    
 }

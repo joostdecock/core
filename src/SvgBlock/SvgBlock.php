@@ -18,7 +18,7 @@ abstract class SvgBlock
     public function __toString()
     {
         $data = '';
-        if(is_array($this->data)) {
+        if (is_array($this->data)) {
             foreach ($this->data as $origin) {
                 $data .= implode("\n    ", $origin)."\n    ";
             }
@@ -32,14 +32,14 @@ abstract class SvgBlock
         return $this->data;
     }
 
-    public function add($data, $replace=null)
+    public function add($data, $replace = null)
     {
         $caller = debug_backtrace()[0]['file'];
         if (!@is_array($this->data[$caller])) {
             $this->data[$caller] = array();
         }
         foreach (explode("\n", $data) as $line) {
-            if(is_array($replace)) {
+            if (is_array($replace)) {
                 $line = str_replace(array_keys($replace), array_values($replace), $line);
             }
             array_push($this->data[$caller], $line);

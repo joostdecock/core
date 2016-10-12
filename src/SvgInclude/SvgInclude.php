@@ -12,12 +12,12 @@ namespace Freesewing;
 class SvgInclude
 {
     private $content;
-    
-   public function set($content)
+
+    public function set($content)
     {
         $this->content = $content;
     }
-    
+
     public function get()
     {
         return $this->content;

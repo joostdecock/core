@@ -1,4 +1,5 @@
-<?php 
+<?php
+
 addModel('developer', array('id' => 'Default developer model', 'added' => 'In input-dev.php'));
 activateModel('developer');
 
@@ -26,15 +27,14 @@ setm('WaistCircumference', 885);
 setm('HipsCircumference', 1040);
 setm('NaturalWaistToTrouserWaist', 175);
 
-setm('SleeveLengthToWrist', 700); 
+setm('SleeveLengthToWrist', 700);
 setm('CrownPointToElbowLength', 410);
 setm('UpperBicepsCircumference', 335);
 setm('WristCircumference', 190);
 
-setm('ShoulderLength' , 150);
+setm('ShoulderLength', 150);
 // Shoulder slope = 50.5cm - 45cm = 5.5cm = 55
-setm('ShoulderSlope' , 55);
-
+setm('ShoulderSlope', 55);
 
 // Options below
 
@@ -47,58 +47,55 @@ setp('HIPS_EASE', 80);
 setp('BICEPS_EASE', 30);
 
 // More shirt to tuck in your trousers. Can also be negative for less
-setp('LENGTH_BONUS' , 150);
-
+setp('LENGTH_BONUS', 150);
 
 // Hem style
 // 1 = straight
 // 2 = baseball
-// 3 = slashed 
-setp('HEM_STYLE' , 1);
+// 3 = slashed
+setp('HEM_STYLE', 1);
 
 // Curved hem for styles 2 and 3
 // Can never be more than LENGTH_BONUS
-setp('HEM_CURVE' ,80);
+setp('HEM_CURVE', 80);
 
 // Go out a bit on the hips to precent belly fluff on show
 // CONSTRAINT: HIP_FLARE cannot be more than LENGTH_BONUS - HEM_CURVE or it will be ignored
-setp('HIP_FLARE' , 20);
-
+setp('HIP_FLARE', 20);
 
 // Back neck cutout
-setp('BACK_NECK_CUTOUT' , 20);
+setp('BACK_NECK_CUTOUT', 20);
 
 // Armhole Depth (used to be a measurement) (using 55 as default shoulder slope)
-setp('ARMHOLE_DEPTH', 200+(getm('ShoulderSlope')/2-27.5)+(getm('UpperBicepsCircumference')/10));
-
+setp('ARMHOLE_DEPTH', 200 + (getm('ShoulderSlope') / 2 - 27.5) + (getm('UpperBicepsCircumference') / 10));
 
 // Collar ease
-setp('COLLAR_EASE' , 15);
+setp('COLLAR_EASE', 15);
 
 // BUTTON PLACKET TYPE
 // 1 = Grown on
 // 2 = Sewn on
-setp('BUTTON_PLACKET_TYPE' , 1);
+setp('BUTTON_PLACKET_TYPE', 1);
 
 // BUTTONHOLE PLACKET STYLE
 // 1 = Classic placket
 // 2 = Seamless (French style)
 // if sewn on, this is always 1
-setp('BUTTON_PLACKET_STYLE' , 2);
-setp('BUTTON_PLACKET_WIDTH' , 20);
+setp('BUTTON_PLACKET_STYLE', 2);
+setp('BUTTON_PLACKET_WIDTH', 20);
 
 // BUTTONHOLE PLACKET TYPE
 // 1 = Grown on
 // 2 = Sewn on
-setp('BUTTONHOLE_PLACKET_TYPE' , 1);
+setp('BUTTONHOLE_PLACKET_TYPE', 1);
 
 // BUTTONHOLE PLACKET STYLE
 // 1 = Classic placket
 // 2 = Seamless (French style)
-setp('BUTTONHOLE_PLACKET_STYLE' , 2);
+setp('BUTTONHOLE_PLACKET_STYLE', 2);
 
-setp('BUTTONHOLE_PLACKET_WIDTH' , 35);
-setp('BUTTONHOLE_PLACKET_FOLD_WIDTH' , 6.35);
+setp('BUTTONHOLE_PLACKET_WIDTH', 35);
+setp('BUTTONHOLE_PLACKET_FOLD_WIDTH', 6.35);
 
 // Number of buttons, not including collar or optional top button
 setp('FRONT_BUTTONS', 7);
@@ -107,7 +104,7 @@ setp('FRONT_BUTTONS', 7);
 setp('EXTRA_TOP_BUTTON', 1);
 
 // Stop buttons before waist
-setp('BUTTON_FREE_LENGTH' , 10);
+setp('BUTTON_FREE_LENGTH', 10);
 
 // Split yoke or not
 setp('SPLIT_YOKE', 1);
@@ -161,8 +158,11 @@ setp('CUFF_EASE', 35);
 // Cuff drape
 setp('CUFF_DRAPE', 40);
   // 1, 2, or 3 pleats?
-if(getp('CUFF_DRAPE') <= 30) setp('CUFF_PLEATS',1);
-else setp('CUFF_PLEATS',2);
+if (getp('CUFF_DRAPE') <= 30) {
+      setp('CUFF_PLEATS', 1);
+  } else {
+    setp('CUFF_PLEATS', 2);
+}
 
 // Sleeve placket width
 setp('SLEEVE_PLACKET_WIDTH', 25);
@@ -170,16 +170,19 @@ setp('SLEEVE_PLACKET_WIDTH', 25);
 // Sleeve placket length
 setp('SLEEVE_PLACKET_LENGTH', 145);
 
-
 // Not set but calculated
-setp('GARMENT_LENGTH', getp('LENGTH_BONUS')+getm('CenterBackNeckToWaist')+getm('NaturalWaistToTrouserWaist'));
+setp('GARMENT_LENGTH', getp('LENGTH_BONUS') + getm('CenterBackNeckToWaist') + getm('NaturalWaistToTrouserWaist'));
 $chest = getm('ChestCircumference') + getp('CHEST_EASE');
 $waist = getm('WaistCircumference') + getp('WAIST_EASE');
 $hips = getm('HipsCircumference') + getp('HIPS_EASE');
 $waist_re = $chest - $waist;
 $hips_re = $chest - $hips;
-if($hips_re <= 0) $hips_re = 0;
-if($waist_re <= 0) $waist_re = 0;
+if ($hips_re <= 0) {
+    $hips_re = 0;
+}
+if ($waist_re <= 0) {
+    $waist_re = 0;
+}
 setp('WAIST_REDUCTION', $waist_re);
 setp('HIPS_REDUCTION', $hips_re);
 dmsg("waist reduction: $waist_re");

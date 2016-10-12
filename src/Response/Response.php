@@ -27,7 +27,7 @@ class Response
             'api_down',
             'server_error',
             ];
-        if(in_array($status, $allowedStatuses)) {
+        if (in_array($status, $allowedStatuses)) {
             $this->status = strtolower($status);
         } else {
             throw new \InvalidArgumentException($status.' is not a supported response status');
@@ -105,7 +105,7 @@ class Response
         $protocol = (isset($_SERVER['SERVER_PROTOCOL']) ? $_SERVER['SERVER_PROTOCOL'] : 'HTTP/1.0');
         $this->sendHeaderToBrowser($protocol.' '.$statuscode.' '.$text);
     }
-    
+
     private function sendHeaderToBrowser($header)
     {
         header($header);

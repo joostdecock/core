@@ -41,11 +41,14 @@ class Boundary
 
     public function updateDimensions()
     {
-        if(is_object($this->topLeft) && is_object($this->bottomRight)) {
+        if (is_object($this->topLeft) && is_object($this->bottomRight)) {
             $this->width = $this->bottomRight->x - $this->topLeft->x;
             $this->height = $this->bottomRight->y - $this->topLeft->y;
-            if($this->height > $this->width) $this->maxSize = $this->height;
-            else $this->maxSize = $this->width;
+            if ($this->height > $this->width) {
+                $this->maxSize = $this->height;
+            } else {
+                $this->maxSize = $this->width;
+            }
         }
     }
 }

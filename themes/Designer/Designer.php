@@ -17,9 +17,11 @@ class Designer extends Theme
     }
     public function themePattern($pattern)
     {
-        foreach($pattern->parts as $partKey => $part) {
-            if($part->render) {
-                if(!isset($_REQUEST['only'])) $this->debugPaths($partKey, $part);
+        foreach ($pattern->parts as $partKey => $part) {
+            if ($part->render) {
+                if (!isset($_REQUEST['only'])) {
+                    $this->debugPaths($partKey, $part);
+                }
                 $this->debugPoints($partKey, $part);
             }
         }
@@ -28,23 +30,30 @@ class Designer extends Theme
 
     private function debugPoints($partKey, $part)
     {
-        foreach($part->points as $key => $point) {
-            if(isset($_REQUEST['only'])) {
-                $only = \Freesewing\Utils::asScrubbedArray($_REQUEST['only'], ','); 
-                if(in_array($key, $only)) $this->debugPoint($key, $point, $part, $partKey);
+        foreach ($part->points as $key => $point) {
+            if (isset($_REQUEST['only'])) {
+                $only = \Freesewing\Utils::asScrubbedArray($_REQUEST['only'], ',');
+                if (in_array($key, $only)) {
+                    $this->debugPoint($key, $point, $part, $partKey);
+                }
+            } else {
+                $this->debugPoint($key, $point, $part, $partKey);
             }
-            else $this->debugPoint($key, $point, $part, $partKey);
         }
     }
 
     private function debugPoint($key, \Freesewing\Point $point, \Freesewing\Part $part, $partKey)
     {
-        if(!isset($part->tmp['pointsThemed'][$key])) {
-            $title = $this->debugPointDescription($key,$point);
+        if (!isset($part->tmp['pointsThemed'][$key])) {
+            $title = $this->debugPointDescription($key, $point);
             $attr = ['id' => "$partKey-$key", 'onmouseover' => "pointHover('$partKey-$key')"];
-            if(substr($key,0,1) == '.' || strpos($key, 'volatile')) $type = 'volatile-point';
-            else $type = 'point';
-            $part->newSnippet($key, $type, $key, $attr, $title); $attr = ['id' => "$partKey-$key-tooltip", 'class' => 'tooltip', 'visibility' => 'hidden'];
+            if (substr($key, 0, 1) == '.' || strpos($key, 'volatile')) {
+                $type = 'volatile-point';
+            } else {
+                $type = 'point';
+            }
+            $part->newSnippet($key, $type, $key, $attr, $title);
+            $attr = ['id' => "$partKey-$key-tooltip", 'class' => 'tooltip', 'visibility' => 'hidden'];
             $part->newText($key, $key, $title, $attr);
         }
     }
@@ -56,32 +65,37 @@ class Designer extends Theme
 
     private function debugPaths($partKey, $part)
     {
-        foreach($part->paths as $path) {
+        foreach ($part->paths as $path) {
             $this->debugPath($path, $part, $partKey);
         }
-    } 
-        
+    }
+
     private function debugPath($path, $part, $partKey)
     {
         foreach (explode(' ', $path->path) as $key) {
             $key = rtrim($key);
-            
+
             if ($key != '' && $path->isAllowedPathCommand($key)) {
                 $command = $key;
-                if($command == 'C') $curveSteps=1;
-            } 
-            elseif (is_object($part->points[$key])) {
-                $part->tmp['pointsThemed'][$key] = true; // Store what points we've seen
-                if($command == 'C') {
-                    if($curveSteps == 3) $type = 'path-point';
-                    else $type = 'path-curvecontrol';
-                    if($curveSteps == 1 or $curveSteps == 3) {
-                        $part->newPath("svgDebug-pathcontrol-$key", "M $previous L $key", ['class' => 'curve-control']);
-                    } 
-                    $curveSteps++;
+                if ($command == 'C') {
+                    $curveSteps = 1;
                 }
-                else $type = 'path-point';
-                $title = $this->debugPointDescription($key,$part->points[$key]);
+            } elseif (is_object($part->points[$key])) {
+                $part->tmp['pointsThemed'][$key] = true; // Store what points we've seen
+                if ($command == 'C') {
+                    if ($curveSteps == 3) {
+                        $type = 'path-point';
+                    } else {
+                        $type = 'path-curvecontrol';
+                    }
+                    if ($curveSteps == 1 or $curveSteps == 3) {
+                        $part->newPath("svgDebug-pathcontrol-$key", "M $previous L $key", ['class' => 'curve-control']);
+                    }
+                    ++$curveSteps;
+                } else {
+                    $type = 'path-point';
+                }
+                $title = $this->debugPointDescription($key, $part->points[$key]);
                 $attr = ['id' => "$partKey-$key", 'onmouseover' => "pointHover('$partKey-$key')", 'onmouseout' => "pointUnhover('$partKey-$key')"];
                 $part->newSnippet("$partKey-$key", $type, $key, $attr, $title);
                 $attr = ['id' => "$partKey-$key-tooltip", 'class' => 'tooltip', 'visibility' => 'hidden'];
@@ -89,7 +103,5 @@ class Designer extends Theme
                 $previous = $key;
             }
         }
-
-    }    
-    
+    }
 }

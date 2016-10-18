@@ -13,7 +13,7 @@ abstract class SvgBlock
 {
     abstract public function load();
 
-    private $data;
+    private $data = false;
 
     public function __toString()
     {
@@ -43,6 +43,7 @@ abstract class SvgBlock
                 $line = str_replace(array_keys($replace), array_values($replace), $line);
             }
             array_push($this->data[$caller], $line);
+            $this->isEmpty = true;
         }
     }
 }

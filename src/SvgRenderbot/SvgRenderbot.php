@@ -139,7 +139,7 @@ class SvgRenderbot
     /*
      * Returns SVG code for a path
      */
-    private function renderPath($path, $part)
+    public function renderPath($path, $part)
     {
         if ($path->getRender() === false) {
             return '';

@@ -13,6 +13,7 @@ class SvgScript extends SvgBlock
 {
     public function load()
     {
-        return  "\n<script type=\"application/ecmascript\">\n    <![CDATA[\n    $this\n    ]]>\n</script>\n";
+        if($this->getData() === false) return false;
+        else return  "\n<script type=\"application/ecmascript\">\n    <![CDATA[\n    $this\n    ]]>\n</script>\n";
     }
 }

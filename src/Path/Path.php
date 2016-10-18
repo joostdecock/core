@@ -16,10 +16,16 @@ class Path
     public $boundary = null;
     public $direction;
     public $render = true;
+    public $sampler = false;
+
+    public function setSampler($bool)
+    {
+        $this->sampler = $bool;
+    }
 
     public function setRender($bool)
     {
-        $this->render = $bool;
+        $this->sampler = $bool;
     }
 
     public function getRender()

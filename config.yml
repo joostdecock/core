@@ -1,7 +1,7 @@
 defaults:
-    channel: ExampleChannel
-    theme: ExampleTheme
-    pattern: ExamplePattern
+    channel: Channel
+    theme: Svg
+    pattern: AidenAshirt
     partMargin: 10
 renderers:
     svg: SvgRenderbot

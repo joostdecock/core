@@ -20,6 +20,19 @@ class AidenAshirt extends JoostBodyBlock
         $this->draftFrontBlock($model);
 
         $this->draftFront($model);
+        $this->finalizeFront($model);
+        $this->draftBack($model);
+        $this->finalizeBack($model);
+    }
+
+    public function sample($model)
+    {
+        $this->parts['frontBlock']->setRender(false);
+        $this->parts['backBlock']->setRender(false);
+        $this->loadHelp($model);
+        $this->draftBackBlock($model);
+        $this->draftFrontBlock($model);
+        $this->draftFront($model);
         $this->draftBack($model);
     }
 
@@ -45,7 +58,7 @@ class AidenAshirt extends JoostBodyBlock
         $p->addPoint(107, $p->shift(5, 0, $p->deltaX(5, 102)), 'Control point for 5');
 
         // Hips
-        $p->newPoint(110, ($model->getMeasurement('hipsCircumference') / 4) * $this->getOption('stretchFactor'), $p->y(4) + $this->getOption('lengthBonus'), 'Hips @ trouser waist');
+        $p->newPoint(110, ($model->getMeasurement('hipsCircumference') + $this->getOption('hipsEase')) / 4 * $this->getOption('stretchFactor'), $p->y(4) + $this->getOption('lengthBonus'), 'Hips @ trouser waist');
         $p->newPoint(111, $p->x(1), $p->y(110), 'Hips @ CF');
 
         // Waist -> Same as hips because stretch
@@ -60,11 +73,46 @@ class AidenAshirt extends JoostBodyBlock
             $p->newPoint(107, $p->x(107), $p->y(5), 'Control point for 5');
             $p->newPoint(2, $p->x(2), $p->y(5), 'Center back @ armhole depth');
         }
+        
+        // Seamline
+        $seamline = 'M 3 L 111 L 110 L 112 C 113 5 5 C 107 106 102 L 103 C 105 104 100 z';
+        $p->newPath('seamline', $seamline, ['class' => 'seamline']);
+
+        // Sampler
+        $p->paths['seamline']->setSampler(true);
+    }
+
+    public function draftBack($model)
+    {
+        $this->clonePoints('backBlock', 'back');
+        $this->clonePoints('front', 'back');
+        $p = $this->parts['back'];
+
+        // Adjust neck
+        $p->newPoint(100, $p->x(100), $p->y(1) + 12.5, 'Neck bottom @ CB');
+        $p->clonePoint(103, 'gridAnchor');
+        $p->newPoint(104, $p->deltaX(100, 103) / 2, $p->y(100), 'Control point for 100');
+        $p->addPoint(105, $p->linesCross(100, 104, 103, 105), 'Control point for 103');
+
+        // Adjust armhole
+        $p->addPoint('106max', $p->linesCross(102, 106, 2, 5), 'Max CP for armhole');
+        // backlineBend should stay between 0.5 and 0.9, so let's make sure of that.
+        $backlineBend = 0.5 + $this->getOption('backlineBend') * 0.4;
+        $p->addPoint(106, $p->shiftTowards(102, '106max', $p->distance(102, '106max') * $backlineBend), 'Control point for 102');
+        $p->addPoint(107, $p->shiftTowards(5, '106max', $p->distance(5, '106max') * $backlineBend * -1), 'Control point for 5');
 
         // Seamline
         $seamline = 'M 3 L 111 L 110 L 112 C 113 5 5 C 107 106 102 L 103 C 105 104 100 z';
         $p->newPath('seamline', $seamline, ['class' => 'seamline']);
 
+        // Sampler
+        $p->paths['seamline']->setSampler(true);
+    }
+
+    public function finalizeFront($model)
+    {
+        $p = $this->parts['front'];
+        
         // Seam allowance | Point indexes from 200 upward
         $p->offsetPathString('sa1', 'M 102 L 103', 10);
         $p->newPath('shoulderSA', 'M 102 L sa1-line-102TO103 L sa1-line-103TO102 L 103', ['class' => 'seam-allowance']);
@@ -151,29 +199,10 @@ class AidenAshirt extends JoostBodyBlock
         }
     }
 
-    public function draftBack($model)
+    public function finalizeBack($model)
     {
-        $this->clonePoints('backBlock', 'back');
-        $this->clonePoints('front', 'back');
         $p = $this->parts['back'];
-
-        // Seamline
-        $seamline = 'M 3 L 111 L 110 L 112 C 113 5 5 C 107 106 102 L 103 C 105 104 100 z';
-        $p->newPath('seamline', $seamline, ['class' => 'seamline']);
-
-        // Adjust neck
-        $p->newPoint(100, $p->x(100), $p->y(1) + 12.5, 'Neck bottom @ CB');
-        $p->clonePoint(100, 'gridAnchor');
-        $p->newPoint(104, $p->deltaX(100, 103) / 2, $p->y(100), 'Control point for 100');
-        $p->addPoint(105, $p->linesCross(100, 104, 103, 105), 'Control point for 103');
-
-        // Adjust armhole
-        $p->addPoint('106max', $p->linesCross(102, 106, 2, 5), 'Max CP for armhole');
-        // backlineBend should stay between 0.5 and 0.9, so let's make sure of that.
-        $backlineBend = 0.5 + $this->getOption('backlineBend') * 0.4;
-        $p->addPoint(106, $p->shiftTowards(102, '106max', $p->distance(102, '106max') * $backlineBend), 'Control point for 102');
-        $p->addPoint(107, $p->shiftTowards(5, '106max', $p->distance(5, '106max') * $backlineBend * -1), 'Control point for 5');
-
+        
         // Title
         $p->newPoint('titleAnchor', $p->x(5) * 0.4, $p->x(5) + 40, 'Title anchor');
         $p->addTitle('titleAnchor', 2, $this->t($p->title), $this->t('Cut 1 on fold'));
@@ -271,5 +300,6 @@ class AidenAshirt extends JoostBodyBlock
             $p->offsetPathString($key, $path, -20, 1, $pAttr);
             $p->newTextOnPath($key, $path, $this->unit($p->distance(102, 103)), ['class' => 'text-lg fill-note text-center', 'dy' => -13]);
         }
+        
     }
 }

@@ -13,8 +13,11 @@ class SvgCss extends SvgBlock
 {
     public function load()
     {
-        // Need to make sure @includes go at the top
-        return  "\n<style type=\"text/css\">\n    <![CDATA[\n".$this->sortCss()."\n    ]]>\n</style>\n";
+        if($this->getData() === false) return false;
+        else {
+            // Need to make sure @includes go at the top
+            return  "\n<style type=\"text/css\">\n    <![CDATA[\n".$this->sortCss()."\n    ]]>\n</style>\n";
+        }
     }
 
     private function sortCss()

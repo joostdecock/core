@@ -1,0 +1,5 @@
+info:
+  name: "Used for testing"
+  version: 1
+parts:
+  testpart: "Test part"

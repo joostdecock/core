@@ -13,6 +13,7 @@ class SvgComments extends SvgBlock
 {
     public function load()
     {
-        return "\n<!--\n\n    $this\n\n  -->\n";
+        if($this->getData() === false) return false;
+        else return "\n<!--\n\n    $this\n\n  -->\n";
     }
 }

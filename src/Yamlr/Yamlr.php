@@ -13,7 +13,7 @@ use Symfony\Component\Yaml\Yaml;
  */
 class Yamlr
 {
-    public static function loadConfig($file)
+    public static function loadYamlFile($file)
     {
         // If Yaml file is not valid, Symphony will throw and exception
         $yaml = Yaml::parse(file_get_contents($file));

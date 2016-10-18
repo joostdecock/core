@@ -11,6 +11,7 @@ namespace Freesewing;
  */
 class Model
 {
+    public $name;
     /**
      * @var array
      */
@@ -33,5 +34,15 @@ class Model
                 $this->measurements[$key] = $value;
             }
         }
+    }
+
+    public function setName($name)
+    {
+        $this->name = $name;
+    }
+
+    public function getName()
+    {
+        return $this->name;
     }
 }

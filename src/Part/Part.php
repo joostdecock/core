@@ -82,7 +82,7 @@ class Part
         $this->addText($key, $text);
     }
 
-    public function addTitle($anchorKey, $nr, $title, $msg)
+    public function addTitle($anchorKey, $nr, $title, $msg='')
     {
         $this->newText('partNumber', $anchorKey, $nr, ['class' => 'part-nr']);
         $this->newText('partTitle', $anchorKey, $title, ['class' => 'part-title']);
@@ -197,7 +197,7 @@ class Part
                 $topLeft = new \Freesewing\Point('topLeft');
                 $topLeft->setX($path->boundary->topLeft->x);
                 $topLeft->setY($path->boundary->topLeft->y);
-                $bottomRight = new \Freesewing\Point('bottomRigh');
+                $bottomRight = new \Freesewing\Point('bottomRight');
                 $bottomRight->setX($path->boundary->bottomRight->x);
                 $bottomRight->setY($path->boundary->bottomRight->y);
             } else {
@@ -611,7 +611,7 @@ class Part
         $this->points[$targetKey] = $this->points[$sourceKey];
     }
 
-    private function loadPoint($key)
+    public function loadPoint($key)
     {
         if (isset($this->points[$key])) {
             return $this->points[$key];

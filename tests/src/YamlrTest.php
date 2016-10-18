@@ -18,7 +18,7 @@ class YamlrTest extends \PHPUnit\Framework\TestCase
             ]
         ];
         $yamlr = new \Freesewing\Yamlr();
-        $config = $yamlr->loadConfig(__DIR__.'/YamlrTestCorrect.yml');
+        $config = $yamlr->loadYamlFile(__DIR__.'/YamlrTestCorrect.yml');
 
         $this->assertEquals($data, $config);
     }
@@ -30,6 +30,6 @@ class YamlrTest extends \PHPUnit\Framework\TestCase
     public function testFaultyYamlFile()
     {
         $yamlr = new \Freesewing\Yamlr();
-        $config = $yamlr->loadConfig(__DIR__.'/YamlrTestIncorrect.yml');
+        $config = $yamlr->loadYamlFile(__DIR__.'/YamlrTestIncorrect.yml');
     }
 }

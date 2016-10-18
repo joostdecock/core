@@ -6,16 +6,18 @@
     <testsuites>
         <testsuite name="Freesewing Test Suite">
             <directory suffix="Test.php">./tests/src/</directory>
-            <directory suffix="Test.php">./tests/themes/</directory>
             <directory suffix="Test.php">./tests/channels/</directory>
+            <directory suffix="Test.php">./tests/themes/</directory>
+            <directory suffix="Test.php">./tests/patterns/</directory>
         </testsuite>
     </testsuites>
     <filter>
         <whitelist processUncoveredFilesFromWhitelist="true">
             <directory suffix=".php">./src</directory>
             <directory suffix=".php">./channels</directory>
-            <directory suffix=".php">./patterns</directory>
             <directory suffix=".php">./themes</directory>
+            <file>./patterns/Pattern/Pattern.php</file>
+            <file>./patterns/TestPattern/TestPattern.php</file>
         </whitelist>
     </filter>
     <logging>

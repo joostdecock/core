@@ -5,10 +5,10 @@ measurements:
     ab    : 'acrossBack'
     nc    : 'neckCircumference'
     hc    : 'hipsCircumference'
-    nwttw : 'naturalWaistToTrouserWaist'
+    nwttw : 'naturalWaistToHip'
     sl    : 'shoulderLength'
     ss    : 'shoulderSlope'
-    ubc   : 'upperBicepsCircumference'
+    ubc   : 'bicepsCircumference'
     slw   : 'sleeveLengthToWrist'
 cmoptions:
     opt_ssw : 'shoulderStrapWidth'
@@ -19,6 +19,7 @@ cmoptions:
     opt_ce  : 'collarEase'
     opt_cfe : 'cuffEase'
     opt_che : 'chestEase'
+    opt_he  : 'hipsEase'
     opt_be  : 'bicepsEase'
     opt_bnc : 'backNeckCutout'
 percentoptions:
@@ -26,3 +27,4 @@ percentoptions:
     opt_ssp : 'shoulderStrapPlacement'
     opt_nb  : 'necklineBend'
     opt_bb  : 'backlineBend'
+

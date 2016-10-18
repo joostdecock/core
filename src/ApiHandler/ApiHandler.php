@@ -40,17 +40,60 @@ class ApiHandler
      * @var array
      */
     public $requestData;
+    public $sampler;
 
     private $fallbackLocale = 'en';
 
     public function __construct($data)
     {
-        $this->config = \Freesewing\Yamlr::loadConfig($this::configFile);
+        $this->config = \Freesewing\Yamlr::loadYamlFile($this::configFile);
         $this->requestData = $data;
         $this->setContext();
     }
 
-    public function handle()
+    public function sample()
+    {
+        $this->channel = $this->instantiateFromContext('channel');
+        $this->pattern = $this->instantiateFromContext('pattern');
+        $this->theme = $this->instantiateFromContext('theme');
+        //$this->theme = new \Freesewing\Themes\Sampler;
+        //$this->context['theme'] = 'Sampler';
+
+        if (
+            !isset($this->response)
+            &&
+            $this->channel->isValidRequest($this->requestData) === true
+        ) {
+            $this->pattern->theme = $this->context['theme'];
+            $this->pattern->setTranslator($this->getTranslator());
+            $this->pattern->setUnits($this->context['units']);
+            if(isset($this->requestData['mode']) && $this->requestData['mode'] == 'options') { // Sampling options
+                $this->sampler = new \Freesewing\OptionsSampler;
+                $this->model = new \Freesewing\Model();
+                $this->model->addMeasurements( $this->sampler->loadModelMeasurements($this->pattern));
+
+            } else { // Sampling measurements
+                $this->sampler = new \Freesewing\MeasurementsSampler;
+                $this->sampler->setPattern($this->pattern);
+                $this->pattern->addOptions( $this->sampler->loadPatternOptions());
+                $this->sampler->loadPatternModels($this->requestData);
+                $this->pattern = $this->sampler->sampleMeasurements($this->theme);
+            }
+
+            $this->svgRender();
+            $this->response = $this->theme->themeResponse($this);
+
+        } else { // channel->isValidRequest() !== true
+            $this->response = $this->bailOut(
+                'bad_request',
+                'Request not valid for channel '.$this->context['channel']
+            );
+        }
+
+        $this->response->send();
+    }
+
+    public function draft()
     {
         $this->channel = $this->instantiateFromContext('channel');
         $this->pattern = $this->instantiateFromContext('pattern');
@@ -63,35 +106,38 @@ class ApiHandler
         ) :
 
             $this->model = new \Freesewing\Model();
-        $this->model->addMeasurements(
+            $this->model->addMeasurements(
                 $this->channel->standardizeModelMeasurements($this->requestData)
             );
 
-        $this->pattern->theme = $this->context['theme'];
-        $this->pattern->setTranslator($this->getTranslator());
-        $this->pattern->setUnits($this->context['units']);
-        $this->pattern->addOptions(
-                $this->channel->standardizePatternOptions($this->requestData)
-            );
+            $this->pattern->theme = $this->context['theme'];
+            $this->pattern->setTranslator($this->getTranslator());
+            $this->pattern->setUnits($this->context['units']);
+            $this->pattern->addOptions(
+                    $this->channel->standardizePatternOptions($this->requestData)
+                );
 
-        $this->pattern->draft($this->model);
+            //$this->pattern->draft($this->model);
+            $this->pattern->sample($this->model);
 
-        $this->pattern->layout();
+            $this->pattern->layout();
 
-        $this->theme->themePattern($this->pattern);
+            $this->theme->themePattern($this->pattern);
 
-        $this->renderAs = $this->theme->RenderAs();
-        if ($this->renderAs['svg'] === true) {
-            $this->svgRender();
-        }
-        if ($this->renderAs['js'] === true) {
-            $this->jsRender();
-        }
+            $this->renderAs = $this->theme->RenderAs();
+            if ($this->renderAs['svg'] === true) {
+                $this->svgRender();
+            }
+            if ($this->renderAs['js'] === true) {
+                $this->jsRender();
+            }
 
-        $this->response = $this->theme->themeResponse($this);
+            $this->response = $this->theme->themeResponse($this);
 
             // Last minute replacements on entire response body
-            $this->response->setBody($this->replace($this->response->getBody(), $this->pattern->getReplacements())); else: // channel->isValidRequest() !== true
+            $this->response->setBody($this->replace($this->response->getBody(), $this->pattern->getReplacements())); 
+        
+        else: // channel->isValidRequest() !== true
             $this->response = $this->bailOut(
                 'bad_request',
                 'Request not valid for channel '.$this->context['channel']

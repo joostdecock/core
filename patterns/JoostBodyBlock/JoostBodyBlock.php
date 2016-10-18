@@ -23,7 +23,7 @@ class JoostBodyBlock extends Pattern
     public function loadHelp($model)
     {
         $this->help = array();
-        $this->help['armholeDepth'] = 200 + ($model->getMeasurement('shoulderSlope') / 2 - 27.5) + ($model->getMeasurement('upperBicepsCircumference') / 10);
+        $this->help['armholeDepth'] = 200 + ($model->getMeasurement('shoulderSlope') / 2 - 27.5) + ($model->getMeasurement('bicepsCircumference') / 10);
         $this->help['collarShapeFactor'] = 1;
         $this->help['sleevecapShapeFactor'] = 1;
     }
@@ -48,7 +48,7 @@ class JoostBodyBlock extends Pattern
         $p->newPoint(2,   0,  $p->y(1) + $this->help['armholeDepth'], 'Center back @ armhole depth');
         $p->clonePoint(2, 'gridAnchor');
         $p->newPoint(3,   0,  $p->y(1) + $model->getMeasurement('centerBackNeckToWaist'), 'Center back @ waist');
-        $p->newPoint(4,   0,  $model->getMeasurement('centerBackNeckToWaist') + $model->getMeasurement('naturalWaistToTrouserWaist') + $this->getOption('backNeckCutout'), 'Center back @ trouser waist');
+        $p->newPoint(4,   0,  $model->getMeasurement('centerBackNeckToWaist') + $model->getMeasurement('naturalWaistToHip') + $this->getOption('backNeckCutout'), 'Center back @ trouser waist');
 
         // Side vertical axis
         $p->newPoint(5, $model->getMeasurement('chestCircumference') / 4 + $this->getOption('chestEase') / 4, $p->y(2), 'Quarter chest @ armhole depth');
@@ -120,7 +120,7 @@ class JoostBodyBlock extends Pattern
         $p->newPoint(3, 0, $model->getMeasurement('sleeveLengthToWrist'), 'Center sleeve @ wrist');
 
         // Sleeve half width
-        $p->newPoint(4, $model->getMeasurement('upperBicepsCircumference') / 2 + $this->getOption('bicepsEase') / 2, 0, 'Half width of sleeve @ shoulder');
+        $p->newPoint(4, $model->getMeasurement('bicepsCircumference') / 2 + $this->getOption('bicepsEase') / 2, 0, 'Half width of sleeve @ shoulder');
         $p->newPoint(5, $p->x(4), $p->y(2), 'Half width of sleeve @ sleevecap start');
         $p->newPoint(6, $p->x(4), $p->y(3), 'Half width of sleeve @ wrist');
 

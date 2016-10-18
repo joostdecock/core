@@ -13,6 +13,7 @@ class SvgDefs extends SvgBlock
 {
     public function load()
     {
-        return "\n<defs id=\"defs\">\n    $this\n</defs>\n";
+        if($this->getData() === false) return false;
+        else return "\n<defs id=\"defs\">\n    $this\n</defs>\n";
     }
 }

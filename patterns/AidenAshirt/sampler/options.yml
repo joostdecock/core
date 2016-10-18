@@ -1,0 +1,59 @@
+chestEase:
+    type: number
+    min: -40
+    max: 160
+    default: 30
+trouserWaistEase:
+    type: number
+    min: -40
+    max: 160
+    default: 60
+armholeDrop:
+    type: number
+    min: -20
+    max: 200
+    default: 30
+lengthBonus:
+    type: number
+    min: -120
+    max: 200
+    default: 60
+necklineBend:
+    type: percent
+    default: 100
+backlineBend:
+    type: percent
+    default: 30
+necklineDrop:
+    type: number
+    min: 40
+    max: 200
+    default: 120
+shoulderStrapWidth:
+    type: number
+    min: 10
+    max: 80
+    default: 40
+shoulderStrapPlacement:
+    type: percent
+    min: 0
+    max: 100
+    default: 45
+stretchFactor:
+    type: percent
+    min: 70
+    max: 1100
+    default: 90
+hipsEase:
+    type: number
+    min: -40
+    max: 160
+    default: 60
+collarEase:
+    type: fixed
+    default: 15
+backNeckCutout:
+    type: fixed
+    default: 20
+
+

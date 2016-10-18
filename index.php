@@ -12,4 +12,4 @@
 require __DIR__ . '/vendor/autoload.php';
 
 $api = new \Freesewing\ApiHandler($_REQUEST);
-$api->handle();
+$api->draft();

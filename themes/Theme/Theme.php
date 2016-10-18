@@ -67,7 +67,7 @@ abstract class Theme
             }
         }
 
-        $svgDocument->footerComments->add(implode("\n", $this->messages));
+        if($this->messages !== false) $svgDocument->footerComments->add(implode("\n", $this->messages));
     }
 
     public function themeResponse($apiHandler)
@@ -90,7 +90,7 @@ abstract class Theme
         foreach ($locations as $location) {
             if (is_readable("$location/config.yml")) {
                 $dir = "$location/templates";
-                $config = \Freesewing\Yamlr::loadConfig("$location/config.yml");
+                $config = \Freesewing\Yamlr::loadYamlFile("$location/config.yml");
                 foreach ($config['templates'] as $type => $entries) {
                     foreach ($entries as $entry) {
                         if (!isset($templates[$type][$entry])) {
@@ -103,7 +103,6 @@ abstract class Theme
                 }
             }
         }
-
         return $templates;
     }
 
@@ -146,5 +145,10 @@ abstract class Theme
         }
 
         return $translations;
+    }
+    
+    public function samplerPathStyle($step, $totalSteps)
+    { 
+        return null;
     }
 }

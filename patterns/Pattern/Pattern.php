@@ -34,19 +34,27 @@ abstract class Pattern
     private $units;
     private $messages;
     public $parts = array();
+    public $replacements = array();
 
     public function __construct()
     {
-        $this->config = \Freesewing\Yamlr::loadConfig($this->getConfigFile());
-        $this->loadParts();
-        $this->replace('__TITLE__', $this->config['info']['name']);
-        $this->replace('__VERSION__', $this->config['info']['version']);
+        if(is_readable($this->getConfigFile())) {
+            $this->config = \Freesewing\Yamlr::loadYamlFile($this->getConfigFile());
+            $this->loadParts();
+            $this->replace('__TITLE__', $this->config['info']['name']);
+            $this->replace('__VERSION__', $this->config['info']['version']);
+        }
         $this->replace('__DATE__', date('l j F Y'));
 
         return $this;
     }
 
-    private function getPatternDir()
+    public function __clone()
+    {
+        unset($this->parts);
+    }
+
+    public function getPatternDir()
     {
         $reflector = new \ReflectionClass(get_class($this));
         $filename = $reflector->getFileName();
@@ -54,7 +62,7 @@ abstract class Pattern
         return dirname($filename);
     }
 
-    private function loadParts()
+    public function loadParts()
     {
         foreach ($this->config['parts'] as $part => $title) {
             $this->addPart($part);
@@ -242,7 +250,8 @@ abstract class Pattern
 
     public function getMessages()
     {
-        return implode("\n", $this->messages);
+        if(isset($this->messages)) return implode("\n", $this->messages);
+        else return false;
     }
 
     public function replace($search, $replace)

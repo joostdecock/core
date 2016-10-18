@@ -11,22 +11,48 @@ namespace Freesewing\Channels;
  */
 class Channel
 {
+    private $config = array();
+
+    public function __construct()
+    {
+        $this->config = \Freesewing\Yamlr::loadYamlFile($this->getChannelDir().'/config.yml');
+    }
+
     public function isValidRequest($requestData)
     {
         return true;
     }
 
+    public function cleanUp()
+    {
+    }
+
     public function standardizeModelMeasurements($requestData)
     {
-        return array();
+        foreach ($this->config['measurements'] as $key => $val) {
+            $measurements[$val] = $requestData[$key] * 10;
+        }
+
+        return $measurements;
     }
 
     public function standardizePatternOptions($requestData)
     {
-        return array();
-    }
+        foreach ($this->config['cmoptions'] as $key => $val) {
+            $options[$val] = $requestData[$key] * 10;
+        }
+        foreach ($this->config['percentoptions'] as $key => $val) {
+            $options[$val] = $requestData[$key] / 100;
+        }
 
-    public function cleanUp()
+        return $options;
+    }
+    
+    public function getChannelDir()
     {
+        $reflector = new \ReflectionClass(get_class($this));
+        $filename = $reflector->getFileName();
+
+        return dirname($filename);
     }
 }

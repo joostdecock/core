@@ -90,7 +90,7 @@ class AidenAshirt extends JoostBodyBlock
 
         // Adjust neck
         $p->newPoint(100, $p->x(100), $p->y(1) + 12.5, 'Neck bottom @ CB');
-        $p->clonePoint(103, 'gridAnchor');
+        $p->clonePoint(100, 'gridAnchor');
         $p->newPoint(104, $p->deltaX(100, 103) / 2, $p->y(100), 'Control point for 100');
         $p->addPoint(105, $p->linesCross(100, 104, 103, 105), 'Control point for 103');
 

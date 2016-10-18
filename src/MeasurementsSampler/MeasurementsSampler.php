@@ -59,6 +59,17 @@ class MeasurementsSampler extends Sampler
             $p->sample($model);
             foreach($p->parts as $partKey => $part) {
                 if($part->render) {
+                    $anchorKey = "anchor-$partKey";
+                    if (!@is_object(${$anchorKey})) {
+                        ${$anchorKey} = $this->getSamplerAnchor($part);
+                        $deltaX = 0;
+                        $deltaY = 0;
+                    } else {
+                        $thisAnchor = $this->getSamplerAnchor($part);
+                        $deltaX = ${$anchorKey}->getX() - $thisAnchor->getX();
+                        $deltaY = ${$anchorKey}->getY() - $thisAnchor->getY();
+                        $transform = "translate( $deltaX, $deltaY )"; 
+                    }
                     $tlKey = "topLeft-$partKey";
                     $brKey = "bottomRight-$partKey";
                     foreach($part->paths as $pathKey => $path) {
@@ -72,14 +83,12 @@ class MeasurementsSampler extends Sampler
                                 ${$brKey}->setX($path->boundary->bottomRight->x);
                                 ${$brKey}->setY($path->boundary->bottomRight->y);
                             } else {
-                                if ($path->boundary->topLeft->x < ${$tlKey}->x) ${$tlKey}->setX($path->boundary->topLeft->x);
-                                if ($path->boundary->topLeft->y < ${$tlKey}->y) ${$tlKey}->setY($path->boundary->topLeft->y);
-                                if ($path->boundary->bottomRight->x > ${$brKey}->x) ${$brKey}->setX($path->boundary->bottomRight->x);
-                                if ($path->boundary->bottomRight->y > ${$brKey}->y) ${$brKey}->setY($path->boundary->bottomRight->y);
+                                if (($path->boundary->topLeft->x + $deltaX) < ${$tlKey}->x) ${$tlKey}->setX($path->boundary->topLeft->x + $deltaX);
+                                if (($path->boundary->topLeft->y + $deltaY) < ${$tlKey}->y) ${$tlKey}->setY($path->boundary->topLeft->y + $deltaY);
+                                if ($path->boundary->bottomRight->x+$deltaX > ${$brKey}->x) ${$brKey}->setX($path->boundary->bottomRight->x + $deltaX);
+                                if ($path->boundary->bottomRight->y+$deltaY > ${$brKey}->y) ${$brKey}->setY($path->boundary->bottomRight->y + $deltaY);
                             }
-                            $transX = $path->boundary->topLeft->getX()*-1;
-                            $transY = $path->boundary->topLeft->getY()*-1;
-                            $path->setAttributes(['style' => $theme->samplerPathStyle($mi, $modelCount)]);
+                            $path->setAttributes(['transform' => $transform, 'style' => $theme->samplerPathStyle($mi, $modelCount)]);
                             $partContainer[$partKey]['includes']["$modelKey-$pathKey"] = $renderBot->renderPath($path, $part);
                             $partContainer[$partKey]['topLeft'] = ${$tlKey};
                             $partContainer[$partKey]['bottomRight'] = ${$brKey};
@@ -105,6 +114,16 @@ class MeasurementsSampler extends Sampler
         $this->pattern->layout();
         return $this->pattern;
     } 
+
+    private function getSamplerAnchor($part)
+    {
+        if(isset($part->points['samplerAnchor'])) return $part->loadPoint('samplerAnchor');
+        else if(isset($part->points['gridAnchor'])) return $part->loadPoint('gridAnchor');
+        else {
+            $part->newPoint('defaultAnchor', 0, 0, 'Anchor point added by sampler');
+            return $part->loadPoint('samplerAnchor');
+        }
+    }
 
     private function getSamplerConfigFile($pattern, $mode)
     {

@@ -13,11 +13,7 @@ class AidenAshirt extends JoostBodyBlock
 {
     public function draft($model)
     {
-        $this->parts['frontBlock']->setRender(false);
-        $this->parts['backBlock']->setRender(false);
-        $this->loadHelp($model);
-        $this->draftBackBlock($model);
-        $this->draftFrontBlock($model);
+        $this->buildCore($model);
 
         $this->draftFront($model);
         $this->finalizeFront($model);
@@ -27,13 +23,31 @@ class AidenAshirt extends JoostBodyBlock
 
     public function sample($model)
     {
+        $this->buildCore($model);
+        
+        $this->draftFront($model);
+        $this->draftBack($model);
+    }
+
+    public function buildCore($model)
+    {
+        $this->validateOptions();
         $this->parts['frontBlock']->setRender(false);
         $this->parts['backBlock']->setRender(false);
         $this->loadHelp($model);
         $this->draftBackBlock($model);
         $this->draftFrontBlock($model);
-        $this->draftFront($model);
-        $this->draftBack($model);
+    }
+
+    public function validateOptions()
+    {
+        // shifTowards can't deal with 0, so shoulderStrapPlacement should be at least 0.001
+        if ($this->getOption('shoulderStrapPlacement') == 0) $this->setOption('shoulderStrapPlacement', 0.001);
+        // a stretchFactor below 50% is obviously wrong
+        if ($this->getOption('stretchFactor') < 0.5) $this->setOption('stretchFactor', 0.5);
+        // These are irrelevant, but needed for JoostBodyBlock
+        $this->setOption('collarEase', 15);
+        $this->setOption('backNeckCutout', 20);
     }
 
     public function draftFront($model)

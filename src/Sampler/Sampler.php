@@ -52,19 +52,23 @@ class Sampler
         else return false;
     }
 
-    public function samplePart($step, $steps, $partKey, $part, $theme, $renderBot)
+    public function samplePart($status, $theme, $renderBot)
     {
+        $part = $status['part'];
+        $partKey = $status['partKey'];
+        $step = $status['step'];
+        $steps = $status['steps'];
         if($part->render) {
             $anchorKey = "anchor-$partKey";
-            if (!@is_object(${$anchorKey})) {
-                ${$anchorKey} = $this->getSamplerAnchor($part);
+            if (!@is_object($status['anchors'][${$anchorKey}])) {
+                $status['anchors'][${$anchorKey}] = $this->getSamplerAnchor($part);
                 $deltaX = 0;
                 $deltaY = 0;
                 $transform = "translate( 0, 0 )"; 
             } else {
                 $thisAnchor = $this->getSamplerAnchor($part);
-                $deltaX = ${$anchorKey}->getX() - $thisAnchor->getX();
-                $deltaY = ${$anchorKey}->getY() - $thisAnchor->getY();
+                $deltaX = $status['anchors'][${$anchorKey}]->getX() - $thisAnchor->getX();
+                $deltaY = $status['anchors'][${$anchorKey}]->getY() - $thisAnchor->getY();
                 $transform = "translate( $deltaX, $deltaY )"; 
             }
             $tlKey = "topLeft-$partKey";

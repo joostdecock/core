@@ -44,11 +44,4 @@ hipsEase:
     min: -40
     max: 160
     default: 60
-collarEase:
-    type: fixed
-    default: 15
-backNeckCutout:
-    type: fixed
-    default: 20
-
 

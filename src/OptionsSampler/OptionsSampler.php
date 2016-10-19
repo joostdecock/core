@@ -44,8 +44,9 @@ class OptionsSampler extends Sampler
     {
         $option = $this->loadOptionToSample($optionKey);
         if(!is_int(intval($steps)) or $steps<=1 or $steps > 25) $steps = 11;
-        $partContainer = array();
+        $this->partContainer = array();
         $renderBot = new \Freesewing\SvgRenderbot;
+
         for($i=1;$i<=$steps;$i++) {
             $p = clone $this->pattern;
             $sampleValue = $this->getSampleValue($i,$steps,$option);
@@ -53,7 +54,44 @@ class OptionsSampler extends Sampler
             $p->loadParts();
             $p->sample($model);
             foreach($p->parts as $partKey => $part) {
-                $this->samplePart($i, $steps, $partKey, $part, $theme, $renderBot);
+        if($part->render) {
+            $anchorKey = "anchor-$partKey";
+            if (!@is_object(${$anchorKey})) {
+                ${$anchorKey} = $this->getSamplerAnchor($part);
+                $deltaX = 0;
+                $deltaY = 0;
+                $transform = "translate( 0, 0 )"; 
+            } else {
+                $thisAnchor = $this->getSamplerAnchor($part);
+                $deltaX = ${$anchorKey}->getX() - $thisAnchor->getX();
+                $deltaY = ${$anchorKey}->getY() - $thisAnchor->getY();
+                $transform = "translate( $deltaX, $deltaY )"; 
+            }
+            $tlKey = "topLeft-$partKey";
+            $brKey = "bottomRight-$partKey";
+            foreach($part->paths as $pathKey => $path) {
+                if($path->sampler) {
+                    $path->boundary = $path->findBoundary($part);
+                    if (!@is_object(${$tlKey})) {
+                        ${$tlKey} = new \Freesewing\Point($tlKey);
+                        ${$tlKey}->setX($path->boundary->topLeft->x);
+                        ${$tlKey}->setY($path->boundary->topLeft->y);
+                        ${$brKey} = new \Freesewing\Point($brKey);
+                        ${$brKey}->setX($path->boundary->bottomRight->x);
+                        ${$brKey}->setY($path->boundary->bottomRight->y);
+                    } else {
+                        if (($path->boundary->topLeft->x + $deltaX) < ${$tlKey}->x) ${$tlKey}->setX($path->boundary->topLeft->x + $deltaX);
+                        if (($path->boundary->topLeft->y + $deltaY) < ${$tlKey}->y) ${$tlKey}->setY($path->boundary->topLeft->y + $deltaY);
+                        if ($path->boundary->bottomRight->x+$deltaX > ${$brKey}->x) ${$brKey}->setX($path->boundary->bottomRight->x + $deltaX);
+                        if ($path->boundary->bottomRight->y+$deltaY > ${$brKey}->y) ${$brKey}->setY($path->boundary->bottomRight->y + $deltaY);
+                    }
+                    $path->setAttributes(['transform' => $transform, 'style' => $theme->samplerPathStyle($i, $steps)]);
+                    $this->partContainer[$partKey]['includes']["$i-$pathKey"] = $renderBot->renderPath($path, $part);
+                    $this->partContainer[$partKey]['topLeft'] = ${$tlKey};
+                    $this->partContainer[$partKey]['bottomRight'] = ${$brKey};
+                }
+            }
+        }
             }
         }
         foreach($this->partContainer as $partKey => $part) {

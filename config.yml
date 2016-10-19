@@ -1,8 +1,15 @@
 defaults:
+    service: draft
     channel: Channel
-    theme: Svg
+    draftTheme: Svg
+    sampleTheme: Sampler
+    infoTheme: Info
     pattern: AidenAshirt
     partMargin: 10
 renderers:
     svg: SvgRenderbot
     js: JsRenderbot
+services:
+    - draft
+    - sample
+    - info

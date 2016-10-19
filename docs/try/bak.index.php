@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="">
     <meta name="author" content="Joost De Cock">
-    <title>Try the freesewing API</title>
+    <title>Try the API</title>
     <link href="../css/style.css" rel="stylesheet">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
@@ -44,8 +44,6 @@
       </div>
       <div class="row margin-top-30">
         <div class="col-xs-12">
-            <h2>Services</h2>
-            <p>The following services are available:</p>
           <ul class="nav nav-tabs" role="tablist">
             <li role="presentation" class="active"><a href="#request" aria-controls="request" role="tab" data-toggle="tab">Request</a></li>
             <li role="presentation"><a id="responsetab" href="#response" aria-controls="profile" role="tab" data-toggle="tab">Response</a></li>

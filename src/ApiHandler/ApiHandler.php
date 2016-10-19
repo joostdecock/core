@@ -51,6 +51,50 @@ class ApiHandler
         $this->setContext();
     }
 
+    public function info()
+    {
+        $this->channel = $this->instantiateFromContext('channel');
+        $this->theme = $this->instantiateFromContext('theme');
+        if(isset($this->requestData['pattern']))  {
+            $this->pattern = $this->instantiateFromContext('pattern');
+            $this->response = $this->theme->themePatternInfo($this->getPatternInfo($this->pattern), $this->requestData['format']);
+        } else {
+            $this->response = $this->theme->themePatternList($this->getPatternList(), $this->requestData['format']);
+        }
+        $this->response->send();
+    }
+    
+    private function loadPatternConfig($pattern)
+    {
+        $class = '\Freesewing\Patterns\\'.$pattern;
+        $pattern =  new $class();
+        return $pattern->config;
+    }
+    
+    private function getPatternInfo($pattern)
+    {
+        $info = $pattern->config;
+        $sampler = new \Freesewing\Sampler;
+        $info['measurements'] = \Freesewing\Yamlr::loadYamlFile($sampler->getSamplerConfigFile($pattern, 'measurements'));
+        $info['options'] = \Freesewing\Yamlr::loadYamlFile($sampler->getSamplerConfigFile($pattern, 'options'));
+        $reflector = new \ReflectionClass(get_class($pattern));
+        $filename = $reflector->getFileName();
+        $info['pattern'] = basename(dirname($filename));
+        return $info;
+    }
+    
+    private function getPatternList()
+    {
+        foreach(glob(dirname(__FILE__) . '/../../patterns/*' , GLOB_ONLYDIR) as $dir) {
+            $name = basename($dir);
+            if($name != 'Pattern') {
+                $config = $this->loadPatternConfig($name);
+                $list[$name] = $config['info']['name'];
+            }
+        }
+        return $list;
+    }
+
     public function sample()
     {
         $this->channel = $this->instantiateFromContext('channel');
@@ -246,15 +290,23 @@ class ApiHandler
 
     private function setContext()
     {
+        $this->setService();
         foreach (['channel', 'pattern', 'theme'] as $type) {
             if (isset($this->requestData[$type])) {
                 $this->context[$type] = $this->requestData[$type];
             } else {
-                $this->context[$type] = $this->config['defaults'][$type];
+                if($type == 'theme') $this->context['theme'] = $this->config['defaults'][$this->service.'Theme'];
+                else $this->context[$type] = $this->config['defaults'][$type];
             }
         }
         $this->setLocale();
         $this->setUnits();
+    }
+
+    private function setService()
+    {
+        if(in_array($this->requestData['service'], $this->config['services'])) $this->service = $this->requestData['service'];
+        else $this->service = $this->config['defaults']['service'];
     }
 
     private function setLocale()

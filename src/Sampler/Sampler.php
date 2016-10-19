@@ -12,6 +12,10 @@ namespace Freesewing;
 class Sampler
 {
 
+    public $partContainer = array();
+    public $anchors = array();
+    public $boundaries = array();
+
     public function setPattern($pattern)
     {
         $this->pattern = $pattern;
@@ -52,48 +56,59 @@ class Sampler
         else return false;
     }
 
-    public function samplePart($status, $theme, $renderBot)
+    public function sampleParts($step, $steps, $pattern, $theme, $renderBot)
     {
-        $part = $status['part'];
-        $partKey = $status['partKey'];
-        $step = $status['step'];
-        $steps = $status['steps'];
-        if($part->render) {
-            $anchorKey = "anchor-$partKey";
-            if (!@is_object($status['anchors'][${$anchorKey}])) {
-                $status['anchors'][${$anchorKey}] = $this->getSamplerAnchor($part);
-                $deltaX = 0;
-                $deltaY = 0;
-                $transform = "translate( 0, 0 )"; 
-            } else {
-                $thisAnchor = $this->getSamplerAnchor($part);
-                $deltaX = $status['anchors'][${$anchorKey}]->getX() - $thisAnchor->getX();
-                $deltaY = $status['anchors'][${$anchorKey}]->getY() - $thisAnchor->getY();
-                $transform = "translate( $deltaX, $deltaY )"; 
-            }
-            $tlKey = "topLeft-$partKey";
-            $brKey = "bottomRight-$partKey";
-            foreach($part->paths as $pathKey => $path) {
-                if($path->sampler) {
-                    $path->boundary = $path->findBoundary($part);
-                    if (!@is_object(${$tlKey})) {
-                        ${$tlKey} = new \Freesewing\Point($tlKey);
-                        ${$tlKey}->setX($path->boundary->topLeft->x);
-                        ${$tlKey}->setY($path->boundary->topLeft->y);
-                        ${$brKey} = new \Freesewing\Point($brKey);
-                        ${$brKey}->setX($path->boundary->bottomRight->x);
-                        ${$brKey}->setY($path->boundary->bottomRight->y);
-                    } else {
-                        if (($path->boundary->topLeft->x + $deltaX) < ${$tlKey}->x) ${$tlKey}->setX($path->boundary->topLeft->x + $deltaX);
-                        if (($path->boundary->topLeft->y + $deltaY) < ${$tlKey}->y) ${$tlKey}->setY($path->boundary->topLeft->y + $deltaY);
-                        if ($path->boundary->bottomRight->x+$deltaX > ${$brKey}->x) ${$brKey}->setX($path->boundary->bottomRight->x + $deltaX);
-                        if ($path->boundary->bottomRight->y+$deltaY > ${$brKey}->y) ${$brKey}->setY($path->boundary->bottomRight->y + $deltaY);
-                    }
-                    $path->setAttributes(['transform' => $transform, 'style' => $theme->samplerPathStyle($step, $steps)]);
-                    $this->partContainer[$partKey]['includes']["$step-$pathKey"] = $renderBot->renderPath($path, $part);
-                    $this->partContainer[$partKey]['topLeft'] = ${$tlKey};
-                    $this->partContainer[$partKey]['bottomRight'] = ${$brKey};
+        foreach($pattern->parts as $partKey => $part) {
+            if($part->render) {
+                if (!@is_object($this->anchors[$partKey])) {
+                    $this->anchors[$partKey] = $this->getSamplerAnchor($part);
+                    $deltaX = 0;
+                    $deltaY = 0;
+                    $transform = "translate( 0, 0 )"; 
+                } else {
+                    $anchor = $this->getSamplerAnchor($part);
+                    $deltaX = $this->anchors[$partKey]->getX() - $anchor->getX();
+                    $deltaY = $this->anchors[$partKey]->getY() - $anchor->getY();
+                    $transform = "translate( $deltaX, $deltaY )"; 
                 }
+                foreach($part->paths as $pathKey => $path) {
+                    if($path->sampler) {
+                        $path->boundary = $path->findBoundary($part);
+                        if (!@is_object($this->boundaries[$partKey]['topLeft'])) {
+                            $this->boundaries[$partKey]['topLeft'] = new \Freesewing\Point();
+                            $this->boundaries[$partKey]['topLeft']->setX($path->boundary->topLeft->x);
+                            $this->boundaries[$partKey]['topLeft']->setY($path->boundary->topLeft->y);
+                            $this->boundaries[$partKey]['bottomRight'] = new \Freesewing\Point();
+                            $this->boundaries[$partKey]['bottomRight']->setX($path->boundary->bottomRight->x);
+                            $this->boundaries[$partKey]['bottomRight']->setY($path->boundary->bottomRight->y);
+                        } else {
+                            if (($path->boundary->topLeft->x + $deltaX) < $this->boundaries[$partKey]['topLeft']->x) $this->boundaries[$partKey]['topLeft']->setX($path->boundary->topLeft->x + $deltaX);
+                            if (($path->boundary->topLeft->y + $deltaY) < $this->boundaries[$partKey]['topLeft']->y) $this->boundaries[$partKey]['topLeft']->setY($path->boundary->topLeft->y + $deltaY);
+                            if ($path->boundary->bottomRight->x+$deltaX > $this->boundaries[$partKey]['bottomRight']->x)  $this->boundaries[$partKey]['bottomRight']->setX($path->boundary->bottomRight->x + $deltaX);
+                            if ($path->boundary->bottomRight->y+$deltaY > $this->boundaries[$partKey]['bottomRight']->y)  $this->boundaries[$partKey]['bottomRight']->setY($path->boundary->bottomRight->y + $deltaY);
+                        }
+                        $path->setAttributes(['transform' => $transform, 'style' => $theme->samplerPathStyle($step, $steps)]);
+                        $this->partContainer[$partKey]['includes']["$step-$pathKey"] = $renderBot->renderPath($path, $part);
+                        $this->partContainer[$partKey]['topLeft'] = $this->boundaries[$partKey]['topLeft'];
+                        $this->partContainer[$partKey]['bottomRight'] = $this->boundaries[$partKey]['bottomRight'];
+                    }
+                }
+            }
+        }
+    }
+    
+    public function addPartBorder()
+    {
+        foreach($this->partContainer as $partKey => $part) {
+            $this->pattern->addPart("sampler-$partKey");
+            $p = $this->pattern->parts[$partKey];
+            $p->newPoint( 1, $part['topLeft']->getX(), $part['topLeft']->getY(), 'Top left');
+            $p->newPoint( 3, $part['bottomRight']->getX(), $part['bottomRight']->getY(), 'Bottom right');
+            $p->newPoint( 2, $p->x(3), $p->y(1), 'Top right');
+            $p->newPoint( 4, $p->x(1), $p->y(3), 'Bottom left');
+            $p->newPath('border', 'M 1 L 2 L 3 L 4 z', ['class' => 'hidden']);
+            foreach($part['includes'] as $pathKey => $include) {
+                $p->newInclude($pathKey, $include);
             }
         }
     }

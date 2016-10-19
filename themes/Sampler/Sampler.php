@@ -30,22 +30,14 @@ class Sampler extends Theme
     public function samplerPathStyle($step, $totalSteps)
     {
         $color = $this->pickColor($step, $totalSteps);
-        $dashes = $this->pickDashes($step, $totalSteps);
-        return "stroke: $color; stroke-dasharray: $dashes;";
+        return "stroke: $color;";
     }
 
     private function pickColor($step, $steps)
     {
-        $hue = $step*(200/($steps-1));
+        $hue = $step*(269/($steps-1));
         $saturation = 55;
         $lightness = 50;
         return "hsl($hue, $saturation%, $lightness%)";
-    } 
-
-    private function pickDashes($step, $steps)
-    {
-        $line = 5+$step*2;
-        if($step % 2 == 0) return "$line, 1";
-        else return "$line, 1, 1, 1";
     } 
 }

@@ -3,11 +3,6 @@ chestEase:
     min: -40
     max: 160
     default: 30
-trouserWaistEase:
-    type: number
-    min: -40
-    max: 160
-    default: 60
 armholeDrop:
     type: number
     min: -20

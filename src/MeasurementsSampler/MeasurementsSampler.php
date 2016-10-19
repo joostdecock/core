@@ -11,20 +11,7 @@ namespace Freesewing;
  */
 class MeasurementsSampler extends Sampler
 {
-    private $options = array();
-
-    public function loadPatternOptions()
-    {
-        $config = $this->getSamplerConfigFile($this->pattern, 'options');
-        if(is_readable($config)) {
-            $options = \Freesewing\Yamlr::loadYamlFile($config);
-            foreach($options as $key => $option) 
-                if($option['type'] == 'percent') $this->options[$key] = $option['default']/100;
-                else $this->options[$key] = $option['default'];
-            return $this->options;
-        } 
-        else return false;
-    }
+    public $options = array();
 
     public function loadPatternModels($requestData)
     {
@@ -35,16 +22,6 @@ class MeasurementsSampler extends Sampler
             return $this->models;
         }
         else return false;
-    }
-
-    public function setPattern($pattern)
-    {
-        $this->pattern = $pattern;
-    }
-
-    public function getPattern()
-    {
-        return $this->pattern;
     }
 
     public function sampleMeasurements($theme) 
@@ -114,23 +91,6 @@ class MeasurementsSampler extends Sampler
         $this->pattern->layout();
         return $this->pattern;
     } 
-
-    private function getSamplerAnchor($part)
-    {
-        if(isset($part->points['samplerAnchor'])) return $part->loadPoint('samplerAnchor');
-        else if(isset($part->points['gridAnchor'])) return $part->loadPoint('gridAnchor');
-        else {
-            $part->newPoint('defaultAnchor', 0, 0, 'Anchor point added by sampler');
-            return $part->loadPoint('samplerAnchor');
-        }
-    }
-
-    private function getSamplerConfigFile($pattern, $mode)
-    {
-        if($mode == 'options') return $pattern->getPatternDir().'/sampler/options.yml';
-        else return $pattern->getPatternDir().'/sampler/measurements.yml';
-
-    }
 
     private function loadModelGroup($group)
     {

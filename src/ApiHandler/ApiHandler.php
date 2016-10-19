@@ -56,8 +56,6 @@ class ApiHandler
         $this->channel = $this->instantiateFromContext('channel');
         $this->pattern = $this->instantiateFromContext('pattern');
         $this->theme = $this->instantiateFromContext('theme');
-        //$this->theme = new \Freesewing\Themes\Sampler;
-        //$this->context['theme'] = 'Sampler';
 
         if (
             !isset($this->response)
@@ -69,8 +67,11 @@ class ApiHandler
             $this->pattern->setUnits($this->context['units']);
             if(isset($this->requestData['mode']) && $this->requestData['mode'] == 'options') { // Sampling options
                 $this->sampler = new \Freesewing\OptionsSampler;
+                $this->sampler->setPattern($this->pattern);
                 $this->model = new \Freesewing\Model();
-                $this->model->addMeasurements( $this->sampler->loadModelMeasurements($this->pattern));
+                $this->model->addMeasurements($this->sampler->loadModelMeasurements($this->pattern));
+                $this->pattern->addOptions( $this->sampler->loadPatternOptions());
+                $this->pattern = $this->sampler->sampleOptions($this->model, $this->theme, $this->requestData['option'], @$this->requestData['steps']);
 
             } else { // Sampling measurements
                 $this->sampler = new \Freesewing\MeasurementsSampler;

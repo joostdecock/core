@@ -59,7 +59,11 @@ class ApiHandler
             $this->pattern = $this->instantiateFromContext('pattern');
             $this->response = $this->theme->themePatternInfo($this->getPatternInfo($this->pattern), $this->requestData['format']);
         } else {
-            $this->response = $this->theme->themePatternList($this->getPatternList(), $this->requestData['format']);
+            $info['services'] = $this->config['services'];
+            $info['patterns'] = $this->getPatternList();
+            $info['channels'] = $this->getChannelList();
+            $info['themes'] = $this->getThemeList();
+            $this->response = $this->theme->themeInfo($info, $this->requestData['format']);
         }
         $this->response->send();
     }
@@ -91,6 +95,24 @@ class ApiHandler
                 $config = $this->loadPatternConfig($name);
                 $list[$name] = $config['info']['name'];
             }
+        }
+        return $list;
+    }
+
+    private function getChannelList()
+    {
+        foreach(glob(dirname(__FILE__) . '/../../channels/*' , GLOB_ONLYDIR) as $dir) {
+            $name = basename($dir);
+            if($name != 'Channel' && $name != 'Info') $list[] = $name;
+        }
+        return $list;
+    }
+
+    private function getThemeList()
+    {
+        foreach(glob(dirname(__FILE__) . '/../../themes/*' , GLOB_ONLYDIR) as $dir) {
+            $name = basename($dir);
+            if($name != 'Theme' && $name != 'Info'&& $name != 'Sampler') $list[] = $name;
         }
         return $list;
     }
@@ -162,8 +184,7 @@ class ApiHandler
                     $this->channel->standardizePatternOptions($this->requestData)
                 );
 
-            //$this->pattern->draft($this->model);
-            $this->pattern->sample($this->model);
+            $this->pattern->draft($this->model);
 
             $this->pattern->layout();
 

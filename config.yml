@@ -1,6 +1,6 @@
 defaults:
     service: draft
-    channel: Channel
+    channel: Docs
     draftTheme: Svg
     sampleTheme: Sampler
     infoTheme: Info
@@ -10,6 +10,6 @@ renderers:
     svg: SvgRenderbot
     js: JsRenderbot
 services:
+    - info
     - draft
     - sample
-    - info

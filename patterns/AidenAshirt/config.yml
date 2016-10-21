@@ -11,4 +11,6 @@ parts:
     backBlock: "Back block"
     front: Front
     back: Back
-
+languages:
+    en: English
+    nl: Nederlands

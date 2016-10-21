@@ -34,6 +34,7 @@ return array(
     'Freesewing\\ApiHandler' => $baseDir . '/src/ApiHandler/ApiHandler.php',
     'Freesewing\\Boundary' => $baseDir . '/src/Boundary/Boundary.php',
     'Freesewing\\Channels\\Channel' => $baseDir . '/channels/Channel/Channel.php',
+    'Freesewing\\Channels\\Docs' => $baseDir . '/channels/Docs/Docs.php',
     'Freesewing\\GrowingPacker' => $baseDir . '/src/GrowingPacker/GrowingPacker.php',
     'Freesewing\\LayoutBlock' => $baseDir . '/src/LayoutBlock/LayoutBlock.php',
     'Freesewing\\MeasurementsSampler' => $baseDir . '/src/MeasurementsSampler/MeasurementsSampler.php',

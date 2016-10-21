@@ -128,6 +128,7 @@ class ComposerStaticInit6d3c91d11fabeb58ed862308abf0796d
         'Freesewing\\ApiHandler' => __DIR__ . '/../..' . '/src/ApiHandler/ApiHandler.php',
         'Freesewing\\Boundary' => __DIR__ . '/../..' . '/src/Boundary/Boundary.php',
         'Freesewing\\Channels\\Channel' => __DIR__ . '/../..' . '/channels/Channel/Channel.php',
+        'Freesewing\\Channels\\Docs' => __DIR__ . '/../..' . '/channels/Docs/Docs.php',
         'Freesewing\\GrowingPacker' => __DIR__ . '/../..' . '/src/GrowingPacker/GrowingPacker.php',
         'Freesewing\\LayoutBlock' => __DIR__ . '/../..' . '/src/LayoutBlock/LayoutBlock.php',
         'Freesewing\\MeasurementsSampler' => __DIR__ . '/../..' . '/src/MeasurementsSampler/MeasurementsSampler.php',

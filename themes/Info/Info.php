@@ -11,14 +11,14 @@ namespace Freesewing\Themes;
  */
 class Info
 {
-    public function themePatternList($list, $format)
+    public function themeInfo($list, $format)
     {
         $response = new \Freesewing\Response();
         if($format == 'php') {
             $response->setBody(serialize($list));
             $response->setFormat('raw');
         } else if($format == 'html') {
-            $response->setBody($this->renderPatternList($list));
+            $response->setBody($this->renderInfo($list));
             $response->setFormat('raw');
         } else {
             $response->setBody($list);
@@ -43,10 +43,23 @@ class Info
         return $response;
     }
 
-    private function renderPatternList($list)
+    private function renderInfo($list)
     {
-        $html = "<ul class=\"patternlist\">";
-        foreach($list as $name => $title) $html .= "\n<li class=\"pattern\"><a data-info=\"/info/$name/html\">$title</a></li>";
+        $html = "<h3>Services</h3>\n";
+        $html .= "<ul class=\"servicelist\">";
+        foreach($list['services'] as $name) $html .= "\n<li class=\"service\">$name</li>";
+        $html .= "\n</ul>";
+        $html .= "<h3>Patterns</h3>\n";
+        $html .= "<ul class=\"patternlist\">";
+        foreach($list['patterns'] as $name => $title) $html .= "\n<li class=\"pattern\"><a data-info=\"/info/$name/html\">$title</a></li>";
+        $html .= "\n</ul>";
+        $html .= "<h3>Channels</h3>\n";
+        $html .= "<ul class=\"channellist\">";
+        foreach($list['channels'] as $name) $html .= "\n<li class=\"channel\">$name</li>";
+        $html .= "\n</ul>";
+        $html .= "<h3>Themes</h3>\n";
+        $html .= "<ul class=\"patternlist\">";
+        foreach($list['themes'] as $name) $html .= "\n<li class=\"theme\">$name</li>";
         $html .= "\n</ul>";
         return $html;
     }

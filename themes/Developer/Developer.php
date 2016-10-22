@@ -14,18 +14,18 @@ class Developer extends Theme
     /**
      * @codeCoverageIgnore
      */
-    public function themeResponse($apiHandler)
+    public function themeResponse($context)
     {
         ob_start();
         \Kint::$maxLevels = 0;
-        \Kint::dump($apiHandler);
+        \Kint::dump($context);
         $debug = ob_get_clean();
 
         $response = new \Freesewing\Response();
         $response->setFormat('json');
         $response->setBody([
             'status' => 'OK',
-            'svg' => "{$apiHandler->svgDocument}",
+            'svg' => "{$context->svgDocument}",
             'debug' => $debug,
         ]);
 

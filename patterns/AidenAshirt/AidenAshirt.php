@@ -32,8 +32,8 @@ class AidenAshirt extends JoostBodyBlock
     public function buildCore($model)
     {
         $this->validateOptions();
-        $this->parts['frontBlock']->setRender(false);
-        $this->parts['backBlock']->setRender(false);
+        $this->parts['frontBlock']->setRender(0);
+        $this->parts['backBlock']->setRender(0);
         $this->loadHelp($model);
         $this->draftBackBlock($model);
         $this->draftFrontBlock($model);

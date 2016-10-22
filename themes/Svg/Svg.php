@@ -11,11 +11,11 @@ namespace Freesewing\Themes;
  */
 class Svg extends Theme
 {
-    public function themeResponse($apiHandler)
+    public function themeResponse($context)
     {
         $response = new \Freesewing\Response();
         $response->setFormat('svg');
-        $response->setBody("{$apiHandler->svgDocument}");
+        $response->setBody("{$context->svgDocument}");
 
         return $response;
     }

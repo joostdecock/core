@@ -18,7 +18,7 @@ class OptionsSampler extends Sampler
         if(is_readable($config)) {
             $measurements = \Freesewing\Yamlr::loadYamlFile($config);
             $default = $measurements['default']['model'];
-            return array_combine($measurements['measurements'], $measurements['models'][$default]);
+            return array_combine($this->pattern->config['measurements'], $measurements['models'][$default]);
         } 
         else return false;
     }

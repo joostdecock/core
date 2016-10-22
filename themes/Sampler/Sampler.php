@@ -18,11 +18,11 @@ class Sampler extends Theme
         $svgDocument->svgAttributes->add(file_get_contents("$dir/svg-attributes"));
     }
 
-    public function themeResponse($apiHandler)
+    public function themeResponse($context)
     {
         $response = new \Freesewing\Response();
         $response->setFormat('svg');
-        $response->setBody("{$apiHandler->svgDocument}");
+        $response->setBody("{$context->svgDocument}");
 
         return $response;
     }
@@ -35,7 +35,8 @@ class Sampler extends Theme
 
     private function pickColor($step, $steps)
     {
-        $hue = $step*(269/($steps-1));
+        if($steps == 1) $hue = 269;
+        else $hue = $step*(269/($steps-1));
         $saturation = 55;
         $lightness = 50;
         return "hsl($hue, $saturation%, $lightness%)";

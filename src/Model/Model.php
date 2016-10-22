@@ -11,7 +11,6 @@ namespace Freesewing;
  */
 class Model
 {
-    public $name;
     /**
      * @var array
      */

@@ -27,22 +27,29 @@ abstract class Channel
     {
     }
 
-    public function standardizeModelMeasurements($requestData)
+    public function standardizeModelMeasurements($request, $pattern)
     {
-        foreach ($this->config['measurements'] as $key => $val) {
-            $measurements[$val] = $requestData[$key] * 10;
+        foreach ($pattern->config['measurements'] as $key => $val) {
+            $measurements[$val] = $request->getData($val) * 10;
         }
 
         return $measurements;
     }
 
-    public function standardizePatternOptions($requestData)
+    public function standardizePatternOptions($request, $pattern)
     {
-        foreach ($this->config['cmoptions'] as $key => $val) {
-            $options[$val] = $requestData[$key] * 10;
-        }
-        foreach ($this->config['percentoptions'] as $key => $val) {
-            $options[$val] = $requestData[$key] / 100;
+        $samplerOptionConf = \Freesewing\Yamlr::loadYamlFile($pattern->getPatternDir().'/sampler/options.yml');
+        foreach ($samplerOptionConf as $key => $option) {
+            switch($option['type']) {
+                case 'percent':
+                    if($request->getData($key) !== null) $options[$key] = $request->getData($key) /100;
+                    else $options[$key] = $option['default'] /100;
+                break;
+                default:
+                    if($request->getData($key) !== null) $options[$key] = $request->getData($key) *10;
+                    else $options[$key] = $option['default'] *10;
+                break;
+            }
         }
 
         return $options;

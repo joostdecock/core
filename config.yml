@@ -5,7 +5,7 @@ defaults:
     sampleTheme: Sampler
     infoTheme: Info
     pattern: AidenAshirt
-    partMargin: 10
+    locale: en
 renderers:
     svg: SvgRenderbot
     js: JsRenderbot
@@ -13,3 +13,5 @@ services:
     - info
     - draft
     - sample
+settings:
+    partMargin: 10

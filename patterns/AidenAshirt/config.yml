@@ -14,3 +14,24 @@ parts:
 languages:
     en: English
     nl: Nederlands
+measurements:
+    - acrossBack
+    - bicepsCircumference
+    - centerBackNeckToWaist
+    - chestCircumference
+    - naturalWaistToHip
+    - neckCircumference
+    - shoulderLength
+    - shoulderSlope
+    - hipsCircumference
+options:
+    - chestEase
+    - armholeDrop
+    - lengthBonus
+    - necklineBend
+    - backlineBend
+    - necklineDrop
+    - shoulderStrapWidth
+    - shoulderStrapPlacement
+    - stretchFactor
+    - hipsEase

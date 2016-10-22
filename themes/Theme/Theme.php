@@ -13,14 +13,6 @@ abstract class Theme
 {
     public $messages = array();
 
-    public function renderAs()
-    {
-        return [
-            'svg' => true,
-            'js' => false,
-        ];
-    }
-
     public function themePattern($pattern)
     {
         $this->messages = $pattern->getMessages();
@@ -70,11 +62,11 @@ abstract class Theme
         if($this->messages !== false) $svgDocument->footerComments->add(implode("\n", $this->messages));
     }
 
-    public function themeResponse($apiHandler)
+    public function themeResponse($context)
     {
         $response = new \Freesewing\Response();
         $response->setFormat('raw');
-        $response->setBody("{$apiHandler->svgDocument}");
+        $response->setBody("{$context->svgDocument}");
 
         return $response;
     }

@@ -1,5 +1,6 @@
 var api = 'http://api.freesewing.org';
 var themes = [];
+var spinner =  '<img src="spinner.gif">';
 
 function scrollTo(target) {
     var scrollTarget = $(target);
@@ -14,7 +15,7 @@ function loadServices() {
         $('#details').html('');
         $('#details').append( " <p>We made an AJAX call to to:</p> <code>" + api + "/info/json</code>");
         $('#details').append( " <p>and received a JSON response with info about the API.</p>");
-        $('#details').append( " <p>We used the services listed in the response to create the content above above.</p>");
+        $('#details').append( " <p>We used the services listed in the response to create the content above.</p>");
         $('#details').append( " <blockquote class='comment'><h6>You just used the INFO service</h6>We used the API's info service to build this page. You can find out more about the info service by clicking the big <b>Try the info service</b> button above.</blockquote>");
     });
 }
@@ -27,6 +28,7 @@ function markActive(id) {
 
 function loadApiInfo() {
     markActive('info');
+    $('#content').html(spinner);
     $.getJSON(api+'/info/json', function( data ) {
         $('#content').html('<div class="row" id="contentrow"></div>');
         $('#contentrow').append( "<h2>API Information</h2>");
@@ -59,10 +61,11 @@ function loadApiInfo() {
 }
 
 function loadPatternInfo(pattern) {
+    if($("#patterninfo").length == 0) { 
+        $('#content').append( "<div class='' id='patterninfo'></div>"); 
+    }
+    $('#patterninfo').html(spinner);
     $.getJSON(api+'/info/'+pattern+'/json', function( data ) {
-        if($("#patterninfo").length == 0) { 
-            $('#content').append( "<div class='' id='patterninfo'></div>"); 
-        }
         $('#patterninfo').html('');
         $('#patterninfo').append( "<h2>The " + pattern + " pattern</h2>");
 
@@ -88,23 +91,23 @@ function loadPatternInfo(pattern) {
         $('#patterninfo').append( "<div class='col-md-3' id='patterninfo-col3'></div>");
         $('#patterninfo-col3').append( "<h3>Measurements</h3>");
         $('#patterninfo-col3').append( "<ul id='patterninfo-col3-ul'></ul>");
-        $.each( data['measurements']['measurements'], function( key, val ) {
-            $("#patterninfo-col3-ul").append( "<li>" + val + "</li>" );
+        $.each( data['measurements'], function( key, val ) {
+            $("#patterninfo-col3-ul").append( "<li><b>" + val + "</b></li>" );
         });
 
         $('#patterninfo').append( "<div class='col-md-3' id='patterninfo-col4'></div>");
         $('#patterninfo-col4').append( "<h3>Sampling</h3>");
         $('#patterninfo-col4').append( "<p>These groups are defined for sampling measurements:</p>");
         $('#patterninfo-col4').append( "<ul id='patterninfo-col4-ul'></ul>");
-        $.each( data['measurements']['groups'], function( key, val ) {
-            $("#patterninfo-col4-ul").append( "<li>" + key + "</li>" );
+        $.each( data['sampler']['measurements']['groups'], function( key, val ) {
+            $("#patterninfo-col4-ul").append( "<li><b>" + key + "</b></li>" );
         });
         $('#patterninfo-col4').append( "<p>Measurements and options sampling is available in the SAMPLE service</p>");
         
         $('#patterninfo').append( "<div class='col-md-12' id='patterninfo-col5'></div>");
         $('#patterninfo-col5').append( "<h3>Options</h3>");
         $('#patterninfo-col5').append( "<div id='patterninfo-col5-div'></div>");
-        $.each( data['options'], function( key, val ) {
+        $.each( data['sampler']['options'], function( key, val ) {
             if(val['type'] == 'number') values = "and expects a value between <span class='label label-warning'>" + val['min'] + "</span> and <span class='label label-warning'>" + val['max'] + "</span> Its default is <span class='label label-success'>" + val['default'] + "</span";
             if(val['type'] == 'percent') values = " so it expects a value between 0 and 100. Its default is " + val['default'];
             $("#patterninfo-col5-div").append( "<h6>" + key + "</h6><p><span class='label label-info'>" + key + "</span> is of type <span class='label label-danger'>" + val['type'] + "</span> " + values + "</p>" );
@@ -120,6 +123,7 @@ function loadPatternInfo(pattern) {
 
 function sampleDraftPatternList(type) {
     markActive(type);
+    $('#content').html(spinner);
     $.getJSON(api+'/info/json', function( data ) {
         $.each( data['themes'], function( key, val ) {
             themes[key] = val; // Store themes so we have them available in step2
@@ -140,6 +144,7 @@ function sampleDraftPatternList(type) {
 }
 
 function loadDraft(pattern) {
+    $('#content').html(spinner);
     $.getJSON(api+'/info/'+pattern+'/json', function( data ) {
         $('#content').html('<div class="row form-group" id="contentrow"></div>');
         $('#contentrow').append( "<h2>Step 2: Submit a form</h2>");
@@ -151,11 +156,11 @@ function loadDraft(pattern) {
         $('#col3').append( '<table class="table mmp-form" id="col3-table"><tr class="heading"> <td colspan="2">General</td> </tr></table>');
         $('#col4').append( '<table class="table mmp-form" id="col4-table"><tr class="heading"> <td colspan="2">Submit</td> </tr></table>');
 
-        var model = data['measurements']['default']['model'];
-        $.each( data['measurements']['measurements'], function( key, val ) {
-            $('#col1-table').append( formRow(val, data['measurements']['models'][model][key], 'metric'));
+        var model = data['sampler']['measurements']['default']['model'];
+        $.each( data['measurements'], function( key, val ) {
+            $('#col1-table').append( formRow(val, data['sampler']['measurements']['models'][model][key], 'metric'));
         });
-        $.each( data['options'], function( key, val ) {
+        $.each( data['sampler']['options'], function( key, val ) {
             $('#col2-table').append( formRow(key, val, 'metric'));
         });
         
@@ -184,6 +189,7 @@ function loadDraft(pattern) {
 }
 
 function loadSample(pattern) {
+    $('#content').html(spinner);
     $.getJSON(api+'/info/'+pattern+'/json', function( data ) {
         $('#content').html('<div class="row form-group" id="contentrow"></div>');
         $('#contentrow').append( "<h2>Step 2: What would you like to sample?</h2>");
@@ -192,11 +198,11 @@ function loadSample(pattern) {
         $('#col1').append( '<ul id="col1-list"></ul>');
         $('#col2').append( '<h3>Sample options</h3>');
         $('#col2').append( '<ul id="col2-list"></ul>');
-        $.each( data['measurements']['groups'], function( key, val ) {
+        $.each( data['sampler']['measurements']['groups'], function( key, val ) {
 
             $('#col1-list').append( '<li><a href="'+api+'/sample/'+pattern+'/measurements/?samplerGroup='+key+'" target="_BLANK">'+key+'</a> ('+val.length+' models)</li>');
         });
-        $.each( data['options'], function( key, val ) {
+        $.each( data['sampler']['options'], function( key, val ) {
             $('#col2-list').append( '<li><a href="'+api+'/sample/'+pattern+'/options/'+key+'/" target="_BLANK">'+key+'</a></li>');
         });
     });
@@ -260,8 +266,8 @@ function draftSubmit (pattern) {
                     <li role="presentation"><a href="#svg" role="tab" data-toggle="tab">SVG</a></li>\
                 </ul>\
                 <div class="tab-content">\
-                    <div role="tabpanel" class="tab-pane fade in active gapabove" id="kint"><img src="spinner.gif"></div>\
-                    <div role="tabpanel" class="tab-pane fade gapabove" id="svg"><img src="spinner.gif"></div>\
+                    <div role="tabpanel" class="tab-pane fade in active gapabove" id="kint">'+spinner+'</div>\
+                    <div role="tabpanel" class="tab-pane fade gapabove" id="svg">'+spinner+'+</div>\
                 </div>\
                 ');
         $.ajax({

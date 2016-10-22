@@ -16,6 +16,20 @@ class JoostBodyBlock extends Pattern
         $this->loadHelp($model);
 
         $this->draftBackBlock($model);
+        $this->finalizeBackBlock($model);
+        
+        $this->draftFrontBlock($model);
+        $this->finalizeFrontBlock($model);
+        
+        $this->draftSleeveBlock($model);
+        $this->finalizeSleeveBlock($model);
+    }
+
+    public function sample($model)
+    {
+        $this->loadHelp($model);
+
+        $this->draftBackBlock($model);
         $this->draftFrontBlock($model);
         $this->draftSleeveBlock($model);
     }
@@ -26,6 +40,9 @@ class JoostBodyBlock extends Pattern
         $this->help['armholeDepth'] = 200 + ($model->getMeasurement('shoulderSlope') / 2 - 27.5) + ($model->getMeasurement('bicepsCircumference') / 10);
         $this->help['collarShapeFactor'] = 1;
         $this->help['sleevecapShapeFactor'] = 1;
+        $this->setOption('collarEase', 15);
+        $this->setOption('backNeckCutout', 20);
+        $this->setOption('sleevecapEase', 15);
     }
 
     public function cleanUp()
@@ -46,12 +63,12 @@ class JoostBodyBlock extends Pattern
         // Center vertical axis
         $p->newPoint(1,   0,  $this->getOption('backNeckCutout'), 'Center back @ neck');
         $p->newPoint(2,   0,  $p->y(1) + $this->help['armholeDepth'], 'Center back @ armhole depth');
-        $p->clonePoint(2, 'gridAnchor');
         $p->newPoint(3,   0,  $p->y(1) + $model->getMeasurement('centerBackNeckToWaist'), 'Center back @ waist');
         $p->newPoint(4,   0,  $model->getMeasurement('centerBackNeckToWaist') + $model->getMeasurement('naturalWaistToHip') + $this->getOption('backNeckCutout'), 'Center back @ trouser waist');
 
         // Side vertical axis
         $p->newPoint(5, $model->getMeasurement('chestCircumference') / 4 + $this->getOption('chestEase') / 4, $p->y(2), 'Quarter chest @ armhole depth');
+        $p->clonePoint(5, 'gridAnchor');
         $p->newPoint(6, $p->x(5), $p->y(4), 'Quarter chest @ trouser waist');
 
         // Back collar
@@ -82,8 +99,15 @@ class JoostBodyBlock extends Pattern
 
         // Paths
         $path = 'M 1 L 2 L 3 L 4 L 6 L 5 C 13 16 14 C 15 18 10 C 17 19 12 L 8 C 20 1 1 z';
-        $p->newPath('outline', $path);
+        $p->newPath('seamline', $path);
+        
+        // Sampler
+        $p->paths['seamline']->setSampler(true);
+    }
 
+    public function finalizeBackBlock($model)
+    {
+        $p = $this->parts['backBlock'];
         // Title anchor
         $p->newPoint('titleAnchor', $p->x(10) / 2, $p->y(10), 'Title anchor');
         $p->addTitle('titleAnchor', 1, $this->t($p->title));
@@ -101,8 +125,15 @@ class JoostBodyBlock extends Pattern
         $p->addPoint(18, $p->shift(18, 180, $frontExtra));
 
         $path = 'M 9 L 2 L 3 L 4 L 6 L 5 C 13 16 14 C 15 18 10 C 17 19 12 L 8 C 20 21 9 z';
-        $p->newPath('outline', $path);
+        $p->newPath('seamline', $path);
+        
+        // Sampler
+        $p->paths['seamline']->setSampler(true);
+    }
 
+    public function finalizeFrontBlock($model)
+    {
+        $p = $this->parts['frontBlock'];
         $p->addTitle('titleAnchor', 1, $this->t($p->title));
         $p->newSnippet('logo', 'logo', 'titleAnchor');
     }
@@ -188,8 +219,15 @@ class JoostBodyBlock extends Pattern
         $p->addPoint(35, $p->linesCross(5, 32, 33, 34), 'Elbow point front side');
 
         $path = 'M 31 L -5 C -5 20 16 C 21 10 10 C 10 22 17 C 23 28 30 C 29 25 18 C 24 11 11 C 11 27 19 C 26 5 5 L 32 z';
-        $p->newPath('outline', $path);
+        $p->newPath('seamline', $path);
+        
+        // Sampler
+        $p->paths['seamline']->setSampler(true);
+    }
 
+    public function finalizeSleeveBlock($model)
+    {
+        $p = $this->parts['sleeveBlock'];
         $p->newPoint('titleAnchor', $p->x(2), $this->parts['frontBlock']->y('titleAnchor'));
         $p->addTitle('titleAnchor', 3, $this->t($p->title));
 

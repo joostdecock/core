@@ -80,6 +80,11 @@ abstract class Pattern
         return $this->getPatternDir().'/config.yml';
     }
 
+    public function getConfig()
+    {
+        return $this->config;
+    }
+
     public function unit($val)
     {
         if ($this->units['out'] == 'imperial') {
@@ -219,7 +224,7 @@ abstract class Pattern
         }
     }
 
-    public function draft($model, $svgDocument)
+    public function draft($model)
     {
     }
 

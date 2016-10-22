@@ -82,25 +82,29 @@ class Info
         
         $html .= "\n\t<h4>Measurements list</h4>";
         $html .= "\n\t<ul>";
-        foreach($list['measurements']['measurements'] as $value) $html .= "\n\t\t<li>$value</li>";
+        foreach($list['measurements'] as $value) $html .= "\n\t\t<li>$value</li>";
         $html .= "\n\t</ul>";
         
         $html .= "\n\t<h4>Options list</h4>";
         $html .= "\n\t<ul>";
-        foreach($list['options'] as $key => $value) $html .= "\n\t\t<li>$key</li>";
+        foreach($list['options'] as $value) $html .= "\n\t\t<li>$value</li>";
         $html .= "\n\t</ul>";
         
         $html .= "\n\t<h4>Sampler</h4>";
         $html .= "\n\t<h5>Measurements</h5>";
         $html .= "\n\t<ul>";
-        foreach($list['measurements']['groups'] as $key => $value) $html .= "\n\t\t<li><a data-sample=\"/sample/$pattern/measurements/$key\">$key</a></li>";
+        foreach($list['sampler']['measurements']['groups'] as $key => $value) $html .= "\n\t\t<li><a data-sample=\"/sample/$pattern/measurements/$key\">$key</a></li>";
         $html .= "\n\t</ul>";
         $html .= "\n\t<h5>Options</h5>";
         $html .= "\n\t<ul>";
-        foreach($list['options'] as $key => $value) $html .= "\n\t\t<li><a data-sample=\"/sample/$pattern/options/$key/\">$key</a></li>";
+        foreach($list['sampler']['options'] as $key => $value) $html .= "\n\t\t<li><a data-sample=\"/sample/$pattern/options/$key/\">$key</a></li>";
         $html .= "\n\t</ul>";
         
         $html .= "\n</div>";
         return $html;
+    }
+
+    public function cleanUp()
+    {
     }
 }

@@ -11,5 +11,8 @@
 
 require __DIR__ . '/vendor/autoload.php';
 
-$api = new \Freesewing\ApiHandler($_REQUEST);
-$api->{$api->service}();
+$context = new \Freesewing\Context();
+$context->setRequest( new \Freesewing\Request($_REQUEST) );
+$context->configure();
+$context->runService();
+//print_r($context);

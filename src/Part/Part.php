@@ -235,7 +235,6 @@ class Part
         $path = $this->paths[$srcKey];
 
         $stack = $this->pathOffsetAsStack($path, $distance, $newKey);
-        //print_r($stack);
         $stack = $this->fillPathStackGaps($stack, $path);
         $pathString = $this->pathStackToPath($newKey, $stack, $render, $path);
         $this->newPath($newKey, $pathString, $attributes);

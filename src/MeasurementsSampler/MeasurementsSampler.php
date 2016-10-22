@@ -13,12 +13,12 @@ class MeasurementsSampler extends Sampler
 {
     public $options = array();
 
-    public function loadPatternModels($requestData)
+    public function loadPatternModels($group)
     {
         $config = $this->getSamplerConfigFile($this->pattern, 'measurements');
         if(is_readable($config)) {
             $this->measurementsConfig = \Freesewing\Yamlr::loadYamlFile($config);
-            $this->models = $this->loadModelGroup($this->modelGroupToLoad($requestData)); 
+            $this->models = $this->loadModelGroup($this->modelGroupToLoad($group)); 
             return $this->models;
         }
         else return false;
@@ -46,22 +46,16 @@ class MeasurementsSampler extends Sampler
         foreach($this->measurementsConfig['groups'][$group] as $member) {
             $model = new \Freesewing\Model;
             $model->setName($member);
-            $measurements = array_combine($this->measurementsConfig['measurements'], $this->measurementsConfig['models'][$member]);
+            $measurements = array_combine($this->pattern->config['measurements'], $this->measurementsConfig['models'][$member]);
             $model->addMeasurements($measurements);
             $models[$member] = $model;
         }
         return $models;
     }
 
-    private function modelGroupToLoad($requestData)
+    private function modelGroupToLoad($group)
     {
-        if(
-            isset($requestData['samplerGroup']) 
-            && 
-            is_array($this->measurementsConfig['groups'][$requestData['samplerGroup']])
-        ) {
-           return $requestData['samplerGroup']; 
-        } 
+        if(is_array($this->measurementsConfig['groups'][$group])) return $group; 
         else return $this->measurementsConfig['default']['group'];
     }
 }

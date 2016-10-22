@@ -6,11 +6,11 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="description" content="">
         <meta name="author" content="Joost De Cock">
-        <title>Try the freesewing API</title>
+        <title>Freesewing API demo</title>
         <link href="../css/style.css" rel="stylesheet">
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
-        <script src="try.js"></script>
+        <script src="demo.js"></script>
         <style>
             body {margin-bottom: 30px; }
             #logo { padding-bottom: 0; padding-top: 20px; margin: auto; text-align: center;}
@@ -41,7 +41,7 @@
             <div id='logo'>
                 <a href='/docs/'><img id='logo' src='../media/logo.svg'></a>
             </div>
-            <h1>Try the freeSewing API</h1>
+            <h1>API demo</h1>
             <div class="row">
                 <div id='services' class="col-xs-12">
                 </div>
@@ -54,6 +54,7 @@
                 <div class="col-xs-12 col-md-8 col-md-offset-2">
                     <h2>What just happened?</h2>
                     <div id='details'>
+                        <img src="spinner.gif">
                     </div>
                 </div>
             </div>

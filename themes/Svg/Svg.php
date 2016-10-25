@@ -1,9 +1,11 @@
 <?php
-
+/** Freesewing\Themes\Info class */
 namespace Freesewing\Themes;
 
 /**
- * Freesewing\Themes\Svg class.
+ * Default theme for the draft service. 
+ *
+ * A straight-forward theme for SVG output
  *
  * @author Joost De Cock <joost@decock.org>
  * @copyright 2016 Joost De Cock
@@ -11,6 +13,11 @@ namespace Freesewing\Themes;
  */
 class Svg extends Theme
 {
+    /**
+     * Returns the SVG document
+     * 
+     * @param \Freesewing\Context $context The context object
+     */
     public function themeResponse($context)
     {
         $response = new \Freesewing\Response();

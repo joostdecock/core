@@ -1,9 +1,9 @@
 <?php
-
+/** Freesewing\Themes\Sampler class */
 namespace Freesewing\Themes;
 
 /**
- * Freesewing\Themes\Sampler class.
+ * Default theme for the sample service
  *
  * @author Joost De Cock <joost@decock.org>
  * @copyright 2016 Joost De Cock
@@ -11,6 +11,11 @@ namespace Freesewing\Themes;
  */
 class Sampler extends Theme
 {
+    /**
+     * Adds SVG and attributes to the SvgDocument
+     *
+     * @param \Freesewing\SvgDocument $svgDocument The SVG document
+     */
     public function themeSvg(\Freesewing\SvgDocument $svgDocument)
     {
         $dir = $this->getTemplateDir();
@@ -18,6 +23,13 @@ class Sampler extends Theme
         $svgDocument->svgAttributes->add(file_get_contents("$dir/svg-attributes"));
     }
 
+    /**
+     * Returns a response object with our SVG pattern
+     *
+     * @param \Freesewing\Context $context The context object
+     *
+     * @return \Freesewing\Response A response object
+     */
     public function themeResponse($context)
     {
         $response = new \Freesewing\Response();
@@ -27,6 +39,14 @@ class Sampler extends Theme
         return $response;
     }
 
+    /**
+     * Returns a stroke attribute based on the current step and total steps
+     *
+     * @param int $step Current step (in the sampler)
+     * @param int $steps Total steps (in the sampler)
+     *
+     * @return string $attr The stroke attribute
+     */
     public function samplerPathStyle($step, $totalSteps)
     {
         $color = $this->pickColor($step, $totalSteps);
@@ -34,6 +54,14 @@ class Sampler extends Theme
         return "stroke: $color;";
     }
 
+    /**
+     * Returns a color based on the current step and total steps
+     *
+     * @param int $step Current step (in the sampler)
+     * @param int $steps Total steps (in the sampler)
+     *
+     * @return string $color A HSL color notation
+     */
     private function pickColor($step, $steps)
     {
         if ($steps == 1) {

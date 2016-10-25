@@ -1728,7 +1728,6 @@ class Part
      * This can split either on a point, in which case $split contains a point ID
      * or on delta, in which case $split contains a delta between 0 and 1
      * 
-     * @param float $prefix The prefix to add to the new points
      * @param string $from The id of the start of the curve
      * @param string $cp1 The id of the first control point
      * @param string $cp2 The id of the second control point

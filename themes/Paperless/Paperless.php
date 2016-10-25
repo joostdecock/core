@@ -1,9 +1,16 @@
 <?php
-
+/** Freesewing\Themes\Sampler class */
 namespace Freesewing\Themes;
 
 /**
- * Freesewing\Themes\Paperless class.
+ * A theme that aims to save trees.
+ *
+ * This theme adds a grid to the pattern. 
+ * That in itself is probably not enough to keep
+ * people from printing their pattern. So it's
+ * up to pattern makes to add instructions to the
+ * pattern that allows people to draft it into the 
+ * fabric without printing it.
  *
  * @author Joost De Cock <joost@decock.org>
  * @copyright 2016 Joost De Cock
@@ -11,10 +18,17 @@ namespace Freesewing\Themes;
  */
 class Paperless extends Svg
 {
+    /** @var string $defs A grid to be added to the SVG defs */
     private $defs;
 
+    /**
+     * Adds the grid to the pattern, and stores pattern message in messages property
+     *
+     * @param \Freesewing\Patterns\* $pattern The pattern object
+     */
     public function themePattern($pattern)
     {
+        $this->messages = $pattern->getMessages();
         $units = $pattern->getUnits();
         $templateDir = $this->getTemplateDir();
         $this->defs = file_get_contents("$templateDir/defs/grid.".$units['out']);
@@ -27,12 +41,24 @@ class Paperless extends Svg
         }
     }
 
+    /**
+     * Adds templates to the SvgDocument, including extra grid svg def
+     *
+     * @param \Freesewing\SvgDocument $svgDocument The SvgDocument
+     */
     public function themeSvg(\Freesewing\SvgDocument $svgDocument)
     {
         $this->loadTemplates($svgDocument);
         $svgDocument->defs->add($this->defs);
     }
 
+    /**
+     * Adds a grid overlay to a pattern part
+     *
+     * @param \Freesewing\Part $part The pattern part
+     * @param string $units metric|imperial
+     *
+     */
     private function addGridToPart($part, $units = 'metric')
     {
         $topLeft = $part->boundary->getTopLeft();
@@ -53,7 +79,7 @@ class Paperless extends Svg
             $transX = $topLeft->getX();
             $transY = $topLeft->getY();
         }
-        // Grid margin
+        // Grid margin from config
         $gridMargin = $this->config['settings']['gridMargin'];
         $x += $gridMargin/2;
         $y += $gridMargin/2;

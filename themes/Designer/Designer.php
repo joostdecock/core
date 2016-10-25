@@ -1,9 +1,9 @@
 <?php
-
+/** Freesewing\Themes\Designer class */
 namespace Freesewing\Themes;
 
 /**
- * Freesewing\Themes\Designer class.
+ * Designer theme adds extra info for pattern designers.
  *
  * @author Joost De Cock <joost@decock.org>
  * @copyright 2016 Joost De Cock
@@ -11,37 +11,44 @@ namespace Freesewing\Themes;
  */
 class Designer extends Theme
 {
-    public function isDesigner()
-    {
-        return true;
-    }
+    /**
+     * Adds debug info to pattern
+     *
+     * @param \Freesewing\Pattern\* $pattern The pattern object
+     */
     public function themePattern($pattern)
     {
         foreach ($pattern->parts as $partKey => $part) {
             if ($part->getRender() == true) {
-                if (!isset($_REQUEST['only'])) {
-                    $this->debugPaths($partKey, $part);
-                }
+                // @todo Add a way to highlight a point (Like the old 'only' request parameter)
+                $this->debugPaths($partKey, $part);
                 $this->debugPoints($partKey, $part);
             }
         }
         $this->messages = $pattern->getMessages();
     }
 
+    /**
+     * Adds debug info to points in a part
+     *
+     * @param string $partKey Key of the part in the pattern parts array
+     * @param \Freesewing\Part $part The pattern part
+     */
     private function debugPoints($partKey, $part)
     {
         foreach ($part->points as $key => $point) {
-            if (isset($_REQUEST['only'])) {
-                $only = \Freesewing\Utils::asScrubbedArray($_REQUEST['only'], ',');
-                if (in_array($key, $only)) {
-                    $this->debugPoint($key, $point, $part, $partKey);
-                }
-            } else {
-                $this->debugPoint($key, $point, $part, $partKey);
-            }
+            $this->debugPoint($key, $point, $part, $partKey);
         }
     }
 
+    /**
+     * Adds debug info for a single point
+     *
+     * @param string $key Key of the point in the part's points array
+     * @param \Freesewing\Point $point The point to add debug for
+     * @param \Freesewing\Part $part The pattern part
+     * @param string $partKey Key of the part in the pattern parts array
+     */
     private function debugPoint($key, \Freesewing\Point $point, \Freesewing\Part $part, $partKey)
     {
         if (!isset($part->tmp['pointsThemed'][$key])) {
@@ -58,11 +65,23 @@ class Designer extends Theme
         }
     }
 
+    /**
+     * Adds extra debug info to a point description
+     *
+     * @param string $key Key of the point in the part's points array
+     * @param \Freesewing\Point $point The point to add debug for
+     */
     private function debugPointDescription($key, $point)
     {
         return $point->getDescription()." | Point $key (".$point->getX().','.$point->getY().')';
     }
 
+    /**
+     * Adds debug info for to paths in a part
+     *
+     * @param string $partKey Key of the part in the pattern parts array
+     * @param \Freesewing\Part $part The pattern part
+     */
     private function debugPaths($partKey, $part)
     {
         foreach ($part->paths as $path) {
@@ -70,6 +89,13 @@ class Designer extends Theme
         }
     }
 
+    /**
+     * Adds debug info for a path
+     *
+     * @param \Freesewing\Path $path The path to add debug for
+     * @param \Freesewing\Part $part The pattern part
+     * @param string $partKey Key of the part in the pattern parts array
+     */
     private function debugPath($path, $part, $partKey)
     {
         foreach (explode(' ', $path->getPath()) as $key) {
@@ -96,7 +122,7 @@ class Designer extends Theme
                     $type = 'path-point';
                 }
                 $title = $this->debugPointDescription($key, $part->points[$key]);
-                $attr = ['id' => "$partKey-$key", 'onmouseover' => "pointHover('$partKey-$key')", 'onmouseout' => "pointUnhover('$partKey-$key')"];
+                $attr = ['id' => "$partKey-$key", 'onmouseover' => "pointHover('$partKey-$key')"];
                 $part->newSnippet("$partKey-$key", $type, $key, $attr, $title);
                 $attr = ['id' => "$partKey-$key-tooltip", 'class' => 'tooltip', 'visibility' => 'hidden'];
                 $part->newText($key, $key, $title, $attr);

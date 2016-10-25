@@ -1,9 +1,14 @@
 <?php
-
+/** Freesewing\Themes\Info class */
 namespace Freesewing\Themes;
 
 /**
- * Freesewing\Themes\Info class.
+ * The Info theme is used by the Info service
+ *
+ * Unlike your typical pattern-drawing theme, this 
+ * one does not extend the abstract Theme class.
+ * That's because the info service just returns information
+ * and doesn't create a pattern.
  *
  * @author Joost De Cock <joost@decock.org>
  * @copyright 2016 Joost De Cock
@@ -11,6 +16,14 @@ namespace Freesewing\Themes;
  */
 class Info
 {
+    /**
+     * Returns a themed response with API information
+     *
+     * @param array $list The data to theme
+     * @param string $format The output format
+     *
+     * @return \Freesewing\Response $resonse A response object
+     */
     public function themeInfo($list, $format)
     {
         $response = new \Freesewing\Response();
@@ -28,6 +41,14 @@ class Info
         return $response;
     }
 
+    /**
+     * Returns a themed response with pattern information
+     *
+     * @param array $pattern The data to theme
+     * @param string $format The output format
+     *
+     * @return \Freesewing\Response $resonse A response object
+     */
     public function themePatternInfo($pattern, $format)
     {
         $response = new \Freesewing\Response();
@@ -45,6 +66,15 @@ class Info
         return $response;
     }
 
+    /**
+     * Returns HTML-formatted API information
+     *
+     * This is only called when the format is HTML
+     *
+     * @param array $list The data to theme
+     *
+     * @return string $html The themed HTML
+     */
     private function renderInfo($list)
     {
         $html = "<h3>Services</h3>\n";
@@ -75,6 +105,15 @@ class Info
         return $html;
     }
 
+    /**
+     * Returns HTML-formatted pattern information
+     *
+     * This is only called when the format is HTML
+     *
+     * @param array $list The data to theme
+     *
+     * @return string $html The themed HTML
+     */
     private function renderPatternInfo($list)
     {
         $pattern = $list['pattern'];
@@ -128,10 +167,18 @@ class Info
         return $html;
     }
 
+    /**
+     * Does nothing, but we need to implement this.
+     */
     public function cleanUp()
     {
     }
     
+    /**
+     * Returns the name of the theme
+     *
+     * @return string $name The name of the theme
+     */
     public function getThemeName()
     {
         return \Freesewing\Utils::getClassDir($this); 

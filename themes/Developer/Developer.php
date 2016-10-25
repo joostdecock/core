@@ -1,5 +1,5 @@
 <?php
-
+/** Freesewing\Themes\Designer class */
 namespace Freesewing\Themes;
 
 /**
@@ -12,7 +12,11 @@ namespace Freesewing\Themes;
 class Developer extends Theme
 {
     /**
-     * @codeCoverageIgnore
+     * Outputs (the entire context object as Kint debug + SVG) as JSON
+     *
+     * @param \Freesewing\Context $context The context object
+     *
+     * @param \Freesewing\Response $response The response object with Kint+SVG
      */
     public function themeResponse($context)
     {
@@ -24,7 +28,6 @@ class Developer extends Theme
         $response = new \Freesewing\Response();
         $response->setFormat('json');
         $response->setBody([
-            'status' => 'OK',
             'svg' => "{$context->svgDocument}",
             'debug' => $debug,
         ]);

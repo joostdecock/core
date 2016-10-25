@@ -255,12 +255,13 @@ class SvgRenderbot
     private function renderSnippet($snippet, $part)
     {
         $anchor = $snippet->getAnchor();
+        $attributes = $snippet->getAttributes();
         $svg = $this->nl();
         $svg .= '<use x="'.$anchor->getX().'" y="'.$anchor->getY().'" xlink:href="#'.$snippet->getReference().'" ';
-        if (!isset($snippet->attributes['id'])) {
+        if (!isset($attributes['id'])) {
             $svg .= 'id="'.$this->getUid().'" ';
         }
-        $svg .= Utils::flattenAttributes($snippet->getAttributes());
+        $svg .= Utils::flattenAttributes($attributes);
         $svg .= '>';
         $this->indent();
         $svg .= $this->nl();

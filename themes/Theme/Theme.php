@@ -1,9 +1,9 @@
 <?php
-
+/** Freesewing\Themes\Sampler class */
 namespace Freesewing\Themes;
 
 /**
- * Freesewing\Themes\Theme class.
+ * Abstract class for themes.
  *
  * @author Joost De Cock <joost@decock.org>
  * @copyright 2016 Joost De Cock
@@ -11,8 +11,14 @@ namespace Freesewing\Themes;
  */
 abstract class Theme
 {
+    /** @var array $messages Messages to include in the pattern */
     public $messages = array();
 
+    /**
+     * Constructor loads the Yaml config file into the config property
+     *
+     * @throws Exception if the Yaml file is invalid
+     */
     public function __construct()
     {
         if (is_readable($this->getConfigFile())) {
@@ -20,23 +26,39 @@ abstract class Theme
         }
     }
     
+    /**
+     * Returns the location of the theme config file
+     */
     public function getConfigFile()
     {
         return \Freesewing\Utils::getClassDir($this).'/config.yml';
     }
 
+    /**
+     * Loads message from pattern into messages property
+     *
+     * @param \Freesewing\Patterns\* $pattern The pattern object
+     */
     public function themePattern($pattern)
     {
         $this->messages = $pattern->getMessages();
-        $pattern->replace('__SCALEBOX_METRIC__', $pattern->t('__SCALEBOX_METRIC__'));
-        $pattern->replace('__SCALEBOX_IMPERIAL__', $pattern->t('__SCALEBOX_IMPERIAL__'));
     }
 
+    /**
+     * Adds templates to the SvgDocument
+     *
+     * @param \Freesewing\SvgDocument $svgDocument The SvgDocument
+     */
     public function themeSvg(\Freesewing\SvgDocument $svgDocument)
     {
         $this->loadTemplates($svgDocument);
     }
 
+    /**
+     * Adds templates to the SvgDocument
+     *
+     * @param \Freesewing\SvgDocument $svgDocument The SvgDocument
+     */
     public function loadTemplates($svgDocument)
     {
         $templates = $this->loadTemplateHierarchy();
@@ -76,6 +98,11 @@ abstract class Theme
         }
     }
 
+    /**
+     * Returns a Response object with our SvgDocument in it
+     *
+     * @param \Freesewing\context $context The context object
+     */
     public function themeResponse($context)
     {
         $response = new \Freesewing\Response();
@@ -85,10 +112,23 @@ abstract class Theme
         return $response;
     }
 
+    /**
+     * This does nothing, but gets called for themes who want it
+     */
     public function cleanUp()
     {
     }
 
+    /**
+     * Loads templates from themes and possible parent themes
+     *
+     * This makes sure that when you extend a theme, the templates 
+     * are extended to.
+     * That means that the parent theme templates are loaded, unless
+     * you override them in your extended theme.
+     *
+     * @return array $templates Array with template files
+     */
     public function loadTemplateHierarchy()
     {
         $locations = $this->getClassChain();
@@ -115,6 +155,17 @@ abstract class Theme
         return $templates;
     }
 
+    /**
+     * Returns an array of classes between this and the abstract theme class
+     *
+     * If your ptheme extends another theme (and another, and ...) this
+     * will construct the class chain up to the abstract theme class.
+     * This is needed for the theme to load template files hierarchically
+     * In other words, when you extend a theme, this makes sure the templates
+     * are extended too.
+     *
+     * @return array $locations An array of class directories
+     */ 
     public function getClassChain()
     {
         $reflector = new \ReflectionClass(get_class($this));
@@ -130,11 +181,24 @@ abstract class Theme
         return $locations;
     }
 
+    /**
+     * Returns the themes's template directory
+     *
+     * @return string $dir The directory path
+     */
     public function getTemplateDir()
     {
         return \Freesewing\Utils::getClassDir($this).'/templates';
     }
 
+    /**
+     * Returns the theme translation translation files
+     *
+     * @param string $locale The primary locale
+     * @param string $altloc The fallback locale
+     *
+     * @return array $translations An array of translation files
+     */
     public function getTranslationFiles($locale, $altloc)
     {
         $locations = $this->getClassChain();
@@ -153,11 +217,28 @@ abstract class Theme
         return $translations;
     }
 
+    /**
+     * Themes a path for the sampler servic
+     *
+     * This is only needed for themes that are used by the sampler serivce
+     * But heck, best include it here just in case
+     *
+     * @param int $step Current step (in the sampler)
+     * @param int $steps Total steps (in the sampler)
+     *
+     * @return void null
+     *
+     */ 
     public function samplerPathStyle($step, $totalSteps)
     {
         return null;
     }
 
+    /**
+     * Returns the name of the theme
+     *
+     * @return string $name The theme name
+     */
     public function getThemeName()
     {
         return \Freesewing\Utils::getClassDir($this); 

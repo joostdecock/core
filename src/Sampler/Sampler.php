@@ -1,5 +1,5 @@
 <?php
-/** Freesewing\Boundary class */
+/** Freesewing\Sampler class */
 namespace Freesewing;
 
 /**

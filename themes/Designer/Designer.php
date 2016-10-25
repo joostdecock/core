@@ -18,7 +18,7 @@ class Designer extends Theme
     public function themePattern($pattern)
     {
         foreach ($pattern->parts as $partKey => $part) {
-            if ($part->render) {
+            if ($part->getRender() == true) {
                 if (!isset($_REQUEST['only'])) {
                     $this->debugPaths($partKey, $part);
                 }
@@ -72,10 +72,10 @@ class Designer extends Theme
 
     private function debugPath($path, $part, $partKey)
     {
-        foreach (explode(' ', $path->path) as $key) {
+        foreach (explode(' ', $path->getPath()) as $key) {
             $key = rtrim($key);
 
-            if ($key != '' && $path->isAllowedPathCommand($key)) {
+            if ($key != '' && \Freesewing\Utils::isAllowedPathCommand($key)) {
                 $command = $key;
                 if ($command == 'C') {
                     $curveSteps = 1;

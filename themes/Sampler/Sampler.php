@@ -30,15 +30,20 @@ class Sampler extends Theme
     public function samplerPathStyle($step, $totalSteps)
     {
         $color = $this->pickColor($step, $totalSteps);
+
         return "stroke: $color;";
     }
 
     private function pickColor($step, $steps)
     {
-        if($steps == 1) $hue = 269;
-        else $hue = $step*(269/($steps-1));
+        if ($steps == 1) {
+            $hue = 269;
+        } else {
+            $hue = $step * (269 / ($steps - 1));
+        }
         $saturation = 55;
         $lightness = 50;
+
         return "hsl($hue, $saturation%, $lightness%)";
-    } 
+    }
 }

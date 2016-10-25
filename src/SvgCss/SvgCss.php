@@ -1,9 +1,9 @@
 <?php
-
+/** Freesewing\SvgCss class */
 namespace Freesewing;
 
 /**
- * Freesewing\SvgCss class.
+ * Holds css style for an SVG document.
  *
  * @author Joost De Cock <joost@decock.org>
  * @copyright 2016 Joost De Cock
@@ -11,15 +11,35 @@ namespace Freesewing;
  */
 class SvgCss extends SvgBlock
 {
+    /**
+     * Returns the css as a style block
+     *
+     * Note that we are returning this as a string,
+     * using the magic __toString() method
+     * which is defined in the parent class
+     *
+     * @see \Freesewing\SvgBlock::__toString()
+     *
+     * @return string svg style block
+     */
     public function load()
     {
-        if($this->getData() === false) return false;
-        else {
-            // Need to make sure @includes go at the top
+        if ($this->getData() === false) {
+            return false;
+        } else {
+            // Need to make sure @include lines go at the top
             return  "\n<style type=\"text/css\">\n    <![CDATA[\n".$this->sortCss()."\n    ]]>\n</style>\n";
         }
     }
 
+    /**
+     * Makes sure css @include lines go first
+     *
+     * CSS requires @include lines to go first
+     * So we sort them to have these at the top
+     *
+     * @return string The sorted css
+     */
     private function sortCss()
     {
         $theseFirst = '';

@@ -17,10 +17,10 @@ class JoostBodyBlock extends Pattern
 
         $this->draftBackBlock($model);
         $this->finalizeBackBlock($model);
-        
+
         $this->draftFrontBlock($model);
         $this->finalizeFrontBlock($model);
-        
+
         $this->draftSleeveBlock($model);
         $this->finalizeSleeveBlock($model);
     }
@@ -100,9 +100,9 @@ class JoostBodyBlock extends Pattern
         // Paths
         $path = 'M 1 L 2 L 3 L 4 L 6 L 5 C 13 16 14 C 15 18 10 C 17 19 12 L 8 C 20 1 1 z';
         $p->newPath('seamline', $path);
-        
-        // Sampler
-        $p->paths['seamline']->setSampler(true);
+
+        // Mark path for sample service
+        $p->paths['seamline']->setSample(true);
     }
 
     public function finalizeBackBlock($model)
@@ -126,9 +126,9 @@ class JoostBodyBlock extends Pattern
 
         $path = 'M 9 L 2 L 3 L 4 L 6 L 5 C 13 16 14 C 15 18 10 C 17 19 12 L 8 C 20 21 9 z';
         $p->newPath('seamline', $path);
-        
-        // Sampler
-        $p->paths['seamline']->setSampler(true);
+
+        // Mark path for sample service
+        $p->paths['seamline']->setSample(true);
     }
 
     public function finalizeFrontBlock($model)
@@ -220,9 +220,9 @@ class JoostBodyBlock extends Pattern
 
         $path = 'M 31 L -5 C -5 20 16 C 21 10 10 C 10 22 17 C 23 28 30 C 29 25 18 C 24 11 11 C 11 27 19 C 26 5 5 L 32 z';
         $p->newPath('seamline', $path);
-        
-        // Sampler
-        $p->paths['seamline']->setSampler(true);
+
+        // Mark path for sample service
+        $p->paths['seamline']->setSample(true);
     }
 
     public function finalizeSleeveBlock($model)

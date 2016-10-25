@@ -1,9 +1,9 @@
 <?php
-
+/** Freesewing\Path class */
 namespace Freesewing;
 
 /**
- * Freesewing\Path class.
+ * Holds SVG paths
  *
  * @author Joost De Cock <joost@decock.org>
  * @copyright 2016 Joost De Cock
@@ -11,89 +11,152 @@ namespace Freesewing;
  */
 class Path
 {
-    public $path = null;
-    public $attributes = array();
+    /** 
+     * @var \Freesewing\Boundary $boundary The path boundary 
+     * 
+     * This is public so we can call the boundary methods
+     * from the path, like: $path->boundary->getX()
+     **/
     public $boundary = null;
-    public $direction;
-    public $render = true;
-    public $sampler = false;
 
-    public function setSampler($bool)
+    /** @var bool $sample To sample this path or not */
+    private $sample = false; 
+
+    /** @var bool $render To render this path or not */
+    private $render = true; 
+    
+    /** @var array $attributes The path attributest */
+    private $attributes = array();
+    
+    /** @var string $path The SVG pathstring */
+    private $path = null;
+
+    /**
+     * Marks path to be sampled by the sample service
+     *
+     * @param bool $bool True to sample this path. False to not sample it.
+     */
+    public function setSample($bool=true)
     {
-        $this->sampler = $bool;
+        $this->sample = $bool;
     }
 
+    /**
+     * Returns the sample property
+     * 
+     * @return bool 
+     */
+    public function getSample()
+    {
+        return $this->sample;
+    }
+
+    /**
+     * Stores path boundary
+     * 
+     * @param \Freesewing\Boundary $boundary The path boundary object.
+     */
+    public function setBoundary($boundary)
+    {
+        $this->boundary = $boundary;
+    }
+
+    /**
+     * Returns the boundary property
+     * 
+     * @return \Freesewing\Boundary
+     */
+    public function getBoundary()
+    {
+        return $this->boundary;
+    }
+
+    /**
+     * Marks path to be rendered by the draft service
+     * 
+     * @param bool $bool True to render this path. False to not render it.
+     */
     public function setRender($bool)
     {
-        $this->sampler = $bool;
+        $this->render = $bool;
     }
 
+    /**
+     * Returns the render property
+     * 
+     * @return bool 
+     */
     public function getRender()
     {
         return $this->render;
     }
 
+    /**
+     * Sanitizes input and sets the path property
+     * 
+     * @param string $path The pathstring 
+     */
     public function setPath($path)
     {
-        // Weeding out double spaces
         $this->path = trim(preg_replace('/ {2,}/', ' ', $path));
     }
 
+    /**
+     * Returns the path property, which is the pathstring
+     * 
+     * @return string
+     */
     public function getPath()
     {
         return $this->path;
     }
 
-    public function setDirection($direction)
-    {
-        if ($direction == 'ccw') {
-            $this->direction = 'ccw';
-        } else {
-            $this->direction = 'cw';
-        }
-    }
-
-    public function getDirection()
-    {
-        return $this->direction;
-    }
-
+    /**
+     * Stores path attributes
+     * 
+     * @param array $attributes 
+     */
     public function setAttributes($attributes)
     {
         $this->attributes = $attributes;
     }
 
+    /**
+     * Returns the attributes property
+     * 
+     * @return array 
+     */
     public function getAttributes()
     {
         return $this->attributes;
     }
 
+    /**
+     * Calculates and returns bounding box of a path
+     * 
+     * We need the bounding box of a path to figure out 
+     * how large a pattern piece is. Something we need to know
+     * in order to lay them out in the pattern later.
+     *
+     * @param \Freesewing\Part $part The part that this path is defined in 
+     *
+     * @throws InvalidArgumentException When the path references a non-existing point 
+     *
+     * @return \Freesewing\Boundary 
+     */
     public function findBoundary($part)
     {
         foreach ($part->paths as $pathName => $pathObject) {
-            /*
-             * breaking path into array
-             **/
+            /* Break path into array */
             $pathAsArray = Utils::asScrubbedArray($pathObject->getPath());
             foreach ($pathAsArray as $index => $data) {
-                /*
-                 * Are we dealing with a command or point index?
-                 **/
-                if ($this->isAllowedPathCommand($data)) {
-                    /*
-                     * This is a command
-                     **/
+                /* Are we dealing with a command or point index? */
+                if (Utils::isAllowedPathCommand($data)) { // Command
                     $command = $data;
                 }
-                if (!$this->isAllowedPathCommand($data)) {
-                    /*
-                     * This is a point index
-                     **/
+                if (!Utils::isAllowedPathCommand($data)) { // Point index
                     $pointIndex = $data;
-                    if (!isset($part->points[$pointIndex])) {
-                        /*
-                         * Reference to non-existing point. Bail out
-                         **/
+                    if (!isset($part->points[$pointIndex])) { // Reference to non-existing point. Bail out
                         throw new \InvalidArgumentException('SVG path references non-existing point '.$pointIndex);
                     }
                     if (!@is_object($topLeft)) {
@@ -131,11 +194,9 @@ class Path
                                 }
                             break;
                             case 'C':
-                                // Bezier curves need a bit more work
                                 /*
-                                 * Bezier curves need a bit more work.
-                                 * We need to calculate their bounding box by stepping through them.
-                                 * We need ther start and finish point + control points, and pass that to findBezierBoundary()
+                                 * Bezier curves need a bit more work. We calculate their bounding box by stepping through them.
+                                 * We need their start and finish point + control points, to pass to $this->findBezierBoundary()
                                  **/
                                 if ($pathAsArray[$index - 1] == 'C') {
                                     /*
@@ -179,6 +240,15 @@ class Path
         return $boundary;
     }
 
+    /**
+     * Determines whether a path is closed
+     *
+     * The SVG path command 'z' closes a path.
+     * So this simply checks to see if the last step
+     * in the pathstring is z or Z.
+     *
+     * @return bool True if it is. False if it is not closed.
+     */
     public function isClosed()
     {
         if (substr(trim(strtolower($this->getPath())), -2) == ' z') {
@@ -188,12 +258,26 @@ class Path
         }
     }
 
+    /**
+     * Finds the boundary of a Bezier curve
+     *
+     * This calculates the bounding box by walking through
+     * the curve while keeping an eye on the coordinates
+     * and registering the most topLeft and bottomRight point
+     * we encounter.
+     *
+     * @param \Freesewing\Point $start The start of the curve
+     * @param \Freesewing\Point $cp1 The control point for the start of the curve
+     * @param \Freesewing\Point $cp2 The control point for the end of the curve
+     * @param \Freesewing\Point $end The end of the curve
+     * @return bool True if it is. False if it is not closed.
+     */
     private function findBezierBoundary($start, $cp1, $cp2, $end)
     {
         for ($i = 0; $i <= 100; ++$i) {
             $t = $i / 100;
-            $x = $this->bezierPoint($t, $start->getX(), $cp1->getX(), $cp2->getX(), $end->getX());
-            $y = $this->bezierPoint($t, $start->getY(), $cp1->getY(), $cp2->getY(), $end->getY());
+            $x = Utils::bezierPoint($t, $start->getX(), $cp1->getX(), $cp2->getX(), $end->getX());
+            $y = Utils::bezierPoint($t, $start->getY(), $cp1->getY(), $cp2->getY(), $end->getY());
             if ($i == 0) {
                 $minX = $x;
                 $minY = $y;
@@ -232,31 +316,15 @@ class Path
         return $boundary;
     }
 
-    private function bezierPoint($t, $start, $cp1, $cp2, $end)
-    {
-        /* wikipedia.org/wiki/B%C3%A9zier_curve#Cubic_B.C3.A9zier_curves */
-        return $start * (1.0 - $t) * (1.0 - $t) * (1.0 - $t)
-            + 3.0 * $cp1 * (1.0 - $t) * (1.0 - $t) * $t
-            + 3.0 * $cp2 * (1.0 - $t) * $t * $t
-            + $end * $t * $t * $t;
-    }
-
-    public function isAllowedPathCommand($command)
-    {
-        $allowedPathCommands = [
-            'M',
-            'L',
-            'C',
-            'Z',
-            'z',
-        ];
-        if (in_array($command, $allowedPathCommands)) {
-            return true;
-        } else {
-            return false;
-        }
-    }
-
+    /**
+     * Breaks up a path into an array if stesps
+     *
+     * A path can be made up of multiple draw operations.
+     * This breaks the path apart to a single operation (step)
+     * like a line or curve.
+     *
+     * @return array Array of pathstrings for the individual steps.
+     */
     public function breakUp()
     {
         $array = Utils::asScrubbedArray($this->getPath());

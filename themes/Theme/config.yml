@@ -11,4 +11,5 @@ templates:
         - "comments/header"
     attributes: 
         - "attributes/svg"
-
+settings:
+    partMargin: 5

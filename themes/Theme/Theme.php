@@ -13,6 +13,18 @@ abstract class Theme
 {
     public $messages = array();
 
+    public function __construct()
+    {
+        if (is_readable($this->getConfigFile())) {
+            $this->config = \Freesewing\Yamlr::loadYamlFile($this->getConfigFile());
+        }
+    }
+    
+    public function getConfigFile()
+    {
+        return \Freesewing\Utils::getClassDir($this).'/config.yml';
+    }
+
     public function themePattern($pattern)
     {
         $this->messages = $pattern->getMessages();
@@ -59,7 +71,9 @@ abstract class Theme
             }
         }
 
-        if($this->messages !== false) $svgDocument->footerComments->add(implode("\n", $this->messages));
+        if ($this->messages !== false) {
+            $svgDocument->footerComments->add(implode("\n", $this->messages));
+        }
     }
 
     public function themeResponse($context)
@@ -83,18 +97,21 @@ abstract class Theme
             if (is_readable("$location/config.yml")) {
                 $dir = "$location/templates";
                 $config = \Freesewing\Yamlr::loadYamlFile("$location/config.yml");
-                foreach ($config['templates'] as $type => $entries) {
-                    foreach ($entries as $entry) {
-                        if (!isset($templates[$type][$entry])) {
-                            $template = "$location/templates/$entry";
-                            if (is_readable($template)) {
-                                $templates[$type][$entry] = file_get_contents($template);
+                if(isset($config['templates'])) {
+                    foreach ($config['templates'] as $type => $entries) {
+                        foreach ($entries as $entry) {
+                            if (!isset($templates[$type][$entry])) {
+                                $template = "$location/templates/$entry";
+                                if (is_readable($template)) {
+                                    $templates[$type][$entry] = file_get_contents($template);
+                                }
                             }
                         }
                     }
                 }
             }
         }
+
         return $templates;
     }
 
@@ -115,10 +132,7 @@ abstract class Theme
 
     public function getTemplateDir()
     {
-        $reflector = new \ReflectionClass(get_class($this));
-        $filename = $reflector->getFileName();
-
-        return dirname($filename).'/templates';
+        return \Freesewing\Utils::getClassDir($this).'/templates';
     }
 
     public function getTranslationFiles($locale, $altloc)
@@ -138,9 +152,14 @@ abstract class Theme
 
         return $translations;
     }
-    
+
     public function samplerPathStyle($step, $totalSteps)
-    { 
+    {
         return null;
+    }
+
+    public function getThemeName()
+    {
+        return \Freesewing\Utils::getClassDir($this); 
     }
 }

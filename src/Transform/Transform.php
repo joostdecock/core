@@ -1,9 +1,9 @@
 <?php
-
+/** Freesewing\Transform class */
 namespace Freesewing;
 
 /**
- * Freesewing\Transform class.
+ * Holds an SVG transform.
  *
  * @author Joost De Cock <joost@decock.org>
  * @copyright 2016 Joost De Cock
@@ -11,11 +11,31 @@ namespace Freesewing;
  */
 class Transform
 {
+    /** @var float $x X value */
     private $x = null;
+    
+    /** @var float $r Y value */
     private $y = null;
+    
+    /** @var float $angle Rotation angle */
     private $angle = null;
+
+    /** @var string $type Transform type */
     private $type = null;
 
+    /**
+     * Transform constructor with some sanity checks
+     *
+     * This creates a new transform, and checks that the values you pass it makes sense
+     * It arguably does too much for a constructor
+     *
+     * @param string $type The type of transform. One of translate|scale|rotate
+     * @param float $x X value for the transform
+     * @param float $y Optional Y value for the transform
+     * @param float $angle Optional angle for rotate transform
+     *
+     * @throws InvalidArgumentException If you specify an unsupported type, pass wrong parameters, or insufficient parameters.
+     */
     public function __construct($type, $x = null, $y = null, $angle = null)
     {
         $allowedTypes = [
@@ -61,26 +81,51 @@ class Transform
         }
     }
 
+    /**
+     * Returns the x property
+     *
+     * @return float $x The X value of the transform
+     */
     public function getX()
     {
         return $this->x;
     }
 
+    /**
+     * Returns the x property
+     *
+     * @return float $x The X value of the transform
+     */
     public function getY()
     {
         return $this->y;
     }
 
+    /**
+     * Returns the y property
+     *
+     * @return float $y The Y value of the transform
+     */
     public function getType()
     {
         return $this->type;
     }
 
+    /**
+     * Returns the angle property
+     *
+     * @return float $angle The angle value of a rotate transform
+     */
     public function getAngle()
     {
         return $this->angle;
     }
 
+    /**
+     * Returns a transform as the valiefor an SVG transform attribute
+     *
+     * @return string The SVG code for the transform
+     */
     public function asSvgTransform()
     {
         switch ($this->type) {
@@ -98,6 +143,13 @@ class Transform
         return $transform;
     }
 
+    /**
+     * Returns an array of transforms as an SVG transform attribute
+     *
+     * @param array $array An array of transforms
+     *
+     * @return string The SVG code for the transforms
+     */
     public function asSvgParameter($array)
     {
         $svg = '';

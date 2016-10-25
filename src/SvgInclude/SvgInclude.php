@@ -1,9 +1,9 @@
 <?php
-
+/** Freesewing\SvgInclude */
 namespace Freesewing;
 
 /**
- * Freesewing\SvgInclude class.
+ * Holds SVG code to be included in output, no questions asked
  *
  * @author Joost De Cock <joost@decock.org>
  * @copyright 2016 Joost De Cock
@@ -11,13 +11,24 @@ namespace Freesewing;
  */
 class SvgInclude
 {
+    /** @var string $content SVG content to include */
     private $content;
 
+    /**
+     * Sets the content property
+     *
+     * @param string $content 
+     */
     public function set($content)
     {
         $this->content = $content;
     }
 
+    /**
+     * Returns the content property
+     *
+     * @return string 
+     */
     public function get()
     {
         return $this->content;

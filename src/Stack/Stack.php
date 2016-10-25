@@ -1,9 +1,15 @@
 <?php
-
+/** Freesewing\Boundary class */
 namespace Freesewing;
 
 /**
- * Freesewing\Stack class.
+ * A stack you can push data onto or replace 1 element with many
+ *
+ * This stack is used for offsetting paths. When doing so, we 
+ * split a path into individual steps. Sometimes, we need to add
+ * steps in between those steps (to fill gaps for example).
+ * This stack class handles this for us. We can push data 
+ * on a stack, or replace one element with several taking its place.
  *
  * @author Joost De Cock <joost@decock.org>
  * @copyright 2016 Joost De Cock
@@ -11,8 +17,14 @@ namespace Freesewing;
  */
 class Stack
 {
+    /** @var array $items Items on the stack */
     public $items = array();
 
+    /**
+     * Adds items to the stack
+     *
+     * @param array items The items to add
+     */
     public function push($items)
     {
         foreach ($items as $item) {
@@ -20,6 +32,12 @@ class Stack
         }
     }
 
+    /**
+     * Replaces an item on the stack
+     *
+     * @param string $search The content of the item to replace
+     * @param array $replace The replacement items
+     */
     public function replace($search, $replace)
     {
         $targetKey = false;

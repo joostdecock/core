@@ -1,9 +1,16 @@
 <?php
-
+/** Freesewing\Part class */
 namespace Freesewing;
 
 /**
- * Freesewing\Part class.
+ * Parts are what patterns are made of.
+ *
+ * This part class is crucial in constructing patterns.
+ * A part is a pattern piece (for example the yoke on a shirt).
+ * It is a self-contained unit that has all the information to render
+ * that piece of the pattern.
+ * It also has a bunch of helper functions that make the life of a 
+ * pattern designer easier.
  *
  * @author Joost De Cock <joost@decock.org>
  * @copyright 2016 Joost De Cock
@@ -11,34 +18,90 @@ namespace Freesewing;
  */
 class Part
 {
+    /** @var array List of points */
     public $points = array();
+
+    /** @var array List of snippets */
     public $snippets = array();
+
+    /** @var array List of texts */
     public $texts = array();
+
+    /** @var array List of textsOnPath */
     public $textsOnPath = array();
+
+    /** @var array List of paths */
     public $paths = array();
+
+    /** @var array List of transforms */
     public $transforms = array();
+
+    /** @var string The part title */
     public $title = null;
+
+    /** @var \Freesewing\Boundary The part boundary */
     public $boundary = array();
-    public $render = true;
+
+    /** @var bool Percentage our path offset is allowed to deviate */
     public $maxOffsetTolerance = 5;
 
-    private $steps = 100;
+    /** @var int Number of steps when walking a path */
+    public $steps = 100;
 
+    /** @var bool To render this part or not */
+    private $render = true;
+    
+    /**
+     * Sets the render property.
+     *
+     * @param bool True to render, false to not render
+     */
     public function setRender($bool)
     {
         $this->render = $bool;
     }
 
+    /**
+     * Returns the render property.
+     *
+     * @return bool True to render, false to not render
+     */
+    public function getRender()
+    {
+        return $this->render;
+    }
+
+    /**
+     * Sets the title property.
+     *
+     * @param string
+     */
     public function setTitle($title)
     {
         $this->title = $title;
     }
 
+    /**
+     * Returns the title property.
+     *
+     * @return string
+     */
     public function getTitle()
     {
         return $this->title;
     }
 
+    /**
+     * Creates a path and adds it to $this->paths.
+     *
+     * This takes a pathString and optional attrinutes 
+     * and creates a new \Freesewing\Path with it
+     * that it then adds to the paths array with key $key
+     *
+     * @param string $key Index in the paths array
+     * @param string $pathString The pathstring in unrendered format
+     * @param array $attributes Optional attributes of the path
+     */
     public function newPath($key, $pathString, $attributes = null)
     {
         $path = new \Freesewing\Path();
@@ -47,6 +110,18 @@ class Part
         $this->addPath($key, $path);
     }
 
+    /**
+     * Creates a path and adds it to $this->points.
+     *
+     * This takes a x and y coordinate with optional description 
+     * and creates a new \Freesewing\Point with it
+     * that it then adds to the points array with key $key
+     *
+     * @param string $key Index in the points array
+     * @param float $x X-coordinate
+     * @param float $y Y-coordinate
+     * @param string $description Optional description for the point
+     */
     public function newPoint($key, $x, $y, $description = null)
     {
         $point = new \Freesewing\Point();
@@ -56,6 +131,21 @@ class Part
         $this->addPoint($key, $point);
     }
 
+    /**
+     * Creates a snippet and adds it to $this->snippets.
+     *
+     * This takes a defs reference 
+     * (the id of something defined in the defs section of the SVG document) 
+     * and anchor with optional attributes and description 
+     * and creates a new \Freesewing\Snippet with it
+     * that it then adds to the snippets array with key $key
+     *
+     * @param string $key Index in the snippets array
+     * @param string $reference defs reference
+     * @param string $anchorKey Key of the point to anchor this on
+     * @param array $attributes Optional array of attributes for the snippet
+     * @param string $description Optional description for the point
+     */
     public function newSnippet($key, $reference, $anchorKey, $attributes = null, $description = null)
     {
         $snippet = new \Freesewing\SvgSnippet();
@@ -66,6 +156,15 @@ class Part
         $this->addSnippet($key, $snippet);
     }
 
+    /**
+     * Creates an include and adds it to $this->includes.
+     *
+     * This takes content and creates a new \Freesewing\SvgInclude with it
+     * that it then adds to the includes array with key $key
+     *
+     * @param string $key Index in the includes array
+     * @param string $content SVG content to include
+     */
     public function newInclude($key, $content)
     {
         $include = new \Freesewing\SvgInclude();
@@ -73,6 +172,18 @@ class Part
         $this->addInclude($key, $include);
     }
 
+    /**
+     * Creates text and adds it to $this->texts.
+     *
+     * This takes text, anchor reference and optional attributes
+     * and creates a new \Freesewing\Text with it
+     * that it then adds to the texts array with key $key
+     *
+     * @param string $key Index in the texts array
+     * @param string $anchorKey Key of the point to anchor this on
+     * @param string $msg The message of the text
+     * @param array $attributes Optional array of attributes for the snippet
+     */
     public function newText($key, $anchorKey, $msg, $attributes = null)
     {
         $text = new \Freesewing\Text();
@@ -82,13 +193,22 @@ class Part
         $this->addText($key, $text);
     }
 
-    public function addTitle($anchorKey, $nr, $title, $msg='')
-    {
-        $this->newText('partNumber', $anchorKey, $nr, ['class' => 'part-nr']);
-        $this->newText('partTitle', $anchorKey, $title, ['class' => 'part-title']);
-        $this->newText('partMsg', $anchorKey, $msg, ['class' => 'part-msg']);
-    }
-
+    /**
+     * Creates a note and adds it to $this->notes.
+     *
+     * This takes text, anchor reference and optional attributes
+     * along with a direction, length, and offset
+     * and creates a new \Freesewing\Note with it
+     * that it then adds to the notes array with key $key
+     *
+     * @param string $key Index in the notes array
+     * @param string $anchorKey Key of the point to anchor this on
+     * @param string $msg The message of the note
+     * @param string $direction Direction to where the note arrow points 
+     * @param string $length Length of the note arrow
+     * @param string $offset How far from the anchor does the note arrow start
+     * @param array $attributes Optional array of attributes for the snippet
+     */
     public function newNote($key, $anchorKey, $msg, $direction = 3, $length = 25, $offset = 3, $attributes = null)
     {
         $note = new \Freesewing\Note();
@@ -122,6 +242,18 @@ class Part
         $this->addNote($key, $note);
     }
 
+    /**
+     * Creates textOnPath and adds it to $this->notes.
+     *
+     * This takes text, path string and optional attributes
+     * and creates a new \Freesewing\TextOnPath with it
+     * that it then adds to the textsOnPath array with key $key
+     *
+     * @param string $key Index in the notes array
+     * @param string $pathString An unrendered SVG path string 
+     * @param string $msg The message of the note
+     * @param array $attributes Optional array of attributes for the TextOnPath
+     */
     public function newTextOnPath($key, $pathString, $msg, $attributes = null)
     {
         $textOnPath = new \Freesewing\TextOnPath();
@@ -133,6 +265,19 @@ class Part
         $this->addTextOnPath($key, $textOnPath);
     }
 
+    /**
+     * Returns a point object.
+     *
+     * This takes a x and y coordinate with optional description 
+     * and creates a new \Freesewing\Point with it
+     * that it then returns
+     *
+     * @param float $x X-coordinate
+     * @param float $y Y-coordinate
+     * @param string $description Optional description for the point
+     *
+     * @return \Freesewing\Point
+     */
     public function createPoint($x, $y, $description = null)
     {
         $point = new \Freesewing\Point($key);
@@ -143,6 +288,37 @@ class Part
         return $point;
     }
 
+    /**
+     * Adds a title to the part, made up of a nr, title and message
+     *
+     * This takes 3 elements (a nr, a short title, and a longer message)
+     * and adds them as 3 texts to the patter anchored at $anchorKey
+     * Don't confuse this with the title attribute of a part, which is 
+     * internal. This gets rendered on the pattern.
+     *
+     * @param string $anchorKey ID of the point to anchor the title on
+     * @param string $nr Number of the part to print on the pattern
+     * @param string $title Title of the part to print on the pattern
+     * @param string $msg Message to print on the pattern
+     */
+    public function addTitle($anchorKey, $nr, $title, $msg = '')
+    {
+        $this->newText('partNumber', $anchorKey, $nr, ['class' => 'part-nr']);
+        $this->newText('partTitle', $anchorKey, $title, ['class' => 'part-title']);
+        $this->newText('partMsg', $anchorKey, $msg, ['class' => 'part-msg']);
+    }
+
+    /**
+     * Adds a \Freesewing\Point to $this->points.
+     *
+     * This takes a pre-created point object 
+     * and adds it to the points array with key $key.
+     * If the optional description is set, it will set the description on the point
+     *
+     * @param string $key Index in the points array
+     * @param \Freesewing\Point $point The point object
+     * @param string $description Optional description for the point
+     */
     public function addPoint($key, \Freesewing\Point $point, $description = null)
     {
         if ($description !== null) {
@@ -151,48 +327,118 @@ class Part
         $this->points[$key] = $point;
     }
 
+    /**
+     * Adds a \Freesewing\Snippet to $this->snippets.
+     *
+     * This takes a pre-created snippet object 
+     * and adds it to the snippets array with key $key.
+     *
+     * @param string $key Index in the snippets array
+     * @param \Freesewing\Snippet $snippet The snippet object
+     */
     public function addSnippet($key, \Freesewing\SvgSnippet $snippet)
     {
         $this->snippets[$key] = $snippet;
     }
 
+    /**
+     * Adds a \Freesewing\SvgInclude to $this->includes.
+     *
+     * This takes a pre-created SvgInclude object 
+     * and adds it to the includes array with key $key.
+     *
+     * @param string $key Index in the includes array
+     * @param \Freesewing\SvgInclude $include The include object
+     */
     public function addInclude($key, \Freesewing\SvgInclude $include)
     {
         $this->includes[$key] = $include;
     }
 
+    /**
+     * Adds a \Freesewing\Text to $this->texts.
+     *
+     * This takes a pre-created text object 
+     * and adds it to the texts array with key $key.
+     *
+     * @param string $key Index in the includes array
+     * @param \Freesewing\Text $text The text object
+     */
     public function addText($key, \Freesewing\Text $text)
     {
         $this->texts[$key] = $text;
     }
 
+    /**
+     * Adds a \Freesewing\Note to $this->notes.
+     *
+     * This takes a pre-created note object 
+     * and adds it to the notes array with key $key.
+     *
+     * @param string $key Index in the notes array
+     * @param \Freesewing\Note $note The note object
+     */
     public function addNote($key, \Freesewing\Note $note)
     {
         $this->notes[$key] = $note;
     }
 
+    /**
+     * Adds a \Freesewing\TextOnPath to $this->textsOnPath.
+     *
+     * This takes a pre-created TextOnPath object 
+     * and adds it to the textsOnPath array with key $key.
+     *
+     * @param string $key Index in the textsOnPath array
+     * @param \Freesewing\TextOnPath $textOnPath The TextOnPath object
+     */
     public function addTextOnPath($key, \Freesewing\TextOnPath $textOnPath)
     {
         $this->textsOnPath[$key] = $textOnPath;
     }
 
+    /**
+     * Adds a \Freesewing\Path to $this->paths.
+     *
+     * This takes a pre-created Path object 
+     * and adds it to the paths array with key $key.
+     *
+     * @param string $key Index in the paths array
+     * @param \Freesewing\Path $path The path object
+     */
     public function addPath($key, \Freesewing\Path $path)
     {
         $this->paths[$key] = $path;
     }
 
+    /**
+     * Adds a \Freesewing\Transform to $this->transforms.
+     *
+     * This takes a pre-created transform object 
+     * and adds it to the transforms array with key $key.
+     *
+     * @param string $key Index in the transforms array
+     * @param \Freesewing\Transform $transform The transform object
+     */
     public function addTransform($key, \Freesewing\Transform $transform)
     {
         $this->transforms[$key] = $transform;
     }
 
+    /**
+     * Calculates a bounding box and adds it as a \Freesewing\Boundary to $this->boundary.
+     *
+     * This figures out the bounding box for a part and adds it as a boundary object
+     *
+     * @param float margin The margin to add to the part
+     */
     public function addBoundary($margin = 0)
     {
         if (count($this->paths) == 0) {
             return false;
         }
         foreach ($this->paths as $path) {
-            $path->boundary = $path->findBoundary($this);
+            $path->setBoundary($path->findBoundary($this));
             if (!@is_object($topLeft)) {
                 $topLeft = new \Freesewing\Point('topLeft');
                 $topLeft->setX($path->boundary->topLeft->x);
@@ -224,19 +470,36 @@ class Part
         $this->boundary->setBottomRight($bottomRight);
     }
 
-    public function offsetPathString($newKey, $pathString, $distance = 10, $render = false, $attributes = null)
+    /**
+     * Like offsetPath() but takes a pathstring rather than a \Freesewing\Path object
+     * 
+     * @param string $key Index in the paths array
+     * @param string $pathString The unrendered SVG pathstring
+     * @param float $distance The distance to offset the path by
+     * @param bool $render Render property of the new path
+     * @param array $attributes Optional array of path attributes
+     */
+    public function offsetPathString($key, $pathString, $distance = 10, $render = false, $attributes = null)
     {
         $this->newPath('.offsetHelper', $pathString);
-        $this->offsetPath($newKey, '.offsetHelper', $distance, $render, $attributes);
+        $this->offsetPath($key, '.offsetHelper', $distance, $render, $attributes);
     }
 
+    /**
+     * Creates a new path offset from an exsiting path
+     * 
+     * @param string $newKey Index in the paths array for the new path
+     * @param string $srcKey Index in the paths array of the source path
+     * @param float $distance The distance to offset the path by
+     * @param bool $render Render property of the new path
+     * @param array $attributes Optional array of path attributes
+     */
     public function offsetPath($newKey, $srcKey, $distance = 10, $render = false, $attributes = null)
     {
         $path = $this->paths[$srcKey];
-
         $stack = $this->pathOffsetAsStack($path, $distance, $newKey);
         $stack = $this->fillPathStackGaps($stack, $path);
-        $pathString = $this->pathStackToPath($newKey, $stack, $render, $path);
+        $pathString = $this->pathStackToPath($stack, $path);
         $this->newPath($newKey, $pathString, $attributes);
         if (!$render) {
             $this->paths[$newKey]->setRender(false);
@@ -244,6 +507,14 @@ class Part
         $this->purgePoints($newKey.'.splitcurve');
     }
 
+    /**
+     * Clears points aray from all points with a given prefix
+     *
+     * Offsetting a path creates new points, many of them have no use
+     * after the path offset is calculated. This allows us to clear them.
+     *
+     * @param string $prefix  Prefix to check for
+     */
     private function purgePoints($prefix = false)
     {
         if ($prefix !== false) {
@@ -255,22 +526,41 @@ class Part
             }
         }
     }
+    
+    /**
+     * Like clonePoint, but applies a prefix to the new point's id
+     *
+     * @param string $key  The key in the points array of the point to clone
+     * @param string $prefix The prefix to apply to the new point's id in the point array
+     */
     private function cloneOffsetPoint($key, $prefix = 'sa')
     {
-        //$newKey = $this->newId('sa');
         $newKey = $this->newId($prefix);
         $this->clonePoint($key, $newKey);
 
         return $newKey;
     }
 
-    private function pathStackToPath($key, $stack, $render, $originalPath)
+    /**
+     * Joins a stack of single path steps into a complete path
+     *
+     * To offset a path, we divide it up into single atomic steps that we push on a stack
+     * We then offset them all, inserting extra steps  were needed 
+     * (extra steps are needed when we need to split a curve to offset it accurately)
+     * When all is done, we need to re-create a path out of this stack of indidividual steps.
+     * This method does that
+     *
+     * @param array $stack  An array of path operations
+     * @param \Freesewing\Path $orginalPath The original path
+     *
+     * @return string The contructed pathstring
+     */
+    private function pathStackToPath($stack, $originalPath)
     {
-        if (substr(trim($originalPath->getPath()), -2) == ' z') {
-            $closed = true;
-        } else {
-            $closed = false;
-        }
+        /* Is the original path closed? */
+        if (substr(trim($originalPath->getPath()), -2) == ' z') $closed = true;
+        else $closed = false;
+        
         $chunks = count($stack->items);
         $count = 1;
         $i = 1;
@@ -306,6 +596,18 @@ class Part
         return $path;
     }
 
+    /**
+     * Creates a new unused ID with an optional prefix
+     *
+     * When offsetting a path, or for other operations where we need to add
+     * points, we need an ID to add a new point to $this->points.
+     * While we don't really care what the idea is, we want to make sure it's not used.
+     * Additionally, by providing a prefix, we can clean up these points with $this->purgePoints()
+     *
+     * @param string $prefix A prefix to apply to the generated ID
+     *
+     * @return string The new ID
+     */
     public function newId($prefix = '.volatile')
     {
         if (isset($this->tmp['id'][$prefix])) {
@@ -317,6 +619,18 @@ class Part
         return $prefix.$this->tmp['id'][$prefix];
     }
 
+    /**
+     * Fills gaps between individually offsetted path steps
+     *
+     * When offsetting a path, we offset each step seperately.
+     * At corners, or bends, this creates 'gaps' in the path.
+     * This method adds steps to the stack to fill those gaps.
+     *
+     * @param array $stack An array of individual path steps
+     * @param \Freesewing\Path $path The path
+     *
+     * @return string The new ID
+     */
     private function fillPathStackGaps($stack, $path)
     {
         $chunks = count($stack->items);
@@ -381,6 +695,20 @@ class Part
         return $stack;
     }
 
+    /**
+     * Breaks up path in as many pieces as needed for an acceptable offset
+     *
+     * When offsetting a path, we offset each step seperately.
+     * These seperated steps are pushed onto a stack.
+     * For curves, we need to break them up if the offset is not precise enough.
+     * This results in multiple steps on the stack to mimic a single curve
+     *
+     * @param \Freesewing\Path $path The path to offset
+     * @param float $distance The distance to offset the path by
+     * @param string $key The key of the new path
+     *
+     * @return string The new ID
+     */
     private function pathOffsetAsStack($path, $distance, $key)
     {
         $stack = new \Freesewing\Stack();
@@ -396,6 +724,17 @@ class Part
         return $stack;
     }
 
+    /**
+     * Offsets a straight line
+     *
+     * Offsets a straight line segment.  This is rather straightforward.
+     *
+     * @param string $line The pathstring of the line segment
+     * @param float $distance The distance to offset the line by
+     * @param string $key The key of the new path
+     *
+     * @return array An array to go on a stack of path steps
+     */
     private function offsetLine($line, $distance, $key)
     {
         $points = Utils::asScrubbedArray($line);
@@ -412,6 +751,15 @@ class Part
         return [0 => ['type' => 'line', 'original' => [$from, $to], 'offset' => [$fromId, $toId]]];
     }
 
+    /**
+     * Gets the offset for the start and end of a line
+     *
+     * @param \Freesewing\Point $from The start of the line
+     * @param \Freesewing\Point $to The end of the line
+     * @param float $distance The distance to offset the line by
+     *
+     * @return array An array with the offsetted points
+     */
     private function getLineOffsetPoints($from, $to, $distance)
     {
         $angle = $this->angle($from, $to) + 90;
@@ -422,6 +770,22 @@ class Part
         ];
     }
 
+    /**
+     * Gets the offset points for start and end of a curve control handle
+     *
+     * When offsetting a curve, we offset the control handle:
+     *  - The line from start to control point 1
+     *  - The line from end to control point 2
+     *  This returns the offsetted points for this
+     *
+     * @param \Freesewing\Point $from The start of the curve
+     * @param \Freesewing\Point $cp1 Control point 1 of the curve
+     * @param \Freesewing\Point $cp2 Control point 2 of the curve
+     * @param \Freesewing\Point $to The end of the curve
+     * @param float $distance The distance to offset the line by
+     *
+     * @return array An array with the offsetted points
+     */
     private function getCurveOffsetPoints($from, $cp1, $cp2, $to, $distance)
     {
         if ($from == $cp1) {
@@ -443,6 +807,24 @@ class Part
         ];
     }
 
+    /**
+     * Gets the offset points for start and end of a curve that has a control point on start or end
+     *
+     * This is like getCurveOffsetPoints but for curves where:
+     *  - Control point 1 is 'missing' (it is identical to the start point)
+     *  or
+     *  - Control point 2 is 'missing' (it is identical to the end point)
+     *  This returns the offsetted points for this
+     *
+     * @param string $missing Either 'cp1' or 'cp2' to indicate what control point is missing
+     * @param \Freesewing\Point $from The start of the curve
+     * @param \Freesewing\Point $cp1 Control point 1 of the curve
+     * @param \Freesewing\Point $cp2 Control point 2 of the curve
+     * @param \Freesewing\Point $to The end of the curve
+     * @param float $distance The distance to offset the line by
+     *
+     * @return array An array with the offsetted points
+     */
     private function getNonCubicCurveOffsetPoints($missing, $from, $cp1, $cp2, $to, $distance)
     {
         if ($missing == 'cp1') {
@@ -460,6 +842,17 @@ class Part
         return [$offset, $offset];
     }
 
+    /**
+     * Checks whether two points are (almost) the same.
+     *
+     * Checks whether two points are the same, or close enough to be considered the same.
+     * Close enough means less than 0.01 mm difference between their coordinates on each axis.
+     *
+     * @param string $key1 ID of point 1 in $this->points
+     * @param string $key2 ID of point 2 in $this->points
+     *
+     * @return bool True is they are the same. False if not.
+     */
     private function isSamePoint($key1, $key2)
     {
         $p1 = $this->loadPoint($key1);
@@ -471,6 +864,24 @@ class Part
         }
     }
 
+    /**
+     * Offsets a curve
+     *
+     * The basics are straighforwards, simply offset the curve's control handles.
+     * But that's not perfect, so we walk through the offsetted curve to check that it
+     * does not deviate more than $this->maxOffsetTolerance percent
+     * If it does, we split the curve and offset the parts individually.
+     * For this, this method recursively calls itself. The subdivide parameter keeps track of that.
+     * We keep on splitting until we're within our $this->maxOffsetTolerance percent
+     * tolerance throughout the entire curve
+     *
+     * @param string $curve The pathstring of the curve segment
+     * @param float $distance The distance to offset the line by
+     * @param string $key The key of the new path
+     * @param string $subdive Is this an original call, or recursive call upon subdividing?
+     *
+     * @return array An array to go on a stack of path steps
+     */
     private function offsetCurve($curve, $distance, $key, $subdivide = 0)
     {
         $points = Utils::asScrubbedArray($curve);
@@ -480,13 +891,13 @@ class Part
         $to = $points[5];
 
         $offset = $this->getCurveOffsetPoints($from, $cp1, $cp2, $to, $distance);
-        if ($subdivide == 0) {
+        if ($subdivide == 0) { // First time around
             $fromId = "$key-curve-$from"."TO$to";
             $toId = "$key-curve-$to"."TO$from";
             $this->tmp['origCurve'] = array();
             $this->tmp['origCurve']['from'] = $from;
             $this->tmp['origCurve']['to'] = $to;
-        } else {
+        } else { // Recursively subdividing
             if ($this->isSamePoint($from, $this->tmp['origCurve']['from'])) {
                 $fromId = "$key-curve-".$this->tmp['origCurve']['from'].'TO'.$this->tmp['origCurve']['to'];
             } else {
@@ -506,10 +917,13 @@ class Part
         $this->addPoint($cp1Id, $offset[1]);
         $this->addPoint($cp2Id, $offset[2]);
         $this->addPoint($toId, $offset[3]);
-
+        
+        // Add this chunk to the stack
         $chunks[] = ['type' => 'curve', 'original' => [$from, $cp1, $cp2, $to], 'offset' => [$fromId, $cp1Id, $cp2Id, $toId], 'subdivide' => $subdivide];
+        
+        // Find out how we're doing
         $tolerance = $this->offsetTolerance($chunks[0], $distance);
-        if ($tolerance['score'] > $this->maxOffsetTolerance) {
+        if ($tolerance['score'] > $this->maxOffsetTolerance) { // Not good enough, let's subdivide
             ++$subdivide;
             $splitId = $key.'.splitcurve:'.$this->newId();
             $this->addSplitCurve($splitId.'-', $from, $cp1, $cp2, $to, $tolerance['index'], 1);
@@ -527,6 +941,14 @@ class Part
         return $chunks;
     }
 
+    /**
+     * Finds how much an offset differs from its ideal
+     *
+     * @param array $entry Array containing offset and original
+     * @param string $subdive Is this an original call, or recursive call upon subdividing?
+     *
+     * @return array Array with the worst score and where it lies on the curve
+     */
     private function offsetTolerance($entry, $distance)
     {
         $origFrom = $this->loadPoint($entry['original'][0]);
@@ -545,10 +967,10 @@ class Part
         $worstDelta = 0;
         for ($i = 0; $i < 100; ++$i) {
             $t = $i / 100;
-            $xOrig = $this->bezierPoint($t, $origFrom->getX(), $origCp1->getX(), $origCp2->getX(), $origTo->getX());
-            $yOrig = $this->bezierPoint($t, $origFrom->getY(), $origCp1->getY(), $origCp2->getY(), $origTo->getY());
-            $xOffset = $this->bezierPoint($t, $offsetFrom->getX(), $offsetCp1->getX(), $offsetCp2->getX(), $offsetTo->getX());
-            $yOffset = $this->bezierPoint($t, $offsetFrom->getY(), $offsetCp1->getY(), $offsetCp2->getY(), $offsetTo->getY());
+            $xOrig = Utils::bezierPoint($t, $origFrom->getX(), $origCp1->getX(), $origCp2->getX(), $origTo->getX());
+            $yOrig = Utils::bezierPoint($t, $origFrom->getY(), $origCp1->getY(), $origCp2->getY(), $origTo->getY());
+            $xOffset = Utils::bezierPoint($t, $offsetFrom->getX(), $offsetCp1->getX(), $offsetCp2->getX(), $offsetTo->getX());
+            $yOffset = Utils::bezierPoint($t, $offsetFrom->getY(), $offsetCp1->getY(), $offsetCp2->getY(), $offsetTo->getY());
 
             $this->points['-po_orig']->setX($xOrig);
             $this->points['-po_orig']->setY($yOrig);
@@ -566,50 +988,26 @@ class Part
         return ['score' => $worstDelta, 'index' => $worstIndex];
     }
 
-    private function DEPRECATEDstraightenCurves($pathString)
-    {
-        $pathArray = Utils::asScrubbedArray($pathString, 'C');
-        if (count($pathArray) == 1) {
-            return $pathString;
-        } // No curves
-        $path = '';
-        $first = true;
-        foreach ($pathArray as $key => $chunk) {
-            $chunk = rtrim($chunk);
-            if ($first) { // Start is always a move
-                $path .= $chunk;
-                $first = false;
-            } else {
-                $chunkArray = Utils::asScrubbedArray($chunk);
-                $path .= ' L '.array_shift($chunkArray).' L '.array_shift($chunkArray).' L '.array_shift($chunkArray).' ';
-                $path .= implode(' ', $chunkArray);
-            }
-        }
 
-        return $path;
-    }
+    /*  Helper functions for pattern designers start here  */
 
-    private function stripEmptyArrayItems($array)
-    {
-        foreach ($array as $key => $value) {
-            if (rtrim($value) != '') {
-                $return[$key] = $value;
-            }
-        }
 
-        return $return;
-    }
-
-    /*
-     * macros start here
+    /**
+     * Clones a point
      *
-     **/
-
+     * @param string $sourceKey The id of the source point
+     * @param string $targetKey The id of the cloned point
+     */
     public function clonePoint($sourceKey, $targetKey)
     {
         $this->points[$targetKey] = $this->points[$sourceKey];
     }
 
+    /**
+     * Loads a point object from its id
+     *
+     * @param string $key The id of the point to load
+     */
     public function loadPoint($key)
     {
         if (isset($this->points[$key])) {
@@ -620,24 +1018,37 @@ class Part
     }
 
     /**
-     * X-coordinate of a point.
-     **/
+     * Returns the X-coordinate of a point
+     *
+     * @param string $key The id of the point
+     *
+     * @return float The X-coordinate
+     */
     public function x($key)
     {
         return $this->points[$key]->getX();
     }
 
     /**
-     * Y-coordinate of a point.
-     **/
+     * Returns the Y-coordinate of a point
+     *
+     * @param string $key The id of the point
+     *
+     * @return float The Y-coordinate
+     */
     public function y($key)
     {
         return $this->points[$key]->getY();
     }
 
     /**
-     * Distance between two points.
-     **/
+     * Returns the distance between two points
+     *
+     * @param string $key1 The id of the first point
+     * @param string $key2 The id of the second point
+     *
+     * @return float Distance between the points
+     */
     public function distance($key1, $key2)
     {
         $point1 = $this->loadPoint($key1);
@@ -649,8 +1060,13 @@ class Part
     }
 
     /**
-     * Distance between two points along X-axis.
-     **/
+     * Returns the distance along the X-axis between two points
+     *
+     * @param string $key1 The id of the first point
+     * @param string $key2 The id of the second point
+     *
+     * @return float Distance between the points along the X-axis
+     */
     public function deltaX($key1, $key2)
     {
         $point1 = $this->loadPoint($key1);
@@ -660,8 +1076,13 @@ class Part
     }
 
     /**
-     * Distance between two points along Y-axis.
-     **/
+     * Returns the distance along the Y-axis between two points
+     *
+     * @param string $key1 The id of the first point
+     * @param string $key2 The id of the second point
+     *
+     * @return float Distance between the points along the Y-axis
+     */
     public function deltaY($key1, $key2)
     {
         $point1 = $this->loadPoint($key1);
@@ -671,8 +1092,14 @@ class Part
     }
 
     /**
-     * Rotate point 1 around point 2.
-     **/
+     * Rotates one point around another
+     *
+     * @param string $key1 The id of the point to rotate
+     * @param string $key2 The id of the pivot point
+     * @param float $rotation The rotation angle in degrees
+     *
+     * @return \Freesewing\Point The rotated point
+     */
     public function rotate($key1, $key2, $rotation)
     {
         $point1 = $this->loadPoint($key1);
@@ -687,8 +1114,13 @@ class Part
     }
 
     /**
-     * Angle between two points.
-     **/
+     * Returns the angle between two points
+     *
+     * @param string $key1 The id of the first point
+     * @param string $key2 The id of the second point
+     *
+     * @return float The angle
+     */
     public function angle($key1, $key2)
     {
         $distance = $this->distance($key1, $key2);
@@ -717,15 +1149,37 @@ class Part
     }
 
     /**
-     * Length of a cubic bezier curve.
-     **/
+     * Returns the length of a curve
+     *
+     * This just calls the cubicBezierLength() curve method
+     *
+     * @param string $keyStart The id of the start of the curve
+     * @param string $keyControl1 The id of the first control point
+     * @param string $keyControl2 The id of the second control point
+     * @param string $keyEnd The id of the end of the curve
+     *
+     * @see \Freesewing\Part::cubicBezierLength()
+     *
+     * @return float The length of the curve
+     */
     public function curveLen($keyStart, $keyControl1, $keyControl2, $keyEnd)
     {
         return $this->cubicBezierLength($keyStart, $keyControl1, $keyControl2, $keyEnd);
     }
 
     /**
-     Whatever that means :)
+     * Returns the length of a cubic Bezier curve
+     *
+     * There is no closed-form solution to calculate the length of cubic polynomial curves. 
+     * Instead, we'll subdivide this cube into a bunch of tiny steps
+     * and treat those as straight lines.
+     *
+     * @param string $keyStart The id of the start of the curve
+     * @param string $keyControl1 The id of the first control point
+     * @param string $keyControl2 The id of the second control point
+     * @param string $keyEnd The id of the end of the curve
+     *
+     * @return float The length of the curve
      */
     private function cubicBezierLength($keyStart, $keyControl1, $keyControl2, $keyEnd)
     {
@@ -737,8 +1191,8 @@ class Part
 
         for ($i = 0; $i <= $this->steps; ++$i) {
             $t = $i / $this->steps;
-            $x = $this->bezierPoint($t, $start->getX(), $cp1->getX(), $cp2->getX(), $end->getX());
-            $y = $this->bezierPoint($t, $start->getY(), $cp1->getY(), $cp2->getY(), $end->getY());
+            $x = Utils::bezierPoint($t, $start->getX(), $cp1->getX(), $cp2->getX(), $end->getX());
+            $y = Utils::bezierPoint($t, $start->getY(), $cp1->getY(), $cp2->getY(), $end->getY());
             if ($i > 0) {
                 $deltaX = $x - $previousX;
                 $deltaY = $y - $previousY;
@@ -751,18 +1205,15 @@ class Part
         return $length;
     }
 
-    private function bezierPoint($t, $startval, $cp1val, $cp2val, $endval)
-    {
-        // See http://en.wikipedia.org/wiki/B%C3%A9zier_curve#Cubic_B.C3.A9zier_curves
-      return $startval * (1.0 - $t) * (1.0 - $t) * (1.0 - $t)
-        + 3.0 * $cp1val * (1.0 - $t) * (1.0 - $t) * $t
-        + 3.0 * $cp2val * (1.0 - $t) * $t * $t
-        + $endval * $t * $t * $t;
-    }
-
     /**
-     * Shift point along a line.
-     **/
+     * Shifts a point along a straight line
+     *
+     * @param string $key1 The id of the first point on the line
+     * @param string $key2 The id of the second point on the line
+     * @param float $distance The distance to shift the point
+     *
+     * @return \Freesewing\Point The shifted point
+     */
     public function shiftTowards($key1, $key2, $distance)
     {
         $point1 = $this->loadPoint($key1);
@@ -783,8 +1234,8 @@ class Part
         } elseif ($point1->getX() > $point2->getX() && $point1->getY() < $point2->getY()) {
             $x = $point1->getX() - abs($deltaX);
             $y = $point1->getY() + abs($deltaY);
-        } else { // FIXME: Other cases?
-          $x = $point1->getX() + $deltaX;
+        } else { 
+            $x = $point1->getX() + $deltaX;
             $y = $point1->getY() + $deltaY;
         }
 
@@ -792,11 +1243,21 @@ class Part
     }
 
     /**
-     * Shift point along a line
-     * Shift, or move, a distance $s along a bezier curves from $start to $end
-     * via control points $cp1 and $cp2.
-     * Note that this is approximate.
-     **/
+     * Shifts a point along a curve
+     *
+     * As with the length of cubic Bezier curves, this is approximate
+     * It's good approximate, but approximate nevertheless
+     *
+     * @param string $keyStart The id of the start of the curve
+     * @param string $keyControl1 The id of the first control point
+     * @param string $keyControl2 The id of the second control point
+     * @param string $keyEnd The id of the end of the curve
+     * @param float $distance The distance to shift the point
+     *
+     * @return \Freesewing\Point The shifted point
+     *
+     * @throws InvalidArgumentException When we shift a point further than the curve is long
+     */
     public function shiftAlong($keyStart, $keyControl1, $keyControl2, $keyEnd, $distance)
     {
         $length = 0;
@@ -807,8 +1268,8 @@ class Part
 
         for ($i = 0; $i <= $this->steps; ++$i) {
             $t = $i / $this->steps;
-            $x = $this->bezierPoint($t, $start->getX(), $cp1->getX(), $cp2->getX(), $end->getX());
-            $y = $this->bezierPoint($t, $start->getY(), $cp1->getY(), $cp2->getY(), $end->getY());
+            $x = Utils::bezierPoint($t, $start->getX(), $cp1->getX(), $cp2->getX(), $end->getX());
+            $y = Utils::bezierPoint($t, $start->getY(), $cp1->getY(), $cp2->getY(), $end->getY());
             if ($i > 0) {
                 $deltaX = $x - $previousX;
                 $deltaY = $y - $previousY;
@@ -820,13 +1281,18 @@ class Part
             $previousX = $x;
             $previousY = $y;
         }
-        /*
-         * We only arrive here if the curve is shorter than the requested offset.
-         **/
+        /* We only arrive here if the curve is shorter than the requested distance */
         throw new \InvalidArgumentException('Ran out of curve to move along');
     }
 
-    // Get the slope of a straight line, given two points on it
+    /**
+     * Returns the slope of a line
+     *
+     * @param string $key1 The id of the start of the line
+     * @param string $key2 The id of the end of the line
+     *
+     * @return float slope of the line
+     */
     private function getSlope($key1, $key2)
     {
         $point1 = $this->loadPoint($key1);
@@ -835,7 +1301,16 @@ class Part
         return ($point2->getY() - $point1->getY()) / ($point2->getX() - $point1->getX());
     }
 
-    // Find the intersection point between two lines
+    /**
+     * Returns the intersection of two lines
+     *
+     * @param string $key1 The id of the start of line A
+     * @param string $key2 The id of the end line A
+     * @param string $key3 The id of the start of line B
+     * @param string $key4 The id of the end line B
+     *
+     * @return \Freesewing\Point The point at the line intersection
+     */
     public function linesCross($key1, $key2, $key3, $key4)
     {
         $point1 = $this->loadPoint($key1);
@@ -843,7 +1318,7 @@ class Part
         $point3 = $this->loadPoint($key3);
         $point4 = $this->loadPoint($key4);
 
-        // If line is vertical, handle this special case
+        /* If line is vertical, handle this special case */
         if ($point1->getX() == $point2->getX()) {
             $slope = $this->getSlope($key3, $key4);
             $i = $point3->getY() - ($slope * $point3->getX());
@@ -855,7 +1330,7 @@ class Part
             $x = $point3->getX();
             $y = $slope * $x + $i;
         } else {
-            // If line goes from right to left, swap points
+            /* If line goes from right to left, swap points */
             if ($point1->getX() > $point2->getX()) {
                 $tmp = $key1;
                 $key1 = $key2;
@@ -866,35 +1341,41 @@ class Part
                 $key3 = $key4;
                 $key4 = $tmp;
             }
-            // Find slope
+            /* Find slope */
             $slope1 = $this->getSlope($key1, $key2);
             $slope2 = $this->getSlope($key3, $key4);
-            // Find y intercept
+            /* Find y intercept */
             $i1 = $point1->getY() - ($slope1 * $point1->getX());
             $i2 = $point3->getY() - ($slope2 * $point3->getX());
-            // Find intersection
+            /* Find intersection */
             $x = ($i2 - $i1) / ($slope1 - $slope2);
             $y = $slope1 * $x + $i1;
         }
 
-        return $this->createPoint($x, $y, "Intersection of $key1,$key2 and $key3,$key4");
+        return $this->createPoint($x, $y);
     }
 
     /**
-     * Return true if point is defined.
+     * Returns true if the point exists in $this->points
+     *
+     * @param string $key The id to look for
+     *
+     * @return bool True if it exists. False if not.
      */
     public function isPoint($key)
     {
         $point = $this->loadPoint($key);
-        if ($point instanceof \Freesewing\Point) {
-            return true;
-        } else {
-            return false;
-        }
+        if ($point instanceof \Freesewing\Point) return true;
+        else return false;
     }
 
     /**
-     * Takes a point (id) and mirrors it's X value around a point on the X axis.
+     * Mirrors point around a X value
+     *
+     * @param string $key The point to flip
+     * @param float $anchorX The X-coordinate to flip around
+     *
+     * @return \Freesewing\Point The flipped point
      */
     public function flipX($key, $anchorX = 0)
     {
@@ -906,7 +1387,12 @@ class Part
     }
 
     /**
-     * Takes a point (id) and mirrors it's Y value around a point on the Y axis.
+     * Mirrors point around a Y value
+     *
+     * @param string $key The point to flip
+     * @param float $anchorY The Y-coordinate to flip around
+     *
+     * @return \Freesewing\Point The flipped point
      */
     public function flipY($key, $anchorY = 0)
     {
@@ -917,8 +1403,23 @@ class Part
         return $this->createPoint($x, $point->getY(), "Point $key flipped around Y coordinate $anchorY");
     }
 
-    // Find intersection of bezier curve with a certain X value
-    // Note that this is approximate.
+    /**
+     * Returns intersection of a Bezier curve with an X value
+     *
+     * A curve can cross over an X-value more that once
+     * yet this will only return one value.
+     * That kinda sucks, but in practice, patterns don't tend to contain the
+     * zig-zag curves that cross an X-value more than once.
+     * If you do need this use case, you can first split your curve to avoid it.
+     *
+     * @param string $keyStart The id of the start of the curve
+     * @param string $keyControl1 The id of the first control point
+     * @param string $keyControl2 The id of the second control point
+     * @param string $keyEnd The id of the end of the curve
+     * @param float $targetX The X-value we're looking for 
+     *
+     * @return \Freesewing\Point The point where the curve crosses the X-value
+     */
     public function curveCrossesX($keyStart, $keyControl1, $keyControl2, $keyEnd, $targetX)
     {
         $start = $this->loadPoint($keyStart);
@@ -930,8 +1431,8 @@ class Part
         $newPoint->setDescription("Crossing of arc $keyStart, $keyControl1, $keyControl2, $keyEnd through X coordinate $targetX");
         for ($i = 0; $i <= $this->steps; ++$i) {
             $t = $i / $this->steps;
-            $x = $this->bezierPoint($t, $start->getX(), $cp1->getX(), $cp2->getX(), $end->getX());
-            $y = $this->bezierPoint($t, $start->getY(), $cp1->getY(), $cp2->getY(), $end->getY());
+            $x = Utils::bezierPoint($t, $start->getX(), $cp1->getX(), $cp2->getX(), $end->getX());
+            $y = Utils::bezierPoint($t, $start->getY(), $cp1->getY(), $cp2->getY(), $end->getY());
             $distance = abs($targetX - $x);
             if ($distance < $bestDistance) {
                 $newPoint->setX($x);
@@ -943,8 +1444,23 @@ class Part
         return $newPoint;
     }
 
-    // Find intersection of bezier curve with a certain Y value
-    // Note that this is approximate.
+    /**
+     * Returns intersection of a Bezier curve with an Y value
+     *
+     * A curve can cross over an Y-value more that once
+     * yet this will only return one value.
+     * That kinda sucks, but in practice, patterns don't tend to contain the
+     * zig-zag curves that cross an X-value more than once.
+     * If you do need this use case, you can first split your curve to avoid it.
+     *
+     * @param string $keyStart The id of the start of the curve
+     * @param string $keyControl1 The id of the first control point
+     * @param string $keyControl2 The id of the second control point
+     * @param string $keyEnd The id of the end of the curve
+     * @param float $targetX The Y-value we're looking for 
+     *
+     * @return \Freesewing\Point The point where the curve crosses the Y-value
+     */
     public function curveCrossesY($keyStart, $keyControl1, $keyControl2, $keyEnd, $targetY)
     {
         $start = $this->loadPoint($keyStart);
@@ -956,8 +1472,8 @@ class Part
         $newPoint->setDescription("Crossing of arc $keyStart, $keyControl1, $keyControl2, $keyEnd through X coordinate $targetY");
         for ($i = 0; $i <= $this->steps; ++$i) {
             $t = $i / $this->steps;
-            $x = $this->bezierPoint($t, $start->getX(), $cp1->getX(), $cp2->getX(), $end->getX());
-            $y = $this->bezierPoint($t, $start->getY(), $cp1->getY(), $cp2->getY(), $end->getY());
+            $x = Utils::bezierPoint($t, $start->getX(), $cp1->getX(), $cp2->getX(), $end->getX());
+            $y = Utils::bezierPoint($t, $start->getY(), $cp1->getY(), $cp2->getY(), $end->getY());
             $distance = abs($targetY - $y);
             if ($distance < $bestDistance) {
                 $newPoint->setX($x);
@@ -969,31 +1485,40 @@ class Part
         return $newPoint;
     }
 
-    public function shift($key, $angle, $distance) // FIXME, left it here
+    /**
+     * Shifts a point a given distance along given angle
+     *
+     * @param string $key The id of the point to shift
+     * @param float $angle The angle to shift along
+     * @param float $distance The distance to shift the point
+     *
+     * @return \Freesewing\Point The point where the curve crosses the Y-value
+     */
+    public function shift($key, $angle, $distance)
     {
         $point = $this->loadPoint($key);
         $newPoint = new \Freesewing\Point();
         $newPoint->setX($point->getX() + $distance);
         $newPoint->setY($point->getY());
-        $this->addPoint('-shiftHelper', $newPoint);
+        $this->addPoint('.shiftHelper', $newPoint);
 
-        return $this->rotate('-shiftHelper', $key, $angle);
+        return $this->rotate('.shiftHelper', $key, $angle);
     }
 
-    public function arcCrossLine($keyStart, $keyControl1, $keyControl2, $keyEnd, $key1, $key2)
-    {
-        $start = $this->loadPoint($start);
-        $cp1 = $this->loadPoint($cp1);
-        $cp2 = $this->loadPoint($cp2);
-        $end = $this->loadPoint($end);
-        $l1 = $this->loadPoint($l1);
-        $l2 = $this->loadPoint($l2);
-
-        return computeIntersections($keyStart, $keyControl1, $keyControl2, $keyEnd, $key1, $key2);
-    }
-
-    /*computes intersection between a cubic spline and a line segment*/
-    private function computeArcLineIntersections($keyStart, $keyControl1, $keyControl2, $keyEnd, $key1, $key2)
+    /**
+     * Returns intersection between a curve and a line
+     *
+     * @param string $keyStart The id of the start of the curve
+     * @param string $keyControl1 The id of the first control point
+     * @param string $keyControl2 The id of the second control point
+     * @param string $keyEnd The id of the end of the curve
+     * @param string $key1 The id of the start of the line
+     * @param string $key2 The id of the end of the line
+     *
+     * @return \Freesewing\Point The point where the curve crosses the line
+     */
+    // FIXME This is broken
+    public function arcCrossesLine($keyStart, $keyControl1, $keyControl2, $keyEnd, $key1, $key2)
     {
         $start = $this->loadPoint($keyStart);
         $cp1 = $this->loadPoint($keyControl1);
@@ -1006,32 +1531,31 @@ class Part
         $B = $point1->getX() - $point2->getX(); // B=x1-x2
         $C = $point1->getX() * ($point1->getY() - $point2->getY()) + $point1->getY() * ($point2->getX() - $point1->getX()); // C=x1*(y1-y2)+y1*(x2-x1)
 
-        $bx = bezierCoeffs($start->getX(), $cp1->getX(), $cp2->getX(), $end->getX());
-        $by = bezierCoeffs($start->getY(), $cp1->getY(), $cp2->getY(), $end->getY());
+        $bx = $this->bezierCoeffs($start->getX(), $cp1->getX(), $cp2->getX(), $end->getX());
+        $by = $this->bezierCoeffs($start->getY(), $cp1->getY(), $cp2->getY(), $end->getY());
 
         $P[0] = $A * $bx[0] + $B * $by[0];         /*t^3*/
         $P[1] = $A * $bx[1] + $B * $by[1];         /*t^2*/
         $P[2] = $A * $bx[2] + $B * $by[2];         /*t*/
         $P[3] = $A * $bx[3] + $B * $by[3] + $C;     /*1*/
 
-        $r = cubicRoots($P);
-
-        /*verify the roots are in bounds of the linear segment*/
+        $r = $this->cubicRoots($P);
+        // Verify the roots are in bounds of the linear segment 
         for ($i = 0; $i < 3; ++$i) {
             $t = $r[$i];
 
             $X[0] = $bx[0] * $t * $t * $t + $bx[1] * $t * $t + $bx[2] * $t + $bx[3];
             $X[1] = $by[0] * $t * $t * $t + $by[1] * $t * $t + $by[2] * $t + $by[3];
 
-            /* above is intersection point assuming infinitely long line segment,
-            make sure we are also in bounds of the line*/
-            if (($lx[1] - $lx[0]) != 0) {           /*if not vertical line*/
-                $s = ($X[0] - $lx[0]) / ($lx[1] - $lx[0]);
+            // above is intersection point assuming infinitely long line segment,
+            // make sure we are also in bounds of the line
+            if (($point1->getX() - $point2->getX()) != 0) {           // if not vertical line
+                $s = ($X[0] - $point1->getX()) / ($point1->getY() - $point1->getX());
             } else {
-                $s = ($X[1] - $ly[0]) / ($ly[1] - $ly[0]);
+                $s = ($X[1] - $point2->getX()) / ($point2->getY() - $point2->getX());
             }
 
-            /*in bounds?*/
+            // in bounds?
             if ($t < 0 || $t > 1.0 || $s < 0 || $s > 1.0) {
                 $X[0] = -100;  // move off screen
                 $X[1] = -100;
@@ -1079,8 +1603,8 @@ class Part
         $D = pow($Q, 3) + pow($R, 2);    // polynomial discriminant
 
         if ($D >= 0) { // complex or duplicate roots
-          $S = sgn($R + sqrt($D)) * pow(abs($R + sqrt($D)), 1 / 3);
-            $T = sgn($R - sqrt($D)) * pow(abs($R - sqrt($D)), 1 / 3);
+          $S = $this->sgn($R + sqrt($D)) * pow(abs($R + sqrt($D)), 1 / 3);
+            $T = $this->sgn($R - sqrt($D)) * pow(abs($R - sqrt($D)), 1 / 3);
 
             $t[0] = -1 * $A / 3 + ($S + $T);    // real root
           $t[1] = -1 * $A / 3 - ($S + $T) / 2;  // real part of complex root
@@ -1109,7 +1633,7 @@ class Part
         }
 
         /*sort but place -1 at the end*/
-        $t = sortSpecial($t);
+        $t = $this->sortSpecial($t);
 
         return $t;
     }
@@ -1133,6 +1657,18 @@ class Part
         return $a;
     }
 
+    /**
+     * Returns delta of split point on curve
+     *
+     * Approximate delta (between 0 and 1) of a point 'split' on
+     * a Bezier curve 
+     *
+     * @param string $key The id of the point to shift
+     * @param float $angle The angle to shift along
+     * @param float $distance The distance to shift the point
+     *
+     * @return \Freesewing\Point The point where the curve crosses the Y-value
+     */
     private function cubicBezierDelta($from, $cp1, $cp2, $to, $split)
     {
         $from = $this->loadPoint($from);
@@ -1140,22 +1676,15 @@ class Part
         $cp2 = $this->loadPoint($cp2);
         $to = $this->loadPoint($to);
         $split = $this->loadPoint($split);
-        /*
-          Approximate delta (between 0 and 1) of a point 'split' on
-         a Bezier curve which starts at "start" and
-         ends at "end" and is defined by control points "cp1" on the start
-         side and "cp2" on the end side.
-         Seems there is no closed form integral for this.
-         Whatever that means :)
-        */
+        
         $best_t = null;
-        $best_distance = 100000000;
+        $best_distance = false;
         for ($i = 0; $i <= $this->steps; ++$i) {
             $t = $i / $this->steps;
-            $x = $this->bezierPoint($t, $from->getX(), $cp1->getX(), $cp2->getX(), $to->getX());
-            $y = $this->bezierPoint($t, $from->getY(), $cp1->getY(), $cp2->getY(), $to->getY());
+            $x = Utils::bezierPoint($t, $from->getX(), $cp1->getX(), $cp2->getX(), $to->getX());
+            $y = Utils::bezierPoint($t, $from->getY(), $cp1->getY(), $cp2->getY(), $to->getY());
             $distance = hopLen($split, array($x, $y));
-            if ($distance < $best_distance) {
+            if ($distance < $best_distance || $best_distance === false) {
                 $best_t = $t;
                 $best_distance = $distance;
             }
@@ -1164,6 +1693,19 @@ class Part
         return $best_t;
     }
 
+    /**
+     * Splits curve and adds prefixed points for it to $this->points
+     *
+     * @see \Freesewing\Part::splitCurve()
+     * 
+     * @param float $prefix The prefix to add to the new points
+     * @param string $from The id of the start of the curve
+     * @param string $cp1 The id of the first control point
+     * @param string $cp2 The id of the second control point
+     * @param string $to The id of the end of the curve
+     * @param string $split The id of the point to split on, or a delta to split on
+     * @param float $splitOnDelta The angle to shift along
+     */
     public function addSplitCurve($prefix, $from, $cp1, $cp2, $to, $split, $splitOnDelta = false)
     {
         $points = $this->splitCurve($from, $cp1, $cp2, $to, $split, $splitOnDelta);
@@ -1177,6 +1719,25 @@ class Part
         $this->addPoint($prefix.'8', $points[7]);
     }
 
+    /**
+     * Splits curve and returns the 8 resulting points
+     *
+     * Splitting a curve makes two curves, 
+     * with a start, end and 2 controlpoints each.
+     * That's 8 points that we add with a prefix
+     * This can split either on a point, in which case $split contains a point ID
+     * or on delta, in which case $split contains a delta between 0 and 1
+     * 
+     * @param float $prefix The prefix to add to the new points
+     * @param string $from The id of the start of the curve
+     * @param string $cp1 The id of the first control point
+     * @param string $cp2 The id of the second control point
+     * @param string $to The id of the end of the curve
+     * @param string $split The id of the point to split on, or a delta to split on
+     * @param float $splitOnDelta The angle to shift along
+     *
+     * @return array the 8 points resulting from the split
+     */
     public function splitCurve($from, $cp1, $cp2, $to, $split, $splitOnDelta = false)
     {
         if ($splitOnDelta) {
@@ -1201,6 +1762,21 @@ class Part
         ];
     }
 
+    /**
+     * Returns points for a curve splitted on a given delta
+     *
+     * This does the actually splitting
+     * 
+     * @see \Freesewing\Part::splitCurve()
+     *
+     * @param string $from The id of the start of the curve
+     * @param string $cp1 The id of the first control point
+     * @param string $cp2 The id of the second control point
+     * @param string $to The id of the end of the curve
+     * @param float $t The delta to split on
+     *
+     * @return array the 8 points resulting from the split
+     */
     private function calculateSplitCurvePoints($from, $cp1, $cp2, $to, $t)
     {
         $from = $this->loadPoint($from);
@@ -1257,6 +1833,15 @@ class Part
     /** returns distance for controle point to make a circle
      * Note that circle is not perfect, but close enough
      * Takes radius of circle as input.
+     */
+    /**
+     * Returns the distance for a control point to approximate a circle
+     *
+     * Note that circle is not perfect, but close enough
+     * 
+     * @param float $radius The radius of the circle to aim for
+     *
+     * @return loat The distance to the control point
      */
     public function bezierCircle($radius)
     {

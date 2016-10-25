@@ -5,4 +5,6 @@ templates:
         - "css/designer.css"
     defs: 
         - "defs/designer"
+settings:
+    partMargin: 5
 

@@ -11,6 +11,16 @@ namespace Freesewing\Patterns;
  */
 class AidenAshirt extends JoostBodyBlock
 {
+    public function loadParts()
+    {
+        foreach ($this->config['parts'] as $part => $title) {
+            $this->addPart($part);
+            $this->parts[$part]->setTitle($title);
+        }
+        $this->parts['frontBlock']->setRender(false);
+        $this->parts['backBlock']->setRender(false);
+    }
+    
     public function draft($model)
     {
         $this->buildCore($model);
@@ -24,7 +34,7 @@ class AidenAshirt extends JoostBodyBlock
     public function sample($model)
     {
         $this->buildCore($model);
-        
+
         $this->draftFront($model);
         $this->draftBack($model);
     }
@@ -32,8 +42,6 @@ class AidenAshirt extends JoostBodyBlock
     public function buildCore($model)
     {
         $this->validateOptions();
-        $this->parts['frontBlock']->setRender(0);
-        $this->parts['backBlock']->setRender(0);
         $this->loadHelp($model);
         $this->draftBackBlock($model);
         $this->draftFrontBlock($model);
@@ -42,9 +50,13 @@ class AidenAshirt extends JoostBodyBlock
     public function validateOptions()
     {
         // shifTowards can't deal with 0, so shoulderStrapPlacement should be at least 0.001
-        if ($this->getOption('shoulderStrapPlacement') == 0) $this->setOption('shoulderStrapPlacement', 0.001);
+        if ($this->getOption('shoulderStrapPlacement') == 0) {
+            $this->setOption('shoulderStrapPlacement', 0.001);
+        }
         // a stretchFactor below 50% is obviously wrong
-        if ($this->getOption('stretchFactor') < 0.5) $this->setOption('stretchFactor', 0.5);
+        if ($this->getOption('stretchFactor') < 0.5) {
+            $this->setOption('stretchFactor', 0.5);
+        }
         // These are irrelevant, but needed for JoostBodyBlock
         $this->setOption('collarEase', 15);
         $this->setOption('backNeckCutout', 20);
@@ -87,13 +99,13 @@ class AidenAshirt extends JoostBodyBlock
             $p->newPoint(107, $p->x(107), $p->y(5), 'Control point for 5');
             $p->newPoint(2, $p->x(2), $p->y(5), 'Center back @ armhole depth');
         }
-        
+
         // Seamline
         $seamline = 'M 3 L 111 L 110 L 112 C 113 5 5 C 107 106 102 L 103 C 105 104 100 z';
         $p->newPath('seamline', $seamline, ['class' => 'seamline']);
 
-        // Sampler
-        $p->paths['seamline']->setSampler(true);
+        // Mark path for sample service
+        $p->paths['seamline']->setSample(true);
     }
 
     public function draftBack($model)
@@ -119,14 +131,14 @@ class AidenAshirt extends JoostBodyBlock
         $seamline = 'M 3 L 111 L 110 L 112 C 113 5 5 C 107 106 102 L 103 C 105 104 100 z';
         $p->newPath('seamline', $seamline, ['class' => 'seamline']);
 
-        // Sampler
-        $p->paths['seamline']->setSampler(true);
+        // Mark path for sample service
+        $p->paths['seamline']->setSample();
     }
 
     public function finalizeFront($model)
     {
         $p = $this->parts['front'];
-        
+
         // Seam allowance | Point indexes from 200 upward
         $p->offsetPathString('sa1', 'M 102 L 103', 10);
         $p->newPath('shoulderSA', 'M 102 L sa1-line-102TO103 L sa1-line-103TO102 L 103', ['class' => 'seam-allowance']);
@@ -216,7 +228,7 @@ class AidenAshirt extends JoostBodyBlock
     public function finalizeBack($model)
     {
         $p = $this->parts['back'];
-        
+
         // Title
         $p->newPoint('titleAnchor', $p->x(5) * 0.4, $p->x(5) + 40, 'Title anchor');
         $p->addTitle('titleAnchor', 2, $this->t($p->title), $this->t('Cut 1 on fold'));
@@ -314,6 +326,5 @@ class AidenAshirt extends JoostBodyBlock
             $p->offsetPathString($key, $path, -20, 1, $pAttr);
             $p->newTextOnPath($key, $path, $this->unit($p->distance(102, 103)), ['class' => 'text-lg fill-note text-center', 'dy' => -13]);
         }
-        
     }
 }

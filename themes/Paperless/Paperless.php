@@ -19,7 +19,7 @@ class Paperless extends Svg
         $templateDir = $this->getTemplateDir();
         $this->defs = file_get_contents("$templateDir/defs/grid.".$units['out']);
         foreach ($pattern->parts as $key => $part) {
-            if ($part->render) {
+            if ($part->getRender() === true) {
                 $id = $part->newId('grid');
                 $this->defs .= "\n".'<pattern id="grid-'.$key.'" xlink:href="grid"></pattern>';
                 $this->addGridToPart($part);
@@ -54,10 +54,11 @@ class Paperless extends Svg
             $transY = $topLeft->getY();
         }
         // Grid margin
-        $x += 2;
-        $y += 2;
-        $h -= 4;
-        $w -= 4;
+        $gridMargin = $this->config['settings']['gridMargin'];
+        $x += $gridMargin/2;
+        $y += $gridMargin/2;
+        $h -= $gridMargin;
+        $w -= $gridMargin;
         $part->newInclude('gridrect', '<rect x="'.$x.'" y="'.$y.'" height="'.$h.'" width="'.$w.'" class="part grid" transform="translate('.$transX.','.$transY.')"/>');
     }
 }

@@ -13,5 +13,3 @@ services:
     - info
     - draft
     - sample
-settings:
-    partMargin: 10

@@ -31,6 +31,7 @@ return array(
     'File_Iterator' => $vendorDir . '/phpunit/php-file-iterator/src/Iterator.php',
     'File_Iterator_Facade' => $vendorDir . '/phpunit/php-file-iterator/src/Facade.php',
     'File_Iterator_Factory' => $vendorDir . '/phpunit/php-file-iterator/src/Factory.php',
+    'Freesewing\\BezierToolbox' => $baseDir . '/src/BezierToolbox/BezierToolbox.php',
     'Freesewing\\Boundary' => $baseDir . '/src/Boundary/Boundary.php',
     'Freesewing\\Channels\\Channel' => $baseDir . '/channels/Channel/Channel.php',
     'Freesewing\\Channels\\Docs' => $baseDir . '/channels/Docs/Docs.php',

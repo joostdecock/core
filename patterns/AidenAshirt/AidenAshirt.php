@@ -94,7 +94,8 @@ class AidenAshirt extends JoostBodyBlock
         // Armhole drop
         if ($this->getOption('armholeDrop') > 0) {
             // Move point 5 along curve
-            $p->addPoint(5, $p->curveCrossesY(112, 112, 113, 5, $p->y(5) + $this->getOption('armholeDrop')));
+            $p->curveCrossesY(112, 112, 113, 5, $p->y(5) + $this->getOption('armholeDrop'), '.help');
+            $p->clonePoint('.help-1', 5);
             // Update other points accordingly
             $p->newPoint(107, $p->x(107), $p->y(5), 'Control point for 5');
             $p->newPoint(2, $p->x(2), $p->y(5), 'Center back @ armhole depth');
@@ -177,10 +178,12 @@ class AidenAshirt extends JoostBodyBlock
         $p->newNote(1, 306, $this->t("Standard\nseam\nallowance")."\n(".$this->unit(10).')', 6, 10, -5, $noteAttr);
 
         $p->addPoint('.help1', $p->shift(100, 90, 20));
-        $p->addPoint(307, $p->curveCrossesY(100, 104, 105, 103, $p->y('.help1')), 'Note 2 anchor');
+        $p->curveCrossesY(100, 104, 105, 103, $p->y('.help1'), '.help');
+        $p->clonePoint('.help-1', 307);
         $p->newNote(2, 307, $this->t("No\nseam\nallowance"), 4, 15, 0, $noteAttr);
 
-        $p->addPoint(308, $p->curveCrossesY(5, 107, 106, 102, $p->y(301)), 'Note 3 anchor');
+        $p->curveCrossesY(5, 107, 106, 102, $p->y(301), '.help');
+        $p->clonePoint('.help-1', 308);
         $p->newNote(3, 308, $this->t("No\nseam\nallowance"), 8, 15, 0, $noteAttr);
 
         $p->addPoint(309, $p->shift(112, -90, $p->distance(110, 112) / 2));
@@ -258,7 +261,8 @@ class AidenAshirt extends JoostBodyBlock
         $p->addPoint('.help1', $p->shift(100, 90, 20));
         $p->newNote(2, 104,  $this->t("No\nseam\nallowance"), 6, 15, 0, $noteAttr);
 
-        $p->addPoint(308, $p->curveCrossesY(5, 107, 106, 102, $p->y('106max') / 2), 'Note 3 anchor');
+        $p->curveCrossesY(5, 107, 106, 102, $p->y('106max') / 2, '.help');
+        $p->clonePoint('.help-1', 308);
         $p->newNote(3, 308,  $this->t("No\nseam\nallowance"), 8, 15, 0, $noteAttr);
 
         $p->newNote(4, 309, $this->t("Standard\nseam\nallowance")."\n(".$this->unit(10).')', 9, 15, -5, $noteAttr);

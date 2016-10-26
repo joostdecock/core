@@ -125,6 +125,7 @@ class ComposerStaticInit6d3c91d11fabeb58ed862308abf0796d
         'File_Iterator' => __DIR__ . '/..' . '/phpunit/php-file-iterator/src/Iterator.php',
         'File_Iterator_Facade' => __DIR__ . '/..' . '/phpunit/php-file-iterator/src/Facade.php',
         'File_Iterator_Factory' => __DIR__ . '/..' . '/phpunit/php-file-iterator/src/Factory.php',
+        'Freesewing\\BezierToolbox' => __DIR__ . '/../..' . '/src/BezierToolbox/BezierToolbox.php',
         'Freesewing\\Boundary' => __DIR__ . '/../..' . '/src/Boundary/Boundary.php',
         'Freesewing\\Channels\\Channel' => __DIR__ . '/../..' . '/channels/Channel/Channel.php',
         'Freesewing\\Channels\\Docs' => __DIR__ . '/../..' . '/channels/Docs/Docs.php',

@@ -33,7 +33,8 @@ class TestBezier extends Pattern
         $p->newPoint(5,   0, 50);
         $p->newPoint(6,   100, 40);
 
-        $p->lineCrossesCurve(5,6,1,3,2,4,'test'); 
+        $p->curveCrossesLine(5,6,1,3,2,4,'test1'); 
+        $p->curveCrossesY(1,3,2,4,50,'test2'); 
         
         // Paths
         $path = 'M 1 C 3 2 4 M 5 L 6';

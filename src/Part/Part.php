@@ -1151,58 +1151,26 @@ class Part
     /**
      * Returns the length of a curve
      *
-     * This just calls the cubicBezierLength() curve method
+     * This loads points and calls the cubicBezierLength() 
+     * method in our BezierToolbox
      *
      * @param string $keyStart The id of the start of the curve
      * @param string $keyControl1 The id of the first control point
      * @param string $keyControl2 The id of the second control point
      * @param string $keyEnd The id of the end of the curve
      *
-     * @see \Freesewing\Part::cubicBezierLength()
+     * @see \Freesewing\BezierToolbox::cubicBezierLength()
      *
      * @return float The length of the curve
      */
     public function curveLen($keyStart, $keyControl1, $keyControl2, $keyEnd)
     {
-        return $this->cubicBezierLength($keyStart, $keyControl1, $keyControl2, $keyEnd);
-    }
-
-    /**
-     * Returns the length of a cubic Bezier curve
-     *
-     * There is no closed-form solution to calculate the length of cubic polynomial curves. 
-     * Instead, we'll subdivide this cube into a bunch of tiny steps
-     * and treat those as straight lines.
-     *
-     * @param string $keyStart The id of the start of the curve
-     * @param string $keyControl1 The id of the first control point
-     * @param string $keyControl2 The id of the second control point
-     * @param string $keyEnd The id of the end of the curve
-     *
-     * @return float The length of the curve
-     */
-    private function cubicBezierLength($keyStart, $keyControl1, $keyControl2, $keyEnd)
-    {
-        $start = $this->loadPoint($keyStart);
-        $cp1 = $this->loadPoint($keyControl1);
-        $cp2 = $this->loadPoint($keyControl2);
-        $end = $this->loadPoint($keyEnd);
-        $length = 0;
-
-        for ($i = 0; $i <= $this->steps; ++$i) {
-            $t = $i / $this->steps;
-            $x = Utils::bezierPoint($t, $start->getX(), $cp1->getX(), $cp2->getX(), $end->getX());
-            $y = Utils::bezierPoint($t, $start->getY(), $cp1->getY(), $cp2->getY(), $end->getY());
-            if ($i > 0) {
-                $deltaX = $x - $previousX;
-                $deltaY = $y - $previousY;
-                $length += sqrt(pow($deltaX, 2) + pow($deltaY, 2));
-            }
-            $previousX = $x;
-            $previousY = $y;
-        }
-
-        return $length;
+        return BezierToolbox::cubicBezierLength(
+            $this->loadPoint($keyStart), 
+            $this->loadPoint($keyControl1), 
+            $this->loadPoint($keyControl2), 
+            $this->loadPoint($keyEnd)
+        );
     }
 
     /**
@@ -1406,83 +1374,47 @@ class Part
     /**
      * Returns intersection of a Bezier curve with an X value
      *
-     * A curve can cross over an X-value more that once
-     * yet this will only return one value.
-     * That kinda sucks, but in practice, patterns don't tend to contain the
-     * zig-zag curves that cross an X-value more than once.
-     * If you do need this use case, you can first split your curve to avoid it.
+     * This adds 2 far away points at the X value so we can simply call
+     * our curveCrossesLine() method to do the actual work.
      *
      * @param string $keyStart The id of the start of the curve
      * @param string $keyControl1 The id of the first control point
      * @param string $keyControl2 The id of the second control point
      * @param string $keyEnd The id of the end of the curve
      * @param float $targetX The X-value we're looking for 
+     * @param string $prefix The prefix for points this will create
      *
-     * @return \Freesewing\Point The point where the curve crosses the X-value
+     * @return void Nothing Points will be added to the part
      */
-    public function curveCrossesX($keyStart, $keyControl1, $keyControl2, $keyEnd, $targetX)
+    public function curveCrossesX($keyStart, $keyControl1, $keyControl2, $keyEnd, $targetX, $prefix=false)
     {
-        $start = $this->loadPoint($keyStart);
-        $cp1 = $this->loadPoint($keyControl1);
-        $cp2 = $this->loadPoint($keyControl2);
-        $end = $this->loadPoint($keyEnd);
-        $bestDistance = 1000000000;
-        $newPoint = new \Freesewing\Point();
-        $newPoint->setDescription("Crossing of arc $keyStart, $keyControl1, $keyControl2, $keyEnd through X coordinate $targetX");
-        for ($i = 0; $i <= $this->steps; ++$i) {
-            $t = $i / $this->steps;
-            $x = Utils::bezierPoint($t, $start->getX(), $cp1->getX(), $cp2->getX(), $end->getX());
-            $y = Utils::bezierPoint($t, $start->getY(), $cp1->getY(), $cp2->getY(), $end->getY());
-            $distance = abs($targetX - $x);
-            if ($distance < $bestDistance) {
-                $newPoint->setX($x);
-                $newPoint->setY($y);
-                $bestDistance = $distance;
-            }
-        }
+        $this->newPoint('.curveCrossesX-1', $targetX, -10000);
+        $this->newPoint('.curveCrossesX-2', $targetX, 10000);
 
-        return $newPoint;
+        $this->curveCrossesLine('.curveCrossesX-1', '.curveCrossesX-2', $keyStart, $keyControl1, $keyControl2, $keyEnd, $prefix);
     }
 
     /**
      * Returns intersection of a Bezier curve with an Y value
      *
-     * A curve can cross over an Y-value more that once
-     * yet this will only return one value.
-     * That kinda sucks, but in practice, patterns don't tend to contain the
-     * zig-zag curves that cross an X-value more than once.
-     * If you do need this use case, you can first split your curve to avoid it.
+     * This adds 2 far away points at the X value so we can simply call
+     * our curveCrossesLine() method to do the actual work.
      *
      * @param string $keyStart The id of the start of the curve
      * @param string $keyControl1 The id of the first control point
      * @param string $keyControl2 The id of the second control point
      * @param string $keyEnd The id of the end of the curve
      * @param float $targetX The Y-value we're looking for 
+     * @param string $prefix The prefix for points this will create
      *
-     * @return \Freesewing\Point The point where the curve crosses the Y-value
+     * @return void Nothing Points will be added to the part
      */
-    public function curveCrossesY($keyStart, $keyControl1, $keyControl2, $keyEnd, $targetY)
+    public function curveCrossesY($keyStart, $keyControl1, $keyControl2, $keyEnd, $targetY, $prefix=false)
     {
-        $start = $this->loadPoint($keyStart);
-        $cp1 = $this->loadPoint($keyControl1);
-        $cp2 = $this->loadPoint($keyControl2);
-        $end = $this->loadPoint($keyEnd);
-        $bestDistance = 1000000000;
-        $newPoint = new \Freesewing\Point();
-        $newPoint->setDescription("Crossing of arc $keyStart, $keyControl1, $keyControl2, $keyEnd through X coordinate $targetY");
-        for ($i = 0; $i <= $this->steps; ++$i) {
-            $t = $i / $this->steps;
-            $x = Utils::bezierPoint($t, $start->getX(), $cp1->getX(), $cp2->getX(), $end->getX());
-            $y = Utils::bezierPoint($t, $start->getY(), $cp1->getY(), $cp2->getY(), $end->getY());
-            $distance = abs($targetY - $y);
-            if ($distance < $bestDistance) {
-                $newPoint->setX($x);
-                $newPoint->setY($y);
-                $bestDistance = $distance;
-            }
-        }
+        $this->newPoint('.curveCrossesY-1', -10000, $targetY);
+        $this->newPoint('.curveCrossesY-2', 10000, $targetY);
 
-        return $newPoint;
+        $this->curveCrossesLine('.curveCrossesY-1', '.curveCrossesY-2', $keyStart, $keyControl1, $keyControl2, $keyEnd, $prefix);
     }
 
     /**
@@ -1505,9 +1437,30 @@ class Part
         return $this->rotate('.shiftHelper', $key, $angle);
     }
     
-    public function lineCrossesCurve($lineStartKey, $lineEndKey, $curveStartKey, $curveControl1Key, $curveControl2Key, $curveEndKey, $prefix=false)
+    /**
+     * Returns intersection of a Bezier curve with a line
+     *
+     * @param string $lineStartKey Point at the start of the line
+     * @param string $lineEndKey Point at the end of the line
+     * @param string $curveStartkey The id of the start of the curve
+     * @param string $curveControl1Key The id of the first control point
+     * @param string $curveControl2Key The id of the second control point
+     * @param string $curveEndKey The id of the end of the curve
+     * @param string $prefix The prefix for points this will create
+     *
+     * @return void Nothing Points will be added to the part
+     */
+    public function curveCrossesLine($lineStartKey, $lineEndKey, $curveStartKey, $curveControl1Key, $curveControl2Key, $curveEndKey, $prefix=false)
     {
-        $points = $this->findLineCurveIntersections($lineStartKey, $lineEndKey, $curveStartKey, $curveControl1Key, $curveControl2Key, $curveEndKey);
+        $points = BezierToolbox::findLineCurveIntersections(
+            $this->loadPoint($lineStartKey), 
+            $this->loadPoint($lineEndKey), 
+            $this->loadPoint($curveStartKey), 
+            $this->loadPoint($curveControl1Key), 
+            $this->loadPoint($curveControl2Key), 
+            $this->loadPoint($curveEndKey)
+        );
+        
         if(!is_array($points)) return false;
 
         $i=1;
@@ -1515,207 +1468,6 @@ class Part
             $this->addPoint("$prefix-$i", $point);
             $i++;
         }
-    }
-
-    /**
-     * Returns intersection between a curve and a line
-     *
-     * The number of intersections between a curve and a line 
-     * varies. So we return an array of points.
-     *
-     * @param string $lineStartKey The id of the point at the start of the line
-     * @param string $lineEndKey The id of the point at the end of the line
-     * @param string $curveStartKey The id of the start of the curve
-     * @param string $curveControl1Key The id of the first control point
-     * @param string $curveControl2Key The id of the second control point
-     * @param string $curveEndKey The id of the end of the curve
-     *
-     * @return array|false An array of intersection points or false if there are none
-     */
-    public function findLineCurveIntersections($lineStartKey, $lineEndKey, $curveStartKey, $curveControl1Key, $curveControl2Key, $curveEndKey)
-    {
-        $points = false;
-        if($prefix === false) $prefix = '.noprefix';
-
-        // Load points
-        $cFrom = $this->loadPoint($curveStartKey);
-        $cC1 = $this->loadPoint($curveControl1Key);
-        $cC2 = $this->loadPoint($curveControl2Key);
-        $cTo = $this->loadPoint($curveEndKey);
-        $lFrom = $this->loadPoint($lineStartKey);
-        $lTo = $this->loadPoint($lineEndKey);
-
-        $X = array();
-
-        $A = $lTo->getY() - $lFrom->getY(); // A=y2-y1
-        $B = $lFrom->getX() - $lTo->getX(); // B=x1-x2
-        $C = $lFrom->getX() * ($lFrom->getY() - $lTo->getY()) + $lFrom->getY() * ($lTo->getX() - $lFrom->getX()); // C=x1*(y1-y2)+y1*(x2-x1)
-
-        $bx = $this->bezierCoeffs($cFrom->getX(), $cC1->getX(), $cC2->getX(), $cTo->getX());
-        $by = $this->bezierCoeffs($cFrom->getY(), $cC1->getY(), $cC2->getY(), $cTo->getY());
-
-        $P[0] = $A * $bx[0] + $B * $by[0];         /*t^3*/
-        $P[1] = $A * $bx[1] + $B * $by[1];         /*t^2*/
-        $P[2] = $A * $bx[2] + $B * $by[2];         /*t*/
-        $P[3] = $A * $bx[3] + $B * $by[3] + $C;     /*1*/
-
-        $r = $this->cubicRoots($P);
-
-        // Verify the roots are in bounds of the linear segment 
-        for ($i = 0; $i < 3; ++$i) {
-            $t = $r[$i];
-
-            $X[0] = $bx[0] * $t * $t * $t + $bx[1] * $t * $t + $bx[2] * $t + $bx[3];
-            $X[1] = $by[0] * $t * $t * $t + $by[1] * $t * $t + $by[2] * $t + $by[3];
-            // above is intersection point assuming infinitely long line segment,
-            // make sure we are also in bounds of the line
-            if (($lTo->getX() - $lFrom->getX()) != 0) {           // if not vertical line
-                $s = ($X[0] - $lFrom->getX()) / ($lTo->getX() - $lFrom->getX());
-            } else {
-                $s = ($X[1] - $lFrom->getY()) / ($lTo->getY() - $lFrom->getY());
-            }
-
-            // in bounds?
-            if ($t < 0 || $t > 1.0 || $s < 0 || $s > 1.0) {
-                $X[0] = -100;  // move off screen
-                $X[1] = -100;
-            } else {
-                $I[$i] = $X;
-            }
-        }
-        $i = 0;
-        foreach($I as $coords) {
-            $point = new \Freesewing\Point();
-            $point->setX($coords[0]);
-            $point->setY($coords[1]);
-            $points[] = $point;
-        }
-
-        return $points;
-    }
-
-    private function bezierCoeffs($P0, $P1, $P2, $P3)
-    {
-        $Z[0] = -1 * $P0 + 3 * $P1 + -3 * $P2 + $P3;
-        $Z[1] = 3 * $P0 - 6 * $P1 + 3 * $P2;
-        $Z[2] = -3 * $P0 + 3 * $P1;
-        $Z[3] = $P0;
-
-        return $Z;
-    }
-
-    // sign of number
-    private function sgn($x)
-    {
-        if ($x < 0.0) return -1;
-
-        return 1;
-    }
-
-    public function cubicRoots($P)
-    {
-        $a = $P[0];
-        $b = $P[1];
-        $c = $P[2];
-        $d = $P[3];
-
-        $A = $b / $a;
-        $B = $c / $a;
-        $C = $d / $a;
-
-        $Q = (3 * $B - pow($A, 2)) / 9;
-        $R = (9 * $A * $B - 27 * $C - 2 * pow($A, 3)) / 54;
-        $D = pow($Q, 3) + pow($R, 2);    // polynomial discriminant
-
-        if ($D >= 0) { // complex or duplicate roots
-            $S = $this->sgn($R + sqrt($D)) * pow(abs($R + sqrt($D)), 1 / 3);
-            $T = $this->sgn($R - sqrt($D)) * pow(abs($R - sqrt($D)), 1 / 3);
-
-            $t[0] = -1 * $A / 3 + ($S + $T);    // real root
-            $t[1] = -1 * $A / 3 - ($S + $T) / 2;  // real part of complex root
-            $t[2] = -1 * $A / 3 - ($S + $T) / 2;  // real part of complex root
-            $Im = abs(sqrt(3) * ($S - $T) / 2); // complex part of root pair
-
-            /*discard complex roots*/
-            if ($Im != 0) {
-                $t[1] = -1;
-                $t[2] = -1;
-            }
-        } else { // distinct real roots
-            $th = acos($R / sqrt(pow($Q, 3) * -1));
-
-            $t[0] = 2 * sqrt(-1 * $Q) * cos($th / 3) - $A / 3;
-            $t[1] = 2 * sqrt(-1 * $Q) * cos(($th + 2 * pi()) / 3) - $A / 3;
-            $t[2] = 2 * sqrt(-$Q) * cos(($th + 4 * pi()) / 3) - $A / 3;
-            $Im = 0.0;
-        }
-
-        /*discard out of spec roots*/
-        for ($i = 0; $i < 3; ++$i) {
-            if ($t[$i] < 0 || $t[$i] > 1.0) {
-                $t[$i] = -1;
-            }
-        }
-
-        /*sort but place -1 at the end*/
-        $t = $this->sortSpecial($t);
-
-        return $t;
-    }
-
-    private function sortSpecial($a)
-    {
-        $flip;
-        $temp;
-        do {
-            $flip = false;
-            for ($i = 0; $i < count($a) - 1; ++$i) {
-                if (($a[$i + 1] >= 0 && $a[$i] > $a[$i + 1]) || ($a[$i] < 0 && $a[$i + 1] >= 0)) {
-                    $flip = true;
-                    $temp = $a[$i];
-                    $a[$i] = $a[$i + 1];
-                    $a[$i + 1] = $temp;
-                }
-            }
-        } while ($flip);
-
-        return $a;
-    }
-
-    /**
-     * Returns delta of split point on curve
-     *
-     * Approximate delta (between 0 and 1) of a point 'split' on
-     * a Bezier curve 
-     *
-     * @param string $key The id of the point to shift
-     * @param float $angle The angle to shift along
-     * @param float $distance The distance to shift the point
-     *
-     * @return \Freesewing\Point The point where the curve crosses the Y-value
-     */
-    private function cubicBezierDelta($from, $cp1, $cp2, $to, $split)
-    {
-        $from = $this->loadPoint($from);
-        $cp1 = $this->loadPoint($cp1);
-        $cp2 = $this->loadPoint($cp2);
-        $to = $this->loadPoint($to);
-        $split = $this->loadPoint($split);
-        
-        $best_t = null;
-        $best_distance = false;
-        for ($i = 0; $i <= $this->steps; ++$i) {
-            $t = $i / $this->steps;
-            $x = Utils::bezierPoint($t, $from->getX(), $cp1->getX(), $cp2->getX(), $to->getX());
-            $y = Utils::bezierPoint($t, $from->getY(), $cp1->getY(), $cp2->getY(), $to->getY());
-            $distance = hopLen($split, array($x, $y));
-            if ($distance < $best_distance || $best_distance === false) {
-                $best_t = $t;
-                $best_distance = $distance;
-            }
-        }
-
-        return $best_t;
     }
 
     /**
@@ -1767,12 +1519,30 @@ class Part
         if ($splitOnDelta) {
             $t = $split;
         } else {
-            $t = cubicBezierDelta($from, $cp1, $cp2, $to, $split);
+            $t = BezierToolbox::cubicBezierDelta(
+                $this->loadPoint($from), 
+                $this->loadPoint($cp1), 
+                $this->loadPoint($cp2), 
+                $this->loadPoint($to), 
+                $this->loadPoint($split)
+            );
         }
 
-        $curve1 = $this->calculateSplitCurvePoints($from, $cp1, $cp2, $to, $t);
+        $curve1 = BezierToolbox::calculateSplitCurvePoints(
+            $this->loadPoint($from), 
+            $this->loadPoint($cp1), 
+            $this->loadPoint($cp2), 
+            $this->loadPoint($to), 
+            $t
+        );
         $t = 1 - $t;
-        $curve2 = $this->calculateSplitCurvePoints($to, $cp2, $cp1, $from, $t);
+        $curve2 = BezierToolbox::calculateSplitCurvePoints(
+            $this->loadPoint($to), 
+            $this->loadPoint($cp2), 
+            $this->loadPoint($cp1), 
+            $this->loadPoint($from), 
+            $t
+        );
 
         return [
             $curve1[0],
@@ -1783,74 +1553,6 @@ class Part
             $curve2[1],
             $curve2[2],
             $curve2[3],
-        ];
-    }
-
-    /**
-     * Returns points for a curve splitted on a given delta
-     *
-     * This does the actually splitting
-     * 
-     * @see \Freesewing\Part::splitCurve()
-     *
-     * @param string $from The id of the start of the curve
-     * @param string $cp1 The id of the first control point
-     * @param string $cp2 The id of the second control point
-     * @param string $to The id of the end of the curve
-     * @param float $t The delta to split on
-     *
-     * @return array the 8 points resulting from the split
-     */
-    private function calculateSplitCurvePoints($from, $cp1, $cp2, $to, $t)
-    {
-        $from = $this->loadPoint($from);
-        $cp1 = $this->loadPoint($cp1);
-        $cp2 = $this->loadPoint($cp2);
-        $to = $this->loadPoint($to);
-
-        $x1 = $from->getX();
-        $y1 = $from->getY();
-        $x2 = $cp1->getX();
-        $y2 = $cp1->getY();
-        $x3 = $cp2->getX();
-        $y3 = $cp2->getY();
-        $x4 = $to->getX();
-        $y4 = $to->getY();
-
-        $x12 = ($x2 - $x1) * $t + $x1;
-        $y12 = ($y2 - $y1) * $t + $y1;
-
-        $x23 = ($x3 - $x2) * $t + $x2;
-        $y23 = ($y3 - $y2) * $t + $y2;
-
-        $x34 = ($x4 - $x3) * $t + $x3;
-        $y34 = ($y4 - $y3) * $t + $y3;
-
-        $x123 = ($x23 - $x12) * $t + $x12;
-        $y123 = ($y23 - $y12) * $t + $y12;
-
-        $x234 = ($x34 - $x23) * $t + $x23;
-        $y234 = ($y34 - $y23) * $t + $y23;
-
-        $x1234 = ($x234 - $x123) * $t + $x123;
-        $y1234 = ($y234 - $y123) * $t + $y123;
-
-        $cp1 = new \Freesewing\Point();
-        $cp2 = new \Freesewing\Point();
-        $to = new \Freesewing\Point();
-
-        $cp1->setX($x12);
-        $cp1->setY($y12);
-        $cp2->setX($x123);
-        $cp2->setY($y123);
-        $to->setX($x1234);
-        $to->setY($y1234);
-
-        return [
-            $from,
-            $cp1,
-            $cp2,
-            $to,
         ];
     }
 
@@ -1869,6 +1571,6 @@ class Part
      */
     public function bezierCircle($radius)
     {
-        return $radius * 4 * (sqrt(2) - 1) / 3;
+        return BezierToolbox::bezierCircle($radius);
     }
 }

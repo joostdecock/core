@@ -1504,35 +1504,55 @@ class Part
 
         return $this->rotate('.shiftHelper', $key, $angle);
     }
+    
+    public function lineCrossesCurve($lineStartKey, $lineEndKey, $curveStartKey, $curveControl1Key, $curveControl2Key, $curveEndKey, $prefix=false)
+    {
+        $points = $this->findLineCurveIntersections($lineStartKey, $lineEndKey, $curveStartKey, $curveControl1Key, $curveControl2Key, $curveEndKey);
+        if(!is_array($points)) return false;
+
+        $i=1;
+        foreach($points as $point) {
+            $this->addPoint("$prefix-$i", $point);
+            $i++;
+        }
+    }
 
     /**
      * Returns intersection between a curve and a line
      *
-     * @param string $keyStart The id of the start of the curve
-     * @param string $keyControl1 The id of the first control point
-     * @param string $keyControl2 The id of the second control point
-     * @param string $keyEnd The id of the end of the curve
-     * @param string $key1 The id of the start of the line
-     * @param string $key2 The id of the end of the line
+     * The number of intersections between a curve and a line 
+     * varies. So we return an array of points.
      *
-     * @return \Freesewing\Point The point where the curve crosses the line
+     * @param string $lineStartKey The id of the point at the start of the line
+     * @param string $lineEndKey The id of the point at the end of the line
+     * @param string $curveStartKey The id of the start of the curve
+     * @param string $curveControl1Key The id of the first control point
+     * @param string $curveControl2Key The id of the second control point
+     * @param string $curveEndKey The id of the end of the curve
+     *
+     * @return array|false An array of intersection points or false if there are none
      */
-    // FIXME This is broken
-    public function arcCrossesLine($keyStart, $keyControl1, $keyControl2, $keyEnd, $key1, $key2)
+    public function findLineCurveIntersections($lineStartKey, $lineEndKey, $curveStartKey, $curveControl1Key, $curveControl2Key, $curveEndKey)
     {
-        $start = $this->loadPoint($keyStart);
-        $cp1 = $this->loadPoint($keyControl1);
-        $cp2 = $this->loadPoint($keyControl2);
-        $end = $this->loadPoint($keyEnd);
-        $point1 = $this->loadPoint($key1);
-        $point2 = $this->loadPoint($key2);
+        $points = false;
+        if($prefix === false) $prefix = '.noprefix';
 
-        $A = $point2->getY() - $point1->getY(); // A=y2-y1
-        $B = $point1->getX() - $point2->getX(); // B=x1-x2
-        $C = $point1->getX() * ($point1->getY() - $point2->getY()) + $point1->getY() * ($point2->getX() - $point1->getX()); // C=x1*(y1-y2)+y1*(x2-x1)
+        // Load points
+        $cFrom = $this->loadPoint($curveStartKey);
+        $cC1 = $this->loadPoint($curveControl1Key);
+        $cC2 = $this->loadPoint($curveControl2Key);
+        $cTo = $this->loadPoint($curveEndKey);
+        $lFrom = $this->loadPoint($lineStartKey);
+        $lTo = $this->loadPoint($lineEndKey);
 
-        $bx = $this->bezierCoeffs($start->getX(), $cp1->getX(), $cp2->getX(), $end->getX());
-        $by = $this->bezierCoeffs($start->getY(), $cp1->getY(), $cp2->getY(), $end->getY());
+        $X = array();
+
+        $A = $lTo->getY() - $lFrom->getY(); // A=y2-y1
+        $B = $lFrom->getX() - $lTo->getX(); // B=x1-x2
+        $C = $lFrom->getX() * ($lFrom->getY() - $lTo->getY()) + $lFrom->getY() * ($lTo->getX() - $lFrom->getX()); // C=x1*(y1-y2)+y1*(x2-x1)
+
+        $bx = $this->bezierCoeffs($cFrom->getX(), $cC1->getX(), $cC2->getX(), $cTo->getX());
+        $by = $this->bezierCoeffs($cFrom->getY(), $cC1->getY(), $cC2->getY(), $cTo->getY());
 
         $P[0] = $A * $bx[0] + $B * $by[0];         /*t^3*/
         $P[1] = $A * $bx[1] + $B * $by[1];         /*t^2*/
@@ -1540,19 +1560,19 @@ class Part
         $P[3] = $A * $bx[3] + $B * $by[3] + $C;     /*1*/
 
         $r = $this->cubicRoots($P);
+
         // Verify the roots are in bounds of the linear segment 
         for ($i = 0; $i < 3; ++$i) {
             $t = $r[$i];
 
             $X[0] = $bx[0] * $t * $t * $t + $bx[1] * $t * $t + $bx[2] * $t + $bx[3];
             $X[1] = $by[0] * $t * $t * $t + $by[1] * $t * $t + $by[2] * $t + $by[3];
-
             // above is intersection point assuming infinitely long line segment,
             // make sure we are also in bounds of the line
-            if (($point1->getX() - $point2->getX()) != 0) {           // if not vertical line
-                $s = ($X[0] - $point1->getX()) / ($point1->getY() - $point1->getX());
+            if (($lTo->getX() - $lFrom->getX()) != 0) {           // if not vertical line
+                $s = ($X[0] - $lFrom->getX()) / ($lTo->getX() - $lFrom->getX());
             } else {
-                $s = ($X[1] - $point2->getX()) / ($point2->getY() - $point2->getX());
+                $s = ($X[1] - $lFrom->getY()) / ($lTo->getY() - $lFrom->getY());
             }
 
             // in bounds?
@@ -1563,8 +1583,15 @@ class Part
                 $I[$i] = $X;
             }
         }
+        $i = 0;
+        foreach($I as $coords) {
+            $point = new \Freesewing\Point();
+            $point->setX($coords[0]);
+            $point->setY($coords[1]);
+            $points[] = $point;
+        }
 
-        return $I;
+        return $points;
     }
 
     private function bezierCoeffs($P0, $P1, $P2, $P3)
@@ -1580,9 +1607,7 @@ class Part
     // sign of number
     private function sgn($x)
     {
-        if ($x < 0.0) {
-            return -1;
-        }
+        if ($x < 0.0) return -1;
 
         return 1;
     }
@@ -1603,21 +1628,21 @@ class Part
         $D = pow($Q, 3) + pow($R, 2);    // polynomial discriminant
 
         if ($D >= 0) { // complex or duplicate roots
-          $S = $this->sgn($R + sqrt($D)) * pow(abs($R + sqrt($D)), 1 / 3);
+            $S = $this->sgn($R + sqrt($D)) * pow(abs($R + sqrt($D)), 1 / 3);
             $T = $this->sgn($R - sqrt($D)) * pow(abs($R - sqrt($D)), 1 / 3);
 
             $t[0] = -1 * $A / 3 + ($S + $T);    // real root
-          $t[1] = -1 * $A / 3 - ($S + $T) / 2;  // real part of complex root
-          $t[2] = -1 * $A / 3 - ($S + $T) / 2;  // real part of complex root
-          $Im = abs(sqrt(3) * ($S - $T) / 2); // complex part of root pair
+            $t[1] = -1 * $A / 3 - ($S + $T) / 2;  // real part of complex root
+            $t[2] = -1 * $A / 3 - ($S + $T) / 2;  // real part of complex root
+            $Im = abs(sqrt(3) * ($S - $T) / 2); // complex part of root pair
 
-          /*discard complex roots*/
-          if ($Im != 0) {
-              $t[1] = -1;
-              $t[2] = -1;
-          }
+            /*discard complex roots*/
+            if ($Im != 0) {
+                $t[1] = -1;
+                $t[2] = -1;
+            }
         } else { // distinct real roots
-          $th = acos($R / sqrt(pow($Q, 3) * -1));
+            $th = acos($R / sqrt(pow($Q, 3) * -1));
 
             $t[0] = 2 * sqrt(-1 * $Q) * cos($th / 3) - $A / 3;
             $t[1] = 2 * sqrt(-1 * $Q) * cos(($th + 2 * pi()) / 3) - $A / 3;

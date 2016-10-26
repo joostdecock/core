@@ -49,7 +49,7 @@ return array(
     'Freesewing\\Patterns\\AidenAshirt' => $baseDir . '/patterns/AidenAshirt/AidenAshirt.php',
     'Freesewing\\Patterns\\JoostBodyBlock' => $baseDir . '/patterns/JoostBodyBlock/JoostBodyBlock.php',
     'Freesewing\\Patterns\\Pattern' => $baseDir . '/patterns/Pattern/Pattern.php',
-    'Freesewing\\Patterns\\SamplerPattern' => $baseDir . '/patterns/SamplerPattern/SamplerPattern.php',
+    'Freesewing\\Patterns\\TestBezier' => $baseDir . '/patterns/TestBezier/TestBezier.php',
     'Freesewing\\Point' => $baseDir . '/src/Point/Point.php',
     'Freesewing\\Request' => $baseDir . '/src/Request/Request.php',
     'Freesewing\\Response' => $baseDir . '/src/Response/Response.php',

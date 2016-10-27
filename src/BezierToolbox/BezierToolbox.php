@@ -3,14 +3,7 @@
 namespace Freesewing;
 
 /**
- * Parts are what patterns are made of.
- *
- * This part class is crucial in constructing patterns.
- * A part is a pattern piece (for example the yoke on a shirt).
- * It is a self-contained unit that has all the information to render
- * that piece of the pattern.
- * It also has a bunch of helper functions that make the life of a 
- * pattern designer easier.
+ * Calculations involving Bezier curves.
  *
  * @author Joost De Cock <joost@decock.org>
  * @copyright 2016 Joost De Cock

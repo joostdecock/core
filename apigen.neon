@@ -1,0 +1,77 @@
+# Dirs or files documentation is generated for.
+source:
+    - src/
+    - patterns/
+    - themes/
+    - channels/
+
+# Target dir for documentation.
+destination: docs/code/
+
+# Access levels of included method and properties. (default: ["public","protected"]) (multiple values allowed)
+accessLevels:           
+    - public
+    - private
+    - protected
+
+# Base url used for sitemap (useful for public doc).
+baseUrl: http://api.freesewing.org
+
+# Custom google search engine id (for search box).
+#googleCseId: {put it here!}
+
+# Google Analytics tracking code.
+#googleAnalytics: {put it here}
+
+# Turn on debug mode.
+debug: false
+
+# Generate documentation for elements marked as @deprecated
+deprecated: false
+
+# Add link to ZIP archive of documentation.
+download: true
+
+# Scanned file extensions. (default: ["php"]) (multiple values allowed)
+extensions:
+    - php     
+
+# Directories and files matching this mask will not be parsed (e.g. */tests/*). (multiple values allowed)
+exclude:
+    - vendor/
+    - logs/
+
+# Charset of scanned files. (multiple values allowed)
+charset:
+    - utf-8              
+
+# Elements with this name prefix will be first in tree.
+# main:
+
+# Include elements marked as @internal.
+internal: true             
+
+# Generate documentation for PHP internal classes.
+php: false             
+
+# Files matching this mask will be included in class tree, but will not create a link to their documentation. (multiple values allowed)
+#skipDocPath:        
+
+# Do not generate highlighted source code for elements.
+#noSourceCode:       
+
+# ApiGen template config
+templateConfig: /usr/share/php/data/ApiGen/templates/fso/config.neon
+
+# Your own template config, has higher priority templateTheme.
+#templateConfig:      
+
+# Title of generated documentation.
+title: Freesewing API Docs
+
+# Generate documentation for elements marked as @todo.
+todo: true
+
+# Generate tree view of classes, interfaces, traits and exceptions.
+tree: true          
+

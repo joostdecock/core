@@ -1573,4 +1573,40 @@ class Part
     {
         return BezierToolbox::bezierCircle($radius);
     }
+    
+    /**
+     * Returns intersections of two cubic Bezier curves
+     *
+     * @param string $curve1Startkey The id of the start of the first curve
+     * @param string $curve1Control1Key The id of the first control point of the first curve
+     * @param string $curve1Control2Key The id of the second control point of the first curve
+     * @param string $curve1EndKey The id of the end of the first curve
+     * @param string $curve2Startkey The id of the start of the first curve
+     * @param string $curve2Control1Key The id of the first control point of the first curve
+     * @param string $curve2Control2Key The id of the second control point of the first curve
+     * @param string $curve2EndKey The id of the end of the first curve
+     * @param string $prefix The prefix for points this will create
+     *
+     * @return void Nothing Points will be added to the part
+     */
+    public function curveCrossesCurve($curve1StartKey, $curve1Control1Key, $curve1Control2Key, $curve1EndKey, $curve2StartKey, $curve2Control1Key, $curve2Control2Key, $curve2EndKey, $prefix=false)
+    {
+        $points = BezierToolbox::findCurveCurveIntersections(
+            $this->loadPoint($curve1StartKey), 
+            $this->loadPoint($curve1Control1Key), 
+            $this->loadPoint($curve1Control2Key), 
+            $this->loadPoint($curve1EndKey),
+            $this->loadPoint($curve2StartKey), 
+            $this->loadPoint($curve2Control1Key), 
+            $this->loadPoint($curve2Control2Key), 
+            $this->loadPoint($curve2EndKey)
+        );
+        if(!is_array($points)) return false;
+
+        $i=1;
+        foreach($points as $point) {
+            $this->addPoint("$prefix-$i", $point);
+            $i++;
+        }
+    }
 }

@@ -21,14 +21,8 @@ namespace Freesewing;
  * @copyright 2016 Joost De Cock
  * @license http://opensource.org/licenses/GPL-3.0 GNU General Public License, Version 3
  */
-class Point
+class Point Extends Coords
 {
-    /** * @var float $x X-coordinate of the point */
-    public $x = null;
-    
-    /** @var float $y Y-coordinate of the point */
-    public $y = null;
-    
     /** @var int $precision Precision to round point coordinates on */
     public $precision = 3;
     
@@ -50,16 +44,6 @@ class Point
     }
 
     /**
-     * Returns the X-coordinate for a point
-     *
-     * @return float The X-coordinate
-     */
-    public function getX()
-    {
-        return $this->x;
-    }
-
-    /**
      * Sets the Y-coordinate for a point
      *
      * @param float $y The value to set
@@ -71,16 +55,6 @@ class Point
         } else {
             $y = 0;
         }
-    }
-
-    /**
-     * Returns the Y-coordinate for a point
-     *
-     * @return float The Y-coordinate
-     */
-    public function getY()
-    {
-        return $this->y;
     }
 
     /**
@@ -101,5 +75,19 @@ class Point
     public function getDescription()
     {
         return $this->description;
+    }
+
+    /**
+     * Returns point as vector object
+     *
+     * @return \Freesewing\Vector The new vector object
+     */
+    public function asVector()
+    {
+        $vector = new \Freesewing\Vector();
+        $vector->setX($this->getX());
+        $vector->setY($this->getY());
+
+        return $vector;
     }
 }

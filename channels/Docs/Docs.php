@@ -29,15 +29,17 @@ class Docs extends Channel
      * @param \Freesewing\Request $request The request object
      * @param \Freesewing\Patterns\[pattern] $pattern The pattern object
      *
-     * @return array The model measurements
+     * @return array|null The model measurements or null of there are none
      */ 
     public function standardizeModelMeasurements($request, $pattern)
     {
-        foreach ($pattern->config['measurements'] as $key => $val) {
-            $measurements[$val] = $request->getData($val) * 10;
-        }
+        if(isset($pattern->config['measurements']) && is_array($pattern->config['measurements'])) {
+            foreach ($pattern->config['measurements'] as $key => $val) {
+                $measurements[$val] = $request->getData($val) * 10;
+            }
+            return $measurements;
+        } else return null;
 
-        return $measurements;
     }
 
     /**
@@ -51,30 +53,31 @@ class Docs extends Channel
      * @param \Freesewing\Request $request The request object
      * @param \Freesewing\Patterns\[pattern] $pattern The pattern object
      *
-     * @return array The pattern options
+     * @return array|null The pattern options or null of there are none
      */ 
     public function standardizePatternOptions($request, $pattern)
     {
         $samplerOptionConf = \Freesewing\Yamlr::loadYamlFile(\Freesewing\Utils::getClassDir($pattern).'/sampler/options.yml');
-        foreach ($samplerOptionConf as $key => $option) {
-            switch ($option['type']) {
-                case 'percent':
-                    if ($request->getData($key) !== null) {
-                        $options[$key] = $request->getData($key) / 100;
-                    } else {
-                        $options[$key] = $option['default'] / 100;
-                    }
-                break;
-                default:
-                    if ($request->getData($key) !== null) {
-                        $options[$key] = $request->getData($key) * 10;
-                    } else {
-                        $options[$key] = $option['default'] * 10;
-                    }
-                break;
+        if(is_array($samplerOptionConf)) {
+            foreach ($samplerOptionConf as $key => $option) {
+                switch ($option['type']) {
+                    case 'percent':
+                        if ($request->getData($key) !== null) {
+                            $options[$key] = $request->getData($key) / 100;
+                        } else {
+                            $options[$key] = $option['default'] / 100;
+                        }
+                    break;
+                    default:
+                        if ($request->getData($key) !== null) {
+                            $options[$key] = $request->getData($key) * 10;
+                        } else {
+                            $options[$key] = $option['default'] * 10;
+                        }
+                    break;
+                }
             }
-        }
-
-        return $options;
+            return $options;
+        } else return null;
     }
 }

@@ -26,19 +26,29 @@ class TestBezier extends Pattern
         $p = $this->parts['test'];
 
         // Center vertical axis
-        $p->newPoint(1,   0,  75);
-        $p->newPoint(2,   80, 100);
-        $p->newPoint(3,   10, 0);
-        $p->newPoint(4,   100, 25);
-        $p->newPoint(5,   0, 50);
-        $p->newPoint(6,   100, 40);
+        $p->newPoint(1,   0,  -20);
+        $p->newPoint(2,   120, 100);
+        $p->newPoint(3,   120, 0);
+        $p->newPoint(4,   -20, 100);
+        $p->newPoint(5,   0, 400);
+        $p->newPoint(6,   100, -300);
+        $p->newPoint(7,   -300, 0);
+        $p->newPoint(8,   450, 100);
 
-        $p->curveCrossesLine(5,6,1,3,2,4,'test1'); 
-        $p->curveCrossesY(1,3,2,4,50,'test2'); 
+        //$p->curveCrossesCurve(1,5,6,2,3,7,8,4,'test3'); 
+        //$p->curveCrossesLine(5,6,1,3,2,4,'test1'); 
+        //$p->curveCrossesY(1,3,2,4,50,'test2'); 
+        
         
         // Paths
-        $path = 'M 1 C 3 2 4 M 5 L 6';
+        $path = 'M 1 C 5 6 2 M 3 C 7 8 4';
         $p->newPath('test', $path);
+        $p->curveCrossesCurve(1,5,6,2,3,7,8,4,'test3'); 
+
+        // Paths
+        //$path = 'M 1 C 2 3 4 M 3 C 1 1 4';
+        //$p->newPath('test', $path);
+        //$p->curveCrossesCurve(1,2,3,4,3,1,1,4,'test3'); 
 
         // Mark path for sample service
         $p->paths['test']->setSample(true);

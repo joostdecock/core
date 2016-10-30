@@ -63,7 +63,7 @@ class Context
     public function addPattern()
     {
         $this->pattern = $this->loadPattern();
-        $this->pattern->setTheme($this->theme->getThemeName());
+        $this->pattern->setPaperless($this->theme->isPaperless());
     }
 
     /**

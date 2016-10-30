@@ -354,8 +354,11 @@ class BezierToolbox
     /**
      * Returns intersection between 2 cubic Bezier curves
      *
-     * The number of intersections between two curves
-     * varies. So we return an array of points.
+     * As the number of intersections between two curves
+     * varies, we return an array of points.
+     *
+     * This implementation is based on the intersection 
+     * procedures by Kevin Lindsey (http://www.kevlindev.com) 
      *
      * @param \Freesewing\Point $c1From The point at the start of the first curve
      * @param \Freesewing\Point $c1C1 The first control point of the first curve

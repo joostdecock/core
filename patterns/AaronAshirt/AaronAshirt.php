@@ -1,16 +1,23 @@
 <?php
-
+/** Freesewing\Patterns\JoostBodyBlock class */
 namespace Freesewing\Patterns;
 
 /**
- * Freesewing\Patterns\AidenAshirt class.
+ * The Aaron A-Shirt pattern
  *
  * @author Joost De Cock <joost@decock.org>
  * @copyright 2016 Joost De Cock
  * @license http://opensource.org/licenses/GPL-3.0 GNU General Public License, Version 3
  */
-class AidenAshirt extends JoostBodyBlock
+class AaronAshirt extends JoostBodyBlock
 {
+    /**
+     * Add parts in config file to pattern
+     *
+     * I override the pattern's class loadParts() here
+     * because I want to not render the blocks that we're
+     * getting from the parent.
+     */
     public function loadParts()
     {
         foreach ($this->config['parts'] as $part => $title) {
@@ -21,6 +28,17 @@ class AidenAshirt extends JoostBodyBlock
         $this->parts['backBlock']->setRender(false);
     }
     
+    /**
+     * Generates a draft of the pattern
+     *
+     * This creates a draft of this pattern for a given model
+     * and set of options. You get a complete pattern with 
+     * all bels and whistles.
+     *
+     * @param \Freesewing\Model $model The model to draft for
+     *
+     * @return void
+     */
     public function draft($model)
     {
         $this->buildCore($model);
@@ -31,6 +49,18 @@ class AidenAshirt extends JoostBodyBlock
         $this->finalizeBack($model);
     }
 
+    /**
+     * Generates a sample of the pattern
+     *
+     * This creates a sample of this pattern for a given model
+     * and set of options. You get a barebones pattern with only 
+     * what it takes to illustrate the effect of changes in
+     * the sampled option or measurement.
+     *
+     * @param \Freesewing\Model $model The model to sample for
+     *
+     * @return void
+     */
     public function sample($model)
     {
         $this->buildCore($model);
@@ -39,6 +69,13 @@ class AidenAshirt extends JoostBodyBlock
         $this->draftBack($model);
     }
 
+    /**
+     * Drafts the blocks this is based on
+     *
+     * @param \Freesewing\Model $model The model to draft for
+     *
+     * @return void
+     */
     public function buildCore($model)
     {
         $this->validateOptions();
@@ -47,6 +84,11 @@ class AidenAshirt extends JoostBodyBlock
         $this->draftFrontBlock($model);
     }
 
+    /**
+     * Makes sure options make sense
+     *
+     * @return void
+     */
     public function validateOptions()
     {
         // shifTowards can't deal with 0, so shoulderStrapPlacement should be at least 0.001
@@ -62,6 +104,24 @@ class AidenAshirt extends JoostBodyBlock
         $this->setOption('backNeckCutout', 20);
     }
 
+    /**
+     * Drafts the front
+     *
+     * I'm using a draft[part name] scheme here but
+     * don't let that think that this is something specific
+     * to the draft service.
+     * 
+     * This draft method does the basic drafting and is
+     * called by both the draft AND sample methods.
+     *
+     * The difference starts after this method is done.
+     * For sample, this is all we need, but draft calls
+     * the finalize[part name] method after this.
+     *
+     * @param \Freesewing\Model $model The model to draft for
+     *
+     * @return void
+     */
     public function draftFront($model)
     {
         $this->clonePoints('frontBlock', 'front');
@@ -109,6 +169,24 @@ class AidenAshirt extends JoostBodyBlock
         $p->paths['seamline']->setSample(true);
     }
 
+    /**
+     * Drafts the back
+     *
+     * I'm using a draft[part name] scheme here but
+     * don't let that think that this is something specific
+     * to the draft service.
+     * 
+     * This draft method does the basic drafting and is
+     * called by both the draft AND sample methods.
+     *
+     * The difference starts after this method is done.
+     * For sample, this is all we need, but draft calls
+     * the finalize[part name] method after this.
+     *
+     * @param \Freesewing\Model $model The model to draft for
+     *
+     * @return void
+     */
     public function draftBack($model)
     {
         $this->clonePoints('backBlock', 'back');
@@ -136,6 +214,17 @@ class AidenAshirt extends JoostBodyBlock
         $p->paths['seamline']->setSample();
     }
 
+    /**
+     * Finalizes the front
+     *
+     * Only draft() calls this method, sample() does not.
+     * It does things like adding a title, logo, and any
+     * text or instructions that go on the pattern.
+     *
+     * @param \Freesewing\Model $model The model to draft for
+     *
+     * @return void
+     */
     public function finalizeFront($model)
     {
         $p = $this->parts['front'];
@@ -192,7 +281,7 @@ class AidenAshirt extends JoostBodyBlock
         $p->newPoint(310, $p->x(110) - 40, $p->y(110), 'Note 5 anchor');
         $p->newNote(5, 310, $this->t('Hem allowance')."\n(".$this->unit(20).')', 12, 15, -10, ['line-height' => 6, 'class' => 'text-lg', 'dy' => -4]);
 
-        if ($this->theme == 'Paperless' || $this->theme == 'Designer' || $this->theme == 'Developer') {
+        if ($this->isPaperless) {
             $pAttr = ['class' => 'measure-lg'];
             $tAttr = ['class' => 'text-lg fill-note text-center', 'dy' => -8];
 
@@ -228,6 +317,17 @@ class AidenAshirt extends JoostBodyBlock
         }
     }
 
+    /**
+     * Finalizes the back 
+     *
+     * Only draft() calls this method, sample() does not.
+     * It does things like adding a title, logo, and any
+     * text or instructions that go on the pattern.
+     *
+     * @param \Freesewing\Model $model The model to draft for
+     *
+     * @return void
+     */
     public function finalizeBack($model)
     {
         $p = $this->parts['back'];
@@ -296,7 +396,7 @@ class AidenAshirt extends JoostBodyBlock
         $p->newPoint('msgAnchor', $p->x(304) + 30, $p->y('scaleboxAnchor'), 'Message anchor');
         $p->newText('binding', 'msgAnchor', $msg, ['class' => 'text-lg fill-note', 'line-height' => 9]);
 
-        if ($this->theme == 'Paperless' || $this->theme == 'Designer' || $this->theme == 'Developer') {
+        if ($this->isPaperless) {
             $pAttr = ['class' => 'measure-lg'];
             $tAttr = ['class' => 'text-lg fill-note text-center', 'dy' => -8];
 

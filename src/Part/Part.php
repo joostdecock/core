@@ -301,11 +301,27 @@ class Part
      * @param string $title Title of the part to print on the pattern
      * @param string $msg Message to print on the pattern
      */
-    public function addTitle($anchorKey, $nr, $title, $msg = '')
+    public function addTitle($anchorKey, $nr, $title, $msg = '', $mode='default')
     {
-        $this->newText('partNumber', $anchorKey, $nr, ['class' => 'part-nr']);
-        $this->newText('partTitle', $anchorKey, $title, ['class' => 'part-title']);
-        $this->newText('partMsg', $anchorKey, $msg, ['class' => 'part-msg']);
+        switch($mode) {
+        case 'vertical':
+            $anchor = $this->loadPoint($anchorKey);
+            $x = $anchor->getX();
+            $y = $anchor->getY();
+            $this->newText('partNumber', $anchorKey, $nr, ['class' => 'part-nr-vertical']);
+            $this->newText('partTitle', $anchorKey, $title, ['class' => 'part-title-vertical', 'transform' => "rotate(-90 $x $y)"]);
+            $this->newText('partMsg', $anchorKey, "\n".$msg, ['class' => 'part-msg-vertical', 'transform' => "rotate(-90 $x $y)"]);
+            break;
+        case 'horizontal':
+            $this->newText('partNumber', $anchorKey, $nr, ['class' => 'part-nr-horizontal']);
+            $this->newText('partTitle', $anchorKey, $title, ['class' => 'part-title-horizontal']);
+            $this->newText('partMsg', $anchorKey, $msg, ['class' => 'part-msg-horizontal']);
+            break;
+        default:
+            $this->newText('partNumber', $anchorKey, $nr, ['class' => 'part-nr']);
+            $this->newText('partTitle', $anchorKey, $title, ['class' => 'part-title']);
+            $this->newText('partMsg', $anchorKey, $msg, ['class' => 'part-msg']);
+        }
     }
 
     /**
@@ -1026,6 +1042,7 @@ class Part
      */
     public function x($key)
     {
+        if(!is_object($this->points[$key])) debug_print_backtrace();
         return $this->points[$key]->getX();
     }
 

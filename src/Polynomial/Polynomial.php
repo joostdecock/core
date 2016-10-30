@@ -87,6 +87,11 @@ class Polynomial
         return $d;
     }
 
+    /**
+     * Evaluates a polynomial
+     *
+     * @param float $x The input
+     */
     public function evalu($x)
     {
         if (!is_numeric($x)) throw new \InvalidArgumentException("Polinomial::Eval() : Parameter must be numeric");
@@ -194,6 +199,9 @@ class Polynomial
         return $result;
     }
 
+    /**
+     * Simplifies a polynomial, if possible
+     */
     public function simplify()
     {
         for ($i=$this->getDegree(); $i>=0; $i--) {
@@ -202,6 +210,11 @@ class Polynomial
         }
     }
 
+    /**
+     * Gets roots of a cubic polynomial
+     *
+     * @return array $results Array of roots
+     */
     public function getCubicRoots()
     {
         $results = array();

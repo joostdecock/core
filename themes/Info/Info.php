@@ -183,4 +183,14 @@ class Info
     {
         return \Freesewing\Utils::getClassDir($this); 
     }
+    
+    /**
+     * Returns false as it's not relevant for the info service, but we need it to be callable
+     *
+     * @return bool false Always false
+     */
+    public function isPaperless()
+    {
+        return false;
+    }
 }

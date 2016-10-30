@@ -35,6 +35,22 @@ abstract class Theme
     }
 
     /**
+     * Returns true if isPaperless is set to true in theme config
+     *
+     * This will be used to determine whether to include the extra 
+     * information for paperless on the pattern.
+     * Extra information is things like instructions, notes and 
+     * seamlengths.
+     *
+     * @return true|false True is isPaperless is true in the config settings
+     */
+    public function isPaperless()
+    {
+        if($this->config['settings']['isPaperless'] === true) return true;
+        else return false;
+    }
+
+    /**
      * Loads message from pattern into messages property
      *
      * @param \Freesewing\Patterns\* $pattern The pattern object

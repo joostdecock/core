@@ -7,4 +7,4 @@ templates:
         - "defs/designer"
 settings:
     partMargin: 5
-
+    isPaperless: true

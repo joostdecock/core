@@ -19,4 +19,8 @@
 <marker orient="auto" refY="0.0" refX="0.0" id="gray1-arrowEnd" style="overflow:visible;" >
   <path class="fill-gray1 stroke-gray1" d="M 0,0 L -12,-4 C -10,-2 -10,2  -12, 4 z" />
 </marker>
+<g id="notch">
+    <circle cy="0" cx="0" r="1.4" class="fill-brand stroke-sm no-fill" />
+    <circle cy="0" cx="0" r="2.8" class="stroke-brand stroke-xl no-fill" />
+</g>
 

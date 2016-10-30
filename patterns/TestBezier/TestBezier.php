@@ -1,9 +1,10 @@
 <?php
+/** Freesewing\Patterns\TestBezier class */
 
 namespace Freesewing\Patterns;
 
 /**
- * Freesewing\Patterns\TestBezier class.
+ * Used for testing Bezier curve intersection
  *
  * @author Joost De Cock <joost@decock.org>
  * @copyright 2016 Joost De Cock
@@ -11,16 +12,35 @@ namespace Freesewing\Patterns;
  */
 class TestBezier extends Pattern
 {
+    /**
+     * Generates a draft 
+     *
+     * @param \Freesewing\Model $model The model to draft for
+     *
+     * @return void
+     */
     public function draft($model)
     {
         $this->test();
     }
 
+    /**
+     * Generates a sample 
+     *
+     * @param \Freesewing\Model $model The model to sample for
+     *
+     * @return void
+     */
     public function sample($model)
     {
         $this->test();
     }
 
+    /**
+     * The actual testing
+     *
+     * @return void
+     */
     public function test()
     {
         $p = $this->parts['test'];

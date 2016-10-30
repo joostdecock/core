@@ -4,4 +4,4 @@ templates:
 settings:
     partMargin: 15
     gridMargin: 10
-
+    isPaperless: true

@@ -45,8 +45,8 @@ class DraftService
             );
 
             $context->pattern->addOptions(
-                    $context->channel->standardizePatternOptions($context->request, $context->pattern)
-                );
+                $context->channel->standardizePatternOptions($context->request, $context->pattern)
+            );
 
             $context->addUnits();
             $context->pattern->setUnits($context->getUnits());

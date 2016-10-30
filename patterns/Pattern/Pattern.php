@@ -17,6 +17,9 @@ abstract class Pattern
     /** @var array $replacements Holds pattern string replacements */
     public $replacements = array();
 
+    /** @var bool $isPaperless Add paperless info to pattern or not? */
+    public $isPaperless;
+
     /** @var array $options Pattern options */
     private $options = array();
 
@@ -569,16 +572,15 @@ abstract class Pattern
     }
 
     /**
-     * Sets the theme property
+     * Sets the paperless property
      *
-     * This does not store a theme object, merely the name of the theme
+     * This is used to determine whether to include the papeless-specific 
+     * stuff in the pattern. 
      *
-     * @todo Is this still used?
-     *
-     * @param string $theme The theme name
+     * @param bool $bool True or false
      */
-    public function setTheme($theme)
+    public function setPaperless($bool)
     {
-        $this->theme = $theme;
+        $this->isPaperless = $bool;
     }
 }

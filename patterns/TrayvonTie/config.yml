@@ -1,0 +1,26 @@
+info:
+  name:     "Trayvon Tie"
+  version:  "2.0"
+  date:     "20161028"
+  author:   "Joost De Cock"
+  email:    "joost@decock.org"
+  company:  "freesewing.org"
+  link:     "freesewing.org/pattern/trayvon-tie/"
+parts:
+  interfacingTip:   "Interfacing tip"
+  interfacingTail:  "Interfacing tail"
+  fabricTip:        "Fabric tip"
+  fabricTail:       "Fabric tail"
+  liningTip:        "Lining tip"
+  liningTail:       "Lining tail"
+  loop:             "Loop"
+languages:
+    en: English
+    nl: Nederlands
+measurements:
+    - centerBackNeckToWaist
+    - neckCircumference
+options:
+    - chestEase
+    - bicepsEase
+    - cuffEase

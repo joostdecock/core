@@ -1,9 +1,21 @@
 <?php
-
+/** Freesewing\Patterns\JoostBodyBlock class */
 namespace Freesewing\Patterns;
 
 /**
- * Freesewing\Patterns\JoostBodyBlock class.
+ * A male body block designed by Joost
+ *
+ * This is a basic body block that serves as a starting 
+ * point for other patterns. It is not complete in
+ * this form, because the sleeve is not adapted to
+ * the armhole. That's because this is not intended
+ * to be used as a stand-along block, but to be 
+ * extended by other patterns.
+ *
+ * This block is based on the method of Gareth Kershaw
+ * with tweaks and improvemens by Joost De Cock.
+ * Most importanltly, this has a variable shoulder slope
+ * based on the model's measurements.
  *
  * @author Joost De Cock <joost@decock.org>
  * @copyright 2016 Joost De Cock
@@ -11,6 +23,17 @@ namespace Freesewing\Patterns;
  */
 class JoostBodyBlock extends Pattern
 {
+    /**
+     * Generates a draft of the pattern
+     *
+     * This creates a draft of this pattern for a given model
+     * and set of options. You get a complete pattern with 
+     * all bels and whistles.
+     *
+     * @param \Freesewing\Model $model The model to draft for
+     *
+     * @return void
+     */
     public function draft($model)
     {
         $this->loadHelp($model);
@@ -25,6 +48,18 @@ class JoostBodyBlock extends Pattern
         $this->finalizeSleeveBlock($model);
     }
 
+    /**
+     * Generates a sample of the pattern
+     *
+     * This creates a sample of this pattern for a given model
+     * and set of options. You get a barebones pattern with only 
+     * what it takes to illustrate the effect of changes in
+     * the sampled option or measurement.
+     *
+     * @param \Freesewing\Model $model The model to sample for
+     *
+     * @return void
+     */
     public function sample($model)
     {
         $this->loadHelp($model);
@@ -34,6 +69,13 @@ class JoostBodyBlock extends Pattern
         $this->draftSleeveBlock($model);
     }
 
+    /**
+     * Sets up some properties shared between methods
+     *
+     * @param \Freesewing\Model $model The model to sample for
+     *
+     * @return void
+     */
     public function loadHelp($model)
     {
         $this->help = array();
@@ -45,11 +87,38 @@ class JoostBodyBlock extends Pattern
         $this->setOption('sleevecapEase', 15);
     }
 
+    /**
+     * Unset helper properties
+     *
+     * This is called at the end of the request.
+     * I use it to clear the help property, but I might
+     * as well do nothing here.
+     *
+     * @return void
+     */
     public function cleanUp()
     {
         unset($this->help);
     }
 
+    /**
+     * Drafts the back block
+     *
+     * I'm using a draft[part name] scheme here but
+     * don't let that think that this is something specific
+     * to the draft service.
+     * 
+     * This draft method does the basic drafting and is
+     * called by both the draft AND sample methods.
+     *
+     * The difference starts after this method is done.
+     * For sample, this is all we need, but draft calls
+     * the finalize[part name] method after this.
+     *
+     * @param \Freesewing\Model $model The model to draft for
+     *
+     * @return void
+     */
     public function draftBackBlock($model)
     {
         $collarWidth = ($model->getMeasurement('neckCircumference') / 3.1415) / 2 + 5;
@@ -105,6 +174,17 @@ class JoostBodyBlock extends Pattern
         $p->paths['seamline']->setSample(true);
     }
 
+    /**
+     * Finalizes the back block
+     *
+     * Only draft() calls this method, sample() does not.
+     * It does things like adding a title, logo, and any
+     * text or instructions that go on the pattern.
+     *
+     * @param \Freesewing\Model $model The model to draft for
+     *
+     * @return void
+     */
     public function finalizeBackBlock($model)
     {
         $p = $this->parts['backBlock'];
@@ -114,6 +194,24 @@ class JoostBodyBlock extends Pattern
         $p->newSnippet('logo', 'logo', 'titleAnchor');
     }
 
+    /**
+     * Drafts the front block
+     *
+     * I'm using a draft[part name] scheme here but
+     * don't let that think that this is something specific
+     * to the draft service.
+     * 
+     * This draft method does the basic drafting and is
+     * called by both the draft AND sample methods.
+     *
+     * The difference starts after this method is done.
+     * For sample, this is all we need, but draft calls
+     * the finalize[part name] method after this.
+     *
+     * @param \Freesewing\Model $model The model to draft for
+     *
+     * @return void
+     */
     public function draftFrontBlock($model)
     {
         $this->clonePoints('backBlock', 'frontBlock');
@@ -131,6 +229,17 @@ class JoostBodyBlock extends Pattern
         $p->paths['seamline']->setSample(true);
     }
 
+    /**
+     * Finalizes the front block
+     *
+     * Only draft() calls this method, sample() does not.
+     * It does things like adding a title, logo, and any
+     * text or instructions that go on the pattern.
+     *
+     * @param \Freesewing\Model $model The model to draft for
+     *
+     * @return void
+     */
     public function finalizeFrontBlock($model)
     {
         $p = $this->parts['frontBlock'];
@@ -138,6 +247,24 @@ class JoostBodyBlock extends Pattern
         $p->newSnippet('logo', 'logo', 'titleAnchor');
     }
 
+    /**
+     * Drafts the sleeve block
+     *
+     * I'm using a draft[part name] scheme here but
+     * don't let that think that this is something specific
+     * to the draft service.
+     * 
+     * This draft method does the basic drafting and is
+     * called by both the draft AND sample methods.
+     *
+     * The difference starts after this method is done.
+     * For sample, this is all we need, but draft calls
+     * the finalize[part name] method after this.
+     *
+     * @param \Freesewing\Model $model The model to draft for
+     *
+     * @return void
+     */
     public function draftSleeveBlock($model)
     {
         $p = $this->parts['sleeveBlock'];
@@ -225,6 +352,17 @@ class JoostBodyBlock extends Pattern
         $p->paths['seamline']->setSample(true);
     }
 
+    /**
+     * Finalizes the front block
+     *
+     * Only draft() calls this method, sample() does not.
+     * It does things like adding a title, logo, and any
+     * text or instructions that go on the pattern.
+     *
+     * @param \Freesewing\Model $model The model to draft for
+     *
+     * @return void
+     */
     public function finalizeSleeveBlock($model)
     {
         $p = $this->parts['sleeveBlock'];
@@ -236,6 +374,11 @@ class JoostBodyBlock extends Pattern
         $p->newSnippet('logo', 'logo', 'titleAnchor');
     }
 
+    /**
+     * Calculates the armhole length
+     *
+     * @return float The armhole length
+     */
     private function armholeLen()
     {
         $back = $this->parts['backBlock'];

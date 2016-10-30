@@ -1,11 +1,11 @@
 info:
-    name: "Aiden A-Shirt"
+    name: "Aaron A-Shirt"
     version: "2.0"
     date: 20161008
     author: "Joost De Cock"
     email: "joost@decock.org"
     company: "freesewing.org"
-    link: "freesewing.org/pattern/aiden-shirt/"
+    link: "freesewing.org/pattern/aaron-ashirt/"
 parts:
     frontBlock: "Front block"
     backBlock: "Back block"

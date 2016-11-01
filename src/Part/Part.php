@@ -688,7 +688,7 @@ class Part
             } elseif ($chunk['type'] == 'curve' && $next['type'] == 'line') {
                 if (!$this->isSamePoint($chunk['offset'][3], $next['offset'][0])) { // Gap to fill
                     $this->addPoint('.help', $this->shiftAlong($chunk['offset'][3], $chunk['offset'][2],  $chunk['offset'][1],  $chunk['offset'][0], 0.5));
-                    $id = $chunk['offset'][1].'XclX'.$next['offset'][0];
+                    $id = $chunk['offset'][3].'XclX'.$next['offset'][0];
                     $this->addPoint($id, $this->linesCross($chunk['offset'][3], '.help', $next['offset'][0], $next['offset'][1]));
                     $pathString = 'M '.$chunk['offset'][3]." L $id L ".$next['offset'][0];
                     $new[] = $chunk;
@@ -1573,10 +1573,6 @@ class Part
         ];
     }
 
-    /** returns distance for controle point to make a circle
-     * Note that circle is not perfect, but close enough
-     * Takes radius of circle as input.
-     */
     /**
      * Returns the distance for a control point to approximate a circle
      *

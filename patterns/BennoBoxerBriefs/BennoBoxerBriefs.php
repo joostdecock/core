@@ -25,6 +25,11 @@ class BennoBoxerBriefs extends Pattern
     public function draft($model)
     {
         $this->sample($model);
+        
+        $this->finalizeBack($model);
+        $this->finalizeSide($model);
+        $this->finalizeFront($model);
+        $this->finalizeInset($model);
     }
 
     /**
@@ -106,6 +111,21 @@ class BennoBoxerBriefs extends Pattern
     }
 
     /**
+     * Finalizes the inset
+     *
+     * @param \Freesewing\Model $model The model to draft for
+     *
+     * @return void
+     */
+    public function finalizeInset($model)
+    {
+        $p = $this->parts['inset'];
+
+        /* Title */
+        $p->newPoint('titleAnchor', $p->x(3)/2.5, $p->y(401));
+        $p->addTitle('titleAnchor', 4, $this->t($p->title), $this->t('Cut 2')."\n".$this->t('Good sides together'));
+    }
+    /**
      * Drafts the front
      *
      * @param \Freesewing\Model $model The model to draft for
@@ -142,11 +162,27 @@ class BennoBoxerBriefs extends Pattern
         $flip = [ 2, 4, 401, 404, 501, 502, 503, 701, 8 ];
         foreach ($flip as $i) $p->addPoint(-$i, $p->flipX($i), $p->points[$i]->getDescription());
   
-        $path = 'M -2 L 2 L 4 C 404 701 501 L 502 C 503 601 6 C 601 -503 -502 L -501 C -701 -404 -4 z';
-        $p->newPath('outline', $path, ['class' => 'seamline']);
+        $this->frontPath = 'M -2 L 2 L 4 C 404 701 501 L 502 C 503 601 6 C 601 -503 -502 L -501 C -701 -404 -4 z';
+        $p->newPath('outline', $this->frontPath, ['class' => 'seamline']);
 
         // Mark path for sample service
         $p->paths['outline']->setSample(true);
+    }
+    
+    /**
+     * Finzalizes the front
+     *
+     * @param \Freesewing\Model $model The model to draft for
+     *
+     * @return void
+     */
+    public function finalizeFront($model)
+    {
+        $p = $this->parts['front'];
+
+        /* Standard seam allowance */
+        $p->offsetPathString('sa', $this->frontPath, -10, 1, ['class' => 'seam-allowance']);
+
     }
 
     /**
@@ -173,11 +209,40 @@ class BennoBoxerBriefs extends Pattern
         $this->frontLength = $p->distance(2,3);
         
         /* Path */
-        $path = 'M 2 L 3 L -3 L -2 z';
-        $p->newPath('outline', $path, ['class' => 'seamline']);
+        $this->sidePath = 'M 2 L 3 L -3 L -2 z';
+        $p->newPath('outline', $this->sidePath, ['class' => 'seamline']);
 
         // Mark path for sample service
         $p->paths['outline']->setSample(true);
+    }
+
+    /**
+     * Finalizes the side
+     *
+     * @param \Freesewing\Model $model The model to draft for
+     *
+     * @return void
+     */
+    public function finalizeSide($model)
+    {
+        $p = $this->parts['side'];
+
+        /* Title */
+        $p->newPoint('titleAnchor', 0, $p->y('gridAnchor')+70);
+        $p->addTitle('titleAnchor', 3, $this->t($p->title), $this->t('Cut 2')."\n".$this->t('Good sides together'));
+
+        /* Logo */
+        $p->newPoint('logoAnchor', 0, $p->y('gridAnchor')+120);
+        $p->newSnippet('logo', 'logo', 'logoAnchor');
+        
+        /* Standard seam allowance */
+        $p->offsetPathString('sa', $this->sidePath, -10, 1, ['class' => 'seam-allowance']);
+
+        /* Extra hem allowance */
+        $p->addPoint('sa-line-3TO-3', $p->shift('sa-line-3TO-3', -90, 10));
+        $p->addPoint('sa-line--3TO3', $p->shift('sa-line--3TO3', -90, 10));
+        $p->newPoint('sa-line-3TO2XllXsa-line-3TO-3', $p->x('sa-line-3TO2'), $p->y('sa-line-3TO-3'));
+        $p->newPoint('sa-line--3TO3XllXsa-line--3TO-2', $p->x('sa-line--3TO-2'), $p->y('sa-line-3TO-3'));
     }
 
     /**
@@ -214,8 +279,8 @@ class BennoBoxerBriefs extends Pattern
         $flip = [ 2, 5, 401, 501, 402, 403, 502, 504, 6, 10, ];
         foreach ($flip as $i) $p->addPoint(-$i, $p->flipX($i), $p->points[$i]->getDescription());
 
-        $path = 'M -2 L 2 L 401 L 5 C 502 6 3 C -6 -502 -5 L -401 z';
-        $p->newPath('outline', $path, ['class' => 'seamline']);
+        $this->backPath = 'M -2 L 2 L 401 L 5 C 502 6 3 C -6 -502 -5 L -401 z';
+        $p->newPath('outline', $this->backPath, ['class' => 'seamline']);
 
         // Mark path for sample service
         $p->paths['outline']->setSample(true);
@@ -224,4 +289,47 @@ class BennoBoxerBriefs extends Pattern
         $this->crotchSeamLength = $p->curveLen(5, 502, 6, 3)*2;
     }
 
+    /**
+     * Finalizes the back
+     *
+     * @param \Freesewing\Model $model The model to draft for
+     *
+     * @return void
+     */
+    public function finalizeBack($model)
+    {
+        $p = $this->parts['back'];
+
+        /* Standard seam allowance */
+        $p->offsetPathString('sa', $this->backPath, -10, 1, ['class' => 'seam-allowance']);
+        
+        /* Extra hem allowance right leg */
+        $moveThese = [
+            'sa-line-401TO2XllXsa-line-401TO5',
+            'sa-line-401TO5',
+            'sa-line-5TO401',
+            'sa-line-5TO401XlcXsa-curve-5TO3',
+        ];
+        $angle = $p->angle(8,5)-90;
+        foreach($moveThese as $i) $p->addPoint($i, $p->shift($i, $angle, 10));
+
+        /* Extra hem allowance left leg */
+        $moveThese = [
+            'sa-curve--5TO3XclXsa-line--5TO-401',
+            'sa-line--5TO-401',
+            'sa-line--401TO-5',
+            'sa-line--401TO-5XllXsa-line--401TO-2',
+        ];
+        $angle = $p->angle(-5,-401)-90;
+        foreach($moveThese as $i) $p->addPoint($i, $p->shift($i, $angle, 10));
+
+        /* Title */
+        $p->newPoint('titleAnchor', 0, $p->y(11) + 70);
+        $p->addTitle('titleAnchor', 1, $this->t($p->title), $this->t('Cut 1'));
+        
+        /* Scalebox */
+        $p->newPoint('scaleboxAnchor', 0, $p->y(11) + 120);
+        $p->newSnippet('scalebox', 'scalebox', 'scaleboxAnchor');
+        
+    }
 }

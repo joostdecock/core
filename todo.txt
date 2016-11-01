@@ -1,1 +1,3 @@
 Update measurement names in frontend
+Filter out overlap in path offset
+Write a better packer

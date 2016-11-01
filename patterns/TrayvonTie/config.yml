@@ -24,3 +24,6 @@ options:
     - chestEase
     - bicepsEase
     - cuffEase
+inMemoryOf:   
+    name: "Trayvon Martin"
+    link: "https://en.wikipedia.org/wiki/Trayvon_Martin"

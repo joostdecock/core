@@ -41,6 +41,18 @@ class Model
     }
 
     /**
+     * Alias for getMeasurement()
+     *
+     * @param string $key The key in the measurements array
+     *
+     * @return float The measurement value
+     */
+    public function m($key)
+    {
+        return $this->getMeasurement($key);
+    }
+
+    /**
      * Adds measurements.
      *
      * Rater than adding measurements individually, this adds 

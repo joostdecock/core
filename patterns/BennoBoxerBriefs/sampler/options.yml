@@ -1,0 +1,19 @@
+waistbandWidth:
+    type: number
+    min: 10
+    max: 80
+    default: 40
+
+speedoRise:
+    type: number
+    min: 0
+    max: 80
+    default: 35
+
+verticalStretchFactor:
+    type: percent
+    default: 90
+
+horizontalStretchFactor:
+    type: percent
+    default: 80

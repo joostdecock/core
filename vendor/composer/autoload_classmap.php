@@ -49,6 +49,7 @@ return array(
     'Freesewing\\Part' => $baseDir . '/src/Part/Part.php',
     'Freesewing\\Path' => $baseDir . '/src/Path/Path.php',
     'Freesewing\\Patterns\\AaronAshirt' => $baseDir . '/patterns/AaronAshirt/AaronAshirt.php',
+    'Freesewing\\Patterns\\BennoBoxerBriefs' => $baseDir . '/patterns/BennoBoxerBriefs/BennoBoxerBriefs.php',
     'Freesewing\\Patterns\\JoostBodyBlock' => $baseDir . '/patterns/JoostBodyBlock/JoostBodyBlock.php',
     'Freesewing\\Patterns\\Pattern' => $baseDir . '/patterns/Pattern/Pattern.php',
     'Freesewing\\Patterns\\TestBezier' => $baseDir . '/patterns/TestBezier/TestBezier.php',

@@ -170,6 +170,18 @@ abstract class Pattern
     }
 
     /**
+     * Alias for getOption()
+     *
+     * @param string $key The key in the options array for which to return the value
+     *
+     * @return anything $value The option value
+     */ 
+    public function o($key)
+    {
+        return $this->getOption($key);
+    }
+
+    /**
      * Sets the key $key in the options array to value $value
      *
      * @param string $key The key in the options array

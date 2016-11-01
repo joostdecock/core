@@ -1,0 +1,42 @@
+models:
+    joost:
+        - 960
+        - 600
+        - 670
+    usSize34:
+        - 722
+        - 520
+        - 590
+    usSize36:
+        - 780
+        - 540
+        - 610
+    usSize38:
+        - 838
+        - 560
+        - 630
+    usSize40:
+        - 896
+        - 580
+        - 650
+    usSize42:
+        - 954
+        - 600
+        - 670
+    usSize44:
+        - 1012
+        - 620
+        - 690
+groups:
+    realMen:
+        - joost
+    maleStandardUsSizes:
+        - usSize34
+        - usSize36
+        - usSize38
+        - usSize40
+        - usSize42
+        - usSize44
+default: 
+    model: joost
+    group: maleStandardUsSizes

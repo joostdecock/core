@@ -1,4 +1,4 @@
-measurements:
+Measurements:
     wristCircumference      : 'wristCircumference'
     chestCircumference      : 'chestCircumference'
     centerBackNeckToWaist   : 'centerBackNeckToWaist'

@@ -16,7 +16,7 @@ class TrayvonTie extends Pattern
      *
      * This creates a draft of this pattern for a given model
      * and set of options. You get a complete pattern with 
-     * all bels and whistles.
+     * all bells and whistles.
      *
      * @param \Freesewing\Model $model The model to draft for
      *

@@ -61,7 +61,7 @@ php: false
 #noSourceCode:       
 
 # ApiGen template config
-templateConfig: /usr/share/php/data/ApiGen/templates/fso/config.neon
+#templateConfig: /usr/share/php/data/ApiGen/templates/fso/config.neon
 
 # Your own template config, has higher priority templateTheme.
 #templateConfig:      

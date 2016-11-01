@@ -35,3 +35,6 @@ options:
     - shoulderStrapPlacement
     - stretchFactor
     - hipsEase
+inMemoryOf:   
+    name: "Aaron Swartz"
+    link: "https://en.wikipedia.org/wiki/Aaron_Swartz"

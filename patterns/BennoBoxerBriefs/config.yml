@@ -1,0 +1,28 @@
+info:
+     name:         "Benno Boxer Briefs"
+     version:      "2.0"
+     date:         "20161031"
+     author:       "Joost De Cock"
+     email:        "joost@decock.org"
+     company:      "freesewing.org"
+     link:         "freesewing.org/pattern/bname-boxer-briefs/"
+parts:
+    front:    "Interfacing tip"
+    back:     "Interfacing tail"
+    side:     "Fabric tip"
+    inset:    "Fabric tail"
+languages:
+    en: English
+    nl: Nederlands
+measurements:
+    - hipsCircumference
+    - upperLegCircumference
+    - crossseamLength
+options:
+    - waistbandWidth
+    - speedoRise
+    - verticalStretchFactor
+    - horizontalStretchFactor
+inMemoryOf:   
+    name: "Benno Ohnesorg"
+    link: "https://en.wikipedia.org/wiki/Benno_Ohnesorg"

@@ -1113,7 +1113,7 @@ class Part
             $this->points['-po_orig']->setY($yOrig);
             $this->points['-po_offset']->setX($xOffset);
             $this->points['-po_offset']->setY($yOffset);
-
+            
             $offset = $this->distance('-po_orig', '-po_offset');
             $delta = abs($offset / (abs($distance) / 100) - 100);
             if ($delta > $worstDelta) {

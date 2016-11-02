@@ -174,13 +174,6 @@ class Utils
             $i1 = $point1->getY() - ($slope1 * $point1->getX());
             $i2 = $point3->getY() - ($slope2 * $point3->getX());
             /* Find intersection */
-            if($slope1 - $slope2 == 0) {
-                echo "div by zero:\n";
-                print_r($point1);
-                print_r($point2);
-                print_r($point3);
-                print_r($point4);
-            }
             $x = ($i2 - $i1) / ($slope1 - $slope2);
             $y = $slope1 * $x + $i1;
         }

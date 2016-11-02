@@ -103,8 +103,10 @@ class BennoBoxerBriefs extends Pattern
         $p->newPoint(101, $p->x(3)*0.7, 0, 'Control point');
         $p->addPoint( 5, $p->shiftAlong(1, 101, 403, 401, 70), 'Notch');
 
-        $path = 'M 1 C 101 403 401 L 3 L 2 z';
-        $p->newPath('outline', $path, ['class' => 'seamline']);
+        $points = $p->addSplitCurve('split', 1, 101, 403, 401, 0.5, true);
+        $this->insetPath = 'M 2 L 1 C split2 split3 split4 C split7 split6 401 L 3 z';
+        
+        $p->newPath('outline', $this->insetPath, ['class' => 'seamline']);
 
         // Mark path for sample service
         $p->paths['outline']->setSample(true);
@@ -124,6 +126,19 @@ class BennoBoxerBriefs extends Pattern
         /* Title */
         $p->newPoint('titleAnchor', $p->x(3)/2.5, $p->y(401));
         $p->addTitle('titleAnchor', 4, $this->t($p->title), $this->t('Cut 2')."\n".$this->t('Good sides together'));
+
+        /* Standard seam allowance */
+        $p->offsetPathString('sa', $this->insetPath, 10, 1, ['class' => 'seam-allowance']);
+    
+        /* Extra hem allowance */
+        $moveThese = [
+            'sa-line-2TO3XllXsa-line-2TO1',
+            'sa-line-2TO3',
+            'sa-line-3TO2',
+            'sa-line-3TO401XllXsa-line-3TO2',
+        ];
+        $angle = -90;
+        foreach($moveThese as $i) $p->addPoint($i, $p->shift($i, $angle, 10));
     }
     /**
      * Drafts the front
@@ -179,10 +194,56 @@ class BennoBoxerBriefs extends Pattern
     public function finalizeFront($model)
     {
         $p = $this->parts['front'];
+        
+        /* Title */
+        $p->newPoint('titleAnchor', 0, $p->y('gridAnchor')+70);
+        $p->addTitle('titleAnchor', 2, $this->t($p->title), $this->t('Cut 2')."\n".$this->t('Good sides together'));
 
         /* Standard seam allowance */
         $p->offsetPathString('sa', $this->frontPath, -10, 1, ['class' => 'seam-allowance']);
 
+        if ($this->isPaperless) {
+            $mAttr = ['class' => 'measure-lg']; // measure attributes
+            $hAttr = ['class' => 'stroke-note strole-sm']; // help line attributes
+            $tAttr = ['class' => 'text-lg fill-note text-center', 'dy' => -3]; // text attributes
+
+            /* Width */
+            $p->newPoint(100, $p->x(2), $p->y(2)+20);
+            $p->newPoint(-100, $p->x(-2), $p->y(2)+20);
+            $p->newPath(100, "M 2 L 100 M -2 L -100", $hAttr);
+            $p->newPath('w1', "M -100 L 100", $mAttr);
+            $p->newTextOnPath('w1', "M -100 L 100", $this->unit($p->distance(-2,2)), $tAttr);
+            $p->newPath('w2', "M -502 L 502", $mAttr);
+            $p->newTextOnPath('w2', "M -502 L 502", $this->unit($p->distance(-502,502)), $tAttr);
+            $p->newPath('w3', "M -501 L 501", $mAttr);
+            $p->newTextOnPath('w3', "M -501 L 501", $this->unit($p->distance(-501,501)), $tAttr);
+            
+            /* Height */
+            $p->newPoint(101, $p->x(6)-20, $p->y(6));
+            $p->newPoint(102, $p->x(101), $p->y(502));
+            $p->newPath(101, "M 6 L 101", $hAttr);
+            $p->newPath('h1', "M 101 L 102", $mAttr);
+            $p->newTextOnPath('h1', "M 102 L 101", $this->unit($p->distance(101, 102)), $tAttr);
+            $p->newPoint(103, $p->x(101)-20, $p->y(2));
+            $p->newPoint(104, $p->x(103), $p->y(502));
+            $p->newPath('h2', "M 103 L 104", $mAttr);
+            $p->newTextOnPath('h2', "M 104 L 103", $this->unit($p->distance(103, 104)), $tAttr);
+            $p->newPoint(105, $p->x(-4)+20, $p->y(-4));
+            $p->newPoint(106, $p->x(105), $p->y(2));
+            $p->newPath(105, "M -4 L 105", $hAttr);
+            $p->newPath('h3', "M 105 L 106", $mAttr);
+            $p->newTextOnPath('h3', "M 105 L 106", $this->unit($p->distance(105, 106)), $tAttr);
+            
+            /* Find most narrow point */
+            $p->newPath('.tmp', 'M -4 C -404 -701 -501', ['class' => 'stroke-note stroke-xl']);
+            $boundary = $p->paths['.tmp']->findBoundary($p);
+            print_r($boundary);
+
+            /* Seam allowance */
+            $p->newPoint(110, $p->x(2)/2, $p->y(2));
+            $noteAttr = ['line-height' => 7, 'class' => 'text-lg'];
+            $p->newNote(1, 110, $this->t("Standard seam allowance")."\n(".$this->unit(10).')', 6, 30, -5, $noteAttr);
+        }
     }
 
     /**
@@ -239,10 +300,41 @@ class BennoBoxerBriefs extends Pattern
         $p->offsetPathString('sa', $this->sidePath, -10, 1, ['class' => 'seam-allowance']);
 
         /* Extra hem allowance */
-        //$p->addPoint('sa-line-3TO-3', $p->shift('sa-line-3TO-3', -90, 10));
-        //$p->addPoint('sa-line--3TO3', $p->shift('sa-line--3TO3', -90, 10));
-        //$p->newPoint('sa-line-3TO2XllXsa-line-3TO-3', $p->x('sa-line-3TO2'), $p->y('sa-line-3TO-3'));
-        //$p->newPoint('sa-line--3TO3XllXsa-line--3TO-2', $p->x('sa-line--3TO-2'), $p->y('sa-line-3TO-3'));
+        $p->addPoint('sa-line-3TO-3', $p->shift('sa-line-3TO-3', -90, 10));
+        $p->addPoint('sa-line--3TO3', $p->shift('sa-line--3TO3', -90, 10));
+        $p->newPoint('sa-line-3TO2XllXsa-line-3TO-3', $p->x('sa-line-3TO2'), $p->y('sa-line-3TO-3'));
+        $p->newPoint('sa-line--3TO3XllXsa-line--3TO-2', $p->x('sa-line--3TO-2'), $p->y('sa-line-3TO-3'));
+        
+        if ($this->isPaperless) {
+            $mAttr = ['class' => 'measure-lg']; // measure attributes
+            $hAttr = ['class' => 'stroke-note strole-sm']; // help line attributes
+            $tAttr = ['class' => 'text-lg fill-note text-center', 'dy' => -3]; // text attributes
+
+            /* Width */
+            $p->newPoint(100, $p->x(2), $p->y(2)+20);
+            $p->newPoint(-100, $p->x(-2), $p->y(2)+20);
+            $p->newPath(100, "M 2 L 100 M -2 L -100", $hAttr);
+            $p->newPath('w1', "M -100 L 100", $mAttr);
+            $p->newTextOnPath('w1', "M -100 L 100", $this->unit($p->distance(-2,2)), $tAttr);
+            $p->newPoint(101, $p->x(3), $p->y(3)+10);
+            $p->newPoint(-101, $p->x(-3), $p->y(3)+10);
+            $p->newPath(101, "M 3 L 101 M -3 L -101", $hAttr);
+            $p->newPath('w2', "M -101 L 101", $mAttr);
+            $p->newTextOnPath('w2', "M -101 L 101", $this->unit($p->distance(-3,3)), $tAttr);
+
+            /* Height */
+            $p->newPoint(102, $p->x(-2)+20, $p->y(2));
+            $p->newPoint(103, $p->x(102), $p->y(3));
+            $p->newPath('h1', "M 102 L 103", $mAttr);
+            $p->newTextOnPath('h1', "M 103 L 102", $this->unit($p->distance(102, 103)), $tAttr);
+            
+            /* Seam allowance */
+            $noteAttr = ['line-height' => 7, 'class' => 'text-lg'];
+            $p->addPoint(110, $p->shiftTowards(2, 3, 100));
+            $p->addPoint(111, $p->shift(3, 180, 40));
+            $p->newNote(1, 110, $this->t("Standard seam allowance")."\n(".$this->unit(10).')', 8, 10, -5, $noteAttr);
+            $p->newNote(2, 111, $this->t("Hem allowance")." (".$this->unit(20).')', 12, 25, -13, $noteAttr);
+        }
     }
 
     /**
@@ -311,7 +403,7 @@ class BennoBoxerBriefs extends Pattern
             'sa-line-5TO401XlcXsa-curve-5TO3',
         ];
         $angle = $p->angle(8,5)-90;
-        //foreach($moveThese as $i) $p->addPoint($i, $p->shift($i, $angle, 10));
+        foreach($moveThese as $i) $p->addPoint($i, $p->shift($i, $angle, 10));
 
         /* Extra hem allowance left leg */
         $moveThese = [
@@ -321,7 +413,7 @@ class BennoBoxerBriefs extends Pattern
             'sa-line--401TO-5XllXsa-line--401TO-2',
         ];
         $angle = $p->angle(-5,-401)-90;
-        //foreach($moveThese as $i) $p->addPoint($i, $p->shift($i, $angle, 10));
+        foreach($moveThese as $i) $p->addPoint($i, $p->shift($i, $angle, 10));
 
         /* Title */
         $p->newPoint('titleAnchor', 0, $p->y(11) + 70);
@@ -331,5 +423,50 @@ class BennoBoxerBriefs extends Pattern
         $p->newPoint('scaleboxAnchor', 0, $p->y(11) + 120);
         $p->newSnippet('scalebox', 'scalebox', 'scaleboxAnchor');
         
+        if ($this->isPaperless) {
+            $mAttr = ['class' => 'measure-lg']; // measure attributes
+            $hAttr = ['class' => 'stroke-note strole-sm']; // help line attributes
+            $tAttr = ['class' => 'text-lg fill-note text-center', 'dy' => -3]; // text attributes
+
+            /* Waist width */
+            $p->newPoint(100, $p->x(2), $p->y(2)+20);
+            $p->newPoint(-100, $p->x(-2), $p->y(2)+20);
+            $p->newPath(100, "M 2 L 100 M -2 L -100", $hAttr);
+            $key = 'widthWaist';
+            $p->newPath($key, "M -100 L 100", $mAttr);
+            $p->newTextOnPath($key, "M -100 L 100", $this->unit($p->distance(-2,2)), $tAttr);
+                
+            /* Height */
+            $p->newPoint(101, $p->x(-2)+20, $p->y(401));
+            $p->newPoint(102, $p->x(101), $p->y(-2));
+            $p->newPath('h1', "M -401 L 101", $hAttr);
+            $p->newPath('h2', "M 101 L 102", $mAttr);
+            $p->newTextOnPath('h1', "M 101 L 102", $this->unit($p->distance(101, 102)), $tAttr);
+            $p->newPoint(103, $p->x(-5)-20, $p->y(-5));
+            $p->newPoint(104, $p->x(103), $p->y(-2));
+            $p->newPath('h3', "M -5 L 103", $hAttr);
+            $p->newPath('h4', "M 103 L 104", $mAttr);
+            $p->newTextOnPath('h3', "M 103 L 104", $this->unit($p->distance(103, 104)), $tAttr);
+
+            /* Opening */
+            $p->newPath('o1', "M -5 L 5", $mAttr);
+            $p->newTextOnPath('o1', "M -5 L 5", $this->unit($p->distance(-5, 5)), ['class' => 'text-lg fill-note text-center', 'dy' => -3, 'dx' => 12]);
+            $p->newPoint(105, 0, $p->y(5));
+            $p->newPath('o2', "M 105 L 3", $mAttr);
+            $p->newTextOnPath('o2', "M 105 L 3", $this->unit($p->distance(105, 3)), $tAttr);
+            
+            /* Width */
+            $p->newPoint(106, $p->x(401), $p->y(5)+15);
+            $p->addPoint(-106, $p->flipX(106));
+            $p->newPath('w1', "M -401 L -106 M 401 L 106", $hAttr);
+            $p->newPath('w2', "M -106 L 106", $mAttr);
+            $p->newTextOnPath('w3', "M -106 L 106", $this->unit($p->distance(-106, 106)), $tAttr);
+            
+            /* Seam allowance */
+            $noteAttr = ['line-height' => 7, 'class' => 'text-lg'];
+            $p->addPoint(110, $p->shiftTowards(2, 401, 150));
+            $p->newNote(1, 110, $this->t("Standard seam allowance")."\n(".$this->unit(10).')', 8, 10, -5, $noteAttr);
+            $p->newNote(2, 8, $this->t("Hem allowance")." (".$this->unit(20).')', 12, 25, -10, $noteAttr);
+        }
     }
 }

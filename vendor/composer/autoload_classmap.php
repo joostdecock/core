@@ -53,6 +53,7 @@ return array(
     'Freesewing\\Patterns\\JoostBodyBlock' => $baseDir . '/patterns/JoostBodyBlock/JoostBodyBlock.php',
     'Freesewing\\Patterns\\Pattern' => $baseDir . '/patterns/Pattern/Pattern.php',
     'Freesewing\\Patterns\\TestBezier' => $baseDir . '/patterns/TestBezier/TestBezier.php',
+    'Freesewing\\Patterns\\TestLines' => $baseDir . '/patterns/TestLines/TestLines.php',
     'Freesewing\\Patterns\\TrayvonTie' => $baseDir . '/patterns/TrayvonTie/TrayvonTie.php',
     'Freesewing\\Point' => $baseDir . '/src/Point/Point.php',
     'Freesewing\\Polynomial' => $baseDir . '/src/Polynomial/Polynomial.php',

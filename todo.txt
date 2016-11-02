@@ -1,3 +1,5 @@
 Update measurement names in frontend
 Filter out overlap in path offset
 Write a better packer
+Subtheme defs don't seem to be taken into account
+Curve does not correctly set bounding box (try with single curve part)

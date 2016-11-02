@@ -20,6 +20,9 @@ class Stack
     /** @var array $items Items on the stack */
     public $items = array();
 
+    /** @var array $intersections Intersections on the stack */
+    public $intersections = array();
+
     /**
      * Adds items to the stack
      *
@@ -30,6 +33,16 @@ class Stack
         foreach ($items as $item) {
             $this->items[] = $item;
         }
+    }
+
+    /**
+     * Adds intersection to the stack
+     *
+     * @param array intersections The intersection to add
+     */
+    public function addIntersection($intersection)
+    {
+            $this->intersections[] = $intersection;
     }
 
     /**

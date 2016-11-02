@@ -514,6 +514,8 @@ class Part
     {
         $path = $this->paths[$srcKey];
         $stack = $this->pathOffsetAsStack($path, $distance, $newKey);
+        /* take care of overlapping parts */
+        $stack = $this->fixStackIntersections($stack);   
         $stack = $this->fillPathStackGaps($stack, $path);
         $pathString = $this->pathStackToPath($stack, $path);
         $this->newPath($newKey, $pathString, $attributes);
@@ -521,6 +523,126 @@ class Part
             $this->paths[$newKey]->setRender(false);
         }
         $this->purgePoints($newKey.'.splitcurve');
+    }
+
+    private function fixStackIntersections($stack)
+    {
+        /**
+         * A few assumptions here:
+         * - the index of a is lower than that of b (should be the case)
+         * - we are removing what's between a and b, not what's between b and a
+         */
+        $stack = $this->findAllStackIntersections($stack);
+        foreach($stack->intersections as $intersection) {
+            $delta = $intersection['b'] - $intersection['a'];
+            $a = $stack->items[$intersection['a']];
+            $b = $stack->items[$intersection['b']];
+            foreach($intersection['at'] as $key => $point) {
+                $this->addPoint($key, $point);
+                // split a here
+                if($a['type'] == 'curve') {
+                    $points = $this->splitCurve( $a['offset'][0], $a['offset'][1], $a['offset'][2], $a['offset'][3], $key);
+                    for($i=1;$i<9;$i++) $this->addPoint("$key-a-$i", $points[$i-1]);
+                    $new[] = ['type' => 'curve', 'offset' => ["$key-a-1", "$key-a-2", "$key-a-3", "$key-a-4"], 'intersection' => true];
+                    $stack->replace($a, $new);
+                } else {
+                    $new[] = ['type' => 'line', 'offset' => [$a['offset'][0],  $key], 'intersection' => true];
+                    $stack->replace($a, $new);
+                }
+                // split b here
+                if($b['type'] == 'curve') {
+                    $points = $this->splitCurve( $b['offset'][0], $b['offset'][1], $b['offset'][2], $b['offset'][3], $key);
+                    for($i=1;$i<9;$i++) $this->addPoint("$key-b-$i", $points[$i-1]);
+                    $new[] = ['type' => 'curve', 'offset' => ["$key-b-5", "$key-b-6", "$key-b-7", "$key-b-8"], 'intersection' => true];
+                    $stack->replace($b, $new);
+                } else {
+                    $new[] = ['type' => 'line', 'offset' => [$key, $b['offset'][1]]];
+                    $stack->replace($b, $new);
+                }
+            }
+        }
+        return $stack;
+    }
+
+    private function findAllStackIntersections($stack)
+    {
+        $count = count($stack->items);
+        for($i=0;$i<$count;$i++) {
+            for($j=$i+1;$j<$count;$j++) {
+                $intersections = $this->findStackIntersections($stack->items[$i], $stack->items[$j]);
+                if(is_array($intersections)) {
+                    $stack->addIntersection(['a' => $i, 'b' => $j, 'at' => $intersections]);       
+                }
+            }
+        }
+    
+        return $stack;
+    }
+
+    private function findStackIntersections($s1, $s2)
+    {
+        $intersections = false;
+        if($s1['type'] == 'line'    && $s2['type'] == 'line') { // 2 lines
+            $i = $this->linesCross(
+                $s1['offset'][0], 
+                $s1['offset'][1], 
+                $s2['offset'][0], 
+                $s2['offset'][1]
+            );
+            if($i) $intersections = $this->keyArray(array($i), 'intersection-');
+        }
+        else if($s1['type'] == 'curve'    && $s2['type'] == 'curve') { // 2 curves
+            if(
+                $this->curveLen($s1['offset'][0], $s1['offset'][1], $s1['offset'][2], $s1['offset'][3]) > 10 AND
+                $this->curveLen($s2['offset'][0], $s2['offset'][1], $s2['offset'][2], $s2['offset'][3]) > 10
+            ) {
+                $i = BezierToolbox::findCurveCurveIntersections(
+                    $this->loadPoint($s1['offset'][0]), 
+                    $this->loadPoint($s1['offset'][1]), 
+                    $this->loadPoint($s1['offset'][2]), 
+                    $this->loadPoint($s1['offset'][3]), 
+                    $this->loadPoint($s2['offset'][0]), 
+                    $this->loadPoint($s2['offset'][1]), 
+                    $this->loadPoint($s2['offset'][2]), 
+                    $this->loadPoint($s2['offset'][3])
+                );
+                if($i) $intersections = $this->keyArray($i, 'intersection-');
+            }
+        }
+        else if($s1['type'] == 'line'    && $s2['type'] == 'curve') { // 1 line, 1 curve
+            if($this->curveLen($s2['offset'][0], $s2['offset'][1], $s2['offset'][2], $s2['offset'][3]) > 10) {
+                $i = BezierToolbox::findLineCurveIntersections(
+                    $this->loadPoint($s1['offset'][0]), 
+                    $this->loadPoint($s1['offset'][1]), 
+                    $this->loadPoint($s2['offset'][0]), 
+                    $this->loadPoint($s2['offset'][1]), 
+                    $this->loadPoint($s2['offset'][2]), 
+                    $this->loadPoint($s2['offset'][3])
+                );
+                if($i) $intersections = $this->keyArray($i, 'intersection-');
+            }
+        } else { // 1 curve, 1 line
+            if($this->curveLen($s1['offset'][0], $s1['offset'][1], $s1['offset'][2], $s1['offset'][3]) > 10) {
+                $i = BezierToolbox::findLineCurveIntersections(
+                    $this->loadPoint($s1['offset'][0]), 
+                    $this->loadPoint($s1['offset'][1]), 
+                    $this->loadPoint($s1['offset'][2]), 
+                    $this->loadPoint($s1['offset'][3]), 
+                    $this->loadPoint($s2['offset'][0]), 
+                    $this->loadPoint($s2['offset'][1]) 
+                );
+                if($i) $intersections = $this->keyArray($i, 'intersection-');
+            }
+        }
+
+        return $intersections;
+    }
+
+    private function keyArray($array, $prefix)
+    {
+        foreach($array as $key => $value) $return[$this->newID($prefix)] = $value;
+
+        return $return;
     }
 
     /**
@@ -664,44 +786,46 @@ class Part
             } else {
                 $next = $array[$count];
             }
-            if ($chunk['type'] == 'line' && $next['type'] == 'line') {
-                if (!$this->isSamePoint($chunk['offset'][1], $next['offset'][0])) { // Gap to fill
-                    $id = $chunk['offset'][1].'XllX'.$next['offset'][0];
-                    $this->addPoint($id, $this->linesCross($chunk['offset'][0], $chunk['offset'][1],  $next['offset'][0],  $next['offset'][1]));
-                    $pathString = 'M '.$chunk['offset'][1]." L $id L ".$next['offset'][0];
-                    $new[] = $chunk;
-                    $new[] = ['type' => 'line', 'offset' => [$chunk['offset'][1], $id]];
-                    $new[] = ['type' => 'line', 'offset' => [$id, $next['offset'][0]]];
-                    $stack->replace($chunk, $new);
-                }
-            } elseif ($chunk['type'] == 'line' && $next['type'] == 'curve') {
-                if (!$this->isSamePoint($chunk['offset'][1], $next['offset'][0])) { // Gap to fill
-                    $this->addPoint('.help', $this->shiftAlong($next['offset'][0], $next['offset'][1],  $next['offset'][2],  $next['offset'][3], 0.5));
-                    $id = $chunk['offset'][1].'XlcX'.$next['offset'][0];
-                    $this->addPoint($id, $this->linesCross($chunk['offset'][0], $chunk['offset'][1],  '.help',  $next['offset'][0]));
-                    $pathString = 'M '.$chunk['offset'][1]." L $id L ".$next['offset'][0];
-                    $new[] = $chunk;
-                    $new[] = ['type' => 'line', 'offset' => [$chunk['offset'][1], $id]];
-                    $new[] = ['type' => 'line', 'offset' => [$id, $next['offset'][0]]];
-                    $stack->replace($chunk, $new);
-                }
-            } elseif ($chunk['type'] == 'curve' && $next['type'] == 'line') {
-                if (!$this->isSamePoint($chunk['offset'][3], $next['offset'][0])) { // Gap to fill
-                    $this->addPoint('.help', $this->shiftAlong($chunk['offset'][3], $chunk['offset'][2],  $chunk['offset'][1],  $chunk['offset'][0], 0.5));
-                    $id = $chunk['offset'][3].'XclX'.$next['offset'][0];
-                    $this->addPoint($id, $this->linesCross($chunk['offset'][3], '.help', $next['offset'][0], $next['offset'][1]));
-                    $pathString = 'M '.$chunk['offset'][3]." L $id L ".$next['offset'][0];
-                    $new[] = $chunk;
-                    $new[] = ['type' => 'line', 'offset' => [$chunk['offset'][3], $id]];
-                    $new[] = ['type' => 'line', 'offset' => [$id, $next['offset'][0]]];
-                    $stack->replace($chunk, $new);
-                }
-            } elseif ($chunk['type'] == 'curve' && $next['type'] == 'curve') {
-                if (!$this->isSamePoint($chunk['offset'][3], $next['offset'][0])) { // Gap to fill
-                    $pathString = 'M '.$chunk['offset'][3].' L '.$next['offset'][0];
-                    $new[] = $chunk;
-                    $new[] = ['type' => 'line', 'offset' => [$chunk['offset'][3], $next['offset'][0]]];
-                    $stack->replace($chunk, $new);
+            if(!isset($chunk['intersection'])) {  // Intersections have no gaps
+                if ($chunk['type'] == 'line' && $next['type'] == 'line') {
+                    if (!$this->isSamePoint($chunk['offset'][1], $next['offset'][0])) { // Gap to fill
+                        $id = $chunk['offset'][1].'XllX'.$next['offset'][0];
+                        $this->addPoint($id, $this->beamsCross($chunk['offset'][0], $chunk['offset'][1],  $next['offset'][0],  $next['offset'][1]));
+                        $pathString = 'M '.$chunk['offset'][1]." L $id L ".$next['offset'][0];
+                        $new[] = $chunk;
+                        $new[] = ['type' => 'line', 'offset' => [$chunk['offset'][1], $id]];
+                        $new[] = ['type' => 'line', 'offset' => [$id, $next['offset'][0]]];
+                        $stack->replace($chunk, $new);
+                    }
+                } elseif ($chunk['type'] == 'line' && $next['type'] == 'curve') {
+                    if (!$this->isSamePoint($chunk['offset'][1], $next['offset'][0])) { // Gap to fill
+                        $this->addPoint('.help', $this->shiftAlong($next['offset'][0], $next['offset'][1],  $next['offset'][2],  $next['offset'][3], 0.5));
+                        $id = $chunk['offset'][1].'XlcX'.$next['offset'][0];
+                        $this->addPoint($id, $this->beamsCross($chunk['offset'][0], $chunk['offset'][1],  '.help',  $next['offset'][0]));
+                        $pathString = 'M '.$chunk['offset'][1]." L $id L ".$next['offset'][0];
+                        $new[] = $chunk;
+                        $new[] = ['type' => 'line', 'offset' => [$chunk['offset'][1], $id]];
+                        $new[] = ['type' => 'line', 'offset' => [$id, $next['offset'][0]]];
+                        $stack->replace($chunk, $new);
+                    }
+                } elseif ($chunk['type'] == 'curve' && $next['type'] == 'line') {
+                    if (!$this->isSamePoint($chunk['offset'][3], $next['offset'][0])) { // Gap to fill
+                        $this->addPoint('.help', $this->shiftAlong($chunk['offset'][3], $chunk['offset'][2],  $chunk['offset'][1],  $chunk['offset'][0], 0.5));
+                        $id = $chunk['offset'][3].'XclX'.$next['offset'][0];
+                        $this->addPoint($id, $this->beamsCross($chunk['offset'][3], '.help', $next['offset'][0], $next['offset'][1]));
+                        $pathString = 'M '.$chunk['offset'][3]." L $id L ".$next['offset'][0];
+                        $new[] = $chunk;
+                        $new[] = ['type' => 'line', 'offset' => [$chunk['offset'][3], $id]];
+                        $new[] = ['type' => 'line', 'offset' => [$id, $next['offset'][0]]];
+                        $stack->replace($chunk, $new);
+                    }
+                } elseif ($chunk['type'] == 'curve' && $next['type'] == 'curve') {
+                    if (!$this->isSamePoint($chunk['offset'][3], $next['offset'][0])) { // Gap to fill
+                        $pathString = 'M '.$chunk['offset'][3].' L '.$next['offset'][0];
+                        $new[] = $chunk;
+                        $new[] = ['type' => 'line', 'offset' => [$chunk['offset'][3], $next['offset'][0]]];
+                        $stack->replace($chunk, $new);
+                    }
                 }
             }
             ++$count;
@@ -871,13 +995,10 @@ class Part
      */
     private function isSamePoint($key1, $key2)
     {
-        $p1 = $this->loadPoint($key1);
-        $p2 = $this->loadPoint($key2);
-        if (round($p1->getX(), 2) == round($p2->getX(), 2) && round($p1->getY(), 2) == round($p2->getY(), 2)) {
-            return true;
-        } else {
-            return false;
-        }
+        $point1 = $this->loadPoint($key1);
+        $point2 = $this->loadPoint($key2);
+
+        return Utils::isSamePoint($point1, $point2);
     }
 
     /**
@@ -1070,10 +1191,8 @@ class Part
     {
         $point1 = $this->loadPoint($key1);
         $point2 = $this->loadPoint($key2);
-        $deltaX = $point1->getX() - $point2->getX();
-        $deltaY = $point1->getY() - $point2->getY();
 
-        return sqrt(pow($deltaX, 2) + pow($deltaY, 2));
+        return Utils::distance($point1, $point2);
     }
 
     /**
@@ -1271,22 +1390,6 @@ class Part
     }
 
     /**
-     * Returns the slope of a line
-     *
-     * @param string $key1 The id of the start of the line
-     * @param string $key2 The id of the end of the line
-     *
-     * @return float slope of the line
-     */
-    private function getSlope($key1, $key2)
-    {
-        $point1 = $this->loadPoint($key1);
-        $point2 = $this->loadPoint($key2);
-
-        return ($point2->getY() - $point1->getY()) / ($point2->getX() - $point1->getX());
-    }
-
-    /**
      * Returns the intersection of two lines
      *
      * @param string $key1 The id of the start of line A
@@ -1294,50 +1397,59 @@ class Part
      * @param string $key3 The id of the start of line B
      * @param string $key4 The id of the end line B
      *
-     * @return \Freesewing\Point The point at the line intersection
+     * @return \Freesewing\Point|false The point at the line intersection or false if lines are parallel
      */
     public function linesCross($key1, $key2, $key3, $key4)
     {
-        $point1 = $this->loadPoint($key1);
-        $point2 = $this->loadPoint($key2);
-        $point3 = $this->loadPoint($key3);
-        $point4 = $this->loadPoint($key4);
-
-        /* If line is vertical, handle this special case */
-        if ($point1->getX() == $point2->getX()) {
-            $slope = $this->getSlope($key3, $key4);
-            $i = $point3->getY() - ($slope * $point3->getX());
-            $x = $point1->getX();
-            $y = $slope * $x + $i;
-        } elseif ($point3->getX() == $point4->getX()) {
-            $slope = $this->getSlope($key1, $key2);
-            $i = $point1->getY() - ($slope * $point1->getX());
-            $x = $point3->getX();
-            $y = $slope * $x + $i;
-        } else {
-            /* If line goes from right to left, swap points */
-            if ($point1->getX() > $point2->getX()) {
-                $tmp = $key1;
-                $key1 = $key2;
-                $key2 = $tmp;
-            }
-            if ($point3->getX() > $point4->getX()) {
-                $tmp = $key3;
-                $key3 = $key4;
-                $key4 = $tmp;
-            }
-            /* Find slope */
-            $slope1 = $this->getSlope($key1, $key2);
-            $slope2 = $this->getSlope($key3, $key4);
-            /* Find y intercept */
-            $i1 = $point1->getY() - ($slope1 * $point1->getX());
-            $i2 = $point3->getY() - ($slope2 * $point3->getX());
-            /* Find intersection */
-            $x = ($i2 - $i1) / ($slope1 - $slope2);
-            $y = $slope1 * $x + $i1;
+        $point = $this->beamsCross($key1, $key2, $key3, $key4);
+        
+        if($point) { // We have an intersection, but is it within the lines segments?
+            $lenA = $this->distance($key1, $key2);
+            $lenB = $this->distance($key3, $key4);
+            $this->addPoint('.linesCrossCheck', $point);
+            $lenC = $this->distance($key1, '.linesCrossCheck') + $this->distance('.linesCrossCheck', $key2);
+            $lenD = $this->distance($key3, '.linesCrossCheck') + $this->distance('.linesCrossCheck', $key4);
+            if(round($lenA,1) == round($lenC,1) AND round($lenB,1) == round($lenD,1)) return $point;
+            else return false;
         }
+    }
 
-        return $this->createPoint($x, $y);
+    /**
+     * Returns the intersection of two endless lines (beams)
+     *
+     * @param string $key1 The id of the start of line A
+     * @param string $key2 The id of the end line A
+     * @param string $key3 The id of the start of line B
+     * @param string $key4 The id of the end line B
+     *
+     * @return \Freesewing\Point|false The point at the line intersection or false if lines are parallel
+     */
+    public function beamsCross($key1, $key2, $key3, $key4)
+    {
+        $i = $this->findLineLineIntersection($key1, $key2, $key3, $key4);
+        
+        if(is_array($i)) return $this->createPoint($i[0], $i[1]);
+        else return false;
+    }
+
+    /**
+     * Returns the coordinates of the intersection of two endless lines (beams)
+     *
+     * @param string $key1 The id of the start of line A
+     * @param string $key2 The id of the end line A
+     * @param string $key3 The id of the start of line B
+     * @param string $key4 The id of the end line B
+     *
+     * @return array|null The coordinates of the line intersection or null if lines are parallel
+     */
+    public function findLineLineIntersection($key1, $key2, $key3, $key4)
+    {
+        return Utils::findLineLineIntersection(
+            $this->loadPoint($key1),
+            $this->loadPoint($key2),
+            $this->loadPoint($key3),
+            $this->loadPoint($key4)
+        );
     }
 
     /**
@@ -1408,7 +1520,7 @@ class Part
         $this->newPoint('.curveCrossesX-1', $targetX, -10000);
         $this->newPoint('.curveCrossesX-2', $targetX, 10000);
 
-        $this->curveCrossesLine('.curveCrossesX-1', '.curveCrossesX-2', $keyStart, $keyControl1, $keyControl2, $keyEnd, $prefix);
+        $this->curveCrossesLine($keyStart, $keyControl1, $keyControl2, $keyEnd, '.curveCrossesX-1', '.curveCrossesX-2', $prefix);
     }
 
     /**
@@ -1431,7 +1543,7 @@ class Part
         $this->newPoint('.curveCrossesY-1', -10000, $targetY);
         $this->newPoint('.curveCrossesY-2', 10000, $targetY);
 
-        $this->curveCrossesLine('.curveCrossesY-1', '.curveCrossesY-2', $keyStart, $keyControl1, $keyControl2, $keyEnd, $prefix);
+        $this->curveCrossesLine($keyStart, $keyControl1, $keyControl2, $keyEnd, '.curveCrossesY-1', '.curveCrossesY-2', $prefix);
     }
 
     /**
@@ -1457,17 +1569,17 @@ class Part
     /**
      * Returns intersection of a Bezier curve with a line
      *
-     * @param string $lineStartKey Point at the start of the line
-     * @param string $lineEndKey Point at the end of the line
      * @param string $curveStartkey The id of the start of the curve
      * @param string $curveControl1Key The id of the first control point
      * @param string $curveControl2Key The id of the second control point
      * @param string $curveEndKey The id of the end of the curve
+     * @param string $lineStartKey Point at the start of the line
+     * @param string $lineEndKey Point at the end of the line
      * @param string $prefix The prefix for points this will create
      *
      * @return void Nothing Points will be added to the part
      */
-    public function curveCrossesLine($lineStartKey, $lineEndKey, $curveStartKey, $curveControl1Key, $curveControl2Key, $curveEndKey, $prefix=false)
+    public function curveCrossesLine($curveStartKey, $curveControl1Key, $curveControl2Key, $curveEndKey, $lineStartKey, $lineEndKey, $prefix=false)
     {
         $points = BezierToolbox::findLineCurveIntersections(
             $this->loadPoint($lineStartKey), 
@@ -1602,7 +1714,7 @@ class Part
      *
      * @return void Nothing Points will be added to the part
      */
-    public function curveCrossesCurve($curve1StartKey, $curve1Control1Key, $curve1Control2Key, $curve1EndKey, $curve2StartKey, $curve2Control1Key, $curve2Control2Key, $curve2EndKey, $prefix=false)
+    public function curvesCross($curve1StartKey, $curve1Control1Key, $curve1Control2Key, $curve1EndKey, $curve2StartKey, $curve2Control1Key, $curve2Control2Key, $curve2EndKey, $prefix=false)
     {
         $points = BezierToolbox::findCurveCurveIntersections(
             $this->loadPoint($curve1StartKey), 

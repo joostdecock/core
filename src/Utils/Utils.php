@@ -127,4 +127,114 @@ class Utils
 
         return dirname($filename);
     }
+    
+    /**
+     * Finds intersection between two (endless) lines
+     *
+     * @param string $key1 The id of the start of line A
+     * @param string $key2 The id of the end line A
+     * @param string $key3 The id of the start of line B
+     * @param string $key4 The id of the end line B
+     *
+     * @return array|null The coordinates of the intersection, or null if the lines are parallel
+     */
+    public static function findLineLineIntersection($point1, $point2, $point3, $point4)
+    {
+        /* weed out parallel lines */
+        if($point1->getX() == $point2->getX() &&  $point3->getX() == $point4->getX()) return false;
+        if($point1->getY() == $point2->getY() &&  $point3->getY() == $point4->getY()) return false;
+
+        /* If line is vertical, handle this special case */
+        if ($point1->getX() == $point2->getX()) {
+            $slope = Utils::getSlope($point3, $point4);
+            $i = $point3->getY() - ($slope * $point3->getX());
+            $x = $point1->getX();
+            $y = $slope * $x + $i;
+        } elseif ($point3->getX() == $point4->getX()) {
+            $slope = Utils::getSlope($point1, $point2);
+            $i = $point1->getY() - ($slope * $point1->getX());
+            $x = $point3->getX();
+            $y = $slope * $x + $i;
+        } else {
+            /* If line goes from right to left, swap points */
+            if ($point1->getX() > $point2->getX()) {
+                $tmp = $point1;
+                $point1 = $point2;
+                $point2 = $tmp;
+            }
+            if ($point3->getX() > $point4->getX()) {
+                $tmp = $point3;
+                $point3 = $point4;
+                $point4 = $tmp;
+            }
+            /* Find slope */
+            $slope1 = Utils::getSlope($point1, $point2);
+            $slope2 = Utils::getSlope($point3, $point4);
+            /* Find y intercept */
+            $i1 = $point1->getY() - ($slope1 * $point1->getX());
+            $i2 = $point3->getY() - ($slope2 * $point3->getX());
+            /* Find intersection */
+            if($slope1 - $slope2 == 0) {
+                echo "div by zero:\n";
+                print_r($point1);
+                print_r($point2);
+                print_r($point3);
+                print_r($point4);
+            }
+            $x = ($i2 - $i1) / ($slope1 - $slope2);
+            $y = $slope1 * $x + $i1;
+        }
+
+        return [$x, $y];
+    }
+
+    /**
+     * Returns the slope of a line
+     *
+     * @param \Freesewing\Point $point1 The point at the start of the line
+     * @param \Freesewing\Point $point2 The point at the end of the line
+     *
+     * @return float slope of the line
+     */
+    public static function getSlope($point1, $point2)
+    {
+        return ($point2->getY() - $point1->getY()) / ($point2->getX() - $point1->getX());
+    }
+    
+    /**
+     * Checks whether two points are (almost) the same.
+     *
+     * Checks whether two points are the same, or close enough to be considered the same.
+     * Close enough means less than 0.01 mm difference between their coordinates on each axis.
+     *
+     * @param \Freesewing\Point $point1 Point 1
+     * @param \Freesewing\Point $point2 Point 2
+     *
+     * @return bool True is they are the same. False if not.
+     */
+    public static function isSamePoint($point1, $point2)
+    {
+        if (round($point1->getX(), 2) == round($point2->getX(), 2) && round($point1->getY(), 2) == round($point2->getY(), 2)) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    /**
+     * Returns the distance between two points
+     *
+     * @param \Freesewing\Point $point1 The first point
+     * @param \Freesewing\Point $point2 The second point
+     *
+     * @return float Distance between the points
+     */
+    public function distance($point1, $point2)
+    {
+        $deltaX = $point1->getX() - $point2->getX();
+        $deltaY = $point1->getY() - $point2->getY();
+
+        return sqrt(pow($deltaX, 2) + pow($deltaY, 2));
+    }
+
 }

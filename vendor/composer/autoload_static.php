@@ -147,6 +147,7 @@ class ComposerStaticInit6d3c91d11fabeb58ed862308abf0796d
         'Freesewing\\Patterns\\JoostBodyBlock' => __DIR__ . '/../..' . '/patterns/JoostBodyBlock/JoostBodyBlock.php',
         'Freesewing\\Patterns\\Pattern' => __DIR__ . '/../..' . '/patterns/Pattern/Pattern.php',
         'Freesewing\\Patterns\\TestBezier' => __DIR__ . '/../..' . '/patterns/TestBezier/TestBezier.php',
+        'Freesewing\\Patterns\\TestLines' => __DIR__ . '/../..' . '/patterns/TestLines/TestLines.php',
         'Freesewing\\Patterns\\TrayvonTie' => __DIR__ . '/../..' . '/patterns/TrayvonTie/TrayvonTie.php',
         'Freesewing\\Point' => __DIR__ . '/../..' . '/src/Point/Point.php',
         'Freesewing\\Polynomial' => __DIR__ . '/../..' . '/src/Polynomial/Polynomial.php',

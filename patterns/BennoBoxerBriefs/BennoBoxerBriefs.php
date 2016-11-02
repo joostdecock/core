@@ -239,10 +239,10 @@ class BennoBoxerBriefs extends Pattern
         $p->offsetPathString('sa', $this->sidePath, -10, 1, ['class' => 'seam-allowance']);
 
         /* Extra hem allowance */
-        $p->addPoint('sa-line-3TO-3', $p->shift('sa-line-3TO-3', -90, 10));
-        $p->addPoint('sa-line--3TO3', $p->shift('sa-line--3TO3', -90, 10));
-        $p->newPoint('sa-line-3TO2XllXsa-line-3TO-3', $p->x('sa-line-3TO2'), $p->y('sa-line-3TO-3'));
-        $p->newPoint('sa-line--3TO3XllXsa-line--3TO-2', $p->x('sa-line--3TO-2'), $p->y('sa-line-3TO-3'));
+        //$p->addPoint('sa-line-3TO-3', $p->shift('sa-line-3TO-3', -90, 10));
+        //$p->addPoint('sa-line--3TO3', $p->shift('sa-line--3TO3', -90, 10));
+        //$p->newPoint('sa-line-3TO2XllXsa-line-3TO-3', $p->x('sa-line-3TO2'), $p->y('sa-line-3TO-3'));
+        //$p->newPoint('sa-line--3TO3XllXsa-line--3TO-2', $p->x('sa-line--3TO-2'), $p->y('sa-line-3TO-3'));
     }
 
     /**
@@ -311,7 +311,7 @@ class BennoBoxerBriefs extends Pattern
             'sa-line-5TO401XlcXsa-curve-5TO3',
         ];
         $angle = $p->angle(8,5)-90;
-        foreach($moveThese as $i) $p->addPoint($i, $p->shift($i, $angle, 10));
+        //foreach($moveThese as $i) $p->addPoint($i, $p->shift($i, $angle, 10));
 
         /* Extra hem allowance left leg */
         $moveThese = [
@@ -321,7 +321,7 @@ class BennoBoxerBriefs extends Pattern
             'sa-line--401TO-5XllXsa-line--401TO-2',
         ];
         $angle = $p->angle(-5,-401)-90;
-        foreach($moveThese as $i) $p->addPoint($i, $p->shift($i, $angle, 10));
+        //foreach($moveThese as $i) $p->addPoint($i, $p->shift($i, $angle, 10));
 
         /* Title */
         $p->newPoint('titleAnchor', 0, $p->y(11) + 70);

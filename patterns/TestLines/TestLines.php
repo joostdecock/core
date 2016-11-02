@@ -1,5 +1,5 @@
 <?php
-/** Freesewing\Patterns\TestBezier class */
+/** Freesewing\Patterns\TestLines class */
 
 namespace Freesewing\Patterns;
 
@@ -10,7 +10,7 @@ namespace Freesewing\Patterns;
  * @copyright 2016 Joost De Cock
  * @license http://opensource.org/licenses/GPL-3.0 GNU General Public License, Version 3
  */
-class TestBezier extends Pattern
+class TestLines extends Pattern
 {
     /**
      * Generates a draft 
@@ -46,29 +46,24 @@ class TestBezier extends Pattern
         $p = $this->parts['test'];
 
         // Center vertical axis
-        $p->newPoint(1,   0,  -20);
-        $p->newPoint(2,   120, 100);
-        $p->newPoint(3,   120, 0);
-        $p->newPoint(4,   -20, 100);
-        $p->newPoint(5,   0, 400);
-        $p->newPoint(6,   100, -300);
-        $p->newPoint(7,   -300, 0);
-        $p->newPoint(8,   450, 100);
+        $p->newPoint(1,   0,  0);
+        $p->newPoint(2,   30, 0);
+        $p->newPoint(3,   50, 50);
+        $p->newPoint(4,   70, 0);
+        $p->newPoint(5,   100, 0);
+        $p->newPoint(6,   100, 100);
+        $p->newPoint(7,   0, 100);
 
         //$p->curveCrossesCurve(1,5,6,2,3,7,8,4,'test3'); 
-        //$p->curveCrossesLine(5,6,1,3,2,4,'test1'); 
+        //$p->curveCrossesLine(1,2,3,4,5,6,'test1'); 
         //$p->curveCrossesY(1,3,2,4,50,'test2'); 
         
-        
-        // Paths
-        $path = 'M 1 C 5 6 2 M 3 C 7 8 4';
-        $p->newPath('test', $path);
-        $p->curvesCross(1,5,6,2,3,7,8,4,'test3'); 
+
 
         // Paths
-        //$path = 'M 1 C 2 3 4 M 3 C 1 1 4';
-        //$p->newPath('test', $path);
-        //$p->curveCrossesCurve(1,2,3,4,3,1,1,4,'test3'); 
+        $path = 'M 1 L 2 L 3 L 4 L 5 L 6 L 7 z';
+        $p->newPath('test', $path);
+        $p->offsetPathString('sa', $path, -10, 1, ['class' => 'seam-allowance']);
 
         // Mark path for sample service
         $p->paths['test']->setSample(true);

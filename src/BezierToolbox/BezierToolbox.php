@@ -109,14 +109,16 @@ class BezierToolbox
             }
         }
         $i = 0;
-        foreach($I as $coords) {
-            $point = new \Freesewing\Point();
-            $point->setX($coords[0]);
-            $point->setY($coords[1]);
-            $points[] = $point;
+        if(isset($I) AND is_array($I)) {
+            foreach($I as $coords) {
+                $point = new \Freesewing\Point();
+                $point->setX($coords[0]);
+                $point->setY($coords[1]);
+                $points[] = $point;
+            }
+            return $points;
         }
-
-        return $points;
+        else return false;
     }
     
     /**
@@ -256,11 +258,14 @@ class BezierToolbox
         $steps = BezierToolbox::$steps;
         $best_t = null;
         $best_distance = false;
+        $tmp = new \Freesewing\Point();
         for ($i = 0; $i <= $steps; ++$i) {
             $t = $i / $steps;
             $x = Utils::bezierPoint($t, $from->getX(), $cp1->getX(), $cp2->getX(), $to->getX());
             $y = Utils::bezierPoint($t, $from->getY(), $cp1->getY(), $cp2->getY(), $to->getY());
-            $distance = hopLen($split, array($x, $y));
+            $tmp->setX($x);
+            $tmp->setY($y);
+            $distance = Utils::distance($split, $tmp);
             if ($distance < $best_distance || $best_distance === false) {
                 $best_t = $t;
                 $best_distance = $distance;
@@ -707,10 +712,11 @@ class BezierToolbox
                 }
             }
         }
-        foreach($points as $key => $point) {
-            $intersections[$key] = $point->asPoint();
+        if(is_array($points)) {
+            foreach($points as $key => $point) $intersections[$key] = $point->asPoint();
+            return $intersections;
         }
-        return $intersections;
+        else return false;
     }
 
 }

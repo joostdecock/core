@@ -3,3 +3,4 @@ Filter out overlap in path offset
 Write a better packer
 Subtheme defs don't seem to be taken into account
 Curve does not correctly set bounding box (try with single curve part)
+Check for improvements in boxer pattern. Rise is not used, plus seam length does not match

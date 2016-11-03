@@ -457,23 +457,23 @@ class Part
             $path->setBoundary($path->findBoundary($this));
             if (!@is_object($topLeft)) {
                 $topLeft = new \Freesewing\Point('topLeft');
-                $topLeft->setX($path->boundary->topLeft->x);
-                $topLeft->setY($path->boundary->topLeft->y);
+                $topLeft->setX($path->boundary->topLeft->getX());
+                $topLeft->setY($path->boundary->topLeft->getY());
                 $bottomRight = new \Freesewing\Point('bottomRight');
-                $bottomRight->setX($path->boundary->bottomRight->x);
-                $bottomRight->setY($path->boundary->bottomRight->y);
+                $bottomRight->setX($path->boundary->bottomRight->getX());
+                $bottomRight->setY($path->boundary->bottomRight->getY());
             } else {
-                if ($path->boundary->topLeft->x < $topLeft->x) {
-                    $topLeft->setX($path->boundary->topLeft->x);
+                if ($path->boundary->topLeft->getX() < $topLeft->getX()) {
+                    $topLeft->setX($path->boundary->topLeft->getX());
                 }
-                if ($path->boundary->topLeft->y < $topLeft->y) {
-                    $topLeft->setY($path->boundary->topLeft->y);
+                if ($path->boundary->topLeft->getY() < $topLeft->getY()) {
+                    $topLeft->setY($path->boundary->topLeft->getY());
                 }
-                if ($path->boundary->bottomRight->x < $bottomRight->x) {
-                    $bottomRight->setX($path->boundary->bottomRight->x);
+                if ($path->boundary->bottomRight->getX() > $bottomRight->getX()) {
+                    $bottomRight->setX($path->boundary->bottomRight->getX());
                 }
-                if ($path->boundary->bottomRight->y < $bottomRight->y) {
-                    $bottomRight->setY($path->boundary->bottomRight->y);
+                if ($path->boundary->bottomRight->getY() > $bottomRight->getY()) {
+                    $bottomRight->setY($path->boundary->bottomRight->getY());
                 }
             }
         }

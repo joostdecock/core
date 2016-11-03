@@ -1,10 +1,4 @@
-waistbandWidth:
-    type: number
-    min: 10
-    max: 80
-    default: 40
-
-speedoRise:
+rise:
     type: number
     min: 0
     max: 80

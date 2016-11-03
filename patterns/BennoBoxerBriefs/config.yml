@@ -19,8 +19,7 @@ measurements:
     - upperLegCircumference
     - crossseamLength
 options:
-    - waistbandWidth
-    - speedoRise
+    - rise
     - verticalStretchFactor
     - horizontalStretchFactor
 inMemoryOf:   

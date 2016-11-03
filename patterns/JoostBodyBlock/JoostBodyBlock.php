@@ -153,7 +153,7 @@ class JoostBodyBlock extends Pattern
         $p->newPoint(12, $p->x(7) + sqrt(pow($model->getMeasurement('shoulderLength'), 2) - pow($model->getMeasurement('shoulderSlope') / 2, 2)), $model->getMeasurement('shoulderSlope') / 2, 'Shoulder tip');
         $p->addPoint(13, $p->Shift(5, 180, $p->distance(11, 5) / 4), 'Left curve control point for 5');
         $p->addPoint('.help1', $p->shift(11, 45, 5), '45 degrees upwards');
-        $p->addPoint('.help2', $p->linesCross(11, '.help1', 5, 10), 'Intersection');
+        $p->addPoint('.help2', $p->beamsCross(11, '.help1', 5, 10), 'Intersection');
         $p->addPoint(14, $p->shiftTowards(11, '.help2', $p->distance(11, '.help2') / 2), 'Point on armhole curve');
         $p->addPoint(15, $p->shift(14, 135, 25), 'Top curve control point for 14');
         $p->addPoint(16, $p->Shift(14, -45, 25), 'Bottom control point for 14');

@@ -138,7 +138,7 @@ class AaronAshirt extends JoostBodyBlock
         $p->addPoint(103, $p->shiftTowards(101, 8, $this->getOption('shoulderStrapWidth') / 2), 'Shoulder strap edge on the neck side');
         $p->addPoint('.help1', $p->shift(103, $p->angle(102, 103) - 90, 20), 'Helper point for 90 degree angle');
         $p->addPoint('.help2', $p->shift(100, 180, 20), 'Helper point to intersect with bottom of neckline');
-        $p->addPoint(104, $p->linesCross(103, '.help1', 100, '.help2'), 'Control point for 100');
+        $p->addPoint(104, $p->beamsCross(103, '.help1', 100, '.help2'), 'Control point for 100');
         $p->addPoint(105, $p->shiftTowards(103, 104, $p->distance(103, 104) * $this->getOption('necklineBend')), 'Control point for 103');
         $p->addPoint(106, $p->shift(102, $p->angle(102, 103) - 90, $p->deltaY(102, 5) / 2), 'Control point for 102');
         $p->addPoint(107, $p->shift(5, 0, $p->deltaX(5, 102)), 'Control point for 5');
@@ -197,10 +197,10 @@ class AaronAshirt extends JoostBodyBlock
         $p->newPoint(100, $p->x(100), $p->y(1) + 12.5, 'Neck bottom @ CB');
         $p->clonePoint(100, 'gridAnchor');
         $p->newPoint(104, $p->deltaX(100, 103) / 2, $p->y(100), 'Control point for 100');
-        $p->addPoint(105, $p->linesCross(100, 104, 103, 105), 'Control point for 103');
+        $p->addPoint(105, $p->beamsCross(100, 104, 103, 105), 'Control point for 103');
 
         // Adjust armhole
-        $p->addPoint('106max', $p->linesCross(102, 106, 2, 5), 'Max CP for armhole');
+        $p->addPoint('106max', $p->beamsCross(102, 106, 2, 5), 'Max CP for armhole');
         // backlineBend should stay between 0.5 and 0.9, so let's make sure of that.
         $backlineBend = 0.5 + $this->getOption('backlineBend') * 0.4;
         $p->addPoint(106, $p->shiftTowards(102, '106max', $p->distance(102, '106max') * $backlineBend), 'Control point for 102');

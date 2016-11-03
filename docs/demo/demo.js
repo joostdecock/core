@@ -10,7 +10,7 @@ function scrollTo(target) {
 function loadServices() {
     $.getJSON(api+'/info/json', function( data ) {
         $.each( data['services'], function( key, val ) {
-            $("#services").append( "<div class='col-md-4' id='servicelist'><p><a class='btn btn-primary btn-lock btn-lg service main-button' id='" + val + "'>Try the " + val + " service</a></p></div>" );
+            $("#services").append( "<div id='servicelist'><p><a class='btn btn-primary btn-lock service main-button' id='" + val + "'>Try the " + val + " service</a></p></div>" );
         });
         $('#details').html('');
         $('#details').append( " <p>We made an AJAX call to to:</p> <code>" + api + "/info/json</code>");
@@ -31,25 +31,27 @@ function loadApiInfo() {
     $('#content').html(spinner);
     $.getJSON(api+'/info/json', function( data ) {
         $('#content').html('<div class="row" id="contentrow"></div>');
-        $('#contentrow').append( "<h2>API Information</h2>");
+        $('#contentrow').append( "<div class='col-xs-12'><h2>API Information</h2></div>");
        
-        $('#contentrow').append( "<div class='col-md-4' id='channelblock'><h3>Channels</h3><ul id='channels'></ul></div>");
+        $('#contentrow').append( "<div class='col-md-3' id='serviceblock'><h3>Services</h3><ul id='servicesul'></ul></div>");
+        $.each( data['services'], function( key, val ) {
+            $("#servicesul").append( "<li>" + val + "</li>" );
+        });
+
+        $('#contentrow').append( "<div class='col-md-3' id='channelblock'><h3>Channels</h3><ul id='channels'></ul></div>");
         $.each( data['channels'], function( key, val ) {
             $("#channels").append( "<li>" + val + "</li>" );
         });
-        $('#channelblock').append( "<blockquote class='comment'><h6>Channels are boring</h6>The info service only provides an overview of available channels.</blockquote>");
 
-        $('#contentrow').append( "<div class='col-md-4' id='themeblock'><h3>Themes</h3><ul id='themes'></ul></div>");
+        $('#contentrow').append( "<div class='col-md-3' id='themeblock'><h3>Themes</h3><ul id='themes'></ul></div>");
         $.each( data['themes'], function( key, val ) {
             $("#themes").append( "<li>" + val + "</li>" );
         });
-        $('#themeblock').append( "<blockquote class='comment'><h6>Themes are just themes</h6>The info service only provides an overview of available themes.</blockquote>");
 
-        $('#contentrow').append( "<div class='col-md-4' id='patternblock'><h3>Patterns</h3><ul id='patterns'></ul></div>");
+        $('#contentrow').append( "<div class='col-md-3' id='patternblock'><h3>Patterns</h3><ul id='patterns'></ul><p>Click on a pattern name to drill deeper.</p></div>");
         $.each( data['patterns'], function( key, val ) {
             $("#patterns").append( "<li><a class='clickable pattern-info' data-pattern='" + key + "'>" + val + "</a></li>" );
         });
-        $('#patternblock').append( "<blockquote class='tip'><h6>Patterns is where it's at</h6>Click on a pattern name to drill deeper.</blockquote>");
 
         $('#details').html('');
         $('#details').append( " <p>We made an AJAX call to to:</p> <code>" + api + "/info/json</code>");
@@ -67,16 +69,18 @@ function loadPatternInfo(pattern) {
     $('#patterninfo').html(spinner);
     $.getJSON(api+'/info/'+pattern+'/json', function( data ) {
         $('#patterninfo').html('');
-        $('#patterninfo').append( "<h2>The " + pattern + " pattern</h2>");
+        $('#patterninfo').append( "<div class='row'><div class='col-xs-12'><h2>" + data['info']['name'] + "</h2></div></div>");
 
-        $('#patterninfo').append( "<div class='col-md-3' id='patterninfo-col1'></div>");
+        $('#patterninfo').append( "<div class='row' id='patternrow1'></div>");
+
+        $('#patternrow1').append( "<div class='col-md-3' id='patterninfo-col1'></div>");
         $('#patterninfo-col1').append( "<h3>General info</h3>");
         $('#patterninfo-col1').append( "<ul id='patterninfo-col1-ul'></ul>");
         $.each( data['info'], function( key, val ) {
             $("#patterninfo-col1-ul").append( "<li><b>" + key + "</b> &raquo; " +val + "</li>" );
         });
 
-        $('#patterninfo').append( "<div class='col-md-3' id='patterninfo-col2'></div>");
+        $('#patternrow1').append( "<div class='col-md-3' id='patterninfo-col2'></div>");
         $('#patterninfo-col2').append( "<h3>Parts</h3>");
         $('#patterninfo-col2').append( "<ul id='patterninfo-col2-ul1'></ul>");
         $.each( data['parts'], function( key, val ) {
@@ -88,23 +92,25 @@ function loadPatternInfo(pattern) {
             $("#patterninfo-col2-ul2").append( "<li><b>" + key + "</b> &raquo; " +val + "</li>" );
         });
 
-        $('#patterninfo').append( "<div class='col-md-3' id='patterninfo-col3'></div>");
+        $('#patternrow1').append( "<div class='col-md-3' id='patterninfo-col3'></div>");
         $('#patterninfo-col3').append( "<h3>Measurements</h3>");
         $('#patterninfo-col3').append( "<ul id='patterninfo-col3-ul'></ul>");
         $.each( data['measurements'], function( key, val ) {
             $("#patterninfo-col3-ul").append( "<li><b>" + val + "</b></li>" );
         });
 
-        $('#patterninfo').append( "<div class='col-md-3' id='patterninfo-col4'></div>");
+        $('#patternrow1').append( "<div class='col-md-3' id='patterninfo-col4'></div>");
         $('#patterninfo-col4').append( "<h3>Sampling</h3>");
         $('#patterninfo-col4').append( "<p>These groups are defined for sampling measurements:</p>");
         $('#patterninfo-col4').append( "<ul id='patterninfo-col4-ul'></ul>");
         $.each( data['sampler']['measurements']['groups'], function( key, val ) {
             $("#patterninfo-col4-ul").append( "<li><b>" + key + "</b></li>" );
         });
-        $('#patterninfo-col4').append( "<p>Measurements and options sampling is available in the SAMPLE service</p>");
+        $('#patterninfo-col4').append( "<p>Measurements and options sampling is available in the <b>sample</b> service</p>");
         
-        $('#patterninfo').append( "<div class='col-md-12' id='patterninfo-col5'></div>");
+        $('#patterninfo').append( "<div class='row' id='patternrow2'></div>");
+
+        $('#patternrow2').append( "<div class='col-md-9' id='patterninfo-col5'></div>");
         $('#patterninfo-col5').append( "<h3>Options</h3>");
         $('#patterninfo-col5').append( "<div id='patterninfo-col5-div'></div>");
         $.each( data['sampler']['options'], function( key, val ) {
@@ -113,6 +119,12 @@ function loadPatternInfo(pattern) {
             $("#patterninfo-col5-div").append( "<h6>" + key + "</h6><p><span class='label label-info'>" + key + "</span> is of type <span class='label label-danger'>" + val['type'] + "</span> " + values + "</p>" );
         });
 
+        $('#patternrow2').append( "<div class='col-md-3' id='patterninfo-col6'></div>");
+        if (typeof data['inMemoryOf']['name'] !== 'undefined') {
+            $('#patterninfo-col6').append( "<h3>Did you know?</h3>");
+            $('#patterninfo-col6').append( "<p>This pattern was named in memory of <a href='" +  data['inMemoryOf']['link'] + "' target='_BLANK'>" +  data['inMemoryOf']['name'] + "</a>.</p>");
+        }
+        
         $('#details').html('');
         $('#details').append( " <p>We made an AJAX call to to:</p> <code>" + api + "/info/" + pattern + "/json</code>");
         $('#details').append( " <p>We used the returned JSON to build the content above.</p><p>Here's what the response looks like:</p>");

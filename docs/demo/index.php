@@ -6,7 +6,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="description" content="">
         <meta name="author" content="Joost De Cock">
-        <title>Freesewing API demo</title>
+        <title>Freesewing API Demo</title>
         <link href="../css/style.css" rel="stylesheet">
         <link href="../css/docs.css" rel="stylesheet">
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
@@ -42,9 +42,20 @@
             <div id='logo'>
                 <a href='/docs/'><img id='logo' src='../media/logo.svg'></a>
             </div>
-            <h1>API demo</h1>
+            <h1>Freesewing API Demo</h1>
+            <div class="row"><div class="col-xs-12"><h2>Before we start: Services</h2></div></div>
             <div class="row">
-                <div id='services' class="col-xs-12">
+                <div class="col-md-9">
+                    <p>Out of the box, the Freesewing API provides 3 different services. They are:</p>
+                    <h6>The info service</h6>
+                    <p>Provides information about the services, patterns, channels, and themes available on the API.</p>
+                    <h6>The draft service</h6>
+                    <p>Drafts patterns according to your wishes.</p>
+                    <h6>The sample service</h6>
+                    <p>Samples patterns; Multiple drafts on top of each other, with changing measurements or options. (This will make sense when you try it, you'll see).</p>
+                </div>
+                <div id='services' class="col-md-3 col-xs-12">
+                    <h3>Try them all</h3>
                 </div>
             </div>
             <div class="row">

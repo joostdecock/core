@@ -116,6 +116,11 @@ function loadPatternInfo(pattern) {
         $.each( data['sampler']['options'], function( key, val ) {
             if(val['type'] == 'number') values = "and expects a value between <span class='label label-warning'>" + val['min'] + "</span> and <span class='label label-warning'>" + val['max'] + "</span> Its default is <span class='label label-success'>" + val['default'] + "</span";
             if(val['type'] == 'percent') values = " so it expects a value between 0 and 100. Its default is " + val['default'];
+            if(val['type'] == 'chooseOne') {
+                values = " so you should pick one of:</p><ul> ";
+                $.each(val['options'], function( subkey, subval ) { values = values + "<li><span class='label label-warning'>" + subval + "</span></li>"; });
+                values = values + "</ul><p>Its default is <span class='label label-success'>" + val['default'] + "</span>";
+            }
             $("#patterninfo-col5-div").append( "<h6>" + key + "</h6><p><span class='label label-info'>" + key + "</span> is of type <span class='label label-danger'>" + val['type'] + "</span> " + values + "</p>" );
         });
 
@@ -170,10 +175,11 @@ function loadDraft(pattern) {
 
         var model = data['sampler']['measurements']['default']['model'];
         $.each( data['measurements'], function( key, val ) {
-            $('#col1-table').append( formRow(val, data['sampler']['measurements']['models'][model][key], 'metric'));
+            $('#col1-table').append( formRow('input', val, data['sampler']['measurements']['models'][model][key], 'metric'));
         });
         $.each( data['sampler']['options'], function( key, val ) {
-            $('#col2-table').append( formRow(key, val, 'metric'));
+            if(val['type'] == 'chooseOne') $('#col2-table').append( formRow('chooseOne', key, val, ''));
+            else $('#col2-table').append( formRow('input', key, val, 'metric'));
         });
         
         $('#col3-table').append( '<tr> <td class="key"><label for="theme">Theme</label></td> <td> <select class="form-control" id="theme" name="theme"></select> </td> </tr>');
@@ -225,7 +231,13 @@ function loadSample(pattern) {
     scrollTo('#content');
 }
 
-function formRow(key, val, units) {
+function formRow(type, key, val, units) {
+    console.log(type);
+    if(type == 'input') return inputRow(key, val, units);
+    if(type == 'chooseOne') return chooseOneRow(key, val);
+}
+
+function inputRow(key, val, units) {
     if(units == 'imperial') {
         unitsLong = 'inch';
         unitsShort = '"';
@@ -258,6 +270,27 @@ function formRow(key, val, units) {
                     <input class="mmp-units-'+unitsLong+' mmp-units form-number form-control" id="'+key+'" name="'+key+'" value="'+value+'" type="number" '+attr+'>\
                     <span class="input-group-addon not-xs">'+unitsLong+'</span>\
                     <span class="input-group-addon xs-only">'+unitsShort+'</span>\
+                </div>\
+            </td>\
+        </tr>';
+}
+
+function chooseOneRow(key, val) {
+    var options;
+    $.each( val['options'], function( key, val ) {
+        options = options + "<option value=\"" + key + "\">" + val + "</option>\n";
+    });
+console.log(options);
+    return '\
+        <tr>\
+            <td class="key">\
+                <label for="'+key+'">'+key+'</label>\
+            </td>\
+            <td class="value">\
+                <div class="input-group">\
+                    <select class="form-control" id="'+key+'" name="'+key+'">\
+                    ' + options + '\
+                    </select>\
                 </div>\
             </td>\
         </tr>';

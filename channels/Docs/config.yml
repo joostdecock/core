@@ -22,6 +22,14 @@ cmoptions:
     hipsEase            : 'hipsEase'
     bicepsEase          : 'bicepsEase'
     backNeckCutout      : 'backNeckCutout'
+
+    backOpening         : 'backOpening'
+    waistReduction      : 'waistReduction'
+    frontRise           : 'frontRise'    
+    frontDrop           : 'frontDrop'    
+    backRise            : 'backRise'    
+    backDrop            : 'backDrop'    
+    hipRise             : 'panels'    
 percentoptions:
     stretchFactor           : 'stretchFactor'
     shoulderStrapPlacement  : 'shoulderStrapPlacement'

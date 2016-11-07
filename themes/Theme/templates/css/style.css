@@ -153,6 +153,11 @@ path.textpath {
   stroke: none;
   fille: none;
 }
+path.helpline {
+  stroke: #666666;
+  stroke-width: 0.2;
+  stroke-dasharray: 0.2,0.6;
+}
 /* Debug */
 path.debug {
   stroke: #d9534f;

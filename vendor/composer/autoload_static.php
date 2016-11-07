@@ -144,6 +144,7 @@ class ComposerStaticInit6d3c91d11fabeb58ed862308abf0796d
         'Freesewing\\Path' => __DIR__ . '/../..' . '/src/Path/Path.php',
         'Freesewing\\Patterns\\AaronAshirt' => __DIR__ . '/../..' . '/patterns/AaronAshirt/AaronAshirt.php',
         'Freesewing\\Patterns\\BennoBoxerBriefs' => __DIR__ . '/../..' . '/patterns/BennoBoxerBriefs/BennoBoxerBriefs.php',
+        'Freesewing\\Patterns\\CnameCorset' => __DIR__ . '/../..' . '/patterns/CnameCorset/CnameCorset.php',
         'Freesewing\\Patterns\\JoostBodyBlock' => __DIR__ . '/../..' . '/patterns/JoostBodyBlock/JoostBodyBlock.php',
         'Freesewing\\Patterns\\Pattern' => __DIR__ . '/../..' . '/patterns/Pattern/Pattern.php',
         'Freesewing\\Patterns\\TestBezier' => __DIR__ . '/../..' . '/patterns/TestBezier/TestBezier.php',

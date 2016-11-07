@@ -1,0 +1,49 @@
+backOpening:
+    type: number
+    min: 0
+    max: 80
+    default: 30
+
+waistReduction:
+    type: number
+    min: 0
+    max: 125
+    default: 80
+
+frontRise:
+    type: number
+    min: -50
+    max: 50
+    default: 25
+
+frontDrop:
+    type: number
+    min: -30
+    max: 50
+    default: 25
+
+backRise:
+    type: number
+    min: -30
+    max: 120
+    default: 0
+
+backDrop:
+    type: number
+    min: -30
+    max: 30
+    default: 0
+
+hipRise:
+    type: number
+    min: 0
+    max: 60
+    default: 30
+
+panels:
+    type: chooseOne
+    options:
+        9:  9
+        11: 11
+    default: 11
+

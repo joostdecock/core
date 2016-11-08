@@ -151,7 +151,7 @@ class CnameCorset extends Pattern
 //            $p->paths["panel$i"]->setSample(true);
 //            $p->offsetPathString("sa$i", $this->{"path$i"}, 10, 1, ['class' => 'seam-allowance']);
         }
-        $i = 3;
+        $i = 7;
         //echo $this->{"path$i"}; //FIXME
         $p->newPath("panel$i", $this->{"path$i"}, ['class' => 'seamline']);
         $p->offsetPathString("sa$i", $this->{"path$i"}, 10, 1, ['class' => 'seam-allowance']);

@@ -709,7 +709,7 @@ class Part
                 } elseif ($chunk['type'] == 'curve') {
                     $path = 'M '.$chunk['offset'][0].' C '.$chunk['offset'][1].' '.$chunk['offset'][2].' '.$chunk['offset'][3];
                 }
-            } elseif ($count == $chunks - 1) { // Last step
+            } elseif ($count == $chunks) { // Last step
                 if ($chunk['type'] == 'line') {
                     $path .= ' L '.$chunk['offset'][1];
                     if ($closed) {
@@ -889,7 +889,8 @@ class Part
         $stack = new \Freesewing\Stack();
         foreach ($path->breakUp() as &$chunk) {
             if ($chunk['type'] == 'L') {
-                $stack->push($this->offsetLine($chunk['path'], $distance, $key));
+                $hop = $this->offsetLine($chunk['path'], $distance, $key);
+                if(is_array($hop)) $stack->push($hop);
             }
             if ($chunk['type'] == 'C') {
                 $stack->push($this->offsetCurve($chunk['path'], $distance, $key));
@@ -915,6 +916,9 @@ class Part
         $points = Utils::asScrubbedArray($line);
         $from = $points[1];
         $to = $points[3];
+        
+        if($this->isSamePoint($from,$to)) return false; // Sometimes, lines go nowhere
+
         $offset = $this->getLineOffsetPoints($from, $to, $distance);
 
         $fromId = "$key-line-$from"."TO$to";

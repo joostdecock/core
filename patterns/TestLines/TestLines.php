@@ -54,16 +54,14 @@ class TestLines extends Pattern
         $p->newPoint(6,   100, 100);
         $p->newPoint(7,   0, 100);
 
-        //$p->curveCrossesCurve(1,5,6,2,3,7,8,4,'test3'); 
-        //$p->curveCrossesLine(1,2,3,4,5,6,'test1'); 
-        //$p->curveCrossesY(1,3,2,4,50,'test2'); 
+        $p->curveCrossesLine(1,4,7,6,5,7,'test1'); 
         
 
 
         // Paths
-        $path = 'M 1 L 2 L 3 L 4 L 5 L 6 L 7 z';
+        $path = 'M 1 C 4 7 6 M 5 L 7';
         $p->newPath('test', $path);
-        $p->offsetPathString('sa', $path, -10, 1, ['class' => 'seam-allowance']);
+//        $p->offsetPathString('sa', $path, -10, 1, ['class' => 'seam-allowance']);
 
         // Mark path for sample service
         $p->paths['test']->setSample(true);

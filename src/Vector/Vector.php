@@ -49,6 +49,18 @@ class Vector extends Coords
     }
 
     /**
+     * Returns vector dot product (aka scalar product)
+     *
+     * @param \Freesewing\Vector $that The second vector
+     *
+     * @return float The dot product
+     */
+    public function dot($that)
+    {
+        return ( $this->getX() * $that->getX() + $this->getY() * $that->getY() );
+    }
+    
+    /**
      * Add a point to anothe to get 2D vector coordinates
      *
      * @param \Freesewing\Vector $addMe The vector to add
@@ -77,4 +89,81 @@ class Vector extends Coords
 
         return $point;
     }
+
+    /**
+     * Linear interpolation 
+     * 
+     * @param \Freesewing\Vector $that The vector to interpolate with
+     * @param float $t Position on Bezier curve between 0 and 1
+     *
+     * @return \Freesewing\Vector $v The new vector
+     */
+    public function lerp($that, $t)
+    {
+        $v = new \Freesewing\Vector();
+        $v->setX($this->getX() + ( $that->getX() - $this->getX() ) * $t );
+        $v->setY($this->getY() + ( $that->getY() - $this->getY() ) * $t );
+
+        return $v;
+    }
+    
+    /**
+     * Top-left corner 
+     * 
+     * @param \Freesewing\Vector $that The second vector of our box
+     *
+     * @return \Freesewing\Vector $v The new vector
+     */
+    public function min($that)
+    {
+        $v = new \Freesewing\Vector();
+        $v->setX( min( $this->getX(),$that->getX() ) );
+        $v->setY( min( $this->getY(),$that->getY() ) );
+        
+        return $v;
+    }
+    
+    /**
+     * Bottom-right corner 
+     * 
+     * @param \Freesewing\Vector $that The second vector of our box
+     *
+     * @return \Freesewing\Vector $v The new vector
+     */
+    public function max($that)
+    {
+        $v = new \Freesewing\Vector();
+        $v->setX( max( $this->getX(),$that->getX() ) );
+        $v->setY( max( $this->getY(),$that->getY() ) );
+        
+        return $v;
+    }
+
+    /**
+     * Checks whether point is to the right-botom 
+     * 
+     * @param \Freesewing\Vector $that The second vector of our box
+     *
+     * @return \Freesewing\Vector $v The new vector
+     */
+    public function gte($that)
+    {
+        return ($this->getX()>=$that->getX()&&$this->getY()>=$that->getY());
+    }
+
+    /**
+     * Checks whether point is to the top-left 
+     * 
+     * @param \Freesewing\Vector $that The second vector of our box
+     *
+     * @return \Freesewing\Vector $v The new vector
+     */
+    public function lte($that)
+    {
+        return ($this->getX()<=$that->getX()&&$this->getY()<=$that->getY());
+    }
+
+
+
+
 }

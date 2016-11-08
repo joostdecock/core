@@ -22,7 +22,7 @@ class Designer extends Theme
             if ($part->getRender() == true) {
                 // @todo Add a way to highlight a point (Like the old 'only' request parameter)
                 $this->debugPaths($partKey, $part);
-                //$this->debugPoints($partKey, $part);
+                $this->debugPoints($partKey, $part);
                 $this->highlightPoints($partKey, $part);
             }
         }
@@ -74,10 +74,12 @@ class Designer extends Theme
      */
     private function highlightPoints($partKey, $part)
     {
-        $toHighlight = \Freesewing\Utils::asScrubbedArray($_REQUEST['highlightPoints'],',');
-        if(isset($toHighlight) && is_array($toHighlight)) {
-            foreach ($toHighlight as $key) {
-                $this->highlightPoint($key, $part->points[$key], $part, $partKey);
+        if(isset($_REQUEST['highlightPoints'])) {
+            $toHighlight = \Freesewing\Utils::asScrubbedArray($_REQUEST['highlightPoints'],',');
+            if(isset($toHighlight) && is_array($toHighlight)) {
+                foreach ($toHighlight as $key) {
+                    $this->highlightPoint($key, $part->points[$key], $part, $partKey);
+                }
             }
         }
     }

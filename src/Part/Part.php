@@ -1137,6 +1137,7 @@ class Part
         $this->newPoint('-po_offset', 0, 0);
 
         $worstDelta = 0;
+        $worstIndex = false;
         for ($i = 0; $i < 100; ++$i) {
             $t = $i / 100;
             $xOrig = Utils::bezierPoint($t, $origFrom->getX(), $origCp1->getX(), $origCp2->getX(), $origTo->getX());

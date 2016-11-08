@@ -55,8 +55,6 @@ class BezierToolbox
      * The number of intersections between a curve and a line 
      * varies. So we return an array of points.
      * 
-     * @see http://www.particleincell.com/blog/2013/cubic-line-intersection/
-     *
      * @param \Freesewing\Point $lFrom The point at the start of the line
      * @param \Freesewing\Point $lTo The point at the end of the line
      * @param \Freesewing\Point $cFrom The point at the start of the curve
@@ -67,6 +65,116 @@ class BezierToolbox
      * @return array|false An array of intersection points or false if there are none
      */
     public static function findLineCurveIntersections($lFrom, $lTo, $cFrom, $cC1, $cC2, $cTo)
+    {
+        $a1 = $lFrom->asVector();
+        $a2 = $lTo->asVector();
+        $p1 = $cFrom->asVector();
+        $p2 = $cC1->asVector();
+        $p3 = $cC2->asVector();
+        $p4 = $cTo->asVector();
+        
+        $min = $a1->min($a2); // used to determine if point is on line segment
+        $max = $a1->max($a2); // used to determine if point is on line segment
+
+        // Cubic polynomial coefficients of the curve
+        $a = $p1->multiply(-1);
+        $b = $p2->multiply(3);
+        $c = $p3->multiply(-3);
+        $d = $a->add($b->add($c->add($p4)));
+        $c3 = clone $d;
+
+        $a = $p1->multiply(3);
+        $b = $p2->multiply(-6);
+        $c = $p3->multiply(3);
+        $d = $a->add($b->add($c));
+        $c2 = clone $d;
+
+        $a = $p1->multiply(-3);
+        $b = $p2->multiply(3);
+        $c = $a->add($b);
+        $c1 = clone $c;
+        
+        $c0 = clone $p1;
+
+        // Convert line to normal form: ax + by + c = 0
+        // Find normal to line: negative inverse of original line's slope
+        $n = new Vector();
+        $n->setX($a1->getY() - $a2->getY());
+        $n->setY($a2->getX() - $a1->getX());
+
+        // Determine new c coefficient
+        $cl = $a1->getX() * $a2->getY() - $a2->getX() * $a1->getY();
+
+        // Rotate each cubic coefficient using line for new coordinate system?
+        // Find roots of rotated cubic
+        $roots = new Polynomial([
+            $n->dot($c3),
+            $n->dot($c2),
+            $n->dot($c1),
+            $n->dot($c0) + $cl,
+        ]);
+        $roots = $roots->getRoots(); 
+        
+        // Any roots in closed interval [0,1] are intersections on Bezier, but
+        // might not be on the line segment.
+        // Find intersections and calculate point coordinates
+        for ($i=0 ; $i< count($roots) ; $i++) {
+            $t = $roots[$i];
+
+            if ( 0 <= $t && $t <= 1 ) {
+                // We're within the Bezier curve
+                // Find point on Bezier
+                $p5 = $p1->lerp($p2, $t);
+                $p6 = $p2->lerp($p3, $t);
+                $p7 = $p3->lerp($p4, $t);
+
+                $p8 = $p5->lerp($p6, $t);
+                $p9 = $p6->lerp($p7, $t);
+
+                $p10 = $p8->lerp($p9, $t);
+
+                // See if point is on line segment
+                // Had to make special cases for vertical and horizontal lines due
+                // to slight errors in calculation of p6
+                if ( $a1->getX() == $a2->getX() ) {
+                    if ( $min->getY() <= $p10->getY() && $p10->getY() <= $max->getY() ) {
+                        $points[] = $p10;
+                    }
+                } else if ( $a1->getY() == $a2->getY() ) {
+                    if ( $min->getX() <= $p10->getX() && $p10->getX() <= $max->getX() ) {
+                        $points[] = $p10;
+                    }
+                } else if ( $p10->gte($min) && $p10->lte($max) ) {
+                    $points[] = $p10;
+                }
+
+            }
+        }
+        if(isset($points) && is_array($points)) {
+            foreach($points as $key => $point) $intersections[$key] = $point->asPoint();
+            return $intersections;
+        }
+        else return false;
+    }
+    
+    /**
+     * Returns intersection between a cubic Bezier and a line
+     *
+     * The number of intersections between a curve and a line 
+     * varies. So we return an array of points.
+     *
+     * @deprecated This has been replaced and needs to be ripped out
+     * 
+     * @param \Freesewing\Point $lFrom The point at the start of the line
+     * @param \Freesewing\Point $lTo The point at the end of the line
+     * @param \Freesewing\Point $cFrom The point at the start of the curve
+     * @param \Freesewing\Point $cC1 The first control point
+     * @param \Freesewing\Point $cC2 The second control point
+     * @param \Freesewing\Point $cTo The point at the end of the curve
+     *
+     * @return array|false An array of intersection points or false if there are none
+     */
+    public static function OLDfindLineCurveIntersections($lFrom, $lTo, $cFrom, $cC1, $cC2, $cTo)
     {
         $points = false;
 
@@ -712,7 +820,7 @@ class BezierToolbox
                 }
             }
         }
-        if(is_array($points)) {
+        if(isset($points) && is_array($points)) {
             foreach($points as $key => $point) $intersections[$key] = $point->asPoint();
             return $intersections;
         }

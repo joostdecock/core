@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="ISO-8859-1" standalone="no"?>
+<svg onload="init(evt)"
+     xmlns="http://www.w3.org/2000/svg"
+     xmlns:xlink="http://www.w3.org/1999/xlink"
+     xmlns:gui="http://www.kevlindev.com/gui">
+    <script type="text/ecmascript" xlink:href="2D.js"/>
+    <script type="text/ecmascript" xlink:href="IntersectionUtilities.js"/>
+    <script type="text/ecmascript" xlink:href="Intersection.js"/>
+    <defs>
+        <g id="intersection">
+            <circle r="3" fill="none" stroke="red" stroke-width="1"/>
+            <circle r="1" fill="black"/>
+        </g>
+    </defs>
+    <rect id="background" width="100%" height="100%" opacity="0"
+          onmousedown="mouser.unregisterShapes()"/>
+    <path gui:edit="editable" d="M0,0 C70,0 0,100 100,100"
+          stroke="blue" stroke-width="5" fill="none" opacity="0.5"/>
+    <line gui:edit="editable" x1="100" y1="0" x2="0" y2="100"
+          stroke="orange" stroke-width="5" opacity="0.5"/>
+    <text id="info" x="5" y="10pt" font-size="10pt">Loading...</text>
+</svg>
+

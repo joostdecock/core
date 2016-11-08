@@ -142,7 +142,7 @@ class TrayvonTie extends Pattern
         
         /* Tip seam allowance */
         $p->offsetPathString('tipSA', 'M 4 L 1 L 3', -10, 0);
-        $p->addPoint(10, $p->linesCross('tipSA-line-1TO4', 'tipSA-line-4TO1', 6, 4), 'Left edge of tip SA');
+        $p->addPoint(10, $p->beamsCross('tipSA-line-1TO4', 'tipSA-line-4TO1', 6, 4), 'Left edge of tip SA');
         $p->addPoint(11, $p->flipX(10), 'Right edge of tip SA');
         $p->newPath('tipSA', 'M 4 L 10 L tipSA-line-1TO4XllXtipSA-line-1TO3 L 11 L 3', ['class' => 'seam-allowance']);
         
@@ -176,7 +176,7 @@ class TrayvonTie extends Pattern
 
         /* Tail seam allowance */
         $p->offsetPathString('tailSA', 'M 4 L 1 L 3', -10, 0);
-        $p->addPoint(10, $p->linesCross('tailSA-line-1TO4', 'tailSA-line-4TO1', 6, 4), 'Left edge of tail SA');
+        $p->addPoint(10, $p->beamsCross('tailSA-line-1TO4', 'tailSA-line-4TO1', 6, 4), 'Left edge of tail SA');
         $p->addPoint(11, $p->flipX(10), 'Right edge of tail SA');
         $p->newPath('tailSA', 'M 4 L 10 L tailSA-line-1TO4XllXtailSA-line-1TO3 L 11 L 3', ['class' => 'seam-allowance']);
         
@@ -356,9 +356,9 @@ class TrayvonTie extends Pattern
         $p->addPoint(4,   $p->flipX(3), 'Left tip corner');
         $p->addPoint('5a', $p->shift(2, 0, $halfKnot), 'Join right, 90deg');
         $p->addPoint('5b', $p->rotate('5a', 2, 45), '45 degree helper');
-        $p->addPoint(5, $p->linesCross(2, '5b', '5a', 3), 'Join right, 45 deg'); 
+        $p->addPoint(5, $p->beamsCross(2, '5b', '5a', 3), 'Join right, 45 deg'); 
         $p->addPoint('6a', $p->rotate('5a', 2, 180), 'Join left, 90deg');
-        $p->addPoint(6, $p->linesCross(2, '5b', '6a', 4), 'Join right, 45 deg'); 
+        $p->addPoint(6, $p->beamsCross(2, '5b', '6a', 4), 'Join right, 45 deg'); 
         $p->newPoint(7, 0, $p->y(3));
         $p->addPoint('notch1', $p->shift(1,-45, 19));
         $p->addPoint('notch2', $p->flipX('notch1'));

@@ -32,7 +32,8 @@ class Utils
             }
         }
 
-        return $return;
+        if(isset($return)) return $return;
+        else return false;
     }
 
     /**

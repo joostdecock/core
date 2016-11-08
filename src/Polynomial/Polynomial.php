@@ -193,7 +193,7 @@ class Polynomial
             case 2: $result = $this->getQuadraticRoots(); break;
             case 3: $result = $this->getCubicRoots(); break;
             case 4: $result = $this->getQuarticRoots(); break;
-            default: $result = array(); echo 'This is not good'; // Not implemented
+            default: $result = array(); // Not implemented
         }        
 
         return $result;

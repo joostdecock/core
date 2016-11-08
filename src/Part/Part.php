@@ -305,12 +305,13 @@ class Part
     {
         switch($mode) {
         case 'vertical':
+            if($title!='') $msg = "\n$msg";
             $anchor = $this->loadPoint($anchorKey);
             $x = $anchor->getX();
             $y = $anchor->getY();
             $this->newText('partNumber', $anchorKey, $nr, ['class' => 'part-nr-vertical']);
             $this->newText('partTitle', $anchorKey, $title, ['class' => 'part-title-vertical', 'transform' => "rotate(-90 $x $y)"]);
-            $this->newText('partMsg', $anchorKey, "\n".$msg, ['class' => 'part-msg-vertical', 'transform' => "rotate(-90 $x $y)"]);
+            $this->newText('partMsg', $anchorKey, $msg, ['class' => 'part-msg-vertical', 'transform' => "rotate(-90 $x $y)"]);
             break;
         case 'horizontal':
             $this->newText('partNumber', $anchorKey, $nr, ['class' => 'part-nr-horizontal']);
@@ -634,7 +635,6 @@ class Part
                 if($i) $intersections = $this->keyArray($i, 'intersection-');
             }
         }
-
         return $intersections;
     }
 
@@ -778,11 +778,11 @@ class Part
             $id = $this->newId();
             if ($count == $chunks) { // Last step. Do we need to close the path?
                 if ($path->isClosed()) {
-                    $next = $array[0];
-                } // We do
+                    $next = $array[0]; // We do
+                } 
                 else {
-                    return $stack;
-                } // No, we're done
+                    return $stack; // No, we're done
+                } 
             } else {
                 $next = $array[$count];
             }
@@ -791,7 +791,6 @@ class Part
                     if (!$this->isSamePoint($chunk['offset'][1], $next['offset'][0])) { // Gap to fill
                         $id = $chunk['offset'][1].'XllX'.$next['offset'][0];
                         $this->addPoint($id, $this->beamsCross($chunk['offset'][0], $chunk['offset'][1],  $next['offset'][0],  $next['offset'][1]));
-                        $pathString = 'M '.$chunk['offset'][1]." L $id L ".$next['offset'][0];
                         $new[] = $chunk;
                         $new[] = ['type' => 'line', 'offset' => [$chunk['offset'][1], $id]];
                         $new[] = ['type' => 'line', 'offset' => [$id, $next['offset'][0]]];
@@ -799,10 +798,25 @@ class Part
                     }
                 } elseif ($chunk['type'] == 'line' && $next['type'] == 'curve') {
                     if (!$this->isSamePoint($chunk['offset'][1], $next['offset'][0])) { // Gap to fill
-                        $this->addPoint('.help', $this->shiftAlong($next['offset'][0], $next['offset'][1],  $next['offset'][2],  $next['offset'][3], 0.5));
+                        /**
+                         * If the control point falls on the edge (so it's really a Quadratic
+                         * Bezier rather than a Cubic Bezier, we need a helper pointa
+                         * because we want to find the intersection between two lines
+                         * but two identical points do no make a line.
+                         * So, we move 0.5mm along the curve to get two different points.
+                         *
+                         * This also applies to the curves in the curve-line and curve-curve 
+                         * scenarios below
+                         */
+                        if($this->isSamePoint($next['offset'][0], $next['offset'][1])) { 
+                            // Quadratic Bezier, shift a tiny bit along the curve to get a different point
+                            $this->addPoint('.help', $this->shiftAlong($next['offset'][0], $next['offset'][1],  $next['offset'][2],  $next['offset'][3], 0.5));
+                        } else { 
+                            // Cubic Bezier, we can just use the control point
+                            $this->clonePoint($next['offset'][1], '.help');
+                        }
                         $id = $chunk['offset'][1].'XlcX'.$next['offset'][0];
-                        $this->addPoint($id, $this->beamsCross($chunk['offset'][0], $chunk['offset'][1],  '.help',  $next['offset'][0]));
-                        $pathString = 'M '.$chunk['offset'][1]." L $id L ".$next['offset'][0];
+                        $this->addPoint($id, $this->beamsCross($chunk['offset'][0], $chunk['offset'][1], $next['offset'][0], '.help'));
                         $new[] = $chunk;
                         $new[] = ['type' => 'line', 'offset' => [$chunk['offset'][1], $id]];
                         $new[] = ['type' => 'line', 'offset' => [$id, $next['offset'][0]]];
@@ -810,10 +824,15 @@ class Part
                     }
                 } elseif ($chunk['type'] == 'curve' && $next['type'] == 'line') {
                     if (!$this->isSamePoint($chunk['offset'][3], $next['offset'][0])) { // Gap to fill
-                        $this->addPoint('.help', $this->shiftAlong($chunk['offset'][3], $chunk['offset'][2],  $chunk['offset'][1],  $chunk['offset'][0], 0.5));
+                        if($this->isSamePoint($chunk['offset'][2], $chunk['offset'][3])) { 
+                            // Quadratic Bezier, shift a tiny bit along the curve to get a different point
+                            $this->addPoint('.help', $this->shiftAlong($chunk['offset'][3], $chunk['offset'][2],  $chunk['offset'][1],  $chunk['offset'][0], 0.5));
+                        } else { 
+                            // Cubic Bezier, we can just use the control point
+                            $this->clonePoint($chunk['offset'][2], '.help');
+                        }
                         $id = $chunk['offset'][3].'XclX'.$next['offset'][0];
-                        $this->addPoint($id, $this->beamsCross($chunk['offset'][3], '.help', $next['offset'][0], $next['offset'][1]));
-                        $pathString = 'M '.$chunk['offset'][3]." L $id L ".$next['offset'][0];
+                        $this->addPoint($id, $this->beamsCross($chunk['offset'][3], '.help' , $next['offset'][0], $next['offset'][1]));
                         $new[] = $chunk;
                         $new[] = ['type' => 'line', 'offset' => [$chunk['offset'][3], $id]];
                         $new[] = ['type' => 'line', 'offset' => [$id, $next['offset'][0]]];
@@ -821,9 +840,25 @@ class Part
                     }
                 } elseif ($chunk['type'] == 'curve' && $next['type'] == 'curve') {
                     if (!$this->isSamePoint($chunk['offset'][3], $next['offset'][0])) { // Gap to fill
-                        $pathString = 'M '.$chunk['offset'][3].' L '.$next['offset'][0];
+                        if($this->isSamePoint($chunk['offset'][2], $chunk['offset'][3])) { 
+                            // Quadratic Bezier, shift a tiny bit along the curve to get a different point
+                            $this->addPoint('.helpChunk', $this->shiftAlong($chunk['offset'][3], $chunk['offset'][2],  $chunk['offset'][1],  $chunk['offset'][0], 0.5));
+                        } else { 
+                            // Cubic Bezier, we can just use the control point
+                            $this->clonePoint($chunk['offset'][2], '.helpChunk');
+                        }
+                        if($this->isSamePoint($next['offset'][0], $next['offset'][1])) { 
+                            // Quadratic Bezier, shift a tiny bit along the curve to get a different point
+                            $this->addPoint('.helpNext', $this->shiftAlong($next['offset'][0], $next['offset'][1],  $next['offset'][2],  $next['offset'][3], 0.5));
+                        } else { 
+                            // Cubic Bezier, we can just use the control point
+                            $this->clonePoint($next['offset'][1], '.helpNext');
+                        }
+                        $id = $chunk['offset'][3].'XccX'.$next['offset'][0];
+                        $this->addPoint($id, $this->beamsCross('.helpChunk', $chunk['offset'][3], '.helpNext', $next['offset'][0]));
                         $new[] = $chunk;
-                        $new[] = ['type' => 'line', 'offset' => [$chunk['offset'][3], $next['offset'][0]]];
+                        $new[] = ['type' => 'line', 'offset' => [$chunk['offset'][3], $id]];
+                        $new[] = ['type' => 'line', 'offset' => [$id, $next['offset'][0]]];
                         $stack->replace($chunk, $new);
                     }
                 }
@@ -1163,7 +1198,6 @@ class Part
      */
     public function x($key)
     {
-        if(!is_object($this->points[$key])) debug_print_backtrace();
         return $this->points[$key]->getX();
     }
 

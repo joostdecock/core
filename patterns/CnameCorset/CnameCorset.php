@@ -111,6 +111,7 @@ class CnameCorset extends Pattern
 
         /* Dividing out the panels */
         $gaps = array(0.15,0.275,0.4,0.6,0.75);
+        $helpLines = '';
         foreach($gaps as $g => $gap) {
             $i = $g+1; // Avoid zero
             /* Underbust */
@@ -134,14 +135,54 @@ class CnameCorset extends Pattern
             $helpLines .= ' M '.(100*$i).' L '.(100*$i+80);
             $helpLines .= ' M '.(100*$i+1).' C '.(100*$i+3).' '.(100*$i+43).' '.(100*$i+41).' C '.(100*$i+45).' '.(100*$i+80).' '.(100*$i+80);
             $helpLines .= ' M '.(100*$i+2).' C '.(100*$i+4).' '.(100*$i+44).' '.(100*$i+42).' C '.(100*$i+46).' '.(100*$i+80).' '.(100*$i+80);
+            
+            
         }
 
+        $p = $this->parts['11panels'];
+
+        // Draft panels
+        for($i=1;$i<8;$i++) {
+            $this->{"draftPanel$i"}($model, $p);
+            $p->newText("title$i", "titleAnchor$i", $i, ['class' => 'part-nr']);
+            if($i == 1) $p->newText("msg$i", "titleAnchor$i", $this->t('Cut 1 on fold'), ['class' => 'part-msg']);
+            else $p->newText("msg$i", "titleAnchor$i", $this->t('Cut 2'), ['class' => 'part-msg']);
+//            $p->newPath("panel$i", $this->{"path$i"}, ['class' => 'seamline']);
+//            $p->paths["panel$i"]->setSample(true);
+//            $p->offsetPathString("sa$i", $this->{"path$i"}, 10, 1, ['class' => 'seam-allowance']);
+        }
+        $i = 3;
+        //echo $this->{"path$i"}; //FIXME
+        $p->newPath("panel$i", $this->{"path$i"}, ['class' => 'seamline']);
+        $p->offsetPathString("sa$i", $this->{"path$i"}, 10, 1, ['class' => 'seam-allowance']);
+        /*
+        $p->offsetPathString('sa2', $this->path2, 10, 1, ['class' => 'seam-allowance']);
+        $p->offsetPathString('sa3', $this->path3, 10, 1, ['class' => 'seam-allowance']);
+        $p->offsetPathString('sa4', $this->path4, 10, 1, ['class' => 'seam-allowance']);
+        //$p->offsetPathString('sa5', $this->path5, 10, 1, ['class' => 'seam-allowance']);
+        //$p->offsetPathString('sa6', $this->path6, 10, 1, ['class' => 'seam-allowance']);
+        $p->offsetPathString('sa7', $this->path7, 10, 1, ['class' => 'seam-allowance']);
+        */
+        $path = 'M 20 C 21 31 30 C 32 41 40 L 50 C 51 52 5 L 13 C 12 11 10 z M 1 L 2 L 3 L 4 z M 5 L 6 M 7 L 8';
+        $path.= $helpLines;
+        //$p->newPath('outline', $path, ['class' => 'helpline']);
+}
+
+    /**
+     * Drafts corset panel 1
+     *
+     * @param \Freesewing\Model $model The model to draft for
+     * @param \Freesewing\Part $p The part to add info to
+     *
+     * @return void Nothing, adds into to part $p
+     */
+    protected function draftPanel1($model, $p)
+    {
         /**
          *  Panel 1 
          *
          *  Containing the frontRise curve in this panel by shifting points
          */
-        $p = $this->parts['11panels'];
         $p->addPoint( 11, $p->shift(11, 180, $p->distance(100,101)) );
         $p->addPoint( 12, $p->shift(12, 180, $p->distance(100,101)) );
         $p->addPoint( 13, $p->shift(13, 180, $p->distance(100,101)) );
@@ -153,14 +194,20 @@ class CnameCorset extends Pattern
         $p->addSplitCurve('53-',20,21,31,30,'52-1');
         /* path */
         $this->path1 = 'M 10 L 20 C 53-2 53-3 52-1 L 50-1 C 51-3 51-2 10 z';
-        $p->newPath('panel1', $this->path1, ['class' => 'seamline']);
-        
-        /**
-         *  Panel 2 
-         *
-         *  Top needs no work
-         */
-        /* Where does gap center cut through bottom curve */
+        /* Title anchor */
+        $p->newPoint('titleAnchor1', $p->x('50-1')/2, $p->y(7)/2, 'Title anchor panel 1');
+    }
+
+    /**
+     * Drafts corset panel 2
+     *
+     * @param \Freesewing\Model $model The model to draft for
+     * @param \Freesewing\Part $p The part to add info to
+     *
+     * @return void Nothing, adds into to part $p
+     */
+    protected function draftPanel2($model, $p)
+    {
         $p->curveCrossesX(20,21,31,30,$p->x(180), '190-'); // Intersection in 190-1
         $p->addSplitCurve('191-','52-1','53-7','53-6',30,'190-1'); 
         if($p->y('190-1') < $p->y(180)) { // Dart still open at edge
@@ -174,13 +221,20 @@ class CnameCorset extends Pattern
             $this->path3 = 'M 102 C 104 144 142 C 146 180 180 L 190-1 ';
         } 
         $this->path2 .= 'C 143 103 101 C 51-6 51-7 50-1 z';
-        $p->newPath('panel2', $this->path2, ['class' => 'seamline']);
-        
-        /**
-         *  Panel 3 
-         *
-         *  Top needs no work
-         */
+        /* Title anchor */
+        $p->newPoint('titleAnchor2', $p->x(140)/1.5, $p->y(2)*0.7, 'Title anchor panel 2');
+    }
+
+    /**
+     * Drafts corset panel 3
+     *
+     * @param \Freesewing\Model $model The model to draft for
+     * @param \Freesewing\Part $p The part to add info to
+     *
+     * @return void Nothing, adds into to part $p
+     */
+    protected function draftPanel3($model, $p)
+    {
         /* Where does gap center cut through bottom curve */
         $p->curveCrossesX(20,21,31,30,$p->x(280), '290-'); // Intersection in 290-1
         $p->addSplitCurve('291-','190-1','191-7','191-6',30,'290-1'); 
@@ -194,13 +248,20 @@ class CnameCorset extends Pattern
             $this->path4 = 'M 202 C 204 244 242 C 246 280 280 L 290-1 ';
         } 
         $this->path3 .= 'C 243 203 201 z';
-        $p->newPath('panel3', $this->path3, ['class' => 'seamline']);
+        /* Title anchor */
+        $p->newPoint('titleAnchor3', $p->x(240)-$p->deltaX(140,240)/2, $p->y('titleAnchor2'), 'Title anchor panel 3');
+    }
 
-        /**
-         *  Panel 4 
-         *
-         *  Top needs no work, but has an assymetrical dart
-         */
+    /**
+     * Drafts corset panel 4
+     *
+     * @param \Freesewing\Model $model The model to draft for
+     * @param \Freesewing\Part $p The part to add info to
+     *
+     * @return void Nothing, adds into to part $p
+     */
+    protected function draftPanel4($model, $p)
+    {
         /* Where does gap center cut through bottom curve */
         $p->curveCrossesX(20,21,31,30,$p->x(380), '390-'); // Intersection in 390-1
         $p->addSplitCurve('391-','290-1','291-7','291-6',30,'390-1'); 
@@ -217,14 +278,20 @@ class CnameCorset extends Pattern
             $this->path5 = 'C 304 344 342 C 346 380 380 ';
         } 
         $this->path4 .= 'C 343 303 301 z';
-        $p->newPath('panel4', $this->path4, ['class' => 'seamline']);
-        
-        /**
-         *  Panel 5
-         *
-         *  Side panel, top needs work
-         */
+        /* Title anchor */
+        $p->newPoint('titleAnchor4', $p->x(340)-$p->deltaX(240,340)/2, $p->y('titleAnchor2'), 'Title anchor panel 4');
+    }
 
+    /**
+     * Drafts corset panel 5
+     *
+     * @param \Freesewing\Model $model The model to draft for
+     * @param \Freesewing\Part $p The part to add info to
+     *
+     * @return void Nothing, adds into to part $p
+     */
+    protected function draftPanel5($model, $p)
+    {
         /* Where does the right edge cut through top curve */
         $p->curveCrossesX(50,51,52,5,$p->x(401), '410-'); // Intersection in 410-1
         $p->addSplitCurve('411-',50,51,52,5,'410-1'); 
@@ -236,15 +303,28 @@ class CnameCorset extends Pattern
             $p->curveCrossesY(441,445,480,480,$p->y('490-1'), '492-'); // Intersection is in 492-1
             $p->curveCrossesY(442,446,480,480,$p->y('490-1'), '493-'); // Intersection is in 493-1
             $this->path5 .= 'C 391-7 391-6 30 C 491-6 491-7 492-1 C 492-1 445 441 z'; 
-            $this->path6 .= 'C 446 cpPart6 493-1 ';
+            $this->path6 = 'C 446 cpPart6 493-1 ';
             /* Dart is not symmetric */
             $p->addPoint('cpPart6', $p->shift('493-1',90,$p->deltaY(7, '493-1')/1.6),'Control point for assymetric dart');
         } else { // dart is closed at edge. Easy! :) 
             $p->addPoint('cpPart6', $p->shift(480,90,$p->deltaY(7, 480)/1.6),'Control point for assymetric dart');
             $this->path5 .= 'L 390-1 C 391-7 391-6 30 C 491-6 491-7 490-1 L 480 C 480 445 441 '; 
-            $this->path6 .= 'C 446 cpPart6 480 L 490-1 ';
+            $this->path6 = 'C 446 cpPart6 480 L 490-1 ';
         } 
-        $p->newPath('panel5', $this->path5, ['class' => 'seamline']);
+        /* Title anchor */
+        $p->newPoint('titleAnchor5', $p->x(440)-$p->deltaX(340,440)/2, $p->y('titleAnchor2'), 'Title anchor panel 5');
+    }
+
+    /**
+     * Drafts corset panel 6
+     *
+     * @param \Freesewing\Model $model The model to draft for
+     * @param \Freesewing\Part $p The part to add info to
+     *
+     * @return void Nothing, adds into to part $p
+     */
+    protected function draftPanel6($model, $p)
+    {
         
         /**
          *  Panel 6
@@ -273,13 +353,20 @@ class CnameCorset extends Pattern
         } else { // dart is closed at edge. Easy! :) 
             $this->path6 .= 'C 591-6 591-7 590-1 L 580 C 580 543 541 z'; 
         } 
-        $p->newPath('panel6', $this->path6, ['class' => 'seamline']);
-        
-        /**
-         *  Panel 7
-         *
-         *  Center back
-         */
+        /* Title anchor */
+        $p->newPoint('titleAnchor6', $p->x(540)-$p->deltaX(440,540)/2, $p->y('titleAnchor2'), 'Title anchor panel 6');
+    }
+
+    /**
+     * Drafts corset panel 7
+     *
+     * @param \Freesewing\Model $model The model to draft for
+     * @param \Freesewing\Part $p The part to add info to
+     *
+     * @return void Nothing, adds into to part $p
+     */
+    protected function draftPanel7($model, $p)
+    {
         /* Where does the left edge cut through top curve */
         $p->curveCrossesX(50,51,52,5,$p->x(502), '520-'); // Intersection in 520-1
         $p->addSplitCurve('521-','510-1','421-7','421-6',50,'520-1'); 
@@ -294,18 +381,12 @@ class CnameCorset extends Pattern
             $this->path7 .= 'C 546 580 580 L 590-1 '; 
         } 
         $this->path7 .= 'C 591-3 591-2 40 z'; 
-        $p->newPath('panel7', $this->path7, ['class' => 'seamline']);
-
-        // Mark path for sample service
-        for($i=1;$i<8;$i++) $p->paths["panel$i"]->setSample(true);
+        /* Title anchor */
+        $p->newPoint('titleAnchor7', $p->x(8)-$p->deltaX(540,8)/2, $p->y('titleAnchor2'), 'Title anchor panel 7');
+    } 
         
         
         
-        
-        $path = 'M 20 C 21 31 30 C 32 41 40 L 50 C 51 52 5 L 13 C 12 11 10 z M 1 L 2 L 3 L 4 z M 5 L 6 M 7 L 8';
-        $path.= $helpLines;
-        $p->newPath('outline', $path, ['class' => 'helpline']);
-    }
 
 
     /**

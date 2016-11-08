@@ -22,7 +22,8 @@ class Designer extends Theme
             if ($part->getRender() == true) {
                 // @todo Add a way to highlight a point (Like the old 'only' request parameter)
                 $this->debugPaths($partKey, $part);
-                $this->debugPoints($partKey, $part);
+                //$this->debugPoints($partKey, $part);
+                $this->highlightPoints($partKey, $part);
             }
         }
         $this->messages = $pattern->getMessages();
@@ -63,6 +64,40 @@ class Designer extends Theme
             $attr = ['id' => "$partKey-$key-tooltip", 'class' => 'tooltip', 'visibility' => 'hidden'];
             $part->newText($key, $key, $title, $attr);
         }
+    }
+
+    /**
+     * Adds highlighted points in a part
+     *
+     * @param string $partKey Key of the part in the pattern parts array
+     * @param \Freesewing\Part $part The pattern part
+     */
+    private function highlightPoints($partKey, $part)
+    {
+        $toHighlight = \Freesewing\Utils::asScrubbedArray($_REQUEST['highlightPoints'],',');
+        if(isset($toHighlight) && is_array($toHighlight)) {
+            foreach ($toHighlight as $key) {
+                $this->highlightPoint($key, $part->points[$key], $part, $partKey);
+            }
+        }
+    }
+
+    /**
+     * Adds hightlight to a single point
+     *
+     * @param string $key Key of the point in the part's points array
+     * @param \Freesewing\Point $point The point to highlight
+     * @param \Freesewing\Part $part The pattern part
+     * @param string $partKey Key of the part in the pattern parts array
+     */
+    private function highlightPoint($key, \Freesewing\Point $point, \Freesewing\Part $part, $partKey)
+    {
+        $title = $this->debugPointDescription($key, $point);
+        $attr = ['id' => "$partKey-$key", 'onmouseover' => "pointHover('$partKey-$key')"];
+        $part->newSnippet($key, 'highlight-point', $key, $attr, $title);
+        $attr = ['id' => "$partKey-$key-tooltip", 'class' => 'tooltip', 'visibility' => 'hidden'];
+        $part->newText($key, $key, $title, $attr);
+        $part->tmp['pointsThemed'][$key] = true; // Store what points we've seen
     }
 
     /**

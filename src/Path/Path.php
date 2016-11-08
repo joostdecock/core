@@ -274,6 +274,7 @@ class Path
     {
         for ($i = 0; $i <= 100; ++$i) {
             $t = $i / 100;
+//            if(!is_object($start)) print_r(debug_backtrace());
             $x = Utils::bezierPoint($t, $start->getX(), $cp1->getX(), $cp2->getX(), $end->getX());
             $y = Utils::bezierPoint($t, $start->getY(), $cp1->getY(), $cp2->getY(), $end->getY());
             if ($i == 0) {

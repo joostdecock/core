@@ -26,4 +26,18 @@ class Svg extends Theme
 
         return $response;
     }
+    
+    /**
+     * Loads message from pattern into messages property
+     * Adds translations for our scalebox
+     *
+     * @param \Freesewing\Patterns\* $pattern The pattern object
+     */
+    public function themePattern($pattern)
+    {
+        $this->messages = $pattern->getMessages();
+        $pattern->replace('__SCALEBOX_METRIC__', $pattern->t('__SCALEBOX_METRIC__'));
+        $pattern->replace('__SCALEBOX_IMPERIAL__', $pattern->t('__SCALEBOX_IMPERIAL__'));
+    }
+
 }

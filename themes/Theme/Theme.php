@@ -139,7 +139,7 @@ abstract class Theme
      * Loads templates from themes and possible parent themes
      *
      * This makes sure that when you extend a theme, the templates 
-     * are extended to.
+     * are extended too.
      * That means that the parent theme templates are loaded, unless
      * you override them in your extended theme.
      *
@@ -234,7 +234,7 @@ abstract class Theme
     }
 
     /**
-     * Themes a path for the sampler servic
+     * Themes a path for the sampler service
      *
      * This is only needed for themes that are used by the sampler serivce
      * But heck, best include it here just in case

@@ -1,15 +1,15 @@
 chestEase:
-    type: number
+    type: measure
     min: -40
     max: 160
     default: 30
 armholeDrop:
-    type: number
+    type: measure
     min: -20
     max: 200
     default: 30
 lengthBonus:
-    type: number
+    type: measure
     min: -120
     max: 200
     default: 60
@@ -20,12 +20,12 @@ backlineBend:
     type: percent
     default: 30
 necklineDrop:
-    type: number
+    type: measure
     min: 40
     max: 200
     default: 120
 shoulderStrapWidth:
-    type: number
+    type: measure
     min: 10
     max: 80
     default: 40
@@ -40,7 +40,7 @@ stretchFactor:
     max: 1100
     default: 90
 hipsEase:
-    type: number
+    type: measure
     min: -40
     max: 160
     default: 60

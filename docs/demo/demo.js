@@ -232,7 +232,6 @@ function loadSample(pattern) {
 }
 
 function formRow(type, key, val, units) {
-    console.log(type);
     if(type == 'input') return inputRow(key, val, units);
     if(type == 'chooseOne') return chooseOneRow(key, val);
 }
@@ -277,10 +276,13 @@ function inputRow(key, val, units) {
 
 function chooseOneRow(key, val) {
     var options;
+    var selectThis = val['default'];
+    var selected = '';
     $.each( val['options'], function( key, val ) {
-        options = options + "<option value=\"" + key + "\">" + val + "</option>\n";
+        if(selectThis == key) selected = ' selected '; 
+        else  selected = '';
+        options = options + "<option value=\"" + key + "\" " + selected + ">" + val + "</option>\n";
     });
-console.log(options);
     return '\
         <tr>\
             <td class="key">\

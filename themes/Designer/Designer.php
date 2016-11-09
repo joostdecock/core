@@ -27,6 +27,8 @@ class Designer extends Theme
             }
         }
         $this->messages = $pattern->getMessages();
+        $pattern->replace('__SCALEBOX_METRIC__', $pattern->t('__SCALEBOX_METRIC__'));
+        $pattern->replace('__SCALEBOX_IMPERIAL__', $pattern->t('__SCALEBOX_IMPERIAL__'));
     }
 
     /**

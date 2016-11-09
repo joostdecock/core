@@ -342,8 +342,8 @@ class JoostBodyBlock extends Pattern
         // Elbow location
         $p->newPoint(33, 0, $p->y(2) + $p->distance(2, 3) / 2 - 25, 'Elbow point');
         $p->addPoint('.help1', $p->shift(33, 0, 10));
-        $p->addPoint(34, $p->linesCross(-5, 31, 33, '.help1'), 'Elbow point back side');
-        $p->addPoint(35, $p->linesCross(5, 32, 33, 34), 'Elbow point front side');
+        $p->addPoint(34, $p->beamsCross(-5, 31, 33, '.help1'), 'Elbow point back side');
+        $p->addPoint(35, $p->beamsCross(5, 32, 33, 34), 'Elbow point front side');
 
         $path = 'M 31 L -5 C -5 20 16 C 21 10 10 C 10 22 17 C 23 28 30 C 29 25 18 C 24 11 11 C 11 27 19 C 26 5 5 L 32 z';
         $p->newPath('seamline', $path);

@@ -7,3 +7,4 @@ Remove 'circumference' from measurements
 Only use naturalWaist, hips, and seat for circumference in the waist/bum area
 Compare position of prefix parametner in addSplitCurve and curveCrossesX. Consistent?
 Make demo select default option in dropdown (chooseOne)
+Make translations use multiple files

@@ -1,6 +1,6 @@
 templates:
     css: 
-        - "css/style.css"
+        - "css/minified.css"
     defs: 
         - "defs/base"
         - "defs/scalebox"

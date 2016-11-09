@@ -304,6 +304,8 @@ class CnameCorset extends Pattern
         $p->newPoint('grainlineTop', $p->x('titleAnchor3'), $p->y(101)+10);
         $p->newPoint('grainlineBottom', $p->x('grainlineTop'), $p->y(2)-$this->o('hipRise'));
         $p->newPath('grainline','M grainlineTop L grainlineBottom',['class' => 'grainline']);
+        $p->addPoint('logoAnchor', $p->shift('titleAnchor3',90,120));
+        $p->newSnippet('logo', 'logo', 'logoAnchor');
     }
 
     /**

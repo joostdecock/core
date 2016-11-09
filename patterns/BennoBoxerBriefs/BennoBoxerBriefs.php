@@ -269,7 +269,7 @@ class BennoBoxerBriefs extends Pattern
             $p->newPath('.tmp', 'M -4 C -404 -701 -501');
             $p->paths['.tmp']->setRender(false);
             $boundary = $p->paths['.tmp']->findBoundary($p);
-            $p->curveCrossesX(-4,-404,-701,-501,$boundary->bottomRight->getX()-0.2, 'narrow'); // -0.2 to make sure we find an intersection
+            $p->curveCrossesX(-4,-404,-701,-501,$boundary->bottomRight->getX()-0.2, 'narrow-'); // -0.2 to make sure we find an intersection
             $p->addPoint(  107  ,  $p->flipX('narrow-1'));
             $p->addPoint(  108  ,  $p->flipX(107));
             $p->newPoint(  109, $p->x(102) , $p->y(108));

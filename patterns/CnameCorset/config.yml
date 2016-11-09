@@ -8,8 +8,7 @@ info:
      link:     "freesewing.org/pattern/cname-corset/"
 parts:
     base: "Base block"
-    9panels: "Corset"
-    11panels: "Corset"
+    panels: "Corset"
 languages:
     en: English
     nl: Nederlands

@@ -24,7 +24,6 @@ class Docs extends Channel
      * This loads measurement names from the pattern config file
      * 
      * @todo What to do when measurments are missing?
-     * @todo What about imperial?
      *
      * @param \Freesewing\Request $request The request object
      * @param \Freesewing\Patterns\[pattern] $pattern The pattern object
@@ -34,8 +33,11 @@ class Docs extends Channel
     public function standardizeModelMeasurements($request, $pattern)
     {
         if(isset($pattern->config['measurements']) && is_array($pattern->config['measurements'])) {
+            $units = $pattern->getUnits();
+            if($units['in'] == 'imperial') $factor = 25.4;
+            else $factor = 10;
             foreach ($pattern->config['measurements'] as $key => $val) {
-                $measurements[$val] = $request->getData($val) * 10;
+                $measurements[$val] = $request->getData($val) * $factor;
             }
             return $measurements;
         } else return null;
@@ -57,24 +59,26 @@ class Docs extends Channel
      */ 
     public function standardizePatternOptions($request, $pattern)
     {
+        $units = $pattern->getUnits();
+        if($units['in'] == 'imperial') $factor = 25.4;
+        else $factor = 10;
+
         $samplerOptionConf = \Freesewing\Yamlr::loadYamlFile(\Freesewing\Utils::getClassDir($pattern).'/sampler/options.yml');
         if(is_array($samplerOptionConf)) {
             foreach ($samplerOptionConf as $key => $option) {
+                if ($request->getData($key) !== null) {
+                    $options[$key] = $request->getData($key);
+                } else {
+                    $options[$key] = $option['default'];
+                }
+
                 switch ($option['type']) {
+                    case 'measure':
+                        $options[$key] = $options[$key] * $factor;
+                        break;
                     case 'percent':
-                        if ($request->getData($key) !== null) {
-                            $options[$key] = $request->getData($key) / 100;
-                        } else {
-                            $options[$key] = $option['default'] / 100;
-                        }
-                    break;
-                    default:
-                        if ($request->getData($key) !== null) {
-                            $options[$key] = $request->getData($key) * 10;
-                        } else {
-                            $options[$key] = $option['default'] * 10;
-                        }
-                    break;
+                        $options[$key] = $options[$key] / 100;
+                        break;
                 }
             }
             return $options;

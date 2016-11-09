@@ -25,7 +25,9 @@ class CnameCorset extends Pattern
     public function draft($model)
     {
         $this->sample($model);
-        
+        $this->finalizePanels($model);
+        /* Don't render panels */
+        $this->parts['panels']->setRender(false);
     }
 
     /**
@@ -45,8 +47,9 @@ class CnameCorset extends Pattern
         $this->loadHelp($model);
 
         $this->draftBase($model);
-        if($this->o('panels') == 9) $this->draft9Panels($model);
-        else $this->draft11Panels($model);
+        $this->draftPanels($model);
+        /* Don't render base */
+        $this->parts['base']->setRender(false);
 
     }
 
@@ -61,8 +64,13 @@ class CnameCorset extends Pattern
     {
       
         /* Where to divide our corset into panels */
-        if($this->o('panels') == 9) $this->gaps = array(FALSE,0.2,0.4,0.6,0.75);
-        else $this->gaps = array(0.15,0.275,0.4,0.6,0.75);
+        if($this->o('panels') == 11) {
+            $this->panels = 11;
+            $this->gaps = array(0.2,0.4,0.4,0.6,0.75);
+        } else {
+            $this->panels = 13;
+            $this->gaps = array(0.15,0.275,0.4,0.6,0.75);
+        }
 
         /** 
          * How much should we take in the corset at waist and bust
@@ -78,41 +86,22 @@ class CnameCorset extends Pattern
     }
 
     /**
-     * Drafts a 9-panel corset
-     *
+     * Drafts the corset panels
+     * 
      * @param \Freesewing\Model $model The model to draft for
      *
      * @return void
      */
-    public function draft9Panels($model)
+    public function draftPanels($model)
     {
-        $this->parts['11panels']->setRender(false);
-        $p = $this->parts['9panels'];
-    }
-
-    /**
-     * Drafts an 11-panel corset
-     *
-     * @param \Freesewing\Model $model The model to draft for
-     *
-     * @return void
-     */
-    public function draft11Panels($model)
-    {
-        
-        /* Don't render base and 9-panels version */
-        $this->parts['base']->setRender(false);
-        $this->parts['9panels']->setRender(false);
         
         /* Clone base points */
-        $this->clonePoints('base', '11panels');
+        $this->clonePoints('base', 'panels');
         
-        $p = $this->parts['11panels'];
+        $p = $this->parts['panels'];
 
-        /* Dividing out the panels */
-        $gaps = array(0.15,0.275,0.4,0.6,0.75);
         $helpLines = '';
-        foreach($gaps as $g => $gap) {
+        foreach($this->gaps as $g => $gap) {
             $i = $g+1; // Avoid zero
             /* Underbust */
             $p->newPoint(   100*$i,    $this->width*$gap, 0, "Gap $i center @ underbust" );
@@ -135,38 +124,55 @@ class CnameCorset extends Pattern
             $helpLines .= ' M '.(100*$i).' L '.(100*$i+80);
             $helpLines .= ' M '.(100*$i+1).' C '.(100*$i+3).' '.(100*$i+43).' '.(100*$i+41).' C '.(100*$i+45).' '.(100*$i+80).' '.(100*$i+80);
             $helpLines .= ' M '.(100*$i+2).' C '.(100*$i+4).' '.(100*$i+44).' '.(100*$i+42).' C '.(100*$i+46).' '.(100*$i+80).' '.(100*$i+80);
-            
-            
         }
 
-        $p = $this->parts['11panels'];
 
-        // Draft panels
+        // Draft panels, mark path for sampler
         for($i=1;$i<8;$i++) {
-            $this->{"draftPanel$i"}($model, $p);
-            $p->newText("title$i", "titleAnchor$i", $i, ['class' => 'part-nr']);
-            if($i == 1) $p->newText("msg$i", "titleAnchor$i", $this->t('Cut 1 on fold'), ['class' => 'part-msg']);
-            else $p->newText("msg$i", "titleAnchor$i", $this->t('Cut 2'), ['class' => 'part-msg']);
-//            $p->newPath("panel$i", $this->{"path$i"}, ['class' => 'seamline']);
-//            $p->paths["panel$i"]->setSample(true);
-//            $p->offsetPathString("sa$i", $this->{"path$i"}, 10, 1, ['class' => 'seam-allowance']);
+            $name = "Panel$i";
+            $this->{"draft$name"}($model, $p);
+            $p->newPath($name, $this->{"path$i"}, ['class' => 'seamline']);
+            $p->paths[$name]->setSample(true);
         }
-        $i = 7;
-        //echo $this->{"path$i"}; //FIXME
-        $p->newPath("panel$i", $this->{"path$i"}, ['class' => 'seamline']);
-        $p->offsetPathString("sa$i", $this->{"path$i"}, 10, 1, ['class' => 'seam-allowance']);
-        /*
-        $p->offsetPathString('sa2', $this->path2, 10, 1, ['class' => 'seam-allowance']);
-        $p->offsetPathString('sa3', $this->path3, 10, 1, ['class' => 'seam-allowance']);
-        $p->offsetPathString('sa4', $this->path4, 10, 1, ['class' => 'seam-allowance']);
-        //$p->offsetPathString('sa5', $this->path5, 10, 1, ['class' => 'seam-allowance']);
-        //$p->offsetPathString('sa6', $this->path6, 10, 1, ['class' => 'seam-allowance']);
-        $p->offsetPathString('sa7', $this->path7, 10, 1, ['class' => 'seam-allowance']);
-        */
         $path = 'M 20 C 21 31 30 C 32 41 40 L 50 C 51 52 5 L 13 C 12 11 10 z M 1 L 2 L 3 L 4 z M 5 L 6 M 7 L 8';
         $path.= $helpLines;
-        //$p->newPath('outline', $path, ['class' => 'helpline']);
-}
+        $p->newPath('corsetStructure', $path, ['class' => 'helpline']);
+    }
+
+    /**
+     * Finalizes the corset panels
+     * 
+     * @param \Freesewing\Model $model The model to draft for
+     *
+     * @return void
+     */
+    public function finalizePanels($model)
+    {
+        // Clone each panel into its own pattern part
+        for($i=1;$i<8;$i++) {
+            if(!($this->panels == 11 && $i == 4)) {
+                $part = "panel$i";
+                $this->addPart($part);
+                $p = $this->parts[$part];
+                $this->clonePoints('panels', $part);
+                $p->newPath($part, $this->{"path$i"}, ['class' => 'seamline']);
+                $p->paths[$part]->setSample(true);
+                $p->clonePoint("gridAnchor$i", 'gridAnchor');
+                if($i == 1) $msg =  $this->t('Cut 1 on fold');
+                else $msg = $this->t('Cut 2');
+                $p->addTitle("titleAnchor$i", $i, $this->t('Panel')." $i", $msg, 'vertical');
+                $p->offsetPathString($part, $this->{"path$i"}, 10, 1, ['class' => 'seam-allowance']);
+
+            }
+        }
+        $this->finalizePanel1($model,$this->parts['panel1']);
+        $this->finalizePanel2($model,$this->parts['panel2']);
+        $this->finalizePanel3($model,$this->parts['panel3']);
+        if(isset($this->parts['panel4'])) $this->finalizePanel4($model,$this->parts['panel4']);
+        $this->finalizePanel5($model,$this->parts['panel5']);
+        $this->finalizePanel5($model,$this->parts['panel5']);
+        $this->finalizePanel7($model,$this->parts['panel7']);
+    }
 
     /**
      * Drafts corset panel 1
@@ -178,11 +184,7 @@ class CnameCorset extends Pattern
      */
     protected function draftPanel1($model, $p)
     {
-        /**
-         *  Panel 1 
-         *
-         *  Containing the frontRise curve in this panel by shifting points
-         */
+        // Containing the frontRise curve in this panel by shifting points
         $p->addPoint( 11, $p->shift(11, 180, $p->distance(100,101)) );
         $p->addPoint( 12, $p->shift(12, 180, $p->distance(100,101)) );
         $p->addPoint( 13, $p->shift(13, 180, $p->distance(100,101)) );
@@ -196,6 +198,24 @@ class CnameCorset extends Pattern
         $this->path1 = 'M 10 L 20 C 53-2 53-3 52-1 L 50-1 C 51-3 51-2 10 z';
         /* Title anchor */
         $p->newPoint('titleAnchor1', $p->x('50-1')/2, $p->y(7)/2, 'Title anchor panel 1');
+        /* Grid anchor */
+        $p->clonePoint(7,'gridAnchor1');
+
+    }
+
+    /**
+     * Finalizes corset panel 1
+     *
+     * @param \Freesewing\Model $model The model to draft for
+     * @param \Freesewing\Part $p The part to add info to
+     *
+     * @return void Nothing, adds into to part $p
+     */
+    protected function finalizePanel1($model, $p)
+    {
+        $p->addPoint('grainlineTop', $p->shift(10,-45,10));
+        $p->addPoint('grainlineBottom', $p->shift(20,45,10));
+        $p->newPath('grainline','M grainlineTop L grainlineBottom',['class' => 'grainline']);
     }
 
     /**
@@ -223,6 +243,23 @@ class CnameCorset extends Pattern
         $this->path2 .= 'C 143 103 101 C 51-6 51-7 50-1 z';
         /* Title anchor */
         $p->newPoint('titleAnchor2', $p->x(140)/1.5, $p->y(2)*0.7, 'Title anchor panel 2');
+        /* Grid anchor */
+        $p->newPoint('gridAnchor2', $p->x('titleAnchor2'), $p->y(7), 'Grid anchor panel 2');
+    }
+
+    /**
+     * Finalizes corset panel 2
+     *
+     * @param \Freesewing\Model $model The model to draft for
+     * @param \Freesewing\Part $p The part to add info to
+     *
+     * @return void Nothing, adds into to part $p
+     */
+    protected function finalizePanel2($model, $p)
+    {
+        $p->newPoint('grainlineTop', $p->x('titleAnchor2'), $p->y(101)+10);
+        $p->newPoint('grainlineBottom', $p->x('grainlineTop'), $p->y(2));
+        $p->newPath('grainline','M grainlineTop L grainlineBottom',['class' => 'grainline']);
     }
 
     /**
@@ -250,6 +287,23 @@ class CnameCorset extends Pattern
         $this->path3 .= 'C 243 203 201 z';
         /* Title anchor */
         $p->newPoint('titleAnchor3', $p->x(240)-$p->deltaX(140,240)/2, $p->y('titleAnchor2'), 'Title anchor panel 3');
+        /* Grid anchor */
+        $p->newPoint('gridAnchor3', $p->x('titleAnchor3'), $p->y(7), 'Grid anchor panel 3');
+    }
+
+    /**
+     * Finalizes corset panel 3
+     *
+     * @param \Freesewing\Model $model The model to draft for
+     * @param \Freesewing\Part $p The part to add info to
+     *
+     * @return void Nothing, adds into to part $p
+     */
+    protected function finalizePanel3($model, $p)
+    {
+        $p->newPoint('grainlineTop', $p->x('titleAnchor3'), $p->y(101)+10);
+        $p->newPoint('grainlineBottom', $p->x('grainlineTop'), $p->y(2)-$this->o('hipRise'));
+        $p->newPath('grainline','M grainlineTop L grainlineBottom',['class' => 'grainline']);
     }
 
     /**
@@ -280,6 +334,23 @@ class CnameCorset extends Pattern
         $this->path4 .= 'C 343 303 301 z';
         /* Title anchor */
         $p->newPoint('titleAnchor4', $p->x(340)-$p->deltaX(240,340)/2, $p->y('titleAnchor2'), 'Title anchor panel 4');
+        /* Grid anchor */
+        $p->newPoint('gridAnchor4', $p->x('titleAnchor4'), $p->y(7), 'Grid anchor panel 4');
+    }
+
+    /**
+     * Finalizes corset panel 4
+     *
+     * @param \Freesewing\Model $model The model to draft for
+     * @param \Freesewing\Part $p The part to add info to
+     *
+     * @return void Nothing, adds into to part $p
+     */
+    protected function finalizePanel4($model, $p)
+    {
+        $p->newPoint('grainlineTop', $p->x('titleAnchor4'), $p->y(101)+10);
+        $p->newPoint('grainlineBottom', $p->x('grainlineTop'), $p->y(2)-$this->o('hipRise')-10);
+        $p->newPath('grainline','M grainlineTop L grainlineBottom',['class' => 'grainline']);
     }
 
     /**
@@ -313,6 +384,23 @@ class CnameCorset extends Pattern
         } 
         /* Title anchor */
         $p->newPoint('titleAnchor5', $p->x(440)-$p->deltaX(340,440)/2, $p->y('titleAnchor2'), 'Title anchor panel 5');
+        /* Grid anchor */
+        $p->newPoint('gridAnchor5', $p->x('titleAnchor5'), $p->y(7), 'Grid anchor panel 5');
+    }
+
+     /**
+     * Finalizes corset panel 5
+     *
+     * @param \Freesewing\Model $model The model to draft for
+     * @param \Freesewing\Part $p The part to add info to
+     *
+     * @return void Nothing, adds into to part $p
+     */
+    protected function finalizePanel5($model, $p)
+    {
+        $p->newPoint('grainlineTop', $p->x('titleAnchor5'), $p->y(101)+10);
+        $p->newPoint('grainlineBottom', $p->x('grainlineTop'), $p->y(2)-$this->o('hipRise')-10);
+        $p->newPath('grainline','M grainlineTop L grainlineBottom',['class' => 'grainline']);
     }
 
     /**
@@ -325,13 +413,6 @@ class CnameCorset extends Pattern
      */
     protected function draftPanel6($model, $p)
     {
-        
-        /**
-         *  Panel 6
-         *
-         *  Assymetrical dart as panel 4, and top needs work
-         */
-
         /* Where does the left edge cut through top curve */
         $p->curveCrossesX(50,51,52,5,$p->x(402), '420-'); // Intersection in 420-1
         $p->addSplitCurve('421-','410-1','411-3','411-2',50,'420-1'); 
@@ -355,6 +436,23 @@ class CnameCorset extends Pattern
         } 
         /* Title anchor */
         $p->newPoint('titleAnchor6', $p->x(540)-$p->deltaX(440,540)/2, $p->y('titleAnchor2'), 'Title anchor panel 6');
+        /* Grid anchor */
+        $p->newPoint('gridAnchor6', $p->x('titleAnchor6'), $p->y(7), 'Grid anchor panel 6');
+    }
+
+    /**
+     * Finalizes corset panel 6
+     *
+     * @param \Freesewing\Model $model The model to draft for
+     * @param \Freesewing\Part $p The part to add info to
+     *
+     * @return void Nothing, adds into to part $p
+     */
+    protected function finalizePanel6($model, $p)
+    {
+        $p->newPoint('grainlineTop', $p->x('titleAnchor6'), $p->y(101)+10);
+        $p->newPoint('grainlineBottom', $p->x('grainlineTop'), $p->y(2)-$this->o('hipRise')-10);
+        $p->newPath('grainline','M grainlineTop L grainlineBottom',['class' => 'grainline']);
     }
 
     /**
@@ -383,8 +481,29 @@ class CnameCorset extends Pattern
         $this->path7 .= 'C 591-3 591-2 40 z'; 
         /* Title anchor */
         $p->newPoint('titleAnchor7', $p->x(8)-$p->deltaX(540,8)/2, $p->y('titleAnchor2'), 'Title anchor panel 7');
+        /* Grid anchor */
+        $p->clonePoint(8, 'gridAnchor7');
     } 
         
+    /**
+     * Finalizes corset panel 7
+     *
+     * @param \Freesewing\Model $model The model to draft for
+     * @param \Freesewing\Part $p The part to add info to
+     *
+     * @return void Nothing, adds into to part $p
+     */
+    protected function finalizePanel7($model, $p)
+    {
+        $p->newPoint('grainlineTop', $p->x(40)-10, $p->y(101)+10);
+        $p->newPoint('grainlineBottom', $p->x('grainlineTop'), $p->y(2)-10);
+        $p->newPath('grainline','M grainlineTop L grainlineBottom',['class' => 'grainline']);
+        $p->newPoint('scaleboxAnchor', $p->x('titleAnchor7')-25, $p->y('titleAnchor7')-100);
+        $p->newSnippet('scalebox', 'scalebox', 'scaleboxAnchor');
+        // This part is narrow, better rotate that scalebox
+        $p->snippets['scalebox']->setAttributes(['transform' => 'rotate( -90 '.$p->points['scaleboxAnchor']->getX().' '.$p->points['scaleboxAnchor']->getY().')']);
+    }
+
         
         
 

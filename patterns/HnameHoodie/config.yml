@@ -1,0 +1,48 @@
+info:
+    name:       "Hname Hoodie"
+    version:    "2.0"
+    date:       20161110
+    author:     "Joost De Cock"
+    email:      "joost@decock.org"
+    company:    "freesewing.org"
+    link:       "freesewing.org/pattern/hname-hoodie/"
+
+parts:
+    backBlock:      "Back block"
+    frontBlock:     "Front block"
+    sleeveBlock:    "Sleeve block"
+    front:          "Front"
+    back:           "Back"
+    sleeve:         "Sleeve"
+    pocket:         "Pocket"
+    pocketFacing:   "Pocket facing"
+    hoodSide:       "Hood side"
+    hoodCenter:     "Hood center"
+    cuff:           "Cuff"
+    waistband:      "Waistband"
+
+languages:
+    en: English
+    nl: Nederlands
+
+measurements:
+    - acrossBack
+    - bicepsCircumference
+    - centerBackNeckToWaist
+    - chestCircumference
+    - hipsCircumference
+    - naturalWaistToHip
+    - neckCircumference
+    - shoulderLength
+    - shoulderSlope
+    - sleeveLengthToWrist  
+    - wristCircumference
+
+options:
+    - chestEase
+    - bicepsEase
+    - cuffEase
+
+inMemoryOf:   
+    name: "FIXME"
+    link: "https://en.wikipedia.org/wiki/FIXME"

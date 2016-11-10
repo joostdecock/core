@@ -209,7 +209,7 @@ class TrayvonTie extends Pattern
         $this->clonePoints('fabricTip', 'liningTip');
         
         /* Title */
-        $p->addTitle('titleAnchor', 5, $this->t($p->title), $this->t('Cut 1 from lining')); 
+        $p->addTitle('titleAnchor', 5, $this->t($p->title), '1x '.$this->t('Cut 1 from lining')); 
         
         /* Tip seam allowance */
         $p->newPath('tipSA', 'M 4 L 10 L tipSA-line-1TO4XllXtipSA-line-1TO3 L 11 L 3', ['class' => 'seam-allowance']);

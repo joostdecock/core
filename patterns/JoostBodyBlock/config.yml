@@ -18,13 +18,13 @@ measurements:
     - bicepsCircumference
     - centerBackNeckToWaist
     - chestCircumference
+    - hipsCircumference
     - naturalWaistToHip
     - neckCircumference
     - shoulderLength
     - shoulderSlope
-    - hipsCircumference
-    - wristCircumference
     - sleeveLengthToWrist  
+    - wristCircumference
 options:
     - chestEase
     - bicepsEase

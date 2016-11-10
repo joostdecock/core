@@ -51,6 +51,7 @@ return array(
     'Freesewing\\Patterns\\AaronAshirt' => $baseDir . '/patterns/AaronAshirt/AaronAshirt.php',
     'Freesewing\\Patterns\\BennoBoxerBriefs' => $baseDir . '/patterns/BennoBoxerBriefs/BennoBoxerBriefs.php',
     'Freesewing\\Patterns\\CnameCorset' => $baseDir . '/patterns/CnameCorset/CnameCorset.php',
+    'Freesewing\\Patterns\\HnameHoodie' => $baseDir . '/patterns/HnameHoodie/HnameHoodie.php',
     'Freesewing\\Patterns\\JoostBodyBlock' => $baseDir . '/patterns/JoostBodyBlock/JoostBodyBlock.php',
     'Freesewing\\Patterns\\Pattern' => $baseDir . '/patterns/Pattern/Pattern.php',
     'Freesewing\\Patterns\\TestBezier' => $baseDir . '/patterns/TestBezier/TestBezier.php',

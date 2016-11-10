@@ -1,3 +1,6 @@
 docs/apigen/
 docs/code/
 fsodoc/
+coverage/
+vendor/
+patterns/HnameHoodie/HomeboyHoodie

@@ -114,7 +114,7 @@ function loadPatternInfo(pattern) {
         $('#patterninfo-col5').append( "<h3>Options</h3>");
         $('#patterninfo-col5').append( "<div id='patterninfo-col5-div'></div>");
         $.each( data['sampler']['options'], function( key, val ) {
-            if(val['type'] == 'number') values = "and expects a value between <span class='label label-warning'>" + val['min'] + "</span> and <span class='label label-warning'>" + val['max'] + "</span> Its default is <span class='label label-success'>" + val['default'] + "</span";
+            if(val['type'] == 'measure') values = "and expects a value between <span class='label label-warning'>" + val['min'] + "</span> and <span class='label label-warning'>" + val['max'] + "</span> Its default is <span class='label label-success'>" + val['default'] + "</span";
             if(val['type'] == 'percent') values = " so it expects a value between 0 and 100. Its default is " + val['default'];
             if(val['type'] == 'chooseOne') {
                 values = " so you should pick one of:</p><ul> ";
@@ -132,7 +132,7 @@ function loadPatternInfo(pattern) {
         
         $('#details').html('');
         $('#details').append( " <p>We made an AJAX call to to:</p> <code>" + api + "/info/" + pattern + "/json</code>");
-        $('#details').append( " <p>We used the returned JSON to build the content above.</p><p>Here's what the response looks like:</p>");
+        $('#details').append( " <p>We used the returned JSON to build the overview above.</p><p>Here's what the response looks like:</p>");
         $('#details').append( " <pre>" + JSON.stringify(data, null, '\t') + "</pre>");
         scrollTo('#patterninfo');
     });

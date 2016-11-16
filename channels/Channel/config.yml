@@ -10,6 +10,7 @@ measurements:
     shoulderSlope           : 'shoulderSlope'
     bicepsCircumference     : 'bicepsCircumference'
     sleeveLengthToWrist     : 'sleeveLengthToWrist'
+    headCircumference       : 'headCircumerence'
 cmoptions:
     shoulderStrapWidth  : 'shoulderStrapWidth'
     necklineDrop        : 'necklineDrop'
@@ -27,4 +28,5 @@ percentoptions:
     shoulderStrapPlacement  : 'shoulderStrapPlacement'
     necklineBend            : 'necklineBend'
     backlineBend            : 'backlineBend'
+    ribbingStretchFactor    : 'ribbingStretchFactor'
 

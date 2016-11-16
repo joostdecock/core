@@ -13,4 +13,9 @@ cuffEase:
     min: 0
     max: 100
     default: 45
+ribbingStretchFactor:
+    type: percent
+    min: 70
+    max: 100
+    default: 85
 

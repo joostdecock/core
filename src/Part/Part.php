@@ -1060,6 +1060,7 @@ class Part
      */
     private function offsetCurve($curve, $distance, $key, $subdivide = 0)
     {
+        if($subdivide>=100) throw new \Exception("Path offset ran $subdivide subdivisions deep. Bailing out before we eat all memory"); // FIXME: This happens
         $points = Utils::asScrubbedArray($curve);
         $from = $points[1];
         $cp1 = $points[3];

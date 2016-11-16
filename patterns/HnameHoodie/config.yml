@@ -20,6 +20,7 @@ parts:
     hoodCenter:     "Hood center"
     cuff:           "Cuff"
     waistband:      "Waistband"
+    neckBinding:    "Neck binding"
 
 languages:
     en: English
@@ -37,11 +38,13 @@ measurements:
     - shoulderSlope
     - sleeveLengthToWrist  
     - wristCircumference
+    - headCircumference
 
 options:
     - chestEase
     - bicepsEase
     - cuffEase
+    - ribbingStretchFactor
 
 inMemoryOf:   
     name: "FIXME"

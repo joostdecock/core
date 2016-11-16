@@ -37,7 +37,7 @@ shoulderStrapPlacement:
 stretchFactor:
     type: percent
     min: 70
-    max: 1100
+    max: 100
     default: 90
 hipsEase:
     type: measure

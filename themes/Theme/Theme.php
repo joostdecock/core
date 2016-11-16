@@ -14,6 +14,9 @@ abstract class Theme
     /** @var array $messages Messages to include in the pattern */
     public $messages = array();
 
+    /** @var array $debug Debug to include in the pattern */
+    public $debug = array();
+
     /**
      * Constructor loads the Yaml config file into the config property
      *
@@ -51,13 +54,14 @@ abstract class Theme
     }
 
     /**
-     * Loads message from pattern into messages property
+     * Loads messages/debug from pattern into messages/debug property
      *
      * @param \Freesewing\Patterns\* $pattern The pattern object
      */
     public function themePattern($pattern)
     {
         $this->messages = $pattern->getMessages();
+        $this->debug = $pattern->getDebug();
     }
 
     /**
@@ -108,11 +112,27 @@ abstract class Theme
                 $svgDocument->svgAttributes->add($attr);
             }
         }
-
-        if ($this->messages !== false) {
-            $svgDocument->footerComments->add(implode("\n", $this->messages));
+        if ($this->messages) {
+            $svgDocument->footerComments->add($this->messages);
+        }
+        
+        if ($this->debug && $this->showDebug()) {
+            $svgDocument->footerComments->add("\n\n\tDEBUG OUTUT\n\n".$this->debug);
         }
     }
+
+    /**
+     * Determines whether to show debug messages or not
+     *
+     * This is false by default, but themes can change that
+     *
+     * @return false Here, always false
+     */
+    protected function showDebug()
+    {
+        return false;
+    }
+
 
     /**
      * Returns a Response object with our SvgDocument in it

@@ -27,6 +27,7 @@ class Designer extends Theme
             }
         }
         $this->messages = $pattern->getMessages();
+        $this->debug = $pattern->getDebug();
         $pattern->replace('__SCALEBOX_METRIC__', $pattern->t('__SCALEBOX_METRIC__'));
         $pattern->replace('__SCALEBOX_IMPERIAL__', $pattern->t('__SCALEBOX_IMPERIAL__'));
     }
@@ -80,7 +81,7 @@ class Designer extends Theme
             $toHighlight = \Freesewing\Utils::asScrubbedArray($_REQUEST['highlightPoints'],',');
             if(isset($toHighlight) && is_array($toHighlight)) {
                 foreach ($toHighlight as $key) {
-                    $this->highlightPoint($key, $part->points[$key], $part, $partKey);
+                    if(isset( $part->points[$key])) $this->highlightPoint($key, $part->points[$key], $part, $partKey);
                 }
             }
         }
@@ -169,4 +170,17 @@ class Designer extends Theme
             }
         }
     }
+    
+    /**
+     * Determines whether to show debug messages or not
+     *
+     * This is false in the theme we extend, so we set it true here
+     *
+     * @return true Here, always true
+     */
+    protected function showDebug()
+    {
+        return true;
+    }
+
 }

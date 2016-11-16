@@ -415,6 +415,38 @@ abstract class Pattern
     }
 
     /**
+     * Add a debug message to the pattern
+     *
+     * This is a helper function that pushes messages onto
+     * the debug property.
+     * In the default theme, these will not be included.
+     * But in the designer theme, they will be added to the
+     * footer comments in the SVG file. 
+     *
+     * @see \Freesewing\Theme::loadTemplates()
+     *
+     * @param string $msg The message to add
+     */
+    public function dbg($msg)
+    {
+        $this->debug[] = $msg;
+    }
+
+    /**
+     * Returns messages in the debug property as a text block
+     *
+     * @return string $messages The debug messages stored in the pattern
+     */
+    public function getDebug()
+    {
+        if (isset($this->debug)) {
+            return implode("\n", $this->debug);
+        } else {
+            return false;
+        }
+    }
+
+    /**
      * Returns messages in the messages property as a text block
      *
      * @return string $messages The messages stored in the pattern

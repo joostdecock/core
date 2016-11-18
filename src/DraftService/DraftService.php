@@ -52,10 +52,15 @@ class DraftService
             $context->pattern->setUnits($context->getUnits());
             $context->addTranslator();
             $context->pattern->setTranslator($context->getTranslator());
+            
+            $context->theme->setOptions($context->request);
 
             $context->pattern->draft($context->model);
             $context->pattern->setPartMargin($context->theme->config['settings']['partMargin']);
+            
+            $context->theme->applyRenderMask($context->pattern);
             $context->pattern->layout();
+            
             $context->theme->themePattern($context->pattern);
 
             $context->addSvgDocument();

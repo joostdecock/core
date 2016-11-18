@@ -27,7 +27,7 @@ class Request
      * in the data property, and sets these properties
      *  - userAgent
      *  - host
-     *  - uti
+     *  - uri
      *  - time
      * based on the request
      *

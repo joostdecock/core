@@ -231,4 +231,18 @@ class Utils
         return sqrt(pow($deltaX, 2) + pow($deltaY, 2));
     }
 
+    /** 
+     * Returns kint formated debug for the data passed to it
+     *
+     * @param $data The data
+     *
+     * @param string $debug The kint formatted debug
+     */
+    public static function debug($data)
+    {
+        ob_start();
+        \Kint::$maxLevels = 0;
+        \Kint::dump($data);
+        return ob_get_clean();
+    }
 }

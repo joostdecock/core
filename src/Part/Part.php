@@ -499,6 +499,7 @@ class Part
     public function offsetPathString($key, $pathString, $distance = 10, $render = false, $attributes = null)
     {
         $this->newPath('.offsetHelper', $pathString);
+        $this->paths['.offsetHelper']->setRender(false);
         $this->offsetPath($key, '.offsetHelper', $distance, $render, $attributes);
     }
 
@@ -518,12 +519,13 @@ class Part
         /* take care of overlapping parts */
         $stack = $this->fixStackIntersections($stack);   
         $stack = $this->fillPathStackGaps($stack, $path);
+//if(count($stack->items)<4) print_r($stack); // FIXME
         $pathString = $this->pathStackToPath($stack, $path);
         $this->newPath($newKey, $pathString, $attributes);
         if (!$render) {
             $this->paths[$newKey]->setRender(false);
         }
-        $this->purgePoints($newKey.'.splitcurve');
+        //$this->purgePoints($newKey.'.splitcurve');//FIXME
     }
 
     private function fixStackIntersections($stack)
@@ -896,6 +898,7 @@ class Part
                 $stack->push($this->offsetCurve($chunk['path'], $distance, $key));
             }
         }
+//            if($this->title == 'Pocket') echo Utils::debug($stack); //FIXME
 
         return $stack;
     }
@@ -1012,12 +1015,11 @@ class Part
             $p = $from;
         } else {
             $almostTheSamePoint = $this->addPoint('-shifthelper', $this->shiftAlong($to, $cp2, $cp1, $from, 0.5));
-            $angle = $this->angle('-shifthelper', $to) + 90;
+            $angle = $this->angle('-shifthelper', $to) + 90; //FIXME this needs some TLC
             $p = $to;
         }
 
         $offset = $this->shift($p, $angle, $distance);
-
         return [$offset, $offset];
     }
 
@@ -1060,7 +1062,9 @@ class Part
      */
     private function offsetCurve($curve, $distance, $key, $subdivide = 0)
     {
-        if($subdivide>=100) throw new \Exception("Path offset ran $subdivide subdivisions deep. Bailing out before we eat all memory"); // FIXME: This happens
+        if($subdivide>=50) {
+            throw new \Exception("Path offset ran $subdivide subdivisions deep. Bailing out before we eat all memory"); // FIXME: This happens
+        }
         $points = Utils::asScrubbedArray($curve);
         $from = $points[1];
         $cp1 = $points[3];
@@ -1068,6 +1072,12 @@ class Part
         $to = $points[5];
 
         $offset = $this->getCurveOffsetPoints($from, $cp1, $cp2, $to, $distance);
+/*        if($this->title == 'Pocket') {
+            echo "<h3>subdivide $subdivide of curve $curve</h3>";
+            echo Utils::debug($points); //FIXME
+            echo Utils::debug($offset); //FIXME
+        }
+ */
         if ($subdivide == 0) { // First time around
             $fromId = "$key-curve-$from"."TO$to";
             $toId = "$key-curve-$to"."TO$from";
@@ -1095,13 +1105,15 @@ class Part
         $this->addPoint($cp2Id, $offset[2]);
         $this->addPoint($toId, $offset[3]);
         
+        $this->addPoint($this->newId(), $offset[3]); // FIXME
+
         // Add this chunk to the stack
         $chunks[] = ['type' => 'curve', 'original' => [$from, $cp1, $cp2, $to], 'offset' => [$fromId, $cp1Id, $cp2Id, $toId], 'subdivide' => $subdivide];
         
         // Find out how we're doing
         $tolerance = $this->offsetTolerance($chunks[0], $distance);
         if ($tolerance['score'] > $this->maxOffsetTolerance) { // Not good enough, let's subdivide
-            ++$subdivide;
+            $subdivide++;
             $splitId = $key.'.splitcurve:'.$this->newId();
             $this->addSplitCurve($splitId.'-', $from, $cp1, $cp2, $to, $tolerance['index'], 1);
             unset($chunks);
@@ -1114,7 +1126,6 @@ class Part
                 $chunks[] = $chunk;
             }
         }
-
         return $chunks;
     }
 
@@ -1128,6 +1139,11 @@ class Part
      */
     private function offsetTolerance($entry, $distance)
     {
+        // If a curve gets too short things go off the rails, so don't bother
+        if($this->curveLen($entry['original'][0],$entry['original'][1],$entry['original'][2],$entry['original'][3]) < 10) {
+            return ['score' => 1, 'index' => 0.5]; // FIXME Remove this when it's no longer an issue
+        }
+        
         $origFrom = $this->loadPoint($entry['original'][0]);
         $origCp1 = $this->loadPoint($entry['original'][1]);
         $origCp2 = $this->loadPoint($entry['original'][2]);

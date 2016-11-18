@@ -17,6 +17,16 @@ abstract class Theme
     /** @var array $debug Debug to include in the pattern */
     public $debug = array();
 
+    /** @var array $options Array of theme options */
+    public $options = array();
+
+    /** @var array $flags Array of theme flags
+     *
+     * A flag is a boolean, true or false
+     * unlike options which can be anything
+     */
+    public $flags = array();
+
     /**
      * Constructor loads the Yaml config file into the config property
      *
@@ -29,6 +39,31 @@ abstract class Theme
         }
     }
     
+    /**
+     * Returns the flag identified by $key
+     *
+     * @param scalar $key The key of the flag in the flags array
+     *
+     * @return bool true or false
+     */
+    public function getFlag($key)
+    {
+        if($this->flags[$key] === true) return true;
+        else return false;
+    }
+
+    /**
+     * Returns the option identified by $key
+     *
+     * @param scalar $key The key of the option in the options array
+     *
+     * @return The value of the option
+     */
+    public function getOption($key)
+    {
+        return $this->options[$key];
+    }
+
     /**
      * Returns the location of the theme config file
      */
@@ -279,4 +314,116 @@ abstract class Theme
     {
         return basename(\Freesewing\Utils::getClassDir($this)); 
     }
+    
+    /**
+     * A way for themes to set options based on the request data
+     *
+     * Maybe you want your theme to do something based on a request parameter
+     * This allows you to configure these options in one place
+     *
+     * @param \Freesewing\Request $request The request object
+     */
+    public function setOptions($request)
+    {
+        $options = ['parts', 'paths', 'points'];
+        $flags = ['forceParts', 'forcePaths', 'forcePoints'];
+
+        foreach($options as $o) {
+            $oval = $request->getData($o);
+            if($oval) {
+                $values = \Freesewing\Utils::asScrubbedArray($oval,',');
+                if (is_array($values)) $this->options[$o] = $values;
+                else $this->options[$o] = false;
+            }
+        }
+
+        foreach($flags as $f) {
+            $fval = $request->getData($f);
+            if($fval == 1) {
+                $this->flags[$f] = true;
+            } else {
+                $this->flags[$f] = false;
+            }
+        }
+
+    }
+
+    /**
+     * Sets the render property on parts and paths based on theme options
+     *
+     * @param \Freesewing\Pattern $pattern The pattern object
+     */
+    public function applyRenderMask($pattern)
+    {
+        $this->applyRenderMaskOnParts($pattern);
+        $this->applyRenderMaskOnPaths($pattern);
+    }
+
+    /**
+     * Sets the render property on parts based on theme options
+     *
+     * You can use the following request parameter to control the render mask for parts:
+     *
+     *  - parts
+     *  - forceParts
+     *
+     * If *parts* is an array, all parts NOT in the array will NOT be rendered
+     * If in addition, *forceParts* is 1, only parts in the *parts* array will be rendered
+     * The difference is that *forceParts* will force all parts in the *parts* array
+     * to be rendered. Even those that have their render property set to false.
+     *
+     * @param \Freesewing\Pattern $pattern The pattern object
+     */
+    public function applyRenderMaskOnParts($pattern)
+    {
+        $parts = $this->getOption('parts');
+        if(is_array($parts)) {
+            foreach($pattern->parts as $key => $part) {
+                if(!in_array($key,$parts)) { // Don't render what's not included
+                    $pattern->parts[$key]->setRender(false);
+                } else {
+                    if($this->getFlag('forceParts')) { // Force render of what's included
+                        $pattern->parts[$key]->setRender(true);
+                    }
+                }
+            }
+
+        }
+    }
+
+    /**
+     * Sets the render property on paths based on theme options
+     *
+     * You can use the following request parameter to control the render mask for paths:
+     *
+     *  - paths
+     *  - forcePaths
+     *
+     * If *paths* is an array, all paths NOT in the array will NOT be rendered
+     * If in addition, *forcePaths* is 1, only paths in the *paths* array will be rendered
+     * The difference is that *forcePaths* will force all paths in the *paths* array
+     * to be rendered. Even those that have their render property set to false.
+     *
+     * @param \Freesewing\Pattern $pattern The pattern object
+     */
+    public function applyRenderMaskOnPaths($pattern)
+    {
+        $paths = $this->getOption('paths');
+        if(is_array($paths)) {
+            foreach($pattern->parts as $key1 => $part) {
+                if($pattern->parts[$key1]->getRender()) { // Don't bother if it's not rendered
+                    foreach($part->paths as $key2 => $path) {
+                        if(!in_array($key2,$paths)) { // Do not render what's not included
+                            $part->paths[$key2]->setRender(false); 
+                        } else {
+                            if($this->getFlag('forcePaths')) { // Force render of what's included
+                                $part->paths[$key2]->setRender(true); 
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
 }

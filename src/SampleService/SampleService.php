@@ -40,34 +40,37 @@ class SampleService extends DraftService
         if ($context->channel->isValidRequest($context) === true) :
 
             $context->addUnits();
-        $context->pattern->setUnits($context->getUnits());
-        $context->addTranslator();
-        $context->pattern->setTranslator($context->getTranslator());
-        $context->pattern->setPartMargin($context->theme->config['settings']['partMargin']);
+            $context->pattern->setUnits($context->getUnits());
+            
+            $context->addTranslator();
+            $context->pattern->setTranslator($context->getTranslator());
+            
+            $context->pattern->setPartMargin($context->theme->config['settings']['partMargin']);
+            $context->theme->setOptions($context->request);
 
-        if ($context->request->getData('mode') == 'options') { // Sampling options
+            if ($context->request->getData('mode') == 'options') { // Sampling options
                 $context->addOptionsSampler();
-            $context->optionsSampler->setPattern($context->pattern);
+                $context->optionsSampler->setPattern($context->pattern);
 
-            $context->addModel();
-            $context->model->addMeasurements($context->optionsSampler->loadModelMeasurements($context->pattern));
+                $context->addModel();
+                $context->model->addMeasurements($context->optionsSampler->loadModelMeasurements($context->pattern));
 
-            $context->pattern->addOptions($context->optionsSampler->loadPatternOptions());
-            $context->setPattern($context->optionsSampler->sampleOptions($context->model, $context->theme, $context->request->getData('option'), $context->request->getData('steps')));
-        } else { // Sampling measurements
-            $context->addMeasurementsSampler();
-            $context->measurementsSampler->setPattern($context->pattern);
+                $context->pattern->addOptions($context->optionsSampler->loadPatternOptions());
+                $context->setPattern($context->optionsSampler->sampleOptions($context->model, $context->theme, $context->request->getData('option'), $context->request->getData('steps')));
+            } else { // Sampling measurements
+                $context->addMeasurementsSampler();
+                $context->measurementsSampler->setPattern($context->pattern);
 
-            $context->pattern->addOptions($context->measurementsSampler->loadPatternOptions());
+                $context->pattern->addOptions($context->measurementsSampler->loadPatternOptions());
 
-            $context->measurementsSampler->loadPatternModels($context->request->getData('samplerGroup'));
-            $context->setPattern($context->measurementsSampler->sampleMeasurements($context->theme));
-        }
+                $context->measurementsSampler->loadPatternModels($context->request->getData('samplerGroup'));
+                $context->setPattern($context->measurementsSampler->sampleMeasurements($context->theme));
+            }
 
-        $context->addSvgDocument();
-        $context->addRenderbot();
-        $this->svgRender($context);
-        $context->setResponse($context->theme->themeResponse($context)); else: // channel->isValidRequest() !== true
+            $context->addSvgDocument();
+            $context->addRenderbot();
+            $this->svgRender($context);
+            $context->setResponse($context->theme->themeResponse($context)); else: // channel->isValidRequest() !== true
             $context->channel->handleInvalidRequest($context);
         endif;
 

@@ -499,6 +499,12 @@ class HnameHoodie extends JoostBodyBlock
         $p->addPoint('logoAnchor', $p->shift('titleAnchor',-90,69));
         $p->newSnippet('logo', 'logo', 'logoAnchor');
         $p->newSnippet('cc', 'cc', 'logoAnchor');
+
+        // Seam allowance
+        $sa = 'M 4 L 6 L 5 C 13 16 14 C 15 100 100 C 57 56 9';
+        $p->offsetPathString('sa',$sa,10, true, ['class' => 'seam-allowance']);
+        // Add bits at the fold
+        $p->paths['sa']->setPath('M 4 L sa-line-4TO6 M 9 L sa-curve-9TO100 '.$p->paths['sa']->getPath());
     }
     
     /**
@@ -523,6 +529,12 @@ class HnameHoodie extends JoostBodyBlock
         // Scalebox
         $p->addPoint('scaleboxAnchor', $p->shift('titleAnchor', -90, 30));
         $p->newSnippet('scalebox', 'scalebox', 'scaleboxAnchor');
+        
+        // Seam allowance
+        $sa = 'M 4 L 6 L 5 C 13 16 14 C 15 100 100 C 57 56 1';
+        $p->offsetPathString('sa',$sa,10, true, ['class' => 'seam-allowance']);
+        // Add bits at the fold
+        $p->paths['sa']->setPath('M 4 L sa-line-4TO6 M 1 L sa-curve-1TO100 '.$p->paths['sa']->getPath());
     }
     
     /**
@@ -543,6 +555,9 @@ class HnameHoodie extends JoostBodyBlock
         // Title
         $p->clonePoint(8, 'titleAnchor');
         $p->addTitle('titleAnchor', 3, $this->t($p->title), '2x '.$this->t('from main fabric')."\n".$this->t('Cut with good sides together'));
+        
+        // Seam allowance
+        $p->offsetPath('sa','seamline',-10, true, ['class' => 'seam-allowance']);
     }
     
     /**
@@ -563,6 +578,12 @@ class HnameHoodie extends JoostBodyBlock
         // Title
         $p->newPoint('titleAnchor', $p->x('grainlineBottom') + $p->deltaX('grainlineBottom',101)/2, $p->y(105)+$p->deltaY(105,4)/2);
         $p->addTitle('titleAnchor', 4, $this->t($p->title), '1x '.$this->t('from main fabric')."\n".$this->t('Cut on  fold'));
+        
+        // Seam allowance
+        $sa = 'M 105 L 103 C 104 102 102 L 101 L 4 z';
+        $sa = 'M 103 C 104 102 102';
+//        $sa = 'M 102 C 102 104 103';
+        $p->offsetPathString('sa',$sa,10, true, ['class' => 'seam-allowance stroke-note']);
     }
     
     /**

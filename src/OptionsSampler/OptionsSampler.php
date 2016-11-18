@@ -107,6 +107,7 @@ class OptionsSampler extends Sampler
             }
         }
         $this->addSampledPartsToPattern();
+        $theme->applyRenderMask($this->pattern);
         $this->pattern->layout();
 
         return $this->pattern;

@@ -65,6 +65,7 @@ class MeasurementsSampler extends Sampler
             ++$i;
         }
         $this->addSampledPartsToPattern();
+        $theme->applyRenderMask($this->pattern);
         $this->pattern->layout();
         return $this->pattern;
     }

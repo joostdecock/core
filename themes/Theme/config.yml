@@ -5,6 +5,7 @@ templates:
         - "defs/base"
         - "defs/scalebox"
         - "defs/logo"
+        - "defs/cc"
     footer: 
         - "comments/footer"
     header: 

@@ -496,7 +496,9 @@ class HnameHoodie extends JoostBodyBlock
         $p->addTitle('titleAnchor', 1, $this->t($p->title), '1x '.$this->t('from main fabric')."\n".$this->t('Cut on fold'));
         
         // Logo
-        $p->newSnippet('logo', 'logo', 'titleAnchor');
+        $p->addPoint('logoAnchor', $p->shift('titleAnchor',-90,69));
+        $p->newSnippet('logo', 'logo', 'logoAnchor');
+        $p->newSnippet('cc', 'cc', 'logoAnchor');
     }
     
     /**

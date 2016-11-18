@@ -47,6 +47,8 @@ abstract class Pattern
             $this->loadParts();
             $this->replace('__TITLE__', $this->config['info']['name']);
             $this->replace('__VERSION__', $this->config['info']['version']);
+            $this->replace('__COMPANY__', $this->config['info']['company']);
+            $this->replace('__AUTHOR__', $this->config['info']['author']);
         }
         $this->replace('__DATE__', date('l j F Y'));
 

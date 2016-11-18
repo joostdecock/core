@@ -35,7 +35,7 @@ path.text {
   stroke: none;
 }
 path.note {
-  stroke: #494ae9;
+  stroke: #4285f4;
   stroke-width: 0.6;
   marker-start: url(#noteArrow);
 }
@@ -100,7 +100,7 @@ text.part-msg-horizontal {
 
 }
 text.note {
-  fill: #494ae9;
+  fill: #4285f4;
 }
 text.note tspan {
   alignment-baseline: middle;
@@ -120,7 +120,7 @@ text.note-10 {
   text-anchor: end;
 }
 path.arrow {
-  stroke: #494ae9;
+  stroke: #4285f4;
 }
 path.grainline {
   stroke: #666666;
@@ -131,7 +131,7 @@ path.grainline {
 path.measure-sm,
 path.measure-lg,
 path.measure {
-  stroke: #494ae9;
+  stroke: #4285f4;
   stroke-width: 0.3;
   marker-start: url(#note-color-arrowStart);
   marker-end: url(#note-color-arrowEnd);
@@ -174,7 +174,7 @@ path.debug {
   stroke: #5c3566;
 }
 .stroke-note {
-  stroke: #494ae9;
+  stroke: #4285f4;
 }
 .stroke-tip {
   stroke: #5cb85c;
@@ -189,7 +189,7 @@ path.debug {
   fill: #5c3566;
 }
 .fill-note {
-  fill: #494ae9;
+  fill: #4285f4;
 }
 .fill-tip {
   fill: #5cb85c;

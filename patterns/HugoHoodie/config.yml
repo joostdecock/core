@@ -1,5 +1,5 @@
 info:
-    name:       "Hname Hoodie"
+    name:       "Hugo Hoodie"
     version:    "2.0"
     date:       20161110
     author:     "Joost De Cock"
@@ -47,5 +47,5 @@ options:
     - ribbingStretchFactor
 
 inMemoryOf:   
-    name: "FIXME"
-    link: "https://en.wikipedia.org/wiki/FIXME"
+    name: "Hugo De Cock"
+    link: "https://www.instagram.com/p/p6CnG3rpir/"

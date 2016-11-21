@@ -3,13 +3,13 @@
 namespace Freesewing\Patterns;
 
 /**
- * The Hname Hoodie pattern
+ * The Hugo Hoodie pattern
  *
  * @author Joost De Cock <joost@decock.org>
  * @copyright 2016 Joost De Cock
  * @license http://opensource.org/licenses/GPL-3.0 GNU General Public License, Version 3
  */
-class HnameHoodie extends JoostBodyBlock
+class HugoHoodie extends JoostBodyBlock
 {
     /**
      * Generates a draft of the pattern
@@ -25,7 +25,6 @@ class HnameHoodie extends JoostBodyBlock
     public function draft($model)
     {
         $this->sample($model);
-
         // Finalize all parts, but not the blocks
         foreach($this->parts as $key => $part) {
             if(!strpos($key,'Block')) {
@@ -54,7 +53,7 @@ class HnameHoodie extends JoostBodyBlock
 
         // Draft all parts
         foreach($this->parts as $key => $part) $this->{'draft'.ucfirst($key)}($model);
-
+        
         // Hide base blocks
         $this->parts['frontBlock']->setRender(false);
         $this->parts['backBlock']->setRender(false);
@@ -575,15 +574,22 @@ class HnameHoodie extends JoostBodyBlock
         $p->newPoint('grainlineBottom', $p->x('grainlineTop'), $p->y(4)-20);
         $p->newPath('grainline','M grainlineTop L grainlineBottom',['class' => 'grainline']);
         
+        // Cut on fold (cof)
+        $p->newPoint('cofStart', $p->x(105), $p->y(105)+10);
+        $p->newPoint('cofTop', $p->x(105)+20, $p->y('cofStart'));
+        $p->newPoint('cofEnd', $p->x(105), $p->y(4)-10);
+        $p->newPoint('cofBottom', $p->x(105)+20, $p->y('cofEnd'));
+        $p->newPath('cutOnFold','M cofStart L cofTop L cofBottom L cofEnd',['class' => 'stroke-lg stroke-note double-arrow']);
+        $p->newTextOnPath('cutonfold', 'M cofBottom L cofTop', $this->t('Cut on fold'), ['line-height' => 12, 'class' => 'text-lg fill-note text-center', 'dy' => -2]);
+
         // Title
         $p->newPoint('titleAnchor', $p->x('grainlineBottom') + $p->deltaX('grainlineBottom',101)/2, $p->y(105)+$p->deltaY(105,4)/2);
         $p->addTitle('titleAnchor', 4, $this->t($p->title), '1x '.$this->t('from main fabric')."\n".$this->t('Cut on  fold'));
         
         // Seam allowance
-        $sa = 'M 105 L 103 C 104 102 102 L 101 L 4 z';
-        $sa = 'M 103 C 104 102 102';
-//        $sa = 'M 102 C 102 104 103';
-        $p->offsetPathString('sa',$sa,10, true, ['class' => 'seam-allowance stroke-note']);
+        $sa = 'M 105 L 103 C 104 102 102 L 101 L 4';
+        $p->offsetPathString('sa',$sa,-10, true, ['class' => 'seam-allowance stroke-note']);
+        $p->paths['sa']->setPath('M 4 L sa-line-4TO101 M 105 L sa-line-105TO103 '.$p->paths['sa']->getPath());
     }
     
     /**
@@ -599,6 +605,9 @@ class HnameHoodie extends JoostBodyBlock
         // Title
         $p->newPoint('titleAnchor', $p->x(111) + $p->deltaX(111,103)/2, $p->y(111)+35);
         $p->addTitle('titleAnchor', 5, $this->t($p->title), '2x '.$this->t('from main fabric')."\n".$this->t('Cut with good sides together'), 'vertical');
+        
+        // Seam allowance
+        $p->offsetPath('sa', 'seamline', 10, true, ['class' => 'seam-allowance stroke-note']);
     }
     
     /**

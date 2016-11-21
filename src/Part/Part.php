@@ -515,17 +515,16 @@ class Part
     public function offsetPath($newKey, $srcKey, $distance = 10, $render = false, $attributes = null)
     {
         $path = $this->paths[$srcKey];
+        if(!$path) throw new \Exception("Path requires a valid path object"); 
         $stack = $this->pathOffsetAsStack($path, $distance, $newKey);
         /* take care of overlapping parts */
         $stack = $this->fixStackIntersections($stack);   
         $stack = $this->fillPathStackGaps($stack, $path);
-//if(count($stack->items)<4) print_r($stack); // FIXME
         $pathString = $this->pathStackToPath($stack, $path);
         $this->newPath($newKey, $pathString, $attributes);
         if (!$render) {
             $this->paths[$newKey]->setRender(false);
         }
-        //$this->purgePoints($newKey.'.splitcurve');//FIXME
     }
 
     private function fixStackIntersections($stack)
@@ -886,7 +885,7 @@ class Part
      *
      * @return string The new ID
      */
-    private function pathOffsetAsStack($path, $distance, $key)
+    private function pathOffsetAsStack(\Freesewing\Path $path, $distance, $key)
     {
         $stack = new \Freesewing\Stack();
         foreach ($path->breakUp() as &$chunk) {
@@ -898,7 +897,6 @@ class Part
                 $stack->push($this->offsetCurve($chunk['path'], $distance, $key));
             }
         }
-//            if($this->title == 'Pocket') echo Utils::debug($stack); //FIXME
 
         return $stack;
     }
@@ -936,8 +934,8 @@ class Part
     /**
      * Gets the offset for the start and end of a line
      *
-     * @param \Freesewing\Point $from The start of the line
-     * @param \Freesewing\Point $to The end of the line
+     * @param string $from The ID of the start of the line
+     * @param string $to The ID of the end of the line
      * @param float $distance The distance to offset the line by
      *
      * @return array An array with the offsetted points
@@ -960,22 +958,22 @@ class Part
      *  - The line from end to control point 2
      *  This returns the offsetted points for this
      *
-     * @param \Freesewing\Point $from The start of the curve
-     * @param \Freesewing\Point $cp1 Control point 1 of the curve
-     * @param \Freesewing\Point $cp2 Control point 2 of the curve
-     * @param \Freesewing\Point $to The end of the curve
+     * @param string $from The ID of the start of the curve
+     * @param string $cp1 The ID of control point 1 of the curve
+     * @param string $cp2 The ID of control point 2 of the curve
+     * @param string $to The ID of the end of the curve
      * @param float $distance The distance to offset the line by
      *
      * @return array An array with the offsetted points
      */
-    private function getCurveOffsetPoints($from, $cp1, $cp2, $to, $distance)
-    {
-        if ($from == $cp1) {
+    private function getCurveOffsetPoints($from, $cp1, $cp2, $to, $distance) 
+    { 
+        if ($this->isSamePoint($from,$cp1)) {
             $halfA = $this->getNonCubicCurveOffsetPoints('cp1', $from, $cp1, $cp2, $to, $distance);
         } else {
             $halfA = $this->getLineOffsetPoints($from, $cp1, $distance);
         }
-        if ($cp2 == $to) {
+        if ($this->isSamePoint($cp2,$to)) {
             $halfB = $this->getNonCubicCurveOffsetPoints('cp2', $from, $cp1, $cp2, $to, $distance);
         } else {
             $halfB = $this->getLineOffsetPoints($cp2, $to, $distance);
@@ -1010,12 +1008,12 @@ class Part
     private function getNonCubicCurveOffsetPoints($missing, $from, $cp1, $cp2, $to, $distance)
     {
         if ($missing == 'cp1') {
-            $almostTheSamePoint = $this->addPoint('-shifthelper', $this->shiftAlong($from, $cp1, $cp2, $to, 0.5));
+            $almostTheSamePoint = $this->addPoint('-shifthelper', $this->shiftAlong($from, $cp1, $cp2, $to, 5));
             $angle = $this->angle($from, '-shifthelper') + 90;
             $p = $from;
         } else {
-            $almostTheSamePoint = $this->addPoint('-shifthelper', $this->shiftAlong($to, $cp2, $cp1, $from, 0.5));
-            $angle = $this->angle('-shifthelper', $to) + 90; //FIXME this needs some TLC
+            $almostTheSamePoint = $this->addPoint('-shifthelper', $this->shiftAlong($to, $cp2, $cp1, $from, 5));
+            $angle = $this->angle('-shifthelper', $to) + 90; 
             $p = $to;
         }
 
@@ -1062,22 +1060,17 @@ class Part
      */
     private function offsetCurve($curve, $distance, $key, $subdivide = 0)
     {
-        if($subdivide>=50) {
-            throw new \Exception("Path offset ran $subdivide subdivisions deep. Bailing out before we eat all memory"); // FIXME: This happens
+        if($subdivide>=20) {
+            // This is here to protect us against egge cases
+            throw new \Exception("Path offset ran $subdivide subdivisions deep. Bailing out before we eat all memory"); 
         }
         $points = Utils::asScrubbedArray($curve);
         $from = $points[1];
         $cp1 = $points[3];
         $cp2 = $points[4];
         $to = $points[5];
-
         $offset = $this->getCurveOffsetPoints($from, $cp1, $cp2, $to, $distance);
-/*        if($this->title == 'Pocket') {
-            echo "<h3>subdivide $subdivide of curve $curve</h3>";
-            echo Utils::debug($points); //FIXME
-            echo Utils::debug($offset); //FIXME
-        }
- */
+        
         if ($subdivide == 0) { // First time around
             $fromId = "$key-curve-$from"."TO$to";
             $toId = "$key-curve-$to"."TO$from";
@@ -1105,13 +1098,11 @@ class Part
         $this->addPoint($cp2Id, $offset[2]);
         $this->addPoint($toId, $offset[3]);
         
-        $this->addPoint($this->newId(), $offset[3]); // FIXME
-
         // Add this chunk to the stack
         $chunks[] = ['type' => 'curve', 'original' => [$from, $cp1, $cp2, $to], 'offset' => [$fromId, $cp1Id, $cp2Id, $toId], 'subdivide' => $subdivide];
-        
         // Find out how we're doing
         $tolerance = $this->offsetTolerance($chunks[0], $distance);
+        
         if ($tolerance['score'] > $this->maxOffsetTolerance) { // Not good enough, let's subdivide
             $subdivide++;
             $splitId = $key.'.splitcurve:'.$this->newId();
@@ -1125,6 +1116,7 @@ class Part
             foreach ($subDivide as $chunk) {
                 $chunks[] = $chunk;
             }
+
         }
         return $chunks;
     }
@@ -1141,7 +1133,7 @@ class Part
     {
         // If a curve gets too short things go off the rails, so don't bother
         if($this->curveLen($entry['original'][0],$entry['original'][1],$entry['original'][2],$entry['original'][3]) < 10) {
-            return ['score' => 1, 'index' => 0.5]; // FIXME Remove this when it's no longer an issue
+            return ['score' => 1, 'index' => 0.5]; 
         }
         
         $origFrom = $this->loadPoint($entry['original'][0]);
@@ -1159,8 +1151,8 @@ class Part
 
         $worstDelta = 0;
         $worstIndex = false;
-        for ($i = 0; $i < 100; ++$i) {
-            $t = $i / 100;
+        for ($i = 0; $i < 20; ++$i) {
+            $t = $i / 20;
             $xOrig = Utils::bezierPoint($t, $origFrom->getX(), $origCp1->getX(), $origCp2->getX(), $origTo->getX());
             $yOrig = Utils::bezierPoint($t, $origFrom->getY(), $origCp1->getY(), $origCp2->getY(), $origTo->getY());
             $xOffset = Utils::bezierPoint($t, $offsetFrom->getX(), $offsetCp1->getX(), $offsetCp2->getX(), $offsetTo->getX());
@@ -1170,7 +1162,7 @@ class Part
             $this->points['-po_orig']->setY($yOrig);
             $this->points['-po_offset']->setX($xOffset);
             $this->points['-po_offset']->setY($yOffset);
-            
+
             $offset = $this->distance('-po_orig', '-po_offset');
             $delta = abs($offset / (abs($distance) / 100) - 100);
             if ($delta > $worstDelta) {

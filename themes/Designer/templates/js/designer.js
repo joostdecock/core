@@ -2,6 +2,7 @@ function pointHover(id) {
     var point = document.getElementById(id);
     var cx = point.getAttribute('x');
     var cy = point.getAttribute('y');
+    console.log('Point '+id+' ( '+cx+' , '+cy+' )');
     var scale = 2;
     cx = cx-scale*cx;
     cy = cy-scale*cy;

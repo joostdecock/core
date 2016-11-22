@@ -371,7 +371,7 @@ class HugoHoodie extends JoostBodyBlock
         $p->paths['seamline']->setSample(true);
         
         // Grid anchor
-        $p->clonePoint(11, 'gridAnchor');
+        $p->clonePoint(6, 'gridAnchor');
     }
     
     /**
@@ -995,34 +995,104 @@ class HugoHoodie extends JoostBodyBlock
             $pAttr = ['class' => 'measure-lg'];
             $hAttr = ['class' => 'stroke-note stroke-sm'];
 
-            $key = 'frontWidth1';
-            $path = 'M 200 L 13';
-            $p->newPoint(200, $p->x(10), $p->y(13));
-            $p->newPath($key, $path, $pAttr);
-            $p->newTextOnPath($key, $path, $this->unit($p->distance(200, 13)), $this->textAttr(-2));
-
+            // Edge of curves
             $p->addPoint(201, $p->curveEdgeLeft(12,15,11,11));
             $p->addPoint(202, $p->curveEdgeLeft(13,20,23,17));
-            $p->newPoint(203, $p->x(10), $p->y(201));
-            $p->newPoint(204, $p->x(10), $p->y(202));
+
+            // Bring points down
+            $p->newPoint(203, $p->x(201), $p->y(6));
+            $p->newPoint(204, $p->x(202), $p->y(6));
+            $p->newPoint(205, $p->x(10), $p->y(6));
+            $p->newPoint(206, $p->x(11), $p->y(6));
+
+            // Bring points to the right
+            $p->newPoint(207, $p->x(6), $p->y(10));
+            $p->newPoint(208, $p->x(6), $p->y(11));
+            $p->newPoint(209, $p->x(6), $p->y(202));
+            $p->newPoint(210, $p->x(6), $p->y(201));
+            $p->newPoint(211, $p->x(6), $p->y(12));
             
-            $key = 'backWidth';
-            $path = 'M 201 L 203';
-            $p->newPath($key, $path, $pAttr);
-            $p->newTextOnPath($key, $path, $this->unit($p->distance(201, 203)), $this->textAttr(-2));
 
-            $key = 'frontWidth2';
-            $path = 'M 204 L 202';
-            $p->newPath($key, $path, $pAttr);
-            $p->newTextOnPath($key, $path, $this->unit($p->distance(204, 202)), $this->textAttr(-2));
+            $key = 'width1';
+            $path = 'M 204 L 6';
+            $p->offsetPathString($key, $path, 20, 1, $pAttr);
+            $p->newTextOnPath($key, $path, $this->unit($p->distance(204, 6)), $this->textAttr(18));
+
+            $key = 'width2';
+            $path = 'M 205 L 6';
+            $p->offsetPathString($key, $path, 32, 1, $pAttr);
+            $p->newTextOnPath($key, $path, $this->unit($p->distance(205, 6)), $this->textAttr(30));
+
+            $key = 'width3';
+            $path = 'M 206 L 6';
+            $p->offsetPathString($key, $path, 44, 1, $pAttr);
+            $p->newTextOnPath($key, $path, $this->unit($p->distance(206, 6)), $this->textAttr(42));
+
+            $key = 'width4';
+            $path = 'M 203 L 6';
+            $p->offsetPathString($key, $path, 56, 1, $pAttr);
+            $p->newTextOnPath($key, $path, $this->unit($p->distance(203, 6)), $this->textAttr(54));
+
+            $key = 'height1';
+            $path = 'M 6 L 207';
+            $p->offsetPathString($key, $path, 20, 1, $pAttr);
+            $p->newTextOnPath($key, $path, $this->unit($p->distance(6, 207)), $this->textAttr(18));
+
+            $key = 'height2';
+            $path = 'M 6 L 208';
+            $p->offsetPathString($key, $path, 32, 1, $pAttr);
+            $p->newTextOnPath($key, $path, $this->unit($p->distance(6, 208)), $this->textAttr(30));
+
+            $key = 'height3';
+            $path = 'M 6 L 209';
+            $p->offsetPathString($key, $path, 44, 1, $pAttr);
+            $p->newTextOnPath($key, $path, $this->unit($p->distance(6, 209)), $this->textAttr(42));
+
+            $key = 'height4';
+            $path = 'M 6 L 210';
+            $p->offsetPathString($key, $path, 56, 1, $pAttr);
+            $p->newTextOnPath($key, $path, $this->unit($p->distance(6, 210)), $this->textAttr(54));
+
+            $key = 'height5';
+            $key = 'height5';
+            $path = 'M 6 L 13';
+            $p->offsetPathString($key, $path, 68, 1, $pAttr);
+            $p->newTextOnPath($key, $path, $this->unit($p->distance(6, 13)), $this->textAttr(66));
+
+            $key = 'height6';
+            $path = 'M 6 L 211';
+            $p->offsetPathString($key, $path, 80, 1, $pAttr);
+            $p->newTextOnPath($key, $path, $this->unit($p->distance(6, 211)), $this->textAttr(78));
+
+            $key = 'hoodlen';
+            $path = 'M 11 C 11 15 12 C 14 13 13';
+            $p->offsetPathString($key, $path, -20, 1, $pAttr);
+            $p->newTextOnPath($key, $path, $this->t('Curve length').': '.$this->unit($p->curveLen(13,13,14,12)+$p->curveLen(12,15,11,11)), $this->textAttr(-22));
+
+            $key = 'necklen';
+            $path = 'M 11 C 7 8 6';
+            $p->offsetPathString($key, $path, -5, 1, $pAttr);
+            $p->newTextOnPath($key, $path, $this->t('Curve length').': '.$this->unit($p->curveLen(11,7,8,6)), $this->textAttr(-8));
 
 
-           /* 
-            $measureHelpLines = 'M 111 L width-line-111TO103 '.
-                'M 103 L width-line-103TO111 '.
+            $measureHelpLines = 'M 6 L width4-line-6TO203 '.
+                'M 201 L  width4-line-203TO6 '.
+                'M 11 L width3-line-206TO6 '.
+                'M 10 L width2-line-205TO6 '.
+                'M 202 L width1-line-204TO6 '.
+                'M 6 L height6-line-6TO211 '.
+                'M 10 L height1-line-207TO6 '.
+                'M 11 L height2-line-208TO6 '.
+                'M 202 L height3-line-209TO6 '.
+                'M 201 L height4-line-210TO6 '.
+                'M 13 L height5-line-13TO6 '.
+                'M 12 L height6-line-211TO6 '.
+                'M 11 L hoodlen-curve-11TO12 '.
+                'M 13 L hoodlen-curve-13TO12 '.
                 '';
             $p->newPath($p->newId(),$measureHelpLines, $hAttr);
             
+           /* 
             // Add some space so measure text is not cut off
             $p->addPoint(200, $p->shift(111,90,23));
             $p->newPath($p->newId(),'M 111 L 200', ['class' => 'hidden']);

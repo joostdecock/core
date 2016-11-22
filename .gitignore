@@ -5,3 +5,5 @@ coverage/
 vendor/
 svg/
 patterns/HnameHoodie/HomeboyHoodie
+docs/bootstrap/
+docs/css/style.css

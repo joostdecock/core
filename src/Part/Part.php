@@ -46,7 +46,7 @@ class Part
     public $maxOffsetTolerance = 5;
 
     /** @var int Number of steps when walking a path */
-    public $steps = 100;
+    public $steps = 1000;
 
     /** @var bool To render this part or not */
     private $render = true;
@@ -525,6 +525,7 @@ class Part
         if (!$render) {
             $this->paths[$newKey]->setRender(false);
         }
+        $this->purgePoints('.tmp_');
     }
 
     private function fixStackIntersections($stack)
@@ -672,7 +673,7 @@ class Part
      * @param string $key  The key in the points array of the point to clone
      * @param string $prefix The prefix to apply to the new point's id in the point array
      */
-    private function cloneOffsetPoint($key, $prefix = 'sa')
+    private function cloneOffsetPoint($key, $prefix = '.sa')
     {
         $newKey = $this->newId($prefix);
         $this->clonePoint($key, $newKey);
@@ -1105,7 +1106,7 @@ class Part
         
         if ($tolerance['score'] > $this->maxOffsetTolerance) { // Not good enough, let's subdivide
             $subdivide++;
-            $splitId = $key.'.splitcurve:'.$this->newId();
+            $splitId = '.tmp_'.$key.'.splitcurve:'.$this->newId();
             $this->addSplitCurve($splitId.'-', $from, $cp1, $cp2, $to, $tolerance['index'], 1);
             unset($chunks);
             $subDivide = $this->offsetCurve("M $splitId-1 C $splitId-2 $splitId-3 $splitId-4", $distance, $key, $subdivide);
@@ -1613,7 +1614,89 @@ class Part
 
         return $this->rotate('.shiftHelper', $key, $angle);
     }
-    
+
+    /**
+     * Returns point that is the left edge of a Bezier curve
+     *
+     * @param string $curveStartkey The id of the start of the curve
+     * @param string $curveControl1Key The id of the first control point
+     * @param string $curveControl2Key The id of the second control point
+     * @param string $curveEndKey The id of the end of the curve
+     *
+     * @return \Freesewing\Point The point at the edge
+     */
+    public function curveEdgeLeft($curveStartKey, $curveControl1Key, $curveControl2Key, $curveEndKey)
+    {
+        return $this->curveEdge($curveStartKey, $curveControl1Key, $curveControl2Key, $curveEndKey, 'left');
+    }
+
+    /**
+     * Returns point that is the right edge of a Bezier curve
+     *
+     * @param string $curveStartkey The id of the start of the curve
+     * @param string $curveControl1Key The id of the first control point
+     * @param string $curveControl2Key The id of the second control point
+     * @param string $curveEndKey The id of the end of the curve
+     *
+     * @return \Freesewing\Point The point at the edge
+     */
+    public function curveEdgeRight($curveStartKey, $curveControl1Key, $curveControl2Key, $curveEndKey)
+    {
+        return $this->curveEdge($curveStartKey, $curveControl1Key, $curveControl2Key, $curveEndKey, 'right');
+    }
+
+    /**
+     * Returns point that is the top edge of a Bezier curve
+     *
+     * @param string $curveStartkey The id of the start of the curve
+     * @param string $curveControl1Key The id of the first control point
+     * @param string $curveControl2Key The id of the second control point
+     * @param string $curveEndKey The id of the end of the curve
+     *
+     * @return \Freesewing\Point The point at the edge
+     */
+    public function curveEdgeTop($curveStartKey, $curveControl1Key, $curveControl2Key, $curveEndKey)
+    {
+        return $this->curveEdge($curveStartKey, $curveControl1Key, $curveControl2Key, $curveEndKey, 'top');
+    }
+
+    /**
+     * Returns point that is the bottom edge of a Bezier curve
+     *
+     * @param string $curveStartkey The id of the start of the curve
+     * @param string $curveControl1Key The id of the first control point
+     * @param string $curveControl2Key The id of the second control point
+     * @param string $curveEndKey The id of the end of the curve
+     *
+     * @return \Freesewing\Point The point at the edge
+     */
+    public function curveEdgeBottom($curveStartKey, $curveControl1Key, $curveControl2Key, $curveEndKey)
+    {
+        return $this->curveEdge($curveStartKey, $curveControl1Key, $curveControl2Key, $curveEndKey, 'bottom');
+    }
+
+    /**
+     * Returns point at the left edge of a Bezier curve
+     *
+     * @param string $curveStartkey The id of the start of the curve
+     * @param string $curveControl1Key The id of the first control point
+     * @param string $curveControl2Key The id of the second control point
+     * @param string $curveEndKey The id of the end of the curve
+     * @param string $direction Either left, right, up, or down
+     *
+     * @return \Freesewing\Point The point at the edge
+     */
+    public function curveEdge($curveStartKey, $curveControl1Key, $curveControl2Key, $curveEndKey, $direction)
+    {
+        return BezierToolbox::findBezierEdge(
+            $this->loadPoint($curveStartKey), 
+            $this->loadPoint($curveControl1Key), 
+            $this->loadPoint($curveControl2Key), 
+            $this->loadPoint($curveEndKey),
+            $direction
+        );
+    }
+
     /**
      * Returns intersection of a Bezier curve with a line
      *

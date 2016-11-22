@@ -1,1 +1,1 @@
-rect.grid{fill:none;stroke:#666;stroke-width:.3;fill:url(#grid)}path.gridline{stroke:#999;stroke-width:.6}path.gridline-sm{stroke:#ccc;stroke-dasharray:1,1}path.gridline-xs{stroke:#ccc;stroke-width:.1}
+rect.grid{fill:none;stroke:#666;stroke-width:.3;fill:url(#grid)}path.gridline{stroke:#999;stroke-width:.5}path.gridline-sm{stroke:#ccc;stroke-width:.4;stroke-dasharray:1.5,1.5}path.gridline-xs{stroke:#ccc;stroke-width:.3}path{stroke-color:#000;stroke-width:.6}path.seam-alowance{stroke-color:#333;stroke-width:.4}path.helpline{stroke-width:.4}

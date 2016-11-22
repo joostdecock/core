@@ -364,7 +364,7 @@ class HugoHoodie extends JoostBodyBlock
         $p->addPoint( 25, $p->shift(6,90,25));
         
         // Paths 
-        $path = 'M 11 C 11 15 12 C 14 13 13 C 20 23 17 C 22 25 6 C 8 7 11';
+        $path = 'M 11 C 11 15 12 C 14 13 13 C 20 23 17 C 22 25 6 C 8 7 11 z';
         $p->newPath('seamline', $path);
         
         // Mark path for sample service
@@ -470,14 +470,15 @@ class HugoHoodie extends JoostBodyBlock
         $p->newPoint('grainlineTop', $p->x(9)+40, $p->y(9)+20);
         $p->newPoint('grainlineBottom', $p->x('grainlineTop'), $p->y(4)-20);
         $p->newPath('grainline','M grainlineTop L grainlineBottom',['class' => 'grainline']);
+        $p->newTextOnPath('grainline', 'M grainlineBottom L grainlineTop', $this->t('Grainline'), ['line-height' => 12, 'class' => 'text-lg fill-fabric text-center', 'dy' => -2]);
 
         // Cut on fold (cof)
         $p->newPoint('cofStart', $p->x(9), $p->y(9)+40);
         $p->newPoint('cofTop', $p->x(9)+20, $p->y('cofStart'));
         $p->newPoint('cofEnd', $p->x(9), $p->y(4)-40);
         $p->newPoint('cofBottom', $p->x(9)+20, $p->y('cofEnd'));
-        $p->newPath('cutOnFold','M cofStart L cofTop L cofBottom L cofEnd',['class' => 'stroke-lg stroke-note double-arrow']);
-        $p->newTextOnPath('cutonfold', 'M cofBottom L cofTop', $this->t('Cut on fold'), ['line-height' => 12, 'class' => 'text-lg fill-note', 'dy' => -2]);
+        $p->newPath('cutOnFold','M cofStart L cofTop L cofBottom L cofEnd',['class' => 'grainline']);
+        $p->newTextOnPath('cutonfold', 'M cofBottom L cofTop', $this->t('Cut on fold'), ['line-height' => 12, 'class' => 'text-lg fill-fabric text-center', 'dy' => -2]);
 
         // Sleeve notch
         $this->frontNotchLen = $p->curveLen(100,100,15,14)/2;
@@ -494,16 +495,101 @@ class HugoHoodie extends JoostBodyBlock
         $p->newPoint('titleAnchor', $p->x(5)/2, $p->y(2)+$p->deltaY(2,3)/2);
         $p->addTitle('titleAnchor', 1, $this->t($p->title), '1x '.$this->t('from main fabric')."\n".$this->t('Cut on fold'));
         
-        // Logo
-        $p->addPoint('logoAnchor', $p->shift('titleAnchor',-90,69));
-        $p->newSnippet('logo', 'logo', 'logoAnchor');
-        $p->newSnippet('cc', 'cc', 'logoAnchor');
-
         // Seam allowance
         $sa = 'M 4 L 6 L 5 C 13 16 14 C 15 100 100 C 57 56 9';
         $p->offsetPathString('sa',$sa,10, true, ['class' => 'seam-allowance']);
         // Add bits at the fold
         $p->paths['sa']->setPath('M 4 L sa-line-4TO6 M 9 L sa-curve-9TO100 '.$p->paths['sa']->getPath());
+        
+        // Paperless
+        if ($this->isPaperless) {
+
+            // Measures
+            $pAttr = ['class' => 'measure-lg'];
+            $hAttr = ['class' => 'stroke-note stroke-sm'];
+
+            $key = 'frontHeight';
+            $path = 'M 4 L 9';
+            $p->offsetPathString($key, $path, -15, 1, $pAttr);
+            $p->newTextOnPath($key, $path, $this->unit($p->distance(4, 9)), $this->textAttr(-17));
+            
+            $key = 'neckHeight';
+            $path = 'M 9 L 200';
+            $p->newPoint(200, 0, $p->y(100));
+            $p->offsetPathString($key, $path, -15, 1, $pAttr);
+            $p->newTextOnPath($key, $path, $this->unit($p->distance(9, 100)), $this->textAttr(-17));
+
+            $key = 'neckWidth';
+            $path = 'M 9 L 201';
+            $p->newPoint(201, $p->x(100), $p->y(9));
+            $p->offsetPathString($key, $path, 15, 1, $pAttr);
+            $p->newTextOnPath($key, $path, $this->unit($p->deltaX(9, 100)),  $this->textAttr(13));
+
+            $key = 'neckCurve';
+            $path = 'M 9 C 56 57 100';
+            $p->offsetPathString($key, $path, -20, 1, $pAttr);
+            $p->newTextOnPath($key, $path, $this->t('Curve length').': '.$this->unit($p->curveLen(9,56,57,100)),  $this->textAttr(-23));
+
+            $key = 'notchDistance';
+            $path = 'M 100 L sleeveNotch';
+            $p->offsetPathString($key, $path, -15, 1, $pAttr);
+            $p->newTextOnPath($key, $path, $this->unit($p->distance(100, 'sleeveNotch')), $this->textAttr(-17));
+            
+            $key = 'width';
+            $path = 'M 2 L 5';
+            $p->offsetPathString($key, $path, 25, 1, $pAttr);
+            $p->newTextOnPath($key, $path, $this->unit($p->deltaX(2, 5)),  $this->textAttr(23));
+            
+            $key = 'sideLen';
+            $path = 'M 6 L 5';
+            $p->offsetPathString($key, $path, 25, 1, $pAttr);
+            $p->newTextOnPath($key, $path, $this->unit($p->deltaY(5, 6)),  $this->textAttr(23));
+            
+            $key = 'pocket1';
+            $path = 'M 105 L 103';
+            $p->offsetPathString($key, $path, -5, 1, $pAttr);
+            $p->newTextOnPath($key, $path, $this->unit($p->deltaX(105, 103)),  $this->textAttr(-7));
+            
+            $key = 'pocket2';
+            $path = 'M 202 L 102';
+            $p->newPoint(202, $p->x(102), $p->y(4));
+            $p->offsetPathString($key, $path, 15, 1, $pAttr);
+            $p->newTextOnPath($key, $path, $this->unit($p->deltaY(102, 202)), $this->textAttr(13));
+            
+            $key = 'pocket3';
+            $path = 'M 101 L 103';
+            $p->offsetPathString($key, $path, -15, 1, $pAttr);
+            $p->newTextOnPath($key, $path, $this->unit($p->deltaY(103, 101)),  $this->textAttr(-17));
+            
+            $key = 'pocket4';
+            $path = 'M 203 L 102';
+            $p->newPoint(203, $p->x(4), $p->y(102));
+            $p->offsetPathString($key, $path, -15, 1, $pAttr);
+            $p->newTextOnPath($key, $path, $this->unit($p->deltaX(203, 102)),  $this->textAttr(-17));
+            
+            $measureHelpLines = 'M 100 L neckHeight-line-200TO9 '.
+                'M 9 L frontHeight-line-9TO4 '.
+                'M 4 L frontHeight-line-4TO9 '.
+                'M 100 L neckWidth-line-201TO9 '.
+                'M 9 L neckCurve-curve-9TO100 '.
+                'M 100 L  neckCurve-curve-100TO9 '.
+                'M 100 L notchDistance-line-100TOsleeveNotch '.
+                'M sleeveNotch L notchDistance-line-sleeveNotchTO100 '.
+                'M 5 L sideLen-line-5TO6 '.
+                'M 6 L sideLen-line-6TO5 '.
+                'M 102 L pocket2-line-102TO202 '.
+                'M 102 L pocket4-line-102TO203';
+            $p->newPath($p->newId(),$measureHelpLines, $hAttr);
+
+            // Draw an extra path to prevent the measure label getting cut off
+            $p->addPoint(204, $p->shift(2,180,25));
+            $p->newPath($p->newId(),'M 2 L 204', ['class' => 'hidden']);
+            
+            // Notes
+            $noteAttr = ['line-height' => 7, 'class' => 'text-lg'];
+            $p->newPoint('saNote', $p->x(5), $p->y(103), 'sa note anchor');
+            $p->newNote('saNote', 'saNote', $this->t("Standard\nseam\nallowance")."\n(".$this->unit(10).')', 9, 10, -5, $noteAttr);
+        }
     }
     
     /**
@@ -520,6 +606,15 @@ class HugoHoodie extends JoostBodyBlock
         $p->newPoint('grainlineTop', $p->x(1)+40, $p->y(1)+20);
         $p->newPoint('grainlineBottom', $p->x('grainlineTop'), $p->y(4)-20);
         $p->newPath('grainline','M grainlineTop L grainlineBottom',['class' => 'grainline']);
+        $p->newTextOnPath('grainline', 'M grainlineBottom L grainlineTop', $this->t('Grainline'), ['line-height' => 12, 'class' => 'text-lg fill-fabric text-center', 'dy' => -2]);
+        
+        // Cut on fold (cof)
+        $p->newPoint('cofStart', $p->x(1), $p->y(1)+40);
+        $p->newPoint('cofTop', $p->x(1)+20, $p->y('cofStart'));
+        $p->newPoint('cofEnd', $p->x(1), $p->y(4)-40);
+        $p->newPoint('cofBottom', $p->x(1)+20, $p->y('cofEnd'));
+        $p->newPath('cutOnFold','M cofStart L cofTop L cofBottom L cofEnd',['class' => 'grainline']);
+        $p->newTextOnPath('cutonfold', 'M cofBottom L cofTop', $this->t('Cut on fold'), ['line-height' => 12, 'class' => 'text-lg fill-fabric text-center', 'dy' => -2]);
         
         // Title
         $p->newPoint('titleAnchor', $p->x(5)/2, $p->y(2)+$p->deltaY(2,3)/2);
@@ -529,13 +624,86 @@ class HugoHoodie extends JoostBodyBlock
         $p->addPoint('scaleboxAnchor', $p->shift('titleAnchor', -90, 30));
         $p->newSnippet('scalebox', 'scalebox', 'scaleboxAnchor');
         
+        // Logo
+        $p->addPoint('logoAnchor', $p->shift('scaleboxAnchor',-90,90));
+        $p->newSnippet('logo', 'logo', 'logoAnchor');
+        $p->newSnippet('cc', 'cc', 'logoAnchor');
+
         // Seam allowance
         $sa = 'M 4 L 6 L 5 C 13 16 14 C 15 100 100 C 57 56 1';
         $p->offsetPathString('sa',$sa,10, true, ['class' => 'seam-allowance']);
         // Add bits at the fold
         $p->paths['sa']->setPath('M 4 L sa-line-4TO6 M 1 L sa-curve-1TO100 '.$p->paths['sa']->getPath());
+        
+        // Sleeve notch
+        $this->backNotchLen = $p->curveLen(100,100,15,14)/2;
+        $p->addPoint('sleeveNotch', $p->shiftAlong(100,100,15,14, $this->backNotchLen),'Back sleeve notch');
+        $p->addPoint('sleeveNotcha', $p->shiftAlong(100,100,15,14, $this->backNotchLen + 2.5),'Back sleeve notch a');
+        $p->addPoint('sleeveNotchb', $p->shiftAlong(100,100,15,14, $this->backNotchLen - 2.5),'Back sleeve notch b');
+        $p->newSnippet('sleeveNotcha', 'notch', 'sleeveNotcha');
+        $p->newSnippet('sleeveNotchb', 'notch', 'sleeveNotchb');
+        
+        // Paperless
+        if ($this->isPaperless) {
+
+            // Measures
+            $pAttr = ['class' => 'measure-lg'];
+            $hAttr = ['class' => 'stroke-note stroke-sm'];
+
+            $key = 'frontHeight1';
+            $path = 'M 4 L 1';
+            $p->offsetPathString($key, $path, -15, 1, $pAttr);
+            $p->newTextOnPath($key, $path, $this->unit($p->distance(4, 1)), $this->textAttr(-17));
+
+            $key = 'frontHeight2';
+            $path = 'M 4 L 200';
+            $p->newPoint(200, 0, $p->y(100));
+            $p->offsetPathString($key, $path, -30, 1, $pAttr);
+            $p->newTextOnPath($key, $path, $this->unit($p->distance(4, 200)), $this->textAttr(-32));
+
+            $key = 'neckWidth';
+            $path = 'M 200 L 100';
+            $p->offsetPathString($key, $path, 15, 1, $pAttr);
+            $p->newTextOnPath($key, $path, $this->unit($p->distance(200, 100)), $this->textAttr(13));
+
+            $key = 'notchLen';
+            $path = 'M 100 L sleeveNotch';
+            $p->offsetPathString($key, $path, -15, 1, $pAttr);
+            $p->newTextOnPath($key, $path, $this->unit($p->distance(100, 'sleeveNotch')), $this->textAttr(-17));
+
+            $key = 'width';
+            $path = 'M 2 L 5';
+            $p->offsetPathString($key, $path, 25, 1, $pAttr);
+            $p->newTextOnPath($key, $path, $this->unit($p->deltaX(2, 5)),  $this->textAttr(23));
+            
+            $key = 'sideLen';
+            $path = 'M 6 L 5';
+            $p->offsetPathString($key, $path, 25, 1, $pAttr);
+            $p->newTextOnPath($key, $path, $this->unit($p->deltaY(5, 6)),  $this->textAttr(23));
+            
+
+
+            $measureHelpLines = 'M 1 L frontHeight1-line-1TO4 '.
+                'M 100 L frontHeight2-line-200TO4 '.
+                'M 100 L neckWidth-line-100TO200 '.
+                'M 100 L notchLen-line-100TOsleeveNotch '.
+                'M sleeveNotch L notchLen-line-sleeveNotchTO100 '.
+                'M 5 L sideLen-line-5TO6 '.
+                'M 6 L sideLen-line-6TO5 '.
+                '';
+            $p->newPath($p->newId(),$measureHelpLines, $hAttr);
+        
+            // Draw an extra path to prevent the measure label getting cut off
+            $p->addPoint(204, $p->shift(2,180,40));
+            $p->newPath($p->newId(),'M 2 L 204', ['class' => 'hidden']);
+            
+            // Notes
+            $noteAttr = ['line-height' => 7, 'class' => 'text-lg'];
+            $p->newPoint('saNote', $p->x(5), $p->y(3), 'sa note anchor');
+            $p->newNote('saNote', 'saNote', $this->t("Standard\nseam\nallowance")."\n(".$this->unit(10).')', 9, 10, -5, $noteAttr);
+        }
     }
-    
+
     /**
      * Finalizes the sleeve
      *
@@ -557,6 +725,118 @@ class HugoHoodie extends JoostBodyBlock
         
         // Seam allowance
         $p->offsetPath('sa','seamline',-10, true, ['class' => 'seam-allowance']);
+        
+        // Sleeve notches
+        $p->addPoint('frontSleeveNotch', $p->shiftAlong(200,134,132,133, $this->frontNotchLen),'Front sleeve notch');
+        $p->addPoint('backSleeveNotcha', $p->shiftAlong(300,234,232,233, $this->backNotchLen -2.5),'Back sleeve notch a');
+        $p->addPoint('backSleeveNotchb', $p->shiftAlong(300,234,232,233, $this->backNotchLen +2.5),'Back sleeve notch b');
+        $p->newSnippet('sleeveNotch', 'notch', 'frontSleeveNotch');
+        $p->newSnippet('sleeveNotcha', 'notch', 'backSleeveNotcha');
+        $p->newSnippet('sleeveNotchb', 'notch', 'backSleeveNotchb');
+        
+        // Paperless
+        if ($this->isPaperless) {
+
+            // Measures
+            $pAttr = ['class' => 'measure-lg'];
+            $hAttr = ['class' => 'stroke-note stroke-sm'];
+
+            $key = 'cuffWidthBack';
+            $path = 'M 400 L 32';
+            $p->newPoint(400, 0, $p->y(31));
+            $p->offsetPathString($key, $path, -15, 1, $pAttr);
+            $p->newTextOnPath($key, $path, $this->unit($p->distance(400, 32)), $this->textAttr(-17));
+            
+            $key = 'cuffWidthFront';
+            $path = 'M 31 L 400';
+            $p->offsetPathString($key, $path, -15, 1, $pAttr);
+            $p->newTextOnPath($key, $path, $this->unit($p->distance(31, 400)), $this->textAttr(-17));
+            
+            $key = 'widthFront';
+            $path = 'M 233 L 401';
+            $p->newPoint(401, 0, $p->y(233));
+            $p->offsetPathString($key, $path, 15, 1, $pAttr);
+            $p->newTextOnPath($key, $path, $this->unit($p->distance(233, 401)), $this->textAttr(13));
+            
+            $key = 'widthBack';
+            $path = 'M 401 L 133';
+            $p->offsetPathString($key, $path, 15, 1, $pAttr);
+            $p->newTextOnPath($key, $path, $this->unit($p->distance(233, 401)), $this->textAttr(13));
+            
+            $key = 'widthBackNotch';
+            $path = 'M backSleeveNotcha L 402';
+            $p->newPoint(402, 0, $p->y('backSleeveNotcha'));
+            $p->newPath($key, $path, $pAttr);
+            $p->newTextOnPath($key, $path, $this->unit($p->distance(402, 'backSleeveNotcha')), $this->textAttr(-2));
+            
+            $key = 'widthFrontNotch';
+            $path = 'M 403 L frontSleeveNotch';
+            $p->newPoint(403, 0, $p->y('frontSleeveNotch'));
+            $p->newPath($key, $path, $pAttr);
+            $p->newTextOnPath($key, $path, $this->unit($p->distance('frontSleeveNotch', 403)), $this->textAttr(-2));
+            
+            $key = 'frontNotchHeight';
+            $path = 'M 404 L frontSleeveNotch';
+            $p->newPoint(404, $p->x('frontSleeveNotch'), $p->y(233));
+            $p->newPath($key, $path, $pAttr);
+            $p->newTextOnPath($key, $path, $this->unit($p->distance('frontSleeveNotch', 404)), $this->textAttr(-2));
+            
+            $key = 'backNotchHeight';
+            $path = 'M 405 L backSleeveNotcha';
+            $p->newPoint(405, $p->x('backSleeveNotcha'), $p->y(233));
+            $p->newPath($key, $path, $pAttr);
+            $p->newTextOnPath($key, $path, $this->unit($p->distance('backSleeveNotcha', 405)), $this->textAttr(-2));
+            
+            $key = 'backHeight';
+            $path = 'M 406 L 300';
+            $p->newPoint(406, $p->x(300), $p->y(233));
+            $p->newPath($key, $path, $pAttr);
+            $p->newTextOnPath($key, $path, $this->unit($p->distance(300, 406)), $this->textAttr(-2));
+            
+            $key = 'frontHeight';
+            $path = 'M 407 L 200';
+            $p->newPoint(407, $p->x(200), $p->y(233));
+            $p->newPath($key, $path, $pAttr);
+            $p->newTextOnPath($key, $path, $this->unit($p->distance(200, 407)), $this->textAttr(-2));
+            
+            $key = 'frontOpening';
+            $path = 'M 401 L 407';
+            $p->offsetPathString($key, $path, $p->deltaY(401,208)+15, 1, $pAttr);
+            $p->newTextOnPath($key, $path, $this->unit($p->distance(401, 407)), $this->textAttr($p->deltaY(401,208)+13));
+            
+            $key = 'backOpening';
+            $path = 'M 406 L 401';
+            $p->offsetPathString($key, $path, $p->deltaY(401,208)+15, 1, $pAttr);
+            $p->newTextOnPath($key, $path, $this->unit($p->distance(406, 401)), $this->textAttr($p->deltaY(401,208)+13));
+            
+            $key = 'neckCurve';
+            $path = 'M 300 C 253 252 208 C 152 153 200';
+            $p->offsetPathString($key, $path, -3, 1, $pAttr);
+            $p->newTextOnPath($key, $path, $this->t('Curve length').': '.$this->unit($p->curveLen(300, 253, 252, 208)+$p->curveLen(208, 152, 153, 200)), $this->textAttr(-4));
+
+            $key = 'length';
+            $path = 'M 408 L 406'; 
+            $p->newPoint(408, $p->x(406), $p->y(31));
+            $p->newPath($key, $path, $pAttr);
+            $p->newTextOnPath($key, $path, $this->unit($p->distance(406, 408)), $this->textAttr(-3));
+            
+            $measureHelpLines = 'M 31 L cuffWidthFront-line-31TO400 '.
+                'M 400 L cuffWidthFront-line-400TO31 '.
+                'M 32 L cuffWidthBack-line-32TO400 '.
+                'M 233 L widthFront-line-233TO401 '.
+                'M 133 L widthBack-line-133TO401 '.
+                'M 108 L backOpening-line-401TO406 '.
+                'M 300 L neckCurve-curve-300TO208 '. 
+                'M 200 L neckCurve-curve-200TO208 '.
+                '';
+            $p->newPath($p->newId(),$measureHelpLines, $hAttr);
+            $p->newPath($p->newId(),'M 233 L 133', ['class' => 'stroke-note stroke-sm']);
+
+            // Notes
+            $noteAttr = ['line-height' => 7, 'class' => 'text-lg'];
+            $p->addPoint('saNote', $p->beamsCross(133,32,34,35), 'sa note anchor');
+            $p->newNote('saNote', 'saNote', $this->t("Standard\nseam\nallowance")."\n(".$this->unit(10).')', 9, 10, -5, $noteAttr);
+        }
     }
     
     /**
@@ -570,17 +850,18 @@ class HugoHoodie extends JoostBodyBlock
     public function finalizePocket($model, $p)
     {
         // Grainline
-        $p->newPoint('grainlineTop', $p->x(105)+40, $p->y(105)+20);
-        $p->newPoint('grainlineBottom', $p->x('grainlineTop'), $p->y(4)-20);
-        $p->newPath('grainline','M grainlineTop L grainlineBottom',['class' => 'grainline']);
+        $p->newPoint('grainlineTop', $p->x(105)+35, $p->y(105)+10);
+        $p->newPoint('grainlineBottom', $p->x('grainlineTop'), $p->y(4)-10);
+        $p->newPath('grainline','M grainlineBottom L grainlineTop',['class' => 'grainline']);
+        $p->newTextOnPath('grainline', 'M grainlineBottom L grainlineTop', $this->t('Grainline'), ['class' => 'text-lg fill-fabric text-center', 'dy' => -2]);
         
         // Cut on fold (cof)
         $p->newPoint('cofStart', $p->x(105), $p->y(105)+10);
         $p->newPoint('cofTop', $p->x(105)+20, $p->y('cofStart'));
         $p->newPoint('cofEnd', $p->x(105), $p->y(4)-10);
         $p->newPoint('cofBottom', $p->x(105)+20, $p->y('cofEnd'));
-        $p->newPath('cutOnFold','M cofStart L cofTop L cofBottom L cofEnd',['class' => 'stroke-lg stroke-note double-arrow']);
-        $p->newTextOnPath('cutonfold', 'M cofBottom L cofTop', $this->t('Cut on fold'), ['line-height' => 12, 'class' => 'text-lg fill-note text-center', 'dy' => -2]);
+        $p->newPath('cutOnFold','M cofStart L cofTop L cofBottom L cofEnd',['class' => 'grainline']);
+        $p->newTextOnPath('cutonfold', 'M cofBottom L cofTop', $this->t('Cut on fold'), ['line-height' => 12, 'class' => 'text-lg fill-fabric text-center', 'dy' => -2]);
 
         // Title
         $p->newPoint('titleAnchor', $p->x('grainlineBottom') + $p->deltaX('grainlineBottom',101)/2, $p->y(105)+$p->deltaY(105,4)/2);
@@ -588,9 +869,49 @@ class HugoHoodie extends JoostBodyBlock
         
         // Seam allowance
         $sa = 'M 105 L 103 C 104 102 102 L 101 L 4';
-        $p->offsetPathString('sa',$sa,-10, true, ['class' => 'seam-allowance stroke-note']);
+        $p->offsetPathString('sa',$sa,-10, true, ['class' => 'seam-allowance']);
         $p->paths['sa']->setPath('M 4 L sa-line-4TO101 M 105 L sa-line-105TO103 '.$p->paths['sa']->getPath());
+        
+        // Paperless
+        if ($this->isPaperless) {
+
+            // Measures
+            $pAttr = ['class' => 'measure-lg'];
+            $hAttr = ['class' => 'stroke-note stroke-sm'];
+
+            $key = 'height1';
+            $path = 'M 201 L 200';
+            $p->newPoint(200, $p->x('grainlineTop') + 20, $p->y(105));
+            $p->newPoint(201, $p->x(200), $p->y(4));
+            $p->newPath($key, $path, $pAttr);
+            $p->newTextOnPath($key, $path, $this->unit($p->distance(200, 201)), $this->textAttr(-2));
+
+            $key = 'width1';
+            $path = 'M 4 L 101';
+            $p->offsetPathString($key,$path,20, true, $pAttr);
+            $p->newTextOnPath($key, $path, $this->unit($p->distance(4, 101)), $this->textAttr(18));
+            
+            $key = 'width2';
+            $path = 'M 4 L 202';
+            $p->newPoint(202, $p->x(102), $p->y(4));
+            $p->offsetPathString($key,$path, 32, true, $pAttr);
+            $p->newTextOnPath($key, $path, $this->unit($p->distance(4, 202)), $this->textAttr(30));
+            
+            $key = 'height2';
+            $path = 'M 204 L 203';
+            $p->newPoint(203, $p->x(103) - 10, $p->y(102));
+            $p->newPoint(204, $p->x(203), $p->y(4));
+            $p->newPath($key, $path, $pAttr);
+            $p->newTextOnPath($key, $path, $this->unit($p->distance(203, 204)), $this->textAttr(-2));
+
+            $measureHelpLines = 'M 101 L width1-line-101TO4 '.
+                'M 102 L width2-line-202TO4 '.
+                'M 4 L width2-line-4TO202 '.
+                'M 203 L 102';
+            $p->newPath($p->newId(),$measureHelpLines, $hAttr);
+        }
     }
+
     
     /**
      * Finalizes the pocket facing
@@ -602,12 +923,43 @@ class HugoHoodie extends JoostBodyBlock
      */
     public function finalizePocketFacing($model, $p)
     {
+        // Grainline
+        $p->addPoint('grainlineTop', $p->shift(103,-115,15));
+        $p->addPoint('grainlineBottom', $p->shift(104,-115,15));
+        $p->newPath('grainline','M grainlineBottom L grainlineTop',['class' => 'grainline']);
+        $p->newTextOnPath('grainline', 'M grainlineBottom L grainlineTop', $this->t('Grainline'), ['class' => 'text fill-fabric text-center', 'dy' => -1]);
+
         // Title
         $p->newPoint('titleAnchor', $p->x(111) + $p->deltaX(111,103)/2, $p->y(111)+35);
         $p->addTitle('titleAnchor', 5, $this->t($p->title), '2x '.$this->t('from main fabric')."\n".$this->t('Cut with good sides together'), 'vertical');
         
         // Seam allowance
-        $p->offsetPath('sa', 'seamline', 10, true, ['class' => 'seam-allowance stroke-note']);
+        $p->offsetPath('sa', 'seamline', 10, true, ['class' => 'seam-allowance']);
+        
+        // Paperless
+        if ($this->isPaperless) {
+
+            // Measures
+            $pAttr = ['class' => 'measure-lg'];
+            $hAttr = ['class' => 'stroke-note stroke-sm'];
+
+            $key = 'width';
+            $path = 'M 111 L 103';
+            $p->offsetPathString($key, $path, -15, 1, $pAttr);
+            $p->newTextOnPath($key, $path, $this->unit($p->distance(111, 103)), $this->textAttr(-17));
+            
+            $measureHelpLines = 'M 111 L width-line-111TO103 '.
+                'M 103 L width-line-103TO111 '.
+                '';
+            $p->newPath($p->newId(),$measureHelpLines, $hAttr);
+            
+            // Add some space so measure text is not cut off
+            $p->addPoint(200, $p->shift(111,90,23));
+            $p->newPath($p->newId(),'M 111 L 200', ['class' => 'hidden']);
+            
+            // Notes
+            $p->newNote('saNote', 110, $this->t("Standard\nseam\nallowance")."\n(".$this->unit(10).')', 12, 10, -5, ['line-height' => 4, 'class' => 'text-sm', 'dy' => -10]);
+        }
     }
     
     /**
@@ -624,10 +976,61 @@ class HugoHoodie extends JoostBodyBlock
         $p->addPoint( 'grainlineTop', $p->shift(12,-90,5));
         $p->addPoint( 'grainlineBottom', $p->shift(10,90,5));
         $p->newPath('grainline','M grainlineTop L grainlineBottom',['class' => 'grainline']);
+        $p->newTextOnPath('grainline', 'M grainlineBottom L grainlineTop', $this->t('Grainline'), ['class' => 'text-lg fill-fabric text-center', 'dy' => -2]);
         
         // Title
         $p->addPoint('titleAnchor', $p->shift(12,-70,100));
         $p->addTitle('titleAnchor', 6, $this->t($p->title), '4x '.$this->t('from main fabric')." (2x2)\n".$this->t('Cut with good sides together'));
+        
+        // Seam allowance
+        $p->offsetPath('sa', 'seamline', -10, true, ['class' => 'seam-allowance']);
+
+        // Notch
+        $p->newSnippet('sleeveNotch', 'notch', 10);
+
+        // Paperless
+        if ($this->isPaperless) {
+
+            // Measures
+            $pAttr = ['class' => 'measure-lg'];
+            $hAttr = ['class' => 'stroke-note stroke-sm'];
+
+            $key = 'frontWidth1';
+            $path = 'M 200 L 13';
+            $p->newPoint(200, $p->x(10), $p->y(13));
+            $p->newPath($key, $path, $pAttr);
+            $p->newTextOnPath($key, $path, $this->unit($p->distance(200, 13)), $this->textAttr(-2));
+
+            $p->addPoint(201, $p->curveEdgeLeft(12,15,11,11));
+            $p->addPoint(202, $p->curveEdgeLeft(13,20,23,17));
+            $p->newPoint(203, $p->x(10), $p->y(201));
+            $p->newPoint(204, $p->x(10), $p->y(202));
+            
+            $key = 'backWidth';
+            $path = 'M 201 L 203';
+            $p->newPath($key, $path, $pAttr);
+            $p->newTextOnPath($key, $path, $this->unit($p->distance(201, 203)), $this->textAttr(-2));
+
+            $key = 'frontWidth2';
+            $path = 'M 204 L 202';
+            $p->newPath($key, $path, $pAttr);
+            $p->newTextOnPath($key, $path, $this->unit($p->distance(204, 202)), $this->textAttr(-2));
+
+
+           /* 
+            $measureHelpLines = 'M 111 L width-line-111TO103 '.
+                'M 103 L width-line-103TO111 '.
+                '';
+            $p->newPath($p->newId(),$measureHelpLines, $hAttr);
+            
+            // Add some space so measure text is not cut off
+            $p->addPoint(200, $p->shift(111,90,23));
+            $p->newPath($p->newId(),'M 111 L 200', ['class' => 'hidden']);
+            
+            // Notes
+            $p->newNote('saNote', 110, $this->t("Standard\nseam\nallowance")."\n(".$this->unit(10).')', 12, 10, -5, ['line-height' => 4, 'class' => 'text-sm', 'dy' => -10]);
+            */
+        }
     }
     
     /**
@@ -644,10 +1047,14 @@ class HugoHoodie extends JoostBodyBlock
         $p->newPoint( 'grainlineTop', $p->x(1)+10, $p->y(3)/2+30);
         $p->newPoint( 'grainlineBottom', $p->x(2)-10, $p->y('grainlineTop'));
         $p->newPath('grainline','M grainlineTop L grainlineBottom',['class' => 'grainline']);
+        $p->newTextOnPath('grainline', 'M grainlineBottom L grainlineTop', $this->t('Grainline'), ['class' => 'text-lg fill-fabric text-center', 'dy' => -1]);
         
         // Title
         $p->newPoint('titleAnchor', $p->x(2)/2, $p->y(3)/2);
         $p->addTitle('titleAnchor', 7, $this->t($p->title), '2x '.$this->t('from main fabric')."\n".$this->t('Cut with good sides together'));
+        
+        // Seam allowance
+        $p->offsetPath('sa', 'seamline', -10, true, ['class' => 'seam-allowance']);
     }
     
     /**
@@ -668,6 +1075,9 @@ class HugoHoodie extends JoostBodyBlock
         // Title
         $p->newPoint('titleAnchor', $p->x(2)/2, $p->y(3)/2);
         $p->addTitle('titleAnchor', 8, $this->t($p->title), '2x '.$this->t('from ribbing')."\n".$this->t('Cut with good sides together'));
+        
+        // Seam allowance
+        $p->offsetPath('sa', 'seamline', -10, true, ['class' => 'seam-allowance']);
     }
     
     /**
@@ -688,6 +1098,9 @@ class HugoHoodie extends JoostBodyBlock
         // Title
         $p->newPoint('titleAnchor', $p->x(2)/2, $p->y(3)/2);
         $p->addTitle('titleAnchor', 9, $this->t($p->title), '1x '.$this->t('from ribbing'));
+        
+        // Seam allowance
+        $p->offsetPath('sa', 'seamline', -10, true, ['class' => 'seam-allowance']);
     }
     
     /**
@@ -707,6 +1120,14 @@ class HugoHoodie extends JoostBodyBlock
         
         // Title
         $p->newPoint('titleAnchor', $p->x(2)/2, $p->y(3)/2);
-        $p->addTitle('titleAnchor', 9, $this->t($p->title), '1x '.$this->t('from main fabric'), 'vertical');
+        $p->addTitle('titleAnchor', 10, $this->t($p->title), '1x '.$this->t('from main fabric'), 'vertical');
+        
+        // Seam allowance
+        $p->offsetPath('sa', 'seamline', -10, true, ['class' => 'seam-allowance']);
+    }
+
+    private function textAttr($dy)
+    {
+        return ['class' => 'text-lg fill-note text-center', 'dy' => $dy];
     }
 }

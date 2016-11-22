@@ -9,7 +9,7 @@ rect {
 /* Paths */
 path {
   fill: none;
-  stroke: #333333;
+  stroke: #000000;
   stroke-opacity: 1;
   stroke-width: 0.3;
   stroke-linecap: round;
@@ -43,7 +43,7 @@ path.note {
 text {
   font-size: 5px;
   font-family: 'Open Sans Condensed';
-  fill: #333333;
+  fill: #000000;
   text-anchor: start;
 }
 text.part-nr,
@@ -51,7 +51,7 @@ text.part-nr-vertical,
 text.part-nr-horizontal {
   font-size: 24px;
   text-anchor: middle;
-  fill: #333333;
+  fill: #000000;
   font-family: 'Abril Fatface';
 }
 text.part-nr,
@@ -68,7 +68,7 @@ text.part-title-vertical,
 text.part-title-horizontal {
   font-size: 14px;
   text-anchor: middle;
-  fill: #333333;
+  fill: #000000;
   font-family: 'Abril Fatface';
 }
 text.part-title-horizontal {
@@ -82,7 +82,7 @@ text.part-msg-vertical,
 text.part-msg-horizontal {
   font-size: 7px;
   text-anchor: middle;
-  fill: #333333;
+  fill: #000000;
 }
 text.part-msg {
   transform: translate(0, 10px);
@@ -123,10 +123,10 @@ path.arrow {
   stroke: #4285f4;
 }
 path.grainline {
-  stroke: #666666;
+  stroke: #db4437;
   stroke-width: 0.6;
-  marker-start: url(#gray1-arrowStart);
-  marker-end: url(#gray1-arrowEnd);
+  marker-start: url(#fabric-arrowStart);
+  marker-end: url(#fabric-arrowEnd);
 }
 path.measure-sm,
 path.measure-lg,
@@ -160,7 +160,7 @@ path.helpline {
 }
 /* Debug */
 path.debug {
-  stroke: #d9534f;
+  stroke: #db4437;
   stroke-opacity: 0.4;
   stroke-width: 2;
 }
@@ -182,8 +182,8 @@ path.debug {
 .stroke-warning {
   stroke: #f57900;
 }
-.stroke-error {
-  stroke: #d9534f;
+.stroke-fabric {
+  stroke: #db4437;
 }
 .fill-brand {
   fill: #5c3566;
@@ -197,11 +197,11 @@ path.debug {
 .fill-warning {
   fill: #f57900;
 }
-.fill-error {
-  fill: #d9534f;
+.fill-fabric {
+  fill: #db4437;
 }
 .stroke-black {
-  stroke: #333333;
+  stroke: #000000;
 }
 .stroke-gray1 {
   stroke: #666666;
@@ -216,7 +216,7 @@ path.debug {
   stroke: #eeeeee;
 }
 .fill-black {
-  fill: #333333;
+  fill: #000000;
 }
 .fill-gray1 {
   fill: #666666;
@@ -280,4 +280,8 @@ path.debug {
 }
 .dotted {
   stroke-dasharray: 0.2,0.6;
+}
+.hidden {
+  stroke: none;
+  file: none;
 }

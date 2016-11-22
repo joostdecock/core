@@ -15,6 +15,113 @@ class BezierToolbox
     public static $steps = 100;
 
     /**
+     * Finds the boundary of a Bezier curve
+     *
+     * This calculates the bounding box by walking through
+     * the curve while keeping an eye on the coordinates
+     * and registering the most topLeft and bottomRight point
+     * we encounter.
+     *
+     * @param \Freesewing\Point $start The start of the curve
+     * @param \Freesewing\Point $cp1 The control point for the start of the curve
+     * @param \Freesewing\Point $cp2 The control point for the end of the curve
+     * @param \Freesewing\Point $end The end of the curve
+     * @return bool True if it is. False if it is not closed.
+     */
+    static function findBezierBoundary($start, $cp1, $cp2, $end)
+    {
+        $steps = BezierToolbox::$steps;
+        for ($i = 0; $i <= $steps; ++$i) {
+            $t = $i / $steps;
+            $x = Utils::bezierPoint($t, $start->getX(), $cp1->getX(), $cp2->getX(), $end->getX());
+            $y = Utils::bezierPoint($t, $start->getY(), $cp1->getY(), $cp2->getY(), $end->getY());
+            if ($i == 0) {
+                $minX = $x;
+                $minY = $y;
+                $maxX = $x;
+                $maxY = $y;
+                $previousX = $x;
+                $previousY = $y;
+            } else {
+                if ($x < $minX) {
+                    $minX = $x;
+                }
+                if ($y < $minY) {
+                    $minY = $y;
+                }
+                if ($x > $maxX) {
+                    $maxX = $x;
+                }
+                if ($y > $maxY) {
+                    $maxY = $y;
+                }
+            }
+            $previousX = $x;
+            $previousY = $y;
+        }
+        $topLeft = new \Freesewing\Point();
+        $topLeft->setX($minX);
+        $topLeft->setY($minY);
+        $bottomRight = new \Freesewing\Point();
+        $bottomRight->setX($maxX);
+        $bottomRight->setY($maxY);
+
+        $boundary = new \Freesewing\Boundary();
+        $boundary->setTopLeft($topLeft);
+        $boundary->setBottomRight($bottomRight);
+
+        return $boundary;
+    }
+
+    /**
+     * Finds one edge of a Bezier curve
+     *
+     * This walks through the curve while keeping an eye on the coordinates
+     * and registering them most [left|right|up|down] depending on the value
+     * of $direction.
+     *
+     * @param \Freesewing\Point $start The start of the curve
+     * @param \Freesewing\Point $cp1 The control point for the start of the curve
+     * @param \Freesewing\Point $cp2 The control point for the end of the curve
+     * @param \Freesewing\Point $end The end of the curve
+     * @param string $direction One of: left, right, up, down
+     *
+     * @return \Freesewing\Point The point at the edge
+     */
+    static function findBezierEdge($start, $cp1, $cp2, $end, $direction='left')
+    {
+        $steps = BezierToolbox::$steps;
+        for ($i = 0; $i <= $steps; ++$i) {
+            $t = $i / $steps;
+            $x = Utils::bezierPoint($t, $start->getX(), $cp1->getX(), $cp2->getX(), $end->getX());
+            $y = Utils::bezierPoint($t, $start->getY(), $cp1->getY(), $cp2->getY(), $end->getY());
+            if ($i == 0) {
+                $edgeX = $x;
+                $edgeY = $y;
+                $previousX = $x;
+                $previousY = $y;
+            } else {
+                if (
+                    ($y < $edgeY && $direction == 'top') OR
+                    ($y > $edgeY && $direction == 'bottom') OR
+                    ($x < $edgeX && $direction == 'left') OR
+                    ($x > $edgeX && $direction == 'right') 
+                ) {
+                    $edgeX = $x;
+                    $edgeY = $y;
+                }
+            }
+            $previousX = $x;
+            $previousY = $y;
+        }
+        $edge = new \Freesewing\Point();
+        $edge->setX($edgeX);
+        $edge->setY($edgeY);
+
+        return $edge;
+    }
+
+    /**
      * Returns the length of a cubic Bezier curve
      *
      * There is no closed-form solution to calculate the length of cubic polynomial curves. 

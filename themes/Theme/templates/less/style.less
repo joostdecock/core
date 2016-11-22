@@ -141,10 +141,10 @@ path.arrow {
 }
 
 path.grainline { 
-    stroke: @gray1; 
+    stroke: @fabric-color; 
     stroke-width: @stroke-lg;
-    marker-start: url(#gray1-arrowStart); 
-    marker-end:url(#gray1-arrowEnd)
+    marker-start: url(#fabric-arrowStart); 
+    marker-end:url(#fabric-arrowEnd)
 }
  
 path.measure-sm,  
@@ -186,7 +186,7 @@ path.helpline {
 /* Debug */
 
 path.debug { 
-    stroke: @error-color; 
+    stroke: @fabric-color; 
     stroke-opacity: 0.4; 
     stroke-width: @stroke-xxl;
 }
@@ -205,13 +205,13 @@ path.debug {
 .stroke-note    { stroke: @note-color;    }
 .stroke-tip     { stroke: @tip-color;     }
 .stroke-warning { stroke: @warning-color; }
-.stroke-error   { stroke: @error-color;   }
+.stroke-fabric  { stroke: @fabric-color;   }
 
 .fill-brand   { fill: @brand-color;   }
 .fill-note    { fill: @note-color;    }
 .fill-tip     { fill: @tip-color;     }
 .fill-warning { fill: @warning-color; }
-.fill-error   { fill: @error-color;   }
+.fill-fabric  { fill: @fabric-color;   }
 
 .stroke-black { stroke: @black; }
 .stroke-gray1 { stroke: @gray1; }
@@ -246,3 +246,5 @@ path.debug {
 
 .dashed { stroke-dasharray:1,1.5; }
 .dotted { stroke-dasharray:0.2,0.6; }
+
+.hidden { stroke: none; file: none;}

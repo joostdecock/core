@@ -1,22 +1,38 @@
-@import 'variables';
+@import '../../../Theme/templates/less/variables';
+@import 'overrides';
 
 rect.grid { 
     fill: none; 
     stroke: @gray1; 
-    stroke-width: @stroke;
+    stroke-width: 0.3;
     fill:url(#grid); 
 }
 path.gridline { 
     stroke: @gray2; 
-    stroke-width: @stroke-lg; 
+    stroke-width: 0.5; 
 }
 
 path.gridline-sm { 
     stroke: @gray3; 
-    stroke-dasharray: 1,1; 
+    stroke-width: 0.4; 
+    stroke-dasharray: 1.5,1.5; 
 }
 
 path.gridline-xs { 
     stroke: @gray3; 
-    stroke-width: @stroke-xs; 
+    stroke-width: 0.3; 
+}
+
+path {
+    stroke-color: #000000;
+    stroke-width: 0.6;
+}
+
+path.seam-alowance {
+    stroke-color: #333333;
+    stroke-width: 0.4;
+}
+
+path.helpline {
+    stroke-width: 0.4;
 }

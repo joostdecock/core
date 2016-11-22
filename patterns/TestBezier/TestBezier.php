@@ -55,20 +55,14 @@ class TestBezier extends Pattern
         $p->newPoint(7,   -300, 0);
         $p->newPoint(8,   450, 100);
 
-        //$p->curveCrossesCurve(1,5,6,2,3,7,8,4,'test3'); 
-        //$p->curveCrossesLine(5,6,1,3,2,4,'test1'); 
-        //$p->curveCrossesY(1,3,2,4,50,'test2'); 
-        
-        
         // Paths
         $path = 'M 1 C 5 6 2 M 3 C 7 8 4';
-        $p->newPath('test', $path);
-        $p->curvesCross(1,5,6,2,3,7,8,4,'test3'); 
+        $path1 = 'M 1 C 5 6 2';
+        $path2 = 'M 3 C 7 8 4';
+        $p->newPath('test', $path2);
+        //$p->curvesCross(1,5,6,2,3,7,8,4,'test3'); 
 
-        // Paths
-        //$path = 'M 1 C 2 3 4 M 3 C 1 1 4';
-        //$p->newPath('test', $path);
-        //$p->curveCrossesCurve(1,2,3,4,3,1,1,4,'test3'); 
+        $p->addPoint(123, $p->curveEdgeRight(3,7,8,4));
 
         // Mark path for sample service
         $p->paths['test']->setSample(true);

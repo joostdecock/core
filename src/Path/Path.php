@@ -212,7 +212,7 @@ class Path
                                 $curveControlPoint1 = $part->points[$pathAsArray[$index]];
                                 $curveControlPoint2 = $part->points[$pathAsArray[$index + 1]];
                                 $curveEnd = $part->points[$pathAsArray[$index + 2]];
-                                $bezierBoundary = $this->findBezierBoundary($curveStart, $curveControlPoint1, $curveControlPoint2, $curveEnd);
+                                $bezierBoundary = Beziertoolbox::findBezierBoundary($curveStart, $curveControlPoint1, $curveControlPoint2, $curveEnd);
                                 if ($bezierBoundary->topLeft->getX() < $topLeft->getX()) {
                                     $topLeft->setX($bezierBoundary->topLeft->getX());
                                 }
@@ -257,66 +257,7 @@ class Path
     }
 
     /**
-     * Finds the boundary of a Bezier curve
-     *
-     * This calculates the bounding box by walking through
-     * the curve while keeping an eye on the coordinates
-     * and registering the most topLeft and bottomRight point
-     * we encounter.
-     *
-     * @param \Freesewing\Point $start The start of the curve
-     * @param \Freesewing\Point $cp1 The control point for the start of the curve
-     * @param \Freesewing\Point $cp2 The control point for the end of the curve
-     * @param \Freesewing\Point $end The end of the curve
-     * @return bool True if it is. False if it is not closed.
-     */
-    private function findBezierBoundary($start, $cp1, $cp2, $end)
-    {
-        for ($i = 0; $i <= 100; ++$i) {
-            $t = $i / 100;
-//            if(!is_object($start)) print_r(debug_backtrace());
-            $x = Utils::bezierPoint($t, $start->getX(), $cp1->getX(), $cp2->getX(), $end->getX());
-            $y = Utils::bezierPoint($t, $start->getY(), $cp1->getY(), $cp2->getY(), $end->getY());
-            if ($i == 0) {
-                $minX = $x;
-                $minY = $y;
-                $maxX = $x;
-                $maxY = $y;
-                $previousX = $x;
-                $previousY = $y;
-            } else {
-                if ($x < $previousX) {
-                    $minX = $x;
-                }
-                if ($y < $previousY) {
-                    $minY = $y;
-                }
-                if ($x > $previousX) {
-                    $maxX = $x;
-                }
-                if ($y > $previousY) {
-                    $maxY = $y;
-                }
-            }
-            $previousX = $x;
-            $previousY = $y;
-        }
-        $topLeft = new \Freesewing\Point();
-        $topLeft->setX($minX);
-        $topLeft->setY($minY);
-        $bottomRight = new \Freesewing\Point();
-        $bottomRight->setX($maxX);
-        $bottomRight->setY($maxY);
-
-        $boundary = new \Freesewing\Boundary();
-        $boundary->setTopLeft($topLeft);
-        $boundary->setBottomRight($bottomRight);
-
-        return $boundary;
-    }
-
-    /**
-     * Breaks up a path into an array if stesps
+     * Breaks up a path into an array of steps
      *
      * A path can be made up of multiple draw operations.
      * This breaks the path apart to a single operation (step)

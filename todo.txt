@@ -1,7 +1,6 @@
 Update measurement names in frontend
 Write a better packer
 Subtheme defs don't seem to be taken into account
-Curve does not correctly set bounding box (try with single curve part)
 Check for improvements in boxer pattern. Rise is not used, plus seam length does not match
 Remove 'circumference' from measurements
 Only use naturalWaist, hips, and seat for circumference in the waist/bum area
@@ -12,3 +11,5 @@ Include measurements in sampler files from parent patterns
 Hood opening replaces with head circumference
 Create compare service which is draft+sample
 Add timing
+Add caching
+Add Svg viewbox

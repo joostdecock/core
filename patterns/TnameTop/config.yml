@@ -1,0 +1,23 @@
+info:
+  name:     "Tname Top"
+  version:  "2.0"
+  date:     "20161124"
+  author:   "Joost De Cock"
+  email:    "joost@decock.org"
+  company:  "freesewing.org"
+  link:     "freesewing.org/pattern/tname-top/"
+parts:
+  top:   "Tname Top"
+languages:
+    en: English
+    nl: Nederlands
+measurements:
+    - acrossBack
+    - chestCircumference
+    - centerBackNeckToWaist
+    - naturalWaistToHip
+options:
+    - lengthBonus
+inMemoryOf:   
+    name: "FIXME"
+    link: "https://en.wikipedia.org/wiki/FIXME"

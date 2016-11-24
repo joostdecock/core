@@ -1,0 +1,5 @@
+lengthBonus:
+    type: measure
+    min: -100
+    max: 300
+    default: 0

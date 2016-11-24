@@ -212,7 +212,7 @@ class Path
                                 $curveControlPoint1 = $part->points[$pathAsArray[$index]];
                                 $curveControlPoint2 = $part->points[$pathAsArray[$index + 1]];
                                 $curveEnd = $part->points[$pathAsArray[$index + 2]];
-                                $bezierBoundary = Beziertoolbox::findBezierBoundary($curveStart, $curveControlPoint1, $curveControlPoint2, $curveEnd);
+                                $bezierBoundary = BezierToolbox::findBezierBoundary($curveStart, $curveControlPoint1, $curveControlPoint2, $curveEnd);
                                 if ($bezierBoundary->topLeft->getX() < $topLeft->getX()) {
                                     $topLeft->setX($bezierBoundary->topLeft->getX());
                                 }

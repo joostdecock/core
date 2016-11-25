@@ -73,6 +73,9 @@ class TnameTop extends Pattern
         $p->newPoint('grainlineBottom', $p->x(42)-10, $p->y('grainlineTop'));
         $p->newPath('grainline', 'M grainlineTop L grainlineBottom', ['class' => 'grainline']);
         $p->newTextOnPath('grainline', 'M grainlineTop L grainlineBottom', $this->t('Grainline'), ['line-height' => 12, 'class' => 'text-lg fill-fabric text-center', 'dy' => -2]);
+
+        // Seam allowance
+        $p->offsetPathString('sa', 'M 3 C 3 6 5 C 7 4 4', 10, 1, ['class' => 'seam-allowance']); 
         
         // Paperless
         if ($this->isPaperless) {
@@ -80,49 +83,116 @@ class TnameTop extends Pattern
             $pAttr = ['class' => 'measure-lg'];
             $hAttr = ['class' => 'stroke-note stroke-sm'];
 
+            // Bring points to the left
+            $p->newPoint(100, $p->x(1), $p->y(23));
+            $p->newPoint(101, $p->x(1), $p->y(22));
+            
+            // Bring points to top
+            $p->newPoint(102, $p->x(22), $p->y(41));
+            $p->newPoint(103, $p->x(23), $p->y(41));
+            
+            // Bring points to bottom
+            $p->newPoint(104, $p->x(10), $p->y(2));
+            $p->newPoint(105, $p->x(5), $p->y(2));
+
+
+            $key = 'toShoulderSeam';
+            $path = 'M 2 L 104';
+            $p->offsetPathString($key, $path, 15, 1, $pAttr);
+            $p->newTextOnPath($key, $path, $this->unit($p->distance(2, 104)), $this->textAttr(13));
+
             $key = 'toArmholeTop';
             $path = 'M 2 L 3';
-            $p->offsetPathString($key, $path, 15, 1, $pAttr);
-            $p->newTextOnPath($key, $path, $this->unit($p->distance(2, 3)), $this->textAttr(13));
+            $p->offsetPathString($key, $path, 30, 1, $pAttr);
+            $p->newTextOnPath($key, $path, $this->unit($p->distance(2, 3)), $this->textAttr(28));
 
             $key = 'toArmholeBottom';
-            $path = 'M 2 L 4';
+            $path = 'M 3 L 4';
             $p->offsetPathString($key, $path, 30, 1, $pAttr);
-            $p->newTextOnPath($key, $path, $this->unit($p->distance(2, 4)), $this->textAttr(28));
+            $p->newTextOnPath($key, $path, $this->unit($p->distance(3, 4)), $this->textAttr(28));
+
+            $key = 'armholeDepth';
+            $path = 'M 105 L 5';
+            $p->newPath($key, $path, $pAttr);
+            $p->newTextOnPath($key, $path, $this->unit($p->distance(105, 5)), $this->textAttr(-2));
+
+            $key = 'armholeLeft';
+            $path = 'M 3 L 105';
+            $p->newPath($key, $path, $pAttr);
+            $p->newTextOnPath($key, $path, $this->unit($p->distance(3,105)), $this->textAttr(-2));
+
+            $key = 'armholeRight';
+            $path = 'M 105 L 4';
+            $p->newPath($key, $path, $pAttr);
+            $p->newTextOnPath($key, $path, $this->unit($p->distance(105,4)), $this->textAttr(-2));
 
             $key = 'width';
             $path = 'M 2 L 42';
             $p->offsetPathString($key, $path, 45, 1, $pAttr);
             $p->newTextOnPath($key, $path, $this->unit($p->distance(2, 42)), $this->textAttr(43));
 
-            // Bring points to the left
-            $p->newPoint(100, $p->x(1), $p->y(23));
-            $p->newPoint(101, $p->x(1), $p->y(22));
-            
             $key = 'sideHeight1';
-            $path = 'M 100 L 41';
-            $p->offsetPathString($key, $path, -15, 1, $pAttr);
-            $p->newTextOnPath($key, $path, $this->unit($p->distance(41, 100)), $this->textAttr(-17));
+            $path = 'M 23 L 103';
+            $p->offsetPathString($key, $path, 15, 1, $pAttr);
+            $p->newTextOnPath($key, $path, $this->unit($p->deltaY(41, 23)), $this->textAttr(13));
             
             $key = 'sideHeight2';
             $path = 'M 101 L 41';
-            $p->offsetPathString($key, $path, -30, 1, $pAttr);
-            $p->newTextOnPath($key, $path, $this->unit($p->distance(41, 101)), $this->textAttr(-32));
+            $p->offsetPathString($key, $path, -15, 1, $pAttr);
+            $p->newTextOnPath($key, $path, $this->unit($p->distance(41, 101)), $this->textAttr(-17));
             
             $key = 'sideHeight3';
             $path = 'M 1 L 41';
-            $p->offsetPathString($key, $path, -45, 1, $pAttr);
-            $p->newTextOnPath($key, $path, $this->unit($p->distance(41, 1)), $this->textAttr(-47));
+            $p->offsetPathString($key, $path, -30, 1, $pAttr);
+            $p->newTextOnPath($key, $path, $this->unit($p->distance(41, 1)), $this->textAttr(-32));
             
             $key = 'sideHeight4';
-            $path = 'M 8 L 41';
-            $p->offsetPathString($key, $path, -60, 1, $pAttr);
-            $p->newTextOnPath($key, $path, $this->unit($p->distance(41, 1)), $this->textAttr(-62));
+            $path = 'M 8 L 1';
+            $p->offsetPathString($key, $path, -30, 1, $pAttr);
+            $p->newTextOnPath($key, $path, $this->unit($p->distance(1, 8)), $this->textAttr(-32));
             
             $key = 'height';
             $path = 'M 2 L 41';
-            $p->offsetPathString($key, $path, -75, 1, $pAttr);
-            $p->newTextOnPath($key, $path, $this->unit($p->distance(41, 2)), $this->textAttr(-77));
+            $p->offsetPathString($key, $path, -45, 1, $pAttr);
+            $p->newTextOnPath($key, $path, $this->unit($p->distance(41, 2)), $this->textAttr(-47));
+
+
+            $key = 'down1';
+            $path = 'M 41 L 102';
+            $p->offsetPathString($key, $path, -10, 1, $pAttr);
+            $p->newTextOnPath($key, $path, $this->unit($p->distance(41, 102)), $this->textAttr(-12));
+
+            $key = 'down2';
+            $path = 'M 41 L 103';
+            $p->offsetPathString($key, $path, -25, 1, $pAttr);
+            $p->newTextOnPath($key, $path, $this->unit($p->distance(41, 103)), $this->textAttr(-27));
+
+            // Draw an extra hidden line to extend the bounding box
+            // so that the measure text does not get cut off
+            $p->addPoint(106, $p->shift('down2-line-41TO103',90,12));
+            $p->newPath($p->newId(),'M 106 L 41', ['class' => 'hidden']);
+
+            $measureHelpLines = 'M 41 L down2-line-41TO103 '.
+                'M 22 L  down1-line-102TO41 '.
+                'M 23 L down2-line-103TO41 '.
+                'M 41 L height-line-41TO2 '.
+                'M 23 L sideHeight1-line-23TO103 '.
+                'M 22 L sideHeight2-line-101TO41 '.
+                'M 31 sideHeight4-line-1TO8 '.
+                'M 38 L sideHeight4-line-8TO1 '.
+                'M 44 L height-line-2TO41 '.
+                'M 44 L width-line-2TO42 '.
+                'M 3 L toArmholeBottom-line-3TO4 '.
+                'M 4 L toArmholeBottom-line-4TO3 '.
+                'M 42 L width-line-42TO2 '.
+                '';
+            $p->newPath($p->newId(),$measureHelpLines, $hAttr);
+            
+            // Notes
+            $p->addPoint(200, $p->shift(5,-5,30));
+            $p->addPoint(201, $p->shift(8,-90,50));
+            $p->newNote('saNote', 200, $this->t("Standard\nseam\nallowance")."\n(".$this->unit(10).')', 1, 30, -3, ['line-height' => 6, 'class' => 'text-lg', 'dy' => -15]);
+            $p->newNote('noSaNote', 201, $this->t("No\nseam\nallowance"), 3, 30, 0, ['line-height' => 6, 'class' => 'text-lg', 'dy' => -5]);
 
         }
     }

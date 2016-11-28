@@ -47,26 +47,13 @@ class TestLines extends Pattern
 
         // Center vertical axis
         $p->newPoint(1,   0,  0);
-        $p->newPoint(2,   0,  80);
-        $p->newPoint(3,   30, 100);
-        $p->newPoint(4,   70, 0);
-        $p->newPoint(5,   100, 0);
-        $p->newPoint(6,   100, 100);
-        $p->newPoint(7,   0, 100);
-
-        
-        /*
-        $p->newPoint(1,   15,  80);
-        $p->newPoint(2,   22.5,  95);
-        $p->newPoint(3,   30,  100);
-        $p->newPoint(4,   30,  100);
-         */
+        $p->newPoint(2,   0,  100);
+        $p->newPoint(3,   100, 100);
+        $p->newPoint(4,   100, 0);
 
         // Paths
-        $path = 'M 1 C 2 3 3';
+        $path = 'M 1 L 2 L 3 L 4 z';
         $p->newPath('test', $path);
-
-        $p->offsetPath('sa', 'test', 10, 1, ['class' => 'seam-allowance']);
 
         // Mark path for sample service
         $p->paths['test']->setSample(true);

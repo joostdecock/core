@@ -132,11 +132,7 @@ class SvgRenderbot
      */
     public function render($pattern)
     {
-        $scale = new \Freesewing\Transform('scale', 3.54330709); // FIXME this seems to be slightly off. Should be 254/72, no?
-        $svg = $this->openGroup(
-            'patternScaleContainer',
-            \Freesewing\Transform::asSvgParameter(array($scale))
-        );
+        $svg = '';
 
         if (isset($pattern->parts) && count($pattern->parts) > 0) :
             foreach ($pattern->parts as $partKey => $part) {
@@ -152,8 +148,6 @@ class SvgRenderbot
                 }
             }
         endif;
-
-        $svg .= $this->closeGroup();
 
         return $svg;
     }

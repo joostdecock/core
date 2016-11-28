@@ -90,9 +90,19 @@ class DraftService
      */
     protected function svgRender($context)
     {
-        $context->svgDocument->svgAttributes->add('width ="'.$context->pattern->getWidth() * 3.54330709.'"'); // FIXME units conversion check
-        $context->svgDocument->svgAttributes->add('height ="'.$context->pattern->getHeight() * 3.54330709.'"');
 
+        $viewbox = $context->request->getData('viewbox');
+        if($viewbox !== null) {
+            $viewbox = Utils::asScrubbedArray($viewbox,',');
+            $scale = $context->request->getData('scale');
+            $context->svgDocument->svgAttributes->add('width ="'.$viewbox[2].'mm"');
+            $context->svgDocument->svgAttributes->add('height ="'.$viewbox[3].'mm"');
+            $context->svgDocument->svgAttributes->add('viewbox ="'.$viewbox[0].' '.$viewbox[1].' '.$viewbox[2].' '.$viewbox[3].'"');     
+        } else {
+            $context->svgDocument->svgAttributes->add('width ="'.$context->pattern->getWidth().'mm"'); 
+            $context->svgDocument->svgAttributes->add('height ="'.$context->pattern->getHeight().'mm"');
+            $context->svgDocument->svgAttributes->add('viewbox ="0 0 '.$context->pattern->getWidth().' '.$context->pattern->getHeight().'"');
+        }
         // format specific themeing
         $context->theme->themeSvg($context->svgDocument);
 

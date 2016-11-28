@@ -11,6 +11,9 @@ namespace Freesewing\Channels;
  */
 abstract class Channel
 {
+    /** @var array $options Array of theme options */
+    public $options = array();
+
     /** @var array $config The channel configuration */
     private $config = array();
 

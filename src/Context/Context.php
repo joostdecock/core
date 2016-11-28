@@ -161,7 +161,7 @@ class Context
     }
 
     /**
-     * Stores response in the pattern property
+     * Stores pattern in the pattern property
      *
      * (only) The SampleService uses this to override the pattern that we added initially
      *

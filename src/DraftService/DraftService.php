@@ -38,7 +38,7 @@ class DraftService
         $context->addPattern();
 
         if ($context->channel->isValidRequest($context) === true) :
-
+        
             $context->addModel();
             $context->model->addMeasurements(
                 $context->channel->standardizeModelMeasurements($context->request, $context->pattern)

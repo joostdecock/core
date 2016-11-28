@@ -23,6 +23,23 @@ class Response
     /** @var string $format Response format */
     public $format = 'json';
 
+    /** @@var array $headers Array of headers to send */
+    private $headers = array();
+
+    /**
+     * Adds caching headers 
+     *
+     * @param \Freesewing\Request $request The request object
+     */
+    public function addCacheHeaders($request)
+    {
+        if($request->getData('cache') === null) {
+            $this->addHeader('cache' , "Cache-Control: public, no-cache");
+        } else {
+            $this->addHeader('cache' , "Cache-Control: public, max-age=15552000");
+        }
+    }
+
     /**
      * Sets the response status 
      *
@@ -111,7 +128,10 @@ class Response
      */
     public function send()
     {
-        $this->sendHeader($this->status);
+        
+        $this->addHeader('status', $this->getStatusHeader($this->status));
+
+        $this->sendHeaders();
         switch ($this->format) {
             case 'json':
                 $body = $this->asJson($this->body);
@@ -128,7 +148,7 @@ class Response
      *
      * @param string $status The response status
      */
-    private function sendHeader($status)
+    private function getStatusHeader($status)
     {
         switch ($status) {
             case 'ok':
@@ -158,7 +178,21 @@ class Response
         }
         $text = $this->statusToMessage($status);
         $protocol = (isset($_SERVER['SERVER_PROTOCOL']) ? $_SERVER['SERVER_PROTOCOL'] : 'HTTP/1.0');
-        $this->sendHeaderToBrowser($protocol.' '.$statuscode.' '.$text);
+        return $protocol.' '.$statuscode.' '.$text;
+    }
+
+    /**
+     * Adds headers to the headers property
+     *
+     * This adds headers to an array on position $key
+     * This allows you to overwrite a header at a later stage
+     *
+     * @param string $key The id in the headers array
+     * @param string $header The header to add
+     */
+    public function addHeader($key, $header)
+    {
+        $this->headers[$key] = $header;
     }
 
     /**
@@ -166,9 +200,9 @@ class Response
      *
      * @param string $header The header ready to send
      */
-    private function sendHeaderToBrowser($header)
+    private function sendHeaders()
     {
-        header($header);
+        foreach($this->headers as $header) header($header);
     }
 
     /**

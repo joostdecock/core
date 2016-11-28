@@ -23,8 +23,11 @@ class Response
     /** @var string $format Response format */
     public $format = 'json';
 
-    /** @@var array $headers Array of headers to send */
+    /** @var array $headers Array of headers to send */
     private $headers = array();
+
+    /** @var int $cacheTime Default cache time in seconds (if caching is used) */
+    private $cacheTime = 15552000;
 
     /**
      * Adds caching headers 
@@ -36,7 +39,7 @@ class Response
         if($request->getData('cache') === null) {
             $this->addHeader('cache' , "Cache-Control: public, no-cache");
         } else {
-            $this->addHeader('cache' , "Cache-Control: public, max-age=15552000");
+            $this->addHeader('cache' , "Cache-Control: public, max-age=".$this->cacheTime);
         }
     }
 

@@ -113,7 +113,7 @@ class BruceBoxerBriefs extends Pattern
         $p->newPoint( 101, $p->x(3)*0.7, 0, 'Control point' );
         $p->addPoint(   5  ,  $p->shiftAlong(1, 101, 403, 401, 70), 'Notch' );
 
-        $points = $p->addSplitCurve('split', 1, 101, 403, 401, 0.5, true);
+        $points = $p->addSplitCurve(1, 101, 403, 401, 0.5, 'split', true);
         $this->insetPath = 'M 2 L 1 C split2 split3 split4 C split7 split6 401 L 3 z';
         
         $p->newPath('outline', $this->insetPath, ['class' => 'seamline']);

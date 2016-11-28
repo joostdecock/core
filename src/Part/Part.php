@@ -1107,7 +1107,7 @@ class Part
         if ($tolerance['score'] > $this->maxOffsetTolerance) { // Not good enough, let's subdivide
             $subdivide++;
             $splitId = '.tmp_'.$key.'.splitcurve:'.$this->newId();
-            $this->addSplitCurve($splitId.'-', $from, $cp1, $cp2, $to, $tolerance['index'], 1);
+            $this->addSplitCurve($from, $cp1, $cp2, $to, $tolerance['index'], $splitId.'-', true);
             unset($chunks);
             $subDivide = $this->offsetCurve("M $splitId-1 C $splitId-2 $splitId-3 $splitId-4", $distance, $key, $subdivide);
             foreach ($subDivide as $chunk) {
@@ -1735,15 +1735,15 @@ class Part
      *
      * @see \Freesewing\Part::splitCurve()
      * 
-     * @param float $prefix The prefix to add to the new points
      * @param string $from The id of the start of the curve
      * @param string $cp1 The id of the first control point
      * @param string $cp2 The id of the second control point
      * @param string $to The id of the end of the curve
      * @param string $split The id of the point to split on, or a delta to split on
-     * @param float $splitOnDelta The angle to shift along
+     * @param string $prefix The prefix to add to the new points
+     * @param bool $splitOnDelta True if we're splitting on delta
      */
-    public function addSplitCurve($prefix, $from, $cp1, $cp2, $to, $split, $splitOnDelta = false)
+    public function addSplitCurve($from, $cp1, $cp2, $to, $split, $prefix='', $splitOnDelta = false)
     {
         $points = $this->splitCurve($from, $cp1, $cp2, $to, $split, $splitOnDelta);
         $this->addPoint($prefix.'1', $points[0]);

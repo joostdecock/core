@@ -1,10 +1,7 @@
 Update measurement names in frontend
-Write a better packer
-Subtheme defs don't seem to be taken into account
 Check for improvements in boxer pattern. Rise is not used, plus seam length does not match
 Remove 'circumference' from measurements
 Only use naturalWaist, hips, and seat for circumference in the waist/bum area
-Compare position of prefix parametner in addSplitCurve and curveCrossesX. Consistent?
 Make demo select default option in dropdown (chooseOne)
 Make translations use multiple files
 Include measurements in sampler files from parent patterns

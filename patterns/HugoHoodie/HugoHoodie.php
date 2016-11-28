@@ -95,7 +95,7 @@ class HugoHoodie extends JoostBodyBlock
         
         // Adding points from index 100 onwards
         $p->addPoint( 100, $p->shiftAlong(8,20,21,9, $p->curveLen(8,20,21,9)/3), 'Raglan front tip');
-        $p->addSplitCurve(5,8,20,21,9,100);
+        $p->addSplitCurve(8,20,21,9,100,5);
 
         // Add pocket points
         $p->newPoint( 101, $p->x(6)*0.6 - 25, $p->y(6));
@@ -146,7 +146,7 @@ class HugoHoodie extends JoostBodyBlock
         // Adding points from index 100 onwards
         $p->newPoint( 21, $p->x(21), $p->y(1),'Control point for 1'); // Re-using point 21
         $p->addPoint( 100, $p->shiftAlong(8,20,21,1, $p->curveLen(8,20,21,1)/2), 'Raglan back tip');
-        $p->addSplitCurve(5,8,20,21,1,100);
+        $p->addSplitCurve(8,20,21,1,100,5);
      
         // Paths
         $path = 'M 1 L 2 L 3 L 4 L 6 L 5 C 13 16 14 C 15 100 100 C 57 56 1 z';

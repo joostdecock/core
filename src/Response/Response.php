@@ -14,9 +14,6 @@ namespace Freesewing;
  */
 class Response
 {
-    /** @var string $status Status of the response */
-    public $status = 'ok';
-
     /** @var string $body Response body */
     public $body = null;
 
@@ -41,45 +38,6 @@ class Response
         } else {
             $this->addHeader('cache' , "Cache-Control: public, max-age=".$this->cacheTime);
         }
-    }
-
-    /**
-     * Sets the response status 
-     *
-     * This only sets the status if it's in the array
-     * of allowed response statuses 
-     *
-     * @param string $status The status to set
-     *
-     * @throws InvalidArgumentException If the status is not allowed
-     */
-    public function setStatus($status)
-    {
-        $allowedStatuses = [
-            'ok',
-            'bad_request',
-            'unauthorized',
-            'forbidden',
-            'not_found',
-            'not_acceptable',
-            'api_down',
-            'server_error',
-            ];
-        if (in_array($status, $allowedStatuses)) {
-            $this->status = strtolower($status);
-        } else {
-            throw new \InvalidArgumentException($status.' is not a supported response status');
-        }
-    }
-
-    /**
-     * Returns the status property
-     *
-     * @return string The response status
-     */
-    public function getStatus()
-    {
-        return $this->status;
     }
 
     /**
@@ -131,9 +89,6 @@ class Response
      */
     public function send()
     {
-        
-        $this->addHeader('status', $this->getStatusHeader($this->status));
-
         $this->sendHeaders();
         switch ($this->format) {
             case 'json':
@@ -144,44 +99,6 @@ class Response
                 break;
         }
         echo $body;
-    }
-
-    /**
-     * Sends a header to the browser for a given response status
-     *
-     * @param string $status The response status
-     */
-    private function getStatusHeader($status)
-    {
-        switch ($status) {
-            case 'ok':
-                $statuscode = 200;
-                break;
-            case 'bad_request':
-                $statuscode = 400;
-                break;
-            case 'unauthorized':
-                $statuscode = 401;
-                break;
-            case 'forbidden':
-                $statuscode = 403;
-                break;
-            case 'not_found':
-                $statuscode = 404;
-                break;
-            case 'not_acceptable':
-                $statuscode = 406;
-                break;
-            case 'api_down':
-                $statuscode = 503;
-                break;
-            case 'server_error':
-                $statuscode = 500;
-                break;
-        }
-        $text = $this->statusToMessage($status);
-        $protocol = (isset($_SERVER['SERVER_PROTOCOL']) ? $_SERVER['SERVER_PROTOCOL'] : 'HTTP/1.0');
-        return $protocol.' '.$statuscode.' '.$text;
     }
 
     /**
@@ -206,16 +123,6 @@ class Response
     private function sendHeaders()
     {
         foreach($this->headers as $header) header($header);
-    }
-
-    /**
-     * Turns a status string into text
-     *
-     * @param string $status The response status
-     */
-    private function statusToMessage($status)
-    {
-        return ucwords(str_replace('_', ' ', $status));
     }
 
     /**

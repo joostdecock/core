@@ -1,11 +1,11 @@
 info:
-     name:     "Cname Corset"
+     name:     "Cathrin Corset"
      version:  "2.0"
      date:     "20161i104"
      author:   "Joost De Cock"
      email:    "joost@decock.org"
      company:  "freesewing.org"
-     link:     "freesewing.org/pattern/cname-corset/"
+     link:     "freesewing.org/pattern/cathrin-corset/"
 parts:
     base: "Base block"
     panels: "Corset"
@@ -27,6 +27,3 @@ options:
     - backDrop
     - hipRise
     - panels
-inMemoryOf:   
-    name: "FIXME"
-    link: "https://en.wikipedia.org/wiki/Fixme"

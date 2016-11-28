@@ -1,15 +1,15 @@
 <?php
-/** Freesewing\Patterns\BennoBoxerBriefs class */
+/** Freesewing\Patterns\BruceBoxerBriefs class */
 namespace Freesewing\Patterns;
 
 /**
- * The Benno Boxer Briefs pattern
+ * The Bruce Boxer Briefs pattern
  *
  * @author Joost De Cock <joost@decock.org>
  * @copyright 2016 Joost De Cock
  * @license http://opensource.org/licenses/GPL-3.0 GNU General Public License, Version 3
  */
-class BennoBoxerBriefs extends Pattern
+class BruceBoxerBriefs extends Pattern
 {
     /**
      * Generates a draft of the pattern

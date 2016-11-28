@@ -1,15 +1,15 @@
 <?php
-/** Freesewing\Patterns\CnameCorset class */
+/** Freesewing\Patterns\CathrinCorset class */
 namespace Freesewing\Patterns;
 
 /**
- * The Cname Corset pattern
+ * The Cathrin Corset pattern
  *
  * @author Joost De Cock <joost@decock.org>
  * @copyright 2016 Joost De Cock
  * @license http://opensource.org/licenses/GPL-3.0 GNU General Public License, Version 3
  */
-class CnameCorset extends Pattern
+class CathrinCorset extends Pattern
 {
     /**
      * Generates a draft of the pattern

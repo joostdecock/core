@@ -1,13 +1,13 @@
 info:
-  name:     "Tname Top"
+  name:     "Tamiko Top"
   version:  "2.0"
   date:     "20161124"
   author:   "Joost De Cock"
   email:    "joost@decock.org"
   company:  "freesewing.org"
-  link:     "freesewing.org/pattern/tname-top/"
+  link:     "freesewing.org/pattern/tamiko-top/"
 parts:
-  top:   "Tname Top"
+  top:   "Tamiko Top"
 languages:
     en: English
     nl: Nederlands
@@ -18,6 +18,3 @@ measurements:
     - naturalWaistToHip
 options:
     - lengthBonus
-inMemoryOf:   
-    name: "FIXME"
-    link: "https://en.wikipedia.org/wiki/FIXME"

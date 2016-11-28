@@ -1,11 +1,11 @@
 info:
-     name:         "Benno Boxer Briefs"
+     name:         "Bruce Boxer Briefs"
      version:      "2.0"
      date:         "20161031"
      author:       "Joost De Cock"
      email:        "joost@decock.org"
      company:      "freesewing.org"
-     link:         "freesewing.org/pattern/benno-boxer-briefs/"
+     link:         "freesewing.org/pattern/bruce-boxer-briefs/"
 parts:
     front:    "Front"
     back:     "Back"
@@ -22,6 +22,3 @@ options:
     - rise
     - verticalStretchFactor
     - horizontalStretchFactor
-inMemoryOf:   
-    name: "Benno Ohnesorg"
-    link: "https://en.wikipedia.org/wiki/Benno_Ohnesorg"

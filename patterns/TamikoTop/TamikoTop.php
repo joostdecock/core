@@ -1,15 +1,15 @@
 <?php
-/** Freesewing\Patterns\TnameTop class */
+/** Freesewing\Patterns\TamikoTop class */
 namespace Freesewing\Patterns;
 
 /**
- * The Tname Top pattern
+ * The Tamiko Top pattern
  *
  * @author Joost De Cock <joost@decock.org>
  * @copyright 2016 Joost De Cock
  * @license http://opensource.org/licenses/GPL-3.0 GNU General Public License, Version 3
  */
-class TnameTop extends Pattern
+class TamikoTop extends Pattern
 {
     /**
      * Generates a draft of the pattern

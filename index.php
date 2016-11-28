@@ -17,5 +17,3 @@ $context->setRequest(new \Freesewing\Request($_REQUEST));
 $context->configure();
 
 $context->runService();
-
-$time = microtime()-$start;

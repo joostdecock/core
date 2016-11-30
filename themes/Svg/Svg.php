@@ -22,6 +22,7 @@ class Svg extends Theme
     {
         $response = new \Freesewing\Response();
         $response->addCacheHeaders($context->request);
+        $response->addHeader('Content-Type', 'Content-Type: image/svg+xml');
         $response->setFormat('svg');
         $response->setBody("{$context->svgDocument}");
 

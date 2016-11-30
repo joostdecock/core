@@ -90,8 +90,9 @@ class DraftService
      */
     protected function svgRender($context)
     {
-
+        $scale = 3.54330709;
         $viewbox = $context->request->getData('viewbox');
+
         if($viewbox !== null) {
             $viewbox = Utils::asScrubbedArray($viewbox,',');
             $scale = $context->request->getData('scale');
@@ -99,9 +100,9 @@ class DraftService
             $context->svgDocument->svgAttributes->add('height ="'.$viewbox[3].'mm"');
             $context->svgDocument->svgAttributes->add('viewbox ="'.$viewbox[0].' '.$viewbox[1].' '.$viewbox[2].' '.$viewbox[3].'"');     
         } else {
-            $context->svgDocument->svgAttributes->add('width ="'.$context->pattern->getWidth().'mm"'); 
-            $context->svgDocument->svgAttributes->add('height ="'.$context->pattern->getHeight().'mm"');
-            $context->svgDocument->svgAttributes->add('viewbox ="0 0 '.$context->pattern->getWidth().' '.$context->pattern->getHeight().'"');
+            $context->svgDocument->svgAttributes->add('width ="'. ($context->pattern->getWidth() * $scale) .'"'); 
+            $context->svgDocument->svgAttributes->add('height ="'. ($context->pattern->getHeight() * $scale) .'"');
+            $context->svgDocument->svgAttributes->add('viewbox ="0 0 '. ($context->pattern->getWidth() * $scale).' '. ($context->pattern->getHeight() * $scale) .'"');
         }
         // format specific themeing
         $context->theme->themeSvg($context->svgDocument);

@@ -178,6 +178,7 @@ abstract class Theme
     {
         $response = new \Freesewing\Response();
         $response->addCacheHeaders($context->request);
+        $response->addHeader('Content-Type', 'Content-Type: image/svg+xml');
         $response->setFormat('raw');
         $response->setBody("{$context->svgDocument}");
 

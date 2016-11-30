@@ -70,7 +70,8 @@ class SampleService extends DraftService
             $context->addSvgDocument();
             $context->addRenderbot();
             $this->svgRender($context);
-            $context->setResponse($context->theme->themeResponse($context)); else: // channel->isValidRequest() !== true
+            $context->setResponse($context->theme->themeResponse($context)); 
+        else: // channel->isValidRequest() !== true
             $context->channel->handleInvalidRequest($context);
         endif;
 

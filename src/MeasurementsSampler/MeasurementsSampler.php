@@ -28,7 +28,7 @@ class MeasurementsSampler extends Sampler
      */
     public function loadPatternModels($group)
     {
-        $config = $this->getSamplerConfigFile($this->pattern, 'measurements');
+        $config = $this->getSamplerModelsFile($this->pattern);
         if (is_readable($config)) {
             $this->measurementsConfig = \Freesewing\Yamlr::loadYamlFile($config);
             $this->models = $this->loadModelGroup($this->modelGroupToLoad($group));
@@ -81,7 +81,7 @@ class MeasurementsSampler extends Sampler
     {
         foreach ($this->measurementsConfig['groups'][$group] as $member) {
             $model = new \Freesewing\Model();
-            $measurements = array_combine($this->pattern->config['measurements'], $this->measurementsConfig['models'][$member]);
+            $measurements = array_combine(array_keys($this->pattern->config['measurements']), $this->measurementsConfig['measurements'][$member]);
             $model->addMeasurements($measurements);
             $models[$member] = $model;
         }

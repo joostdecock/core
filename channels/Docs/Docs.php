@@ -37,7 +37,9 @@ class Docs extends Channel
             if($units['in'] == 'imperial') $factor = 25.4;
             else $factor = 10;
             foreach ($pattern->config['measurements'] as $key => $val) {
-                $measurements[$val] = $request->getData($val) * $factor;
+                $input = $request->getData($val);
+                if(isset($input) && $input !== null) $measurements[$key] = $input * $factor;
+                else $measurements[$key] = $pattern->config['measurements'][$key];
             }
             return $measurements;
         } else return null;
@@ -59,27 +61,24 @@ class Docs extends Channel
      */ 
     public function standardizePatternOptions($request, $pattern)
     {
-        $units = $pattern->getUnits();
-        if($units['in'] == 'imperial') $factor = 25.4;
-        else $factor = 10;
+        if(isset($pattern->config['options']) && is_array($pattern->config['options'])) {
+            $units = $pattern->getUnits();
+            if($units['in'] == 'imperial') $factor = 25.4;
+            else $factor = 10;
 
-        $samplerOptionConf = \Freesewing\Yamlr::loadYamlFile(\Freesewing\Utils::getClassDir($pattern).'/sampler/options.yml');
-        if(is_array($samplerOptionConf)) {
-            foreach ($samplerOptionConf as $key => $option) {
-                if ($request->getData($key) !== null) {
-                    $options[$key] = $request->getData($key);
-                } else {
-                    $options[$key] = $option['default'];
-                }
-
-                switch ($option['type']) {
+            foreach ($pattern->config['options'] as $key => $val) {
+                $input = $request->getData($key);
+                switch ($val['type']) {
                     case 'measure':
-                        $options[$key] = $options[$key] * $factor;
+                        if(isset($input) && $input !== null) $options[$key] = $input * $factor;
+                        else $options[$key] = $val['default'];
                         break;
                     case 'percent':
-                        $options[$key] = $options[$key] / 100;
+                        if(isset($input) && $input !== null) $options[$key] = $input / 100;
+                        else $options[$key] = $val['default'] / 100;
                         break;
                 }
+                
             }
             return $options;
         } else return null;

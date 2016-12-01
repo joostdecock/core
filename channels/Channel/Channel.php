@@ -65,7 +65,7 @@ abstract class Channel
      * Clean up does nothing
      *
      * By default, there's nothing to clean up. But if your channel
-     * is loggen to a database (for example), you could close that
+     * is logging to a database (for example), you could close that
      * database connection here.
      *
      * @return void Nothing

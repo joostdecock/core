@@ -91,17 +91,14 @@ class DraftService
     protected function svgRender($context)
     {
         $scale = 3.54330709;
+        $context->svgDocument->svgAttributes->add('width ="'. ($context->pattern->getWidth() * $scale) .'"'); 
+        $context->svgDocument->svgAttributes->add('height ="'. ($context->pattern->getHeight() * $scale) .'"');
+        
         $viewbox = $context->request->getData('viewbox');
-
         if($viewbox !== null) {
             $viewbox = Utils::asScrubbedArray($viewbox,',');
-            $scale = $context->request->getData('scale');
-            $context->svgDocument->svgAttributes->add('width ="'.$viewbox[2].'mm"');
-            $context->svgDocument->svgAttributes->add('height ="'.$viewbox[3].'mm"');
             $context->svgDocument->svgAttributes->add('viewbox ="'.$viewbox[0].' '.$viewbox[1].' '.$viewbox[2].' '.$viewbox[3].'"');     
         } else {
-            $context->svgDocument->svgAttributes->add('width ="'. ($context->pattern->getWidth() * $scale) .'"'); 
-            $context->svgDocument->svgAttributes->add('height ="'. ($context->pattern->getHeight() * $scale) .'"');
             $context->svgDocument->svgAttributes->add('viewbox ="0 0 '. ($context->pattern->getWidth() * $scale).' '. ($context->pattern->getHeight() * $scale) .'"');
         }
         // format specific themeing

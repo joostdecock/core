@@ -24,15 +24,7 @@ class OptionsSampler extends Sampler
      */
     public function loadModelMeasurements()
     {
-        $config = $this->getSamplerConfigFile($this->pattern, 'measurements');
-        if (is_readable($config)) {
-            $measurements = \Freesewing\Yamlr::loadYamlFile($config);
-            $default = $measurements['default']['model'];
-
-            return array_combine($this->pattern->config['measurements'], $measurements['models'][$default]);
-        } else {
-            throw new \InvalidArgumentException("Could not read sampler configuration");
-        }
+        return $this->pattern->config['measurements'];
     }
 
     /**
@@ -46,14 +38,10 @@ class OptionsSampler extends Sampler
      */
     private function loadOptionToSample($option)
     {
-        $config = $this->getSamplerConfigFile($this->pattern, 'options');
-        if (is_readable($config)) {
-            $options = \Freesewing\Yamlr::loadYamlFile($config);
-            if (isset($options[$option])) {
-                return $options[$option];
-            }
-        }
-        throw new \InvalidArgumentException("Could not read sampler configuration");
+        $config = $this->pattern->getConfig();
+        $options = $config['options'];
+    
+        if (isset($options[$option])) return $options[$option];
     }
 
     /**

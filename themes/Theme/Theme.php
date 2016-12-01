@@ -61,7 +61,7 @@ abstract class Theme
      */
     public function getOption($key)
     {
-        return $this->options[$key];
+        return @$this->options[$key];
     }
 
     /**

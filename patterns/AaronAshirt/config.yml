@@ -9,32 +9,68 @@ info:
 parts:
     frontBlock: "Front block"
     backBlock: "Back block"
-    front: Front
-    back: Back
+    front: "Front"
+    back: "Back"
 languages:
-    en: English
-    nl: Nederlands
+    en: "English"
+    nl: "Nederlands"
 measurements:
-    - acrossBack
-    - bicepsCircumference
-    - centerBackNeckToWaist
-    - chestCircumference
-    - naturalWaistToHip
-    - neckCircumference
-    - shoulderLength
-    - shoulderSlope
-    - hipsCircumference
+    acrossBack: 450
+    bicepsCircumference: 335
+    centerBackNeckToWaist: 480
+    chestCircumference: 1080
+    naturalWaistToHip: 120
+    neckCircumference: 420
+    shoulderLength: 160
+    shoulderSlope: 40
+    hipsCircumference: 950
 options:
-    - chestEase
-    - armholeDrop
-    - lengthBonus
-    - necklineBend
-    - backlineBend
-    - necklineDrop
-    - shoulderStrapWidth
-    - shoulderStrapPlacement
-    - stretchFactor
-    - hipsEase
+    chestEase:
+        type: "measure"
+        min: -40
+        max: 160
+        default: 30
+    armholeDrop:
+        type: "measure"
+        min: -20
+        max: 200
+        default: 30
+    lengthBonus:
+        type: "measure"
+        min: -120
+        max: 200
+        default: 60
+    necklineBend:
+        type: "percent"
+        default: 100
+    backlineBend:
+        type: "percent"
+        default: 30
+    necklineDrop:
+        type: "measure"
+        min: 40
+        max: 200
+        default: 120
+    shoulderStrapWidth:
+        type: "measure"
+        min: 10
+        max: 80
+        default: 40
+    shoulderStrapPlacement:
+        type: "percent"
+        min: 0
+        max: 100
+        default: 45
+    stretchFactor:
+        type: "percent"
+        min: 70
+        max: 100
+        default: 90
+    hipsEase:
+        type: "measure"
+        min: -40
+        max: 160
+        default: 60
 inMemoryOf:   
     name: "Aaron Swartz"
     link: "https://en.wikipedia.org/wiki/Aaron_Swartz"

@@ -1,4 +1,4 @@
-var api = 'http://api.freesewing.org';
+var api = 'https://api.freesewing.org';
 var themes = [];
 var spinner =  '<img src="spinner.gif">';
 
@@ -96,14 +96,14 @@ function loadPatternInfo(pattern) {
         $('#patterninfo-col3').append( "<h3>Measurements</h3>");
         $('#patterninfo-col3').append( "<ul id='patterninfo-col3-ul'></ul>");
         $.each( data['measurements'], function( key, val ) {
-            $("#patterninfo-col3-ul").append( "<li><b>" + val + "</b></li>" );
+            $("#patterninfo-col3-ul").append( "<li><b>" + key + "</b></li>" );
         });
 
         $('#patternrow1').append( "<div class='col-md-3' id='patterninfo-col4'></div>");
         $('#patterninfo-col4').append( "<h3>Sampling</h3>");
         $('#patterninfo-col4').append( "<p>These groups are defined for sampling measurements:</p>");
         $('#patterninfo-col4').append( "<ul id='patterninfo-col4-ul'></ul>");
-        $.each( data['sampler']['measurements']['groups'], function( key, val ) {
+        $.each( data['models']['groups'], function( key, val ) {
             $("#patterninfo-col4-ul").append( "<li><b>" + key + "</b></li>" );
         });
         $('#patterninfo-col4').append( "<p>Measurements and options sampling is available in the <b>sample</b> service</p>");
@@ -113,7 +113,7 @@ function loadPatternInfo(pattern) {
         $('#patternrow2').append( "<div class='col-md-9' id='patterninfo-col5'></div>");
         $('#patterninfo-col5').append( "<h3>Options</h3>");
         $('#patterninfo-col5').append( "<div id='patterninfo-col5-div'></div>");
-        $.each( data['sampler']['options'], function( key, val ) {
+        $.each( data['options'], function( key, val ) {
             if(val['type'] == 'measure') values = "and expects a value between <span class='label label-warning'>" + val['min'] + "</span> and <span class='label label-warning'>" + val['max'] + "</span> Its default is <span class='label label-success'>" + val['default'] + "</span";
             if(val['type'] == 'percent') values = " so it expects a value between 0 and 100. Its default is " + val['default'];
             if(val['type'] == 'chooseOne') {
@@ -173,11 +173,12 @@ function loadDraft(pattern) {
         $('#col3').append( '<table class="table mmp-form" id="col3-table"><tr class="heading"> <td colspan="2">General</td> </tr></table>');
         $('#col4').append( '<table class="table mmp-form" id="col4-table"><tr class="heading"> <td colspan="2">Submit</td> </tr></table>');
 
-        var model = data['sampler']['measurements']['default']['model'];
+        var model = data['models']['default']['model'];
         $.each( data['measurements'], function( key, val ) {
-            $('#col1-table').append( formRow('input', val, data['sampler']['measurements']['models'][model][key], 'metric'));
+            console.log(key);
+            $('#col1-table').append( formRow('input', key, data['measurements'][key], 'metric'));
         });
-        $.each( data['sampler']['options'], function( key, val ) {
+        $.each( data['options'], function( key, val ) {
             if(val['type'] == 'chooseOne') $('#col2-table').append( formRow('chooseOne', key, val, ''));
             else $('#col2-table').append( formRow('input', key, val, 'metric'));
         });
@@ -216,11 +217,11 @@ function loadSample(pattern) {
         $('#col1').append( '<ul id="col1-list"></ul>');
         $('#col2').append( '<h3>Sample options</h3>');
         $('#col2').append( '<ul id="col2-list"></ul>');
-        $.each( data['sampler']['measurements']['groups'], function( key, val ) {
+        $.each( data['models']['groups'], function( key, val ) {
 
             $('#col1-list').append( '<li><a href="'+api+'/sample/'+pattern+'/measurements/?samplerGroup='+key+'" target="_BLANK">'+key+'</a> ('+val.length+' models)</li>');
         });
-        $.each( data['sampler']['options'], function( key, val ) {
+        $.each( data['options'], function( key, val ) {
             $('#col2-list').append( '<li><a href="'+api+'/sample/'+pattern+'/options/'+key+'/" target="_BLANK">'+key+'</a></li>');
         });
     });

@@ -86,7 +86,7 @@ class Info
         $html .= "<h3>Patterns</h3>\n";
         $html .= '<ul class="patternlist">';
         foreach ($list['patterns'] as $name => $title) {
-            $html .= "\n<li class=\"pattern\"><a data-info=\"/info/$name/html\">$title</a></li>";
+            $html .= "\n<li class=\"pattern\">$title</li>";
         }
         $html .= "\n</ul>";
         $html .= "<h3>Channels</h3>\n";
@@ -136,29 +136,52 @@ class Info
 
         $html .= "\n\t<h4>Measurements list</h4>";
         $html .= "\n\t<ul>";
-        foreach ($list['measurements'] as $value) {
-            $html .= "\n\t\t<li>$value</li>";
+        foreach ($list['measurements'] as $key => $value) {
+            $html .= "\n\t\t<li><b>$key</b>  <small>(default  &raquo; $value"."mm)</small></li>";
         }
         $html .= "\n\t</ul>";
 
         $html .= "\n\t<h4>Options list</h4>";
         $html .= "\n\t<ul>";
-        foreach ($list['options'] as $value) {
-            $html .= "\n\t\t<li>$value</li>";
+        foreach ($list['options'] as $key => $value) {
+            $html .= "\n\t\t<li>$key<ul><li>Type &raquo; ".$value['type']."</li>";
+            switch($value['type']) {
+                case 'measure':
+                    $html .= "<li>Min &raquo; ".$value['min']."</li>
+                        <li>Max &raquo; ".$value['max']."</li>
+                        <li>Default &raquo; ".$value['default']."</li>";
+                    break;
+                case 'percent':
+                    $html .= "<li>Default &raquo; ".$value['default']."</li>";
+                    break;
+            }
+            $html .= "</ul></li>";
         }
         $html .= "\n\t</ul>";
 
-        $html .= "\n\t<h4>Sampler</h4>";
-        $html .= "\n\t<h5>Measurements</h5>";
+        $html .= "\n\t<h4>Model list</h4>";
+        $html .= "\n\t<h5>Defaults</h5>";
         $html .= "\n\t<ul>";
-        foreach ($list['sampler']['measurements']['groups'] as $key => $value) {
-            $html .= "\n\t\t<li><a data-sample=\"/sample/$pattern/measurements/$key\">$key</a></li>";
+        foreach ($list['models']['default'] as $key => $value) {
+            $html .= "\n\t\t<li>$key</li>";
         }
         $html .= "\n\t</ul>";
-        $html .= "\n\t<h5>Options</h5>";
+
+        $html .= "\n\t<h5>Groups</h5>";
         $html .= "\n\t<ul>";
-        foreach ($list['sampler']['options'] as $key => $value) {
-            $html .= "\n\t\t<li><a data-sample=\"/sample/$pattern/options/$key/\">$key</a></li>";
+        foreach ($list['models']['groups'] as $key => $value) {
+            $html .= "\n\t\t<li>$key<ul>";
+            foreach ($value as $mkey => $mvalue) $html .= "\n\t\t\t<li>$mvalue</li>";
+            $html .= "</ul></li>";
+        }
+        $html .= "\n\t</ul>";
+
+        $html .= "\n\t<h5>Models</h5>";
+        $html .= "\n\t<ul>";
+        foreach ($list['models']['measurements'] as $key => $value) {
+            $html .= "\n\t\t<li>$key<ul>";
+            foreach ($value as $mkey => $mvalue) $html .= "\n\t\t\t<li>$mkey &raquo; $mvalue</li>";
+            $html .= "</ul></li>";
         }
         $html .= "\n\t</ul>";
 

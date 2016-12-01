@@ -1,0 +1,84 @@
+default: 
+    model: joost
+    group: maleStandardUsSizes
+groups:
+    realMen:
+        - joost
+    maleStandardUsSizes:
+        - usSize34
+        - usSize36
+        - usSize38
+        - usSize40
+        - usSize42
+        - usSize44
+measurements:
+    joost:
+        acrossBack:             450
+        bicepsCircumference:    335
+        centerBackNeckToWaist:  480
+        chestCircumference:    1080
+        naturalWaistToHip:      120
+        neckCircumference:      420
+        shoulderLength:         160
+        shoulderSlope:           40
+        hipsCircumference:      950
+    usSize34:
+        acrossBack:             380
+        bicepsCircumference:    275
+        centerBackNeckToWaist:  489
+        chestCircumference:     849
+        naturalWaistToHip:      120
+        neckCircumference:      366
+        shoulderLength:         148
+        shoulderSlope:           43
+        hipsCircumference:      722
+    usSize36:
+        acrossBack:             390
+        bicepsCircumference:    290
+        centerBackNeckToWaist:  492
+        chestCircumference:     907
+        naturalWaistToHip:      120
+        neckCircumference:      378
+        shoulderLength:         151
+        shoulderSlope:           46
+        hipsCircumference:      780
+    usSize38:
+        acrossBack:             400
+        bicepsCircumference:    305
+        centerBackNeckToWaist:  495
+        chestCircumference:     965
+        naturalWaistToHip:      120
+        neckCircumference:      391
+        shoulderLength:         154
+        shoulderSlope:           49
+        hipsCircumference:      838
+    usSize40:
+        acrossBack:             410
+        bicepsCircumference:    320
+        centerBackNeckToWaist:  498
+        chestCircumference:    1023
+        naturalWaistToHip:      120
+        neckCircumference:      404
+        shoulderLength:         157
+        shoulderSlope:           52
+        hipsCircumference:      896
+    usSize42:
+        acrossBack:             420
+        bicepsCircumference:    335
+        centerBackNeckToWaist:  501
+        chestCircumference:    1081
+        naturalWaistToHip:      120
+        neckCircumference:      416
+        shoulderLength:         160
+        shoulderSlope:           55
+        hipsCircumference:      954
+    usSize44:
+        acrossBack:             420
+        bicepsCircumference:    350
+        centerBackNeckToWaist:  505
+        chestCircumference:    1139
+        naturalWaistToHip:      120
+        neckCircumference:      429
+        shoulderLength:         163
+        shoulderSlope:           58
+        hipsCircumference:     1012

@@ -190,7 +190,7 @@ class Polynomial
         switch($this->getDegree()) {
             case 0: $result = array(); break;
             case 1: $result = $this->getLinearRoot(); break;
-            case 2: $result = $this->getQuadraticRoots(); break;
+            case 2: $result = $this->getQuadraticRoots();  break;
             case 3: $result = $this->getCubicRoots(); break;
             case 4: $result = $this->getQuarticRoots(); break;
             default: $result = array(); // Not implemented

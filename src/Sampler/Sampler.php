@@ -51,13 +51,9 @@ class Sampler
      *
      * @return string the filename
      */
-    public function getSamplerConfigFile($pattern, $mode)
+    public function getSamplerModelsFile($pattern)
     {
-        if ($mode == 'options') {
-            return Utils::getClassDir($pattern).'/sampler/options.yml';
-        } else {
-            return Utils::getClassDir($pattern).'/sampler/measurements.yml';
-        }
+        return Utils::getClassDir($pattern).'/sampler/models.yml';
     }
 
     /**
@@ -93,21 +89,16 @@ class Sampler
      */
     public function loadPatternOptions()
     {
-        $config = $this->getSamplerConfigFile($this->pattern, 'options');
-        if (is_readable($config)) {
-            $options = \Freesewing\Yamlr::loadYamlFile($config);
-            foreach ($options as $key => $option) {
-                if ($option['type'] == 'percent') {
-                    $this->options[$key] = $option['default'] / 100;
-                } else {
-                    $this->options[$key] = $option['default'];
-                }
+        $config = $this->pattern->getConfig();
+        $options = $config['options'];
+        foreach ($options as $key => $option) {
+            if ($option['type'] == 'percent') {
+                $this->options[$key] = $option['default'] / 100;
+            } else {
+                $this->options[$key] = $option['default'];
             }
-
-            return $this->options;
-        } else {
-            return false;
         }
+        return $this->options;
     }
 
     /**

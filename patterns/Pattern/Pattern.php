@@ -118,6 +118,16 @@ abstract class Pattern
     }
 
     /**
+     * Returns the sampler model file
+     *
+     * @return string $models The sampler model file
+     */
+    public function getSamplerModelFile()
+    {
+        return \Freesewing\Utils::getClassDir($this).'/sampler/models.yml';
+    }
+
+    /**
      * Returns the pattern configuration
      *
      * This loads the configation Yaml file and returns it as an array
@@ -129,6 +139,20 @@ abstract class Pattern
     public function getConfig()
     {
         return $this->config;
+    }
+
+    /**
+     * Returns the sampler model configuration
+     *
+     * This loads the sampler/models.yml Yaml file and returns it as an array
+     *
+     * @throws Exception If the Yaml file is invalid
+     *
+     * @return array The sampler models
+     */
+    public function getSamplerModels()
+    {
+        return \Freesewing\Yamlr::loadYamlFile($this->getSamplerModelFile());
     }
 
     /**
@@ -615,6 +639,23 @@ abstract class Pattern
         }
 
         return $translations;
+    }
+
+    /**
+     * Returns list of sampler files
+     *
+     * @return array $files An array of sampler config files
+     */
+    public function getSamplerModelFiles()
+    {
+        $locations = $this->getClassChain();
+        $files = array();
+        foreach (array_reverse($locations) as $location) {
+            $file = "$location/sampler/models.yml";
+            if (is_readable($file)) $files[] = $file;
+        }
+
+        return $files;
     }
 
     /**

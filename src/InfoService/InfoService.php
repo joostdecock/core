@@ -141,11 +141,9 @@ class InfoService
     private function getPatternInfo($pattern)
     {
         $info = $pattern->getConfig();
-        $sampler = new \Freesewing\Sampler();
-        $info['sampler']['measurements'] = \Freesewing\Yamlr::loadYamlFile($sampler->getSamplerConfigFile($pattern, 'measurements'));
-        $info['sampler']['options'] = \Freesewing\Yamlr::loadYamlFile($sampler->getSamplerConfigFile($pattern, 'options'));
+        $info['models'] = $pattern->getSamplerModels();
         $info['pattern'] = basename(Utils::getClassDir($pattern));
-
+        
         return $info;
     }
 }

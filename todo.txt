@@ -1,7 +1,10 @@
 Check for improvements in boxer pattern. Rise is not used, plus seam length does not match
 Only use naturalWaist, hips, and seat for circumference in the waist/bum area
 Make demo select default option in dropdown (chooseOne)
-Include measurements in sampler files from parent patterns
 Hood opening replaced with head circumference
 Create compare service which is draft+sample
 Make missing measurements/options fall back to defaults (in channel?)
+Rework config files for other patterns, see AaronAshirt
+Viewbox seems broken
+Include measurements in sampler files from parent patterns
+

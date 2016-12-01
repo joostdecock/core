@@ -1,0 +1,20 @@
+default:
+    model: cathrin
+    group: realWomen
+groups:
+    realWomen:
+        - cathrin
+        - sorcha
+measurements:
+    cathrin:
+        underBust:               720
+        naturalWaist:            640
+        hips:                    800
+        naturalWaistToUnderbust: 100
+        naturalWaistToHips:      160
+    sorcha:
+        underBust:               730
+        naturalWaist:            840
+        hips:                   1000
+        naturalWaistToUnderbust:  90
+        naturalWaistToHips:      200

@@ -15,10 +15,20 @@ languages:
     en: English
     nl: Nederlands
 measurements:
-    - hipsCircumference
-    - upperLegCircumference
-    - crossseamLength
+    hipsCircumference: 960
+    upperLegCircumference: 600
+    crossseamLength: 670
 options:
-    - rise
-    - verticalStretchFactor
-    - horizontalStretchFactor
+    rise:
+        type: "measure"
+        min: 0
+        max: 80
+        default: 35
+
+    verticalStretchFactor:
+        type: "percent"
+        default: 90
+
+    horizontalStretchFactor:
+        type: "percent"
+        default: 80

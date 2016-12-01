@@ -1,0 +1,42 @@
+default: 
+    model: joost
+    group: maleStandardUsSizes
+groups:
+    realMen:
+        - joost
+    maleStandardUsSizes:
+        - usSize34
+        - usSize36
+        - usSize38
+        - usSize40
+        - usSize42
+        - usSize44
+measurements:
+    joost:
+        hipsCircumference:     960
+        upperLegCircumference: 600
+        crossseamLength:       670
+    usSize34:
+        hipsCircumference:     722
+        upperLegCircumference: 520
+        crossseamLength:       590
+    usSize36:
+        hipsCircumference:     780
+        upperLegCircumference: 540
+        crossseamLength:       610
+    usSize38:
+        hipsCircumference:     838
+        upperLegCircumference: 560
+        crossseamLength:       630
+    usSize40:
+        hipsCircumference:     896
+        upperLegCircumference: 580
+        crossseamLength:       650
+    usSize42:
+        hipsCircumference:     954
+        upperLegCircumference: 600
+        crossseamLength:       670
+    usSize44:
+        hipsCircumference:    1012
+        upperLegCircumference: 620
+        crossseamLength:       690

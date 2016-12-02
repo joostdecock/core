@@ -44,10 +44,9 @@ class Sampler
     }
 
     /**
-     * Returns file name of the sampler config file
+     * Returns file names of the sampler models files
      *
      * @param \Freesewing\Pattern or equivalent $pattern
-     * @param string $mode options|measurements
      *
      * @return string the filename
      */

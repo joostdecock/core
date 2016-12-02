@@ -27,24 +27,40 @@ languages:
     nl: Nederlands
 
 measurements:
-    - acrossBack
-    - bicepsCircumference
-    - centerBackNeckToWaist
-    - chestCircumference
-    - hipsCircumference
-    - naturalWaistToHip
-    - neckCircumference
-    - shoulderLength
-    - shoulderSlope
-    - sleeveLengthToWrist  
-    - wristCircumference
-    - headCircumference
+    acrossBack: 450
+    bicepsCircumference: 335
+    centerBackNeckToWaist: 480
+    chestCircumference: 1080
+    naturalWaistToHip: 120
+    neckCircumference: 420
+    shoulderLength: 160
+    shoulderSlope: 40
+    hipsCircumference: 950
+    sleeveLengthToWrist: 700  
+    wristCircumference: 190
+    headCircumference: 590
 
 options:
-    - chestEase
-    - bicepsEase
-    - cuffEase
-    - ribbingStretchFactor
+    chestEase:
+        type: measure
+        min: -40
+        max: 160
+        default: 30
+    bicepsEase:
+        type: measure
+        min: 0
+        max: 80
+        default: 30
+    cuffEase:
+        type: measure
+        min: 0
+        max: 100
+        default: 45
+    ribbingStretchFactor:
+        type: percent
+        min: 70
+        max: 100
+        default: 85
 
 inMemoryOf:   
     name: "Hugo De Cock"

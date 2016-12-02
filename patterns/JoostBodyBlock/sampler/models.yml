@@ -1,11 +1,9 @@
 default: 
-    model: joost
     group: maleStandardUsSizes
 groups:
     realMen:
         - joost
     maleStandardUsSizes:
-        - joost
         - usSize34
         - usSize36
         - usSize38
@@ -93,3 +91,21 @@ measurements:
         usSize40:  896
         usSize42:  954
         usSize44: 1012
+    
+    sleeveLengthToWrist:
+        joost   : 700
+        usSize34: 670
+        usSize36: 675
+        usSize38: 680
+        usSize40: 685
+        usSize42: 690
+        usSize44: 700
+    
+    wristCircumference:
+        joost   : 190
+        usSize34: 170
+        usSize36: 180
+        usSize38: 185
+        usSize40: 190
+        usSize42: 195
+        usSize44: 200

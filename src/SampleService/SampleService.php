@@ -63,6 +63,7 @@ class SampleService extends DraftService
 
                 $context->pattern->addOptions($context->measurementsSampler->loadPatternOptions());
 
+                $context->measurementsSampler->setModelConfig($context->pattern->getSamplerModelConfig());
                 $context->measurementsSampler->loadPatternModels($context->request->getData('samplerGroup'));
                 $context->setPattern($context->measurementsSampler->sampleMeasurements($context->theme));
             }

@@ -646,16 +646,32 @@ abstract class Pattern
      *
      * @return array $files An array of sampler config files
      */
-    public function getSamplerModelFiles()
+    private function getSamplerModelFiles()
     {
         $locations = $this->getClassChain();
         $files = array();
-        foreach (array_reverse($locations) as $location) {
+        foreach ($locations as $location) {
             $file = "$location/sampler/models.yml";
             if (is_readable($file)) $files[] = $file;
         }
 
         return $files;
+    }
+
+    /**
+     * Returns list of sampler files
+     *
+     * @return array $files An array of sampler config files
+     */
+    public function getSamplerModelConfig()
+    {
+        $files = $this->getSamplerModelFiles(); // HERE
+        $data = array();
+        foreach ($files as $file) {
+            $data = array_merge_recursive($data, \Freesewing\Yamlr::loadYamlFile($file));
+        }
+
+        return $data;
     }
 
     /**

@@ -17,6 +17,11 @@ namespace Freesewing;
 class MeasurementsSampler extends Sampler
 {
 
+    public function setModelConfig($config)
+    {
+        $this->modelConfig = $config;
+    }
+
     /**
      * Loads models for which we'll sampler the pattern.
      *
@@ -28,15 +33,17 @@ class MeasurementsSampler extends Sampler
      */
     public function loadPatternModels($group)
     {
-        $config = $this->getSamplerModelsFile($this->pattern);
-        if (is_readable($config)) {
-            $this->measurementsConfig = \Freesewing\Yamlr::loadYamlFile($config);
-            $this->models = $this->loadModelGroup($this->modelGroupToLoad($group));
-
-            return $this->models;
-        } else {
-            throw new \InvalidArgumentException("Could not read sampler configuration");
+        // Does this group even exist?
+        if(!is_array($this->modelConfig['groups'][$group]) || count($config['groups'][$group] == 0)) { 
+            // It doesn't
+            // Do we have multiple defaults from extended patterns?
+            if(is_array($this->modelConfig['default']['group'])) $group = $this->modelConfig['default']['group'][0]; 
+            else $group = $this->modelConfig['default']['group'];
         }
+            
+        $this->models = $this->loadModelGroup($group);
+              
+        return $this->models;
     }
 
     /**
@@ -71,21 +78,24 @@ class MeasurementsSampler extends Sampler
     }
 
     /**
-     * Loads models from the sampler config file.
+     * Structures models for consumption by the sampler 
      *
-     * @param string group Name of the model group as defined in sampler config
+     * @param string $group Name of the model group as defined in sampler config
      *
      * @return array Array of models
      */
     private function loadModelGroup($group)
     {
-        foreach ($this->measurementsConfig['groups'][$group] as $member) {
+        foreach ($this->modelConfig['groups'][$group] as $member) {
             $model = new \Freesewing\Model();
-            $measurements = array_combine(array_keys($this->pattern->config['measurements']), $this->measurementsConfig['measurements'][$member]);
+            foreach($this->modelConfig['measurements'] as $mKey => $mModels) {
+                $measurements[$mKey] = $mModels[$member];
+            }
             $model->addMeasurements($measurements);
+            unset($measurements);
             $models[$member] = $model;
         }
-
+        
         return $models;
     }
 

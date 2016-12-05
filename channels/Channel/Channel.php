@@ -19,12 +19,16 @@ abstract class Channel
 
     /**
      * Constructor loads the Yaml config into the config property
+     * 
+     * Note that by default, a channel has no config file.
+     * This is just here for extensibility
      *
      * @throws InvalidArgument if the Yaml file is not valid
      */
     public function __construct()
     {
-        $this->config = \Freesewing\Yamlr::loadYamlFile(\Freesewing\Utils::getClassDir($this).'/config.yml');
+        $file = \Freesewing\Utils::getClassDir($this).'/config.yml';
+        if(is_readable($file)) $this->config = \Freesewing\Yamlr::loadYamlFile($file);
     }
 
     /**

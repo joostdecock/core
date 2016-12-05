@@ -2,7 +2,7 @@ default:
     group: maleStandardUsSizes
 groups:
     realMen:
-        - joost
+        - usSize44
     maleStandardUsSizes:
         - usSize34
         - usSize36
@@ -18,7 +18,7 @@ measurements:
         usSize38: 400
         usSize40: 410
         usSize42: 420
-        usSize44: 420
+        usSize44: 430
     
     bicepsCircumference:
         joost   : 335

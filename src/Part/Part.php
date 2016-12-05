@@ -592,7 +592,19 @@ class Part
                 $s2['offset'][0], 
                 $s2['offset'][1]
             );
-            if($i) $intersections = $this->keyArray(array($i), 'intersection-');
+            if($i) {
+                foreach($i as $key => $point) { // Ignore intersections at line end points
+                    if(
+                        Utils::isSamePoint($point, $this->loadPoint($s1['offset'][0])) OR
+                        Utils::isSamePoint($point, $this->loadPoint($s1['offset'][1])) OR
+                        Utils::isSamePoint($point, $this->loadPoint($s2['offset'][0])) OR
+                        Utils::isSamePoint($point, $this->loadPoint($s2['offset'][1]))
+                    ) {
+                        unset($i[$key]);
+                    } 
+                } 
+                $intersections = $this->keyArray(array($i), 'intersection-');
+            }
         }
         else if($s1['type'] == 'curve'    && $s2['type'] == 'curve') { // 2 curves
             if(
@@ -609,7 +621,19 @@ class Part
                     $this->loadPoint($s2['offset'][2]), 
                     $this->loadPoint($s2['offset'][3])
                 );
-                if($i) $intersections = $this->keyArray($i, 'intersection-');
+                if($i) {
+                    foreach($i as $key => $point) { // Ignore intersections at curve end points
+                        if(
+                            Utils::isSamePoint($point, $this->loadPoint($s1['offset'][0])) OR
+                            Utils::isSamePoint($point, $this->loadPoint($s1['offset'][3])) OR
+                            Utils::isSamePoint($point, $this->loadPoint($s2['offset'][0])) OR
+                            Utils::isSamePoint($point, $this->loadPoint($s2['offset'][3]))
+                        ) {
+                           unset($i[$key]);
+                        } 
+                    } 
+                    $intersections = $this->keyArray($i, 'intersection-');
+                }
             }
         }
         else if($s1['type'] == 'line'    && $s2['type'] == 'curve') { // 1 line, 1 curve
@@ -622,7 +646,19 @@ class Part
                     $this->loadPoint($s2['offset'][2]), 
                     $this->loadPoint($s2['offset'][3])
                 );
-                if($i) $intersections = $this->keyArray($i, 'intersection-');
+                if($i) {
+                    foreach($i as $key => $point) { // Ignore intersections at line/curve end points
+                        if(
+                            Utils::isSamePoint($point, $this->loadPoint($s1['offset'][0])) OR
+                            Utils::isSamePoint($point, $this->loadPoint($s1['offset'][1])) OR
+                            Utils::isSamePoint($point, $this->loadPoint($s2['offset'][0])) OR
+                            Utils::isSamePoint($point, $this->loadPoint($s2['offset'][3]))
+                        ) {
+                            unset($i[$key]);
+                        } 
+                    } 
+                    $intersections = $this->keyArray($i, 'intersection-');
+                }
             }
         } else { // 1 curve, 1 line
             if($this->curveLen($s1['offset'][0], $s1['offset'][1], $s1['offset'][2], $s1['offset'][3]) > 10) {
@@ -634,7 +670,19 @@ class Part
                     $this->loadPoint($s2['offset'][0]), 
                     $this->loadPoint($s2['offset'][1]) 
                 );
-                if($i) $intersections = $this->keyArray($i, 'intersection-');
+                if($i) {
+                    foreach($i as $key => $point) { // Ignore intersections at line/curve end points
+                        if(
+                            Utils::isSamePoint($point, $this->loadPoint($s1['offset'][0])) OR
+                            Utils::isSamePoint($point, $this->loadPoint($s1['offset'][3])) OR
+                            Utils::isSamePoint($point, $this->loadPoint($s2['offset'][0])) OR
+                            Utils::isSamePoint($point, $this->loadPoint($s2['offset'][1]))
+                        ) {
+                            unset($i[$key]);
+                        } 
+                    } 
+                    $intersections = $this->keyArray($i, 'intersection-');
+                }
             }
         }
         return $intersections;
@@ -841,7 +889,10 @@ class Part
                         $stack->replace($chunk, $new);
                     }
                 } elseif ($chunk['type'] == 'curve' && $next['type'] == 'curve') {
-                    if (!$this->isSamePoint($chunk['offset'][3], $next['offset'][0])) { // Gap to fill
+                    if (
+                        !$this->isSamePoint($chunk['offset'][3], $next['offset'][0]) &&
+                        $this->curveLen($next['offset'][0], $next['offset'][1],  $next['offset'][2],  $next['offset'][3]) > 0
+                    ) { // Gap to fill
                         if($this->isSamePoint($chunk['offset'][2], $chunk['offset'][3])) { 
                             // Quadratic Bezier, shift a tiny bit along the curve to get a different point
                             $this->addPoint('.helpChunk', $this->shiftAlong($chunk['offset'][3], $chunk['offset'][2],  $chunk['offset'][1],  $chunk['offset'][0], 0.5));
@@ -1435,6 +1486,7 @@ class Part
             $previousY = $y;
         }
         /* We only arrive here if the curve is shorter than the requested distance */
+//        echo \Freesewing\Utils::debug(debug_backtrace());
         throw new \InvalidArgumentException('Ran out of curve to move along');
     }
 

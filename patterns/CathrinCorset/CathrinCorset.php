@@ -161,7 +161,7 @@ class CathrinCorset extends Pattern
                 if($i == 1) $msg =  $this->t('Cut 1 on fold');
                 else $msg = $this->t('Cut 2');
                 $p->addTitle("titleAnchor$i", $i, $this->t('Panel')." $i", $msg, 'vertical');
-                $p->offsetPathString($part, $this->{"path$i"}, 10, 1, ['class' => 'seam-allowance']);
+                $p->offsetPathString($part.'-sa', $this->{"path$i"}, 10, 1, ['class' => 'seam-allowance']);
 
             }
         }
@@ -170,7 +170,7 @@ class CathrinCorset extends Pattern
         $this->finalizePanel3($model,$this->parts['panel3']);
         if(isset($this->parts['panel4'])) $this->finalizePanel4($model,$this->parts['panel4']);
         $this->finalizePanel5($model,$this->parts['panel5']);
-        $this->finalizePanel5($model,$this->parts['panel5']);
+        $this->finalizePanel6($model,$this->parts['panel6']);
         $this->finalizePanel7($model,$this->parts['panel7']);
     }
 
@@ -419,13 +419,17 @@ class CathrinCorset extends Pattern
         $p->curveCrossesX(50,51,52,5,$p->x(402), '420-'); // Intersection in 420-1
         $p->addSplitCurve('410-1','411-3','411-2',50,'420-1','421-'); 
         /* Where does the right edge cut through top curve */
-        $p->curveCrossesX(50,51,52,5,$p->x(501), '510-'); // Intersection in 420-1
+        $p->curveCrossesX(50,51,52,5,$p->x(501), '510-'); // Intersection in 510-1
         $p->addSplitCurve('420-1','421-7','421-6',50,'510-1','421-'); 
+        if($this->o('backRise') == 0) {
+        $this->path6 = 'M 541 C 543 503 501 L 402 C 404 444 442 '. $this->path6;
+        } else {
         $this->path6 = 'M 541 C 543 503 501 L 510-1 C 421-3 421-2 420-1 L 402 C 404 444 442 '. $this->path6;
         // We need to left edge and control point to keep the same height
         $deltaY = $p->deltaY('410-1','420-1');
         $p->addPoint('420-1', $p->shift('420-1',90,$deltaY));
         $p->addPoint('421-2', $p->shift('421-2',90,$deltaY));
+        }
         // Where does gap center cut through bottom curve 
         $p->curveCrossesX(30,32,41,40,$p->x(580), '590-'); // Intersection in 490-1
         $p->addSplitCurve(40,'491-2','491-3','490-1','590-1','591-'); 
@@ -435,7 +439,7 @@ class CathrinCorset extends Pattern
             $this->path6 .= 'C 591-6 591-7 592-1 C 592-1 545 541 z'; 
         } else { // dart is closed at edge. Easy! :) 
             $this->path6 .= 'C 591-6 591-7 590-1 L 580 C 580 543 541 z'; 
-        } 
+        }
         /* Title anchor */
         $p->newPoint('titleAnchor6', $p->x(540)-$p->deltaX(440,540)/2, $p->y('titleAnchor2'), 'Title anchor panel 6');
         /* Grid anchor */

@@ -141,7 +141,7 @@ class InfoService
     private function getPatternInfo($pattern)
     {
         $info = $pattern->getConfig();
-        $info['models'] = $pattern->getSamplerModels();
+        $info['models'] = $pattern->getSamplerModelConfig();
         $info['pattern'] = basename(Utils::getClassDir($pattern));
         
         return $info;

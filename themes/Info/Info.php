@@ -134,14 +134,14 @@ class Info
         }
         $html .= "\n\t</ul>";
 
-        $html .= "\n\t<h4>Measurements list</h4>";
+        $html .= "\n\t<h4>Measurements</h4>";
         $html .= "\n\t<ul>";
         foreach ($list['measurements'] as $key => $value) {
             $html .= "\n\t\t<li><b>$key</b>  <small>(default  &raquo; $value"."mm)</small></li>";
         }
         $html .= "\n\t</ul>";
 
-        $html .= "\n\t<h4>Options list</h4>";
+        $html .= "\n\t<h4>Options</h4>";
         $html .= "\n\t<ul>";
         foreach ($list['options'] as $key => $value) {
             $html .= "\n\t\t<li>$key<ul><li>Type &raquo; ".$value['type']."</li>";
@@ -159,11 +159,11 @@ class Info
         }
         $html .= "\n\t</ul>";
 
-        $html .= "\n\t<h4>Model list</h4>";
+        $html .= "\n\t<h4>Sampler models</h4>";
         $html .= "\n\t<h5>Defaults</h5>";
         $html .= "\n\t<ul>";
         foreach ($list['models']['default'] as $key => $value) {
-            $html .= "\n\t\t<li>$key</li>";
+            $html .= "\n\t\t<li>$key &raquo; $value</li>";
         }
         $html .= "\n\t</ul>";
 
@@ -176,7 +176,7 @@ class Info
         }
         $html .= "\n\t</ul>";
 
-        $html .= "\n\t<h5>Models</h5>";
+        $html .= "\n\t<h5>Model measurements</h5>";
         $html .= "\n\t<ul>";
         foreach ($list['models']['measurements'] as $key => $value) {
             $html .= "\n\t\t<li>$key<ul>";

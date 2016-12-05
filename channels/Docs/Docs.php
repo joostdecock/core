@@ -77,6 +77,10 @@ class Docs extends Channel
                         if(isset($input) && $input !== null) $options[$key] = $input / 100;
                         else $options[$key] = $val['default'] / 100;
                         break;
+                    case 'chooseOne':
+                        if(isset($input) && $input !== null) $options[$key] = $input;
+                        else $options[$key] = $val['default'];
+                        break;
                 }
                 
             }

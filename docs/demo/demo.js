@@ -125,7 +125,7 @@ function loadPatternInfo(pattern) {
         });
 
         $('#patternrow2').append( "<div class='col-md-3' id='patterninfo-col6'></div>");
-        if (typeof data['inMemoryOf']['name'] !== 'undefined') {
+        if (typeof data['inMemoryOf'] !== 'undefined') {
             $('#patterninfo-col6').append( "<h3>Did you know?</h3>");
             $('#patterninfo-col6').append( "<p>This pattern was named in memory of <a href='" +  data['inMemoryOf']['link'] + "' target='_BLANK'>" +  data['inMemoryOf']['name'] + "</a>.</p>");
         }

@@ -1,5 +1,22 @@
-Check for improvements in boxer pattern. Rise is not used, plus seam length does not match
-Only use naturalWaist, hips, and seat for circumference in the waist/bum area
+Core:
 Create compare service which is draft+sample
 Rework config files for other patterns, see AaronAshirt
 Viewbox seems broken
+
+Trouser patterns:
+1. Make the back pleat aware of the rise.  When positioning the two
+sides together, they didn't seem to fit the sloped top in the back.
+2. Alter the back pocket slit to be more parallel to the waist line
+when there is rise added to the back.
+
+Hoodie pattern:
+1. Make it longer
+
+Boxer pattern:
+1. Side seam length
+2. Rise not taken into account
+
+A-Shirt pattern:
+1. US size 44 sample breaks because it wants Freesewing\\Polynomial::getQuadraticRoots() which is not implemented
+
+

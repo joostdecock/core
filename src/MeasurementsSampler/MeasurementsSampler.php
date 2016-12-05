@@ -34,7 +34,7 @@ class MeasurementsSampler extends Sampler
     public function loadPatternModels($group)
     {
         // Does this group even exist?
-        if(!is_array($this->modelConfig['groups'][$group]) || count($config['groups'][$group] == 0)) { 
+        if(!is_array($this->modelConfig['groups'][$group]) || count($this->modelConfig['groups'][$group]) == 0) { 
             // It doesn't
             // Do we have multiple defaults from extended patterns?
             if(is_array($this->modelConfig['default']['group'])) $group = $this->modelConfig['default']['group'][0]; 

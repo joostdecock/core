@@ -586,7 +586,8 @@ abstract class Pattern
             $sorted[$key] = $layoutBlock;
         }
 
-        return $sorted;
+        if(isset($sorted)) return $sorted;
+        else return false;
     }
 
     /**

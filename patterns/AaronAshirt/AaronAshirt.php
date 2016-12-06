@@ -1,5 +1,5 @@
 <?php
-/** Freesewing\Patterns\JoostBodyBlock class */
+/** Freesewing\Patterns\AaronAshirt class */
 namespace Freesewing\Patterns;
 
 /**

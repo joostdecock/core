@@ -354,7 +354,7 @@ class TrayvonTie extends Pattern
         $p->newPoint(2,   0,  $this->halfLength, 'Middle');
         $p->newPoint(3,   $halfTip, $halfTip, 'Right tip corner');
         $p->addPoint(4,   $p->flipX(3), 'Left tip corner');
-        $p->addPoint('5a', $p->shift(2, 0, $halfKnot), 'Join right, 90deg');
+        $p->addPoint('5a', $p->shift(2, 0, $halfKnot), 'Join right, 90 deg');
         $p->addPoint('5b', $p->rotate('5a', 2, 45), '45 degree helper');
         $p->addPoint(5, $p->beamsCross(2, '5b', '5a', 3), 'Join right, 45 deg'); 
         $p->addPoint('6a', $p->rotate('5a', 2, 180), 'Join left, 90deg');
@@ -435,12 +435,7 @@ class TrayvonTie extends Pattern
         $p->addPoint(101, $p->rotate('6a', 2, 45));
         $p->addPoint(102, $p->shift(101, 135, $p->distance('6a', 6)/4));
         $p->newPath('angle', 'M 101 C 102 100 6a', ['class' => "double-arrow stroke-note stroke-$size"]);
-        /* 
-         * TODO: Including &deg; in the pattern makes Inkscape fall over when opening the pattern.
-         * That's not the end of the world as this only applies to paperless, and there's no point to 
-         * open a paperless pattern in an SVG editor. But still, I need to find a way to avoid this
-         */
-        $p->newTextOnPath('angle', 'M 101 C 102 100 6a', '45 &deg;', ['class' => "text-$size fill-note text-center", 'dy' => -4]);
+        $p->newTextOnPath('angle', 'M 101 C 102 100 6a', '45 &#176;', ['class' => "text-$size fill-note text-center", 'dy' => -4]);
         
         /* The measure for the tip width */
         $p->newPath('tip', 'M 3 L 4', ['class' => 'double-arrow stroke-note stroke-lg']);

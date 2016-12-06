@@ -37,7 +37,7 @@ class Docs extends Channel
             if($units['in'] == 'imperial') $factor = 25.4;
             else $factor = 10;
             foreach ($pattern->config['measurements'] as $key => $val) {
-                $input = $request->getData($val);
+                $input = $request->getData($key);
                 if(isset($input) && $input !== null) $measurements[$key] = $input * $factor;
                 else $measurements[$key] = $pattern->config['measurements'][$key];
             }

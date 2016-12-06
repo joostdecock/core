@@ -6,6 +6,7 @@ info:
   email:    "joost@decock.org"
   company:  "freesewing.org"
   link:     "freesewing.org/pattern/trayvon-tie/"
+
 parts:
   interfacingTip:   "Interfacing tip"
   interfacingTail:  "Interfacing tail"
@@ -14,16 +15,27 @@ parts:
   liningTip:        "Lining tip"
   liningTail:       "Lining tail"
   loop:             "Loop"
+
 languages:
     en: English
     nl: Nederlands
+
 measurements:
-    - centerBackNeckToWaist
-    - neckCircumference
+    centerBackNeckToWaist: 480
+    neckCircumference: 420
+
 options:
-    - chestEase
-    - bicepsEase
-    - cuffEase
+    tipWidth:
+        type: measure
+        min: 20
+        max: 120
+        default: 60
+    knotWidth:
+        type: measure
+        min: 20
+        max: 70
+        default: 35
+
 inMemoryOf:   
     name: "Trayvon Martin"
     link: "https://en.wikipedia.org/wiki/Trayvon_Martin"

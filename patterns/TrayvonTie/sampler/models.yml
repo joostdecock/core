@@ -1,0 +1,29 @@
+default: 
+    group: maleStandardUsSizes
+groups:
+    realMen:
+        - joost
+    maleStandardUsSizes:
+        - usSize34
+        - usSize36
+        - usSize38
+        - usSize40
+        - usSize42
+        - usSize44
+measurements:
+    centerBackNeckToWaist: 
+        joost   : 480 
+        usSize34: 489
+        usSize36: 492
+        usSize38: 495
+        usSize40: 498
+        usSize42: 501
+        usSize44: 505
+    neckCircumference: 
+        joost   : 420
+        usSize34: 366
+        usSize36: 378
+        usSize38: 391
+        usSize40: 404
+        usSize42: 416
+        usSize44: 429

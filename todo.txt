@@ -19,4 +19,5 @@ Boxer pattern:
 A-Shirt pattern:
 1. US size 44 sample breaks because it wants Freesewing\\Polynomial::getQuadraticRoots() which is not implemented
 
-
+Tie pattern
+1. Text is not wrapped in transation call

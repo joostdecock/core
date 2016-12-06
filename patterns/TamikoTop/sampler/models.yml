@@ -1,0 +1,17 @@
+default: 
+    group: realWomen
+
+groups:
+    realWomen:
+        - sorcha
+
+measurements:
+    acrossBack: 
+        sorcha: 330
+    chestCircumference: 
+        sorcha: 1050
+    centerBackNeckToWaist: 
+        sorcha: 365
+    naturalWaistToHip: 
+        sorcha: 260
+

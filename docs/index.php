@@ -1,3 +1,6 @@
+<?php
+header("Location: /docs/demo/");
+?>
 <!DOCTYPE html>
 <html lang="en">
   <head>

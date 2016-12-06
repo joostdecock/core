@@ -6,15 +6,23 @@ info:
   email:    "joost@decock.org"
   company:  "freesewing.org"
   link:     "freesewing.org/pattern/tamiko-top/"
+
 parts:
   top:   "Tamiko Top"
+
 languages:
     en: English
     nl: Nederlands
+
 measurements:
-    - acrossBack
-    - chestCircumference
-    - centerBackNeckToWaist
-    - naturalWaistToHip
+    acrossBack: 330
+    chestCircumference: 1050
+    centerBackNeckToWaist: 365
+    naturalWaistToHip: 260
+
 options:
-    - lengthBonus
+    lengthBonus:
+        type: "measure"
+        min: -150
+        max: 350
+        default: 0

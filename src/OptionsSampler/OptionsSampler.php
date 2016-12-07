@@ -41,7 +41,9 @@ class OptionsSampler extends Sampler
         $config = $this->pattern->getConfig();
         $options = $config['options'];
     
-        if (isset($options[$option])) return $options[$option];
+        if (isset($options[$option])) {
+            return $options[$option];
+        }
     }
 
     /**
@@ -51,7 +53,7 @@ class OptionsSampler extends Sampler
      * @param int $steps Total number of steps
      * @param array $option Option configuration
      *
-     * @return float 
+     * @return float
      */
     private function getSampleValue($step, $steps, $option)
     {
@@ -70,7 +72,7 @@ class OptionsSampler extends Sampler
      * with the model as parameter.
      * It then itterates over the parts and calls sampleParts() on them
      *
-     * @param \Freesewing\Model 
+     * @param \Freesewing\Model
      * @param \Freesewing\Theme or similar
      * @param string $optionKey Name of the option
      * @param int $steps Number of steps

@@ -1,11 +1,11 @@
 <?php
-/** Freesewing\Coords class */
+ /** Freesewing\Coords class */
 namespace Freesewing;
 
 /**
  * An object to hold coordinates.
  *
- * A generic class for coordinates, 
+ * A generic class for coordinates,
  * extended by Point and Vector
  *
  * @author Joost De Cock <joost@decock.org>
@@ -21,16 +21,18 @@ class Coords
     public $y = null;
     
     /**
-     * Sets the X-coordinate 
+     * Sets the X-coordinate
      *
      * @param float $x The value to set
      */
     public function setX($x)
     {
-        if (is_numeric($x)) $this->x = $x;
-        else $x = 0;
+        if (is_numeric($x)) {
+            $this->x = $x;
+        } else {
+            $x = 0;
+        }
     }
-
     /**
      * Sets the Y-coordinate
      *
@@ -38,8 +40,11 @@ class Coords
      */
     public function setY($y)
     {
-        if (is_numeric($y)) $this->y = $y;
-        else $y = 0;
+        if (is_numeric($y)) {
+            $this->y = $y;
+        } else {
+            $y = 0;
+        }
     }
 
     /**
@@ -53,7 +58,7 @@ class Coords
     }
 
     /**
-     * Returns the Y-coordinate 
+     * Returns the Y-coordinate
      *
      * @return float The Y-coordinate
      */
@@ -61,5 +66,4 @@ class Coords
     {
         return $this->y;
     }
-
 }

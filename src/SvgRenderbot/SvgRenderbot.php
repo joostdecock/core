@@ -26,7 +26,7 @@ class SvgRenderbot
     /**
      * Returns indentation
      *
-     * @return string 
+     * @return string
      */
     private function tab()
     {
@@ -41,7 +41,7 @@ class SvgRenderbot
     /**
      * Returns a linebreak + indentation
      *
-     * @return string 
+     * @return string
      */
     private function nl()
     {
@@ -107,7 +107,7 @@ class SvgRenderbot
      *
      * Apart from returning the SVG code to close a group
      * this will also remove this group from the opengroups array
-     * and call outdent() 
+     * and call outdent()
      *
      * @return string The SVG code to close the group
      */
@@ -297,14 +297,16 @@ class SvgRenderbot
      */
     private function renderText($text, $part, $textOnPath = false)
     {
-        if ($textOnPath !== false) { // Text on path
+        if ($textOnPath !== false) {
+// Text on path
             $path = $text->getPath();
             $id = $this->getUid();
             $path->setAttributes(['class' => 'textpath', 'id' => $id]);
             $svg = $this->renderPath($path, $part);
             $svg .= $this->nl();
             $svg .= '<text ';
-        } else { // Regular text
+        } else {
+// Regular text
             $anchor = $text->getAnchor();
             $svg = $this->nl();
             $svg .= '<text x="'.$anchor->getX().'" y="'.$anchor->getY().'" ';
@@ -320,11 +322,13 @@ class SvgRenderbot
         $svg .= Utils::flattenAttributes($text->getAttributes(), ['line-height']);
         $svg .= '>';
 
-        if ($textOnPath !== false) { // Text on path
+        if ($textOnPath !== false) {
+// Text on path
             $svg .= "<textPath xlink:href=\"#$id\" startOffset=\"50%\">".
                 '<tspan '.Utils::flattenAttributes($text->getAttributes()).'>'.$text->getText().'</tspan>'.
                 '</textPath>';
-        } else { // Regular text
+        } else {
+// Regular text
             $lines = explode("\n", $text->getText());
             $attr = '';
             $this->indent();

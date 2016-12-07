@@ -20,7 +20,7 @@ class InfoService
      * Returns the name of the service
      *
      * This is used to load the default theme for the service when no theme is specified
-     * 
+     *
      * @see Context::loadTheme()
      *
      * @return string
@@ -35,7 +35,7 @@ class InfoService
      *
      * This assembles information, sets the response and sends it
      * Essentially, it takes care of the entire remainder of the request
-     * 
+     *
      * @param \Freesewing\Context
      */
     public function run($context)
@@ -59,7 +59,7 @@ class InfoService
     }
 
     /**
-     * Returns list of available patterns 
+     * Returns list of available patterns
      *
      * @param \Freesewing\Context
      *
@@ -79,7 +79,7 @@ class InfoService
     }
 
     /**
-     * Returns configuration for a pattern 
+     * Returns configuration for a pattern
      *
      * @param string pattern The name of the pattern
      *
@@ -94,7 +94,7 @@ class InfoService
     }
 
     /**
-     * Returns list of available channels 
+     * Returns list of available channels
      *
      * @param \Freesewing\Context
      *
@@ -113,7 +113,7 @@ class InfoService
     }
 
     /**
-     * Returns list of available themes 
+     * Returns list of available themes
      *
      * @param \Freesewing\Context
      *
@@ -132,7 +132,7 @@ class InfoService
     }
 
     /**
-     * Returns information about a pattern 
+     * Returns information about a pattern
      *
      * @param string pattern The pattern name
      *

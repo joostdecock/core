@@ -32,7 +32,7 @@ class AaronAshirt extends JoostBodyBlock
      * Generates a draft of the pattern
      *
      * This creates a draft of this pattern for a given model
-     * and set of options. You get a complete pattern with 
+     * and set of options. You get a complete pattern with
      * all bels and whistles.
      *
      * @param \Freesewing\Model $model The model to draft for
@@ -53,7 +53,7 @@ class AaronAshirt extends JoostBodyBlock
      * Generates a sample of the pattern
      *
      * This creates a sample of this pattern for a given model
-     * and set of options. You get a barebones pattern with only 
+     * and set of options. You get a barebones pattern with only
      * what it takes to illustrate the effect of changes in
      * the sampled option or measurement.
      *
@@ -110,7 +110,7 @@ class AaronAshirt extends JoostBodyBlock
      * I'm using a draft[part name] scheme here but
      * don't let that think that this is something specific
      * to the draft service.
-     * 
+     *
      * This draft method does the basic drafting and is
      * called by both the draft AND sample methods.
      *
@@ -152,7 +152,7 @@ class AaronAshirt extends JoostBodyBlock
         $p->addPoint(113, $p->shift(112, 90, $p->deltaY(5, 112) / 3), 'Top control point for 112');
 
         // Armhole drop
-        if ($this->getOption('armholeDrop') > 0 ) { 
+        if ($this->getOption('armholeDrop') > 0) {
             // Move point 5 along curve
             $p->curveCrossesY(112, 112, 113, 5, $p->y(5) + $this->getOption('armholeDrop'), '.help-');
             $p->clonePoint('.help-1', 5);
@@ -175,7 +175,7 @@ class AaronAshirt extends JoostBodyBlock
      * I'm using a draft[part name] scheme here but
      * don't let that think that this is something specific
      * to the draft service.
-     * 
+     *
      * This draft method does the basic drafting and is
      * called by both the draft AND sample methods.
      *
@@ -318,7 +318,7 @@ class AaronAshirt extends JoostBodyBlock
     }
 
     /**
-     * Finalizes the back 
+     * Finalizes the back
      *
      * Only draft() calls this method, sample() does not.
      * It does things like adding a title, logo, and any
@@ -356,19 +356,19 @@ class AaronAshirt extends JoostBodyBlock
         // Notes
         $noteAttr = ['line-height' => 7, 'class' => 'text-lg'];
         $p->addPoint(306, $p->shift(101, 180, 3), 'Note 1 anchor');
-        $p->newNote(1, 306,  $this->t("Standard\nseam\nallowance")."\n(".$this->unit(10).')', 6, 10, -5, $noteAttr);
+        $p->newNote(1, 306, $this->t("Standard\nseam\nallowance")."\n(".$this->unit(10).')', 6, 10, -5, $noteAttr);
 
         $p->addPoint('.help1', $p->shift(100, 90, 20));
-        $p->newNote(2, 104,  $this->t("No\nseam\nallowance"), 6, 15, 0, $noteAttr);
+        $p->newNote(2, 104, $this->t("No\nseam\nallowance"), 6, 15, 0, $noteAttr);
 
         $p->curveCrossesY(5, 107, 106, 102, $p->y('106max') / 2, '.help-');
         $p->clonePoint('.help-1', 308);
-        $p->newNote(3, 308,  $this->t("No\nseam\nallowance"), 8, 15, 0, $noteAttr);
+        $p->newNote(3, 308, $this->t("No\nseam\nallowance"), 8, 15, 0, $noteAttr);
 
         $p->newNote(4, 309, $this->t("Standard\nseam\nallowance")."\n(".$this->unit(10).')', 9, 15, -5, $noteAttr);
 
         $p->newPoint(309, $p->x(110) - 40, $p->y(110), 'Note 5 anchor');
-        $p->newNote(5, 309,  $this->t('Hem allowance')."\n(".$this->unit(20).')', 12, 15, -10, ['line-height' => 6, 'class' => 'text-lg', 'dy' => -4]);
+        $p->newNote(5, 309, $this->t('Hem allowance')."\n(".$this->unit(20).')', 12, 15, -10, ['line-height' => 6, 'class' => 'text-lg', 'dy' => -4]);
 
         $armholeLen = $p->curveLen(102, 106, 107, 5) + $this->parts['front']->curveLen(102, 106, 107, 5);
         $neckholeLen = $p->curveLen(103, 105, 104, 100) + $this->parts['front']->curveLen(103, 105, 104, 100);

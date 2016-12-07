@@ -13,7 +13,7 @@ namespace Freesewing\Patterns;
 class TestLines extends Pattern
 {
     /**
-     * Generates a draft 
+     * Generates a draft
      *
      * @param \Freesewing\Model $model The model to draft for
      *
@@ -25,7 +25,7 @@ class TestLines extends Pattern
     }
 
     /**
-     * Generates a sample 
+     * Generates a sample
      *
      * @param \Freesewing\Model $model The model to sample for
      *
@@ -46,10 +46,10 @@ class TestLines extends Pattern
         $p = $this->parts['test'];
 
         // Center vertical axis
-        $p->newPoint(1,   0,  0);
-        $p->newPoint(2,   0,  100);
-        $p->newPoint(3,   100, 100);
-        $p->newPoint(4,   100, 0);
+        $p->newPoint(1, 0, 0);
+        $p->newPoint(2, 0, 100);
+        $p->newPoint(3, 100, 100);
+        $p->newPoint(4, 100, 0);
 
         // Paths
         $path = 'M 1 L 2 L 3 L 4 z';

@@ -3,7 +3,7 @@
 namespace Freesewing\Themes;
 
 /**
- * Default theme for the draft service. 
+ * Default theme for the draft service.
  *
  * A straight-forward theme for SVG output
  *
@@ -15,7 +15,7 @@ class Svg extends Theme
 {
     /**
      * Returns the SVG document
-     * 
+     *
      * @param \Freesewing\Context $context The context object
      */
     public function themeResponse($context)
@@ -41,5 +41,4 @@ class Svg extends Theme
         $pattern->replace('__SCALEBOX_METRIC__', $pattern->t('__SCALEBOX_METRIC__'));
         $pattern->replace('__SCALEBOX_IMPERIAL__', $pattern->t('__SCALEBOX_IMPERIAL__'));
     }
-
 }

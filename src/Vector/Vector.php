@@ -91,8 +91,8 @@ class Vector extends Coords
     }
 
     /**
-     * Linear interpolation 
-     * 
+     * Linear interpolation
+     *
      * @param \Freesewing\Vector $that The vector to interpolate with
      * @param float $t Position on Bezier curve between 0 and 1
      *
@@ -108,8 +108,8 @@ class Vector extends Coords
     }
     
     /**
-     * Top-left corner 
-     * 
+     * Top-left corner
+     *
      * @param \Freesewing\Vector $that The second vector of our box
      *
      * @return \Freesewing\Vector $v The new vector
@@ -117,15 +117,15 @@ class Vector extends Coords
     public function min($that)
     {
         $v = new \Freesewing\Vector();
-        $v->setX( min( $this->getX(),$that->getX() ) );
-        $v->setY( min( $this->getY(),$that->getY() ) );
+        $v->setX( min( $this->getX(), $that->getX() ) );
+        $v->setY( min( $this->getY(), $that->getY() ) );
         
         return $v;
     }
     
     /**
-     * Bottom-right corner 
-     * 
+     * Bottom-right corner
+     *
      * @param \Freesewing\Vector $that The second vector of our box
      *
      * @return \Freesewing\Vector $v The new vector
@@ -133,15 +133,15 @@ class Vector extends Coords
     public function max($that)
     {
         $v = new \Freesewing\Vector();
-        $v->setX( max( $this->getX(),$that->getX() ) );
-        $v->setY( max( $this->getY(),$that->getY() ) );
+        $v->setX( max( $this->getX(), $that->getX() ) );
+        $v->setY( max( $this->getY(), $that->getY() ) );
         
         return $v;
     }
 
     /**
-     * Checks whether point is to the right-botom 
-     * 
+     * Checks whether point is to the right-botom
+     *
      * @param \Freesewing\Vector $that The second vector of our box
      *
      * @return \Freesewing\Vector $v The new vector
@@ -152,8 +152,8 @@ class Vector extends Coords
     }
 
     /**
-     * Checks whether point is to the top-left 
-     * 
+     * Checks whether point is to the top-left
+     *
      * @param \Freesewing\Vector $that The second vector of our box
      *
      * @return \Freesewing\Vector $v The new vector
@@ -162,8 +162,4 @@ class Vector extends Coords
     {
         return ($this->getX()<=$that->getX()&&$this->getY()<=$that->getY());
     }
-
-
-
-
 }

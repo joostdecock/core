@@ -38,7 +38,6 @@ abstract class Theme
             $this->config = \Freesewing\Yamlr::loadYamlFile($this->getConfigFile());
         }
     }
-    
     /**
      * Returns the flag identified by $key
      *
@@ -48,8 +47,11 @@ abstract class Theme
      */
     public function getFlag($key)
     {
-        if($this->flags[$key] === true) return true;
-        else return false;
+        if ($this->flags[$key] === true) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
     /**
@@ -71,21 +73,23 @@ abstract class Theme
     {
         return \Freesewing\Utils::getClassDir($this).'/config.yml';
     }
-
     /**
      * Returns true if isPaperless is set to true in theme config
      *
-     * This will be used to determine whether to include the extra 
+     * This will be used to determine whether to include the extra
      * information for paperless on the pattern.
-     * Extra information is things like instructions, notes and 
+     * Extra information is things like instructions, notes and
      * seamlengths.
      *
      * @return true|false True is isPaperless is true in the config settings
      */
     public function isPaperless()
     {
-        if($this->config['settings']['isPaperless'] === true) return true;
-        else return false;
+        if ($this->config['settings']['isPaperless'] === true) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
     /**
@@ -195,7 +199,7 @@ abstract class Theme
     /**
      * Loads templates from themes and possible parent themes
      *
-     * This makes sure that when you extend a theme, the templates 
+     * This makes sure that when you extend a theme, the templates
      * are extended too.
      * That means that the parent theme templates are loaded, unless
      * you override them in your extended theme.
@@ -210,7 +214,7 @@ abstract class Theme
             if (is_readable("$location/config.yml")) {
                 $dir = "$location/templates";
                 $config = \Freesewing\Yamlr::loadYamlFile("$location/config.yml");
-                if(isset($config['templates'])) {
+                if (isset($config['templates'])) {
                     foreach ($config['templates'] as $type => $entries) {
                         foreach ($entries as $entry) {
                             if (!isset($templates[$type][$entry])) {
@@ -238,7 +242,7 @@ abstract class Theme
      * are extended too.
      *
      * @return array $locations An array of class directories
-     */ 
+     */
     public function getClassChain()
     {
         $reflector = new \ReflectionClass(get_class($this));
@@ -301,7 +305,7 @@ abstract class Theme
      *
      * @return void null
      *
-     */ 
+     */
     public function samplerPathStyle($step, $totalSteps)
     {
         return null;
@@ -314,9 +318,8 @@ abstract class Theme
      */
     public function getThemeName()
     {
-        return basename(\Freesewing\Utils::getClassDir($this)); 
+        return basename(\Freesewing\Utils::getClassDir($this));
     }
-    
     /**
      * A way for themes to set options based on the request data
      *
@@ -330,18 +333,21 @@ abstract class Theme
         $options = ['parts', 'paths', 'points'];
         $flags = ['forceParts', 'forcePaths', 'forcePoints'];
 
-        foreach($options as $o) {
+        foreach ($options as $o) {
             $oval = $request->getData($o);
-            if($oval) {
-                $values = \Freesewing\Utils::asScrubbedArray($oval,',');
-                if (is_array($values)) $this->options[$o] = $values;
-                else $this->options[$o] = false;
+            if ($oval) {
+                $values = \Freesewing\Utils::asScrubbedArray($oval, ',');
+                if (is_array($values)) {
+                    $this->options[$o] = $values;
+                } else {
+                    $this->options[$o] = false;
+                }
             }
         }
 
-        foreach($flags as $f) {
+        foreach ($flags as $f) {
             $fval = $request->getData($f);
-            if($fval == 1) {
+            if ($fval == 1) {
                 $this->flags[$f] = true;
             } else {
                 $this->flags[$f] = false;
@@ -379,12 +385,14 @@ abstract class Theme
     public function applyRenderMaskOnParts($pattern)
     {
         $parts = $this->getOption('parts');
-        if(is_array($parts)) {
-            foreach($pattern->parts as $key => $part) {
-                if(!in_array($key,$parts)) { // Don't render what's not included
+        if (is_array($parts)) {
+            foreach ($pattern->parts as $key => $part) {
+                if (!in_array($key, $parts)) {
+// Don't render what's not included
                     $pattern->parts[$key]->setRender(false);
                 } else {
-                    if($this->getFlag('forceParts')) { // Force render of what's included
+                    if ($this->getFlag('forceParts')) {
+// Force render of what's included
                         $pattern->parts[$key]->setRender(true);
                     }
                 }
@@ -411,15 +419,18 @@ abstract class Theme
     public function applyRenderMaskOnPaths($pattern)
     {
         $paths = $this->getOption('paths');
-        if(is_array($paths)) {
-            foreach($pattern->parts as $key1 => $part) {
-                if($pattern->parts[$key1]->getRender()) { // Don't bother if it's not rendered
-                    foreach($part->paths as $key2 => $path) {
-                        if(!in_array($key2,$paths)) { // Do not render what's not included
-                            $part->paths[$key2]->setRender(false); 
+        if (is_array($paths)) {
+            foreach ($pattern->parts as $key1 => $part) {
+                if ($pattern->parts[$key1]->getRender()) {
+// Don't bother if it's not rendered
+                    foreach ($part->paths as $key2 => $path) {
+                        if (!in_array($key2, $paths)) {
+// Do not render what's not included
+                            $part->paths[$key2]->setRender(false);
                         } else {
-                            if($this->getFlag('forcePaths')) { // Force render of what's included
-                                $part->paths[$key2]->setRender(true); 
+                            if ($this->getFlag('forcePaths')) {
+// Force render of what's included
+                                $part->paths[$key2]->setRender(true);
                             }
                         }
                     }
@@ -427,5 +438,4 @@ abstract class Theme
             }
         }
     }
-
 }

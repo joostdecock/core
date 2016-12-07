@@ -10,10 +10,10 @@ function pointHover(id) {
     tooltip.setAttribute("visibility", 'visible');
 }
 function pointUnhover(id) {
-    setTimeout(function(){ 
+    setTimeout(function(){
         var point = document.getElementById(id);
         point.removeAttribute("transform", '');
         var tooltip = document.getElementById(id+'-tooltip');
         tooltip.setAttribute("visibility", 'hidden');
-    }, 1000);  
+    }, 1000);
 }

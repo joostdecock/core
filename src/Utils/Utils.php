@@ -31,9 +31,11 @@ class Utils
                 $return[] = rtrim($value);
             }
         }
-
-        if(isset($return)) return $return;
-        else return false;
+        if (isset($return)) {
+            return $return;
+        } else {
+            return false;
+        }
     }
 
     /**
@@ -91,7 +93,7 @@ class Utils
     }
     
     /**
-     * Returns single-axis coordinate of a point along a cubic Bezier curve 
+     * Returns single-axis coordinate of a point along a cubic Bezier curve
      *
      * This returns the coordinate for a point $t into a curve
      * $t is between 0 and 1
@@ -108,7 +110,7 @@ class Utils
      */
     public static function bezierPoint($t, $startval, $cp1val, $cp2val, $endval)
     {
-      return $startval * (1.0 - $t) * (1.0 - $t) * (1.0 - $t)
+        return $startval * (1.0 - $t) * (1.0 - $t) * (1.0 - $t)
         + 3.0 * $cp1val * (1.0 - $t) * (1.0 - $t) * $t
         + 3.0 * $cp2val * (1.0 - $t) * $t * $t
         + $endval * $t * $t * $t;
@@ -142,8 +144,12 @@ class Utils
     public static function findLineLineIntersection($point1, $point2, $point3, $point4)
     {
         /* weed out parallel lines */
-        if($point1->getX() == $point2->getX() &&  $point3->getX() == $point4->getX()) return false;
-        if($point1->getY() == $point2->getY() &&  $point3->getY() == $point4->getY()) return false;
+        if ($point1->getX() == $point2->getX() &&  $point3->getX() == $point4->getX()) {
+            return false;
+        }
+        if ($point1->getY() == $point2->getY() &&  $point3->getY() == $point4->getY()) {
+            return false;
+        }
 
         /* If line is vertical, handle this special case */
         if ($point1->getX() == $point2->getX()) {
@@ -231,7 +237,7 @@ class Utils
         return sqrt(pow($deltaX, 2) + pow($deltaY, 2));
     }
 
-    /** 
+    /**
      * Returns kint formated debug for the data passed to it
      *
      * @param $data The data

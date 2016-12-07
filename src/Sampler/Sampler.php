@@ -62,7 +62,7 @@ class Sampler
      *  - a point with id 'samplerAnchor'
      *  - a point with id 'gridAnchor'
      * It will return the first one found.
-     * If the part has neither, it will add a point 
+     * If the part has neither, it will add a point
      * with coordinates (0,0) and return that.
      *
      * @param \Freesewing\Part $part The part
@@ -110,7 +110,7 @@ class Sampler
      *  - It renders the paths marked for sampling
      *  - It finds a bounding box for the parts
      * This info is stored in $this->partContainer and will be added to a pattern later
-     * The $step and $steps parameters are passed to the theme so different samplings can be 
+     * The $step and $steps parameters are passed to the theme so different samplings can be
      * made to look different. (giving us that rainbow effect in the standard theme).
      *
      * @param int $step The step out of total steps this is

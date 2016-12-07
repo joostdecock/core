@@ -15,7 +15,7 @@ class DraftService
      * Returns the name of the service
      *
      * This is used to load the default theme for the service when no theme is specified
-     * 
+     *
      * @see Context::loadTheme()
      *
      * @return string
@@ -23,14 +23,12 @@ class DraftService
     public function getServiceName()
     {
         return 'draft';
-    }
-
-    /**
+    } /**
      * Drafts a pattern
      *
      * This drafts a pattern, sets the response and sends it
      * Essentially, it takes care of the entire remainder of the request
-     * 
+     *
      * @param \Freesewing\Context
      */
     public function run($context)
@@ -38,7 +36,6 @@ class DraftService
         $context->addPattern();
 
         if ($context->channel->isValidRequest($context) === true) :
-        
             $context->addModel();
             $context->model->addMeasurements(
                 $context->channel->standardizeModelMeasurements($context->request, $context->pattern)
@@ -70,8 +67,9 @@ class DraftService
             $context->setResponse($context->theme->themeResponse($context));
 
             /* Last minute replacements on the entire response body */
-            $context->response->setBody($this->replace($context->response->getBody(), $context->pattern->getReplacements())); 
-        else: // channel->isValidRequest() !== true
+            $context->response->setBody($this->replace($context->response->getBody(), $context->pattern->getReplacements()));
+        else :
+// channel->isValidRequest() !== true
             $context->channel->handleInvalidRequest($context);
         endif;
 
@@ -85,19 +83,19 @@ class DraftService
      *
      * This add width and height attributes to the SVG and calls theme->themeSvg()
      * Then, it gets the renderbot to render the SVG body
-     * 
+     *
      * @param \Freesewing\Context
      */
     protected function svgRender($context)
     {
         $scale = 3.54330709;
-        $context->svgDocument->svgAttributes->add('width ="'. ($context->pattern->getWidth() * $scale) .'"'); 
+        $context->svgDocument->svgAttributes->add('width ="'. ($context->pattern->getWidth() * $scale) .'"');
         $context->svgDocument->svgAttributes->add('height ="'. ($context->pattern->getHeight() * $scale) .'"');
         
         $viewbox = $context->request->getData('viewbox');
-        if($viewbox !== null) {
-            $viewbox = Utils::asScrubbedArray($viewbox,',');
-            $context->svgDocument->svgAttributes->add('viewbox ="'.$viewbox[0].' '.$viewbox[1].' '.$viewbox[2].' '.$viewbox[3].'"');     
+        if ($viewbox !== null) {
+            $viewbox = Utils::asScrubbedArray($viewbox, ',');
+            $context->svgDocument->svgAttributes->add('viewbox ="'.$viewbox[0].' '.$viewbox[1].' '.$viewbox[2].' '.$viewbox[3].'"');
         } else {
             $context->svgDocument->svgAttributes->add('viewbox ="0 0 '. ($context->pattern->getWidth() * $scale).' '. ($context->pattern->getHeight() * $scale) .'"');
         }
@@ -115,7 +113,7 @@ class DraftService
      * Or, more commonly, you want to include something in defs or CSS and have it adapt to
      * whatever is going on in the pattern
      * For that, you can register a replacement in the pattern, and it will be handled here
-     * 
+     *
      * @param string svg
      * @param array replacements
      *

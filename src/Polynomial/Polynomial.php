@@ -26,14 +26,14 @@ class Polynomial
     
     
     /**
-     * Constructor 
+     * Constructor
      *
      * @param array $coefs The coeficients
      */
     public function __construct($coefs)
     {
         for ($i=count($coefs)-1; $i>=0; $i--) {
-            array_push($this->coefs,$coefs[$i]);
+            array_push($this->coefs, $coefs[$i]);
         }
         $this->_variable = "t";
         $this->_s = 0;
@@ -63,7 +63,7 @@ class Polynomial
 
     /**
      * Returns the degree of a polynomial
-     * 
+     *
      * @return int $degree The degree of the polynomial
      * @todo Remove this, it's not used
      */
@@ -74,7 +74,7 @@ class Polynomial
 
     /**
      * Returns the derivative of a polymomial
-     * 
+     *
      * @return \Freesewing\Polynomial $d The derivative
      */
     public function getDerivative()
@@ -94,7 +94,9 @@ class Polynomial
      */
     public function evalu($x)
     {
-        if (!is_numeric($x)) throw new \InvalidArgumentException("Polinomial::Eval() : Parameter must be numeric");
+        if (!is_numeric($x)) {
+            throw new \InvalidArgumentException("Polinomial::Eval() : Parameter must be numeric");
+        }
 
         $result = 0;
         for ($i=count($this->coefs)-1; $i>= 0; $i--) {
@@ -102,8 +104,7 @@ class Polynomial
         }
         return $result;
     }
-
-    /** 
+    /**
      * Polynomial bisection
      *
      * @param float $min Lower edge of interval
@@ -116,9 +117,11 @@ class Polynomial
         $minValue = $this->evalu($min);
         $maxValue = $this->evalu($max);
     
-        if (abs($minValue) <= $this->tolerance) $result = $min;
-        else if ( abs($maxValue) <= $this->tolerance ) $result = $max;
-        else if ( $minValue * $maxValue <= 0 ) {
+        if (abs($minValue) <= $this->tolerance) {
+            $result = $min;
+        } elseif (abs($maxValue) <= $this->tolerance) {
+            $result = $max;
+        } elseif ($minValue * $maxValue <= 0) {
             $tmp1  = log($max - $min);
             $tmp2  = log(10) * $this->precision;
             $iters = ceil( ($tmp1+$tmp2) / log(2) );
@@ -127,9 +130,11 @@ class Polynomial
                 $result = 0.5 * ($min + $max);
                 $value = $this->evalu($result);
 
-                if ( abs($value) <= $this->tolerance ) break;
+                if (abs($value) <= $this->tolerance) {
+                    break;
+                }
 
-                if ( $value * $minValue < 0 ) {
+                if ($value * $minValue < 0) {
                     $max = $result;
                     $maxValue = $value;
                 } else {
@@ -143,73 +148,89 @@ class Polynomial
     }
 
     /**
-     * Finds polynomial roots within interval 
+     * Finds polynomial roots within interval
      *
      * @param float $min Lower edge of interval
      * @param float $max Upper edge of interval
      */
-    public function getRootsInInterval($min=0, $max=1) 
+    public function getRootsInInterval($min = 0, $max = 1)
     {
         $roots = array();
         if ($this->getDegree() == 1) {
             $root = $this->bisection($min, $max);
-            if ($root != null) $roots[] = $root;
+            if ($root != null) {
+                $roots[] = $root;
+            }
         } else {
             // get roots of derivative
             $deriv  = $this->getDerivative();
             $droots = $deriv->getRootsInInterval($min, $max);
-            if (count($droots) > 0 ) {
+            if (count($droots) > 0) {
                 // find root on [min, droots[0]]
                 $root = $this->bisection($min, $droots[0]);
-                if ($root != null ) $roots[] = $root;
+                if ($root != null) {
+                    $roots[] = $root;
+                }
     
                 // find root on [droots[i],droots[i+1]] for 0 <= i <= count-2
-                for ($i=0; $i <= count($droots)-2; $i++ ) {
+                for ($i=0; $i <= count($droots)-2; $i++) {
                     $root = $this->bisection($droots[$i], $droots[$i+1]);
-                    if ($root != null) $roots[] = $root;
+                    if ($root != null) {
+                        $roots[] = $root;
+                    }
                 }
     
                 // find root on [droots[count-1],xmax]
                 $root = $this->bisection($droots[count($droots)-1], $max);
-                if ($root != null) $roots[] = $root;
+                if ($root != null) {
+                    $roots[] = $root;
+                }
             } else {
                 // polynomial is monotone on [min,max], has at most one root
                 $root = $this->bisection($min, $max);
-                if ($root != null) $roots[] = $root;
+                if ($root != null) {
+                    $roots[] = $root;
+                }
             }
         }
-    return $roots;
+        return $roots;
     }
 
     /**
      * Roots, bloody roots
-     */ 
+     */
     public function getRoots()
     {
         $this->simplify();
         switch($this->getDegree()) {
-            case 0: $result = array(); break;
-            case 1: $result = $this->getLinearRoot(); break;
-            case 2: $result = $this->getQuadraticRoots();  break;
-            case 3: $result = $this->getCubicRoots(); break;
-            case 4: $result = $this->getQuarticRoots(); break;
+            case 0: $result = array();
+                break;
+            case 1: $result = $this->getLinearRoot();
+                break;
+            case 2: $result = $this->getQuadraticRoots();
+                break;
+            case 3: $result = $this->getCubicRoots();
+                break;
+            case 4: $result = $this->getQuarticRoots();
+                break;
             default: $result = array(); // Not implemented
-        }        
+        }
 
         return $result;
     }
-
     /**
      * Simplifies a polynomial, if possible
      */
     public function simplify()
     {
         for ($i=$this->getDegree(); $i>=0; $i--) {
-            if (abs($this->coefs[$i]) <= $this->tolerance) array_pop($this->coefs);
-            else break;
+            if (abs($this->coefs[$i]) <= $this->tolerance) {
+                array_pop($this->coefs);
+            } else {
+                break;
+            }
         }
     }
-
     /**
      * Gets roots of a cubic polynomial
      *
@@ -219,7 +240,7 @@ class Polynomial
     {
         $results = array();
 
-        if ($this->getDegree() == 3 ) {
+        if ($this->getDegree() == 3) {
             $c3 = $this->coefs[3];
             $c2 = $this->coefs[2] / $c3;
             $c1 = $this->coefs[1] / $c3;
@@ -231,21 +252,29 @@ class Polynomial
             $discrim = $b*$b/4 + $a*$a*$a/27;
             $halfB   = $b / 2;
 
-            if (abs($discrim) <= $this->tolerance) $disrim = 0;
+            if (abs($discrim) <= $this->tolerance) {
+                $disrim = 0;
+            }
 
             if ($discrim>0) {
                 $e = sqrt($discrim);
 
                 $tmp = -1*$halfB + $e;
-                if ($tmp>=0) $root = pow($tmp, 1/3);
-                else $root = -1*pow(-1*$tmp, 1/3);
+                if ($tmp>=0) {
+                    $root = pow($tmp, 1/3);
+                } else {
+                    $root = -1*pow(-1*$tmp, 1/3);
+                }
 
                 $tmp = -1*$halfB - $e;
-                if ($tmp>=0) $root += pow($tmp, 1/3);
-                else $root -= pow(-1*$tmp, 1/3);
+                if ($tmp>=0) {
+                    $root += pow($tmp, 1/3);
+                } else {
+                    $root -= pow(-1*$tmp, 1/3);
+                }
 
                 $results[] = $root - $offset;
-            } else if ($discrim<0) {
+            } elseif ($discrim<0) {
                 $distance = sqrt(-1*$a/3);
                 $angle    = atan2(sqrt(-1*$discrim), -1*$halfB) / 3;
                 $cos      = cos($angle);
@@ -257,8 +286,11 @@ class Polynomial
                 $results[] = -1*$distance * ($cos - $sqrt3 * $sin) - $offset;
 
             } else {
-                if ($halfB>=0) $tmp = -1*pow($halfB, 1/3);
-                else $tmp = pow(-1*$halfB, 1/3);
+                if ($halfB>=0) {
+                    $tmp = -1*pow($halfB, 1/3);
+                } else {
+                    $tmp = pow(-1*$halfB, 1/3);
+                }
 
                 $results[] = 2*$tmp - $offset;
                 // really should return next root twice, but we return only one
@@ -268,6 +300,4 @@ class Polynomial
 
         return $results;
     }
-
-
 }

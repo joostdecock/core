@@ -33,7 +33,7 @@ class Request
      *
      * @param array $data The request data
      */
-    public function __construct($data=null)
+    public function __construct($data = null)
     {
         $this->data = $data;
         $this->info['client'] = $_SERVER['REMOTE_ADDR'];

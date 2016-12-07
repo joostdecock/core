@@ -57,7 +57,7 @@ abstract class Pattern
 
     /**
      * Makes sure to unset the parts array when cloning a pattern
-     * 
+     *
      * This is used by the sample service
      * @see \Freesewing\MeasurementsSampler::samplerMeasurements()
      */
@@ -66,16 +66,16 @@ abstract class Pattern
         unset($this->parts);
     }
 
-    /** 
-     * Patterns must implement this method called by the DraftService 
-     * 
+    /**
+     * Patterns must implement this method called by the DraftService
+     *
      * @param \Freesewing\Context $context The context
      */
     abstract public function draft($context);
 
-    /** 
+    /**
      * Patterns must implement this method called by the SampleService
-     * 
+     *
      * @param \Freesewing\Context $context The context
      */
     abstract public function sample($model);
@@ -85,7 +85,7 @@ abstract class Pattern
      *
      * This prevents you from having to manually add all parts.
      * Note that if there are parts you don't need
-     * (depending on options for example) you could 
+     * (depending on options for example) you could
      * override this function. Or, you can simple call
      * setRender(false) on them to keep them from being rendered.
      */
@@ -158,10 +158,10 @@ abstract class Pattern
     /**
      * Takes a value in mm and returns it as text in the chose units
      *
-     * For example, this returns 25.4 as either '2.54cm' or '1"' 
+     * For example, this returns 25.4 as either '2.54cm' or '1"'
      *
      * @param $val The value to convert
-     * 
+     *
      * @return string $text The converted text
      */
     public function unit($val)
@@ -177,7 +177,7 @@ abstract class Pattern
      * Returns the units property
      *
      * @return string imperial|metric
-     */ 
+     */
     public function getUnits()
     {
         return $this->units;
@@ -189,7 +189,7 @@ abstract class Pattern
      * @param string $key The key in the options array for which to return the value
      *
      * @return anything $value The option value
-     */ 
+     */
     public function getOption($key)
     {
         return $this->options[$key];
@@ -201,7 +201,7 @@ abstract class Pattern
      * @param string $key The key in the options array for which to return the value
      *
      * @return anything $value The option value
-     */ 
+     */
     public function o($key)
     {
         return $this->getOption($key);
@@ -212,7 +212,7 @@ abstract class Pattern
      *
      * @param string $key The key in the options array
      * @param anything $value The option to set
-     */ 
+     */
     public function setOption($key, $value)
     {
         $this->options[$key] = $value;
@@ -222,7 +222,7 @@ abstract class Pattern
      * Sets the width property
      *
      * @param float $width The width of the pattern
-     */ 
+     */
     public function setWidth($width)
     {
         $this->width = $width;
@@ -232,7 +232,7 @@ abstract class Pattern
      * Returns the height property
      *
      * @return float $height The height of the pattern
-     */ 
+     */
     public function getWidth()
     {
         return $this->width;
@@ -242,7 +242,7 @@ abstract class Pattern
      * Sets the height property
      *
      * @param float $height The height of the pattern
-     */ 
+     */
     public function setHeight($height)
     {
         $this->height = $height;
@@ -252,7 +252,7 @@ abstract class Pattern
      * Returns the height property
      *
      * @return float $height The height of the pattern
-     */ 
+     */
     public function getHeight()
     {
         return $this->height;
@@ -262,7 +262,7 @@ abstract class Pattern
      * Sets the partMargin property
      *
      * @param float $margin The margin between pattern parts
-     */ 
+     */
     public function setPartMargin($margin)
     {
         $this->partMargin = $margin;
@@ -273,7 +273,7 @@ abstract class Pattern
      *
      * @param string $from The ID in the parts array of the source part
      * @param string $into The ID in the parts array of the destination part
-     */ 
+     */
     public function clonePoints($from, $into)
     {
         foreach ($this->parts[$from]->points as $key => $point) {
@@ -285,7 +285,7 @@ abstract class Pattern
      * Sets the partMargin property
      *
      * @param float $margin The margin between pattern parts
-     */ 
+     */
     public function getPartMargin()
     {
         return $this->partMargin;
@@ -298,7 +298,7 @@ abstract class Pattern
      * its top left corner. This takes care of that by pushing everything to
      * the top left (by adding a translate transform). We do this before
      * we layout the pattern with our packer.
-     */ 
+     */
     public function pileParts()
     {
         if (isset($this->parts) && count($this->parts) > 0) {
@@ -324,11 +324,13 @@ abstract class Pattern
                     $topLeft = new \Freesewing\Point(
                         $part->boundary->topLeft->x,
                         $part->boundary->topLeft->y,
-                        'Top-left pattern boundary');
+                        'Top-left pattern boundary'
+                    );
                     $bottomRight = new \Freesewing\Point(
                         $part->boundary->bottomRight->x,
                         $part->boundary->bottomRight->y,
-                        'Bottom-right pattern boundary');
+                        'Bottom-right pattern boundary'
+                    );
                 } else {
                     if ($part->boundary->topLeft->x < $topLeft->x) {
                         $topLeft->setX($part->boundary->topLeft->x);
@@ -397,7 +399,7 @@ abstract class Pattern
     /**
      * Lays out pattern parts on the page
      *
-     * This uses a packer to automatically lay out 
+     * This uses a packer to automatically lay out
      * the different pattern pieces on that page.
      */
     public function layout()
@@ -429,7 +431,7 @@ abstract class Pattern
      * This is a helper function that pushes messages onto
      * the messages property.
      * In the default theme, these will be added to the
-     * footer comments in the SVG file. 
+     * footer comments in the SVG file.
      *
      * @see \Freesewing\Theme::loadTemplates()
      *
@@ -447,7 +449,7 @@ abstract class Pattern
      * the debug property.
      * In the default theme, these will not be included.
      * But in the designer theme, they will be added to the
-     * footer comments in the SVG file. 
+     * footer comments in the SVG file.
      *
      * @see \Freesewing\Theme::loadTemplates()
      *
@@ -569,7 +571,7 @@ abstract class Pattern
      * This takes care of that.
      *
      * @param array $parts Array of pattern parts
-     */ 
+     */
     private function layoutPreSort($parts)
     {
         $order = array();
@@ -585,9 +587,11 @@ abstract class Pattern
             $layoutBlock->h = @$parts[$key]->boundary->height;// FIXME Sample service issues a warning here
             $sorted[$key] = $layoutBlock;
         }
-
-        if(isset($sorted)) return $sorted;
-        else return false;
+        if (isset($sorted)) {
+            return $sorted;
+        } else {
+            return false;
+        }
     }
 
     /**
@@ -600,7 +604,7 @@ abstract class Pattern
      * are extended too.
      *
      * @return array $locations An array of class directories
-     */ 
+     */
     public function getClassChain()
     {
         $reflector = new \ReflectionClass(get_class($this));
@@ -653,7 +657,9 @@ abstract class Pattern
         $files = array();
         foreach ($locations as $location) {
             $file = "$location/sampler/models.yml";
-            if (is_readable($file)) $files[] = $file;
+            if (is_readable($file)) {
+                $files[] = $file;
+            }
         }
 
         return $files;
@@ -678,8 +684,8 @@ abstract class Pattern
     /**
      * Sets the paperless property
      *
-     * This is used to determine whether to include the papeless-specific 
-     * stuff in the pattern. 
+     * This is used to determine whether to include the papeless-specific
+     * stuff in the pattern.
      *
      * @param bool $bool True or false
      */

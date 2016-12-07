@@ -6,7 +6,7 @@ namespace Freesewing;
  * Holds measurements of a model.
  *
  * This is mainly used to hold measurements for a model.
- * There's also support to give the model a name, but only the 
+ * There's also support to give the model a name, but only the
  * sampler service uses that at the moment.
  * @author Joost De Cock <joost@decock.org>
  * @copyright 2016 Joost De Cock
@@ -67,7 +67,7 @@ class Model
     /**
      * Adds measurements.
      *
-     * Rater than adding measurements individually, this adds 
+     * Rater than adding measurements individually, this adds
      * an array of measurements.
      *
      * @param array measurements
@@ -80,5 +80,4 @@ class Model
             }
         }
     }
-
 }

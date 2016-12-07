@@ -7,7 +7,7 @@ namespace Freesewing;
  *
  * This takes a group of models (with different measurements) and generates
  * the pattern parts for them, aligning them properly.
- * This allows you to verify that your pattern grades nicely over a range of 
+ * This allows you to verify that your pattern grades nicely over a range of
  * sizes/measurements.
  *
  * @author Joost De Cock <joost@decock.org>
@@ -21,7 +21,6 @@ class MeasurementsSampler extends Sampler
     {
         $this->modelConfig = $config;
     }
-
     /**
      * Loads models for which we'll sampler the pattern.
      *
@@ -34,11 +33,14 @@ class MeasurementsSampler extends Sampler
     public function loadPatternModels($group)
     {
         // Does this group even exist?
-        if(!is_array($this->modelConfig['groups'][$group]) || count($this->modelConfig['groups'][$group]) == 0) { 
+        if (!is_array($this->modelConfig['groups'][$group]) || count($this->modelConfig['groups'][$group]) == 0) {
             // It doesn't
             // Do we have multiple defaults from extended patterns?
-            if(is_array($this->modelConfig['default']['group'])) $group = $this->modelConfig['default']['group'][0]; 
-            else $group = $this->modelConfig['default']['group'];
+            if (is_array($this->modelConfig['default']['group'])) {
+                $group = $this->modelConfig['default']['group'][0];
+            } else {
+                $group = $this->modelConfig['default']['group'];
+            }
         }
             
         $this->models = $this->loadModelGroup($group);
@@ -78,7 +80,7 @@ class MeasurementsSampler extends Sampler
     }
 
     /**
-     * Structures models for consumption by the sampler 
+     * Structures models for consumption by the sampler
      *
      * @param string $group Name of the model group as defined in sampler config
      *
@@ -88,7 +90,7 @@ class MeasurementsSampler extends Sampler
     {
         foreach ($this->modelConfig['groups'][$group] as $member) {
             $model = new \Freesewing\Model();
-            foreach($this->modelConfig['measurements'] as $mKey => $mModels) {
+            foreach ($this->modelConfig['measurements'] as $mKey => $mModels) {
                 $measurements[$mKey] = $mModels[$member];
             }
             $model->addMeasurements($measurements);

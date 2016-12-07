@@ -386,10 +386,12 @@ class Context
             $pattern = $this->request->getData('pattern');
         } else {
             $pattern = $this->config['defaults']['pattern'];
+        }         $class = '\\Freesewing\\Patterns\\'.$pattern;
+        if (class_exists($class)) {
+            return new $class();
+        } else {
+            throw new \InvalidArgumentException("Cannot load pattern $pattern, it does not exist");
         }
-        $class = '\\Freesewing\\Patterns\\'.$pattern;
-        if (class_exists($class)) return new $class();
-        else throw new \InvalidArgumentException("Cannot load pattern $pattern, it does not exist");
     }
 
     /**

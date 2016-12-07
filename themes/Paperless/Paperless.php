@@ -5,11 +5,11 @@ namespace Freesewing\Themes;
 /**
  * A theme that aims to save trees.
  *
- * This theme adds a grid to the pattern. 
+ * This theme adds a grid to the pattern.
  * That in itself is probably not enough to keep
  * people from printing their pattern. So it's
  * up to pattern makes to add instructions to the
- * pattern that allows people to draft it into the 
+ * pattern that allows people to draft it into the
  * fabric without printing it.
  *
  * @author Joost De Cock <joost@decock.org>

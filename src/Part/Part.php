@@ -1279,6 +1279,8 @@ $i++) {
      * Loads a point object from its id
      *
      * @param string $key The id of the point to load
+     * @return \Freesewing\Point
+     * @throws \InvalidArgumentException
      */
     public function loadPoint($key)
     {

@@ -338,10 +338,14 @@ abstract class Pattern
             if ($part->getRender() === true) {
                 // @todo: frome where comes the topLeft-variable?
                 if (!@is_object($topLeft)) {
-                    $topLeft = new \Freesewing\Point($part->boundary->topLeft->x, $part->boundary->topLeft->y,
-                        'Top-left pattern boundary');
-                    $bottomRight = new \Freesewing\Point($part->boundary->bottomRight->x, $part->boundary->bottomRight->y,
-                        'Bottom-right pattern boundary');
+                    $topLeft = new \Freesewing\Point(
+                        $part->boundary->topLeft->x, $part->boundary->topLeft->y,
+                        'Top-left pattern boundary'
+                    );
+                    $bottomRight = new \Freesewing\Point(
+                        $part->boundary->bottomRight->x, $part->boundary->bottomRight->y,
+                        'Bottom-right pattern boundary'
+                    );
                 } else {
                     if ($part->boundary->topLeft->x < $topLeft->x) {
                         $topLeft->setX($part->boundary->topLeft->x);

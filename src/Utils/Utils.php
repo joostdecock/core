@@ -229,7 +229,7 @@ class Utils
      *
      * @return float Distance between the points
      */
-    public function distance($point1, $point2)
+    public static function distance($point1, $point2)
     {
         $deltaX = $point1->getX() - $point2->getX();
         $deltaY = $point1->getY() - $point2->getY();

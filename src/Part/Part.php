@@ -2,6 +2,7 @@
 /** Freesewing\Part class */
 namespace Freesewing;
 
+use Freesewing\Boundary;
 use Freesewing\Note;
 use Freesewing\Path;
 use Freesewing\Point;
@@ -10,6 +11,7 @@ use Freesewing\SvgInclude;
 use Freesewing\SvgSnippet;
 use Freesewing\Text;
 use Freesewing\TextOnPath;
+use Freesewing\Transform;
 
 /**
  * Parts are what patterns are made of.
@@ -29,27 +31,33 @@ class Part
 {
 
     /** @var array List of points */
-    public $points = array();
+    public $points = [];
 
     /** @var array List of snippets */
-    public $snippets = array();
+    public $snippets = [];
 
     /** @var array List of texts */
-    public $texts = array();
+    public $texts = [];
 
     /** @var array List of textsOnPath */
-    public $textsOnPath = array();
+    public $textsOnPath = [];
 
     /** @var array List of paths */
-    public $paths = array();
+    public $paths = [];
 
     /** @var array List of transforms */
-    public $transforms = array();
+    public $transforms = [];
+
+    /** @var array Holds temporary variables */
+    public $tmp = [];
+
+    /** @var array notes */
+    public $notes = [];
 
     /** @var string The part title */
     public $title = null;
 
-    /** @var \Freesewing\Boundary The part boundary */
+    /** @var Boundary The part boundary */
     public $boundary = array();
 
     /** @var bool Percentage our path offset is allowed to deviate */
@@ -60,6 +68,8 @@ class Part
 
     /** @var bool To render this part or not */
     private $render = true;
+
+
 
     /**
      * Sets the render property.
@@ -323,8 +333,10 @@ class Part
                 $x = $anchor->getX();
                 $y = $anchor->getY();
                 $this->newText('partNumber', $anchorKey, $nr, ['class' => 'part-nr-vertical']);
-                $this->newText('partTitle', $anchorKey, $title,
-                    ['class' => 'part-title-vertical', 'transform' => "rotate(-90 $x $y)"]);
+                $this->newText(
+                    'partTitle', $anchorKey, $title,
+                    ['class' => 'part-title-vertical', 'transform' => "rotate(-90 $x $y)"]
+                );
                 $this->newText('partMsg', $anchorKey, $msg, ['class' => 'part-msg-vertical', 'transform' => "rotate(-90 $x $y)"]);
                 break;
             case 'horizontal':
@@ -449,9 +461,9 @@ class Part
      * and adds it to the transforms array with key $key.
      *
      * @param string                $key       Index in the transforms array
-     * @param \Freesewing\Transform $transform The transform object
+     * @param Transform $transform The transform object
      */
-    public function addTransform($key, \Freesewing\Transform $transform)
+    public function addTransform($key, Transform $transform)
     {
         $this->transforms[$key] = $transform;
     }
@@ -463,42 +475,49 @@ class Part
      *
      * @param float $margin The margin to add to the part
      *
-     * @return bool
+     * @return void
      */
-    public function addBoundary($margin = 0)
+    public function addBoundary($margin = 0.0)
     {
         if (count($this->paths) == 0) {
-            return false;
+            return;
         }
+
+        // initialize topLeft
+        $topLeft = new Point('topLeft');
+        $topLeft->setX(0);
+        $topLeft->setY(0);
+
+        // initialize bottomRight
+        $bottomRight = new Point('bottomRight');
+        $bottomRight->setX(0);
+        $bottomRight->setY(0);
+
         foreach ($this->paths as $path) {
             $path->setBoundary($path->findBoundary($this));
-            if (!@is_object($topLeft)) {
-                $topLeft = new Point('topLeft');
+
+            // topLeft
+            if ($path->boundary->topLeft->getX() < $topLeft->getX()) {
                 $topLeft->setX($path->boundary->topLeft->getX());
+            }
+            if ($path->boundary->topLeft->getY() < $topLeft->getY()) {
                 $topLeft->setY($path->boundary->topLeft->getY());
-                $bottomRight = new Point('bottomRight');
+            }
+
+            // bottomRight
+            if ($path->boundary->bottomRight->getX() > $bottomRight->getX()) {
                 $bottomRight->setX($path->boundary->bottomRight->getX());
+            }
+            if ($path->boundary->bottomRight->getY() > $bottomRight->getY()) {
                 $bottomRight->setY($path->boundary->bottomRight->getY());
-            } else {
-                if ($path->boundary->topLeft->getX() < $topLeft->getX()) {
-                    $topLeft->setX($path->boundary->topLeft->getX());
-                }
-                if ($path->boundary->topLeft->getY() < $topLeft->getY()) {
-                    $topLeft->setY($path->boundary->topLeft->getY());
-                }
-                if ($path->boundary->bottomRight->getX() > $bottomRight->getX()) {
-                    $bottomRight->setX($path->boundary->bottomRight->getX());
-                }
-                if ($path->boundary->bottomRight->getY() > $bottomRight->getY()) {
-                    $bottomRight->setY($path->boundary->bottomRight->getY());
-                }
             }
         }
         $topLeft->setX($topLeft->getX() - $margin);
         $topLeft->setY($topLeft->getY() - $margin);
         $bottomRight->setX($bottomRight->getX() + $margin);
         $bottomRight->setY($bottomRight->getY() + $margin);
-        $this->boundary = new \Freesewing\Boundary();
+
+        $this->boundary = new Boundary();
         $this->boundary->setTopLeft($topLeft);
         $this->boundary->setBottomRight($bottomRight);
     }
@@ -512,7 +531,7 @@ class Part
      * @param bool   $render     Render property of the new path
      * @param array  $attributes Optional array of path attributes
      */
-    public function offsetPathString($key, $pathString, $distance = 10, $render = false, $attributes = null)
+    public function offsetPathString($key, $pathString, $distance = 10.0, $render = false, $attributes = null)
     {
         $this->newPath('.offsetHelper', $pathString);
         $this->paths['.offsetHelper']->setRender(false);
@@ -633,9 +652,13 @@ class Part
             if ($i) {
                 foreach ($i as $key => $point) {
                     // Ignore intersections at line end points
-                    if (Utils::isSamePoint($point, $this->loadPoint($s1['offset'][0])) or Utils::isSamePoint($point,
-                            $this->loadPoint($s1['offset'][1])) or Utils::isSamePoint($point,
-                            $this->loadPoint($s2['offset'][0])) or Utils::isSamePoint($point, $this->loadPoint($s2['offset'][1]))
+                    if (Utils::isSamePoint($point, $this->loadPoint($s1['offset'][0])) or Utils::isSamePoint(
+                        $point,
+                        $this->loadPoint($s1['offset'][1])
+                    ) or Utils::isSamePoint(
+                        $point,
+                        $this->loadPoint($s2['offset'][0])
+                    ) or Utils::isSamePoint($point, $this->loadPoint($s2['offset'][1]))
                     ) {
                         unset($i[$key]);
                     }
@@ -644,21 +667,33 @@ class Part
             }
         } elseif ($s1['type'] == 'curve' && $s2['type'] == 'curve') {
             // 2 curves
-            if ($this->curveLen($s1['offset'][0], $s1['offset'][1], $s1['offset'][2],
-                    $s1['offset'][3]) > 10 and $this->curveLen($s2['offset'][0], $s2['offset'][1], $s2['offset'][2],
-                    $s2['offset'][3]) > 10
+            if ($this->curveLen(
+                $s1['offset'][0], $s1['offset'][1], $s1['offset'][2],
+                $s1['offset'][3]
+            ) > 10 and $this->curveLen(
+                $s2['offset'][0], $s2['offset'][1], $s2['offset'][2],
+                $s2['offset'][3]
+            ) > 10
             ) {
-                $i = BezierToolbox::findCurveCurveIntersections($this->loadPoint($s1['offset'][0]),
+                $i = BezierToolbox::findCurveCurveIntersections(
+                    $this->loadPoint($s1['offset'][0]),
                     $this->loadPoint($s1['offset'][1]), $this->loadPoint($s1['offset'][2]), $this->loadPoint($s1['offset'][3]),
                     $this->loadPoint($s2['offset'][0]), $this->loadPoint($s2['offset'][1]), $this->loadPoint($s2['offset'][2]),
-                    $this->loadPoint($s2['offset'][3]));
+                    $this->loadPoint($s2['offset'][3])
+                );
                 if ($i) {
                     foreach ($i as $key => $point) {
                         // Ignore intersections at curve end points
-                        if (Utils::isSamePoint($point, $this->loadPoint($s1['offset'][0])) or Utils::isSamePoint($point,
-                                $this->loadPoint($s1['offset'][3])) or Utils::isSamePoint($point,
-                                $this->loadPoint($s2['offset'][0])) or Utils::isSamePoint($point,
-                                $this->loadPoint($s2['offset'][3]))
+                        if (Utils::isSamePoint($point, $this->loadPoint($s1['offset'][0])) or Utils::isSamePoint(
+                            $point,
+                            $this->loadPoint($s1['offset'][3])
+                        ) or Utils::isSamePoint(
+                            $point,
+                            $this->loadPoint($s2['offset'][0])
+                        ) or Utils::isSamePoint(
+                            $point,
+                            $this->loadPoint($s2['offset'][3])
+                        )
                         ) {
                             unset($i[$key]);
                         }
@@ -669,16 +704,24 @@ class Part
         } elseif ($s1['type'] == 'line' && $s2['type'] == 'curve') {
             // 1 line, 1 curve
             if ($this->curveLen($s2['offset'][0], $s2['offset'][1], $s2['offset'][2], $s2['offset'][3]) > 10) {
-                $i = BezierToolbox::findLineCurveIntersections($this->loadPoint($s1['offset'][0]),
+                $i = BezierToolbox::findLineCurveIntersections(
+                    $this->loadPoint($s1['offset'][0]),
                     $this->loadPoint($s1['offset'][1]), $this->loadPoint($s2['offset'][0]), $this->loadPoint($s2['offset'][1]),
-                    $this->loadPoint($s2['offset'][2]), $this->loadPoint($s2['offset'][3]));
+                    $this->loadPoint($s2['offset'][2]), $this->loadPoint($s2['offset'][3])
+                );
                 if ($i) {
                     foreach ($i as $key => $point) {
                         // Ignore intersections at line/curve end points
-                        if (Utils::isSamePoint($point, $this->loadPoint($s1['offset'][0])) or Utils::isSamePoint($point,
-                                $this->loadPoint($s1['offset'][1])) or Utils::isSamePoint($point,
-                                $this->loadPoint($s2['offset'][0])) or Utils::isSamePoint($point,
-                                $this->loadPoint($s2['offset'][3]))
+                        if (Utils::isSamePoint($point, $this->loadPoint($s1['offset'][0])) or Utils::isSamePoint(
+                            $point,
+                            $this->loadPoint($s1['offset'][1])
+                        ) or Utils::isSamePoint(
+                            $point,
+                            $this->loadPoint($s2['offset'][0])
+                        ) or Utils::isSamePoint(
+                            $point,
+                            $this->loadPoint($s2['offset'][3])
+                        )
                         ) {
                             unset($i[$key]);
                         }
@@ -689,16 +732,24 @@ class Part
         } else {
             // 1 curve, 1 line
             if ($this->curveLen($s1['offset'][0], $s1['offset'][1], $s1['offset'][2], $s1['offset'][3]) > 10) {
-                $i = BezierToolbox::findLineCurveIntersections($this->loadPoint($s1['offset'][0]),
+                $i = BezierToolbox::findLineCurveIntersections(
+                    $this->loadPoint($s1['offset'][0]),
                     $this->loadPoint($s1['offset'][1]), $this->loadPoint($s1['offset'][2]), $this->loadPoint($s1['offset'][3]),
-                    $this->loadPoint($s2['offset'][0]), $this->loadPoint($s2['offset'][1]));
+                    $this->loadPoint($s2['offset'][0]), $this->loadPoint($s2['offset'][1])
+                );
                 if ($i) {
                     foreach ($i as $key => $point) {
                         // Ignore intersections at line/curve end points
-                        if (Utils::isSamePoint($point, $this->loadPoint($s1['offset'][0])) or Utils::isSamePoint($point,
-                                $this->loadPoint($s1['offset'][3])) or Utils::isSamePoint($point,
-                                $this->loadPoint($s2['offset'][0])) or Utils::isSamePoint($point,
-                                $this->loadPoint($s2['offset'][1]))
+                        if (Utils::isSamePoint($point, $this->loadPoint($s1['offset'][0])) or Utils::isSamePoint(
+                            $point,
+                            $this->loadPoint($s1['offset'][3])
+                        ) or Utils::isSamePoint(
+                            $point,
+                            $this->loadPoint($s2['offset'][0])
+                        ) or Utils::isSamePoint(
+                            $point,
+                            $this->loadPoint($s2['offset'][1])
+                        )
                         ) {
                             unset($i[$key]);
                         }
@@ -773,12 +824,12 @@ class Part
      * When all is done, we need to re-create a path out of this stack of indidividual steps.
      * This method does that
      *
-     * @param array $stack       An array of path operations
-     * @param Path  $orginalPath The original path
+     * @param Stack $stack       An array of path operations
+     * @param Path  $originalPath The original path
      *
      * @return string The contructed pathstring
      */
-    private function pathStackToPath($stack, $originalPath)
+    private function pathStackToPath(Stack $stack, Path $originalPath)
     {
         /* Is the original path closed? */
         if (substr(trim($originalPath->getPath()), -2) == ' z') {
@@ -789,7 +840,6 @@ class Part
 
         $chunks = count($stack->items);
         $count = 1;
-        $i = 1;
         $path = '';
         foreach ($stack->items as $chunk) {
             if ($count == 1) {
@@ -856,12 +906,12 @@ class Part
      * At corners, or bends, this creates 'gaps' in the path.
      * This method adds steps to the stack to fill those gaps.
      *
-     * @param array $stack An array of individual path steps
+     * @param Stack $stack An array of individual path steps
      * @param Path  $path  The path
      *
      * @return string The new ID
      */
-    private function fillPathStackGaps($stack, $path)
+    private function fillPathStackGaps(Stack $stack, $path)
     {
         $chunks = count($stack->items);
         $count = 1;
@@ -884,8 +934,10 @@ class Part
                     if (!$this->isSamePoint($chunk['offset'][1], $next['offset'][0])) {
                         // Gap to fill
                         $id = $chunk['offset'][1] . 'XllX' . $next['offset'][0];
-                        $this->addPoint($id,
-                            $this->beamsCross($chunk['offset'][0], $chunk['offset'][1], $next['offset'][0], $next['offset'][1]));
+                        $this->addPoint(
+                            $id,
+                            $this->beamsCross($chunk['offset'][0], $chunk['offset'][1], $next['offset'][0], $next['offset'][1])
+                        );
                         $new[] = $chunk;
                         $new[] = ['type' => 'line', 'offset' => [$chunk['offset'][1], $id]];
                         $new[] = ['type' => 'line', 'offset' => [$id, $next['offset'][0]]];
@@ -906,16 +958,22 @@ class Part
                          */
                         if ($this->isSamePoint($next['offset'][0], $next['offset'][1])) {
                             // Quadratic Bezier, shift a tiny bit along the curve to get a different point
-                            $this->addPoint('.help',
-                                $this->shiftAlong($next['offset'][0], $next['offset'][1], $next['offset'][2], $next['offset'][3],
-                                    0.5));
+                            $this->addPoint(
+                                '.help',
+                                $this->shiftAlong(
+                                    $next['offset'][0], $next['offset'][1], $next['offset'][2], $next['offset'][3],
+                                    0.5
+                                )
+                            );
                         } else {
                             // Cubic Bezier, we can just use the control point
                             $this->clonePoint($next['offset'][1], '.help');
                         }
                         $id = $chunk['offset'][1] . 'XlcX' . $next['offset'][0];
-                        $this->addPoint($id,
-                            $this->beamsCross($chunk['offset'][0], $chunk['offset'][1], $next['offset'][0], '.help'));
+                        $this->addPoint(
+                            $id,
+                            $this->beamsCross($chunk['offset'][0], $chunk['offset'][1], $next['offset'][0], '.help')
+                        );
                         $new[] = $chunk;
                         $new[] = ['type' => 'line', 'offset' => [$chunk['offset'][1], $id]];
                         $new[] = ['type' => 'line', 'offset' => [$id, $next['offset'][0]]];
@@ -926,47 +984,65 @@ class Part
                         // Gap to fill
                         if ($this->isSamePoint($chunk['offset'][2], $chunk['offset'][3])) {
                             // Quadratic Bezier, shift a tiny bit along the curve to get a different point
-                            $this->addPoint('.help',
-                                $this->shiftAlong($chunk['offset'][3], $chunk['offset'][2], $chunk['offset'][1],
-                                    $chunk['offset'][0], 0.5));
+                            $this->addPoint(
+                                '.help',
+                                $this->shiftAlong(
+                                    $chunk['offset'][3], $chunk['offset'][2], $chunk['offset'][1],
+                                    $chunk['offset'][0], 0.5
+                                )
+                            );
                         } else {
                             // Cubic Bezier, we can just use the control point
                             $this->clonePoint($chunk['offset'][2], '.help');
                         }
                         $id = $chunk['offset'][3] . 'XclX' . $next['offset'][0];
-                        $this->addPoint($id,
-                            $this->beamsCross($chunk['offset'][3], '.help', $next['offset'][0], $next['offset'][1]));
+                        $this->addPoint(
+                            $id,
+                            $this->beamsCross($chunk['offset'][3], '.help', $next['offset'][0], $next['offset'][1])
+                        );
                         $new[] = $chunk;
                         $new[] = ['type' => 'line', 'offset' => [$chunk['offset'][3], $id]];
                         $new[] = ['type' => 'line', 'offset' => [$id, $next['offset'][0]]];
                         $stack->replace($chunk, $new);
                     }
                 } elseif ($chunk['type'] == 'curve' && $next['type'] == 'curve') {
-                    if (!$this->isSamePoint($chunk['offset'][3], $next['offset'][0]) && $this->curveLen($next['offset'][0],
-                            $next['offset'][1], $next['offset'][2], $next['offset'][3]) > 0
+                    if (!$this->isSamePoint($chunk['offset'][3], $next['offset'][0]) && $this->curveLen(
+                        $next['offset'][0],
+                        $next['offset'][1], $next['offset'][2], $next['offset'][3]
+                    ) > 0
                     ) {
                         // Gap to fill
                         if ($this->isSamePoint($chunk['offset'][2], $chunk['offset'][3])) {
                             // Quadratic Bezier, shift a tiny bit along the curve to get a different point
-                            $this->addPoint('.helpChunk',
-                                $this->shiftAlong($chunk['offset'][3], $chunk['offset'][2], $chunk['offset'][1],
-                                    $chunk['offset'][0], 0.5));
+                            $this->addPoint(
+                                '.helpChunk',
+                                $this->shiftAlong(
+                                    $chunk['offset'][3], $chunk['offset'][2], $chunk['offset'][1],
+                                    $chunk['offset'][0], 0.5
+                                )
+                            );
                         } else {
                             // Cubic Bezier, we can just use the control point
                             $this->clonePoint($chunk['offset'][2], '.helpChunk');
                         }
                         if ($this->isSamePoint($next['offset'][0], $next['offset'][1])) {
                             // Quadratic Bezier, shift a tiny bit along the curve to get a different point
-                            $this->addPoint('.helpNext',
-                                $this->shiftAlong($next['offset'][0], $next['offset'][1], $next['offset'][2], $next['offset'][3],
-                                    0.5));
+                            $this->addPoint(
+                                '.helpNext',
+                                $this->shiftAlong(
+                                    $next['offset'][0], $next['offset'][1], $next['offset'][2], $next['offset'][3],
+                                    0.5
+                                )
+                            );
                         } else {
                             // Cubic Bezier, we can just use the control point
                             $this->clonePoint($next['offset'][1], '.helpNext');
                         }
                         $id = $chunk['offset'][3] . 'XccX' . $next['offset'][0];
-                        $this->addPoint($id,
-                            $this->beamsCross('.helpChunk', $chunk['offset'][3], '.helpNext', $next['offset'][0]));
+                        $this->addPoint(
+                            $id,
+                            $this->beamsCross('.helpChunk', $chunk['offset'][3], '.helpNext', $next['offset'][0])
+                        );
                         $new[] = $chunk;
                         $new[] = ['type' => 'line', 'offset' => [$chunk['offset'][3], $id]];
                         $new[] = ['type' => 'line', 'offset' => [$id, $next['offset'][0]]];
@@ -1022,7 +1098,7 @@ class Part
      * @param float  $distance The distance to offset the line by
      * @param string $key      The key of the new path
      *
-     * @return array An array to go on a stack of path steps
+     * @return array|bool An array to go on a stack of path steps
      */
     private function offsetLine($line, $distance, $key)
     {
@@ -1110,10 +1186,10 @@ class Part
      *  This returns the offsetted points for this
      *
      * @param string $missing  Either 'cp1' or 'cp2' to indicate what control point is missing
-     * @param Point  $from     The start of the curve
-     * @param Point  $cp1      Control point 1 of the curve
-     * @param Point  $cp2      Control point 2 of the curve
-     * @param Point  $to       The end of the curve
+     * @param string  $from     The start of the curve
+     * @param string  $cp1      Control point 1 of the curve
+     * @param string  $cp2      Control point 2 of the curve
+     * @param string  $to       The end of the curve
      * @param float  $distance The distance to offset the line by
      *
      * @return array An array with the offsetted points
@@ -1121,11 +1197,11 @@ class Part
     private function getNonCubicCurveOffsetPoints($missing, $from, $cp1, $cp2, $to, $distance)
     {
         if ($missing == 'cp1') {
-            $almostTheSamePoint = $this->addPoint('-shifthelper', $this->shiftAlong($from, $cp1, $cp2, $to, 5));
+            $this->addPoint('-shifthelper', $this->shiftAlong($from, $cp1, $cp2, $to, 5));
             $angle = $this->angle($from, '-shifthelper') + 90;
             $p = $from;
         } else {
-            $almostTheSamePoint = $this->addPoint('-shifthelper', $this->shiftAlong($to, $cp2, $cp1, $from, 5));
+            $this->addPoint('-shifthelper', $this->shiftAlong($to, $cp2, $cp1, $from, 5));
             $angle = $this->angle('-shifthelper', $to) + 90;
             $p = $to;
         }
@@ -1167,9 +1243,10 @@ class Part
      * @param string $curve    The pathstring of the curve segment
      * @param float  $distance The distance to offset the line by
      * @param string $key      The key of the new path
-     * @param string $subdive  Is this an original call, or recursive call upon subdividing?
+     * @param int    $subdivide
      *
      * @return array An array to go on a stack of path steps
+     * @throws \Exception
      */
     private function offsetCurve($curve, $distance, $key, $subdivide = 0)
     {
@@ -1177,6 +1254,8 @@ class Part
             // This is here to protect us against egge cases
             throw new \Exception("Path offset ran $subdivide subdivisions deep. Bailing out before we eat all memory");
         }
+
+        $chunks = [];
         $points = Utils::asScrubbedArray($curve);
         $from = $points[1];
         $cp1 = $points[3];
@@ -1245,8 +1324,8 @@ class Part
     /**
      * Finds how much an offset differs from its ideal
      *
-     * @param array  $entry   Array containing offset and original
-     * @param string $subdive Is this an original call, or recursive call upon subdividing?
+     * @param array  $entry Array containing offset and original
+     * @param string $distance
      *
      * @return array Array with the worst score and where it lies on the curve
      */
@@ -1434,6 +1513,7 @@ class Part
         $distance = $this->distance($key1, $key2);
         $deltaX = $this->deltaX($key1, $key2);
         $deltaY = $this->deltaY($key1, $key2);
+        $angle = 0;
 
         if ($deltaX == 0 && $deltaY == 0) {
             $angle = 0;
@@ -1473,8 +1553,10 @@ class Part
      */
     public function curveLen($keyStart, $keyControl1, $keyControl2, $keyEnd)
     {
-        return BezierToolbox::cubicBezierLength($this->loadPoint($keyStart), $this->loadPoint($keyControl1),
-            $this->loadPoint($keyControl2), $this->loadPoint($keyEnd));
+        return BezierToolbox::cubicBezierLength(
+            $this->loadPoint($keyStart), $this->loadPoint($keyControl1),
+            $this->loadPoint($keyControl2), $this->loadPoint($keyEnd)
+        );
     }
 
     /**
@@ -1550,8 +1632,10 @@ class Part
                 $deltaY = $y - $previousY;
                 $length += sqrt(pow($deltaX, 2) + pow($deltaY, 2));
                 if ($length > $distance) {
-                    return $this->createPoint($x, $y,
-                        "Point shifted $distance along curve $keyStart $keyControl1 $keyControl2 $keyEnd");
+                    return $this->createPoint(
+                        $x, $y,
+                        "Point shifted $distance along curve $keyStart $keyControl1 $keyControl2 $keyEnd"
+                    );
                 }
             }
             $previousX = $x;
@@ -1624,8 +1708,10 @@ class Part
      */
     public function findLineLineIntersection($key1, $key2, $key3, $key4)
     {
-        return Utils::findLineLineIntersection($this->loadPoint($key1), $this->loadPoint($key2), $this->loadPoint($key3),
-            $this->loadPoint($key4));
+        return Utils::findLineLineIntersection(
+            $this->loadPoint($key1), $this->loadPoint($key2), $this->loadPoint($key3),
+            $this->loadPoint($key4)
+        );
     }
 
     /**
@@ -1818,8 +1904,10 @@ class Part
      */
     public function curveEdge($curveStartKey, $curveControl1Key, $curveControl2Key, $curveEndKey, $direction)
     {
-        return BezierToolbox::findBezierEdge($this->loadPoint($curveStartKey), $this->loadPoint($curveControl1Key),
-            $this->loadPoint($curveControl2Key), $this->loadPoint($curveEndKey), $direction);
+        return BezierToolbox::findBezierEdge(
+            $this->loadPoint($curveStartKey), $this->loadPoint($curveControl1Key),
+            $this->loadPoint($curveControl2Key), $this->loadPoint($curveEndKey), $direction
+        );
     }
 
     /**
@@ -1844,9 +1932,11 @@ class Part
         $lineEndKey,
         $prefix = false
     ) {
-        $points = BezierToolbox::findLineCurveIntersections($this->loadPoint($lineStartKey), $this->loadPoint($lineEndKey),
+        $points = BezierToolbox::findLineCurveIntersections(
+            $this->loadPoint($lineStartKey), $this->loadPoint($lineEndKey),
             $this->loadPoint($curveStartKey), $this->loadPoint($curveControl1Key), $this->loadPoint($curveControl2Key),
-            $this->loadPoint($curveEndKey));
+            $this->loadPoint($curveEndKey)
+        );
 
         if (!is_array($points)) {
             return;
@@ -1908,15 +1998,21 @@ class Part
         if ($splitOnDelta) {
             $t = $split;
         } else {
-            $t = BezierToolbox::cubicBezierDelta($this->loadPoint($from), $this->loadPoint($cp1), $this->loadPoint($cp2),
-                $this->loadPoint($to), $this->loadPoint($split));
+            $t = BezierToolbox::cubicBezierDelta(
+                $this->loadPoint($from), $this->loadPoint($cp1), $this->loadPoint($cp2),
+                $this->loadPoint($to), $this->loadPoint($split)
+            );
         }
 
-        $curve1 = BezierToolbox::calculateSplitCurvePoints($this->loadPoint($from), $this->loadPoint($cp1),
-            $this->loadPoint($cp2), $this->loadPoint($to), $t);
+        $curve1 = BezierToolbox::calculateSplitCurvePoints(
+            $this->loadPoint($from), $this->loadPoint($cp1),
+            $this->loadPoint($cp2), $this->loadPoint($to), $t
+        );
         $t = 1 - $t;
-        $curve2 = BezierToolbox::calculateSplitCurvePoints($this->loadPoint($to), $this->loadPoint($cp2), $this->loadPoint($cp1),
-            $this->loadPoint($from), $t);
+        $curve2 = BezierToolbox::calculateSplitCurvePoints(
+            $this->loadPoint($to), $this->loadPoint($cp2), $this->loadPoint($cp1),
+            $this->loadPoint($from), $t
+        );
 
         return [
             $curve1[0],
@@ -1971,10 +2067,12 @@ class Part
         $curve2EndKey,
         $prefix = false
     ) {
-        $points = BezierToolbox::findCurveCurveIntersections($this->loadPoint($curve1StartKey),
+        $points = BezierToolbox::findCurveCurveIntersections(
+            $this->loadPoint($curve1StartKey),
             $this->loadPoint($curve1Control1Key), $this->loadPoint($curve1Control2Key), $this->loadPoint($curve1EndKey),
             $this->loadPoint($curve2StartKey), $this->loadPoint($curve2Control1Key), $this->loadPoint($curve2Control2Key),
-            $this->loadPoint($curve2EndKey));
+            $this->loadPoint($curve2EndKey)
+        );
         if (!is_array($points)) {
             return;
         }

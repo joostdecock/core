@@ -4,7 +4,7 @@ defaults:
     draftTheme: Svg
     sampleTheme: Sampler
     infoTheme: Info
-    pattern: AidenAshirt
+    pattern: AaronAshirt
     locale: en
 renderers:
     svg: SvgRenderbot

@@ -1,4 +1,4 @@
-var api = 'https://api.freesewing.org';
+var api = '';
 var themes = [];
 var spinner =  '<img src="spinner.gif">';
 

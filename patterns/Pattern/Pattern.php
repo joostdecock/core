@@ -2,6 +2,8 @@
 /** Freesewing\Patterns\Pattern class */
 namespace Freesewing\Patterns;
 
+use Symfony\Component\Yaml\Exception\ParseException;
+
 /**
  * Abstract class for patterns.
  *
@@ -38,7 +40,7 @@ abstract class Pattern
     /**
      * Constructor stores Yaml config file in the config property
      *
-     * @throws InvalidArgument if the Yaml file is not valid
+     * @throws ParseException if the Yaml file is not valid
      */
     public function __construct()
     {
@@ -78,7 +80,7 @@ abstract class Pattern
      *
      * @param \Freesewing\Context $context The context
      */
-    abstract public function sample($model);
+    abstract public function sample($context);
     
     /**
      * Add parts in config file to pattern
@@ -132,7 +134,7 @@ abstract class Pattern
      *
      * This loads the configation Yaml file and returns it as an array
      *
-     * @throws Exception If the Yaml file is invalid
+     * @throws ParseException If the Yaml file is invalid
      *
      * @return array The pattern configuration
      */
@@ -160,7 +162,7 @@ abstract class Pattern
      *
      * For example, this returns 25.4 as either '2.54cm' or '1"'
      *
-     * @param $val The value to convert
+     * @param string $val The value to convert
      *
      * @return string $text The converted text
      */
@@ -188,7 +190,7 @@ abstract class Pattern
      *
      * @param string $key The key in the options array for which to return the value
      *
-     * @return anything $value The option value
+     * @return mixed $value The option value
      */
     public function getOption($key)
     {
@@ -200,7 +202,7 @@ abstract class Pattern
      *
      * @param string $key The key in the options array for which to return the value
      *
-     * @return anything $value The option value
+     * @return mixed $value The option value
      */
     public function o($key)
     {
@@ -211,7 +213,7 @@ abstract class Pattern
      * Sets the key $key in the options array to value $value
      *
      * @param string $key The key in the options array
-     * @param anything $value The option to set
+     * @param mixed $value The option to set
      */
     public function setOption($key, $value)
     {
@@ -353,7 +355,7 @@ abstract class Pattern
     /**
      * Adds a part to the pattern by adding it to the parts array
      *
-     * @param $key The ID in the parts array of the part to add
+     * @param string $key The ID in the parts array of the part to add
      */
     public function addPart($key)
     {
@@ -514,7 +516,7 @@ abstract class Pattern
     /**
      * Stores a translator object in the translator property
      *
-     * @param Symfony\Component\Translation\Translator $translator The translator
+     * @param \Symfony\Component\Translation\Translator $translator The translator
      */
     public function setTranslator($translator)
     {
@@ -571,6 +573,7 @@ abstract class Pattern
      * This takes care of that.
      *
      * @param array $parts Array of pattern parts
+     * @return array|bool
      */
     private function layoutPreSort($parts)
     {

@@ -6,12 +6,15 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ### Changed
 - Created the (now default) develop branch
 - Added this CHANGELOG.md file
+- Moved todo to GitHub issues
+- Install instructions in README.md
 
 ### Fixed
-- ...
+- Bug in the docs channel not taking measurements into account
 
 ### Added
-- ...
+- The WahidWaistcoat pattern
+- Buttonhole and Button defs in default theme
 
 ## [0.0.4-alpha] - 2016-11-01
 ### Changed

@@ -10,4 +10,3 @@ Freesewing development
 * composer install
 * composer dump-autoload -o
 * copy htaccess to .htaccess 
-* change API URI in docs/demo/demo.js (optional)

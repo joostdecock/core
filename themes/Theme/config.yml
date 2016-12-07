@@ -6,6 +6,8 @@ templates:
         - "defs/scalebox"
         - "defs/logo"
         - "defs/cc"
+        - "defs/buttons"
+        - "defs/buttonholes"
     footer: 
         - "comments/footer"
     header: 

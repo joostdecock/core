@@ -247,6 +247,13 @@ class Context
         $altloc = $this->config['defaults']['locale'];
         $themeTranslations = $this->theme->getTranslationFiles($locale, $altloc);
         $patternTranslations = $this->pattern->getTranslationFiles($locale, $altloc);
+
+        // Check if there is a theme-localization
+        // allow to translate patterns independent of the theme
+        if (!isset($themeTranslations[$locale])) {
+            $themeTranslations[$locale] = $themeTranslations[$altloc];
+        }
+
         $translations[$locale] = array_merge($themeTranslations[$locale], $patternTranslations[$locale]);
         $translations[$altloc] = array_merge($themeTranslations[$altloc], $patternTranslations[$altloc]);
 

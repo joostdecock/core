@@ -7,12 +7,13 @@ use Symfony\Component\Yaml\Exception\ParseException;
 /**
  * Abstract class for patterns.
  *
- * @author Joost De Cock <joost@decock.org>
+ * @author    Joost De Cock <joost@decock.org>
  * @copyright 2016 Joost De Cock
- * @license http://opensource.org/licenses/GPL-3.0 GNU General Public License, Version 3
+ * @license   http://opensource.org/licenses/GPL-3.0 GNU General Public License, Version 3
  */
 abstract class Pattern
 {
+
     /** @var array $parts Holds the pattern parts */
     public $parts = array();
 
@@ -36,6 +37,18 @@ abstract class Pattern
 
     /** @var array $messages Messages to include in SVG source */
     private $messages;
+
+    /** @var float $partMargin Margin between pattern parts */
+    private $partMargin;
+
+    /** @var \Freesewing\GrowingPacker $packer */
+    private $packer;
+
+    /** @var array $layoutBlocks */
+    private $layoutBlocks;
+
+    /** @var array $debug collection of debug messages */
+    private $debug;
 
     /**
      * Constructor stores Yaml config file in the config property
@@ -61,6 +74,7 @@ abstract class Pattern
      * Makes sure to unset the parts array when cloning a pattern
      *
      * This is used by the sample service
+     *
      * @see \Freesewing\MeasurementsSampler::samplerMeasurements()
      */
     public function __clone()
@@ -81,7 +95,7 @@ abstract class Pattern
      * @param \Freesewing\Context $context The context
      */
     abstract public function sample($context);
-    
+
     /**
      * Add parts in config file to pattern
      *
@@ -106,7 +120,7 @@ abstract class Pattern
      */
     public function getTranslationsDir()
     {
-        return \Freesewing\Utils::getClassDir($this).'/translations';
+        return \Freesewing\Utils::getClassDir($this) . '/translations';
     }
 
     /**
@@ -116,7 +130,7 @@ abstract class Pattern
      */
     public function getConfigFile()
     {
-        return \Freesewing\Utils::getClassDir($this).'/config.yml';
+        return \Freesewing\Utils::getClassDir($this) . '/config.yml';
     }
 
     /**
@@ -126,7 +140,7 @@ abstract class Pattern
      */
     public function getSamplerModelFile()
     {
-        return \Freesewing\Utils::getClassDir($this).'/sampler/models.yml';
+        return \Freesewing\Utils::getClassDir($this) . '/sampler/models.yml';
     }
 
     /**
@@ -148,7 +162,7 @@ abstract class Pattern
      *
      * This loads the sampler/models.yml Yaml file and returns it as an array
      *
-     * @throws Exception If the Yaml file is invalid
+     * @throws ParseException If the Yaml file is invalid
      *
      * @return array The sampler models
      */
@@ -169,9 +183,9 @@ abstract class Pattern
     public function unit($val)
     {
         if ($this->units['out'] == 'imperial') {
-            return round($val / 25.4, 2).'"';
+            return round($val / 25.4, 2) . '"';
         } else {
-            return round($val / 10, 2).'cm';
+            return round($val / 10, 2) . 'cm';
         }
     }
 
@@ -212,8 +226,8 @@ abstract class Pattern
     /**
      * Sets the key $key in the options array to value $value
      *
-     * @param string $key The key in the options array
-     * @param mixed $value The option to set
+     * @param string $key   The key in the options array
+     * @param mixed  $value The option to set
      */
     public function setOption($key, $value)
     {
@@ -286,7 +300,7 @@ abstract class Pattern
     /**
      * Sets the partMargin property
      *
-     * @param float $margin The margin between pattern parts
+     * @return float $margin The margin between pattern parts
      */
     public function getPartMargin()
     {
@@ -322,17 +336,12 @@ abstract class Pattern
     {
         foreach ($this->parts as $part) {
             if ($part->getRender() === true) {
+                // @todo: frome where comes the topLeft-variable?
                 if (!@is_object($topLeft)) {
-                    $topLeft = new \Freesewing\Point(
-                        $part->boundary->topLeft->x,
-                        $part->boundary->topLeft->y,
-                        'Top-left pattern boundary'
-                    );
-                    $bottomRight = new \Freesewing\Point(
-                        $part->boundary->bottomRight->x,
-                        $part->boundary->bottomRight->y,
-                        'Bottom-right pattern boundary'
-                    );
+                    $topLeft = new \Freesewing\Point($part->boundary->topLeft->x, $part->boundary->topLeft->y,
+                        'Top-left pattern boundary');
+                    $bottomRight = new \Freesewing\Point($part->boundary->bottomRight->x, $part->boundary->bottomRight->y,
+                        'Bottom-right pattern boundary');
                 } else {
                     if ($part->boundary->topLeft->x < $topLeft->x) {
                         $topLeft->setX($part->boundary->topLeft->x);
@@ -396,7 +405,6 @@ abstract class Pattern
             }
         }
     }
-
 
     /**
      * Lays out pattern parts on the page
@@ -495,7 +503,7 @@ abstract class Pattern
      *
      * @see \Freesewing\DraftService::run()
      *
-     * @param string $search The string to search for
+     * @param string $search  The string to search for
      * @param string $replace The string to replace it with
      */
     public function replace($search, $replace)
@@ -544,7 +552,7 @@ abstract class Pattern
     {
         return $this->translator->trans($msg);
     }
-    
+
     /**
      * Add transforms to parts to implement layout calculated by the packer
      *
@@ -573,6 +581,7 @@ abstract class Pattern
      * This takes care of that.
      *
      * @param array $parts Array of pattern parts
+     *
      * @return array|bool
      */
     private function layoutPreSort($parts)

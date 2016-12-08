@@ -86,7 +86,7 @@ class TrayvonTie extends Pattern
     public function finalizeInterfacingTip($model, $p)
     {
         /* Title */
-        $p->addTitle('titleAnchor', 1, $this->t($p->title), $this->t('Cut 1 from tie interfacing'), 'vertical');
+        $p->addTitle('titleAnchor', 1, $this->t($p->title), '1x '.$this->t('from tie interfacing'), 'vertical');
 
         /* Paperless instructions (or not) */
         if ($this->isPaperless) {
@@ -110,7 +110,7 @@ class TrayvonTie extends Pattern
     public function finalizeInterfacingTail($model, $p)
     {
         /* Title */
-        $p->addTitle('titleAnchor', 2, $this->t($p->title), $this->t('Cut 1 from tie interfacing'), 'vertical');
+        $p->addTitle('titleAnchor', 2, $this->t($p->title), '1x '.$this->t('from tie interfacing'), 'vertical');
         
         /* Paperless instructions (or not) */
         if (!$this->isPaperless) {
@@ -137,7 +137,7 @@ class TrayvonTie extends Pattern
     public function finalizeFabricTip($model, $p)
     {
         /* Title */
-        $p->addTitle('titleAnchor', 3, $this->t($p->title), $this->t('Cut 1 from fabric'));
+        $p->addTitle('titleAnchor', 3, $this->t($p->title), '1x '.$this->t('from fabric'));
         
         /* Scalebox */
         $p->addPoint('scaleboxAnchor', $p->shift('titleAnchor', -90, 50));
@@ -177,7 +177,7 @@ class TrayvonTie extends Pattern
     public function finalizeFabricTail($model, $p)
     {
         /* Title */
-        $p->addTitle('titleAnchor', 4, $this->t($p->title), $this->t('Cut 1 from fabric'));
+        $p->addTitle('titleAnchor', 4, $this->t($p->title), '1x '.$this->t('from fabric'));
 
         /* Tail seam allowance */
         $p->offsetPathString('tailSA', 'M 4 L 1 L 3', -10, 0);
@@ -217,7 +217,7 @@ class TrayvonTie extends Pattern
         $this->clonePoints('fabricTip', 'liningTip');
         
         /* Title */
-        $p->addTitle('titleAnchor', 5, $this->t($p->title), '1x '.$this->t('Cut 1 from lining'));
+        $p->addTitle('titleAnchor', 5, $this->t($p->title), '1x '.$this->t('from lining'));
         
         /* Tip seam allowance */
         $p->newPath('tipSA', 'M 4 L 10 L tipSA-line-1TO4XllXtipSA-line-1TO3 L 11 L 3', ['class' => 'seam-allowance']);
@@ -238,7 +238,7 @@ class TrayvonTie extends Pattern
             $p->newTextOnPath('width', 'M 4 L 3', $this->unit($p->distance(3, 4)), ['class' => 'text-lg fill-note text-center', 'dy' => -3, 'dx' => 12]);
             
             /* Seam allowance note */
-            $p->newNote(1, 1, $this->t("Standard  seam\nallowance")."(".$this->unit(10).')', 9, 25, 8, ['line-height' => 7, 'class' => 'text-lg']);
+            $p->newNote(1, 1, $this->t("Standard\nseam\nallowance")."(".$this->unit(10).')', 9, 25, 8, ['line-height' => 7, 'class' => 'text-lg']);
         }
     }
 
@@ -258,7 +258,7 @@ class TrayvonTie extends Pattern
         $this->clonePoints('fabricTail', 'liningTail');
 
         /* Title */
-        $p->addTitle('titleAnchor', 6, $this->t($p->title), $this->t('Cut 1 from lining'));
+        $p->addTitle('titleAnchor', 6, $this->t($p->title), '1x '.$this->t('from lining'));
         
         /* Tip seam allowance */
         $p->newPath('tailSA', 'M 4 L 10 L tailSA-line-1TO4XllXtailSA-line-1TO3 L 11 L 3', ['class' => 'seam-allowance']);
@@ -279,7 +279,7 @@ class TrayvonTie extends Pattern
             $p->newTextOnPath('width', 'M 4 L 3', $this->unit($p->distance(3, 4)), ['class' => 'text-lg fill-note text-center', 'dy' => -3, 'dx' => 12]);
 
             /* Seam allowance note */
-            $p->newNote(1, 1, $this->t("Standard  seam\nallowance")."(".$this->unit(10).')', 9, 25, 8, ['line-height' => 7, 'class' => 'text-lg']);
+            $p->newNote(1, 1, $this->t("Standard\nseam\nallowance")."(".$this->unit(10).')', 9, 25, 8, ['line-height' => 7, 'class' => 'text-lg']);
         }
     }
 
@@ -322,7 +322,7 @@ class TrayvonTie extends Pattern
     public function finalizeLoop($model, $p)
     {
         /* Title */
-        $p->addTitle('titleAnchor', 7, $this->t($p->title), $this->t('Cut 1 from fabric'), 'horizontal');
+        $p->addTitle('titleAnchor', 7, $this->t($p->title), '1x '.$this->t('from fabric'), 'horizontal');
     
         /* Paperless instructions */
         if ($this->isPaperless) {
@@ -454,8 +454,8 @@ class TrayvonTie extends Pattern
         if (!$interfacing) {
             /* Seam allowance notes */
             $noteAttr = ['line-height' => 7, 'class' => 'text-lg'];
-            $p->newNote(1, 101, $this->t("Standard  seam\nallowance")."(".$this->unit(10).')', 3, 20, 8, $noteAttr);
-            $p->newNote(1, 1, $this->t("Standard  seam\nallowance")."(".$this->unit(10).')', 9, 25, 8, $noteAttr);
+            $p->newNote(1, 101, $this->t("Standard\nseam\nallowance")."(".$this->unit(10).')', 3, 20, 8, $noteAttr);
+            $p->newNote(1, 1, $this->t("Standard\nseam\nallowance")."(".$this->unit(10).')', 9, 25, 8, $noteAttr);
         }
     }
 }

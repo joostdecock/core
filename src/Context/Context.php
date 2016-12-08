@@ -2,6 +2,7 @@
 /** Freesewing\Context class */
 namespace Freesewing;
 
+use Freesewing\Service\AbstractService;
 use Symfony\Component\Translation\Translator;
 use Symfony\Component\Translation\Loader\YamlFileLoader;
 
@@ -16,6 +17,12 @@ use Symfony\Component\Translation\Loader\YamlFileLoader;
  */
 class Context
 {
+
+    /**
+     * @var \Freesewing\Service\AbstractService
+     */
+    protected $service;
+
     /**
      * Stores a request object in the request property.
      *
@@ -337,9 +344,9 @@ class Context
     /**
      * Creates a new service based on request data, or the default service
      *
-     * @return \Freesewing\DraftService|\Freesewing\SampleService|\Freesewing\InfoService
+     * @return \Freesewing\Service\DraftService|\Freesewing\Service\SampleService|\Freesewing\Service\InfoService
      *
-     * @throws InvalidArgumentException if the specified service cannot be found
+     * @throws \InvalidArgumentException if the specified service cannot be found
      */
     private function loadService()
     {
@@ -348,8 +355,8 @@ class Context
         } else {
             $service = $this->config['defaults']['service'];
         }
-        $class = '\\Freesewing\\'.ucfirst($service).'Service';
-        if (class_exists($class)) {
+        $class = '\\Freesewing\\Service\\'.ucfirst($service).'Service';
+        if (class_exists($class) && $class instanceof AbstractService) {
             return new $class();
         } else {
             throw new \InvalidArgumentException('Cannot load service '.ucfirst($service).'Service, it does not exist');

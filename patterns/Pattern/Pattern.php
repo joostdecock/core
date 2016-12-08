@@ -505,7 +505,7 @@ abstract class Pattern
     /**
      * Adds a search/replace pair to the replacements property
      *
-     * @see \Freesewing\DraftService::run()
+     * @see \Freesewing\Service\DraftService::run()
      *
      * @param string $search  The string to search for
      * @param string $replace The string to replace it with

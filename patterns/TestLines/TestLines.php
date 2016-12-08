@@ -46,10 +46,10 @@ class TestLines extends Pattern
         $p = $this->parts['test'];
 
         // Center vertical axis
-        $p->newPoint(1, 0, 0);
-        $p->newPoint(2, 0, 100);
-        $p->newPoint(3, 100, 100);
-        $p->newPoint(4, 100, 0);
+        $p->newPoint(1, 100, 100);
+        $p->newPoint(2, 100, 200);
+        $p->newPoint(3, 200, 200);
+        $p->newPoint(4, 200, 100);
 
         // Paths
         $path = 'M 1 L 2 L 3 L 4 z';

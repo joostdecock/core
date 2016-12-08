@@ -5,17 +5,18 @@ namespace Freesewing;
 /**
  * Handles the draft service, which samples patterns.
  *
- * @author Joost De Cock <joost@decock.org>
+ * @author    Joost De Cock <joost@decock.org>
  * @copyright 2016 Joost De Cock
- * @license http://opensource.org/licenses/GPL-3.0 GNU General Public License, Version 3
+ * @license   http://opensource.org/licenses/GPL-3.0 GNU General Public License, Version 3
  */
 class SampleService extends DraftService
 {
+
     /**
      * Returns the name of the service
      *
      * This is used to load the default theme for the service when no theme is specified
-     * 
+     *
      * @see Context::loadTheme()
      *
      * @return string
@@ -24,16 +25,16 @@ class SampleService extends DraftService
     {
         return 'sample';
     }
-    
+
     /**
      * Samples a pattern
      *
      * This samples a pattern, sets the response and sends it
      * Essentially, it takes care of the entire remainder of the request
-     * 
+     *
      * @param \Freesewing\Context
      */
-    public function run($context)
+    public function run(\Freesewing\Context $context)
     {
         $context->addPattern();
 
@@ -41,10 +42,10 @@ class SampleService extends DraftService
 
             $context->addUnits();
             $context->pattern->setUnits($context->getUnits());
-            
+
             $context->addTranslator();
             $context->pattern->setTranslator($context->getTranslator());
-            
+
             $context->pattern->setPartMargin($context->theme->config['settings']['partMargin']);
             $context->theme->setOptions($context->request);
 
@@ -56,7 +57,8 @@ class SampleService extends DraftService
                 $context->model->addMeasurements($context->optionsSampler->loadModelMeasurements($context->pattern));
 
                 $context->pattern->addOptions($context->optionsSampler->loadPatternOptions());
-                $context->setPattern($context->optionsSampler->sampleOptions($context->model, $context->theme, $context->request->getData('option'), $context->request->getData('steps')));
+                $context->setPattern($context->optionsSampler->sampleOptions($context->model, $context->theme,
+                    $context->request->getData('option'), $context->request->getData('steps')));
             } else { // Sampling measurements
                 $context->addMeasurementsSampler();
                 $context->measurementsSampler->setPattern($context->pattern);
@@ -71,7 +73,7 @@ class SampleService extends DraftService
             $context->addSvgDocument();
             $context->addRenderbot();
             $this->svgRender($context);
-            $context->setResponse($context->theme->themeResponse($context)); 
+            $context->setResponse($context->theme->themeResponse($context));
         else: // channel->isValidRequest() !== true
             $context->channel->handleInvalidRequest($context);
         endif;

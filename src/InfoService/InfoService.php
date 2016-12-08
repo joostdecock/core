@@ -8,14 +8,15 @@ namespace Freesewing;
  * This InfoService class aims to make frontend integration simpler.
  * You can see it at work in the demo that is part of the documentation.
  *
- * @see http://api.freesewing.org/docs/demo/
+ * @see       http://api.freesewing.org/docs/demo/
  *
- * @author Joost De Cock <joost@decock.org>
+ * @author    Joost De Cock <joost@decock.org>
  * @copyright 2016 Joost De Cock
- * @license http://opensource.org/licenses/GPL-3.0 GNU General Public License, Version 3
+ * @license   http://opensource.org/licenses/GPL-3.0 GNU General Public License, Version 3
  */
 class InfoService
 {
+
     /**
      * Returns the name of the service
      *
@@ -38,7 +39,7 @@ class InfoService
      *
      * @param \Freesewing\Context
      */
-    public function run($context)
+    public function run(\Freesewing\Context $context)
     {
         $format = $context->request->getData('format');
         if ($context->request->getData('pattern') !== null) {
@@ -67,7 +68,7 @@ class InfoService
      */
     private function getPatternList($context)
     {
-        foreach (glob($context->getApiDir().'/patterns/*', GLOB_ONLYDIR) as $dir) {
+        foreach (glob($context->getApiDir() . '/patterns/*', GLOB_ONLYDIR) as $dir) {
             $name = basename($dir);
             if ($name != 'Pattern') {
                 $config = $this->loadPatternConfig($name);
@@ -87,7 +88,7 @@ class InfoService
      */
     private function loadPatternConfig($pattern)
     {
-        $class = '\Freesewing\Patterns\\'.$pattern;
+        $class = '\Freesewing\Patterns\\' . $pattern;
         $pattern = new $class();
 
         return $pattern->getConfig();
@@ -102,7 +103,7 @@ class InfoService
      */
     private function getChannelList($context)
     {
-        foreach (glob($context->getApiDir().'/channels/*', GLOB_ONLYDIR) as $dir) {
+        foreach (glob($context->getApiDir() . '/channels/*', GLOB_ONLYDIR) as $dir) {
             $name = basename($dir);
             if ($name != 'Channel' && $name != 'Info') {
                 $list[] = $name;
@@ -121,7 +122,7 @@ class InfoService
      */
     private function getThemeList($context)
     {
-        foreach (glob($context->getApiDir().'/themes/*', GLOB_ONLYDIR) as $dir) {
+        foreach (glob($context->getApiDir() . '/themes/*', GLOB_ONLYDIR) as $dir) {
             $name = basename($dir);
             if ($name != 'Theme' && $name != 'Info' && $name != 'Sampler') {
                 $list[] = $name;
@@ -143,7 +144,7 @@ class InfoService
         $info = $pattern->getConfig();
         $info['models'] = $pattern->getSamplerModelConfig();
         $info['pattern'] = basename(Utils::getClassDir($pattern));
-        
+
         return $info;
     }
 }

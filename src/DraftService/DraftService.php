@@ -5,12 +5,18 @@ namespace Freesewing;
 /**
  * Handles the draft service, which drafts patterns.
  *
- * @author Joost De Cock <joost@decock.org>
+ * @author    Joost De Cock <joost@decock.org>
  * @copyright 2016 Joost De Cock
- * @license http://opensource.org/licenses/GPL-3.0 GNU General Public License, Version 3
+ * @license   http://opensource.org/licenses/GPL-3.0 GNU General Public License, Version 3
  */
 class DraftService
 {
+
+    /**
+     * Scale factor for SVG Rendering.
+     */
+    const SCALE = 3.54330709;
+
     /**
      * Returns the name of the service
      *
@@ -23,7 +29,9 @@ class DraftService
     public function getServiceName()
     {
         return 'draft';
-    } /**
+    }
+
+    /**
      * Drafts a pattern
      *
      * This drafts a pattern, sets the response and sends it
@@ -31,33 +39,30 @@ class DraftService
      *
      * @param \Freesewing\Context
      */
-    public function run($context)
+    public function run(\Freesewing\Context $context)
     {
         $context->addPattern();
 
         if ($context->channel->isValidRequest($context) === true) :
             $context->addModel();
-            $context->model->addMeasurements(
-                $context->channel->standardizeModelMeasurements($context->request, $context->pattern)
-            );
+            $context->model->addMeasurements($context->channel->standardizeModelMeasurements($context->request,
+                $context->pattern));
 
-            $context->pattern->addOptions(
-                $context->channel->standardizePatternOptions($context->request, $context->pattern)
-            );
+            $context->pattern->addOptions($context->channel->standardizePatternOptions($context->request, $context->pattern));
 
             $context->addUnits();
             $context->pattern->setUnits($context->getUnits());
             $context->addTranslator();
             $context->pattern->setTranslator($context->getTranslator());
-            
+
             $context->theme->setOptions($context->request);
 
             $context->pattern->draft($context->model);
             $context->pattern->setPartMargin($context->theme->config['settings']['partMargin']);
-            
+
             $context->theme->applyRenderMask($context->pattern);
             $context->pattern->layout();
-            
+
             $context->theme->themePattern($context->pattern);
 
             $context->addSvgDocument();
@@ -69,7 +74,7 @@ class DraftService
             /* Last minute replacements on the entire response body */
             $context->response->setBody($this->replace($context->response->getBody(), $context->pattern->getReplacements()));
         else :
-// channel->isValidRequest() !== true
+            // channel->isValidRequest() !== true
             $context->channel->handleInvalidRequest($context);
         endif;
 
@@ -88,16 +93,15 @@ class DraftService
      */
     protected function svgRender($context)
     {
-        $scale = 3.54330709;
-        $context->svgDocument->svgAttributes->add('width ="'. ($context->pattern->getWidth() * $scale) .'"');
-        $context->svgDocument->svgAttributes->add('height ="'. ($context->pattern->getHeight() * $scale) .'"');
-        
+        $context->svgDocument->svgAttributes->add('width ="' . ($context->pattern->getWidth() * self::SCALE) . '"');
+        $context->svgDocument->svgAttributes->add('height ="' . ($context->pattern->getHeight() * self::SCALE) . '"');
+
         $viewbox = $context->request->getData('viewbox');
         if ($viewbox !== null) {
             $viewbox = Utils::asScrubbedArray($viewbox, ',');
-            $context->svgDocument->svgAttributes->add('viewbox ="'.$viewbox[0].' '.$viewbox[1].' '.$viewbox[2].' '.$viewbox[3].'"');
+            $context->svgDocument->svgAttributes->add('viewbox ="' . $viewbox[0] . ' ' . $viewbox[1] . ' ' . $viewbox[2] . ' ' . $viewbox[3] . '"');
         } else {
-            $context->svgDocument->svgAttributes->add('viewbox ="0 0 '. ($context->pattern->getWidth() * $scale).' '. ($context->pattern->getHeight() * $scale) .'"');
+            $context->svgDocument->svgAttributes->add('viewbox ="0 0 ' . ($context->pattern->getWidth() * self::SCALE) . ' ' . ($context->pattern->getHeight() * self::SCALE) . '"');
         }
         // format specific themeing
         $context->theme->themeSvg($context->svgDocument);
@@ -115,9 +119,10 @@ class DraftService
      * For that, you can register a replacement in the pattern, and it will be handled here
      *
      * @param string svg
-     * @param array replacements
+     * @param array  replacements
      *
-     * @see \Freesewing\Patters\Pattern::replace()
+     * @see \Freesewing\Patterns\Pattern::replace()
+     * @return string
      */
     private function replace($svg, $replacements)
     {

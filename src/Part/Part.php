@@ -485,13 +485,13 @@ class Part
 
         // initialize topLeft
         $topLeft = new Point('topLeft');
-        $topLeft->setX(0);
-        $topLeft->setY(0);
+        $topLeft->setX(INF);
+        $topLeft->setY(INF);
 
         // initialize bottomRight
         $bottomRight = new Point('bottomRight');
-        $bottomRight->setX(0);
-        $bottomRight->setY(0);
+        $bottomRight->setX(-INF);
+        $bottomRight->setY(-INF);
 
         foreach ($this->paths as $path) {
             $path->setBoundary($path->findBoundary($this));

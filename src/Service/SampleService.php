@@ -1,6 +1,6 @@
 <?php
 /** Freesewing\SampleService class */
-namespace Freesewing;
+namespace Freesewing\Service;
 
 /**
  * Handles the draft service, which samples patterns.

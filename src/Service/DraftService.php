@@ -1,6 +1,8 @@
 <?php
 /** Freesewing\DraftService class */
-namespace Freesewing;
+namespace Freesewing\Service;
+
+use Freesewing\Utils;
 
 /**
  * Handles the draft service, which drafts patterns.
@@ -9,7 +11,7 @@ namespace Freesewing;
  * @copyright 2016 Joost De Cock
  * @license   http://opensource.org/licenses/GPL-3.0 GNU General Public License, Version 3
  */
-class DraftService
+class DraftService extends AbstractService
 {
 
     /**

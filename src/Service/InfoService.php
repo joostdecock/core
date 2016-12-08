@@ -1,6 +1,8 @@
 <?php
-/** Freesewing\InfoService class */
-namespace Freesewing;
+/** Freesewing\Service\InfoService class */
+namespace Freesewing\Service;
+
+use Freesewing\Utils;
 
 /**
  * Handles the info service, providing info about the API.
@@ -14,7 +16,7 @@ namespace Freesewing;
  * @copyright 2016 Joost De Cock
  * @license   http://opensource.org/licenses/GPL-3.0 GNU General Public License, Version 3
  */
-class InfoService
+class InfoService extends AbstractService
 {
 
     /**

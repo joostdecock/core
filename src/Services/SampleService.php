@@ -1,9 +1,9 @@
 <?php
-/** Freesewing\SampleService class */
-namespace Freesewing\Service;
+/** Freesewing\Services\SampleService class */
+namespace Freesewing\Services;
 
 /**
- * Handles the draft service, which samples patterns.
+ * Handles the sample service, which samples patterns.
  *
  * @author    Joost De Cock <joost@decock.org>
  * @copyright 2016 Joost De Cock

@@ -1,6 +1,6 @@
 <?php
-/** Freesewing\Service\InfoService class */
-namespace Freesewing\Service;
+/** Freesewing\Services\InfoService class */
+namespace Freesewing\Services;
 
 use Freesewing\Utils;
 

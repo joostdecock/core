@@ -1,9 +1,9 @@
 <?php
-/** Freesewing\DraftService class */
-namespace Freesewing\Service;
+/** Freesewing\Services\AbstractService class */
+namespace Freesewing\Services;
 
 /**
- * Handles the draft service, which drafts patterns.
+ * Abstract service class for services
  *
  * @author    Joost De Cock <joost@decock.org>
  * @copyright 2016 Joost De Cock

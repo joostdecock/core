@@ -1,6 +1,6 @@
 <?php
-/** Freesewing\DraftService class */
-namespace Freesewing\Service;
+/** Freesewing\Services\DraftService class */
+namespace Freesewing\Services;
 
 use Freesewing\Utils;
 

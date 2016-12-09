@@ -2,6 +2,11 @@
 /** Freesewing\Themes\Sampler class */
 namespace Freesewing\Themes;
 
+use Freesewing\Context;
+use Freesewing\Patterns\Pattern;
+use Freesewing\SvgDocument;
+use Freesewing\Utils;
+
 /**
  * Abstract class for themes.
  *
@@ -41,7 +46,7 @@ abstract class Theme
     /**
      * Returns the flag identified by $key
      *
-     * @param scalar $key The key of the flag in the flags array
+     * @param string $key The key of the flag in the flags array
      *
      * @return bool true or false
      */
@@ -49,17 +54,17 @@ abstract class Theme
     {
         if ($this->flags[$key] === true) {
             return true;
-        } else {
-            return false;
         }
+
+        return false;
     }
 
     /**
      * Returns the option identified by $key
      *
-     * @param scalar $key The key of the option in the options array
+     * @param string $key The key of the option in the options array
      *
-     * @return The value of the option
+     * @return mixed The value of the option
      */
     public function getOption($key)
     {
@@ -71,7 +76,7 @@ abstract class Theme
      */
     public function getConfigFile()
     {
-        return \Freesewing\Utils::getClassDir($this).'/config.yml';
+        return Utils::getClassDir($this).'/config.yml';
     }
     /**
      * Returns true if isPaperless is set to true in theme config
@@ -95,9 +100,9 @@ abstract class Theme
     /**
      * Loads messages/debug from pattern into messages/debug property
      *
-     * @param \Freesewing\Patterns\* $pattern The pattern object
+     * @param Pattern $pattern The pattern object
      */
-    public function themePattern($pattern)
+    public function themePattern(Pattern $pattern)
     {
         $this->messages = $pattern->getMessages();
         $this->debug = $pattern->getDebug();
@@ -106,9 +111,9 @@ abstract class Theme
     /**
      * Adds templates to the SvgDocument
      *
-     * @param \Freesewing\SvgDocument $svgDocument The SvgDocument
+     * @param SvgDocument $svgDocument The SvgDocument
      */
-    public function themeSvg(\Freesewing\SvgDocument $svgDocument)
+    public function themeSvg(SvgDocument $svgDocument)
     {
         $this->loadTemplates($svgDocument);
     }
@@ -116,7 +121,7 @@ abstract class Theme
     /**
      * Adds templates to the SvgDocument
      *
-     * @param \Freesewing\SvgDocument $svgDocument The SvgDocument
+     * @param SvgDocument $svgDocument The SvgDocument
      */
     public function loadTemplates($svgDocument)
     {
@@ -176,15 +181,16 @@ abstract class Theme
     /**
      * Returns a Response object with our SvgDocument in it
      *
-     * @param \Freesewing\context $context The context object
+     * @param context $context The context object
+     * @return \Freesewing\Response
      */
-    public function themeResponse($context)
+    public function themeResponse(Context $context)
     {
         $response = new \Freesewing\Response();
-        $response->addCacheHeaders($context->request);
+        $response->addCacheHeaders($context->getRequest());
         $response->addHeader('Content-Type', 'Content-Type: image/svg+xml');
         $response->setFormat('raw');
-        $response->setBody("{$context->svgDocument}");
+        $response->setBody("{$context->getSvgDocument()}");
 
         return $response;
     }
@@ -265,7 +271,7 @@ abstract class Theme
      */
     public function getTemplateDir()
     {
-        return \Freesewing\Utils::getClassDir($this).'/templates';
+        return Utils::getClassDir($this).'/templates';
     }
 
     /**
@@ -318,7 +324,7 @@ abstract class Theme
      */
     public function getThemeName()
     {
-        return basename(\Freesewing\Utils::getClassDir($this));
+        return basename(Utils::getClassDir($this));
     }
     /**
      * A way for themes to set options based on the request data
@@ -336,7 +342,7 @@ abstract class Theme
         foreach ($options as $o) {
             $oval = $request->getData($o);
             if ($oval) {
-                $values = \Freesewing\Utils::asScrubbedArray($oval, ',');
+                $values = Utils::asScrubbedArray($oval, ',');
                 if (is_array($values)) {
                     $this->options[$o] = $values;
                 } else {
@@ -359,9 +365,9 @@ abstract class Theme
     /**
      * Sets the render property on parts and paths based on theme options
      *
-     * @param \Freesewing\Pattern $pattern The pattern object
+     * @param \Freesewing\Patterns\Pattern $pattern The pattern object
      */
-    public function applyRenderMask($pattern)
+    public function applyRenderMask(Pattern $pattern)
     {
         $this->applyRenderMaskOnParts($pattern);
         $this->applyRenderMaskOnPaths($pattern);
@@ -380,9 +386,9 @@ abstract class Theme
      * The difference is that *forceParts* will force all parts in the *parts* array
      * to be rendered. Even those that have their render property set to false.
      *
-     * @param \Freesewing\Pattern $pattern The pattern object
+     * @param \Freesewing\Patterns\Pattern $pattern The pattern object
      */
-    public function applyRenderMaskOnParts($pattern)
+    public function applyRenderMaskOnParts(Pattern $pattern)
     {
         $parts = $this->getOption('parts');
         if (is_array($parts)) {
@@ -414,9 +420,9 @@ abstract class Theme
      * The difference is that *forcePaths* will force all paths in the *paths* array
      * to be rendered. Even those that have their render property set to false.
      *
-     * @param \Freesewing\Pattern $pattern The pattern object
+     * @param \Freesewing\Patterns\Pattern $pattern The pattern object
      */
-    public function applyRenderMaskOnPaths($pattern)
+    public function applyRenderMaskOnPaths(Pattern $pattern)
     {
         $paths = $this->getOption('paths');
         if (is_array($paths)) {

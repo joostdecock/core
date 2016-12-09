@@ -2,6 +2,8 @@
 /** Freesewing\Themes\Sampler class */
 namespace Freesewing\Themes;
 
+use Freesewing\Context;
+
 /**
  * Default theme for the sample service
  *
@@ -30,13 +32,13 @@ class Sampler extends Theme
      *
      * @return \Freesewing\Response A response object
      */
-    public function themeResponse($context)
+    public function themeResponse(Context $context)
     {
         $response = new \Freesewing\Response();
         $response->addHeader('Content-Type', 'Content-Type: image/svg+xml');
-        $response->addCacheHeaders($context->request);
+        $response->addCacheHeaders($context->getRequest());
         $response->setFormat('svg');
-        $response->setBody("{$context->svgDocument}");
+        $response->setBody("{$context->getSvgDocument()}");
 
         return $response;
     }

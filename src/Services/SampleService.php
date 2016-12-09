@@ -2,6 +2,8 @@
 /** Freesewing\Services\SampleService class */
 namespace Freesewing\Services;
 
+use Freesewing\Context;
+
 /**
  * Handles the sample service, which samples patterns.
  *
@@ -32,53 +34,69 @@ class SampleService extends DraftService
      * This samples a pattern, sets the response and sends it
      * Essentially, it takes care of the entire remainder of the request
      *
-     * @param \Freesewing\Context
+     * @param \Freesewing\Context $context
      */
-    public function run(\Freesewing\Context $context)
+    public function run(Context $context)
     {
         $context->addPattern();
 
-        if ($context->channel->isValidRequest($context) === true) :
+        if ($context->getChannel()
+                ->isValidRequest($context) === true
+        ) :
 
             $context->addUnits();
-            $context->pattern->setUnits($context->getUnits());
+            $context->getPattern()
+                ->setUnits($context->getUnits());
 
             $context->addTranslator();
-            $context->pattern->setTranslator($context->getTranslator());
+            $context->getPattern()->setTranslator($context->getTranslator());
 
-            $context->pattern->setPartMargin($context->theme->config['settings']['partMargin']);
-            $context->theme->setOptions($context->request);
+            $context->getPattern()->setPartMargin($context->getTheme()->config['settings']['partMargin']);
+            $context->getTheme()->setOptions($context->getRequest());
 
-            if ($context->request->getData('mode') == 'options') { // Sampling options
+            if ($context->getRequest()
+                    ->getData('mode') == 'options'
+            ) { // Sampling options
                 $context->addOptionsSampler();
-                $context->optionsSampler->setPattern($context->pattern);
+                $context->getOptionsSampler()->setPattern($context->getPattern());
 
                 $context->addModel();
-                $context->model->addMeasurements($context->optionsSampler->loadModelMeasurements($context->pattern));
+                $context->getModel()->addMeasurements($context->getOptionsSampler()->loadModelMeasurements($context->getPattern()));
 
-                $context->pattern->addOptions($context->optionsSampler->loadPatternOptions());
-                $context->setPattern($context->optionsSampler->sampleOptions($context->model, $context->theme,
-                    $context->request->getData('option'), $context->request->getData('steps')));
+                $context->getPattern()->addOptions($context->getOptionsSampler()->loadPatternOptions());
+                $context->setPattern(
+                    $context->getOptionsSampler()->sampleOptions(
+                        $context->getModel(),
+                        $context->getTheme(),
+                        $context->getRequest()->getData('option'),
+                        $context->getRequest()->getData('steps')
+                    )
+                );
             } else { // Sampling measurements
                 $context->addMeasurementsSampler();
-                $context->measurementsSampler->setPattern($context->pattern);
+                $context->getMeasurementsSampler()->setPattern($context->getPattern());
 
-                $context->pattern->addOptions($context->measurementsSampler->loadPatternOptions());
+                $context->getPattern()
+                    ->addOptions($context->getMeasurementsSampler()->loadPatternOptions());
 
-                $context->measurementsSampler->setModelConfig($context->pattern->getSamplerModelConfig());
-                $context->measurementsSampler->loadPatternModels($context->request->getData('samplerGroup'));
-                $context->setPattern($context->measurementsSampler->sampleMeasurements($context->theme));
+                $context->getMeasurementsSampler()->setModelConfig($context->getPattern()
+                    ->getSamplerModelConfig());
+                $context->getMeasurementsSampler()->loadPatternModels($context->getRequest()
+                    ->getData('samplerGroup'));
+                $context->setPattern($context->getMeasurementsSampler()->sampleMeasurements($context->getTheme()));
             }
 
             $context->addSvgDocument();
             $context->addRenderbot();
             $this->svgRender($context);
-            $context->setResponse($context->theme->themeResponse($context));
+            $context->setResponse($context->getTheme()
+                ->themeResponse($context));
         else: // channel->isValidRequest() !== true
-            $context->channel->handleInvalidRequest($context);
+            $context->getChannel()
+                ->handleInvalidRequest($context);
         endif;
 
-        $context->response->send();
+        $context->getResponse()->send();
 
         $context->cleanUp();
     }

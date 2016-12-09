@@ -17,21 +17,53 @@ use Symfony\Component\Translation\Loader\YamlFileLoader;
  */
 class Context
 {
-
     /**
-     * @var \Freesewing\Service\AbstractService
+     * @var \Freesewing\Services\AbstractService
      */
     protected $service;
 
-    /**
-     * Stores a request object in the request property.
-     *
-     * @param \Freesewing\Request request
-     */
-    public function setRequest($request)
-    {
-        $this->request = $request;
-    }
+    /** @var \Freesewing\Patterns\Pattern */
+    protected $pattern;
+
+    /** @var \Freesewing\Themes\Theme */
+    protected $theme;
+
+    /** @var \Freesewing\Channels\Channel */
+    protected $channel;
+
+    /** @var \Freesewing\Request */
+    protected $request;
+
+    /** @var \Freesewing\Response */
+    protected $response;
+
+    /** @var \Freesewing\Model */
+    protected $model;
+
+    /** @var \Symfony\Component\Translation\Translator */
+    protected $translator;
+
+    /** @var \Freesewing\OptionsSampler */
+    protected $optionsSampler;
+
+    /** @var \Freesewing\MeasurementsSampler */
+    protected $measurementsSampler;
+
+    /** @var \Freesewing\SvgRenderbot */
+    protected $renderbot;
+
+    /** @var \Freesewing\SvgDocument */
+    protected $svgDocument;
+
+    /** @var string */
+    protected $locale;
+
+    /** @var array */
+    protected $config;
+
+    /** @var array */
+    protected $units;
+
 
     /**
      * Sets properties based on the data passed in the request
@@ -46,11 +78,11 @@ class Context
      */
     public function configure()
     {
-        $this->config = $this->loadConfig();
-        $this->service = $this->loadService();
-        $this->channel = $this->loadChannel();
-        $this->theme = $this->loadTheme();
-        $this->locale = $this->loadLocale();
+        $this->setConfig($this->loadConfig());
+        $this->setService($this->loadService());
+        $this->setChannel($this->loadChannel());
+        $this->setTheme($this->loadTheme());
+        $this->setLocale($this->loadLocale());
     }
 
     /**
@@ -78,7 +110,7 @@ class Context
      */
     public function addTheme()
     {
-        $this->theme = $this->loadTheme();
+        $this->setTheme($this->loadTheme());
     }
 
     /**
@@ -86,7 +118,7 @@ class Context
      */
     public function addModel()
     {
-        $this->model = new \Freesewing\Model();
+        $this->setModel(new \Freesewing\Model());
     }
 
     /**
@@ -94,7 +126,7 @@ class Context
      */
     public function addOptionsSampler()
     {
-        $this->optionsSampler = new \Freesewing\OptionsSampler();
+        $this->setOptionsSampler(new \Freesewing\OptionsSampler());
     }
 
     /**
@@ -102,7 +134,7 @@ class Context
      */
     public function addMeasurementsSampler()
     {
-        $this->measurementsSampler = new \Freesewing\MeasurementsSampler();
+        $this->setMeasurementsSampler(new \Freesewing\MeasurementsSampler());
     }
 
     /**
@@ -134,13 +166,13 @@ class Context
      */
     public function addRenderbot()
     {
-        $this->renderbot = $this->loadRenderbot();
+        $this->setRenderbot($this->loadRenderbot());
     }
 
     /**
      * Returns the translator property
      *
-     * @return \Freesewing\Translator
+     * @return Translator
      */
     public function getTranslator()
     {
@@ -168,13 +200,21 @@ class Context
     }
 
     /**
+     * @return Response
+     */
+    public function getResponse()
+    {
+        return $this->response;
+    }
+
+    /**
      * Stores pattern in the pattern property
      *
      * (only) The SampleService uses this to override the pattern that we added initially
      *
-     * @param \Freesewing\Response
+     * @param \Freesewing\Patterns\Pattern
      */
-    public function setPattern($pattern)
+    public function setPattern(\Freesewing\Patterns\Pattern $pattern)
     {
         $this->pattern = $pattern;
     }
@@ -246,7 +286,7 @@ class Context
      * Loads translations for the locale set in the context and
      * the backup (default) locale set in the config file
      *
-     * @return \Freesewing\Translator
+     * @return \Symfony\Component\Translation\Translator
      */
     private function loadTranslator()
     {
@@ -344,7 +384,7 @@ class Context
     /**
      * Creates a new service based on request data, or the default service
      *
-     * @return \Freesewing\Services\DraftService|\Freesewing\Services\SampleService|\Freesewing\Services\InfoService
+     * @return \Freesewing\Services\AbstractService|\Freesewing\Services\DraftService|\Freesewing\Services\SampleService|\Freesewing\Services\InfoService
      *
      * @throws \InvalidArgumentException if the specified service cannot be found
      */
@@ -358,7 +398,9 @@ class Context
         $class = '\\Freesewing\\Services\\'.ucfirst($service).'Service';
         if (class_exists($class)) {
             $serviceObject = new $class();
-            if($serviceObject instanceof AbstractService) return $serviceObject;
+            if($serviceObject instanceof \Freesewing\Services\AbstractService) {
+                return $serviceObject;
+            }
             else throw new \InvalidArgumentException('Cannot load service '.ucfirst($service).'Service, it is not an instance of AbstractService');
         } else {
             throw new \InvalidArgumentException('Cannot load service '.ucfirst($service).'Service, it does not exist');
@@ -368,9 +410,9 @@ class Context
     /**
      * Creates a new channel based on request data, or the default channel
      *
-     * @return \Freesewing\Channel or equivalent
+     * @return \Freesewing\Channels\Channel or equivalent
      *
-     * @throws InvalidArgumentException if the specified channel cannot be found
+     * @throws \InvalidArgumentException if the specified channel cannot be found
      */
     private function loadChannel()
     {
@@ -390,11 +432,9 @@ class Context
     /**
      * Creates a new pattern based on request data, or the default pattern
      *
-     * @param string name The (optional) class of a name to load, only used by the sample service
+     * @return \Freesewing\Patterns\Pattern or equivalent
      *
-     * @return \Freesewing\Pattern or equivalent
-     *
-     * @throws InvalidArgumentException if the specified pattern cannot be found
+     * @throws \InvalidArgumentException if the specified pattern cannot be found
      */
     private function loadPattern()
     {
@@ -413,9 +453,9 @@ class Context
     /**
      * Creates a new theme based on request data, or the default theme
      *
-     * @return \Freesewing\Theme or equivalent
+     * @return \Freesewing\Themes\Theme or equivalent
      *
-     * @throws InvalidArgumentException if the specified theme cannot be found
+     * @throws \InvalidArgumentException if the specified theme cannot be found
      */
     private function loadTheme()
     {
@@ -430,5 +470,188 @@ class Context
         } else {
             throw new \InvalidArgumentException("Cannot load theme $theme, it does not exist");
         }
+    }
+
+    /**
+     * @return AbstractService
+     */
+    public function getService()
+    {
+        return $this->service;
+    }
+
+    /**
+     * @param AbstractService $service
+     */
+    public function setService($service)
+    {
+        $this->service = $service;
+    }
+
+    /**
+     * @return Themes\Theme
+     */
+    public function getTheme()
+    {
+        return $this->theme;
+    }
+
+    /**
+     * @param Themes\Theme $theme
+     */
+    public function setTheme($theme)
+    {
+        $this->theme = $theme;
+    }
+
+    /**
+     * @return Channels\Channel
+     */
+    public function getChannel()
+    {
+        return $this->channel;
+    }
+
+    /**
+     * @param Channels\Channel $channel
+     */
+    public function setChannel($channel)
+    {
+        $this->channel = $channel;
+    }
+
+    /**
+     * @return string
+     */
+    public function getLocale()
+    {
+        return $this->locale;
+    }
+
+    /**
+     * @param string $locale
+     */
+    public function setLocale($locale)
+    {
+        $this->locale = $locale;
+    }
+
+    /**
+     * @return array
+     */
+    public function getConfig()
+    {
+        return $this->config;
+    }
+
+    /**
+     * @param array $config
+     */
+    public function setConfig($config)
+    {
+        $this->config = $config;
+    }
+
+    /**
+     * @return Patterns\Pattern
+     */
+    public function getPattern()
+    {
+        return $this->pattern;
+    }
+
+    /**
+     * Stores a request object in the request property.
+     *
+     * @param \Freesewing\Request request
+     */
+    public function setRequest($request)
+    {
+        $this->request = $request;
+    }
+
+    public function getRequest()
+    {
+        return $this->request;
+    }
+
+    /**
+     * @return Model
+     */
+    public function getModel()
+    {
+        return $this->model;
+    }
+
+    /**
+     * @param Model $model
+     */
+    public function setModel($model)
+    {
+        $this->model = $model;
+    }
+
+    /**
+     * @return OptionsSampler
+     */
+    public function getOptionsSampler()
+    {
+        return $this->optionsSampler;
+    }
+
+    /**
+     * @param OptionsSampler $optionsSampler
+     */
+    public function setOptionsSampler($optionsSampler)
+    {
+        $this->optionsSampler = $optionsSampler;
+    }
+
+    /**
+     * @return MeasurementsSampler
+     */
+    public function getMeasurementsSampler()
+    {
+        return $this->measurementsSampler;
+    }
+
+    /**
+     * @param MeasurementsSampler $measurementsSampler
+     */
+    public function setMeasurementsSampler($measurementsSampler)
+    {
+        $this->measurementsSampler = $measurementsSampler;
+    }
+
+    /**
+     * @return SvgRenderbot
+     */
+    public function getRenderbot()
+    {
+        return $this->renderbot;
+    }
+
+    /**
+     * @param SvgRenderbot $renderbot
+     */
+    public function setRenderbot($renderbot)
+    {
+        $this->renderbot = $renderbot;
+    }
+
+    /**
+     * @return SvgDocument
+     */
+    public function getSvgDocument()
+    {
+        return $this->svgDocument;
+    }
+
+    /**
+     * @param SvgDocument $svgDocument
+     */
+    public function setSvgDocument($svgDocument)
+    {
+        $this->svgDocument = $svgDocument;
     }
 }

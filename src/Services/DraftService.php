@@ -45,42 +45,42 @@ class DraftService extends AbstractService
     {
         $context->addPattern();
 
-        if ($context->channel->isValidRequest($context) === true) :
+        if ($context->getChannel()->isValidRequest($context) === true) :
             $context->addModel();
-            $context->model->addMeasurements($context->channel->standardizeModelMeasurements($context->request,
-                $context->pattern));
+            $context->getModel()->addMeasurements($context->getChannel()->standardizeModelMeasurements($context->getRequest(),
+                $context->getPattern()));
 
-            $context->pattern->addOptions($context->channel->standardizePatternOptions($context->request, $context->pattern));
+            $context->getPattern()->addOptions($context->getChannel()->standardizePatternOptions($context->getRequest(), $context->getPattern()));
 
             $context->addUnits();
-            $context->pattern->setUnits($context->getUnits());
+            $context->getPattern()->setUnits($context->getUnits());
             $context->addTranslator();
-            $context->pattern->setTranslator($context->getTranslator());
+            $context->getPattern()->setTranslator($context->getTranslator());
 
-            $context->theme->setOptions($context->request);
+            $context->getTheme()->setOptions($context->getRequest());
 
-            $context->pattern->draft($context->model);
-            $context->pattern->setPartMargin($context->theme->config['settings']['partMargin']);
+            $context->getPattern()->draft($context->getModel());
+            $context->getPattern()->setPartMargin($context->getTheme()->config['settings']['partMargin']);
 
-            $context->theme->applyRenderMask($context->pattern);
-            $context->pattern->layout();
+            $context->getTheme()->applyRenderMask($context->getPattern());
+            $context->getPattern()->layout();
 
-            $context->theme->themePattern($context->pattern);
+            $context->getTheme()->themePattern($context->getPattern());
 
             $context->addSvgDocument();
             $context->addRenderbot();
             $this->svgRender($context);
 
-            $context->setResponse($context->theme->themeResponse($context));
+            $context->setResponse($context->getTheme()->themeResponse($context));
 
             /* Last minute replacements on the entire response body */
-            $context->response->setBody($this->replace($context->response->getBody(), $context->pattern->getReplacements()));
+            $context->getResponse()->setBody($this->replace($context->getResponse()->getBody(), $context->getPattern()->getReplacements()));
         else :
             // channel->isValidRequest() !== true
-            $context->channel->handleInvalidRequest($context);
+            $context->getChannel()->handleInvalidRequest($context);
         endif;
 
-        $context->response->send();
+        $context->getResponse()->send();
 
         $context->cleanUp();
     }
@@ -93,23 +93,23 @@ class DraftService extends AbstractService
      *
      * @param \Freesewing\Context
      */
-    protected function svgRender($context)
+    protected function svgRender(\Freesewing\Context $context)
     {
-        $context->svgDocument->svgAttributes->add('width ="' . ($context->pattern->getWidth() * self::SCALE) . '"');
-        $context->svgDocument->svgAttributes->add('height ="' . ($context->pattern->getHeight() * self::SCALE) . '"');
+        $context->getSvgDocument()->svgAttributes->add('width ="' . ($context->getPattern()->getWidth() * self::SCALE) . '"');
+        $context->getSvgDocument()->svgAttributes->add('height ="' . ($context->getPattern()->getHeight() * self::SCALE) . '"');
 
-        $viewbox = $context->request->getData('viewbox');
+        $viewbox = $context->getRequest()->getData('viewbox');
         if ($viewbox !== null) {
             $viewbox = Utils::asScrubbedArray($viewbox, ',');
-            $context->svgDocument->svgAttributes->add('viewbox ="' . $viewbox[0] . ' ' . $viewbox[1] . ' ' . $viewbox[2] . ' ' . $viewbox[3] . '"');
+            $context->getSvgDocument()->svgAttributes->add('viewbox ="' . $viewbox[0] . ' ' . $viewbox[1] . ' ' . $viewbox[2] . ' ' . $viewbox[3] . '"');
         } else {
-            $context->svgDocument->svgAttributes->add('viewbox ="0 0 ' . ($context->pattern->getWidth() * self::SCALE) . ' ' . ($context->pattern->getHeight() * self::SCALE) . '"');
+            $context->getSvgDocument()->svgAttributes->add('viewbox ="0 0 ' . ($context->getPattern()->getWidth() * self::SCALE) . ' ' . ($context->getPattern()->getHeight() * self::SCALE) . '"');
         }
         // format specific themeing
-        $context->theme->themeSvg($context->svgDocument);
+        $context->getTheme()->themeSvg($context->getSvgDocument());
 
         // render SVG
-        $context->svgDocument->setSvgBody($context->renderbot->render($context->pattern));
+        $context->getSvgDocument()->setSvgBody($context->getRenderbot()->render($context->getPattern()));
     }
 
     /**

@@ -2,6 +2,7 @@
 /** Freesewing\Services\InfoService class */
 namespace Freesewing\Services;
 
+use Freesewing\Context;
 use Freesewing\Utils;
 
 /**
@@ -41,22 +42,22 @@ class InfoService extends AbstractService
      *
      * @param \Freesewing\Context
      */
-    public function run(\Freesewing\Context $context)
+    public function run(Context $context)
     {
-        $format = $context->request->getData('format');
-        if ($context->request->getData('pattern') !== null) {
+        $format = $context->getRequest()->getData('format');
+        if ($context->getRequest()->getData('pattern') !== null) {
             $context->addPattern();
-            $context->setResponse($context->theme->themePatternInfo($this->getPatternInfo($context->pattern), $format));
+            $context->setResponse($context->getTheme()->themePatternInfo($this->getPatternInfo($context->getPattern()), $format));
         } else {
-            $info['services'] = $context->config['services'];
+            $info['services'] = $context->getConfig()['services'];
             $info['patterns'] = $this->getPatternList($context);
             $info['channels'] = $this->getChannelList($context);
             $info['themes'] = $this->getThemeList($context);
 
-            $context->setResponse($context->theme->themeInfo($info, $format));
+            $context->setResponse($context->getTheme()->themeInfo($info, $format));
         }
 
-        $context->response->send();
+        $context->getResponse()->send();
 
         $context->cleanUp();
     }
@@ -105,6 +106,7 @@ class InfoService extends AbstractService
      */
     private function getChannelList($context)
     {
+        $list = [];
         foreach (glob($context->getApiDir() . '/channels/*', GLOB_ONLYDIR) as $dir) {
             $name = basename($dir);
             if ($name != 'Channel' && $name != 'Info') {
@@ -124,6 +126,7 @@ class InfoService extends AbstractService
      */
     private function getThemeList($context)
     {
+        $list = [];
         foreach (glob($context->getApiDir() . '/themes/*', GLOB_ONLYDIR) as $dir) {
             $name = basename($dir);
             if ($name != 'Theme' && $name != 'Info' && $name != 'Sampler') {

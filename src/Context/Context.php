@@ -356,8 +356,10 @@ class Context
             $service = $this->config['defaults']['service'];
         }
         $class = '\\Freesewing\\Service\\'.ucfirst($service).'Service';
-        if (class_exists($class) && $class instanceof AbstractService) {
-            return new $class();
+        if (class_exists($class)) {
+            $serviceObject = new $class();
+            if($serviceObject instanceof AbstractService) return $serviceObject;
+            else throw new \InvalidArgumentException('Cannot load service '.ucfirst($service).'Service, it is not an instance of AbstractService');
         } else {
             throw new \InvalidArgumentException('Cannot load service '.ucfirst($service).'Service, it does not exist');
         }

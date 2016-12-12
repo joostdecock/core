@@ -83,6 +83,8 @@ class HugoHoodie extends JoostBodyBlock
     public function draftFront($model)
     {
         $this->clonePoints('frontBlock', 'front');
+
+        /** @var \Freesewing\Part $p */
         $p = $this->parts['front'];
 
         // Making neck opening wider and deeper
@@ -135,6 +137,8 @@ class HugoHoodie extends JoostBodyBlock
     public function draftBack($model)
     {
         $this->clonePoints('backBlock', 'back');
+
+        /** @var \Freesewing\Part $p */
         $p = $this->parts['back'];
         // Making neck opening wider and deeper
         $p->addPoint(  1, $p->shift( 1, -90, 10), 'Center front collar depth');
@@ -177,6 +181,8 @@ class HugoHoodie extends JoostBodyBlock
     public function draftSleeve($model)
     {
         $this->clonePoints('sleeveBlock', 'sleeve');
+
+        /** @var \Freesewing\Part $p */
         $p = $this->parts['sleeve'];
         
         // Importing cut off shoulder part from front
@@ -220,6 +226,7 @@ class HugoHoodie extends JoostBodyBlock
         }
         
         // Raglan seam lengths
+        // @TODO: why class-variables? Are they really needed?
         $this->frontRaglan = $front->curveLen(100, 100, 15, 14) + $front->curveLen(14, 14, 13, 5);
         $this->backRaglan =  $back->curveLen( 100, 100, 15, 14) + $back->curveLen(14, 14, 13, 5);
         $this->sleeveFrontRaglan = $p->distance(200, 114);
@@ -299,6 +306,8 @@ class HugoHoodie extends JoostBodyBlock
     public function draftPocket($model)
     {
         $this->clonePoints('front', 'pocket');
+
+        /** @var \Freesewing\Part $p */
         $p = $this->parts['pocket'];
         
         $pocket = 'M 105 L 103 C 104 102 102 L 101 L 4 z';
@@ -318,6 +327,8 @@ class HugoHoodie extends JoostBodyBlock
     public function draftPocketFacing($model)
     {
         $this->clonePoints('front', 'pocketFacing');
+
+        /** @var \Freesewing\Part $p */
         $p = $this->parts['pocketFacing'];
 
         $p->addPoint( 110, $p->shiftTowards(102, 101, 25));
@@ -343,9 +354,16 @@ class HugoHoodie extends JoostBodyBlock
      */
     public function draftHoodSide($model)
     {
+        /** @var \Freesewing\Part $front */
         $front = $this->parts['front'];
+
+        /** @var \Freesewing\Part $back */
         $back = $this->parts['back'];
+
+        /** @var \Freesewing\Part $sleeve */
         $sleeve = $this->parts['sleeve'];
+
+        /** @var \Freesewing\Part $p */
         $p = $this->parts['hoodSide'];
 
         // Some measures we'll need
@@ -402,6 +420,7 @@ class HugoHoodie extends JoostBodyBlock
      */
     public function draftHoodCenter($model)
     {
+        /** @var \Freesewing\Part $side */
         $side = $this->parts['hoodSide'];
         $len = $side->curveLen(11, 11, 15, 12) + $side->curveLen(12, 14, 13, 13);
         
@@ -417,6 +436,7 @@ class HugoHoodie extends JoostBodyBlock
      */
     public function draftWaistband($model)
     {
+        /** @var \Freesewing\Part $front */
         $front = $this->parts['front'];
         $len = $front->deltaX(4, 6) * 4 * $this->o('ribbingStretchFactor');
         $this->draftRectangle(160, $len, $this->parts['waistband']);
@@ -431,6 +451,7 @@ class HugoHoodie extends JoostBodyBlock
      */
     public function draftCuff($model)
     {
+        /** @var \Freesewing\Part $sleeve */
         $sleeve = $this->parts['sleeve'];
         $len = $sleeve->deltaX(31, 32) * $this->o('ribbingStretchFactor');
 

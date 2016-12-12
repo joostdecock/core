@@ -8,20 +8,32 @@ namespace Freesewing;
  * This contains functionality that is shared between
  * the MeasurementsSampler and OptionsSampler classes
  *
- * @author Joost De Cock <joost@decock.org>
+ * @author    Joost De Cock <joost@decock.org>
  * @copyright 2016 Joost De Cock
- * @license http://opensource.org/licenses/GPL-3.0 GNU General Public License, Version 3
+ * @license   http://opensource.org/licenses/GPL-3.0 GNU General Public License, Version 3
  */
 class Sampler
 {
+
     /** @var array $partContainer Container for parts that created while sampling a pattern */
     public $partContainer = array();
-    
+
     /** @var array $anchors Container for the anchors of parts that created while sampling a pattern */
     public $anchors = array();
-    
+
     /** @var array $boundaries Container for the boundaries of parts that created while sampling a pattern */
     public $boundaries = array();
+
+    /** @var  array */
+    protected $modelConfig;
+
+    /**
+     * @var array
+     */
+    protected $models;
+
+    /** @var  \Freesewing\Patterns\Pattern */
+    protected $pattern;
 
     /**
      * Stores a pattern in the pattern property
@@ -52,7 +64,7 @@ class Sampler
      */
     public function getSamplerModelsFile($pattern)
     {
-        return Utils::getClassDir($pattern).'/sampler/models.yml';
+        return Utils::getClassDir($pattern) . '/sampler/models.yml';
     }
 
     /**
@@ -113,10 +125,10 @@ class Sampler
      * The $step and $steps parameters are passed to the theme so different samplings can be
      * made to look different. (giving us that rainbow effect in the standard theme).
      *
-     * @param int $step The step out of total steps this is
-     * @param int $step The total amount of steps
-     * @param \Freesewing\Pattern $pattern The pattern to sample
-     * @param \Freesewing\Theme or equivalent $theme The theme
+     * @param int                      $step      The step out of total steps this is
+     * @param int                      $step      The total amount of steps
+     * @param \Freesewing\Pattern      $pattern   The pattern to sample
+     * @param \Freesewing\Theme        or         equivalent $theme The theme
      * @param \Freesewing\SvgRenderbot $renderBot The SVG renderbot to render the path
      */
     public function sampleParts($step, $steps, $pattern, $theme, $renderBot)

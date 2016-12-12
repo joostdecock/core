@@ -13,3 +13,4 @@ services:
     - info
     - draft
     - sample
+    - compare

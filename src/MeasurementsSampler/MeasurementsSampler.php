@@ -10,9 +10,9 @@ namespace Freesewing;
  * This allows you to verify that your pattern grades nicely over a range of
  * sizes/measurements.
  *
- * @author Joost De Cock <joost@decock.org>
+ * @author    Joost De Cock <joost@decock.org>
  * @copyright 2016 Joost De Cock
- * @license http://opensource.org/licenses/GPL-3.0 GNU General Public License, Version 3
+ * @license   http://opensource.org/licenses/GPL-3.0 GNU General Public License, Version 3
  */
 class MeasurementsSampler extends Sampler
 {
@@ -21,6 +21,7 @@ class MeasurementsSampler extends Sampler
     {
         $this->modelConfig = $config;
     }
+
     /**
      * Loads models for which we'll sampler the pattern.
      *
@@ -42,10 +43,23 @@ class MeasurementsSampler extends Sampler
                 $group = $this->modelConfig['default']['group'];
             }
         }
-            
+
         $this->models = $this->loadModelGroup($group);
-              
+
         return $this->models;
+    }
+
+    /**
+     * Add a additional measurement to the sample-models.
+     *
+     * @param array  $measurements
+     * @param string $name
+     */
+    public function addPatternModel(array $measurements, $name = 'UserSize')
+    {
+        $model = new \Freesewing\Model();
+        $model->addMeasurements($measurements);
+        $this->models[$name] = $model;
     }
 
     /**
@@ -55,9 +69,9 @@ class MeasurementsSampler extends Sampler
      * with the model as parameter.
      * It then itterates over the parts and calls sampleParts() on them
      *
-     * @param \Freesewing\Theme or similar
+     * @param \Freesewing\Themes\Theme or similar
      *
-     * @return \Freesewing\Pattern or similar
+     * @return \Freesewing\Patterns\Pattern or similar
      */
     public function sampleMeasurements($theme)
     {
@@ -88,6 +102,7 @@ class MeasurementsSampler extends Sampler
      */
     private function loadModelGroup($group)
     {
+        $models = [];
         foreach ($this->modelConfig['groups'][$group] as $member) {
             $model = new \Freesewing\Model();
             foreach ($this->modelConfig['measurements'] as $mKey => $mModels) {
@@ -97,7 +112,7 @@ class MeasurementsSampler extends Sampler
             unset($measurements);
             $models[$member] = $model;
         }
-        
+
         return $models;
     }
 

@@ -49,26 +49,32 @@ class CompareService extends DraftService
                 ->setUnits($context->getUnits());
 
             $context->addTranslator();
-            $context->getPattern()->setTranslator($context->getTranslator());
-
-            $context->getPattern()->setPartMargin($context->getTheme()->config['settings']['partMargin']);
-            $context->getTheme()->setOptions($context->getRequest());
-
-            $context->addMeasurementsSampler();
-            $context->getMeasurementsSampler()->setPattern($context->getPattern());
+            $context->getPattern()
+                ->setTranslator($context->getTranslator());
 
             $context->getPattern()
-                ->addOptions($context->getMeasurementsSampler()->loadPatternOptions());
+                ->setPartMargin($context->getTheme()->config['settings']['partMargin']);
+            $context->getTheme()
+                ->setOptions($context->getRequest());
 
-            $context->getMeasurementsSampler()->setModelConfig(
-                $context->getPattern()
-                ->getSamplerModelConfig()
-            );
+            $context->addMeasurementsSampler();
             $context->getMeasurementsSampler()
-                ->loadPatternModels(
-                    $context->getRequest()
-                    ->getData('samplerGroup')
-                );
+                ->setPattern($context->getPattern());
+
+            // add options like 'chestEase' to all compare-models
+            $context->getPattern()->addOptions(
+                $context->getChannel()->standardizePatternOptions(
+                    $context->getRequest(),
+                    $context->getPattern()
+                )
+            );
+
+            $context->getMeasurementsSampler()
+                ->setModelConfig($context->getPattern()
+                    ->getSamplerModelConfig());
+            $context->getMeasurementsSampler()
+                ->loadPatternModels($context->getRequest()
+                    ->getData('samplerGroup'));
 
             // add the user-measurements to the sampler
             $context->getMeasurementsSampler()->addPatternModel(
@@ -79,7 +85,11 @@ class CompareService extends DraftService
                 'compareModel'
             );
 
-            $context->setPattern($context->getMeasurementsSampler()->sampleMeasurements($context->getTheme()));
+            $context->setPattern(
+                $context->getMeasurementsSampler()->sampleMeasurements(
+                    $context->getTheme()
+                )
+            );
 
             $context->addSvgDocument();
             $context->addRenderbot();
@@ -91,7 +101,8 @@ class CompareService extends DraftService
                 ->handleInvalidRequest($context);
         endif;
 
-        $context->getResponse()->send();
+        $context->getResponse()
+            ->send();
 
         $context->cleanUp();
     }

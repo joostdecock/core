@@ -354,8 +354,13 @@ class HugoHoodie extends JoostBodyBlock
      */
     public function draftHoodSide($model)
     {
+        /** @var \Freesewing\Part $front */
         $front = $this->parts['front'];
+
+        /** @var \Freesewing\Part $back */
         $back = $this->parts['back'];
+
+        /** @var \Freesewing\Part $sleeve */
         $sleeve = $this->parts['sleeve'];
 
         /** @var \Freesewing\Part $p */

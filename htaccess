@@ -2,6 +2,7 @@ RewriteEngine On
 RewriteRule draft/([^/]*)/$ /index.php?service=draft&pattern=$1&%{QUERY_STRING} [L]
 RewriteRule sample/([^/]*)/measurements/([^?]*)$ /index.php?service=sample&pattern=$1&mode=measurements&samplerGroup=$2&%{QUERY_STRING} [L]
 RewriteRule sample/([^/]*)/options/([^/]*)/([^?]*)$ /index.php?service=sample&pattern=$1&mode=options&option=$2&%{QUERY_STRING} [L]
+RewriteRule compare/([^/]*)/measurements/([^?]*)$ /index.php?service=compare&pattern=$1&mode=measurements&samplerGroup=$2&%{QUERY_STRING} [L]
 RewriteRule info/([^/]*)/([^/]*) /index.php?service=info&pattern=$1&format=$2%{QUERY_STRING} [L]
 RewriteRule info/([^/]*) /index.php?service=info&format=$1&%{QUERY_STRING} [L]
 RewriteCond %{REQUEST_FILENAME} !-f

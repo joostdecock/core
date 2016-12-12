@@ -3,6 +3,7 @@ defaults:
     channel: Docs
     draftTheme: Svg
     sampleTheme: Sampler
+    compareTheme: Compare
     infoTheme: Info
     pattern: AaronAshirt
     locale: en
@@ -13,3 +14,4 @@ services:
     - info
     - draft
     - sample
+    - compare

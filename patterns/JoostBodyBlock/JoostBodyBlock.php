@@ -17,12 +17,13 @@ namespace Freesewing\Patterns;
  * Most importanltly, this has a variable shoulder slope
  * based on the model's measurements.
  *
- * @author Joost De Cock <joost@decock.org>
+ * @author    Joost De Cock <joost@decock.org>
  * @copyright 2016 Joost De Cock
- * @license http://opensource.org/licenses/GPL-3.0 GNU General Public License, Version 3
+ * @license   http://opensource.org/licenses/GPL-3.0 GNU General Public License, Version 3
  */
 class JoostBodyBlock extends Pattern
 {
+
     /**
      * Generates a draft of the pattern
      *
@@ -122,21 +123,22 @@ class JoostBodyBlock extends Pattern
     public function draftBackBlock($model)
     {
         $collarWidth = ($model->getMeasurement('neckCircumference') / 3.1415) / 2 + 5;
-        $collarDepth = $this->help['collarShapeFactor'] * (
-                $model->getMeasurement('neckCircumference')
-                + $this->getOption('collarEase')
-            ) / 5 - 8;
+        $collarDepth = $this->help['collarShapeFactor'] * ($model->getMeasurement('neckCircumference') + $this->getOption('collarEase')) / 5 - 8;
 
+        /** @var \Freesewing\Part $p */
         $p = $this->parts['backBlock'];
 
         // Center vertical axis
         $p->newPoint(1, 0, $this->getOption('backNeckCutout'), 'Center back @ neck');
         $p->newPoint(2, 0, $p->y(1) + $this->help['armholeDepth'], 'Center back @ armhole depth');
         $p->newPoint(3, 0, $p->y(1) + $model->getMeasurement('centerBackNeckToWaist'), 'Center back @ waist');
-        $p->newPoint(4, 0, $model->getMeasurement('centerBackNeckToWaist') + $model->getMeasurement('naturalWaistToHip') + $this->getOption('backNeckCutout'), 'Center back @ trouser waist');
+        $p->newPoint(4, 0,
+            $model->getMeasurement('centerBackNeckToWaist') + $model->getMeasurement('naturalWaistToHip') + $this->getOption('backNeckCutout'),
+            'Center back @ trouser waist');
 
         // Side vertical axis
-        $p->newPoint(5, $model->getMeasurement('chestCircumference') / 4 + $this->getOption('chestEase') / 4, $p->y(2), 'Quarter chest @ armhole depth');
+        $p->newPoint(5, $model->getMeasurement('chestCircumference') / 4 + $this->getOption('chestEase') / 4, $p->y(2),
+            'Quarter chest @ armhole depth');
         $p->clonePoint(5, 'gridAnchor');
         $p->newPoint(6, $p->x(5), $p->y(4), 'Quarter chest @ trouser waist');
 
@@ -150,7 +152,9 @@ class JoostBodyBlock extends Pattern
         // Armhole
         $p->newPoint(10, $model->getMeasurement('acrossBack') / 2, $p->y(1) + $p->deltaY(1, 2) / 2, 'Armhole pitch point');
         $p->newPoint(11, $p->x(10), $p->y(2), 'Armhole pitch width @ armhole depth');
-        $p->newPoint(12, $p->x(7) + sqrt(pow($model->getMeasurement('shoulderLength'), 2) - pow($model->getMeasurement('shoulderSlope') / 2, 2)), $model->getMeasurement('shoulderSlope') / 2, 'Shoulder tip');
+        $p->newPoint(12,
+            $p->x(7) + sqrt(pow($model->getMeasurement('shoulderLength'), 2) - pow($model->getMeasurement('shoulderSlope') / 2,
+                    2)), $model->getMeasurement('shoulderSlope') / 2, 'Shoulder tip');
         $p->addPoint(13, $p->Shift(5, 180, $p->distance(11, 5) / 4), 'Left curve control point for 5');
         $p->addPoint('.help1', $p->shift(11, 45, 5), '45 degrees upwards');
         $p->addPoint('.help2', $p->beamsCross(11, '.help1', 5, 10), 'Intersection');
@@ -163,7 +167,8 @@ class JoostBodyBlock extends Pattern
         $p->addPoint(19, $p->shift(12, $p->angle(8, 12) + 90, 10), 'Bottom control point for 12');
 
         // Control points for collar
-        $p->addPoint(20, $p->shift(8, $p->angle(8, 12) + 90, $this->getOption('backNeckCutout')), 'Curve control point for collar');
+        $p->addPoint(20, $p->shift(8, $p->angle(8, 12) + 90, $this->getOption('backNeckCutout')),
+            'Curve control point for collar');
         $p->newPoint(21, $p->x(8), $p->y(9));
 
         // Paths
@@ -215,6 +220,8 @@ class JoostBodyBlock extends Pattern
     public function draftFrontBlock($model)
     {
         $this->clonePoints('backBlock', 'frontBlock');
+
+        /** @var \Freesewing\Part $p */
         $p = $this->parts['frontBlock'];
 
         $frontExtra = 5; // Cutting out armhole a bit deeper at the front
@@ -242,6 +249,7 @@ class JoostBodyBlock extends Pattern
      */
     public function finalizeFrontBlock($model)
     {
+        /** @var \Freesewing\Part $p */
         $p = $this->parts['frontBlock'];
         $p->addTitle('titleAnchor', 1, $this->t($p->title));
         $p->newSnippet('logo', 'logo', 'titleAnchor');
@@ -267,6 +275,7 @@ class JoostBodyBlock extends Pattern
      */
     public function draftSleeveBlock($model)
     {
+        /** @var \Freesewing\Part $p */
         $p = $this->parts['sleeveBlock'];
 
         $this->help['sleevecapSeamLength'] = $this->help['sleevecapShapeFactor'] * ($this->armholeLen() + $this->getOption('sleevecapEase'));
@@ -278,7 +287,8 @@ class JoostBodyBlock extends Pattern
         $p->newPoint(3, 0, $model->getMeasurement('sleeveLengthToWrist'), 'Center sleeve @ wrist');
 
         // Sleeve half width
-        $p->newPoint(4, $model->getMeasurement('bicepsCircumference') / 2 + $this->getOption('bicepsEase') / 2, 0, 'Half width of sleeve @ shoulder');
+        $p->newPoint(4, $model->getMeasurement('bicepsCircumference') / 2 + $this->getOption('bicepsEase') / 2, 0,
+            'Half width of sleeve @ shoulder');
         $p->newPoint(5, $p->x(4), $p->y(2), 'Half width of sleeve @ sleevecap start');
         $p->newPoint(6, $p->x(4), $p->y(3), 'Half width of sleeve @ wrist');
 
@@ -365,6 +375,7 @@ class JoostBodyBlock extends Pattern
      */
     public function finalizeSleeveBlock($model)
     {
+        /** @var \Freesewing\Part $p */
         $p = $this->parts['sleeveBlock'];
         $p->newPoint('titleAnchor', $p->x(2), $this->parts['frontBlock']->y('titleAnchor'));
         $p->addTitle('titleAnchor', 3, $this->t($p->title));
@@ -384,14 +395,7 @@ class JoostBodyBlock extends Pattern
         $back = $this->parts['backBlock'];
         $front = $this->parts['frontBlock'];
 
-        return (
-            $back->curveLen(12, 19, 17, 10) +
-            $back->curveLen(10, 18, 15, 14) +
-            $back->curveLen(14, 16, 13, 5)
-        ) + (
-            $front->curveLen(12, 19, 17, 10) +
-            $front->curveLen(10, 18, 15, 14) +
-            $front->curveLen(14, 16, 13, 5)
-        );
+        return ($back->curveLen(12, 19, 17, 10) + $back->curveLen(10, 18, 15, 14) + $back->curveLen(14, 16, 13,
+                    5)) + ($front->curveLen(12, 19, 17, 10) + $front->curveLen(10, 18, 15, 14) + $front->curveLen(14, 16, 13, 5));
     }
 }

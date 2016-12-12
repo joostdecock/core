@@ -8,6 +8,8 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - Added this CHANGELOG.md file
 - Moved todo to GitHub issues
 - Install instructions in README.md
+- New compare service + theme
+- Style code and type hinting
 
 ### Fixed
 - Bug in the docs channel not taking measurements into account

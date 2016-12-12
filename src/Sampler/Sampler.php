@@ -128,10 +128,12 @@ class Sampler
      * @param int                      $step      The step out of total steps this is
      * @param int                      $step      The total amount of steps
      * @param \Freesewing\Pattern      $pattern   The pattern to sample
-     * @param \Freesewing\Theme        or         equivalent $theme The theme
+     * @param \Freesewing\Theme        $theme     The theme
+     * @param \Freesewing\SvgRenderbot $mode      sample or compare
      * @param \Freesewing\SvgRenderbot $renderBot The SVG renderbot to render the path
+     * @param string                   $mode      sample or compare
      */
-    public function sampleParts($step, $steps, $pattern, $theme, $renderBot)
+    public function sampleParts($step, $steps, $pattern, $theme, $renderBot, $mode='sample')
     {
         foreach ($pattern->parts as $partKey => $part) {
             if ($part->getRender() === true) {
@@ -170,7 +172,8 @@ class Sampler
                                 $this->boundaries[$partKey]['bottomRight']->setY($path->boundary->bottomRight->y + $deltaY);
                             }
                         }
-                        $path->setAttributes(['transform' => $transform, 'style' => $theme->samplerPathStyle($step, $steps)]);
+                        if($mode == 'compare') $path->setAttributes(['transform' => $transform, 'class' => 'compare']);
+                        else $path->setAttributes(['transform' => $transform, 'style' => $theme->samplerPathStyle($step, $steps)]);
                         $this->partContainer[$partKey]['includes']["$step-$pathKey"] = $renderBot->renderPath($path, $part);
                         $this->partContainer[$partKey]['topLeft'] = $this->boundaries[$partKey]['topLeft'];
                         $this->partContainer[$partKey]['bottomRight'] = $this->boundaries[$partKey]['bottomRight'];

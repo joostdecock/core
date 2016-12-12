@@ -55,7 +55,7 @@ class MeasurementsSampler extends Sampler
      * @param array  $measurements
      * @param string $name
      */
-    public function addPatternModel(array $measurements, $name = 'UserSize')
+    public function addPatternModel(array $measurements, $name = 'userSize')
     {
         $model = new \Freesewing\Model();
         $model->addMeasurements($measurements);
@@ -79,11 +79,13 @@ class MeasurementsSampler extends Sampler
         $steps = count($this->models);
         $i = 0;
         foreach ($this->models as $modelKey => $model) {
+            if($modelKey == 'compareModel') $mode = 'compare';
+            else $mode = 'sample';
             $p = clone $this->pattern;
             $p->loadParts();
             $p->sample($model);
             foreach ($p->parts as $partKey => $part) {
-                $this->sampleParts($i, $steps, $p, $theme, $renderBot);
+                $this->sampleParts($i, $steps, $p, $theme, $renderBot, $mode);
             }
             ++$i;
         }

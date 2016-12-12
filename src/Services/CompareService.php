@@ -54,63 +54,32 @@ class CompareService extends DraftService
             $context->getPattern()->setPartMargin($context->getTheme()->config['settings']['partMargin']);
             $context->getTheme()->setOptions($context->getRequest());
 
-            if ($context->getRequest()
-                    ->getData('mode') == 'options'
-            ) { // Sampling options
-                $context->addOptionsSampler();
-                $context->getOptionsSampler()->setPattern($context->getPattern());
+            $context->addMeasurementsSampler();
+            $context->getMeasurementsSampler()->setPattern($context->getPattern());
 
-                $context->addModel();
-                $context->getModel()->addMeasurements(
-                    $context->getOptionsSampler()->loadModelMeasurements($context->getPattern())
-                );
+            $context->getPattern()
+                ->addOptions($context->getMeasurementsSampler()->loadPatternOptions());
 
-                // add the user-measurements to the sampler
-                $context->getMeasurementsSampler()->addPatternModel(
-                    $context->getChannel()->standardizeModelMeasurements(
-                        $context->getRequest(),
-                        $context->getPattern()
-                    )
-                );
-
-                $context->getPattern()->addOptions($context->getOptionsSampler()->loadPatternOptions());
-                $context->setPattern(
-                    $context->getOptionsSampler()->sampleOptions(
-                        $context->getModel(),
-                        $context->getTheme(),
-                        $context->getRequest()->getData('option'),
-                        $context->getRequest()->getData('steps')
-                    )
-                );
-            } else { // Sampling measurements
-                $context->addMeasurementsSampler();
-                $context->getMeasurementsSampler()->setPattern($context->getPattern());
-
+            $context->getMeasurementsSampler()->setModelConfig(
                 $context->getPattern()
-                    ->addOptions($context->getMeasurementsSampler()->loadPatternOptions());
+                ->getSamplerModelConfig()
+            );
+            $context->getMeasurementsSampler()
+                ->loadPatternModels(
+                    $context->getRequest()
+                    ->getData('samplerGroup')
+                );
 
-                $context->getMeasurementsSampler()->setModelConfig(
+            // add the user-measurements to the sampler
+            $context->getMeasurementsSampler()->addPatternModel(
+                $context->getChannel()->standardizeModelMeasurements(
+                    $context->getRequest(),
                     $context->getPattern()
-                    ->getSamplerModelConfig()
-                );
-                $context->getMeasurementsSampler()
-                    ->loadPatternModels(
-                        $context->getRequest()
-                        ->getData('samplerGroup')
-                    );
+                ),
+                'compareModel'
+            );
 
-                // add the user-measurements to the sampler
-                $context->getMeasurementsSampler()->addPatternModel(
-                    $context->getChannel()->standardizeModelMeasurements(
-                        $context->getRequest(),
-                        $context->getPattern()
-                    )
-                );
-
-                $context->setPattern($context->getMeasurementsSampler()->sampleMeasurements($context->getTheme()));
-
-                //$this->addModel($context);
-            }
+            $context->setPattern($context->getMeasurementsSampler()->sampleMeasurements($context->getTheme()));
 
             $context->addSvgDocument();
             $context->addRenderbot();

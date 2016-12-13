@@ -103,9 +103,9 @@ class HugoHoodie extends JoostBodyBlock
         $p->addSplitCurve(8, 20, 21, 9, 100, 5);
 
         // Add pocket points
-        $p->newPoint( 101, $p->x(6)*0.6 - 25, $p->y(6));
-        $p->newPoint( 102, $p->x(6)*0.6, $p->y(6)-50);
-        $p->newPoint( 103, $p->x(101), $p->y(4)-$p->x(102));
+        $p->newPoint( 101, $p->x(6)*0.65 - 25, $p->y(6));
+        $p->newPoint( 102, $p->x(6)*0.65, $p->y(6)-50);
+        $p->newPoint( 103, $p->x(101), $p->y(4)-$p->x(101));
         $p->addPoint( 104, $p->shift(103, 90, $p->deltaY(102, 103)*0.75));
         $p->newPoint( 105, 0, $p->y(103));
         

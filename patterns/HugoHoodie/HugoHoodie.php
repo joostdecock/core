@@ -47,9 +47,10 @@ class HugoHoodie extends JoostBodyBlock
      */
     public function sample($model)
     {
-        $this->loadHelp($model);
+        $this->initialize($model);
+        
         // Lower the armhole
-        $this->help['armholeDepth'] += 50;
+        $this->setValue('armholeDepth', $this->getValue('armholeDepth') + 50);
 
         // Draft all parts
         foreach ($this->parts as $key => $part) {
@@ -226,20 +227,17 @@ class HugoHoodie extends JoostBodyBlock
         }
         
         // Raglan seam lengths
-        // @TODO: why class-variables? Are they really needed?
-        $this->frontRaglan = $front->curveLen(100, 100, 15, 14) + $front->curveLen(14, 14, 13, 5);
-        $this->backRaglan =  $back->curveLen( 100, 100, 15, 14) + $back->curveLen(14, 14, 13, 5);
-        $this->sleeveFrontRaglan = $p->distance(200, 114);
-        $this->sleeveBackRaglan = $p->distance(300, 214);
+        $this->setValue('frontRaglan', $front->curveLen(100, 100, 15, 14) + $front->curveLen(14, 14, 13, 5));
+        $this->setValue('backRaglan',  $back->curveLen( 100, 100, 15, 14) + $back->curveLen(14, 14, 13, 5));
 
 
         // Sleevecap front
-        $p->addPoint( 130, $p->shiftTowards(200, 114, $this->frontRaglan));
+        $p->addPoint( 130, $p->shiftTowards(200, 114, $this->v('frontRaglan')));
         $p->addPoint( 131, $p->shiftTowards(130, 5, $p->distance(130, 5)/2));
-        $p->addPoint( 132, $p->shiftTowards(200, 131, $this->frontRaglan));
-        $p->addPoint( 133, $p->shift(132, 0, $this->frontRaglan*0.1));
-        $p->addPoint( 134, $p->shiftTowards(200, 114, $this->frontRaglan*0.5));
-        $delta = $p->curveLen(200, 134, 132, 133) - $this->frontRaglan;
+        $p->addPoint( 132, $p->shiftTowards(200, 131, $this->v('frontRaglan')));
+        $p->addPoint( 133, $p->shift(132, 0, $this->v('frontRaglan')*0.1));
+        $p->addPoint( 134, $p->shiftTowards(200, 114, $this->v('frontRaglan')*0.5));
+        $delta = $p->curveLen(200, 134, 132, 133) - $this->v('frontRaglan');
         $i=1;
         while (abs($delta) > 1) {
             if ($delta>0) {
@@ -249,7 +247,7 @@ class HugoHoodie extends JoostBodyBlock
             }            $p->newPoint( "132-$i", $p->x(132), $p->y(132));
             $p->addPoint( 132, $p->shift(132, $angle, $delta));
             $p->newPoint( 133, $p->x(133), $p->y(132));
-            $delta = $p->curveLen(200, 134, 132, 133) - $this->frontRaglan;
+            $delta = $p->curveLen(200, 134, 132, 133) - $this->v('frontRaglan');
             $this->dbg("Iteration $i, front sleevecap delta is $delta");
             $i++;
             if ($i>40) {
@@ -258,11 +256,11 @@ class HugoHoodie extends JoostBodyBlock
         }
 
         // Sleevecap back
-        $p->addPoint( 230, $p->shiftTowards(300, 214, $this->backRaglan));
+        $p->addPoint( 230, $p->shiftTowards(300, 214, $this->v('backRaglan')));
         $p->addPoint( 231, $p->shiftTowards(230, -5, $p->distance(230, -5)/2));
-        $p->addPoint( 232, $p->shiftTowards(300, 231, $this->backRaglan));
-        $p->addPoint( 233, $p->shift(232, 180, $this->backRaglan*0.1));
-        $p->addPoint( 234, $p->shiftTowards(300, 214, $this->backRaglan*0.5));
+        $p->addPoint( 232, $p->shiftTowards(300, 231, $this->v('backRaglan')));
+        $p->addPoint( 233, $p->shift(232, 180, $this->v('backRaglan')*0.1));
+        $p->addPoint( 234, $p->shiftTowards(300, 214, $this->v('backRaglan')*0.5));
         $p->newPoint( 232, $p->x(232), $p->y(132));
         $p->newPoint( 233, $p->x(233), $p->y(232));
 
@@ -543,7 +541,7 @@ class HugoHoodie extends JoostBodyBlock
         
         // Paperless
         if ($this->isPaperless) {
-// Measures
+            // Measures
             $pAttr = ['class' => 'measure-lg'];
             $hAttr = ['class' => 'stroke-note stroke-sm'];
 
@@ -691,7 +689,7 @@ class HugoHoodie extends JoostBodyBlock
         
         // Paperless
         if ($this->isPaperless) {
-// Measures
+            // Measures
             $pAttr = ['class' => 'measure-lg'];
             $hAttr = ['class' => 'stroke-note stroke-sm'];
 
@@ -786,7 +784,7 @@ class HugoHoodie extends JoostBodyBlock
         
         // Paperless
         if ($this->isPaperless) {
-// Measures
+            // Measures
             $pAttr = ['class' => 'measure-lg'];
             $hAttr = ['class' => 'stroke-note stroke-sm'];
 
@@ -950,7 +948,7 @@ class HugoHoodie extends JoostBodyBlock
         
         // Paperless
         if ($this->isPaperless) {
-// Measures
+            // Measures
             $pAttr = ['class' => 'measure-lg'];
             $hAttr = ['class' => 'stroke-note stroke-sm'];
 
@@ -1013,7 +1011,7 @@ class HugoHoodie extends JoostBodyBlock
         
         // Paperless
         if ($this->isPaperless) {
-// Measures
+            // Measures
             $pAttr = ['class' => 'measure-lg'];
             $hAttr = ['class' => 'stroke-note stroke-sm'];
 
@@ -1064,7 +1062,7 @@ class HugoHoodie extends JoostBodyBlock
 
         // Paperless
         if ($this->isPaperless) {
-// Measures
+            // Measures
             $pAttr = ['class' => 'measure-lg'];
             $hAttr = ['class' => 'stroke-note stroke-sm'];
 
@@ -1196,7 +1194,7 @@ class HugoHoodie extends JoostBodyBlock
         
         // Paperless
         if ($this->isPaperless) {
-// Measures
+            // Measures
             $pAttr = ['class' => 'measure-lg'];
             $hAttr = ['class' => 'stroke-note stroke-sm'];
 

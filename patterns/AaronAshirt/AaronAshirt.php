@@ -48,7 +48,7 @@ class AaronAshirt extends JoostBodyBlock
         $this->setValue('armholeDepth', 200 + ($model->m('shoulderSlope') / 2 - 27.5) + ($model->m('bicepsCircumference') / 10));
         
         // Collar widht and depth
-        $this->setValue('collarWidth', ($model->getMeasurement('neckCircumference') / 3.1415) / 2 + 5);
+        $this->setValue('collarWidth', ($model->getMeasurement('neckCircumference') / self::PI) / 2 + 5);
         $this->setValue('collarDepth', ($model->getMeasurement('neckCircumference') + $this->getOption('collarEase')) / 5 - 8);
         
         // Cut front armhole a bit deeper

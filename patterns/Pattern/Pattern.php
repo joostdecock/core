@@ -13,6 +13,10 @@ use Symfony\Component\Yaml\Exception\ParseException;
  */
 abstract class Pattern
 {
+    /**
+     * PI with max needed precision
+     */
+    const PI = 3.1415;
 
     /** @var array $parts Holds the pattern parts */
     public $parts = array();

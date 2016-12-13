@@ -161,7 +161,7 @@ class SvgRenderbot
     }
 
     /**
-     * Returns SVG code for a pattern
+     * Returns SVG code for a pattern part
      *
      * This renders the following elements contained within the part:
      *  - includes
@@ -170,6 +170,7 @@ class SvgRenderbot
      *  - texts
      *  - textsonpath
      *  - notes
+     *  - dimensions
      *
      * @param \Freesewing\Part The part to render
      *
@@ -207,6 +208,11 @@ class SvgRenderbot
         if (@$part->notes) {
             foreach ($part->notes as $note) {
                 $svg .= $this->renderNote($note, $part);
+            }
+        }
+        if (@$part->dimensions) {
+            foreach ($part->dimensions as $dimension) {
+                $svg .= $this->renderDimension($dimension, $part);
             }
         }
 
@@ -359,6 +365,36 @@ class SvgRenderbot
         $path = $note->getPath();
         $svg = $this->renderPath($path, $part);
         $svg .= $this->renderText($note, $part);
+
+        return $svg;
+    }
+
+    /**
+     * Returns SVG code for a dimension
+     *
+     * A dimension has a Path, a TextOnPath and optional leaders (which are
+     * also paths). Se we just render them each
+     *
+     * @param \Freesewing\Dimension $dimension The dimension to render
+     * @param \Freesewing\Part $part The part this dimension is part of
+     *
+     * @return string The SVG code for the rendered dimension
+     */
+    private function renderDimension($dimension, $part)
+    {
+        // Path
+        $svg = $this->renderPath($dimension->getPath(), $part);
+        
+        // Label
+        $svg .= $this->renderTextOnPath($dimension->getLabel(), $part);
+        
+        // Leaders
+        $leaders = $dimension->getLeaders();
+        if(is_array($leaders) && count($leaders)>0) {
+            foreach($leaders as $leader) {
+                $svg = $this->renderPath($leader, $part);
+            }
+        }
 
         return $svg;
     }

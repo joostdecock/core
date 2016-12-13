@@ -10,7 +10,7 @@ info:
 parts:
     frontBlock: "Front block"
     backBlock: "Back block"
-    waistcoatBlock: "Waistcoat block"
+    waistcoatFrontBlock: "Waistcoat front block"
     front: "Front"
     back: "Back"
     pocketWelt: "Pocket welt"

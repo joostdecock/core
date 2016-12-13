@@ -1,4 +1,4 @@
-var api = 'https://api.freesewing.org';
+var api = '';
 var themes = [];
 var spinner =  '<img src="spinner.gif">';
 
@@ -10,7 +10,7 @@ function scrollTo(target) {
 function loadServices() {
     $.getJSON(api+'/info/json', function( data ) {
         $.each( data['services'], function( key, val ) {
-            $("#services").append( "<div id='servicelist'><p><a class='btn btn-primary btn-lock service main-button' id='" + val + "'>Try the " + val + " service</a></p></div>" );
+            $("#services").append( "<div class='servicelist'><p><a class='btn btn-primary btn-lock service main-button' id='" + val + "'>Try the " + val + " service</a></p></div>" );
         });
         $('#details').html('');
         $('#details').append( " <p>We made an AJAX call to to:</p> <code>" + api + "/info/json</code>");
@@ -149,7 +149,7 @@ function sampleDraftPatternList(type) {
         $('#contentrow').append( "<h2>Step 1: Pick a pattern to "+type+"</h2>");
        
         $.each( data['patterns'], function( key, val ) {
-            $("#contentrow").append( "<div class='col-md-3'><blockquote><h6>" + val + "</h6><a class='btn btn-primary btn-block clickable uppercasefirst pattern-"+type+"' data-pattern='" + key + "'>"+type+" this pattern</a></blockquote></div>" );
+            $("#contentrow").append( "<div class='col-md-3'><blockquote><h6>" + val + "</h6><a class='btn btn-primary btn-block clickable uppercasefirst pattern-"+type+"' data-pattern='" + key + "'>"+type+"</a></blockquote></div>" );
         });
 
         $('#details').html('');
@@ -160,8 +160,7 @@ function sampleDraftPatternList(type) {
     });
 }
 
-function loadDraft(pattern) {
-    $('#content').html(spinner);
+function loadPatternForm(pattern, service) {
     $.getJSON(api+'/info/'+pattern+'/json', function( data ) {
         $('#content').html('<div class="row form-group" id="contentrow"></div>');
         $('#contentrow').append( "<h2>Step 2: Submit a form</h2>");
@@ -175,14 +174,18 @@ function loadDraft(pattern) {
 
         var model = data['models']['default']['model'];
         $.each( data['measurements'], function( key, val ) {
-            console.log(key);
             $('#col1-table').append( formRow('input', key, data['measurements'][key], 'metric'));
         });
         $.each( data['options'], function( key, val ) {
             if(val['type'] == 'chooseOne') $('#col2-table').append( formRow('chooseOne', key, val, ''));
             else $('#col2-table').append( formRow('input', key, val, 'metric'));
         });
-        
+        if(service == 'compare') { 
+            $('#col3-table').append( '<tr> <td class="key"><label for="samplerGroup">Sampler group</label></td> <td> <select class="form-control" id="samplerGroup" name="samplerGroup"></select> </td> </tr>');
+            $.each( data['models']['groups'], function( key, val ) {
+                $('#samplerGroup').append( '<option value="'+key+'">'+key+'</option>');
+            });
+        }
         $('#col3-table').append( '<tr> <td class="key"><label for="theme">Theme</label></td> <td> <select class="form-control" id="theme" name="theme"></select> </td> </tr>');
         $.each( themes, function( key, val ) {
             $('#theme').append( '<option value="'+val+'">'+val+'</option>');
@@ -197,14 +200,26 @@ function loadDraft(pattern) {
         $('#col3-table').append( '<tr> <td class="key"><label for="unitsOut">Output units</label></td> <td> <select class="form-control" id="unitsOut" name="unitsOut"></select> </td> </tr>');
         $('#unitsOut').append( '<option value="metric">Metric</option>');
         $('#unitsOut').append( '<option value="imperial">Imperial</option>');
+        $('#col4-table').append( '<tr><td colspan="2"><blockquote class="comment" id="theme-msg"><p><b>What to expect</b></p><p>The button below will open your pattern in a new window</p></blockquote><a class="btn btn-block btn-primary btn-lg gapabove uppercasefirst" id="'+service+'-submit" data-pattern="'+pattern+'" target="_BLANK">'+service+' the '+pattern+'</a></td></tr>');
         
-        $('#col4-table').append( '<tr><td colspan="2"><blockquote class="comment" id="theme-msg"><p><b>What to expect</b></p><p>The button below will open your draft in a new window</p></blockquote><a class="btn btn-block btn-primary btn-lg gapabove" id="draft-submit" data-pattern="'+pattern+'" target="_BLANK">Draft the '+pattern+'</a></td></tr>');
     });
+
+}
+
+function loadDraft(pattern) {
+    $('#content').html(spinner);
+    loadPatternForm(pattern, 'draft');
+    $('#col4-table').html('');
     $('#details').html('');
     $('#details').append( " <p>We made an AJAX call to to:</p> <code>" + api + "/info/" + pattern + "/json</code>");
     $('#details').append( " <p>We used the returned JSON to build the form above.</p>");
     $('#details').append( " <p>If you're curious about what the JSON response looks like, try the INFO service.</p>");
     scrollTo('#content');
+}
+
+function loadCompare(pattern) {
+    $('#content').html(spinner);
+    loadPatternForm(pattern, 'compare');
 }
 
 function loadSample(pattern) {
@@ -345,4 +360,22 @@ function draftSubmit (pattern) {
         $('#details').append( " <blockquote class='comment gapabove'><p><b>Yes, that's a long URL</b></p><p>We could have submitted this via a POST request to <code>"+api+'/draft/'+pattern+"/</code> but this is more verbose and makes is easier to see what's going on.</p></blockquote>");
         scrollTo('#details');
     }
+}
+
+function compareSubmit (pattern) {
+    if($("#dev").length == 0) {
+        $('#content').append( "<div id='dev'></div>");
+    } else {
+        $("#dev").html('');
+    }
+    data = $("#form").serialize();
+    url = api+'/compare/'+pattern+'/measurements/?'+data
+        console.log(url);
+    $('#compare-submit').attr('href', url);
+    $('#compare-submit').attr('target', '_BLANK');
+    $('#details').html('');
+    $('#details').append( " <p>We constructed the API url from the information in your form, and opened it in a new window.</p>");
+    $('#details').append( " <p>Specifically, we opened this url in a new window:</p><code>"+url+"</code>");
+    $('#details').append( " <blockquote class='comment gapabove'><p><b>Yes, that's a long URL</b></p><p>We could have submitted this via a POST request to <code>"+api+'/compare/'+pattern+"/</code> but this is more verbose and makes is easier to see what's going on.</p></blockquote>");
+    scrollTo('#details');
 }

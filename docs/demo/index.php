@@ -16,7 +16,7 @@
             body {margin-bottom: 30px; }
             #logo { padding-bottom: 0; padding-top: 20px; margin: auto; text-align: center;}
             h1 { text-align: center; }
-            #servicelist {margin-top: 20px; text-align: center;}
+            .servicelist {margin-top: 10px; text-align: center;}
             blockquote h6 { text-align: center; }
             .clickable:hover { cursor: pointer; }
             .gapabove { margin-top: 40px; }
@@ -31,9 +31,12 @@
                 $(document).on('click', 'a.pattern-info', function() { loadPatternInfo($(this).attr('data-pattern')); });
                 $(document).on('click', 'a#draft', function() { sampleDraftPatternList('draft'); });
                 $(document).on('click', 'a#sample', function() { sampleDraftPatternList('sample'); });
+                $(document).on('click', 'a#compare', function() { sampleDraftPatternList('compare'); });
                 $(document).on('click', 'a.pattern-draft', function() { loadDraft($(this).attr('data-pattern')); });
                 $(document).on('click', 'a#draft-submit', function() { draftSubmit($(this).attr('data-pattern')); });
                 $(document).on('click', 'a.pattern-sample', function() { loadSample($(this).attr('data-pattern')); });
+                $(document).on('click', 'a.pattern-compare', function() { loadCompare($(this).attr('data-pattern')); });
+                $(document).on('click', 'a#compare-submit', function() { compareSubmit($(this).attr('data-pattern')); });
             });   
         </script>
     </head>
@@ -46,13 +49,15 @@
             <div class="row"><div class="col-xs-12"><h2>Before we start: Services</h2></div></div>
             <div class="row">
                 <div class="col-md-9">
-                    <p>Out of the box, the Freesewing API provides 3 different services. They are:</p>
+                    <p>Out of the box, the Freesewing API provides 4 different services. They are:</p>
                     <h6>The info service</h6>
                     <p>Provides information about the services, patterns, channels, and themes available on the API.</p>
                     <h6>The draft service</h6>
                     <p>Drafts patterns according to your wishes.</p>
                     <h6>The sample service</h6>
                     <p>Samples patterns; Multiple drafts on top of each other, with changing measurements or options. (This will make sense when you try it, you'll see).</p>
+                    <h6>The compare service</h6>
+                    <p>Like the sample service, but in addition places your draft on top so you can compare. (This will make sense when you try it, you'll see).</p>
                 </div>
                 <div id='services' class="col-md-3 col-xs-12">
                     <h3>Try them all</h3>

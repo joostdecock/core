@@ -5,9 +5,9 @@ namespace Freesewing;
 /**
  * A note is text + an arrow pointing to something.
  *
- * This extends text, and is a way to add text to your pattern with a 
- * little arrow pointing to a particular point. 
- * It's useful for adding instructions and remarks to 
+ * This extends text, and is a way to add text to your pattern with a
+ * little arrow pointing to a particular point.
+ * It's useful for adding instructions and remarks to
  * your pattern about something in particular.
  *
  * @see \Freesewing\Part::newNote()

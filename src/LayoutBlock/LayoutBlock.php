@@ -6,7 +6,7 @@ namespace Freesewing;
  * A layout element used by the packer
  *
  * @see \Freesewing\GrowingPacker
- * 
+ *
  * @author Joost De Cock <joost@decock.org>
  * @copyright 2016 Joost De Cock
  * @license http://opensource.org/licenses/GPL-3.0 GNU General Public License, Version 3
@@ -29,7 +29,7 @@ class LayoutBlock
     private $used = false;
 
     /**
-     * Sets the position 
+     * Sets the position
      *
      * @param float x Position X-value
      * @param float y Position Y-value
@@ -41,7 +41,7 @@ class LayoutBlock
     }
 
     /**
-     * Sets the size 
+     * Sets the size
      *
      * @param float w Width
      * @param float h Height
@@ -53,24 +53,25 @@ class LayoutBlock
     }
 
     /**
-     * Sets whether the block is used or not 
+     * Sets whether the block is used or not
      *
-     * @param bool used 
+     * @param bool used
      */
     public function setUsed($used = true)
     {
         $this->used = $used;
     }
-
     /**
-     * Return whether the block is used or not 
+     * Return whether the block is used or not
      *
      * @return bool True if it's used, false if not
      */
     public function isUsed()
     {
-        if($this->used === true) return true;
-        else return false;
+        if ($this->used === true) {
+            return true;
+        } else {
+            return false;
+        }
     }
-
 }

@@ -5,7 +5,7 @@ namespace Freesewing\Themes;
 /**
  * The Info theme is used by the Info service
  *
- * Unlike your typical pattern-drawing theme, this 
+ * Unlike your typical pattern-drawing theme, this
  * one does not extend the abstract Theme class.
  * That's because the info service just returns information
  * and doesn't create a pattern.
@@ -171,7 +171,9 @@ class Info
         $html .= "\n\t<ul>";
         foreach ($list['models']['groups'] as $key => $value) {
             $html .= "\n\t\t<li>$key<ul>";
-            foreach ($value as $mkey => $mvalue) $html .= "\n\t\t\t<li>$mvalue</li>";
+            foreach ($value as $mkey => $mvalue) {
+                $html .= "\n\t\t\t<li>$mvalue</li>";
+            }
             $html .= "</ul></li>";
         }
         $html .= "\n\t</ul>";
@@ -180,7 +182,9 @@ class Info
         $html .= "\n\t<ul>";
         foreach ($list['models']['measurements'] as $key => $value) {
             $html .= "\n\t\t<li>$key<ul>";
-            foreach ($value as $mkey => $mvalue) $html .= "\n\t\t\t<li>$mkey &raquo; $mvalue</li>";
+            foreach ($value as $mkey => $mvalue) {
+                $html .= "\n\t\t\t<li>$mkey &raquo; $mvalue</li>";
+            }
             $html .= "</ul></li>";
         }
         $html .= "\n\t</ul>";
@@ -204,7 +208,7 @@ class Info
      */
     public function getThemeName()
     {
-        return \Freesewing\Utils::getClassDir($this); 
+        return \Freesewing\Utils::getClassDir($this);
     }
     
     /**

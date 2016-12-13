@@ -6,22 +6,24 @@ namespace Freesewing;
  * Holds measurements of a model.
  *
  * This is mainly used to hold measurements for a model.
- * There's also support to give the model a name, but only the 
+ * There's also support to give the model a name, but only the
  * sampler service uses that at the moment.
- * @author Joost De Cock <joost@decock.org>
+ *
+ * @author    Joost De Cock <joost@decock.org>
  * @copyright 2016 Joost De Cock
- * @license http://opensource.org/licenses/GPL-3.0 GNU General Public License, Version 3
+ * @license   http://opensource.org/licenses/GPL-3.0 GNU General Public License, Version 3
  */
 class Model
 {
+
     /** @var array measurements */
     private $measurements = array();
 
     /**
      * Sets a measurement.
      *
-     * @param string $key Measurement key in the array
-     * @param float $value Measurement value
+     * @param string $key   Measurement key in the array
+     * @param float  $value Measurement value
      */
     public function setMeasurement($key, $value)
     {
@@ -67,18 +69,17 @@ class Model
     /**
      * Adds measurements.
      *
-     * Rater than adding measurements individually, this adds 
+     * Rater than adding measurements individually, this adds
      * an array of measurements.
      *
-     * @param array measurements
+     * @param array $measurements
      */
-    public function addMeasurements($array)
+    public function addMeasurements($measurements)
     {
-        if (is_array($array)) {
-            foreach ($array as $key => $value) {
+        if (is_array($measurements)) {
+            foreach ($measurements as $key => $value) {
                 $this->measurements[$key] = $value;
             }
         }
     }
-
 }

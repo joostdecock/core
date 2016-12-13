@@ -11,19 +11,19 @@ namespace Freesewing;
  */
 class Path
 {
-    /** 
-     * @var \Freesewing\Boundary $boundary The path boundary 
-     * 
+    /**
+     * @var \Freesewing\Boundary $boundary The path boundary
+     *
      * This is public so we can call the boundary methods
      * from the path, like: $path->boundary->getX()
      **/
     public $boundary = null;
 
     /** @var bool $sample To sample this path or not */
-    private $sample = false; 
+    private $sample = false;
 
     /** @var bool $render To render this path or not */
-    private $render = true; 
+    private $render = true;
     
     /** @var array $attributes The path attributest */
     private $attributes = array();
@@ -36,15 +36,15 @@ class Path
      *
      * @param bool $bool True to sample this path. False to not sample it.
      */
-    public function setSample($bool=true)
+    public function setSample($bool = true)
     {
         $this->sample = $bool;
     }
 
     /**
      * Returns the sample property
-     * 
-     * @return bool 
+     *
+     * @return bool
      */
     public function getSample()
     {
@@ -53,7 +53,7 @@ class Path
 
     /**
      * Stores path boundary
-     * 
+     *
      * @param \Freesewing\Boundary $boundary The path boundary object.
      */
     public function setBoundary($boundary)
@@ -63,7 +63,7 @@ class Path
 
     /**
      * Returns the boundary property
-     * 
+     *
      * @return \Freesewing\Boundary
      */
     public function getBoundary()
@@ -73,7 +73,7 @@ class Path
 
     /**
      * Marks path to be rendered by the draft service
-     * 
+     *
      * @param bool $bool True to render this path. False to not render it.
      */
     public function setRender($bool)
@@ -83,8 +83,8 @@ class Path
 
     /**
      * Returns the render property
-     * 
-     * @return bool 
+     *
+     * @return bool
      */
     public function getRender()
     {
@@ -93,8 +93,8 @@ class Path
 
     /**
      * Sanitizes input and sets the path property
-     * 
-     * @param string $path The pathstring 
+     *
+     * @param string $path The pathstring
      */
     public function setPath($path)
     {
@@ -103,7 +103,7 @@ class Path
 
     /**
      * Returns the path property, which is the pathstring
-     * 
+     *
      * @return string
      */
     public function getPath()
@@ -113,8 +113,8 @@ class Path
 
     /**
      * Stores path attributes
-     * 
-     * @param array $attributes 
+     *
+     * @param array $attributes
      */
     public function setAttributes($attributes)
     {
@@ -123,8 +123,8 @@ class Path
 
     /**
      * Returns the attributes property
-     * 
-     * @return array 
+     *
+     * @return array
      */
     public function getAttributes()
     {
@@ -133,16 +133,16 @@ class Path
 
     /**
      * Calculates and returns bounding box of a path
-     * 
-     * We need the bounding box of a path to figure out 
+     *
+     * We need the bounding box of a path to figure out
      * how large a pattern piece is. Something we need to know
      * in order to lay them out in the pattern later.
      *
-     * @param \Freesewing\Part $part The part that this path is defined in 
+     * @param \Freesewing\Part $part The part that this path is defined in
      *
-     * @throws InvalidArgumentException When the path references a non-existing point 
+     * @throws InvalidArgumentException When the path references a non-existing point
      *
-     * @return \Freesewing\Boundary 
+     * @return \Freesewing\Boundary
      */
     public function findBoundary($part)
     {
@@ -150,12 +150,15 @@ class Path
         $pathAsArray = Utils::asScrubbedArray($this->getPath());
         foreach ($pathAsArray as $index => $data) {
             /* Are we dealing with a command or point index? */
-            if (Utils::isAllowedPathCommand($data)) { // Command
+            if (Utils::isAllowedPathCommand($data)) {
+// Command
                 $command = $data;
             }
-            if (!Utils::isAllowedPathCommand($data)) { // Point index
+            if (!Utils::isAllowedPathCommand($data)) {
+// Point index
                 $pointIndex = $data;
-                if (!isset($part->points[$pointIndex])) { // Reference to non-existing point. Bail out
+                if (!isset($part->points[$pointIndex])) {
+// Reference to non-existing point. Bail out
                     throw new \InvalidArgumentException('SVG path references non-existing point '.$pointIndex);
                 }
                 if (!@is_object($topLeft)) {
@@ -191,7 +194,7 @@ class Path
                             if ($part->points[$pointIndex]->getY() > $bottomRight->getY()) {
                                 $bottomRight->setY($part->points[$pointIndex]->getY());
                             }
-                        break;
+                            break;
                         case 'C':
                             /*
                              * Bezier curves need a bit more work. We calculate their bounding box by stepping through them.
@@ -226,7 +229,7 @@ class Path
                                     $bottomRight->setY($bezierBoundary->bottomRight->getY());
                                 }
                             }
-                        break;
+                            break;
                     }
                 }
             }

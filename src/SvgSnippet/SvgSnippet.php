@@ -102,5 +102,4 @@ class SvgSnippet
     {
         $this->attributes = $attributes;
     }
-
 }

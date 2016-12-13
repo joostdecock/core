@@ -27,16 +27,16 @@ class Response
     private $cacheTime = 15552000;
 
     /**
-     * Adds caching headers 
+     * Adds caching headers
      *
      * @param \Freesewing\Request $request The request object
      */
     public function addCacheHeaders($request)
     {
-        if($request->getData('cache') === null) {
-            $this->addHeader('cache' , "Cache-Control: public, no-cache");
+        if ($request->getData('cache') === null) {
+            $this->addHeader('cache', "Cache-Control: public, no-cache");
         } else {
-            $this->addHeader('cache' , "Cache-Control: public, max-age=".$this->cacheTime);
+            $this->addHeader('cache', "Cache-Control: public, max-age=".$this->cacheTime);
         }
     }
 
@@ -64,7 +64,7 @@ class Response
      * Sets the repsonse format
      *
      * Currently, only the format 'json' causes
-     * anything else but the response being 
+     * anything else but the response being
      * send to the browser as-is.
      *
      * @param string $body The response body
@@ -122,7 +122,9 @@ class Response
      */
     private function sendHeaders()
     {
-        foreach($this->headers as $header) header($header);
+        foreach ($this->headers as $header) {
+            header($header);
+        }
     }
 
     /**
@@ -132,6 +134,6 @@ class Response
      */
     private function asJson($data)
     {
-        return json_encode($data,  JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_NUMERIC_CHECK);
+        return json_encode($data, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_NUMERIC_CHECK);
     }
 }

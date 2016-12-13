@@ -45,22 +45,27 @@ options:
         type: measure
         min: -40
         max: 160
-        default: 30
+        default: 60
     bicepsEase:
         type: measure
         min: 0
         max: 80
-        default: 30
+        default: 40
     cuffEase:
         type: measure
         min: 0
         max: 100
-        default: 45
+        default: 35
+    lengthBonus:
+        type: measure
+        min: 0
+        max: 180
+        default: 70
     ribbingStretchFactor:
         type: percent
         min: 70
         max: 100
-        default: 85
+        default: 90
 
 inMemoryOf:   
     name: "Hugo De Cock"

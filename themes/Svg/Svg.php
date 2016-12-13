@@ -2,8 +2,11 @@
 /** Freesewing\Themes\Info class */
 namespace Freesewing\Themes;
 
+use Freesewing\Context;
+use Freesewing\Patterns\Pattern;
+
 /**
- * Default theme for the draft service. 
+ * Default theme for the draft service.
  *
  * A straight-forward theme for SVG output
  *
@@ -15,16 +18,17 @@ class Svg extends Theme
 {
     /**
      * Returns the SVG document
-     * 
-     * @param \Freesewing\Context $context The context object
+     *
+     * @param Context $context The context object
+     * @return \Freesewing\Response
      */
-    public function themeResponse($context)
+    public function themeResponse(Context $context)
     {
         $response = new \Freesewing\Response();
-        $response->addCacheHeaders($context->request);
+        $response->addCacheHeaders($context->getRequest());
         $response->addHeader('Content-Type', 'Content-Type: image/svg+xml');
         $response->setFormat('svg');
-        $response->setBody("{$context->svgDocument}");
+        $response->setBody("{$context->getSvgDocument()}");
 
         return $response;
     }
@@ -33,13 +37,12 @@ class Svg extends Theme
      * Loads message from pattern into messages property
      * Adds translations for our scalebox
      *
-     * @param \Freesewing\Patterns\* $pattern The pattern object
+     * @param \Freesewing\Patterns\Pattern $pattern The pattern object
      */
-    public function themePattern($pattern)
+    public function themePattern(Pattern $pattern)
     {
         $this->messages = $pattern->getMessages();
         $pattern->replace('__SCALEBOX_METRIC__', $pattern->t('__SCALEBOX_METRIC__'));
         $pattern->replace('__SCALEBOX_IMPERIAL__', $pattern->t('__SCALEBOX_IMPERIAL__'));
     }
-
 }

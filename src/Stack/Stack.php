@@ -5,10 +5,10 @@ namespace Freesewing;
 /**
  * A stack you can push data onto or replace 1 element with many
  *
- * This stack is used for offsetting paths. When doing so, we 
+ * This stack is used for offsetting paths. When doing so, we
  * split a path into individual steps. Sometimes, we need to add
  * steps in between those steps (to fill gaps for example).
- * This stack class handles this for us. We can push data 
+ * This stack class handles this for us. We can push data
  * on a stack, or replace one element with several taking its place.
  *
  * @author Joost De Cock <joost@decock.org>

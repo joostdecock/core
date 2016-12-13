@@ -9,10 +9,10 @@ namespace Freesewing;
  * round all point data to this precision.
  * By default it's 3, rounding everything
  * to 1/1000th of a mm, which is very accurate.
- * If you increase the precision, some operations 
+ * If you increase the precision, some operations
  * (like path offset) will become rather expensive (slow)
  * because mathematically, they are approximations.
- * And making the approximation overly precise is just being 
+ * And making the approximation overly precise is just being
  * difficult for the sake of being difficult.
  * For all intends and purposes, 1/1000th of a mm is way more
  * precice than you'll even be able to sew or cut.
@@ -21,7 +21,7 @@ namespace Freesewing;
  * @copyright 2016 Joost De Cock
  * @license http://opensource.org/licenses/GPL-3.0 GNU General Public License, Version 3
  */
-class Point Extends Coords
+class Point extends Coords
 {
     /** @var int $precision Precision to round point coordinates on */
     public $precision = 3;

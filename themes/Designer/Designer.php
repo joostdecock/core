@@ -77,11 +77,13 @@ class Designer extends Theme
      */
     private function highlightPoints($partKey, $part)
     {
-        if(isset($_REQUEST['highlightPoints'])) {
-            $toHighlight = \Freesewing\Utils::asScrubbedArray($_REQUEST['highlightPoints'],',');
-            if(isset($toHighlight) && is_array($toHighlight)) {
+        if (isset($_REQUEST['highlightPoints'])) {
+            $toHighlight = \Freesewing\Utils::asScrubbedArray($_REQUEST['highlightPoints'], ',');
+            if (isset($toHighlight) && is_array($toHighlight)) {
                 foreach ($toHighlight as $key) {
-                    if(isset( $part->points[$key])) $this->highlightPoint($key, $part->points[$key], $part, $partKey);
+                    if (isset( $part->points[$key])) {
+                        $this->highlightPoint($key, $part->points[$key], $part, $partKey);
+                    }
                 }
             }
         }
@@ -182,5 +184,4 @@ class Designer extends Theme
     {
         return true;
     }
-
 }

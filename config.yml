@@ -3,8 +3,9 @@ defaults:
     channel: Docs
     draftTheme: Svg
     sampleTheme: Sampler
+    compareTheme: Compare
     infoTheme: Info
-    pattern: AidenAshirt
+    pattern: AaronAshirt
     locale: en
 renderers:
     svg: SvgRenderbot
@@ -13,3 +14,4 @@ services:
     - info
     - draft
     - sample
+    - compare

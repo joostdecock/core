@@ -88,7 +88,7 @@ class BezierToolbox
      *
      * @return \Freesewing\Point The point at the edge
      */
-    static function findBezierEdge($start, $cp1, $cp2, $end, $direction='left')
+    static function findBezierEdge($start, $cp1, $cp2, $end, $direction = 'left')
     {
         $steps = BezierToolbox::$steps;
         for ($i = 0; $i <= $steps; ++$i) {
@@ -102,10 +102,10 @@ class BezierToolbox
                 $previousY = $y;
             } else {
                 if (
-                    ($y < $edgeY && $direction == 'top') OR
-                    ($y > $edgeY && $direction == 'bottom') OR
-                    ($x < $edgeX && $direction == 'left') OR
-                    ($x > $edgeX && $direction == 'right') 
+                    ($y < $edgeY && $direction == 'top') or
+                    ($y > $edgeY && $direction == 'bottom') or
+                    ($x < $edgeX && $direction == 'left') or
+                    ($x > $edgeX && $direction == 'right')
                 ) {
                     $edgeX = $x;
                     $edgeY = $y;
@@ -124,7 +124,7 @@ class BezierToolbox
     /**
      * Returns the length of a cubic Bezier curve
      *
-     * There is no closed-form solution to calculate the length of cubic polynomial curves. 
+     * There is no closed-form solution to calculate the length of cubic polynomial curves.
      * Instead, we'll subdivide this cube into a bunch of tiny steps
      * and treat those as straight lines.
      *
@@ -159,9 +159,9 @@ class BezierToolbox
     /**
      * Returns intersection between a curve and a line
      *
-     * The number of intersections between a curve and a line 
+     * The number of intersections between a curve and a line
      * varies. So we return an array of points.
-     * 
+     *
      * @param \Freesewing\Point $lFrom The point at the start of the line
      * @param \Freesewing\Point $lTo The point at the end of the line
      * @param \Freesewing\Point $cFrom The point at the start of the curve
@@ -220,15 +220,15 @@ class BezierToolbox
             $n->dot($c1),
             $n->dot($c0) + $cl,
         ]);
-        $roots = $roots->getRoots(); 
+        $roots = $roots->getRoots();
         
         // Any roots in closed interval [0,1] are intersections on Bezier, but
         // might not be on the line segment.
         // Find intersections and calculate point coordinates
-        for ($i=0 ; $i< count($roots) ; $i++) {
+        for ($i=0; $i< count($roots); $i++) {
             $t = $roots[$i];
 
-            if ( 0 <= $t && $t <= 1 ) {
+            if (0 <= $t && $t <= 1) {
                 // We're within the Bezier curve
                 // Find point on Bezier
                 $p5 = $p1->lerp($p2, $t);
@@ -243,35 +243,38 @@ class BezierToolbox
                 // See if point is on line segment
                 // Had to make special cases for vertical and horizontal lines due
                 // to slight errors in calculation of p6
-                if ( $a1->getX() == $a2->getX() ) {
-                    if ( $min->getY() <= $p10->getY() && $p10->getY() <= $max->getY() ) {
+                if ($a1->getX() == $a2->getX()) {
+                    if ($min->getY() <= $p10->getY() && $p10->getY() <= $max->getY()) {
                         $points[] = $p10;
                     }
-                } else if ( $a1->getY() == $a2->getY() ) {
-                    if ( $min->getX() <= $p10->getX() && $p10->getX() <= $max->getX() ) {
+                } elseif ($a1->getY() == $a2->getY()) {
+                    if ($min->getX() <= $p10->getX() && $p10->getX() <= $max->getX()) {
                         $points[] = $p10;
                     }
-                } else if ( $p10->gte($min) && $p10->lte($max) ) {
+                } elseif ($p10->gte($min) && $p10->lte($max)) {
                     $points[] = $p10;
                 }
 
             }
         }
-        if(isset($points) && is_array($points)) {
-            foreach($points as $key => $point) $intersections[$key] = $point->asPoint();
+        if (isset($points) && is_array($points)) {
+            foreach ($points as $key => $point) {
+                $intersections[$key] = $point->asPoint();
+            }
             return $intersections;
+        } else {
+            return false;
         }
-        else return false;
     }
     
     /**
      * Returns intersection between a cubic Bezier and a line
      *
-     * The number of intersections between a curve and a line 
+     * The number of intersections between a curve and a line
      * varies. So we return an array of points.
      *
      * @deprecated This has been replaced and needs to be ripped out
-     * 
+     *
      * @param \Freesewing\Point $lFrom The point at the start of the line
      * @param \Freesewing\Point $lTo The point at the end of the line
      * @param \Freesewing\Point $cFrom The point at the start of the curve
@@ -301,7 +304,7 @@ class BezierToolbox
 
         $r = BezierToolbox::cubicRoots($P);
 
-        // Verify the roots are in bounds of the linear segment 
+        // Verify the roots are in bounds of the linear segment
         for ($i = 0; $i < 3; ++$i) {
             $t = $r[$i];
 
@@ -309,7 +312,8 @@ class BezierToolbox
             $X[1] = $by[0] * $t * $t * $t + $by[1] * $t * $t + $by[2] * $t + $by[3];
             // above is intersection point assuming infinitely long line segment,
             // make sure we are also in bounds of the line
-            if (($lTo->getX() - $lFrom->getX()) != 0) {           // if not vertical line
+            if (($lTo->getX() - $lFrom->getX()) != 0) {
+// if not vertical line
                 $s = ($X[0] - $lFrom->getX()) / ($lTo->getX() - $lFrom->getX());
             } else {
                 $s = ($X[1] - $lFrom->getY()) / ($lTo->getY() - $lFrom->getY());
@@ -324,16 +328,17 @@ class BezierToolbox
             }
         }
         $i = 0;
-        if(isset($I) AND is_array($I)) {
-            foreach($I as $coords) {
+        if (isset($I) and is_array($I)) {
+            foreach ($I as $coords) {
                 $point = new \Freesewing\Point();
                 $point->setX($coords[0]);
                 $point->setY($coords[1]);
                 $points[] = $point;
             }
             return $points;
+        } else {
+            return false;
         }
-        else return false;
     }
     
     /**
@@ -378,7 +383,8 @@ class BezierToolbox
         $R = (9 * $A * $B - 27 * $C - 2 * pow($A, 3)) / 54;
         $D = pow($Q, 3) + pow($R, 2);    // polynomial discriminant
 
-        if ($D >= 0) { // complex or duplicate roots
+        if ($D >= 0) {
+// complex or duplicate roots
             $S = BezierToolbox::sgn($R + sqrt($D)) * pow(abs($R + sqrt($D)), 1 / 3);
             $T = BezierToolbox::sgn($R - sqrt($D)) * pow(abs($R - sqrt($D)), 1 / 3);
 
@@ -392,7 +398,8 @@ class BezierToolbox
                 $t[1] = -1;
                 $t[2] = -1;
             }
-        } else { // distinct real roots
+        } else {
+// distinct real roots
             $th = acos($R / sqrt(pow($Q, 3) * -1));
 
             $t[0] = 2 * sqrt(-1 * $Q) * cos($th / 3) - $A / 3;
@@ -423,7 +430,9 @@ class BezierToolbox
      */
     public static function sgn($x)
     {
-        if ($x < 0.0) return -1;
+        if ($x < 0.0) {
+            return -1;
+        }
 
         return 1;
     }
@@ -458,7 +467,7 @@ class BezierToolbox
      * Returns delta of split point on curve
      *
      * Approximate delta (between 0 and 1) of a point 'split' on
-     * a Bezier curve 
+     * a Bezier curve
      *
      * @param \Freesewing\Point $from Point at the start of the curve
      * @param \Freesewing\Point $cp1 Control point 1
@@ -494,7 +503,7 @@ class BezierToolbox
      * Returns points for a curve splitted on a given delta
      *
      * This does the actually splitting
-     * 
+     *
      * @see \Freesewing\Part::splitCurve()
      *
      * @param \Freesewing\Point $from The point at the start of the curve
@@ -561,7 +570,7 @@ class BezierToolbox
      * Returns the distance for a control point to approximate a circle
      *
      * Note that circle is not perfect, but close enough
-     * 
+     *
      * @param float $radius The radius of the circle to aim for
      *
      * @return loat The distance to the control point
@@ -577,8 +586,8 @@ class BezierToolbox
      * As the number of intersections between two curves
      * varies, we return an array of points.
      *
-     * This implementation is based on the intersection 
-     * procedures by Kevin Lindsey (http://www.kevlindev.com) 
+     * This implementation is based on the intersection
+     * procedures by Kevin Lindsey (http://www.kevlindev.com)
      *
      * @param \Freesewing\Point $c1From The point at the start of the first curve
      * @param \Freesewing\Point $c1C1 The first control point of the first curve
@@ -883,7 +892,7 @@ class BezierToolbox
 
         $poly = new \Freesewing\Polynomial($coefs);
 
-        $roots = $poly->getRootsInInterval(0,1);
+        $roots = $poly->getRootsInInterval(0, 1);
 
         for ($i=0; $i<count($roots); $i++) {
             $s = $roots[$i];
@@ -906,13 +915,14 @@ class BezierToolbox
             if (count($xRoots) > 0 && count($yRoots) > 0) {
                 $TOLERANCE = 0.0001;
 
-                if(true) { // Need a structure to break out of
+                if (true) {
+// Need a structure to break out of
                     for ($j=0; $j < count($xRoots); $j++) {
                         $xRoot = $xRoots[$j];
                         
                         if (0 <= $xRoot && $xRoot <= 1) {
-                            for ($k=0;$k < count($yRoots);$k++) {
-                                if (abs($xRoot - $yRoots[$k] ) < $TOLERANCE ) {
+                            for ($k=0; $k < count($yRoots); $k++) {
+                                if (abs($xRoot - $yRoots[$k] ) < $TOLERANCE) {
                                     $j1  = $c21->multiply($s);
                                     $j2  = $j1->add($c20);
                                     $j3 = $c22->multiply($s*$s);
@@ -927,12 +937,13 @@ class BezierToolbox
                 }
             }
         }
-        if(isset($points) && is_array($points)) {
-            foreach($points as $key => $point) $intersections[$key] = $point->asPoint();
+        if (isset($points) && is_array($points)) {
+            foreach ($points as $key => $point) {
+                $intersections[$key] = $point->asPoint();
+            }
             return $intersections;
+        } else {
+            return false;
         }
-        else return false;
     }
-
 }
-

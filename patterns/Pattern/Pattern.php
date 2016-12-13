@@ -2,15 +2,22 @@
 /** Freesewing\Patterns\Pattern class */
 namespace Freesewing\Patterns;
 
+use Symfony\Component\Yaml\Exception\ParseException;
+
 /**
  * Abstract class for patterns.
  *
- * @author Joost De Cock <joost@decock.org>
+ * @author    Joost De Cock <joost@decock.org>
  * @copyright 2016 Joost De Cock
- * @license http://opensource.org/licenses/GPL-3.0 GNU General Public License, Version 3
+ * @license   http://opensource.org/licenses/GPL-3.0 GNU General Public License, Version 3
  */
 abstract class Pattern
 {
+    /**
+     * PI with max needed precision
+     */
+    const PI = 3.1415;
+
     /** @var array $parts Holds the pattern parts */
     public $parts = array();
 
@@ -22,6 +29,9 @@ abstract class Pattern
 
     /** @var array $options Pattern options */
     private $options = array();
+
+    /** @var array $values Pattern values */
+    private $values = array();
 
     /** @var int $width Pattern width */
     private $width;
@@ -35,10 +45,22 @@ abstract class Pattern
     /** @var array $messages Messages to include in SVG source */
     private $messages;
 
+    /** @var float $partMargin Margin between pattern parts */
+    private $partMargin;
+
+    /** @var \Freesewing\GrowingPacker $packer */
+    private $packer;
+
+    /** @var array $layoutBlocks */
+    private $layoutBlocks;
+
+    /** @var array $debug collection of debug messages */
+    private $debug;
+
     /**
      * Constructor stores Yaml config file in the config property
      *
-     * @throws InvalidArgument if the Yaml file is not valid
+     * @throws ParseException if the Yaml file is not valid
      */
     public function __construct()
     {
@@ -57,8 +79,9 @@ abstract class Pattern
 
     /**
      * Makes sure to unset the parts array when cloning a pattern
-     * 
+     *
      * This is used by the sample service
+     *
      * @see \Freesewing\MeasurementsSampler::samplerMeasurements()
      */
     public function __clone()
@@ -66,26 +89,26 @@ abstract class Pattern
         unset($this->parts);
     }
 
-    /** 
-     * Patterns must implement this method called by the DraftService 
-     * 
+    /**
+     * Patterns must implement this method called by the DraftService
+     *
      * @param \Freesewing\Context $context The context
      */
     abstract public function draft($context);
 
-    /** 
+    /**
      * Patterns must implement this method called by the SampleService
-     * 
+     *
      * @param \Freesewing\Context $context The context
      */
-    abstract public function sample($model);
-    
+    abstract public function sample($context);
+
     /**
      * Add parts in config file to pattern
      *
      * This prevents you from having to manually add all parts.
      * Note that if there are parts you don't need
-     * (depending on options for example) you could 
+     * (depending on options for example) you could
      * override this function. Or, you can simple call
      * setRender(false) on them to keep them from being rendered.
      */
@@ -104,7 +127,7 @@ abstract class Pattern
      */
     public function getTranslationsDir()
     {
-        return \Freesewing\Utils::getClassDir($this).'/translations';
+        return \Freesewing\Utils::getClassDir($this) . '/translations';
     }
 
     /**
@@ -114,7 +137,7 @@ abstract class Pattern
      */
     public function getConfigFile()
     {
-        return \Freesewing\Utils::getClassDir($this).'/config.yml';
+        return \Freesewing\Utils::getClassDir($this) . '/config.yml';
     }
 
     /**
@@ -124,7 +147,7 @@ abstract class Pattern
      */
     public function getSamplerModelFile()
     {
-        return \Freesewing\Utils::getClassDir($this).'/sampler/models.yml';
+        return \Freesewing\Utils::getClassDir($this) . '/sampler/models.yml';
     }
 
     /**
@@ -132,7 +155,7 @@ abstract class Pattern
      *
      * This loads the configation Yaml file and returns it as an array
      *
-     * @throws Exception If the Yaml file is invalid
+     * @throws ParseException If the Yaml file is invalid
      *
      * @return array The pattern configuration
      */
@@ -146,7 +169,7 @@ abstract class Pattern
      *
      * This loads the sampler/models.yml Yaml file and returns it as an array
      *
-     * @throws Exception If the Yaml file is invalid
+     * @throws ParseException If the Yaml file is invalid
      *
      * @return array The sampler models
      */
@@ -158,18 +181,18 @@ abstract class Pattern
     /**
      * Takes a value in mm and returns it as text in the chose units
      *
-     * For example, this returns 25.4 as either '2.54cm' or '1"' 
+     * For example, this returns 25.4 as either '2.54cm' or '1"'
      *
-     * @param $val The value to convert
-     * 
+     * @param string $val The value to convert
+     *
      * @return string $text The converted text
      */
     public function unit($val)
     {
         if ($this->units['out'] == 'imperial') {
-            return round($val / 25.4, 2).'"';
+            return round($val / 25.4, 2) . '"';
         } else {
-            return round($val / 10, 2).'cm';
+            return round($val / 10, 2) . 'cm';
         }
     }
 
@@ -177,7 +200,7 @@ abstract class Pattern
      * Returns the units property
      *
      * @return string imperial|metric
-     */ 
+     */
     public function getUnits()
     {
         return $this->units;
@@ -188,11 +211,23 @@ abstract class Pattern
      *
      * @param string $key The key in the options array for which to return the value
      *
-     * @return anything $value The option value
-     */ 
+     * @return mixed $value The option value
+     */
     public function getOption($key)
     {
         return $this->options[$key];
+    }
+
+    /**
+     * Returns a value from the values array
+     *
+     * @param string $key The key in the values array for which to return the value
+     *
+     * @return mixed $value The value
+     */
+    public function getValue($key)
+    {
+        return $this->values[$key];
     }
 
     /**
@@ -200,29 +235,52 @@ abstract class Pattern
      *
      * @param string $key The key in the options array for which to return the value
      *
-     * @return anything $value The option value
-     */ 
+     * @return mixed $value The option value
+     */
     public function o($key)
     {
         return $this->getOption($key);
     }
 
     /**
+     * Alias for getValue()
+     *
+     * @param string $key The key in the values array for which to return the value
+     *
+     * @return mixed $value The value
+     */
+    public function v($key)
+    {
+        return $this->getValue($key);
+    }
+
+    /**
      * Sets the key $key in the options array to value $value
      *
-     * @param string $key The key in the options array
-     * @param anything $value The option to set
-     */ 
+     * @param string $key   The key in the options array
+     * @param mixed  $value The option to set
+     */
     public function setOption($key, $value)
     {
         $this->options[$key] = $value;
     }
 
     /**
+     * Sets the key $key in the values array to value $value
+     *
+     * @param string $key   The key in the values array
+     * @param mixed  $value The value to set
+     */
+    public function setValue($key, $value)
+    {
+        $this->values[$key] = $value;
+    }
+
+    /**
      * Sets the width property
      *
      * @param float $width The width of the pattern
-     */ 
+     */
     public function setWidth($width)
     {
         $this->width = $width;
@@ -232,7 +290,7 @@ abstract class Pattern
      * Returns the height property
      *
      * @return float $height The height of the pattern
-     */ 
+     */
     public function getWidth()
     {
         return $this->width;
@@ -242,7 +300,7 @@ abstract class Pattern
      * Sets the height property
      *
      * @param float $height The height of the pattern
-     */ 
+     */
     public function setHeight($height)
     {
         $this->height = $height;
@@ -252,7 +310,7 @@ abstract class Pattern
      * Returns the height property
      *
      * @return float $height The height of the pattern
-     */ 
+     */
     public function getHeight()
     {
         return $this->height;
@@ -262,7 +320,7 @@ abstract class Pattern
      * Sets the partMargin property
      *
      * @param float $margin The margin between pattern parts
-     */ 
+     */
     public function setPartMargin($margin)
     {
         $this->partMargin = $margin;
@@ -273,7 +331,7 @@ abstract class Pattern
      *
      * @param string $from The ID in the parts array of the source part
      * @param string $into The ID in the parts array of the destination part
-     */ 
+     */
     public function clonePoints($from, $into)
     {
         foreach ($this->parts[$from]->points as $key => $point) {
@@ -284,8 +342,8 @@ abstract class Pattern
     /**
      * Sets the partMargin property
      *
-     * @param float $margin The margin between pattern parts
-     */ 
+     * @return float $margin The margin between pattern parts
+     */
     public function getPartMargin()
     {
         return $this->partMargin;
@@ -298,7 +356,7 @@ abstract class Pattern
      * its top left corner. This takes care of that by pushing everything to
      * the top left (by adding a translate transform). We do this before
      * we layout the pattern with our packer.
-     */ 
+     */
     public function pileParts()
     {
         if (isset($this->parts) && count($this->parts) > 0) {
@@ -320,15 +378,16 @@ abstract class Pattern
     {
         foreach ($this->parts as $part) {
             if ($part->getRender() === true) {
+                // @todo: frome where comes the topLeft-variable?
                 if (!@is_object($topLeft)) {
                     $topLeft = new \Freesewing\Point(
-                        $part->boundary->topLeft->x,
-                        $part->boundary->topLeft->y,
-                        'Top-left pattern boundary');
+                        $part->boundary->topLeft->x, $part->boundary->topLeft->y,
+                        'Top-left pattern boundary'
+                    );
                     $bottomRight = new \Freesewing\Point(
-                        $part->boundary->bottomRight->x,
-                        $part->boundary->bottomRight->y,
-                        'Bottom-right pattern boundary');
+                        $part->boundary->bottomRight->x, $part->boundary->bottomRight->y,
+                        'Bottom-right pattern boundary'
+                    );
                 } else {
                     if ($part->boundary->topLeft->x < $topLeft->x) {
                         $topLeft->setX($part->boundary->topLeft->x);
@@ -351,7 +410,7 @@ abstract class Pattern
     /**
      * Adds a part to the pattern by adding it to the parts array
      *
-     * @param $key The ID in the parts array of the part to add
+     * @param string $key The ID in the parts array of the part to add
      */
     public function addPart($key)
     {
@@ -393,11 +452,10 @@ abstract class Pattern
         }
     }
 
-
     /**
      * Lays out pattern parts on the page
      *
-     * This uses a packer to automatically lay out 
+     * This uses a packer to automatically lay out
      * the different pattern pieces on that page.
      */
     public function layout()
@@ -429,7 +487,7 @@ abstract class Pattern
      * This is a helper function that pushes messages onto
      * the messages property.
      * In the default theme, these will be added to the
-     * footer comments in the SVG file. 
+     * footer comments in the SVG file.
      *
      * @see \Freesewing\Theme::loadTemplates()
      *
@@ -447,7 +505,7 @@ abstract class Pattern
      * the debug property.
      * In the default theme, these will not be included.
      * But in the designer theme, they will be added to the
-     * footer comments in the SVG file. 
+     * footer comments in the SVG file.
      *
      * @see \Freesewing\Theme::loadTemplates()
      *
@@ -489,9 +547,9 @@ abstract class Pattern
     /**
      * Adds a search/replace pair to the replacements property
      *
-     * @see \Freesewing\DraftService::run()
+     * @see \Freesewing\Service\DraftService::run()
      *
-     * @param string $search The string to search for
+     * @param string $search  The string to search for
      * @param string $replace The string to replace it with
      */
     public function replace($search, $replace)
@@ -512,7 +570,7 @@ abstract class Pattern
     /**
      * Stores a translator object in the translator property
      *
-     * @param Symfony\Component\Translation\Translator $translator The translator
+     * @param \Symfony\Component\Translation\Translator $translator The translator
      */
     public function setTranslator($translator)
     {
@@ -540,7 +598,7 @@ abstract class Pattern
     {
         return $this->translator->trans($msg);
     }
-    
+
     /**
      * Add transforms to parts to implement layout calculated by the packer
      *
@@ -569,7 +627,9 @@ abstract class Pattern
      * This takes care of that.
      *
      * @param array $parts Array of pattern parts
-     */ 
+     *
+     * @return array|bool
+     */
     private function layoutPreSort($parts)
     {
         $order = array();
@@ -585,9 +645,11 @@ abstract class Pattern
             $layoutBlock->h = @$parts[$key]->boundary->height;// FIXME Sample service issues a warning here
             $sorted[$key] = $layoutBlock;
         }
-
-        if(isset($sorted)) return $sorted;
-        else return false;
+        if (isset($sorted)) {
+            return $sorted;
+        } else {
+            return false;
+        }
     }
 
     /**
@@ -600,7 +662,7 @@ abstract class Pattern
      * are extended too.
      *
      * @return array $locations An array of class directories
-     */ 
+     */
     public function getClassChain()
     {
         $reflector = new \ReflectionClass(get_class($this));
@@ -653,7 +715,9 @@ abstract class Pattern
         $files = array();
         foreach ($locations as $location) {
             $file = "$location/sampler/models.yml";
-            if (is_readable($file)) $files[] = $file;
+            if (is_readable($file)) {
+                $files[] = $file;
+            }
         }
 
         return $files;
@@ -678,8 +742,8 @@ abstract class Pattern
     /**
      * Sets the paperless property
      *
-     * This is used to determine whether to include the papeless-specific 
-     * stuff in the pattern. 
+     * This is used to determine whether to include the papeless-specific
+     * stuff in the pattern.
      *
      * @param bool $bool True or false
      */

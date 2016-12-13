@@ -2,6 +2,7 @@
 /** Freesewing\Yamlr class */
 namespace Freesewing;
 
+use Symfony\Component\Yaml\Exception\ParseException;
 use Symfony\Component\Yaml\Yaml;
 
 /**
@@ -20,7 +21,7 @@ class Yamlr
      *
      * @return array The Yaml file as array
      *
-     * @throws exception Symphony will throw and exception if the Yaml file is not valid
+     * @throws ParseException Symphony will throw and exception if the Yaml file is not valid
      */
     public static function loadYamlFile($file)
     {

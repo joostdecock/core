@@ -17,7 +17,7 @@ class SvgInclude
     /**
      * Sets the content property
      *
-     * @param string $content 
+     * @param string $content
      */
     public function set($content)
     {
@@ -27,7 +27,7 @@ class SvgInclude
     /**
      * Returns the content property
      *
-     * @return string 
+     * @return string
      */
     public function get()
     {

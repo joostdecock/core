@@ -60,8 +60,8 @@ class SvgDocument
         \Freesewing\SvgCss $css,
         \Freesewing\SvgScript $script,
         \Freesewing\SvgDefs $defs,
-        \Freesewing\SvgComments $footerComments)
-    {
+        \Freesewing\SvgComments $footerComments
+) {
         $this->headerComments = $headerComments;
         $this->svgAttributes = $svgAttributes;
         $this->css = $css;

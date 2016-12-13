@@ -1,6 +1,9 @@
 <?php
-/** Freesewing\InfoService class */
-namespace Freesewing;
+/** Freesewing\Services\InfoService class */
+namespace Freesewing\Services;
+
+use Freesewing\Context;
+use Freesewing\Utils;
 
 /**
  * Handles the info service, providing info about the API.
@@ -8,19 +11,20 @@ namespace Freesewing;
  * This InfoService class aims to make frontend integration simpler.
  * You can see it at work in the demo that is part of the documentation.
  *
- * @see http://api.freesewing.org/docs/demo/
+ * @see       http://api.freesewing.org/docs/demo/
  *
- * @author Joost De Cock <joost@decock.org>
+ * @author    Joost De Cock <joost@decock.org>
  * @copyright 2016 Joost De Cock
- * @license http://opensource.org/licenses/GPL-3.0 GNU General Public License, Version 3
+ * @license   http://opensource.org/licenses/GPL-3.0 GNU General Public License, Version 3
  */
-class InfoService
+class InfoService extends AbstractService
 {
+
     /**
      * Returns the name of the service
      *
      * This is used to load the default theme for the service when no theme is specified
-     * 
+     *
      * @see Context::loadTheme()
      *
      * @return string
@@ -35,31 +39,31 @@ class InfoService
      *
      * This assembles information, sets the response and sends it
      * Essentially, it takes care of the entire remainder of the request
-     * 
+     *
      * @param \Freesewing\Context
      */
-    public function run($context)
+    public function run(Context $context)
     {
-        $format = $context->request->getData('format');
-        if ($context->request->getData('pattern') !== null) {
+        $format = $context->getRequest()->getData('format');
+        if ($context->getRequest()->getData('pattern') !== null) {
             $context->addPattern();
-            $context->setResponse($context->theme->themePatternInfo($this->getPatternInfo($context->pattern), $format));
+            $context->setResponse($context->getTheme()->themePatternInfo($this->getPatternInfo($context->getPattern()), $format));
         } else {
-            $info['services'] = $context->config['services'];
+            $info['services'] = $context->getConfig()['services'];
             $info['patterns'] = $this->getPatternList($context);
             $info['channels'] = $this->getChannelList($context);
             $info['themes'] = $this->getThemeList($context);
 
-            $context->setResponse($context->theme->themeInfo($info, $format));
+            $context->setResponse($context->getTheme()->themeInfo($info, $format));
         }
 
-        $context->response->send();
+        $context->getResponse()->send();
 
         $context->cleanUp();
     }
 
     /**
-     * Returns list of available patterns 
+     * Returns list of available patterns
      *
      * @param \Freesewing\Context
      *
@@ -67,7 +71,7 @@ class InfoService
      */
     private function getPatternList($context)
     {
-        foreach (glob($context->getApiDir().'/patterns/*', GLOB_ONLYDIR) as $dir) {
+        foreach (glob($context->getApiDir() . '/patterns/*', GLOB_ONLYDIR) as $dir) {
             $name = basename($dir);
             if ($name != 'Pattern') {
                 $config = $this->loadPatternConfig($name);
@@ -79,7 +83,7 @@ class InfoService
     }
 
     /**
-     * Returns configuration for a pattern 
+     * Returns configuration for a pattern
      *
      * @param string pattern The name of the pattern
      *
@@ -87,14 +91,14 @@ class InfoService
      */
     private function loadPatternConfig($pattern)
     {
-        $class = '\Freesewing\Patterns\\'.$pattern;
+        $class = '\Freesewing\Patterns\\' . $pattern;
         $pattern = new $class();
 
         return $pattern->getConfig();
     }
 
     /**
-     * Returns list of available channels 
+     * Returns list of available channels
      *
      * @param \Freesewing\Context
      *
@@ -102,7 +106,8 @@ class InfoService
      */
     private function getChannelList($context)
     {
-        foreach (glob($context->getApiDir().'/channels/*', GLOB_ONLYDIR) as $dir) {
+        $list = [];
+        foreach (glob($context->getApiDir() . '/channels/*', GLOB_ONLYDIR) as $dir) {
             $name = basename($dir);
             if ($name != 'Channel' && $name != 'Info') {
                 $list[] = $name;
@@ -113,7 +118,7 @@ class InfoService
     }
 
     /**
-     * Returns list of available themes 
+     * Returns list of available themes
      *
      * @param \Freesewing\Context
      *
@@ -121,7 +126,8 @@ class InfoService
      */
     private function getThemeList($context)
     {
-        foreach (glob($context->getApiDir().'/themes/*', GLOB_ONLYDIR) as $dir) {
+        $list = [];
+        foreach (glob($context->getApiDir() . '/themes/*', GLOB_ONLYDIR) as $dir) {
             $name = basename($dir);
             if ($name != 'Theme' && $name != 'Info' && $name != 'Sampler') {
                 $list[] = $name;
@@ -132,7 +138,7 @@ class InfoService
     }
 
     /**
-     * Returns information about a pattern 
+     * Returns information about a pattern
      *
      * @param string pattern The pattern name
      *
@@ -143,7 +149,7 @@ class InfoService
         $info = $pattern->getConfig();
         $info['models'] = $pattern->getSamplerModelConfig();
         $info['pattern'] = basename(Utils::getClassDir($pattern));
-        
+
         return $info;
     }
 }

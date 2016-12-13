@@ -12,6 +12,51 @@ namespace Freesewing\Patterns;
 class AaronAshirt extends JoostBodyBlock
 {
     /**
+     * Sets up options and values for our draft
+     *
+     * By branching this out of the sample/draft methods, we can
+     * set a bunch of options and values the influence the draft
+     * without having to touch the sample/draft methods
+     * When extending this pattern so we can just implement the
+     * initialize() method and re-use the other methods.
+     *
+     * Good to know: 
+     * Options are typically provided by the user, but sometimes they are fixed
+     * Values are calculated for re-use later
+     *
+     * @param \Freesewing\Model $model The model to sample for
+     *
+     * @return void
+     */
+    public function initialize($model)
+    {
+        // Options needed for JoostBodyBlock (but irrelevant here)
+        $this->setOption('collarEase', self::COLLAR_EASE);
+        $this->setOption('backNeckCutout', self::NECK_CUTOUT);
+        $this->setOption('sleevecapEase', self::SLEEVECAP_EASE);
+
+        // shifTowards can't deal with 0, so shoulderStrapPlacement should be at least 0.001
+        if ($this->getOption('shoulderStrapPlacement') == 0) {
+            $this->setOption('shoulderStrapPlacement', 0.001);
+        }
+        // a stretchFactor below 50% is obviously wrong
+        if ($this->getOption('stretchFactor') < 0.5) {
+            $this->setOption('stretchFactor', 0.5);
+        }
+        
+        // Depth of the armhole
+        $this->setValue('armholeDepth', 200 + ($model->m('shoulderSlope') / 2 - 27.5) + ($model->m('bicepsCircumference') / 10));
+        
+        // Collar widht and depth
+        $this->setValue('collarWidth', ($model->getMeasurement('neckCircumference') / self::PI) / 2 + 5);
+        $this->setValue('collarDepth', ($model->getMeasurement('neckCircumference') + $this->getOption('collarEase')) / 5 - 8);
+        
+        // Cut front armhole a bit deeper
+        $this->setValue('frontArmholeExtra', 5); 
+        
+    }
+
+    /**
      * Add parts in config file to pattern
      *
      * I override the pattern's class loadParts() here
@@ -24,15 +69,13 @@ class AaronAshirt extends JoostBodyBlock
             $this->addPart($part);
             $this->parts[$part]->setTitle($title);
         }
-        $this->parts['frontBlock']->setRender(false);
-        $this->parts['backBlock']->setRender(false);
     }
     
     /**
      * Generates a draft of the pattern
      *
      * This creates a draft of this pattern for a given model
-     * and set of options. You get a complete pattern with 
+     * and set of options. You get a complete pattern with
      * all bels and whistles.
      *
      * @param \Freesewing\Model $model The model to draft for
@@ -41,11 +84,9 @@ class AaronAshirt extends JoostBodyBlock
      */
     public function draft($model)
     {
-        $this->buildCore($model);
-
-        $this->draftFront($model);
+        $this->sample($model);
+        
         $this->finalizeFront($model);
-        $this->draftBack($model);
         $this->finalizeBack($model);
     }
 
@@ -53,7 +94,7 @@ class AaronAshirt extends JoostBodyBlock
      * Generates a sample of the pattern
      *
      * This creates a sample of this pattern for a given model
-     * and set of options. You get a barebones pattern with only 
+     * and set of options. You get a barebones pattern with only
      * what it takes to illustrate the effect of changes in
      * the sampled option or measurement.
      *
@@ -63,45 +104,16 @@ class AaronAshirt extends JoostBodyBlock
      */
     public function sample($model)
     {
-        $this->buildCore($model);
+        $this->initialize($model);
+
+        $this->draftBackBlock($model);
+        $this->draftFrontBlock($model);
 
         $this->draftFront($model);
         $this->draftBack($model);
-    }
-
-    /**
-     * Drafts the blocks this is based on
-     *
-     * @param \Freesewing\Model $model The model to draft for
-     *
-     * @return void
-     */
-    public function buildCore($model)
-    {
-        $this->validateOptions();
-        $this->loadHelp($model);
-        $this->draftBackBlock($model);
-        $this->draftFrontBlock($model);
-    }
-
-    /**
-     * Makes sure options make sense
-     *
-     * @return void
-     */
-    public function validateOptions()
-    {
-        // shifTowards can't deal with 0, so shoulderStrapPlacement should be at least 0.001
-        if ($this->getOption('shoulderStrapPlacement') == 0) {
-            $this->setOption('shoulderStrapPlacement', 0.001);
-        }
-        // a stretchFactor below 50% is obviously wrong
-        if ($this->getOption('stretchFactor') < 0.5) {
-            $this->setOption('stretchFactor', 0.5);
-        }
-        // These are irrelevant, but needed for JoostBodyBlock
-        $this->setOption('collarEase', 15);
-        $this->setOption('backNeckCutout', 20);
+        
+        $this->parts['frontBlock']->setRender(false);
+        $this->parts['backBlock']->setRender(false);
     }
 
     /**
@@ -110,7 +122,7 @@ class AaronAshirt extends JoostBodyBlock
      * I'm using a draft[part name] scheme here but
      * don't let that think that this is something specific
      * to the draft service.
-     * 
+     *
      * This draft method does the basic drafting and is
      * called by both the draft AND sample methods.
      *
@@ -152,7 +164,7 @@ class AaronAshirt extends JoostBodyBlock
         $p->addPoint(113, $p->shift(112, 90, $p->deltaY(5, 112) / 3), 'Top control point for 112');
 
         // Armhole drop
-        if ($this->getOption('armholeDrop') > 0 ) { 
+        if ($this->getOption('armholeDrop') > 0) {
             // Move point 5 along curve
             $p->curveCrossesY(112, 112, 113, 5, $p->y(5) + $this->getOption('armholeDrop'), '.help-');
             $p->clonePoint('.help-1', 5);
@@ -175,7 +187,7 @@ class AaronAshirt extends JoostBodyBlock
      * I'm using a draft[part name] scheme here but
      * don't let that think that this is something specific
      * to the draft service.
-     * 
+     *
      * This draft method does the basic drafting and is
      * called by both the draft AND sample methods.
      *
@@ -255,10 +267,13 @@ class AaronAshirt extends JoostBodyBlock
         // Title
         $p->newPoint('titleAnchor', $p->x(5) * 0.4, $p->x(5) + 40, 'Title anchor');
         $p->addTitle('titleAnchor', 1, $this->t($p->title), $this->t('Cut 1 on fold'));
-        $p->newSnippet('logo', 'logo', 'titleAnchor');
+        
+        // Logo
+        $p->addPoint('logoAnchor', $p->shift('titleAnchor', -90, 50));
+        $p->newSnippet('logo', 'logo', 'logoAnchor');
 
         // Scalebox
-        $p->addPoint('scaleboxAnchor', $p->shift('titleAnchor', -90, 100));
+        $p->addPoint('scaleboxAnchor', $p->shift('titleAnchor', -90, 80));
         $p->newSnippet('scalebox', 'scalebox', 'scaleboxAnchor');
 
         // Notes
@@ -318,7 +333,7 @@ class AaronAshirt extends JoostBodyBlock
     }
 
     /**
-     * Finalizes the back 
+     * Finalizes the back
      *
      * Only draft() calls this method, sample() does not.
      * It does things like adding a title, logo, and any
@@ -335,40 +350,51 @@ class AaronAshirt extends JoostBodyBlock
         // Title
         $p->newPoint('titleAnchor', $p->x(5) * 0.4, $p->x(5) + 40, 'Title anchor');
         $p->addTitle('titleAnchor', 2, $this->t($p->title), $this->t('Cut 1 on fold'));
-        $p->newSnippet('logo', 'logo', 'titleAnchor');
+
+        // Logo
+        $p->addPoint('logoAnchor', $p->shift('titleAnchor', -90, 50));
+        $p->newSnippet('logo', 'logo', 'logoAnchor');
 
         // Seam allowance | Point indexes from 200 upward
+        $p->offsetPathString('sa1', 'M 102 L 103', 10);
         $p->newPath('shoulderSA', 'M 102 L sa1-line-102TO103 L sa1-line-103TO102 L 103', ['class' => 'seam-allowance']);
         $p->offsetPathString('sideSA', 'M 110 L 112 C 113 5 5', 10, 1, ['class' => 'seam-allowance']);
+        $p->addPoint(200, $p->shift(111, -90, 20), 'Hem allowance @ CF');
+        $p->addPoint(201, $p->shift(110, -90, 20), 'Hem allowance @ CF');
+        $p->addPoint(201, $p->shift(201, 0, 10), 'Hem allowance @ side');
         $p->newPath('hemSA', 'M 111 L 200 L 201 L sideSA-line-110TO112 M 5 L sideSA-curve-5TO112', ['class' => 'seam-allowance']);
 
         // Instructions | Point indexes from 300 upward
         // Cut on fold line and grainline
         $p->newPoint(300, 0, $p->y(100) + 20, 'Cut on fold endpoint top');
         $p->newPoint(301, 20, $p->y(300), 'Cut on fold corner top');
+        $p->newPoint(302, 0, $p->y(111) - 20, 'Cut on fold endpoint bottom');
+        $p->newPoint(303, 20, $p->y(302), 'Cut on fold corner bottom');
         $p->addPoint(304, $p->shift(301, 0, 15), 'Grainline top');
+        $p->addPoint(305, $p->shift(303, 0, 15), 'Grainline bottom');
 
         $p->newPath('cutOnFold', 'M 300 L 301 L 303 L 302', ['class' => 'double-arrow stroke-note stroke-lg']);
         $p->newTextOnPath('cutonfold', 'M 303 L 301', $this->t('Cut on fold'), ['line-height' => 12, 'class' => 'text-lg fill-note', 'dy' => -2]);
         $p->newPath('grainline', 'M 304 L 305', ['class' => 'grainline']);
-        $p->newTextOnPath('grainline', 'M 305 L 304', $this->t('Grainline'), ['line-height' => 12, 'class' => 'text-lg fill-gray1', 'dy' => -2]);
+        $p->newTextOnPath('grainline', 'M 305 L 304', $this->t('Grainline'), ['line-height' => 12, 'class' => 'text-lg grainline', 'dy' => -2]);
 
         // Notes
         $noteAttr = ['line-height' => 7, 'class' => 'text-lg'];
         $p->addPoint(306, $p->shift(101, 180, 3), 'Note 1 anchor');
-        $p->newNote(1, 306,  $this->t("Standard\nseam\nallowance")."\n(".$this->unit(10).')', 6, 10, -5, $noteAttr);
+        $p->newNote(1, 306, $this->t("Standard\nseam\nallowance")."\n(".$this->unit(10).')', 6, 10, -5, $noteAttr);
 
         $p->addPoint('.help1', $p->shift(100, 90, 20));
-        $p->newNote(2, 104,  $this->t("No\nseam\nallowance"), 6, 15, 0, $noteAttr);
+        $p->newNote(2, 104, $this->t("No\nseam\nallowance"), 6, 15, 0, $noteAttr);
 
         $p->curveCrossesY(5, 107, 106, 102, $p->y('106max') / 2, '.help-');
         $p->clonePoint('.help-1', 308);
-        $p->newNote(3, 308,  $this->t("No\nseam\nallowance"), 8, 15, 0, $noteAttr);
+        $p->newNote(3, 308, $this->t("No\nseam\nallowance"), 8, 15, 0, $noteAttr);
 
+        $p->addPoint(309, $p->shift(112, -90, $p->distance(110, 112) / 2));
         $p->newNote(4, 309, $this->t("Standard\nseam\nallowance")."\n(".$this->unit(10).')', 9, 15, -5, $noteAttr);
 
         $p->newPoint(309, $p->x(110) - 40, $p->y(110), 'Note 5 anchor');
-        $p->newNote(5, 309,  $this->t('Hem allowance')."\n(".$this->unit(20).')', 12, 15, -10, ['line-height' => 6, 'class' => 'text-lg', 'dy' => -4]);
+        $p->newNote(5, 309, $this->t('Hem allowance')."\n(".$this->unit(20).')', 12, 15, -10, ['line-height' => 6, 'class' => 'text-lg', 'dy' => -4]);
 
         $armholeLen = $p->curveLen(102, 106, 107, 5) + $this->parts['front']->curveLen(102, 106, 107, 5);
         $neckholeLen = $p->curveLen(103, 105, 104, 100) + $this->parts['front']->curveLen(103, 105, 104, 100);
@@ -393,7 +419,7 @@ class AaronAshirt extends JoostBodyBlock
             ': '.
             $this->unit($neckholeLen);
 
-        $p->newPoint('msgAnchor', $p->x(304) + 30, $p->y('scaleboxAnchor'), 'Message anchor');
+        $p->newPoint('msgAnchor', $p->x(304) + 30, $p->y('logoAnchor')+50, 'Message anchor');
         $p->newText('binding', 'msgAnchor', $msg, ['class' => 'text-lg fill-note', 'line-height' => 9]);
 
         if ($this->isPaperless) {

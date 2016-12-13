@@ -8,20 +8,32 @@ namespace Freesewing;
  * This contains functionality that is shared between
  * the MeasurementsSampler and OptionsSampler classes
  *
- * @author Joost De Cock <joost@decock.org>
+ * @author    Joost De Cock <joost@decock.org>
  * @copyright 2016 Joost De Cock
- * @license http://opensource.org/licenses/GPL-3.0 GNU General Public License, Version 3
+ * @license   http://opensource.org/licenses/GPL-3.0 GNU General Public License, Version 3
  */
 class Sampler
 {
+
     /** @var array $partContainer Container for parts that created while sampling a pattern */
     public $partContainer = array();
-    
+
     /** @var array $anchors Container for the anchors of parts that created while sampling a pattern */
     public $anchors = array();
-    
+
     /** @var array $boundaries Container for the boundaries of parts that created while sampling a pattern */
     public $boundaries = array();
+
+    /** @var  array */
+    protected $modelConfig;
+
+    /**
+     * @var array
+     */
+    protected $models;
+
+    /** @var  \Freesewing\Patterns\Pattern */
+    protected $pattern;
 
     /**
      * Stores a pattern in the pattern property
@@ -52,7 +64,7 @@ class Sampler
      */
     public function getSamplerModelsFile($pattern)
     {
-        return Utils::getClassDir($pattern).'/sampler/models.yml';
+        return Utils::getClassDir($pattern) . '/sampler/models.yml';
     }
 
     /**
@@ -62,7 +74,7 @@ class Sampler
      *  - a point with id 'samplerAnchor'
      *  - a point with id 'gridAnchor'
      * It will return the first one found.
-     * If the part has neither, it will add a point 
+     * If the part has neither, it will add a point
      * with coordinates (0,0) and return that.
      *
      * @param \Freesewing\Part $part The part
@@ -110,16 +122,18 @@ class Sampler
      *  - It renders the paths marked for sampling
      *  - It finds a bounding box for the parts
      * This info is stored in $this->partContainer and will be added to a pattern later
-     * The $step and $steps parameters are passed to the theme so different samplings can be 
+     * The $step and $steps parameters are passed to the theme so different samplings can be
      * made to look different. (giving us that rainbow effect in the standard theme).
      *
-     * @param int $step The step out of total steps this is
-     * @param int $step The total amount of steps
-     * @param \Freesewing\Pattern $pattern The pattern to sample
-     * @param \Freesewing\Theme or equivalent $theme The theme
+     * @param int                      $step      The step out of total steps this is
+     * @param int                      $step      The total amount of steps
+     * @param \Freesewing\Pattern      $pattern   The pattern to sample
+     * @param \Freesewing\Theme        $theme     The theme
+     * @param \Freesewing\SvgRenderbot $mode      sample or compare
      * @param \Freesewing\SvgRenderbot $renderBot The SVG renderbot to render the path
+     * @param string                   $mode      sample or compare
      */
-    public function sampleParts($step, $steps, $pattern, $theme, $renderBot)
+    public function sampleParts($step, $steps, $pattern, $theme, $renderBot, $mode='sample')
     {
         foreach ($pattern->parts as $partKey => $part) {
             if ($part->getRender() === true) {
@@ -158,7 +172,8 @@ class Sampler
                                 $this->boundaries[$partKey]['bottomRight']->setY($path->boundary->bottomRight->y + $deltaY);
                             }
                         }
-                        $path->setAttributes(['transform' => $transform, 'style' => $theme->samplerPathStyle($step, $steps)]);
+                        if($mode == 'compare') $path->setAttributes(['transform' => $transform, 'class' => 'compare']);
+                        else $path->setAttributes(['transform' => $transform, 'style' => $theme->samplerPathStyle($step, $steps)]);
                         $this->partContainer[$partKey]['includes']["$step-$pathKey"] = $renderBot->renderPath($path, $part);
                         $this->partContainer[$partKey]['topLeft'] = $this->boundaries[$partKey]['topLeft'];
                         $this->partContainer[$partKey]['bottomRight'] = $this->boundaries[$partKey]['bottomRight'];

@@ -119,6 +119,9 @@ text.note-9,
 text.note-10 {
   text-anchor: end;
 }
+text.grainline {
+  fill: #db4437;
+}
 path.arrow {
   stroke: #4285f4;
 }

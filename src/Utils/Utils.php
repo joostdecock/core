@@ -2,15 +2,18 @@
 /** Freesewing\Utils class */
 namespace Freesewing;
 
+use Freesewing\Point;
+
 /**
  * Utilities that do not depend on an instantiated object
  *
- * @author Joost De Cock <joost@decock.org>
+ * @author    Joost De Cock <joost@decock.org>
  * @copyright 2016 Joost De Cock
- * @license http://opensource.org/licenses/GPL-3.0 GNU General Public License, Version 3
+ * @license   http://opensource.org/licenses/GPL-3.0 GNU General Public License, Version 3
  */
 class Utils
 {
+
     /**
      * Like PHP's explode() but weeds out empties
      *
@@ -18,7 +21,7 @@ class Utils
      * It then weeds out empty elements in the array, and strips spaces from the start
      * and end of the non-empty elements.
      *
-     * @param string $data The input data
+     * @param string $data      The input data
      * @param string $seperator The seperator for the explode
      *
      * @return array The scrubbed array
@@ -31,9 +34,11 @@ class Utils
                 $return[] = rtrim($value);
             }
         }
-
-        if(isset($return)) return $return;
-        else return false;
+        if (isset($return)) {
+            return $return;
+        } else {
+            return false;
+        }
     }
 
     /**
@@ -58,7 +63,7 @@ class Utils
             return false;
         }
     }
-    
+
     /**
      * Flattens an array of attributes into attribute markup, optionally filtering out attributes
      *
@@ -70,7 +75,7 @@ class Utils
      *
      * @see \Freesewing\SvgRenderbot::renderText()
      *
-     * @param array $array The array of attributes
+     * @param array $array  The array of attributes
      * @param array $remove An array of attributes to filter out
      *
      * @return string The attributes markup
@@ -89,18 +94,18 @@ class Utils
 
         return $attributes;
     }
-    
+
     /**
-     * Returns single-axis coordinate of a point along a cubic Bezier curve 
+     * Returns single-axis coordinate of a point along a cubic Bezier curve
      *
      * This returns the coordinate for a point $t into a curve
      * $t is between 0 and 1
      *
-     * @param float $t Value between 0 and 1 to indicate how far along the curve we are
+     * @param float  $t        Value between 0 and 1 to indicate how far along the curve we are
      * @param string $startval X or Y value for the start of the curve
-     * @param string $cp1val X or Y  value for the first control point
-     * @param string $cp2val X or Y value for the second control point
-     * @param string $endval X or Y value for the end of the curve
+     * @param string $cp1val   X or Y  value for the first control point
+     * @param string $cp2val   X or Y value for the second control point
+     * @param string $endval   X or Y value for the end of the curve
      *
      * @see http://en.wikipedia.org/wiki/B%C3%A9zier_curve#Cubic_B.C3.A9zier_curves
      *
@@ -108,16 +113,13 @@ class Utils
      */
     public static function bezierPoint($t, $startval, $cp1val, $cp2val, $endval)
     {
-      return $startval * (1.0 - $t) * (1.0 - $t) * (1.0 - $t)
-        + 3.0 * $cp1val * (1.0 - $t) * (1.0 - $t) * $t
-        + 3.0 * $cp2val * (1.0 - $t) * $t * $t
-        + $endval * $t * $t * $t;
+        return $startval * (1.0 - $t) * (1.0 - $t) * (1.0 - $t) + 3.0 * $cp1val * (1.0 - $t) * (1.0 - $t) * $t + 3.0 * $cp2val * (1.0 - $t) * $t * $t + $endval * $t * $t * $t;
     }
-    
+
     /**
      * Returns the class directory of the object passed to it
      *
-     * @param $class The object for which to return the class directory
+     * @param object $class The object for which to return the class directory
      *
      * @return string The directory path
      */
@@ -128,22 +130,26 @@ class Utils
 
         return dirname($filename);
     }
-    
+
     /**
      * Finds intersection between two (endless) lines
      *
-     * @param string $key1 The id of the start of line A
-     * @param string $key2 The id of the end line A
-     * @param string $key3 The id of the start of line B
-     * @param string $key4 The id of the end line B
+     * @param Point $point1 The id of the start of line A
+     * @param Point $point2 The id of the end line A
+     * @param Point $point3 The id of the start of line B
+     * @param Point $point4 The id of the end line B
      *
      * @return array|null The coordinates of the intersection, or null if the lines are parallel
      */
-    public static function findLineLineIntersection($point1, $point2, $point3, $point4)
+    public static function findLineLineIntersection(Point $point1, Point $point2, Point $point3, Point $point4)
     {
         /* weed out parallel lines */
-        if($point1->getX() == $point2->getX() &&  $point3->getX() == $point4->getX()) return false;
-        if($point1->getY() == $point2->getY() &&  $point3->getY() == $point4->getY()) return false;
+        if ($point1->getX() == $point2->getX() && $point3->getX() == $point4->getX()) {
+            return false;
+        }
+        if ($point1->getY() == $point2->getY() && $point3->getY() == $point4->getY()) {
+            return false;
+        }
 
         /* If line is vertical, handle this special case */
         if ($point1->getX() == $point2->getX()) {
@@ -185,8 +191,8 @@ class Utils
     /**
      * Returns the slope of a line
      *
-     * @param \Freesewing\Point $point1 The point at the start of the line
-     * @param \Freesewing\Point $point2 The point at the end of the line
+     * @param Point $point1 The point at the start of the line
+     * @param Point $point2 The point at the end of the line
      *
      * @return float slope of the line
      */
@@ -194,15 +200,15 @@ class Utils
     {
         return ($point2->getY() - $point1->getY()) / ($point2->getX() - $point1->getX());
     }
-    
+
     /**
      * Checks whether two points are (almost) the same.
      *
      * Checks whether two points are the same, or close enough to be considered the same.
      * Close enough means less than 0.01 mm difference between their coordinates on each axis.
      *
-     * @param \Freesewing\Point $point1 Point 1
-     * @param \Freesewing\Point $point2 Point 2
+     * @param Point $point1 Point 1
+     * @param Point $point2 Point 2
      *
      * @return bool True is they are the same. False if not.
      */
@@ -218,12 +224,12 @@ class Utils
     /**
      * Returns the distance between two points
      *
-     * @param \Freesewing\Point $point1 The first point
-     * @param \Freesewing\Point $point2 The second point
+     * @param Point $point1 The first point
+     * @param Point $point2 The second point
      *
      * @return float Distance between the points
      */
-    public function distance($point1, $point2)
+    public static function distance($point1, $point2)
     {
         $deltaX = $point1->getX() - $point2->getX();
         $deltaY = $point1->getY() - $point2->getY();
@@ -231,12 +237,12 @@ class Utils
         return sqrt(pow($deltaX, 2) + pow($deltaY, 2));
     }
 
-    /** 
+    /**
      * Returns kint formated debug for the data passed to it
      *
-     * @param $data The data
-     *
      * @param string $debug The kint formatted debug
+     *
+     * @return string
      */
     public static function debug($data)
     {

@@ -4,6 +4,13 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [UNRELEASED] - 0000-00-00
 ### Changed
+
+### Fixed
+
+### Added
+
+## [0.1.0-alpha] - 2016-12-13
+### Changed
 - Created the (now default) develop branch
 - Added this CHANGELOG.md file
 - Moved todo to GitHub issues

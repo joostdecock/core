@@ -27,17 +27,17 @@ class JoostBodyBlock extends Pattern
     /**
      * Fix collar ease to 1.5cm
      */
-    const FIX_COLLAR_EASE = 15;
+    const COLLAR_EASE = 15;
 
     /**
      * Fix back neck cutout to 2cm
      */
-    const FIX_NECK_CUTOUT = 20;
+    const NECK_CUTOUT = 20;
 
     /**
      * Fix sleevecap ease to 1.5cm
      */
-    const FIX_SLEEVECAP_EASE = 15;
+    const SLEEVECAP_EASE = 15;
 
     /**
      * Sets up options and values for our draft
@@ -58,9 +58,9 @@ class JoostBodyBlock extends Pattern
      */
     public function initialize($model)
     {
-        $this->setOption('collarEase', self::FIX_COLLAR_EASE);
-        $this->setOption('backNeckCutout', self::FIX_NECK_CUTOUT);
-        $this->setOption('sleevecapEase', self::FIX_SLEEVECAP_EASE);
+        $this->setOption('collarEase', self::COLLAR_EASE);
+        $this->setOption('backNeckCutout', self::NECK_CUTOUT);
+        $this->setOption('sleevecapEase', self::SLEEVECAP_EASE);
 
         // Depth of the armhole
         $this->setValue('armholeDepth', 200 + ($model->m('shoulderSlope') / 2 - 27.5) + ($model->m('bicepsCircumference') / 10));

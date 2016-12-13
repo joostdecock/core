@@ -25,6 +25,21 @@ class JoostBodyBlock extends Pattern
 {
 
     /**
+     * Fix collar ease to 1.5cm
+     */
+    const COLLAR_EASE = 15;
+
+    /**
+     * Fix back neck cutout to 2cm
+     */
+    const NECK_CUTOUT = 20;
+
+    /**
+     * Fix sleevecap ease to 1.5cm
+     */
+    const SLEEVECAP_EASE = 15;
+
+    /**
      * Sets up options and values for our draft
      *
      * By branching this out of the sample/draft methods, we can
@@ -43,15 +58,15 @@ class JoostBodyBlock extends Pattern
      */
     public function initialize($model)
     {
-        $this->setOption('collarEase', 15); // Fix collar ease to 1.5cm
-        $this->setOption('backNeckCutout', 20); // Fix back neck cutout to 2cm
-        $this->setOption('sleevecapEase', 15); // Fix sleevecap ease to 1.5cm
+        $this->setOption('collarEase', self::COLLAR_EASE);
+        $this->setOption('backNeckCutout', self::NECK_CUTOUT);
+        $this->setOption('sleevecapEase', self::SLEEVECAP_EASE);
 
         // Depth of the armhole
         $this->setValue('armholeDepth', 200 + ($model->m('shoulderSlope') / 2 - 27.5) + ($model->m('bicepsCircumference') / 10));
         
         // Collar widht and depth
-        $this->setValue('collarWidth', ($model->getMeasurement('neckCircumference') / 3.1415) / 2 + 5);
+        $this->setValue('collarWidth', ($model->getMeasurement('neckCircumference') / self::PI) / 2 + 5);
         $this->setValue('collarDepth', ($model->getMeasurement('neckCircumference') + $this->getOption('collarEase')) / 5 - 8);
         
         // Cut front armhole a bit deeper

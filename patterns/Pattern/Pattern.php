@@ -26,6 +26,9 @@ abstract class Pattern
     /** @var array $options Pattern options */
     private $options = array();
 
+    /** @var array $values Pattern values */
+    private $values = array();
+
     /** @var int $width Pattern width */
     private $width;
 
@@ -212,6 +215,18 @@ abstract class Pattern
     }
 
     /**
+     * Returns a value from the values array
+     *
+     * @param string $key The key in the values array for which to return the value
+     *
+     * @return mixed $value The value
+     */
+    public function getValue($key)
+    {
+        return $this->values[$key];
+    }
+
+    /**
      * Alias for getOption()
      *
      * @param string $key The key in the options array for which to return the value
@@ -224,6 +239,18 @@ abstract class Pattern
     }
 
     /**
+     * Alias for getValue()
+     *
+     * @param string $key The key in the values array for which to return the value
+     *
+     * @return mixed $value The value
+     */
+    public function v($key)
+    {
+        return $this->getValue($key);
+    }
+
+    /**
      * Sets the key $key in the options array to value $value
      *
      * @param string $key   The key in the options array
@@ -232,6 +259,17 @@ abstract class Pattern
     public function setOption($key, $value)
     {
         $this->options[$key] = $value;
+    }
+
+    /**
+     * Sets the key $key in the values array to value $value
+     *
+     * @param string $key   The key in the values array
+     * @param mixed  $value The value to set
+     */
+    public function setValue($key, $value)
+    {
+        $this->values[$key] = $value;
     }
 
     /**

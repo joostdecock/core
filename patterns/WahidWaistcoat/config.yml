@@ -29,10 +29,10 @@ measurements:
     chestCircumference: 1080
     naturalWaistToHip: 120
     neckCircumference: 420
-    shoulderLength: 160
-    shoulderSlope: 40
+    shoulderLength: 150
+    shoulderSlope: 55
     hipsCircumference: 950
-    waistCircumference: 885
+    naturalWaist: 885
 
 options:
     chestEase:
@@ -52,14 +52,9 @@ options:
         default: 40
     lengthBonus:
         type: "measure"
-        min: -40
-        max:  60
+        min:  0
+        max:  50
         default: 15
-    backNeckCutout:
-        type: "measure"
-        min: 10
-        max: 35
-        default: 25
     neckInset:
         type: "measure"
         min: 0
@@ -72,12 +67,12 @@ options:
         default: 20
     backInset:
         type: "measure"
-        min: 0
-        max: 45
+        min: 15
+        max: 55
         default: 25
-    inset:
+    frontInset:
         type: "measure"
-        min: 0
+        min: 15
         max: 45
         default: 30
     frontDrop:

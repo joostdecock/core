@@ -225,11 +225,11 @@ header("Location: /docs/demo/");
       <form method="POST" action="/itecnews/api/0.1/clients/">
         <div class="form-group">
           <label for="deviceId">Device ID</label>
-          <input type="text" class="form-control" id="deviceId" name="deviceId" placeholder="Enter the device ID" value="<?php echo $deviceid; ?>">
+          <input type="text" class="form-control" id="deviceId" name="deviceId" placeholder="Enter the device ID" value="<?php //echo $deviceid; ?>">
         </div>
         <div class="form-group">
           <label for="userName">Username</label>
-          <input type="text" class="form-control" id="userName" name="userName" placeholder="Enter username" value="<?php echo $user; ?>">
+          <input type="text" class="form-control" id="userName" name="userName" placeholder="Enter username" value="<?php //echo $user; ?>">
         </div>
         <div class="checkbox">
         <label>
@@ -294,15 +294,15 @@ header("Location: /docs/demo/");
               <form id="clientsForm" method="POST">
                 <div class="form-group">
                   <label for="activationId">Activation ID</label>
-                  <input type="text" class="form-control" id="activationId" name="activationId" placeholder="Enter the activation ID" value="<?php echo $activationid; ?>">
+                  <input type="text" class="form-control" id="activationId" name="activationId" placeholder="Enter the activation ID" value="<?php //echo $activationid; ?>">
                 </div>
                 <div class="form-group">
                   <label for="clientId">Client ID</label>
-                  <input type="text" class="form-control" id="clientId" name="clientId" placeholder="Enter the client ID" value="<?php echo $clientid; ?>">
+                  <input type="text" class="form-control" id="clientId" name="clientId" placeholder="Enter the client ID" value="<?php //echo $clientid; ?>">
                 </div>
                 <div class="form-group">
                   <label for="pinCode">Pin Code</label>
-                  <input type="text" class="form-control" id="pinCode" name="pinCode" placeholder="Enter the pin code" value="<?php echo $pincode; ?>">
+                  <input type="text" class="form-control" id="pinCode" name="pinCode" placeholder="Enter the pin code" value="<?php //echo $pincode; ?>">
                 </div>
                 <div class="checkbox">
                   <label>

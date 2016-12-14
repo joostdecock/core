@@ -4,6 +4,8 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [UNRELEASED] - 0000-00-00
 ### Changed
+- WahidPattern
+- Consistent use of naturalWaist as measurement name (no longer waistCircumference)
 
 ### Fixed
 

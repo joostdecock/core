@@ -8,8 +8,10 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - Consistent use of naturalWaist as measurement name (no longer waistCircumference)
 
 ### Fixed
+- Parts with no paths to render broke the paperless theme
 
 ### Added
+- hasPathToRender() method in Part class
 
 ## [0.1.0-alpha] - 2016-12-13
 ### Changed

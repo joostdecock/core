@@ -13,6 +13,8 @@ parts:
     waistcoatFrontBlock: "Waistcoat front block"
     front: "Front"
     back: "Back"
+    frontFacing: "Front facing"
+    frontLining: "Front lining"
     pocketWelt: "Pocket welt"
     pocketFacing: "Pocket facing"
     pocketBag: "Pocket bag"

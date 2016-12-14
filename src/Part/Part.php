@@ -523,6 +523,25 @@ class Part
     }
 
     /**
+     * Returns true if a part has a path that needs to be rendered
+     *
+     * This avoids things breaking when no paths are rendered
+     * and thus a bounding box can't be calculated.
+     * Just check whether this returns true
+     *
+     * @return bool true or false
+     */
+    public function hasPathToRender()
+    {
+        $render = 0;
+        foreach($this->paths as $path) {
+            if($path->getRender()) $render++;
+        }
+        if($render) return true;
+        else return false;
+    }
+
+    /**
      * Like offsetPath() but takes a pathstring rather than a \Freesewing\Path object
      *
      * @param string $key        Index in the paths array

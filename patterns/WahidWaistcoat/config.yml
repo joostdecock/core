@@ -87,7 +87,7 @@ options:
             2: "Rounded"
         default: 1
     hemStyle:
-        type: chooseOne
+        type: "chooseOne"
         options:
             1: "Classic"
             2: "Rounded"

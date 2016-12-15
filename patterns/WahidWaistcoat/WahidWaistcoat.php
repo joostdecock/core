@@ -12,13 +12,12 @@ namespace Freesewing\Patterns;
 class WahidWaistcoat extends JoostBodyBlock
 {
     /*
-       ____                                 _   _             
-      |  _ \ _ __ ___ _ __   __ _ _ __ __ _| |_(_) ___  _ __  
-      | |_) | '__/ _ \ '_ \ / _` | '__/ _` | __| |/ _ \| '_ \ 
-      |  __/| | |  __/ |_) | (_| | | | (_| | |_| | (_) | | | |
-      |_|   |_|  \___| .__/ \__,_|_|  \__,_|\__|_|\___/|_| |_|
-                     |_|                                      
-        
+        ___       _ _   _       _ _          
+       |_ _|_ __ (_) |_(_) __ _| (_)___  ___ 
+        | || '_ \| | __| |/ _` | | / __|/ _ \
+        | || | | | | |_| | (_| | | \__ \  __/
+       |___|_| |_|_|\__|_|\__,_|_|_|___/\___|
+              
       Things we need to do before we can draft a pattern
     */
 
@@ -102,18 +101,19 @@ class WahidWaistcoat extends JoostBodyBlock
         if ($waist_re <= 0) {
             $waist_re = 0;
         }
-        
+     
+        // How much to reduce in darts/sides   
         $this->setValue('waistReduction', $waist_re);
         $this->setValue('hipsReduction', $hips_re);
         $this->setValue('scyeDart', (5 + $waist_re/10));
     }
 
     /*
-          _        _   _             
-         / \   ___| |_(_) ___  _ __  
-        / _ \ / __| __| |/ _ \| '_ \ 
-       / ___ \ (__| |_| | (_) | | | |
-      /_/   \_\___|\__|_|\___/|_| |_|
+        ____             __ _   
+       |  _ \ _ __ __ _ / _| |_ 
+       | | | | '__/ _` | |_| __|
+       | |_| | | | (_| |  _| |_ 
+       |____/|_|  \__,_|_|  \__|
         
       The actual sampling/drafting of the pattern
     */
@@ -126,24 +126,34 @@ class WahidWaistcoat extends JoostBodyBlock
      * what it takes to illustrate the effect of changes in
      * the sampled option or measurement.
      *
+     * Note that we're only including front and back in the sample
+     * as the other parts add little relevance while cluttiring up the sample
+     *
      * @param \Freesewing\Model $model The model to sample for
      *
      * @return void
      */
     public function sample($model)
     {
+        // Setup all options and values we need
         $this->initialize($model);
         
+        // Draft the base block
+        /** @see \Freesewing\Patterns\JoostBodyBlock::draftBackBlock() */
         $this->draftBackBlock($model);
+        /** @see \Freesewing\Patterns\JoostBodyBlock::draftFrontBlock() */
         $this->draftFrontBlock($model);
         
+        // Draft base front to the point where it differs from back
         $this->draftWaistcoatFrontBlock($model);
         
+        // Draft the final front and back
         $this->draftFront($model);
         $this->draftBack($model);
 
-        $doNotRender = ['frontBlock','backBlock','waistcoatFrontBlock'];
-        foreach($doNotRender as $dnr) $this->parts[$dnr]->setRender(false);
+        // Do not render blocks from parent pattern
+        $this->parts['frontBlock']->setRender(false);
+        $this->parts['backBlock']->setRender(false);
     }
 
     /**
@@ -159,8 +169,10 @@ class WahidWaistcoat extends JoostBodyBlock
      */
     public function draft($model)
     {
+        // Continue from sample
         $this->sample($model);
         
+        // Draft all remaining blocks
         $this->draftFrontFacing($model);
         $this->draftFrontLining($model);
         $this->draftPocketWelt($model);
@@ -169,11 +181,17 @@ class WahidWaistcoat extends JoostBodyBlock
         $this->draftPocketBag($model);
 
         
+        // Finalize front and back
         $this->finalizeFront($model);
         $this->finalizeBack($model);
 
+        // Finalize all remaining blocks
         $this->finalizeFrontFacing($model);
         $this->finalizeFrontLining($model);
+        $this->finalizePocketWelt($model);
+        $this->finalizePocketInterfacing($model);
+        $this->finalizePocketFacing($model);
+        $this->finalizePocketBag($model);
     }
 
     /**
@@ -661,6 +679,40 @@ class WahidWaistcoat extends JoostBodyBlock
     }
     
     /**
+     * Finalizes the back
+     *
+     * @param \Freesewing\Model $model The model to draft for
+     *
+     * @return void
+     */
+    public function finalizeBack($model)
+    {
+        /** @var \Freesewing\Part $p */
+        $p = $this->parts['back'];
+
+        // Seam allowance 
+        $p->offsetPath('sa', 'saBase', 10, 1, ['class' => 'seam-allowance']);
+        
+        // Title
+        $p->newPoint('titleAnchor', $p->x(2)+$p->deltaX(2,907)/2, $p->y(5));
+        $p->addTitle('titleAnchor', 2, $this->t($p->title), '2x '.$this->t('from main fabric')."\n".'2x '.$this->t('from lining')."\n".$this->t('With good sides together'));
+
+        // Logo
+        $p->newPoint('logoAnchor', $p->x(10)/2, $p->y(10));
+        $p->newSnippet('logo', 'logo', 'logoAnchor');
+        
+        // Scalebox
+        $p->addPoint('scaleboxAnchor', $p->shift('logoAnchor', -90, 20));
+        $p->newSnippet('scalebox', 'scalebox', 'scaleboxAnchor');
+
+        // Grainline
+        $p->addPoint('grainlineTop', $p->shift(1,-45,10));
+        $p->newPoint('grainlineBottom', $p->x('grainlineTop'), $p->y(4)-10);
+        $p->newPath('grainline', 'M grainlineTop L grainlineBottom', ['class' => 'grainline']);
+        $p->newTextOnPath('grainline', 'M grainlineBottom L grainlineTop', $this->t('Grainline'), ['line-height' => 12, 'class' => 'text-lg grainline', 'dy' => -2]);
+    }
+    
+    /**
      * Finalizes the front facing
      *
      * @param \Freesewing\Model $model The model to draft for
@@ -713,36 +765,127 @@ class WahidWaistcoat extends JoostBodyBlock
     }
     
     /**
-     * Finalizes the back
+     * Finalizes the pocket welt
      *
      * @param \Freesewing\Model $model The model to draft for
      *
      * @return void
      */
-    public function finalizeBack($model)
+    public function finalizePocketWelt($model)
     {
         /** @var \Freesewing\Part $p */
-        $p = $this->parts['back'];
+        $p = $this->parts['pocketWelt'];
 
-        // Seam allowance 
-        $p->offsetPath('sa', 'saBase', 10, 1, ['class' => 'seam-allowance']);
-        
         // Title
-        $p->newPoint('titleAnchor', $p->x(2)+$p->deltaX(2,907)/2, $p->y(5));
-        $p->addTitle('titleAnchor', 2, $this->t($p->title), '2x '.$this->t('from main fabric')."\n".'2x '.$this->t('from lining')."\n".$this->t('With good sides together'));
-
-        // Logo
-        $p->newPoint('logoAnchor', $p->x(10)/2, $p->y(10));
-        $p->newSnippet('logo', 'logo', 'logoAnchor');
-        
-        // Scalebox
-        $p->addPoint('scaleboxAnchor', $p->shift('logoAnchor', -90, 20));
-        $p->newSnippet('scalebox', 'scalebox', 'scaleboxAnchor');
+        $p->newPoint('titleAnchor', 0, $p->y(3)/2);
+        $p->addTitle('titleAnchor', 5, $this->t($p->title), '2x '.$this->t('from main fabric'));
 
         // Grainline
-        $p->addPoint('grainlineTop', $p->shift(1,-45,10));
-        $p->newPoint('grainlineBottom', $p->x('grainlineTop'), $p->y(4)-10);
+        $p->addPoint('grainlineBottom', $p->shift(3,135,5));
+        $p->addPoint('.help1', $p->shift(2,-135,5));
+        $p->addPoint('grainlineTop', $p->rotate('.help1','grainlineBottom',self::POCKET_ANGLE));
         $p->newPath('grainline', 'M grainlineTop L grainlineBottom', ['class' => 'grainline']);
-        $p->newTextOnPath('grainline', 'M grainlineBottom L grainlineTop', $this->t('Grainline'), ['line-height' => 12, 'class' => 'text-lg grainline', 'dy' => -2]);
+        $p->newTextOnPath('grainline', 'M grainlineBottom L grainlineTop', $this->t('Grainline'), ['line-height' => 12, 'class' => 'text-lg grainline text-center', 'dy' => -2]);
+
+        // Notches
+        $p->newSnippet('notchRight', 'notch', 1);
+        $p->newSnippet('notchLeft', 'notch', -1);
+
+        // No seam allowance note
+        $p->newPoint('noSaAnchor', $p->x(-3),$p->y(-1));
+        $p->newNote(1, 'noSaAnchor', $this->t("No\nseam\nallowance"), 4, 10, 0, ['line-height' => 4, 'class' => 'text']);
     }
+
+    /**
+     * Finalizes the pocket interfacing
+     *
+     * @param \Freesewing\Model $model The model to draft for
+     *
+     * @return void
+     */
+    public function finalizePocketInterfacing($model)
+    {
+        /** @var \Freesewing\Part $p */
+        $p = $this->parts['pocketInterfacing'];
+
+        // Title
+        $p->newPoint('titleAnchor', 0, $p->y(3)/2+5);
+        $p->addTitle('titleAnchor', 6, $this->t($p->title), '2x '.$this->t('from interfacing'));
+
+        // Notches
+        $p->newSnippet('notchRight', 'notch', 1);
+        $p->newSnippet('notchLeft', 'notch', -1);
+
+        // No seam allowance note
+        $p->newPoint('noSaAnchor', $p->x(-3),$p->y(-1)-3);
+        $p->newNote(1, 'noSaAnchor', $this->t("No\nseam\nallowance"), 4, 10, 0, ['line-height' => 4, 'class' => 'text']);
+    }
+
+    /**
+     * Finalizes the pocket facing
+     *
+     * @param \Freesewing\Model $model The model to draft for
+     *
+     * @return void
+     */
+    public function finalizePocketFacing($model)
+    {
+        /** @var \Freesewing\Part $p */
+        $p = $this->parts['pocketFacing'];
+
+        // Title
+        $p->newPoint('titleAnchor', 0, $p->y(3)/2+5);
+        $p->addTitle('titleAnchor', 7, $this->t($p->title), '2x '.$this->t('from main fabric'));
+
+        // Grainline
+        $p->addPoint('grainlineBottom', $p->shift(3,135,5));
+        $p->addPoint('.help1', $p->shift(2,-135,5));
+        $p->addPoint('grainlineTop', $p->rotate('.help1','grainlineBottom',self::POCKET_ANGLE));
+        $p->newPath('grainline', 'M grainlineTop L grainlineBottom', ['class' => 'grainline']);
+        $p->newTextOnPath('grainline', 'M grainlineBottom L grainlineTop', $this->t('Grainline'), ['line-height' => 12, 'class' => 'text-lg grainline text-center', 'dy' => -2]);
+
+        // Notches
+        $p->newSnippet('notchRight', 'notch', 1);
+        $p->newSnippet('notchLeft', 'notch', -1);
+
+        // No seam allowance note
+        $p->newPoint('noSaAnchor', $p->x(-3),$p->y(-1)+10);
+        $p->newNote(1, 'noSaAnchor', $this->t("No\nseam\nallowance"), 4, 10, 0, ['line-height' => 4, 'class' => 'text']);
+    }
+
+    /**
+     * Finalizes the pocket bag
+     *
+     * @param \Freesewing\Model $model The model to draft for
+     *
+     * @return void
+     */
+    public function finalizePocketBag($model)
+    {
+        /** @var \Freesewing\Part $p */
+        $p = $this->parts['pocketBag'];
+
+        // Title
+        $p->newPoint('titleAnchor', 0, $p->y(3)/2+5);
+        $p->addTitle('titleAnchor', 7, $this->t($p->title), '2x '.$this->t('from lining'));
+
+        // Notches
+        $p->newSnippet('notchRight', 'notch', 1);
+        $p->newSnippet('notchLeft', 'notch', -1);
+
+        // No seam allowance note
+        $p->newPoint('noSaAnchor', $p->x(-3),$p->y(-1)+10);
+        $p->newNote(1, 'noSaAnchor', $this->t("No\nseam\nallowance"), 4, 10, 0, ['line-height' => 4, 'class' => 'text']);
+    }
+
+    /*
+        ____                       _               
+       |  _ \ __ _ _ __   ___ _ __| | ___  ___ ___ 
+       | |_) / _` | '_ \ / _ \ '__| |/ _ \/ __/ __|
+       |  __/ (_| | |_) |  __/ |  | |  __/\__ \__ \
+       |_|   \__,_| .__/ \___|_|  |_|\___||___/___/
+                  |_|                              
+                                       
+      Instructions for paperless patterns
+    */
 }

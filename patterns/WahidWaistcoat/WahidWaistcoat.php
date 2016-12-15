@@ -151,7 +151,7 @@ class WahidWaistcoat extends JoostBodyBlock
         $this->draftFront($model);
         $this->draftBack($model);
 
-        // Do not render blocks from parent pattern
+        // Do not render parts from parent pattern
         $this->parts['frontBlock']->setRender(false);
         $this->parts['backBlock']->setRender(false);
     }
@@ -185,13 +185,26 @@ class WahidWaistcoat extends JoostBodyBlock
         $this->finalizeFront($model);
         $this->finalizeBack($model);
 
-        // Finalize all remaining blocks
+        // Finalize all remaining parts
         $this->finalizeFrontFacing($model);
         $this->finalizeFrontLining($model);
         $this->finalizePocketWelt($model);
         $this->finalizePocketInterfacing($model);
         $this->finalizePocketFacing($model);
         $this->finalizePocketBag($model);
+
+        // Is this a paperless pattern?
+        if ($this->isPaperless) {
+            // Add paperless info to all parts
+            $this->paperlessFront($model);
+            //$this->paperlessBack($model);
+            //$this->paperlessFrontFacing($model);
+            //$this->paperlessFrontLining($model);
+            //$this->paperlessPocketWelt($model);
+            //$this->paperlessPocketInterfacing($model);
+            //$this->paperlessPocketFacing($model);
+            //$this->paperlessPocketBag($model);
+        }
     }
 
     /**
@@ -888,4 +901,112 @@ class WahidWaistcoat extends JoostBodyBlock
                                        
       Instructions for paperless patterns
     */
+    
+    /**
+     * Adds paperless info for front
+     *
+     * @param \Freesewing\Model $model The model to draft for
+     *
+     * @return void
+     */
+    public function paperlessFront($model)
+    {
+        /** @var \Freesewing\Part $p */
+        $p = $this->parts['front'];
+
+        //
+        // Vertical measures on the left
+        //
+        if($this->o('hemStyle') == 1) { // Classic hem
+            // Add point bottom left, and bottom at buttons
+            $p->newPoint('bottomLeft', $p->x(4001), $p->y(4002));
+            $p->newPoint('bottomButtons', $p->x(5050), $p->y(4002));
+            // Measure help lines bottom origin (mhlBo)
+            $mhlBo = 4002; 
+        } else { // Rounded hem
+            $p->newPoint('bottomLeft', $p->x(4001), $p->y(4004));
+            $p->newPoint('bottomButtons', $p->x(5050), $p->y(4004));
+            // Measure help lines bottom origin (mhlBo)
+            $mhlBo = 4004; 
+        }
+
+        // Height to tip
+        $measure = 'M bottomLeft L 4001';
+        $p->offsetPathString( 1, $measure, -20, true, ['class' => 'measure-lg']);
+        $p->newTextOnPath( $p->newId(), $measure, $this->unit($p->deltaY(4001, 'bottomLeft')), ['class' => 'text-lg fill-note text-center', 'dy' => -22]);
+
+        // Height to first button
+        $measure = 'M bottomButtons L 5050'; 
+        $p->offsetPathString( 2, $measure, -45, true, ['class' => 'measure-lg']);
+        $p->newTextOnPath( $p->newId(), $measure, $this->unit($p->deltaY(5050, 'bottomButtons')), ['class' => 'text-lg fill-note text-center', 'dy' => -47]);
+        
+        // Button spacing
+        $mhlButtons = '';
+        for($i=1;$i<$this->o('buttons')-1;$i++) {
+            $measure = 'M '.(5000+$i).' L '.(4999+$i); 
+            $p->offsetPathString( "button$i", $measure, -45, true, ['class' => 'measure-lg']);
+            $p->newTextOnPath( $p->newId(), $measure, $this->unit($p->deltaY(5000, 5001)), ['class' => 'text-lg fill-note text-center', 'dy' => -47]);
+            // Measure help lines
+            $mhlButtons .= 'M '.(4999+$i)." L button$i-line-".(4999+$i).'TO'.(5000+$i).' ';
+        }
+        $p->offsetPathString( 4, 'M 5050 L '.(4999+$i), -45, true, ['class' => 'measure-lg']);
+        $p->newTextOnPath( $p->newId(), 'M 5050 L '.(4999+$i), $this->unit($p->deltaY(5000, 5001)), ['class' => 'text-lg fill-note text-center', 'dy' => -47]);
+        //  Measure help lines
+        $i = $this->o('buttons')-2;
+        $mhlButtons .= 'M '.(5000+$i).' L 4-line-'.(5000+$i).'TO5050 ';
+        $mhlButtons .= 'M 5050 L 4-line-5050TO'.(5000+$i).' ';
+        
+        // Height to neck bottom of neck opening
+        $measure = 'M bottomLeft L 300'; 
+        $p->offsetPathString( 5, $measure, -50, true, ['class' => 'measure-lg']);
+        $p->newTextOnPath( $p->newId(), $measure, $this->unit($p->deltaY(300, 'bottomLeft')), ['class' => 'text-lg fill-note text-center', 'dy' => -52]);
+        
+        // Total height
+        $p->newPoint('topLeft', $p->x(300), $p->y(8));
+        $measure = 'M bottomLeft L topLeft'; 
+        $p->offsetPathString( 6, $measure, -65, true, ['class' => 'measure-lg']);
+        $p->newTextOnPath( $p->newId(), $measure, $this->unit($p->deltaY('topLeft', 'bottomLeft')), ['class' => 'text-lg fill-note text-center', 'dy' => -67]);
+        
+        // Measure help lines (mhl)
+        $mhl = ''.
+            "M $mhlBo L 6-line-bottomLeftTOtopLeft ".
+            "M 4001 1-line-4001TObottomLeft ". 
+            "$mhlButtons ". 
+            "M 300 L 5-line-300TObottomLeft ". 
+            "M 8 L 6-line-topLeftTObottomLeft "; 
+        $p->newPath($p->newId(), $mhl, ['class' => 'stroke-note stroke-sm']);
+        
+        
+        //
+        // Horizontal measures at the bottom
+        //
+        if($this->o('hemStyle') == 1) { // Classic hem
+            $dartLeft = 9121;
+            $dartRight = 9111;
+        } else { // Rounded hem
+            $dartLeft = 912;
+            $dartRight = 911;
+        }
+        // Left at hips level (ignoring length bonus)
+        $p->newPoint('hipsLeft', $p->x(300), $p->y(910));
+
+        // Width of tip/curve
+        $measure = "M bottomLeft L $mhlBo";
+        $p->offsetPathString( 10, $measure, 25, true, ['class' => 'measure-lg']);
+        $p->newTextOnPath( $p->newId(), $measure, $this->unit($p->deltaX('bottomLeft', $mhlBo)), ['class' => 'text-lg fill-note text-center', 'dy' => 23]);
+
+        // Width to dart left side
+        $p->newPoint('dartLeftLeft', $p->x(300), $p->y($dartLeft));
+        $dyBase = $p->deltaY('dartLeftLeft','bottomLeft');
+        $measure = "M dartLeftLeft L $dartLeft";
+        $p->offsetPathString( 11, $measure, 40+$dyBase, true, ['class' => 'measure-lg']);
+        $p->newTextOnPath( $p->newId(), $measure, $this->unit($p->deltaX('dartLeftLeft',$dartLeft)), ['class' => 'text-lg fill-note text-center', 'dy' => 38+$dyBase]);
+
+        // Width to dart left side
+        $p->newPoint('dartRightLeft', $p->x(300), $p->y($dartRight));
+        $dyBase = $p->deltaY('dartRightLeft','bottomLeft');
+        $measure = "M dartRightLeft L $dartRight";
+        $p->offsetPathString( 12, $measure, 55+$dyBase, true, ['class' => 'measure-lg']);
+        $p->newTextOnPath( $p->newId(), $measure, $this->unit($p->deltaX('dartRightLeft',$dartRight)), ['class' => 'text-lg fill-note text-center', 'dy' => 53+$dyBase]);
+    }
 }

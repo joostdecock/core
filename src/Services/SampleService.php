@@ -64,6 +64,7 @@ class SampleService extends DraftService
                 $context->getModel()->addMeasurements($context->getOptionsSampler()->loadModelMeasurements($context->getPattern()));
 
                 $context->getPattern()->addOptions($context->getOptionsSampler()->loadPatternOptions());
+
                 $context->setPattern(
                     $context->getOptionsSampler()->sampleOptions(
                         $context->getModel(),
@@ -76,8 +77,13 @@ class SampleService extends DraftService
                 $context->addMeasurementsSampler();
                 $context->getMeasurementsSampler()->setPattern($context->getPattern());
 
-                $context->getPattern()
-                    ->addOptions($context->getMeasurementsSampler()->loadPatternOptions());
+                // add options like 'chestEase' to all compare-models
+                $context->getPattern()->addOptions(
+                    $context->getChannel()->standardizePatternOptions(
+                        $context->getRequest(),
+                        $context->getPattern()
+                    )
+                );
 
                 $context->getMeasurementsSampler()->setModelConfig($context->getPattern()
                     ->getSamplerModelConfig());

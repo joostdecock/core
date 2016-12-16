@@ -48,6 +48,9 @@ class Part
     /** @var array List of transforms */
     public $transforms = [];
 
+    /** @var array List of dimensions */
+    public $dimensions = [];
+
     /** @var array Holds temporary variables */
     public $tmp = [];
 
@@ -2102,4 +2105,89 @@ class Part
             $i++;
         }
     }
+
+    /** 
+     * Adds a \Freesewing\DimensionWidth to the pattern
+     */
+    public function newWidth(
+        $key, 
+        $fromId, 
+        $toId, 
+        $y = false, 
+        $text = false, 
+        $pathAttributes=['class' => 'dimension dimension-width'], 
+        $labelAttributes=['class' => 'dimension-label'],
+        $leaderAttributes=['class' => 'dimension-leader']
+    ) {
+        /** @var \Freesewing\DimensionWidth $d */
+        $d = new \Freesewing\DimensionWidth();
+
+        // Do we need a from leader?
+        if($this->y($fromId) == $y || $y === false) { // Nope
+            $d->setFrom($this->loadPoint($fromId));
+            $pathFrom = $fromId;
+        } else { // We do
+            $i = $this->newId('.dw-');
+            $this->newPoint($i, $this->x($fromId), $y);
+            $d->setFrom($this->loadPoint($i));
+            $fromLeader = new \Freesewing\Path;
+            $fromLeader->setPath("M $fromId L $i");
+            $fromLeader->setAttributes($leaderAttributes);
+            $d->addLeader($fromLeader);
+            $pathFrom = $i;
+        }
+
+        // Do we need a To leader?
+        if($this->y($toId) == $y) { // Nope
+            $d->setTo($this->loadPoint($toId));
+            $pathTo = $toId;
+        } else { // We do
+            $i = $this->newId('.dw-');
+            $this->newPoint($i, $this->x($toId), $this->y($fromId));
+            $d->setTo($this->loadPoint($i));
+            $toLeader = new \Freesewing\Path;
+            $toLeader->setPath("M $toId L $i");
+            $toLeader->setAttributes($leaderAttributes);
+            $d->addLeader($toLeader);
+            $pathTo = $i;
+        }
+
+        // Path
+        $path = new \Freesewing\Path();
+        $path->setPath("M $pathFrom L $pathTo");
+        $path->setAttributes($pathAttributes);
+        $d->setPath($path);
+
+        // Label
+        if($text === false) $text = 'Default text'; // HERE 
+        $label = new \Freesewing\TextOnPath();
+        $label->setText($text);
+        $label->setPath($path);
+        $label->setAttributes($labelAttributes);
+        $d->setLabel($label);
+    
+        $this->addDimension($key, $d);
+    }
+
+    // FIXME - also do these:
+    // newHeight
+    // newDistance
+    // newCurveLen
+    // newRadius
+    // newAngle
+    
+    /**
+     * Adds a dimension to $this->dimensions.
+     *
+     * This takes a pre-created dimension object
+     * and adds it to the dimensions array with key $key.
+     *
+     * @param string $key  Index in the dimensions array
+     * @param Note   $note The dimension object
+     */
+    public function addDimension($key, $dimension)
+    {
+        $this->dimensions[$key] = $dimension;
+    }
+
 }

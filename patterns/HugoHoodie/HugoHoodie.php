@@ -240,11 +240,12 @@ class HugoHoodie extends JoostBodyBlock
         $delta = $p->curveLen(200, 134, 132, 133) - $this->v('frontRaglan');
         $i=1;
         while (abs($delta) > 1) {
-            if ($delta>0) {
+            if ($delta > 0) {
                 $angle = 90; // Move up
             } else {
                 $angle = -90; // Move down
-            }            $p->newPoint( "132-$i", $p->x(132), $p->y(132));
+            }
+            $p->newPoint( "132-$i", $p->x(132), $p->y(132));
             $p->addPoint( 132, $p->shift(132, $angle, $delta));
             $p->newPoint( 133, $p->x(133), $p->y(132));
             $delta = $p->curveLen(200, 134, 132, 133) - $this->v('frontRaglan');

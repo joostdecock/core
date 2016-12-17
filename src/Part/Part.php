@@ -2116,51 +2116,50 @@ class Part
         $y = false, 
         $text = false, 
         $pathAttributes=['class' => 'dimension dimension-width'], 
-        $labelAttributes=['class' => 'dimension-label'],
+        $labelAttributes=['class' => 'dimension-label', 'dy' => -2],
         $leaderAttributes=['class' => 'dimension-leader']
     ) {
         /** @var \Freesewing\DimensionWidth $d */
-        $d = new \Freesewing\DimensionWidth();
+        $d = new \Freesewing\Dimension();
 
         // Do we need a from leader?
         if($this->y($fromId) == $y || $y === false) { // Nope
-            $d->setFrom($this->loadPoint($fromId));
             $pathFrom = $fromId;
         } else { // We do
             $i = $this->newId('.dw-');
             $this->newPoint($i, $this->x($fromId), $y);
-            $d->setFrom($this->loadPoint($i));
+            $pathFrom = $i;
+            // Leader
             $fromLeader = new \Freesewing\Path;
             $fromLeader->setPath("M $fromId L $i");
             $fromLeader->setAttributes($leaderAttributes);
             $d->addLeader($fromLeader);
-            $pathFrom = $i;
         }
 
         // Do we need a To leader?
         if($this->y($toId) == $y) { // Nope
-            $d->setTo($this->loadPoint($toId));
             $pathTo = $toId;
         } else { // We do
             $i = $this->newId('.dw-');
             $this->newPoint($i, $this->x($toId), $this->y($fromId));
-            $d->setTo($this->loadPoint($i));
+            $pathTo = $i;
+            // Leader
             $toLeader = new \Freesewing\Path;
             $toLeader->setPath("M $toId L $i");
             $toLeader->setAttributes($leaderAttributes);
             $d->addLeader($toLeader);
-            $pathTo = $i;
         }
 
+        // Label (a TextOnPath object)
+        $label = new \Freesewing\TextOnPath();
+        
         // Path
         $path = new \Freesewing\Path();
         $path->setPath("M $pathFrom L $pathTo");
         $path->setAttributes($pathAttributes);
-        $d->setPath($path);
 
-        // Label
-        if($text === false) $text = 'Default text'; // HERE 
-        $label = new \Freesewing\TextOnPath();
+        // Text
+        if($text === false) $text = 'Default text'; 
         $label->setText($text);
         $label->setPath($path);
         $label->setAttributes($labelAttributes);

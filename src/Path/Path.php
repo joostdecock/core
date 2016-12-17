@@ -132,6 +132,29 @@ class Path
     }
 
     /**
+     * Sets a path attribute
+     *
+     * @param string $key
+     * @param scalar $value
+     */
+    public function setAttribute($key, $value)
+    {
+        $this->attributes[$key] = $value;
+    }
+
+    /**
+     * Returns an attribute value
+     *
+     * @param string $key
+     *
+     * @return scalar
+     */
+    public function getAttribute($key)
+    {
+        return $this->attributes[$key];
+    }
+
+    /**
      * Calculates and returns bounding box of a path
      *
      * We need the bounding box of a path to figure out

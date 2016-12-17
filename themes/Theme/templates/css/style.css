@@ -99,7 +99,8 @@ text.part-msg-horizontal {
   /* FIXME: How do we do this with LESS based on @font-size-title? */
 
 }
-text.note {
+text.note,
+text.dimension-label {
   fill: #4285f4;
 }
 text.note tspan {
@@ -111,13 +112,17 @@ text.note-7,
 text.note-11,
 text.note-12,
 text.note-0,
-text.note-1 {
+text.note-1,
+text.dimension-label {
   text-anchor: middle;
 }
 text.note-8,
 text.note-9,
 text.note-10 {
   text-anchor: end;
+}
+text.dimension-label {
+  font-size: 7px;
 }
 text.grainline {
   fill: #db4437;
@@ -131,19 +136,18 @@ path.grainline {
   marker-start: url(#fabric-arrowStart);
   marker-end: url(#fabric-arrowEnd);
 }
-path.measure-sm,
-path.measure-lg,
-path.measure {
+path.dimension {
   stroke: #4285f4;
-  stroke-width: 0.3;
+  stroke-width: 0.6;
   marker-start: url(#note-color-arrowStart);
   marker-end: url(#note-color-arrowEnd);
 }
-path.measure-lg {
-  stroke-width: 0.6;
+path.dimension.dimension-sm {
+  stroke-width: 0.3;
 }
-path.measure-sm {
-  stroke-width: 0.2;
+path.dimension-leader {
+  stroke: #4285f4;
+  stroke-width: 0.3;
 }
 path.single-arrow {
   marker-start: url(#note-color-arrowStart);
@@ -151,10 +155,6 @@ path.single-arrow {
 path.double-arrow {
   marker-start: url(#note-color-arrowStart);
   marker-end: url(#note-color-arrowEnd);
-}
-path.textpath {
-  stroke: none;
-  fille: none;
 }
 path.helpline {
   stroke: #666666;

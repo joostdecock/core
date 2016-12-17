@@ -987,26 +987,11 @@ class WahidWaistcoat extends JoostBodyBlock
             $dartLeft = 912;
             $dartRight = 911;
         }
-        // Left at hips level (ignoring length bonus)
-        $p->newPoint('hipsLeft', $p->x(300), $p->y(910));
 
-        // Width of tip/curve
-        $measure = "M bottomLeft L $mhlBo";
-        $p->offsetPathString( 10, $measure, 25, true, ['class' => 'measure-lg']);
-        $p->newTextOnPath( $p->newId(), $measure, $this->unit($p->deltaX('bottomLeft', $mhlBo)), ['class' => 'text-lg fill-note text-center', 'dy' => 23]);
-
-        // Width to dart left side
-        $p->newPoint('dartLeftLeft', $p->x(300), $p->y($dartLeft));
-        $dyBase = $p->deltaY('dartLeftLeft','bottomLeft');
-        $measure = "M dartLeftLeft L $dartLeft";
-        $p->offsetPathString( 11, $measure, 40+$dyBase, true, ['class' => 'measure-lg']);
-        $p->newTextOnPath( $p->newId(), $measure, $this->unit($p->deltaX('dartLeftLeft',$dartLeft)), ['class' => 'text-lg fill-note text-center', 'dy' => 38+$dyBase]);
-
-        // Width to dart left side
-        $p->newPoint('dartRightLeft', $p->x(300), $p->y($dartRight));
-        $dyBase = $p->deltaY('dartRightLeft','bottomLeft');
-        $measure = "M dartRightLeft L $dartRight";
-        $p->offsetPathString( 12, $measure, 55+$dyBase, true, ['class' => 'measure-lg']);
-        $p->newTextOnPath( $p->newId(), $measure, $this->unit($p->deltaX('dartRightLeft',$dartRight)), ['class' => 'text-lg fill-note text-center', 'dy' => 53+$dyBase]);
+        $yBase = $p->y($mhlBo);
+        $p->dw(4001, $mhlBo, $yBase+25);  // Width of the tip
+        $p->dw(4001, $dartLeft, $yBase+40); // Width to dart left side
+        $p->dw(4001, $dartRight, $yBase+55); // Width to dart right side
+        $p->dw(4001, 2912, $yBase+70); // Width to right edge
     }
 }

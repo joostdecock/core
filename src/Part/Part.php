@@ -115,6 +115,34 @@ class Part
     }
 
     /**
+     * Sets the units property.
+     *
+     * @param string
+     */
+    public function setUnits($units)
+    {
+        $this->units = $units;
+    }
+
+    /**
+     * Takes a value in mm and returns it as text in the chosen units
+     *
+     * For example, this returns 25.4 as either '2.54cm' or '1"'
+     *
+     * @param string $val The value to convert
+     *
+     * @return string $text The converted text
+     */
+    public function unit($val)
+    {
+        if ($this->units == 'imperial') {
+            return round($val / 25.4, 2) . '"';
+        } else {
+            return round($val / 10, 2) . 'cm';
+        }
+    }
+
+    /**
      * Creates a path and adds it to $this->paths.
      *
      * This takes a pathString and optional attrinutes
@@ -496,7 +524,16 @@ class Part
         $bottomRight->setX(-INF);
         $bottomRight->setY(-INF);
 
-        foreach ($this->paths as $path) {
+        // FIXME We need a getAllPaths() method, since notes can also have paths that 
+        // should be taken into account when calculating the bounding box 
+        if(is_array($this->dimensions) && count($this->dimensions) > 0) {
+            foreach($this->dimensions as $dimension) $dimensionPaths[] = $dimension->getPath();
+            $allPaths = array_merge($this->paths,$dimensionPaths);
+        } else {
+            $allPaths = $this->paths;
+        }
+        
+        foreach ($allPaths as $path) {
             $path->setBoundary($path->findBoundary($this));
 
             // topLeft
@@ -515,6 +552,7 @@ class Part
                 $bottomRight->setY($path->boundary->bottomRight->getY());
             }
         }
+
         $topLeft->setX($topLeft->getX() - $margin);
         $topLeft->setY($topLeft->getY() - $margin);
         $bottomRight->setX($bottomRight->getX() + $margin);
@@ -2107,9 +2145,33 @@ class Part
     }
 
     /** 
+     * Quickly adds a \Freesewing\DimensionWidth to the pattern
+     */
+    public function dw(
+        $fromId, 
+        $toId, 
+        $y = false, 
+        $text = false, 
+        $pathAttributes=['class' => 'dimension dimension-width'], 
+        $labelAttributes=['class' => 'dimension-label', 'dy' => -2],
+        $leaderAttributes=['class' => 'dimension-leader']
+    ) {
+        $this->newWidthDimension(
+            $i = $this->newId('.dim-'),
+            $fromId, 
+            $toId, 
+            $y, 
+            $text, 
+            $pathAttributes, 
+            $labelAttributes,
+            $leaderAttributes
+        );
+    }
+
+    /** 
      * Adds a \Freesewing\DimensionWidth to the pattern
      */
-    public function newWidth(
+    public function newWidthDimension(
         $key, 
         $fromId, 
         $toId, 
@@ -2141,7 +2203,7 @@ class Part
             $pathTo = $toId;
         } else { // We do
             $i = $this->newId('.dw-');
-            $this->newPoint($i, $this->x($toId), $this->y($fromId));
+            $this->newPoint($i, $this->x($toId), $this->y($pathFrom));
             $pathTo = $i;
             // Leader
             $toLeader = new \Freesewing\Path;
@@ -2159,7 +2221,7 @@ class Part
         $path->setAttributes($pathAttributes);
 
         // Text
-        if($text === false) $text = 'Default text'; 
+        if($text === false) $text = $this->unit($this->distance($pathFrom, $pathTo));
         $label->setText($text);
         $label->setPath($path);
         $label->setAttributes($labelAttributes);

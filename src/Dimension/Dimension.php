@@ -42,6 +42,16 @@ class Dimension
     }
 
     /**
+     * Gets the path from the label
+     *
+     * @return \Freesewing\Path The label path
+     */
+    public function getPath()
+    {
+        return $this->label->getPath();
+    }
+
+    /**
      * Sets the leaders property
      *
      * @param array $leaders Array of leaders

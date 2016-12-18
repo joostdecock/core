@@ -197,13 +197,13 @@ class WahidWaistcoat extends JoostBodyBlock
         if ($this->isPaperless) {
             // Add paperless info to all parts
             $this->paperlessFront($model);
-            //$this->paperlessBack($model);
-            //$this->paperlessFrontFacing($model);
-            //$this->paperlessFrontLining($model);
-            //$this->paperlessPocketWelt($model);
-            //$this->paperlessPocketInterfacing($model);
-            //$this->paperlessPocketFacing($model);
-            //$this->paperlessPocketBag($model);
+            $this->paperlessBack($model);
+            $this->paperlessFrontFacing($model);
+            $this->paperlessFrontLining($model);
+            $this->paperlessPocketWelt($model);
+            $this->paperlessPocketInterfacing($model);
+            $this->paperlessPocketFacing($model);
+            $this->paperlessPocketBag($model);
         }
     }
 
@@ -687,7 +687,7 @@ class WahidWaistcoat extends JoostBodyBlock
         // Grainline
         $p->addPoint('grainlineTop', $p->shift(8,-45,10));
         $p->newPoint('grainlineBottom', $p->x('grainlineTop'), $p->y(4001));
-        $p->dg('grainlineBottom', 'grainlineTop', $this->t('Grainline')); 
+        $p->newGrainline('grainlineBottom', 'grainlineTop', $this->t('Grainline')); 
     }
     
     /**
@@ -720,8 +720,7 @@ class WahidWaistcoat extends JoostBodyBlock
         // Grainline
         $p->addPoint('grainlineTop', $p->shift(1,-45,10));
         $p->newPoint('grainlineBottom', $p->x('grainlineTop'), $p->y(4)-10);
-        $p->newPath('grainline', 'M grainlineTop L grainlineBottom', ['class' => 'grainline']);
-        $p->newTextOnPath('grainline', 'M grainlineBottom L grainlineTop', $this->t('Grainline'), ['line-height' => 12, 'class' => 'text-lg grainline', 'dy' => -2]);
+        $p->newGrainline('grainlineBottom', 'grainlineTop', $this->t('Grainline'));
     }
     
     /**
@@ -746,8 +745,7 @@ class WahidWaistcoat extends JoostBodyBlock
         // Grainline
         $p->addPoint('grainlineTop', $p->shift(8,-45,10));
         $p->newPoint('grainlineBottom', $p->x('grainlineTop'), $p->y(4001));
-        $p->newPath('grainline', 'M grainlineTop L grainlineBottom', ['class' => 'grainline']);
-        $p->newTextOnPath('grainline', 'M grainlineBottom L grainlineTop', $this->t('Grainline'), ['line-height' => 12, 'class' => 'text-lg grainline', 'dy' => -2]);
+        $p->newGrainline('grainlineBottom', 'grainlineTop', $this->t('Grainline')); 
     }
     
     /**
@@ -770,10 +768,9 @@ class WahidWaistcoat extends JoostBodyBlock
         $p->addTitle('titleAnchor', 4, $this->t($p->title), '2x '.$this->t('from main fabric')."\n".$this->t('With good sides together'));
 
         // Grainline
-        $p->addPoint('grainlineTop', $p->shift(909,45,10));
-        $p->newPoint('grainlineBottom', $p->x('grainlineTop'), $p->y('shoulderFront'));
-        $p->newPath('grainline', 'M grainlineTop L grainlineBottom', ['class' => 'grainline']);
-        $p->newTextOnPath('grainline', 'M grainlineTop L grainlineBottom', $this->t('Grainline'), ['line-height' => 12, 'class' => 'text-lg grainline', 'dy' => -2]);
+        $p->addPoint('grainlineBottom', $p->shift(909,45,10));
+        $p->newPoint('grainlineTop', $p->x('grainlineBottom'), $p->y('shoulderFront'));
+        $p->newGrainline('grainlineBottom', 'grainlineTop', $this->t('Grainline')); 
     }
     
     /**
@@ -796,8 +793,7 @@ class WahidWaistcoat extends JoostBodyBlock
         $p->addPoint('grainlineBottom', $p->shift(3,135,5));
         $p->addPoint('.help1', $p->shift(2,-135,5));
         $p->addPoint('grainlineTop', $p->rotate('.help1','grainlineBottom',self::POCKET_ANGLE));
-        $p->newPath('grainline', 'M grainlineTop L grainlineBottom', ['class' => 'grainline']);
-        $p->newTextOnPath('grainline', 'M grainlineBottom L grainlineTop', $this->t('Grainline'), ['line-height' => 12, 'class' => 'text-lg grainline text-center', 'dy' => -2]);
+        $p->newGrainline('grainlineBottom', 'grainlineTop', $this->t('Grainline')); 
 
         // Notches
         $p->newSnippet('notchRight', 'notch', 1);
@@ -853,8 +849,7 @@ class WahidWaistcoat extends JoostBodyBlock
         $p->addPoint('grainlineBottom', $p->shift(3,135,5));
         $p->addPoint('.help1', $p->shift(2,-135,5));
         $p->addPoint('grainlineTop', $p->rotate('.help1','grainlineBottom',self::POCKET_ANGLE));
-        $p->newPath('grainline', 'M grainlineTop L grainlineBottom', ['class' => 'grainline']);
-        $p->newTextOnPath('grainline', 'M grainlineBottom L grainlineTop', $this->t('Grainline'), ['line-height' => 12, 'class' => 'text-lg grainline text-center', 'dy' => -2]);
+        $p->newGrainline('grainlineBottom', 'grainlineTop', $this->t('Grainline')); 
 
         // Notches
         $p->newSnippet('notchRight', 'notch', 1);
@@ -879,7 +874,7 @@ class WahidWaistcoat extends JoostBodyBlock
 
         // Title
         $p->newPoint('titleAnchor', 0, $p->y(3)/2+5);
-        $p->addTitle('titleAnchor', 7, $this->t($p->title), '2x '.$this->t('from lining'));
+        $p->addTitle('titleAnchor', 8, $this->t($p->title), '2x '.$this->t('from lining'));
 
         // Notches
         $p->newSnippet('notchRight', 'notch', 1);
@@ -930,15 +925,15 @@ class WahidWaistcoat extends JoostBodyBlock
         }
 
         $xBase = $p->x(300);
-        $p->dh($bottom, 4001, $xBase-20);  // Height to tip
-        $p->dh($bottom, 5050, $xBase-35);  // Height to first button
+        $p->newHeightDimension($bottom, 4001, $xBase-20);  // Height to tip
+        $p->newHeightDimension($bottom, 5050, $xBase-35);  // Height to first button
         // Button spacing
         for($i=1;$i<$this->o('buttons')-1;$i++) {
-            $p->dh((5000+$i), (4999+$i), $xBase-35);  // Height to next button
+            $p->newHeightDimension((5000+$i), (4999+$i), $xBase-35);  // Height to next button
         }
-        $p->dh(5050, (4999+$i), $xBase-35);  // Height from bottom button
-        $p->dh($bottom, 300, $xBase-50); // Height to neck bottom of neck opening
-        $p->dh($bottom, 8, $xBase-65); // Total height 
+        $p->newHeightDimension(5050, (4999+$i), $xBase-35);  // Height from bottom button
+        $p->newHeightDimension($bottom, 300, $xBase-50); // Height to neck bottom of neck opening
+        $p->newHeightDimension($bottom, 8, $xBase-65); // Total height 
         
         // Horizontal measures at the bottom
         if($this->o('hemStyle') == 1) { // Classic hem
@@ -950,44 +945,221 @@ class WahidWaistcoat extends JoostBodyBlock
         }
 
         $yBase = $p->y($mhlBo);
-        $p->dw(4001, $mhlBo, $yBase+25);  // Width of the tip
-        $p->dw(4001, $dartLeft, $yBase+40); // Width to dart left side
-        $p->dw(4001, $dartRight, $yBase+55); // Width to dart right side
-        $p->dw(4001, 2912, $yBase+70); // Width to right edge
+        $p->newWidthDimension(4001, $mhlBo, $yBase+25);  // Width of the tip
+        $p->newWidthDimension(4001, $dartLeft, $yBase+40); // Width to dart left side
+        $p->newWidthDimension(4001, $dartRight, $yBase+55); // Width to dart right side
+        $p->newWidthDimension(4001, 2912, $yBase+70); // Width to right edge
         
         // Horizontal measures at the top
         $yBase = $p->y(8);
-        $p->dw(300, 8, $yBase-25);  // Width of neck opening
-        $p->dw(300, 'shoulderFront', $yBase-40);  // Width of neck opening
-        $p->dw(300, 5, $yBase-55);  // Width to armhole
+        $p->newWidthDimension(300, 8, $yBase-25);  // Width of neck opening
+        $p->newWidthDimension(300, 'shoulderFront', $yBase-40);  // Width of neck opening
+        $p->newWidthDimension(300, 5, $yBase-55);  // Width to armhole
         
-        $p->dl(8, 'flbTop', -15);  // Shoulder seam to flb
-        $p->dl('flbTop', 'shoulderFront', -15);  // Flb to shoulder edge
-        $p->dl(8, 'shoulderFront', -30);  // Shoulder seam length
+        $p->newLinearDimension(8, 'flbTop', -15);  // Shoulder seam to flb
+        $p->newLinearDimension('flbTop', 'shoulderFront', -15);  // Flb to shoulder edge
+        $p->newLinearDimension(8, 'shoulderFront', -30);  // Shoulder seam length
 
         // Pocket
-        $p->dl(7001, 7005, self::POCKET_HEIGHT/2);  // Half pocket width
-        $p->dl(7007, 7002, self::POCKET_HEIGHT/2);  // Half pocket width
-        $p->dl(7006, 7005, 15, $this->unit(self::POCKET_HEIGHT), ['class' => 'dimension dimension-sm'] );  // Pocket height
-        $p->dh($dartLeft, 7002, $p->x($dartLeft)+15);
+        $p->newLinearDimension(7001, 7005, self::POCKET_HEIGHT/2);  // Half pocket width
+        $p->newLinearDimension(7007, 7002, self::POCKET_HEIGHT/2);  // Half pocket width
+        $p->newLinearDimension(7006, 7005, 15, $this->unit(self::POCKET_HEIGHT), ['class' => 'dimension dimension-sm'] );  // Pocket height
+        $p->newHeightDimension($dartLeft, 7002, $p->x($dartLeft)+15);
+        $p->newNote('pocketAngle', 7007, $this->t("Pocket is placed under angle").': '.self::POCKET_ANGLE.'&#176;', 10, 20, 0, ['line-height' => 4, 'class' => 'text']);
+        $p->newNote('pocket', 7005, $this->t("Draw this half of the pocket\nafter you have closed the dart"), 12, 20, 0, ['line-height' => 5, 'class' => 'text','dy' => -2]);
 
         // Vertical measures at the right
-        $p->dh($bottom, $dartLeft, $p->x($dartLeft)+15);
-        $p->dh($bottom, $dartRight, $p->x($dartRight)+15);
+        $p->newHeightDimension($bottom, $dartLeft, $p->x($dartLeft)+15);
+        $p->newHeightDimension($bottom, $dartRight, $p->x($dartRight)+15);
         $xBase = $p->x(2912);
-        $p->dh($bottom, 2912, $xBase+25);
-        $p->dh($bottom, 907, $xBase+40);
-        $p->dh($bottom, 5, $xBase+55);
-        $p->dh($bottom, 'shoulderFront', $xBase+70);
+        $p->newHeightDimension($bottom, 2912, $xBase+25);
+        $p->newHeightDimension($bottom, 907, $xBase+40);
+        $p->newHeightDimension($bottom, 5, $xBase+55);
+        $p->newHeightDimension($bottom, 'shoulderFront', $xBase+70);
 
         // Some extra dimensions
-        $p->dl(901,2902); // Width of right part
+        $p->newLinearDimension(901,2902); // Width of right part
         $p->addPoint('3edge', $p->shift(3,180,10));
-        $p->dw('3edge', 902); // Width of left part
-        $p->dl(902, 901); // Widht of dart
+        $p->newWidthDimension('3edge', 902); // Width of left part
+        $p->newLinearDimension(902, 901); // Widht of dart
         $p->newPoint('907edge', $p->x(300), $p->y(907));
-        $p->dw('907edge', 907); // Dart tip
-        $p->dw(4001,5050,$p->y(4001)+35, $this->unit(10) ,['class' => 'dimension dimension-sm']); // Button offset from edge
-        $p->dw(10,5); // Deph of armhole
+        $p->newWidthDimension('907edge', 907); // Dart tip
+        $p->newWidthDimension(4001,5050,$p->y(4001)+35, $this->unit(10) ,['class' => 'dimension dimension-sm']); // Button offset from edge
+        $p->newWidthDimension(10,5); // Deph of armhole
+    
+        // FIXME: This needs some work, leaders and path length
+        //$p->newCurvedDimension('M 2912 L 2910 C 2914 2906 2902 C 2904 2907 5', 20);
+    }
+    
+    /**
+     * Adds paperless info for back
+     *
+     * @param \Freesewing\Model $model The model to draft for
+     *
+     * @return void
+     */
+    public function paperlessBack($model)
+    {
+        /** @var \Freesewing\Part $p */
+        $p = $this->parts['back'];
+
+        // Vertical dimensions on the left
+        $xBase = $p->x(4);
+        $p->newHeightDimension(4,2,$xBase-25); // Height to start of back curve
+        $p->newHeightDimension(4,1,$xBase-40); // Height to center back
+        $p->newHeightDimension(4,8,$xBase-55); // Total height
+
+        // Dart
+        $p->newHeightDimension(910,902,$p->x(910)-15); // Height to middle of dart
+        $p->newHeightDimension(910,907,$p->x(910)-30); // Total dart height
+        $p->newWidthDimension(902,901, false, false, ['class' => 'dimension dimension-sm']); // Dart width at middle
+
+        // Horizontal dimensions bottom
+        $yBase = $p->y(4);
+        $p->newWidthDimension(4,910,$yBase+25); // Width to dart left side
+        $p->newWidthDimension(4,909,$yBase+40); // Width to dart right side
+        $p->newWidthDimension(4,2902,$yBase+55); // Waist width
+        $p->newWidthDimension(4,2910,$yBase+70); // Total hips width
+        $p->newWidthDimension(4,5,$yBase+85); // Total width
+        
+        // Vertical dimensions on the left
+        $xBase = $p->x(5);
+        $p->newHeightDimension(2910,5,$xBase+25); // Height to armhole
+        $p->newHeightDimension(2910,'shoulderBack',$xBase+40); // Height to shoulder point
+
+        // Horizontal dimensions top
+        $yBase = $p->y(8);
+        $p->newWidthDimension(2,1,$yBase-25, false, ['class' => 'dimension dimension-sm']); // Width of center back curve
+        $p->newWidthDimension(2,8,$yBase-40); // Width of neck opening
+        $p->newWidthDimension(2,'shoulderBack',$yBase-55); // Width to shoulder
+
+        // Shoulder seam
+        $p->newLinearDimension(8,'shoulderBack', 15);
+    }
+    
+    /**
+     * Adds paperless info for front facing
+     *
+     * @param \Freesewing\Model $model The model to draft for
+     *
+     * @return void
+     */
+    public function paperlessFrontFacing($model)
+    {
+        /** @var \Freesewing\Part $p */
+        $p = $this->parts['frontFacing'];
+        $front = $this->parts['front'];
+
+        $p->newPoint('textAnchor', $p->x('titleAnchor'), $p->y(2902));
+        $p->newText('text1', 'textAnchor', $this->t("For dimensions,\nsee:").' '.$front->title, ['line-height' => 10, 'class' => 'note text-center text-xl']);
+    }
+    
+    /**
+     * Adds paperless info for front lining
+     *
+     * @param \Freesewing\Model $model The model to draft for
+     *
+     * @return void
+     */
+    public function paperlessFrontLining($model)
+    {
+        /** @var \Freesewing\Part $p */
+        $p = $this->parts['frontLining'];
+        $front = $this->parts['front'];
+
+        $p->newPoint('textAnchor', $p->x('titleAnchor'), $p->y(2902));
+        $p->newText('text1', 'textAnchor', $this->t("For dimensions,\nsee:").' '.$front->title, ['line-height' => 10, 'class' => 'note text-center text-xl']);
+    }
+    
+    /**
+     * Adds paperless info for pocket welt
+     *
+     * @param \Freesewing\Model $model The model to draft for
+     *
+     * @return void
+     */
+    public function paperlessPocketWelt($model)
+    {
+        /** @var \Freesewing\Part $p */
+        $p = $this->parts['pocketWelt'];
+
+        $p->newWidthDimension(-1,1, -20); // Welt line width
+        $p->newWidthDimension(-2,2, -35); // Total width
+        
+        $xBase = $p->x(-2);
+        $p->newHeightDimension(-3,-1, $xBase-10); // Height to welt line
+        $p->newHeightDimension(-3,-2, $xBase-25); // Total height
+
+        $p->addPoint('textAnchor', $p->shift('titleAnchor',-90,15));
+        $p->newText('note2', 'textAnchor', $this->t('Grainline under the same angle as the pocket:').' '.self::POCKET_ANGLE.'&#176;', ['line-height' => 10, 'class' => 'note text-center text']);
+    }
+   
+    /**
+     * Adds paperless info for pocket interfacing
+     *
+     * @param \Freesewing\Model $model The model to draft for
+     *
+     * @return void
+     */
+    public function paperlessPocketInterfacing($model)
+    {
+        /** @var \Freesewing\Part $p */
+        $p = $this->parts['pocketInterfacing'];
+
+        $p->newWidthDimension(-1,1, -20); // Welt line width
+        $p->newWidthDimension(-2,2, -35); // Total width
+        
+        $xBase = $p->x(-2);
+        $p->newHeightDimension(-3,-1, $xBase-10); // Height to welt line
+        $p->newHeightDimension(-3,-2, $xBase-25); // Total height
+    }
+   
+    /**
+     * Adds paperless info for pocket facing
+     *
+     * @param \Freesewing\Model $model The model to draft for
+     *
+     * @return void
+     */
+    public function paperlessPocketFacing($model)
+    {
+        /** @var \Freesewing\Part $p */
+        $p = $this->parts['pocketFacing'];
+
+        $p->newWidthDimension(-1,1, -20); // Welt line width
+        $p->newWidthDimension(-2,2, -35); // Total width
+        
+        $xBase = $p->x(-2);
+        $p->newHeightDimension(-7,-1, $xBase-10); // Height to welt line
+        $p->newHeightDimension(-7,-2, $xBase-25); // Total height
+
+        $p->addPoint('textAnchor', $p->shift('titleAnchor',-90,15));
+        $p->newText('note2', 'textAnchor', $this->t('Grainline under the same angle as the pocket:').' '.self::POCKET_ANGLE.'&#176;', ['line-height' => 10, 'class' => 'note text-center text']);
+
+        $p->addPoint('radiusAnchor', $p->shiftAlong(-3,-4,-6,-7,11));
+        $p->newNote(2, 'radiusAnchor', $this->t("Radius").': '.$p->unit($p->deltaX(-3,-7)), 2, 20, 0, ['line-height' => 4, 'class' => 'text']);
+    }
+    
+    /**
+     * Adds paperless info for the pocket bag
+     *
+     * @param \Freesewing\Model $model The model to draft for
+     *
+     * @return void
+     */
+    public function paperlessPocketBag($model)
+    {
+        /** @var \Freesewing\Part $p */
+        $p = $this->parts['pocketBag'];
+
+        $p->newWidthDimension(-1,1, -10); // Welt line width
+        $p->newWidthDimension(-2,2, $p->y(-2)-10); // Total width
+        
+        $xBase = $p->x(-2);
+        $p->newHeightDimension(-7,-1, $xBase-10); // Height to welt line
+        $p->newHeightDimension(-7,-2, $xBase-25); // Total height
+        
+        $p->addPoint('radiusAnchor', $p->shiftAlong(-3,-4,-6,-7,11));
+        $p->newNote(2, 'radiusAnchor', $this->t("Radius").': '.$p->unit($p->deltaX(-3,-7)), 2, 20, 0, ['line-height' => 4, 'class' => 'text']);
     }
 }

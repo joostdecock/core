@@ -2145,48 +2145,8 @@ class Part
     }
 
     /** 
-     * Like newWidthDimension(), but doesn't require an ID
+     * Adds a width dimension to the pattern
      *
-     * This allows you to quickly add a width dimension.
-     * However, given that it does not take a key for the dimensions array
-     * you will not be able to change this dimension once its added.
-     * 
-     * Still, this is a handy shortcut for the typical scenario
-     *
-     * @param string $fromId ID of the point that the dimension starts from
-     * @param string $toId ID of the point that is the end of the dimension
-     * @param float $y Y-coordinate where the dimension should be placed
-     * @param string $text The text to put on the dimension label
-     * @param array $pathAttributes Attributes for the path the label goes on
-     * @param array $labelAttributes Attributes for the text of the label
-     * @param array $leaderAttributes Attributes for the leader paths
-     *
-     */
-    public function dw(
-        $fromId, 
-        $toId, 
-        $y = false, 
-        $text = false, 
-        $pathAttributes=['class' => 'dimension dimension-width'], 
-        $labelAttributes=['class' => 'dimension-label', 'dy' => -2],
-        $leaderAttributes=['class' => 'dimension-leader']
-    ) {
-        $this->newWidthDimension(
-            $this->newId('.dim-'),
-            $fromId, 
-            $toId, 
-            $y, 
-            $text, 
-            $pathAttributes, 
-            $labelAttributes,
-            $leaderAttributes
-        );
-    }
-
-    /** 
-     * Adds a height \Freesewing\Dimension to the pattern
-     *
-     * @param string $key Key in the dimensions array
      * @param string $fromId ID of the point that the dimension starts from
      * @param string $toId ID of the point that is the end of the dimension
      * @param float $y Y-coordinate where the dimension should be placed
@@ -2197,7 +2157,6 @@ class Part
      *
      */
     public function newWidthDimension(
-        $key, 
         $fromId, 
         $toId, 
         $y = false, 
@@ -2251,52 +2210,12 @@ class Part
         $label->setPath($path);
         $label->setAttributes($labelAttributes);
         $d->setLabel($label);
-        $this->addDimension($key, $d);
+        $this->addDimension($d);
     }
 
     /** 
-     * Like newHeightDimension(), but doesn't require an ID
+     * Adds a height dimension to the pattern
      *
-     * This allows you to quickly add a height dimension.
-     * However, given that it does not take a key for the dimensions array
-     * you will not be able to change this dimension once its added.
-     * 
-     * Still, this is a handy shortcut for the typical scenario
-     *
-     * @param string $fromId ID of the point that the dimension starts from
-     * @param string $toId ID of the point that is the end of the dimension
-     * @param float $x X-coordinate where the dimension should be placed
-     * @param string $text The text to put on the dimension label
-     * @param array $pathAttributes Attributes for the path the label goes on
-     * @param array $labelAttributes Attributes for the text of the label
-     * @param array $leaderAttributes Attributes for the leader paths
-     *
-     */
-    public function dh(
-        $fromId, 
-        $toId, 
-        $x = false, 
-        $text = false, 
-        $pathAttributes=['class' => 'dimension dimension-width'], 
-        $labelAttributes=['class' => 'dimension-label', 'dy' => -2],
-        $leaderAttributes=['class' => 'dimension-leader']
-    ) {
-        $this->newHeightDimension(
-            $this->newId('.dim-'),
-            $fromId, 
-            $toId, 
-            $x, 
-            $text, 
-            $pathAttributes, 
-            $labelAttributes,
-            $leaderAttributes
-        );
-    }
-
-    /** 
-     * Adds a height \Freesewing\Dimension to the pattern
-     *
-     * @param string $key Key in the dimensions array
      * @param string $fromId ID of the point that the dimension starts from
      * @param string $toId ID of the point that is the end of the dimension
      * @param float $x X-coordinate where the dimension should be placed
@@ -2307,13 +2226,12 @@ class Part
      *
      */
     public function newHeightDimension(
-        $key, 
         $fromId, 
         $toId, 
         $x = false, 
         $text = false, 
         $pathAttributes=['class' => 'dimension dimension-width'], 
-        $labelAttributes=['class' => 'dimension-label', 'dx' => -2],
+        $labelAttributes=['class' => 'dimension-label', 'dy' => -2],
         $leaderAttributes=['class' => 'dimension-leader']
     ) {
         /** @var \Freesewing\Dimension $d */
@@ -2362,55 +2280,15 @@ class Part
         $label->setAttributes($labelAttributes);
         $d->setLabel($label);
     
-        $this->addDimension($key, $d);
+        $this->addDimension($d);
     }
 
     /** 
-     * Like newLinearDimension(), but doesn't require an ID
-     *
-     * This allows you to quickly add a linear dimension.
-     * However, given that it does not take a key for the dimensions array
-     * you will not be able to change this dimension once its added.
-     * 
-     * Still, this is a handy shortcut for the typical scenario
+     * Creates a linear dimension to the part
      *
      * @param string $fromId ID of the point that the dimension starts from
      * @param string $toId ID of the point that is the end of the dimension
-     * @param float $offset How far to offset this dimension with leaders
-     * @param string $text The text to put on the dimension label
-     * @param array $pathAttributes Attributes for the path the label goes on
-     * @param array $labelAttributes Attributes for the text of the label
-     * @param array $leaderAttributes Attributes for the leader paths
-     *
-     */
-    public function dl(
-        $fromId, 
-        $toId, 
-        $offset = 0, 
-        $text = false, 
-        $pathAttributes=['class' => 'dimension dimension-width'], 
-        $labelAttributes=['class' => 'dimension-label', 'dy' => -2],
-        $leaderAttributes=['class' => 'dimension-leader']
-    ) {
-        $this->newLinearDimension(
-            $this->newId('.dim-'),
-            $fromId, 
-            $toId, 
-            $offset, 
-            $text, 
-            $pathAttributes, 
-            $labelAttributes,
-            $leaderAttributes
-        );
-    }
-
-    /** 
-     * Creates a \Freesewing\Dimension and adds it to the part
-     *
-     * @param string $key Key in the dimensions array
-     * @param string $fromId ID of the point that the dimension starts from
-     * @param string $toId ID of the point that is the end of the dimension
-     * @param float $x X-coordinate where the dimension should be placed
+     * @param float $offset The amount to offset the dimension by
      * @param string $text The text to put on the dimension label
      * @param array $pathAttributes Attributes for the path the label goes on
      * @param array $labelAttributes Attributes for the text of the label
@@ -2418,13 +2296,12 @@ class Part
      * 
      */
     public function newLinearDimension(
-        $key, 
         $fromId, 
         $toId, 
         $offset = 0, 
         $text = false, 
         $pathAttributes=['class' => 'dimension dimension-width'], 
-        $labelAttributes=['class' => 'dimension-label', 'dx' => -2],
+        $labelAttributes=['class' => 'dimension-label', 'dy' => -2],
         $leaderAttributes=['class' => 'dimension-leader']
     ) {
         /** @var \Freesewing\Dimension $d */
@@ -2461,7 +2338,48 @@ class Part
         $label->setAttributes($labelAttributes);
         $d->setLabel($label);
     
-        $this->addDimension($key, $d);
+        $this->addDimension($d);
+    }
+    
+    /** 
+     * Creates and adds a curved dimension to the part
+     *
+     * @param string $pathString The (unrendered) pathstring of the curve
+     * @param float $offset X-coordinate where the dimension should be placed
+     * @param string $text The text to put on the dimension label
+     * @param array $pathAttributes Attributes for the path the label goes on
+     * @param array $labelAttributes Attributes for the text of the label
+     * @param array $leaderAttributes Attributes for the leader paths
+     * 
+     */
+    public function newCurvedDimension(
+        $pathString, 
+        $offset = 0, 
+        $text = false, 
+        $pathAttributes=['class' => 'dimension dimension-width'], 
+        $labelAttributes=['class' => 'dimension-label', 'dy' => -2],
+        $leaderAttributes=['class' => 'dimension-leader']
+    ) {
+        /** @var \Freesewing\Dimension $d */
+        $d = new \Freesewing\Dimension();
+
+        // Label (a TextOnPath object)
+        $label = new \Freesewing\TextOnPath();
+        
+        // Path
+        $id = $this->newId('.dc-');
+        $this->offsetPathString($id, $pathString, $offset, true, $pathAttributes);
+        $path = $this->paths[$id];
+
+        // Text
+        //if($text === false) $text = $this->unit($this->distance($pathFrom, $pathTo));
+        if($text === false) $text = 'FIXME length of curve';
+        $label->setText($text);
+        $label->setPath($path);
+        $label->setAttributes($labelAttributes);
+        $d->setLabel($label);
+    
+        $this->addDimension($d);
     }
     // FIXME - also do these:
     // newCurveDimension
@@ -2476,9 +2394,9 @@ class Part
      * @param string $text The text to put on the grainline
      *
      */
-    public function dg($fromId, $toId, $text=' ') 
+    public function newGrainline($fromId, $toId, $text=' ') 
     {
-        $this->newLinearDimension( $this->newId('.dim-'), $fromId, $toId, 0, $text, ['class' => 'grainline'], ['class' => 'text-lg grainline', 'dy' => -2]);
+        $this->newLinearDimension($fromId, $toId, 0, $text, ['class' => 'grainline'], ['class' => 'text-lg text-center grainline', 'dy' => -2]);
     }
 
     /**
@@ -2487,12 +2405,11 @@ class Part
      * This takes a pre-created dimension object
      * and adds it to the dimensions array with key $key.
      *
-     * @param string $key  Index in the dimensions array
-     * @param Note   $note The dimension object
+     * @param \Freesewing\Dimension   $dimension The dimension object
      */
-    public function addDimension($key, $dimension)
+    public function addDimension($dimension)
     {
-        $this->dimensions[$key] = $dimension;
+        $this->dimensions[] = $dimension;
     }
 
 }

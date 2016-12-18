@@ -358,17 +358,14 @@ class SvgRenderbot
      */
     private function renderDimension($dimension, $part)
     {
-        // Path
-        $svg = $this->renderPath($dimension->getPath(), $part);
-        
         // Label
-        $svg .= $this->renderTextOnPath($dimension->getLabel(), $part);
+        $svg = $this->renderTextOnPath($dimension->getLabel(), $part);
         
         // Leaders
         $leaders = $dimension->getLeaders();
         if(is_array($leaders) && count($leaders)>0) {
             foreach($leaders as $leader) {
-                $svg = $this->renderPath($leader, $part);
+                $svg .= $this->renderPath($leader, $part);
             }
         }
 

@@ -56,7 +56,7 @@ class TestLines extends Pattern
         $p->newPath('test', $path);
 
         // Dimensions
-        $p->newWidth('width',1,3);
+        $p->dw(1,3,120);
 
 
         // Mark path for sample service

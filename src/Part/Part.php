@@ -2394,10 +2394,16 @@ class Part
         $label = new \Freesewing\TextOnPath();
         
         // Path
-        $id = $this->newId('.dc-');
-        $this->offsetPathString($id, $pathString, $offset, true, $pathAttributes);
-        $path = $this->paths[$id];
-        
+        if($offset == 0) {
+            $path = new \Freesewing\Path();
+            $path->setPath($pathString);    
+            $path->setAttributes($pathAttributes);    
+        } else {
+            $id = $this->newId('.dc-');
+            $this->offsetPathString($id, $pathString, $offset, true, $pathAttributes);
+            $path = $this->paths[$id];
+        }
+
         // Text
         if($text === false) $text = $this->unit($this->pathLen($origPath));
         $label->setText($text);
@@ -2425,7 +2431,7 @@ class Part
     }
     
     /** 
-     * Adds a grainline, by calling dl() with specific attributes
+     * Adds a grainline, by calling newLinearDimension() with specific attributes
      *
      * @param string $fromId ID of the point that the dimension starts from
      * @param string $toId ID of the point that is the end of the dimension
@@ -2435,6 +2441,28 @@ class Part
     public function newGrainline($fromId, $toId, $text=' ') 
     {
         $this->newLinearDimension($fromId, $toId, 0, $text, ['class' => 'grainline'], ['class' => 'text-lg text-center grainline', 'dy' => -2]);
+    }
+
+    /** 
+     * Adds a cut-on-fold line, by calling dl() with specific attributes
+     *
+     * @param string $fromId ID of the point that the dimension starts from
+     * @param string $toId ID of the point that is the end of the dimension
+     * @param string $text The text to put on the grainline
+     *
+     */
+    public function newCutOnFold($fromId, $toId, $text, $offset=20) 
+    {
+        // Add via points
+        $angle = $this->angle($fromId, $toId)+90;
+
+        $viaFrom = $this->newId('.cof');
+        $this->addPoint($viaFrom, $this->shift($fromId,$angle,$offset));
+        
+        $viaTo = $this->newId('.cof');
+        $this->addPoint($viaTo, $this->shift($toId,$angle,$offset));
+
+        $this->newCurvedDimension("M $fromId L $viaFrom L $viaTo L $toId", 0, $text, ['class' => 'grainline'], ['class' => 'text-lg text-center grainline', 'dy' => -2]);
     }
 
     /**

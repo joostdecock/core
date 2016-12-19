@@ -260,7 +260,7 @@ class Part
      * @param string $offset     How far from the anchor does the note arrow start
      * @param array  $attributes Optional array of attributes for the snippet
      */
-    public function newNote($key, $anchorKey, $msg, $direction = 3, $length = 25, $offset = 3, $attributes = null)
+    public function newNote($key, $anchorKey, $msg, $direction = 3, $length = 25, $offset = 3, $attributes = ['class' => 'note', 'line-height' => 7])
     {
         $note = new Note();
 

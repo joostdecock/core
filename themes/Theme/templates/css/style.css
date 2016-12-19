@@ -121,6 +121,7 @@ text.note-9,
 text.note-10 {
   text-anchor: end;
 }
+text.note,
 text.dimension-label {
   font-size: 7px;
 }

@@ -322,4 +322,31 @@ class Path
 
         return $paths;
     }
+    
+    /**
+     * Gets the start point of the path
+     *
+     * @return string ID of the path's start point
+     */
+    public function getStartPoint()
+    {
+        $points = Utils::asScrubbedArray($this->getPath());
+    
+        return $points[1];
+    }
+    
+    /**
+     * Gets the end point of the path
+     *
+     * @return string ID of the path's start point
+     */
+    public function getEndPoint()
+    {
+        $points = Utils::asScrubbedArray($this->getPath());
+
+        $last = array_pop($points);
+
+        if(strtolower($last) == 'z') return $points[1];
+        else return $last;
+    }
 }

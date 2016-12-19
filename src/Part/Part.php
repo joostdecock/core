@@ -1435,6 +1435,29 @@ class Part
     }
 
 
+    /**
+     * Calculated the length of a path
+     *
+     * @param Path   $path     The path of which to calculate the length
+     *
+     * @return float The path length
+     */
+    private function pathLen(Path $path)
+    {
+        $len = 0;
+        foreach ($path->breakUp() as $chunk) {
+            $points = Utils::asScrubbedArray($chunk['path']); 
+            if ($chunk['type'] == 'L') {
+                $len += $this->distance($points[1],$points[3]);
+            }
+            if ($chunk['type'] == 'C') {
+                $len += $this->curveLen($points[1],$points[3],$points[4],$points[5]);
+            }
+        }
+
+        return $len;
+    }
+
     /*  Helper functions for pattern designers start here  */
 
 
@@ -2363,6 +2386,10 @@ class Part
         /** @var \Freesewing\Dimension $d */
         $d = new \Freesewing\Dimension();
 
+        // Make pathstring into a path object
+        $origPath = new \Freesewing\Path();
+        $origPath->setPath($pathString);
+
         // Label (a TextOnPath object)
         $label = new \Freesewing\TextOnPath();
         
@@ -2370,21 +2397,32 @@ class Part
         $id = $this->newId('.dc-');
         $this->offsetPathString($id, $pathString, $offset, true, $pathAttributes);
         $path = $this->paths[$id];
-
+        
         // Text
-        //if($text === false) $text = $this->unit($this->distance($pathFrom, $pathTo));
-        if($text === false) $text = 'FIXME length of curve';
+        if($text === false) $text = $this->unit($this->pathLen($origPath));
         $label->setText($text);
         $label->setPath($path);
         $label->setAttributes($labelAttributes);
         $d->setLabel($label);
     
+        // Leaders
+        if($offset != 0) { // We need leaders
+            
+            // Start Leader
+            $leader = new \Freesewing\Path;
+            $leader->setPath('M '.$origPath->getStartPoint().' L '.$path->getStartPoint());
+            $leader->setAttributes($leaderAttributes);
+            $d->addLeader($leader);
+            
+            // End Leader
+            $leader = new \Freesewing\Path;
+            $leader->setPath('M '.$origPath->getEndPoint().' L '.$path->getEndPoint());
+            $leader->setAttributes($leaderAttributes);
+            $d->addLeader($leader);
+        }
+
         $this->addDimension($d);
     }
-    // FIXME - also do these:
-    // newCurveDimension
-    // newRadiusDimension
-    // newAngleDimension
     
     /** 
      * Adds a grainline, by calling dl() with specific attributes

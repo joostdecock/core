@@ -413,7 +413,7 @@ class WahidWaistcoat extends JoostBodyBlock
             $torotate[] = 9111;
         } 
         // Rotate front scye dart into front dart
-        foreach($torotate as $rp) $p->addPoint($rp, $p->rotate($rp,907,-$angle));
+        foreach($torotate as $rp) $p->addPoint($rp, $p->rotate($rp,907,-$angle)); 
 
         // Facing/Lining boundary (flb)
         $p->addPoint('flbTop', $p->shiftTowards(8,'shoulderFront', $p->distance(8,'shoulderFront')/2));
@@ -499,11 +499,16 @@ class WahidWaistcoat extends JoostBodyBlock
         $toRotate = [18,10,19,17,'shoulderBack',8,20,1]; // Points involved in dart rotation
         foreach($toRotate as $i) $p->addPoint($i, $p->rotate($i, 907, -1*$angle));
 
+        // Add lenght bonus
+        $p->newPoint(4000, $p->x(4), $p->y(4)+$this->o('lengthBonus'));
+        $p->newPoint(2911, $p->x(2910), $p->y(4)+$this->o('lengthBonus'));
+
+
 
         // Paths
-        $partA = 'M 1 C 1 1cp 2 L 3 L 4 ';
+        $partA = 'M 1 C 1 1cp 2 L 3 L 4000 L 912 ';
         $dart = 'L 910 C 914 906 902 C 904 907 907 C 907 903 901 C 905 913 909 ';
-        $partB = 'L 2910 C 2914 2906 2902 C 2904 2907 5 C 13 16 14 C 15 18 10 C 17 19 shoulderBack L 8 C 20 1 1 z';
+        $partB = 'L 911 L 2911 L 2910 C 2914 2906 2902 C 2904 2907 5 C 13 16 14 C 15 18 10 C 17 19 shoulderBack L 8 C 20 1 1 z';
         $withDart = $partA.$dart.$partB;
         $withoutDart = $partA.$partB;
         $p->newPath('seamline', $withDart);
@@ -678,7 +683,7 @@ class WahidWaistcoat extends JoostBodyBlock
         $p = $this->parts['front'];
 
         // Seam allowance
-        $p->offsetPath('sa', 'saBase', 10, 1, ['class' => 'seam-allowance']);
+//        $p->offsetPath('sa', 'saBase', 10, 1, ['class' => 'seam-allowance']);
 
         // Title
         $p->newPoint('titleAnchor', $p->x(8), $p->y(5000));
@@ -986,9 +991,8 @@ class WahidWaistcoat extends JoostBodyBlock
         $p->newWidthDimension('907edge', 907); // Dart tip
         $p->newWidthDimension(4001,5050,$p->y(4001)+35, $this->unit(10) ,['class' => 'dimension dimension-sm']); // Button offset from edge
         $p->newWidthDimension(10,5); // Deph of armhole
-    
-        // FIXME: This needs some work, leaders and path length
-        //$p->newCurvedDimension('M 2912 L 2910 C 2914 2906 2902 C 2904 2907 5', 20);
+        $p->newCurvedDimension('M 2912 L 2910 C 2914 2906 2902 C 2904 2907 5', 25); // Side curve
+
     }
     
     /**
@@ -1005,27 +1009,28 @@ class WahidWaistcoat extends JoostBodyBlock
 
         // Vertical dimensions on the left
         $xBase = $p->x(4);
-        $p->newHeightDimension(4,2,$xBase-25); // Height to start of back curve
-        $p->newHeightDimension(4,1,$xBase-40); // Height to center back
-        $p->newHeightDimension(4,8,$xBase-55); // Total height
+        $p->newHeightDimension(4000,2,$xBase-25); // Height to start of back curve
+        $p->newHeightDimension(4000,1,$xBase-40); // Height to center back
+        $p->newHeightDimension(4000,8,$xBase-55); // Total height
 
         // Dart
-        $p->newHeightDimension(910,902,$p->x(910)-15); // Height to middle of dart
-        $p->newHeightDimension(910,907,$p->x(910)-30); // Total dart height
+        $p->newHeightDimension(912,902,$p->x(912)-15); // Height to middle of dart
+        $p->newHeightDimension(912,907,$p->x(912)-30); // Total dart height
         $p->newWidthDimension(902,901, false, false, ['class' => 'dimension dimension-sm']); // Dart width at middle
 
         // Horizontal dimensions bottom
-        $yBase = $p->y(4);
-        $p->newWidthDimension(4,910,$yBase+25); // Width to dart left side
-        $p->newWidthDimension(4,909,$yBase+40); // Width to dart right side
-        $p->newWidthDimension(4,2902,$yBase+55); // Waist width
-        $p->newWidthDimension(4,2910,$yBase+70); // Total hips width
-        $p->newWidthDimension(4,5,$yBase+85); // Total width
+        $yBase = $p->y(4000);
+        $p->newWidthDimension(4000,910,$yBase+25); // Width to dart left side
+        $p->newWidthDimension(4000,909,$yBase+40); // Width to dart right side
+        $p->newWidthDimension(4000,2902,$yBase+55); // Waist width
+        $p->newWidthDimension(4000,2910,$yBase+70); // Total hips width
+        $p->newWidthDimension(4000,5,$yBase+85); // Total width
         
         // Vertical dimensions on the left
         $xBase = $p->x(5);
-        $p->newHeightDimension(2910,5,$xBase+25); // Height to armhole
-        $p->newHeightDimension(2910,'shoulderBack',$xBase+40); // Height to shoulder point
+        $p->newCurvedDimension('M 2911 L 2910 C 2914 2906 2902 C 2904 2907 5', 25); // Side curve
+        $p->newHeightDimension(2911,5,$xBase+40); // Height to armhole
+        $p->newHeightDimension(2911,'shoulderBack',$xBase+55); // Height to shoulder point
 
         // Horizontal dimensions top
         $yBase = $p->y(8);

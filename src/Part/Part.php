@@ -48,6 +48,9 @@ class Part
     /** @var array List of transforms */
     public $transforms = [];
 
+    /** @var array List of dimensions */
+    public $dimensions = [];
+
     /** @var array Holds temporary variables */
     public $tmp = [];
 
@@ -109,6 +112,34 @@ class Part
     public function getTitle()
     {
         return $this->title;
+    }
+
+    /**
+     * Sets the units property.
+     *
+     * @param string
+     */
+    public function setUnits($units)
+    {
+        $this->units = $units;
+    }
+
+    /**
+     * Takes a value in mm and returns it as text in the chosen units
+     *
+     * For example, this returns 25.4 as either '2.54cm' or '1"'
+     *
+     * @param string $val The value to convert
+     *
+     * @return string $text The converted text
+     */
+    public function unit($val)
+    {
+        if ($this->units == 'imperial') {
+            return round($val / 25.4, 2) . '"';
+        } else {
+            return round($val / 10, 2) . 'cm';
+        }
     }
 
     /**
@@ -493,7 +524,16 @@ class Part
         $bottomRight->setX(-INF);
         $bottomRight->setY(-INF);
 
-        foreach ($this->paths as $path) {
+        // FIXME We need a getAllPaths() method, since notes can also have paths that 
+        // should be taken into account when calculating the bounding box 
+        if(is_array($this->dimensions) && count($this->dimensions) > 0) {
+            foreach($this->dimensions as $dimension) $dimensionPaths[] = $dimension->getPath();
+            $allPaths = array_merge($this->paths,$dimensionPaths);
+        } else {
+            $allPaths = $this->paths;
+        }
+        
+        foreach ($allPaths as $path) {
             $path->setBoundary($path->findBoundary($this));
 
             // topLeft
@@ -512,6 +552,7 @@ class Part
                 $bottomRight->setY($path->boundary->bottomRight->getY());
             }
         }
+
         $topLeft->setX($topLeft->getX() - $margin);
         $topLeft->setY($topLeft->getY() - $margin);
         $bottomRight->setX($bottomRight->getX() + $margin);
@@ -520,6 +561,25 @@ class Part
         $this->boundary = new Boundary();
         $this->boundary->setTopLeft($topLeft);
         $this->boundary->setBottomRight($bottomRight);
+    }
+
+    /**
+     * Returns true if a part has a path that needs to be rendered
+     *
+     * This avoids things breaking when no paths are rendered
+     * and thus a bounding box can't be calculated.
+     * Just check whether this returns true
+     *
+     * @return bool true or false
+     */
+    public function hasPathToRender()
+    {
+        $render = 0;
+        foreach($this->paths as $path) {
+            if($path->getRender()) $render++;
+        }
+        if($render) return true;
+        else return false;
     }
 
     /**
@@ -1375,6 +1435,29 @@ class Part
     }
 
 
+    /**
+     * Calculated the length of a path
+     *
+     * @param Path   $path     The path of which to calculate the length
+     *
+     * @return float The path length
+     */
+    private function pathLen(Path $path)
+    {
+        $len = 0;
+        foreach ($path->breakUp() as $chunk) {
+            $points = Utils::asScrubbedArray($chunk['path']); 
+            if ($chunk['type'] == 'L') {
+                $len += $this->distance($points[1],$points[3]);
+            }
+            if ($chunk['type'] == 'C') {
+                $len += $this->curveLen($points[1],$points[3],$points[4],$points[5]);
+            }
+        }
+
+        return $len;
+    }
+
     /*  Helper functions for pattern designers start here  */
 
 
@@ -2083,4 +2166,288 @@ class Part
             $i++;
         }
     }
+
+    /** 
+     * Adds a width dimension to the pattern
+     *
+     * @param string $fromId ID of the point that the dimension starts from
+     * @param string $toId ID of the point that is the end of the dimension
+     * @param float $y Y-coordinate where the dimension should be placed
+     * @param string $text The text to put on the dimension label
+     * @param array $pathAttributes Attributes for the path the label goes on
+     * @param array $labelAttributes Attributes for the text of the label
+     * @param array $leaderAttributes Attributes for the leader paths
+     *
+     */
+    public function newWidthDimension(
+        $fromId, 
+        $toId, 
+        $y = false, 
+        $text = false, 
+        $pathAttributes=['class' => 'dimension dimension-width'], 
+        $labelAttributes=['class' => 'dimension-label', 'dy' => -2],
+        $leaderAttributes=['class' => 'dimension-leader']
+    ) {
+        /** @var \Freesewing\Dimension $d */
+        $d = new \Freesewing\Dimension();
+
+        // Do we need a from leader?
+        if($this->y($fromId) == $y || $y === false) { // Nope
+            $pathFrom = $fromId;
+        } else { // We do
+            $i = $this->newId('.dw-');
+            $this->newPoint($i, $this->x($fromId), $y);
+            $pathFrom = $i;
+            // Leader
+            $fromLeader = new \Freesewing\Path;
+            $fromLeader->setPath("M $fromId L $pathFrom");
+            $fromLeader->setAttributes($leaderAttributes);
+            $d->addLeader($fromLeader);
+        }
+
+        // Do we need a To leader?
+        if($this->y($toId) == $y) { // Nope
+            $pathTo = $toId;
+        } else { // We do
+            $i = $this->newId('.dw-');
+            $this->newPoint($i, $this->x($toId), $this->y($pathFrom));
+            $pathTo = $i;
+            // Leader
+            $toLeader = new \Freesewing\Path;
+            $toLeader->setPath("M $toId L $pathTo");
+            $toLeader->setAttributes($leaderAttributes);
+            $d->addLeader($toLeader);
+        }
+
+        // Label (a TextOnPath object)
+        $label = new \Freesewing\TextOnPath();
+        
+        // Path
+        $path = new \Freesewing\Path();
+        $path->setPath("M $pathFrom L $pathTo");
+        $path->setAttributes($pathAttributes);
+
+        // Text
+        if($text === false) $text = $this->unit($this->distance($pathFrom, $pathTo));
+        $label->setText($text);
+        $label->setPath($path);
+        $label->setAttributes($labelAttributes);
+        $d->setLabel($label);
+        $this->addDimension($d);
+    }
+
+    /** 
+     * Adds a height dimension to the pattern
+     *
+     * @param string $fromId ID of the point that the dimension starts from
+     * @param string $toId ID of the point that is the end of the dimension
+     * @param float $x X-coordinate where the dimension should be placed
+     * @param string $text The text to put on the dimension label
+     * @param array $pathAttributes Attributes for the path the label goes on
+     * @param array $labelAttributes Attributes for the text of the label
+     * @param array $leaderAttributes Attributes for the leader paths
+     *
+     */
+    public function newHeightDimension(
+        $fromId, 
+        $toId, 
+        $x = false, 
+        $text = false, 
+        $pathAttributes=['class' => 'dimension dimension-width'], 
+        $labelAttributes=['class' => 'dimension-label', 'dy' => -2],
+        $leaderAttributes=['class' => 'dimension-leader']
+    ) {
+        /** @var \Freesewing\Dimension $d */
+        $d = new \Freesewing\Dimension();
+
+        // Do we need a from leader?
+        if($this->x($fromId) == $x || $x === false) { // Nope
+            $pathFrom = $fromId;
+        } else { // We do
+            $i = $this->newId('.dw-');
+            $this->newPoint($i, $x, $this->y($fromId));
+            $pathFrom = $i;
+            // Leader
+            $fromLeader = new \Freesewing\Path;
+            $fromLeader->setPath("M $fromId L $i");
+            $fromLeader->setAttributes($leaderAttributes);
+            $d->addLeader($fromLeader);
+        }
+
+        // Do we need a To leader?
+        if($this->x($toId) == $x) { // Nope
+            $pathTo = $toId;
+        } else { // We do
+            $i = $this->newId('.dw-');
+            $this->newPoint($i, $this->x($pathFrom), $this->y($toId));
+            $pathTo = $i;
+            // Leader
+            $toLeader = new \Freesewing\Path;
+            $toLeader->setPath("M $toId L $i");
+            $toLeader->setAttributes($leaderAttributes);
+            $d->addLeader($toLeader);
+        }
+
+        // Label (a TextOnPath object)
+        $label = new \Freesewing\TextOnPath();
+        
+        // Path
+        $path = new \Freesewing\Path();
+        $path->setPath("M $pathFrom L $pathTo");
+        $path->setAttributes($pathAttributes);
+
+        // Text
+        if($text === false) $text = $this->unit($this->distance($pathFrom, $pathTo));
+        $label->setText($text);
+        $label->setPath($path);
+        $label->setAttributes($labelAttributes);
+        $d->setLabel($label);
+    
+        $this->addDimension($d);
+    }
+
+    /** 
+     * Creates a linear dimension to the part
+     *
+     * @param string $fromId ID of the point that the dimension starts from
+     * @param string $toId ID of the point that is the end of the dimension
+     * @param float $offset The amount to offset the dimension by
+     * @param string $text The text to put on the dimension label
+     * @param array $pathAttributes Attributes for the path the label goes on
+     * @param array $labelAttributes Attributes for the text of the label
+     * @param array $leaderAttributes Attributes for the leader paths
+     * 
+     */
+    public function newLinearDimension(
+        $fromId, 
+        $toId, 
+        $offset = 0, 
+        $text = false, 
+        $pathAttributes=['class' => 'dimension dimension-width'], 
+        $labelAttributes=['class' => 'dimension-label', 'dy' => -2],
+        $leaderAttributes=['class' => 'dimension-leader']
+    ) {
+        /** @var \Freesewing\Dimension $d */
+        $d = new \Freesewing\Dimension();
+
+        if($offset != 0) { // We need leaders
+            $angle = $this->angle($fromId,$toId)+90;
+            foreach(['pathFrom' => $fromId, 'pathTo' => $toId] as $i => $point) {
+                ${$i} = $this->newId('.dw-');
+                $this->addPoint(${$i}, $this->shift($point, $angle, $offset));
+                // Leader
+                $leader = new \Freesewing\Path;
+                $leader->setPath("M $point L ".${$i});
+                $leader->setAttributes($leaderAttributes);
+                $d->addLeader($leader);
+            }
+        } else { // No leaders
+            $pathFrom = $fromId;
+            $pathTo = $toId;
+        }
+
+        // Label (a TextOnPath object)
+        $label = new \Freesewing\TextOnPath();
+        
+        // Path
+        $path = new \Freesewing\Path();
+        $path->setPath("M $pathFrom L $pathTo");
+        $path->setAttributes($pathAttributes);
+
+        // Text
+        if($text === false) $text = $this->unit($this->distance($pathFrom, $pathTo));
+        $label->setText($text);
+        $label->setPath($path);
+        $label->setAttributes($labelAttributes);
+        $d->setLabel($label);
+    
+        $this->addDimension($d);
+    }
+    
+    /** 
+     * Creates and adds a curved dimension to the part
+     *
+     * @param string $pathString The (unrendered) pathstring of the curve
+     * @param float $offset X-coordinate where the dimension should be placed
+     * @param string $text The text to put on the dimension label
+     * @param array $pathAttributes Attributes for the path the label goes on
+     * @param array $labelAttributes Attributes for the text of the label
+     * @param array $leaderAttributes Attributes for the leader paths
+     * 
+     */
+    public function newCurvedDimension(
+        $pathString, 
+        $offset = 0, 
+        $text = false, 
+        $pathAttributes=['class' => 'dimension dimension-width'], 
+        $labelAttributes=['class' => 'dimension-label', 'dy' => -2],
+        $leaderAttributes=['class' => 'dimension-leader']
+    ) {
+        /** @var \Freesewing\Dimension $d */
+        $d = new \Freesewing\Dimension();
+
+        // Make pathstring into a path object
+        $origPath = new \Freesewing\Path();
+        $origPath->setPath($pathString);
+
+        // Label (a TextOnPath object)
+        $label = new \Freesewing\TextOnPath();
+        
+        // Path
+        $id = $this->newId('.dc-');
+        $this->offsetPathString($id, $pathString, $offset, true, $pathAttributes);
+        $path = $this->paths[$id];
+        
+        // Text
+        if($text === false) $text = $this->unit($this->pathLen($origPath));
+        $label->setText($text);
+        $label->setPath($path);
+        $label->setAttributes($labelAttributes);
+        $d->setLabel($label);
+    
+        // Leaders
+        if($offset != 0) { // We need leaders
+            
+            // Start Leader
+            $leader = new \Freesewing\Path;
+            $leader->setPath('M '.$origPath->getStartPoint().' L '.$path->getStartPoint());
+            $leader->setAttributes($leaderAttributes);
+            $d->addLeader($leader);
+            
+            // End Leader
+            $leader = new \Freesewing\Path;
+            $leader->setPath('M '.$origPath->getEndPoint().' L '.$path->getEndPoint());
+            $leader->setAttributes($leaderAttributes);
+            $d->addLeader($leader);
+        }
+
+        $this->addDimension($d);
+    }
+    
+    /** 
+     * Adds a grainline, by calling dl() with specific attributes
+     *
+     * @param string $fromId ID of the point that the dimension starts from
+     * @param string $toId ID of the point that is the end of the dimension
+     * @param string $text The text to put on the grainline
+     *
+     */
+    public function newGrainline($fromId, $toId, $text=' ') 
+    {
+        $this->newLinearDimension($fromId, $toId, 0, $text, ['class' => 'grainline'], ['class' => 'text-lg text-center grainline', 'dy' => -2]);
+    }
+
+    /**
+     * Adds a dimension to $this->dimensions.
+     *
+     * This takes a pre-created dimension object
+     * and adds it to the dimensions array with key $key.
+     *
+     * @param \Freesewing\Dimension   $dimension The dimension object
+     */
+    public function addDimension($dimension)
+    {
+        $this->dimensions[] = $dimension;
+    }
+
 }

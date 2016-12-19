@@ -132,6 +132,29 @@ class Path
     }
 
     /**
+     * Sets a path attribute
+     *
+     * @param string $key
+     * @param scalar $value
+     */
+    public function setAttribute($key, $value)
+    {
+        $this->attributes[$key] = $value;
+    }
+
+    /**
+     * Returns an attribute value
+     *
+     * @param string $key
+     *
+     * @return scalar
+     */
+    public function getAttribute($key)
+    {
+        return $this->attributes[$key];
+    }
+
+    /**
      * Calculates and returns bounding box of a path
      *
      * We need the bounding box of a path to figure out
@@ -298,5 +321,32 @@ class Path
         }
 
         return $paths;
+    }
+    
+    /**
+     * Gets the start point of the path
+     *
+     * @return string ID of the path's start point
+     */
+    public function getStartPoint()
+    {
+        $points = Utils::asScrubbedArray($this->getPath());
+    
+        return $points[1];
+    }
+    
+    /**
+     * Gets the end point of the path
+     *
+     * @return string ID of the path's start point
+     */
+    public function getEndPoint()
+    {
+        $points = Utils::asScrubbedArray($this->getPath());
+
+        $last = array_pop($points);
+
+        if(strtolower($last) == 'z') return $points[1];
+        else return $last;
     }
 }

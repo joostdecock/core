@@ -13,6 +13,8 @@ parts:
     waistcoatFrontBlock: "Waistcoat front block"
     front: "Front"
     back: "Back"
+    frontFacing: "Front facing"
+    frontLining: "Front lining"
     pocketWelt: "Pocket welt"
     pocketFacing: "Pocket facing"
     pocketBag: "Pocket bag"
@@ -87,7 +89,7 @@ options:
             2: "Rounded"
         default: 1
     hemStyle:
-        type: chooseOne
+        type: "chooseOne"
         options:
             1: "Classic"
             2: "Rounded"

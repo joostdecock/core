@@ -23,7 +23,7 @@ path {
 }
 path.seam-allowance {
   stroke-color: #333333;
-  stroke-width: 0.4;
+  stroke-width: 0.6;
   stroke-dasharray: 2.5,1.5;
 }
 path.helpline {

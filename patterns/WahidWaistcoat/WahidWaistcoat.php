@@ -667,7 +667,7 @@ class WahidWaistcoat extends JoostBodyBlock
       |  _| | | | | | (_| | | |/ /  __/
       |_|   |_|_| |_|\__,_|_|_/___\___|
                                        
-      Adding titles/logos/seam-allowance/measurements and so on
+      Adding titles/logos/seam-allowance/grainline and so on
     */
     
     /**

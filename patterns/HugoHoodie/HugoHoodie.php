@@ -11,27 +11,29 @@ namespace Freesewing\Patterns;
  */
 class HugoHoodie extends JoostBodyBlock
 {
-    /**
-     * Generates a draft of the pattern
-     *
-     * This creates a draft of this pattern for a given model
-     * and set of options. You get a complete pattern with
-     * all bels and whistles.
-     *
-     * @param \Freesewing\Model $model The model to draft for
-     *
-     * @return void
-     */
-    public function draft($model)
-    {
-        $this->sample($model);
-        // Finalize all parts, but not the blocks
-        foreach ($this->parts as $key => $part) {
-            if (!strpos($key, 'Block')) {
-                $this->{'finalize'.ucfirst($key)}($model, $this->parts[$key]);
-            }
-        }
-    }
+    /*
+        ___       _ _   _       _ _          
+       |_ _|_ __ (_) |_(_) __ _| (_)___  ___ 
+        | || '_ \| | __| |/ _` | | / __|/ _ \
+        | || | | | | |_| | (_| | | \__ \  __/
+       |___|_| |_|_|\__|_|\__,_|_|_|___/\___|
+              
+      Things we need to do before we can draft a pattern
+    */
+
+
+    // Nothing to do, we call initialize() from the parent class
+
+
+    /*
+        ____             __ _   
+       |  _ \ _ __ __ _ / _| |_ 
+       | | | | '__/ _` | |_| __|
+       | |_| | | | (_| |  _| |_ 
+       |____/|_|  \__,_|_|  \__|
+        
+      The actual sampling/drafting of the pattern
+    */
 
     /**
      * Generates a sample of the pattern
@@ -61,6 +63,38 @@ class HugoHoodie extends JoostBodyBlock
         $this->parts['frontBlock']->setRender(false);
         $this->parts['backBlock']->setRender(false);
         $this->parts['sleeveBlock']->setRender(false);
+    }
+
+    /**
+     * Generates a draft of the pattern
+     *
+     * This creates a draft of this pattern for a given model
+     * and set of options. You get a complete pattern with
+     * all bels and whistles.
+     *
+     * @param \Freesewing\Model $model The model to draft for
+     *
+     * @return void
+     */
+    public function draft($model)
+    {
+        $this->sample($model);
+
+        // Finalize all parts, but not the blocks
+        foreach ($this->parts as $key => $part) {
+            if (!strpos($key, 'Block')) {
+                $this->{'finalize'.ucfirst($key)}($model,$part);
+            }
+        }
+        
+        // Is this a paperless pattern?
+        if ($this->isPaperless) {
+            foreach ($this->parts as $key => $part) {
+                if (!strpos($key, 'Block')) {
+                    $this->{'paperless'.ucfirst($key)}($model);
+                }
+            }
+        }
     }
 
     /**
@@ -141,6 +175,7 @@ class HugoHoodie extends JoostBodyBlock
 
         /** @var \Freesewing\Part $p */
         $p = $this->parts['back'];
+        
         // Making neck opening wider and deeper
         $p->addPoint(  1, $p->shift( 1, -90, 10), 'Center front collar depth');
         $angle = $p->angle(8, 12);
@@ -494,6 +529,15 @@ class HugoHoodie extends JoostBodyBlock
         $p->paths['seamline']->setSample(true);
     }
         
+    /*
+       _____ _             _ _         
+      |  ___(_)_ __   __ _| (_)_______ 
+      | |_  | | '_ \ / _` | | |_  / _ \
+      |  _| | | | | | (_| | | |/ /  __/
+      |_|   |_|_| |_|\__,_|_|_/___\___|
+                                       
+      Adding titles/logos/seam-allowance/grainline and so on
+    */
 
     /**
      * Finalizes the front
@@ -508,16 +552,12 @@ class HugoHoodie extends JoostBodyBlock
         // Grainline
         $p->newPoint('grainlineTop', $p->x(9)+40, $p->y(9)+20);
         $p->newPoint('grainlineBottom', $p->x('grainlineTop'), $p->y(4)-20);
-        $p->newPath('grainline', 'M grainlineTop L grainlineBottom', ['class' => 'grainline']);
-        $p->newTextOnPath('grainline', 'M grainlineBottom L grainlineTop', $this->t('Grainline'), ['line-height' => 12, 'class' => 'text-lg fill-fabric text-center', 'dy' => -2]);
+        $p->newGrainline('grainlineBottom', 'grainlineTop', $this->t('Grainline'));
 
         // Cut on fold (cof)
-        $p->newPoint('cofStart', $p->x(9), $p->y(9)+40);
-        $p->newPoint('cofTop', $p->x(9)+20, $p->y('cofStart'));
-        $p->newPoint('cofEnd', $p->x(9), $p->y(4)-40);
-        $p->newPoint('cofBottom', $p->x(9)+20, $p->y('cofEnd'));
-        $p->newPath('cutOnFold', 'M cofStart L cofTop L cofBottom L cofEnd', ['class' => 'grainline']);
-        $p->newTextOnPath('cutonfold', 'M cofBottom L cofTop', $this->t('Cut on fold'), ['line-height' => 12, 'class' => 'text-lg fill-fabric text-center', 'dy' => -2]);
+        $p->newPoint('cofTop', $p->x(9), $p->y(9)+40);
+        $p->newPoint('cofBottom', $p->x(9), $p->y(4)-40);
+        $p->newCutonfold('cofBottom', 'cofTop', $this->t('Cut on fold'));
 
         // Sleeve notch
         $this->frontNotchLen = $p->curveLen(100, 100, 15, 14)/2;
@@ -529,7 +569,6 @@ class HugoHoodie extends JoostBodyBlock
         $p->newSnippet('pocketNotch2', 'notch', 102);
         $p->newSnippet('pocketNotch3', 'notch', 103);
 
-        
         // Title
         $p->newPoint('titleAnchor', $p->x(5)/2, $p->y(2)+$p->deltaY(2, 3)/2);
         $p->addTitle('titleAnchor', 1, $this->t($p->title), '1x '.$this->t('from main fabric')."\n".$this->t('Cut on fold'));
@@ -537,11 +576,275 @@ class HugoHoodie extends JoostBodyBlock
         // Seam allowance
         $sa = 'M 4 L 6 L 5 C 13 16 14 C 15 100 100 C 57 56 9';
         $p->offsetPathString('sa', $sa, 10, true, ['class' => 'seam-allowance']);
-        // Add bits at the fold
+    
+        // Close path at the fold
         $p->paths['sa']->setPath('M 4 L sa-line-4TO6 M 9 L sa-curve-9TO100 '.$p->paths['sa']->getPath());
+    }
+    
+    /**
+     * Finalizes the back
+     *
+     * @param \Freesewing\Model $model The model to draft for
+     * @param \Freesewing\Part $p The part to add the info to
+     *
+     * @return void
+     */
+    public function finalizeBack($model, $p)
+    {
+        // Grainline
+        $p->newPoint('grainlineTop', $p->x(1)+40, $p->y(1)+20);
+        $p->newPoint('grainlineBottom', $p->x('grainlineTop'), $p->y(4)-20);
+        $p->newGrainline('grainlineBottom', 'grainlineTop', $this->t('Grainline'));
         
-        // Paperless
-        if ($this->isPaperless) {
+        // Cut on fold (cof)
+        $p->newPoint('cofTop', $p->x(1), $p->y(1)+40);
+        $p->newPoint('cofBottom', $p->x(1), $p->y(4)-40);
+        $p->newCutonfold('cofBottom', 'cofTop', $this->t('Cut on fold'));
+        
+        // Title
+        $p->newPoint('titleAnchor', $p->x(5)/2, $p->y(2)+$p->deltaY(2, 3)/2);
+        $p->addTitle('titleAnchor', 2, $this->t($p->title), '1x '.$this->t('from main fabric')."\n".$this->t('Cut on fold'));
+        
+        // Scalebox
+        $p->addPoint('scaleboxAnchor', $p->shift('titleAnchor', -90, 30));
+        $p->newSnippet('scalebox', 'scalebox', 'scaleboxAnchor');
+        
+        // Logo & CC
+        $p->addPoint('logoAnchor', $p->shift('scaleboxAnchor', -90, 90));
+        $p->newSnippet('logo', 'logo', 'logoAnchor');
+        $p->newSnippet('cc', 'cc', 'logoAnchor');
+
+        // Seam allowance
+        $sa = 'M 4 L 6 L 5 C 13 16 14 C 15 100 100 C 57 56 1';
+        $p->offsetPathString('sa', $sa, 10, true, ['class' => 'seam-allowance']);
+        // Close path at the fold
+        $p->paths['sa']->setPath('M 4 L sa-line-4TO6 M 1 L sa-curve-1TO100 '.$p->paths['sa']->getPath());
+        
+        // Sleeve notch
+        $this->backNotchLen = $p->curveLen(100, 100, 15, 14)/2;
+        $p->addPoint('sleeveNotch', $p->shiftAlong(100, 100, 15, 14, $this->backNotchLen), 'Back sleeve notch');
+        $p->addPoint('sleeveNotcha', $p->shiftAlong(100, 100, 15, 14, $this->backNotchLen + 2.5), 'Back sleeve notch a');
+        $p->addPoint('sleeveNotchb', $p->shiftAlong(100, 100, 15, 14, $this->backNotchLen - 2.5), 'Back sleeve notch b');
+        $p->newSnippet('sleeveNotcha', 'notch', 'sleeveNotcha');
+        $p->newSnippet('sleeveNotchb', 'notch', 'sleeveNotchb');
+    }
+
+    /**
+     * Finalizes the sleeve
+     *
+     * @param \Freesewing\Model $model The model to draft for
+     * @param \Freesewing\Part $p The part to add the info to
+     *
+     * @return void
+     */
+    public function finalizeSleeve($model, $p)
+    {
+        // Grainline
+        $p->newPoint('grainlineTop', $p->x(108), $p->y(108)+20);
+        $p->newPoint('grainlineBottom', $p->x('grainlineTop'), $p->y(32)-20);
+        $p->newGrainline('grainlineBottom', 'grainlineTop', $this->t('Grainline'));
+        
+        // Title
+        $p->clonePoint(8, 'titleAnchor');
+        $p->addTitle('titleAnchor', 3, $this->t($p->title), '2x '.$this->t('from main fabric')."\n".$this->t('Cut with good sides together'));
+        
+        // Seam allowance
+        $p->offsetPath('sa', 'seamline', -10, true, ['class' => 'seam-allowance']);
+        
+        // Sleeve notches
+        $p->addPoint('frontSleeveNotch', $p->shiftAlong(200, 134, 132, 133, $this->frontNotchLen), 'Front sleeve notch');
+        $p->addPoint('backSleeveNotcha', $p->shiftAlong(300, 234, 232, 233, $this->backNotchLen -2.5), 'Back sleeve notch a');
+        $p->addPoint('backSleeveNotchb', $p->shiftAlong(300, 234, 232, 233, $this->backNotchLen +2.5), 'Back sleeve notch b');
+        $p->newSnippet('sleeveNotch', 'notch', 'frontSleeveNotch');
+        $p->newSnippet('sleeveNotcha', 'notch', 'backSleeveNotcha');
+        $p->newSnippet('sleeveNotchb', 'notch', 'backSleeveNotchb');
+    }
+    
+    /**
+     * Finalizes the pocket
+     *
+     * @param \Freesewing\Model $model The model to draft for
+     * @param \Freesewing\Part $p The part to add the info to
+     *
+     * @return void
+     */
+    public function finalizePocket($model, $p)
+    {
+        // Grainline
+        $p->newPoint('grainlineTop', $p->x(105)+35, $p->y(105)+10);
+        $p->newPoint('grainlineBottom', $p->x('grainlineTop'), $p->y(4)-10);
+        $p->newGrainline('grainlineBottom', 'grainlineTop', $this->t('Grainline'));
+        
+        // Cut on fold (cof)
+        $p->newPoint('cofTop', $p->x(105), $p->y(105)+10);
+        $p->newPoint('cofBottom', $p->x(105), $p->y(4)-10);
+        $p->newCutonfold('cofBottom', 'cofTop', $this->t('Cut on fold'));
+
+        // Title
+        $p->newPoint('titleAnchor', $p->x('grainlineBottom') + $p->deltaX('grainlineBottom', 101)/2, $p->y(105)+$p->deltaY(105, 4)/2);
+        $p->addTitle('titleAnchor', 4, $this->t($p->title), '1x '.$this->t('from main fabric')."\n".$this->t('Cut on  fold'));
+        
+        // Seam allowance
+        $sa = 'M 105 L 103 C 104 102 102 L 101 L 4';
+        $p->offsetPathString('sa', $sa, -10, true, ['class' => 'seam-allowance']);
+        $p->paths['sa']->setPath('M 4 L sa-line-4TO101 M 105 L sa-line-105TO103 '.$p->paths['sa']->getPath());
+    }
+
+    
+    /**
+     * Finalizes the pocket facing
+     *
+     * @param \Freesewing\Model $model The model to draft for
+     * @param \Freesewing\Part $p The part to add the info to
+     *
+     * @return void
+     */
+    public function finalizePocketFacing($model, $p)
+    {
+        // Grainline
+        $p->addPoint('grainlineTop', $p->shift(103, -115, 15));
+        $p->addPoint('grainlineBottom', $p->shift(104, -115, 15));
+        $p->newGrainline('grainlineBottom', 'grainlineTop', $this->t('Grainline'));
+
+        // Title
+        $p->newPoint('titleAnchor', $p->x(111) + $p->deltaX(111, 103)/2, $p->y(111)+35);
+        $p->addTitle('titleAnchor', 5, $this->t($p->title), '2x '.$this->t('from main fabric')."\n".$this->t('Cut with good sides together'), 'vertical');
+        
+        // Seam allowance
+        $p->offsetPath('sa', 'seamline', 10, true, ['class' => 'seam-allowance']);
+    }
+    
+    /**
+     * Finalizes the hood side
+     *
+     * @param \Freesewing\Model $model The model to draft for
+     * @param \Freesewing\Part $p The part to add the info to
+     *
+     * @return void
+     */
+    public function finalizeHoodSide($model, $p)
+    {
+        // Grainline
+        $p->addPoint( 'grainlineTop', $p->shift(12, -90, 5));
+        $p->addPoint( 'grainlineBottom', $p->shift(10, 90, 5));
+        $p->newGrainline('grainlineBottom', 'grainlineTop', $this->t('Grainline'));
+        
+        // Title
+        $p->addPoint('titleAnchor', $p->shift(12, -70, 100));
+        $p->addTitle('titleAnchor', 6, $this->t($p->title), '4x '.$this->t('from main fabric')." (2x2)\n".$this->t('Cut with good sides together'));
+        
+        // Seam allowance
+        $p->offsetPath('sa', 'seamline', -10, true, ['class' => 'seam-allowance']);
+
+        // Notch
+        $p->newSnippet('sleeveNotch', 'notch', 10);
+    }
+    
+    /**
+     * Finalizes the hood center
+     *
+     * @param \Freesewing\Model $model The model to draft for
+     * @param \Freesewing\Part $p The part to add the info to
+     *
+     * @return void
+     */
+    public function finalizeHoodCenter($model, $p)
+    {
+        $this->finalizeRectangle($model, $p, 7, '2x '.$this->t('from main fabric')."\n".$this->t('Cut with good sides together'));
+    }
+    
+    /**
+     * Finalizes the cuffs
+     *
+     * @param \Freesewing\Model $model The model to draft for
+     * @param \Freesewing\Part $p The part to add the info to
+     *
+     * @return void
+     */
+    public function finalizeCuff($model, $p)
+    {
+        $this->finalizeRectangle($model, $p, 8, '2x '.$this->t('from ribbing')."\n".$this->t('Cut with good sides together'));
+    }
+    
+    /**
+     * Finalizes the waistband
+     *
+     * @param \Freesewing\Model $model The model to draft for
+     * @param \Freesewing\Part $p The part to add the info to
+     *
+     * @return void
+     */
+    public function finalizeWaistband($model, $p)
+    {
+        $this->finalizeRectangle($model, $p, 9, '1x '.$this->t('from ribbing'));
+    }
+    
+    /**
+     * Finalizes the neck binding
+     *
+     * @param \Freesewing\Model $model The model to draft for
+     * @param \Freesewing\Part $p The part to add the info to
+     *
+     * @return void
+     */
+    public function finalizeNeckBinding($model, $p)
+    {
+        $this->finalizeRectangle($model, $p, 10, '1x '.$this->t('from main fabric'), 'vertical');
+    }
+
+    private function textAttr($dy)
+    {
+        // FIXME remove this
+        return ['class' => 'text-lg fill-note text-center', 'dy' => $dy];
+    }
+
+    /**
+     * Finalizes one of the rectanglular parts
+     *
+     * @param \Freesewing\Model $model The model to draft for
+     * @param \Freesewing\Part $p The part to add the info to
+     *
+     * @return void
+     */
+    public function finalizeRectangle($model, $p, $nr, $cut, $titleOption = '')
+    {
+        // Grainline
+        $p->newPoint( 'grainlineTop', $p->x(1)+5, $p->y(3)/1.5);
+        $p->newPoint( 'grainlineBottom', $p->x(2)-5, $p->y('grainlineTop'));
+        $p->newGrainline('grainlineTop', 'grainlineBottom', $this->t('Grainline'));
+        
+        // Title
+        $p->newPoint('titleAnchor', $p->x(2)/2, $p->y(3)/4);
+        $p->addTitle('titleAnchor', $nr, $this->t($p->title), $cut, $titleOption);
+        
+        // Seam allowance
+        $p->offsetPath('sa', 'seamline', -10, true, ['class' => 'seam-allowance']);
+    }
+
+
+    /*
+        ____                       _               
+       |  _ \ __ _ _ __   ___ _ __| | ___  ___ ___ 
+       | |_) / _` | '_ \ / _ \ '__| |/ _ \/ __/ __|
+       |  __/ (_| | |_) |  __/ |  | |  __/\__ \__ \
+       |_|   \__,_| .__/ \___|_|  |_|\___||___/___/
+                  |_|                              
+                                       
+      Instructions for paperless patterns
+    */
+    
+    
+    /**
+     * Adds paperless info for front
+     *
+     * @param \Freesewing\Model $model The model to draft for
+     *
+     * @return void
+     */
+    public function paperlessFront($model)
+    {
+        /** @var \Freesewing\Part $p */
+        $p = $this->parts['front'];
             // Measures
             $pAttr = ['class' => 'measure-lg'];
             $hAttr = ['class' => 'stroke-note stroke-sm'];
@@ -634,62 +937,19 @@ class HugoHoodie extends JoostBodyBlock
             $noteAttr = ['line-height' => 7, 'class' => 'text-lg'];
             $p->newPoint('saNote', $p->x(5), $p->y(103)-40, 'sa note anchor');
             $p->newNote('saNote', 'saNote', $this->t("Standard\nseam\nallowance")."\n(".$this->unit(10).')', 9, 10, -5, $noteAttr);
-        }
     }
-    
+
     /**
-     * Finalizes the back
+     * Adds paperless info for back
      *
      * @param \Freesewing\Model $model The model to draft for
-     * @param \Freesewing\Part $p The part to add the info to
      *
      * @return void
      */
-    public function finalizeBack($model, $p)
+    public function paperlessBack($model)
     {
-        // Grainline
-        $p->newPoint('grainlineTop', $p->x(1)+40, $p->y(1)+20);
-        $p->newPoint('grainlineBottom', $p->x('grainlineTop'), $p->y(4)-20);
-        $p->newPath('grainline', 'M grainlineTop L grainlineBottom', ['class' => 'grainline']);
-        $p->newTextOnPath('grainline', 'M grainlineBottom L grainlineTop', $this->t('Grainline'), ['line-height' => 12, 'class' => 'text-lg fill-fabric text-center', 'dy' => -2]);
-        
-        // Cut on fold (cof)
-        $p->newPoint('cofStart', $p->x(1), $p->y(1)+40);
-        $p->newPoint('cofTop', $p->x(1)+20, $p->y('cofStart'));
-        $p->newPoint('cofEnd', $p->x(1), $p->y(4)-40);
-        $p->newPoint('cofBottom', $p->x(1)+20, $p->y('cofEnd'));
-        $p->newPath('cutOnFold', 'M cofStart L cofTop L cofBottom L cofEnd', ['class' => 'grainline']);
-        $p->newTextOnPath('cutonfold', 'M cofBottom L cofTop', $this->t('Cut on fold'), ['line-height' => 12, 'class' => 'text-lg fill-fabric text-center', 'dy' => -2]);
-        
-        // Title
-        $p->newPoint('titleAnchor', $p->x(5)/2, $p->y(2)+$p->deltaY(2, 3)/2);
-        $p->addTitle('titleAnchor', 2, $this->t($p->title), '1x '.$this->t('from main fabric')."\n".$this->t('Cut on fold'));
-        
-        // Scalebox
-        $p->addPoint('scaleboxAnchor', $p->shift('titleAnchor', -90, 30));
-        $p->newSnippet('scalebox', 'scalebox', 'scaleboxAnchor');
-        
-        // Logo
-        $p->addPoint('logoAnchor', $p->shift('scaleboxAnchor', -90, 90));
-        $p->newSnippet('logo', 'logo', 'logoAnchor');
-        $p->newSnippet('cc', 'cc', 'logoAnchor');
-
-        // Seam allowance
-        $sa = 'M 4 L 6 L 5 C 13 16 14 C 15 100 100 C 57 56 1';
-        $p->offsetPathString('sa', $sa, 10, true, ['class' => 'seam-allowance']);
-        // Add bits at the fold
-        $p->paths['sa']->setPath('M 4 L sa-line-4TO6 M 1 L sa-curve-1TO100 '.$p->paths['sa']->getPath());
-        
-        // Sleeve notch
-        $this->backNotchLen = $p->curveLen(100, 100, 15, 14)/2;
-        $p->addPoint('sleeveNotch', $p->shiftAlong(100, 100, 15, 14, $this->backNotchLen), 'Back sleeve notch');
-        $p->addPoint('sleeveNotcha', $p->shiftAlong(100, 100, 15, 14, $this->backNotchLen + 2.5), 'Back sleeve notch a');
-        $p->addPoint('sleeveNotchb', $p->shiftAlong(100, 100, 15, 14, $this->backNotchLen - 2.5), 'Back sleeve notch b');
-        $p->newSnippet('sleeveNotcha', 'notch', 'sleeveNotcha');
-        $p->newSnippet('sleeveNotchb', 'notch', 'sleeveNotchb');
-        
-        // Paperless
-        if ($this->isPaperless) {
+        /** @var \Freesewing\Part $p */
+        $p = $this->parts['back'];
             // Measures
             $pAttr = ['class' => 'measure-lg'];
             $hAttr = ['class' => 'stroke-note stroke-sm'];
@@ -750,41 +1010,19 @@ class HugoHoodie extends JoostBodyBlock
             $noteAttr = ['line-height' => 7, 'class' => 'text-lg'];
             $p->newPoint('saNote', $p->x(5), $p->y(3), 'sa note anchor');
             $p->newNote('saNote', 'saNote', $this->t("Standard\nseam\nallowance")."\n(".$this->unit(10).')', 9, 10, -5, $noteAttr);
-        }
     }
 
     /**
-     * Finalizes the sleeve
+     * Adds paperless info for sleeve
      *
      * @param \Freesewing\Model $model The model to draft for
-     * @param \Freesewing\Part $p The part to add the info to
      *
      * @return void
      */
-    public function finalizeSleeve($model, $p)
+    public function paperlessSleeve($model)
     {
-        // Grainline
-        $p->newPoint('grainlineTop', $p->x(108), $p->y(108)+20);
-        $p->newPoint('grainlineBottom', $p->x('grainlineTop'), $p->y(32)-20);
-        $p->newPath('grainline', 'M grainlineTop L grainlineBottom', ['class' => 'grainline']);
-        
-        // Title
-        $p->clonePoint(8, 'titleAnchor');
-        $p->addTitle('titleAnchor', 3, $this->t($p->title), '2x '.$this->t('from main fabric')."\n".$this->t('Cut with good sides together'));
-        
-        // Seam allowance
-        $p->offsetPath('sa', 'seamline', -10, true, ['class' => 'seam-allowance']);
-        
-        // Sleeve notches
-        $p->addPoint('frontSleeveNotch', $p->shiftAlong(200, 134, 132, 133, $this->frontNotchLen), 'Front sleeve notch');
-        $p->addPoint('backSleeveNotcha', $p->shiftAlong(300, 234, 232, 233, $this->backNotchLen -2.5), 'Back sleeve notch a');
-        $p->addPoint('backSleeveNotchb', $p->shiftAlong(300, 234, 232, 233, $this->backNotchLen +2.5), 'Back sleeve notch b');
-        $p->newSnippet('sleeveNotch', 'notch', 'frontSleeveNotch');
-        $p->newSnippet('sleeveNotcha', 'notch', 'backSleeveNotcha');
-        $p->newSnippet('sleeveNotchb', 'notch', 'backSleeveNotchb');
-        
-        // Paperless
-        if ($this->isPaperless) {
+        /** @var \Freesewing\Part $p */
+        $p = $this->parts['sleeve'];
             // Measures
             $pAttr = ['class' => 'measure-lg'];
             $hAttr = ['class' => 'stroke-note stroke-sm'];
@@ -911,44 +1149,19 @@ class HugoHoodie extends JoostBodyBlock
             $noteAttr = ['line-height' => 7, 'class' => 'text-lg'];
             $p->addPoint('saNote', $p->beamsCross(133, 32, 34, 35), 'sa note anchor');
             $p->newNote('saNote', 'saNote', $this->t("Standard\nseam\nallowance")."\n(".$this->unit(10).')', 9, 10, -5, $noteAttr);
-        }
     }
-    
+
     /**
-     * Finalizes the pocket
+     * Adds paperless info for pocket
      *
      * @param \Freesewing\Model $model The model to draft for
-     * @param \Freesewing\Part $p The part to add the info to
      *
      * @return void
      */
-    public function finalizePocket($model, $p)
+    public function paperlessPocket($model)
     {
-        // Grainline
-        $p->newPoint('grainlineTop', $p->x(105)+35, $p->y(105)+10);
-        $p->newPoint('grainlineBottom', $p->x('grainlineTop'), $p->y(4)-10);
-        $p->newPath('grainline', 'M grainlineBottom L grainlineTop', ['class' => 'grainline']);
-        $p->newTextOnPath('grainline', 'M grainlineBottom L grainlineTop', $this->t('Grainline'), ['class' => 'text-lg fill-fabric text-center', 'dy' => -2]);
-        
-        // Cut on fold (cof)
-        $p->newPoint('cofStart', $p->x(105), $p->y(105)+10);
-        $p->newPoint('cofTop', $p->x(105)+20, $p->y('cofStart'));
-        $p->newPoint('cofEnd', $p->x(105), $p->y(4)-10);
-        $p->newPoint('cofBottom', $p->x(105)+20, $p->y('cofEnd'));
-        $p->newPath('cutOnFold', 'M cofStart L cofTop L cofBottom L cofEnd', ['class' => 'grainline']);
-        $p->newTextOnPath('cutonfold', 'M cofBottom L cofTop', $this->t('Cut on fold'), ['line-height' => 12, 'class' => 'text-lg fill-fabric text-center', 'dy' => -2]);
-
-        // Title
-        $p->newPoint('titleAnchor', $p->x('grainlineBottom') + $p->deltaX('grainlineBottom', 101)/2, $p->y(105)+$p->deltaY(105, 4)/2);
-        $p->addTitle('titleAnchor', 4, $this->t($p->title), '1x '.$this->t('from main fabric')."\n".$this->t('Cut on  fold'));
-        
-        // Seam allowance
-        $sa = 'M 105 L 103 C 104 102 102 L 101 L 4';
-        $p->offsetPathString('sa', $sa, -10, true, ['class' => 'seam-allowance']);
-        $p->paths['sa']->setPath('M 4 L sa-line-4TO101 M 105 L sa-line-105TO103 '.$p->paths['sa']->getPath());
-        
-        // Paperless
-        if ($this->isPaperless) {
+        /** @var \Freesewing\Part $p */
+        $p = $this->parts['pocket'];
             // Measures
             $pAttr = ['class' => 'measure-lg'];
             $hAttr = ['class' => 'stroke-note stroke-sm'];
@@ -983,35 +1196,19 @@ class HugoHoodie extends JoostBodyBlock
                 'M 4 L width2-line-4TO202 '.
                 'M 203 L 102';
             $p->newPath($p->newId(), $measureHelpLines, $hAttr);
-        }
     }
 
-    
     /**
-     * Finalizes the pocket facing
+     * Adds paperless info for pocket facing
      *
      * @param \Freesewing\Model $model The model to draft for
-     * @param \Freesewing\Part $p The part to add the info to
      *
      * @return void
      */
-    public function finalizePocketFacing($model, $p)
+    public function paperlessPocketFacing($model)
     {
-        // Grainline
-        $p->addPoint('grainlineTop', $p->shift(103, -115, 15));
-        $p->addPoint('grainlineBottom', $p->shift(104, -115, 15));
-        $p->newPath('grainline', 'M grainlineBottom L grainlineTop', ['class' => 'grainline']);
-        $p->newTextOnPath('grainline', 'M grainlineBottom L grainlineTop', $this->t('Grainline'), ['class' => 'text fill-fabric text-center', 'dy' => -1]);
-
-        // Title
-        $p->newPoint('titleAnchor', $p->x(111) + $p->deltaX(111, 103)/2, $p->y(111)+35);
-        $p->addTitle('titleAnchor', 5, $this->t($p->title), '2x '.$this->t('from main fabric')."\n".$this->t('Cut with good sides together'), 'vertical');
-        
-        // Seam allowance
-        $p->offsetPath('sa', 'seamline', 10, true, ['class' => 'seam-allowance']);
-        
-        // Paperless
-        if ($this->isPaperless) {
+        /** @var \Freesewing\Part $p */
+        $p = $this->parts['pocketFacing'];
             // Measures
             $pAttr = ['class' => 'measure-lg'];
             $hAttr = ['class' => 'stroke-note stroke-sm'];
@@ -1032,37 +1229,19 @@ class HugoHoodie extends JoostBodyBlock
             
             // Notes
             $p->newNote('saNote', 110, $this->t("Standard\nseam\nallowance")."\n(".$this->unit(10).')', 12, 10, -5, ['line-height' => 4, 'class' => 'text-sm', 'dy' => -10]);
-        }
     }
-    
+
     /**
-     * Finalizes the hood side
+     * Adds paperless info for hood side
      *
      * @param \Freesewing\Model $model The model to draft for
-     * @param \Freesewing\Part $p The part to add the info to
      *
      * @return void
      */
-    public function finalizeHoodSide($model, $p)
+    public function paperlessHoodSide($model)
     {
-        // Grainline
-        $p->addPoint( 'grainlineTop', $p->shift(12, -90, 5));
-        $p->addPoint( 'grainlineBottom', $p->shift(10, 90, 5));
-        $p->newPath('grainline', 'M grainlineTop L grainlineBottom', ['class' => 'grainline']);
-        $p->newTextOnPath('grainline', 'M grainlineBottom L grainlineTop', $this->t('Grainline'), ['class' => 'text-lg fill-fabric text-center', 'dy' => -2]);
-        
-        // Title
-        $p->addPoint('titleAnchor', $p->shift(12, -70, 100));
-        $p->addTitle('titleAnchor', 6, $this->t($p->title), '4x '.$this->t('from main fabric')." (2x2)\n".$this->t('Cut with good sides together'));
-        
-        // Seam allowance
-        $p->offsetPath('sa', 'seamline', -10, true, ['class' => 'seam-allowance']);
-
-        // Notch
-        $p->newSnippet('sleeveNotch', 'notch', 10);
-
-        // Paperless
-        if ($this->isPaperless) {
+        /** @var \Freesewing\Part $p */
+        $p = $this->parts['hoodSide'];
             // Measures
             $pAttr = ['class' => 'measure-lg'];
             $hAttr = ['class' => 'stroke-note stroke-sm'];
@@ -1166,132 +1345,75 @@ class HugoHoodie extends JoostBodyBlock
             
             // Notes
             $p->newNote('saNote', 202, $this->t("Standard\nseam\nallowance")."\n(".$this->unit(10).')', 9, 10, -3, ['line-height' => 6, 'class' => 'text-lg', 'dy' => -10]);
-        }
-    }
-    
-    /**
-     * Finalizes the hood center
-     *
-     * @param \Freesewing\Model $model The model to draft for
-     * @param \Freesewing\Part $p The part to add the info to
-     *
-     * @return void
-     */
-    public function finalizeHoodCenter($model, $p)
-    {
-        return $this->finalizeRectangle($model, $p, 7, '2x '.$this->t('from main fabric')."\n".$this->t('Cut with good sides together'));
-        // Grainline
-        $p->newPoint( 'grainlineTop', $p->x(1)+10, $p->y(3)/2+50);
-        $p->newPoint( 'grainlineBottom', $p->x(2)-10, $p->y('grainlineTop'));
-        $p->newPath('grainline', 'M grainlineTop L grainlineBottom', ['class' => 'grainline']);
-        $p->newTextOnPath('grainline', 'M grainlineTop L grainlineBottom', $this->t('Grainline'), ['class' => 'text-lg fill-fabric text-center', 'dy' => -1]);
-        
-        // Title
-        $p->newPoint('titleAnchor', $p->x(2)/2, $p->y(3)/2);
-        $p->addTitle('titleAnchor', 7, $this->t($p->title), '2x '.$this->t('from main fabric')."\n".$this->t('Cut with good sides together'));
-        
-        // Seam allowance
-        $p->offsetPath('sa', 'seamline', -10, true, ['class' => 'seam-allowance']);
-        
-        // Paperless
-        if ($this->isPaperless) {
-            // Measures
-            $pAttr = ['class' => 'measure-lg'];
-            $hAttr = ['class' => 'stroke-note stroke-sm'];
-
-            $key = 'width';
-            $path = 'M 4 L 3';
-            $p->offsetPathString($key, $path, 20, 1, $pAttr);
-            $p->newTextOnPath($key, $path, $this->unit($p->distance(4, 3)), $this->textAttr(18));
-            
-            $key = 'height';
-            $path = 'M 3 L 2';
-            $p->offsetPathString($key, $path, 20, 1, $pAttr);
-            $p->newTextOnPath($key, $path, $this->unit($p->distance(2, 3)), $this->textAttr(18));
-            
-            $measureHelpLines = 'M 4 L width-line-4TO3 '.
-                'M 3 L  width-line-3TO4 '.
-                'M 2 L height-line-2TO3 '.
-                'M 3 L height-line-3TO2 '.
-                '';
-            $p->newPath($p->newId(), $measureHelpLines, $hAttr);
-            
-            // Notes
-            $p->newPoint(200, $p->x(3), $p->y('grainlineTop') + 40);
-            $p->newNote('saNote', 200, $this->t("Standard\nseam\nallowance")."\n(".$this->unit(10).')', 9, 10, -3, ['line-height' => 6, 'class' => 'text-lg', 'dy' => -10]);
-        }
-    }
-    
-    /**
-     * Finalizes the cuffs
-     *
-     * @param \Freesewing\Model $model The model to draft for
-     * @param \Freesewing\Part $p The part to add the info to
-     *
-     * @return void
-     */
-    public function finalizeCuff($model, $p)
-    {
-        $this->finalizeRectangle($model, $p, 8, '2x '.$this->t('from ribbing')."\n".$this->t('Cut with good sides together'));
-    }
-    
-    /**
-     * Finalizes the waistband
-     *
-     * @param \Freesewing\Model $model The model to draft for
-     * @param \Freesewing\Part $p The part to add the info to
-     *
-     * @return void
-     */
-    public function finalizeWaistband($model, $p)
-    {
-        $this->finalizeRectangle($model, $p, 9, '1x '.$this->t('from ribbing'));
-    }
-    
-    /**
-     * Finalizes the neck binding
-     *
-     * @param \Freesewing\Model $model The model to draft for
-     * @param \Freesewing\Part $p The part to add the info to
-     *
-     * @return void
-     */
-    public function finalizeNeckBinding($model, $p)
-    {
-        $this->finalizeRectangle($model, $p, 10, '1x '.$this->t('from main fabric'), 'vertical');
-    }
-
-    private function textAttr($dy)
-    {
-        return ['class' => 'text-lg fill-note text-center', 'dy' => $dy];
     }
 
     /**
-     * Finalizes one of the rectanglular parts
+     * Adds paperless info for hood center
      *
      * @param \Freesewing\Model $model The model to draft for
-     * @param \Freesewing\Part $p The part to add the info to
      *
      * @return void
      */
-    public function finalizeRectangle($model, $p, $nr, $cut, $titleOption = '')
+    public function paperlessHoodCenter($model)
     {
-        // Grainline
-        $p->newPoint( 'grainlineTop', $p->x(1)+5, $p->y(3)/2-40);
-        $p->newPoint( 'grainlineBottom', $p->x(2)-5, $p->y('grainlineTop'));
-        $p->newPath('grainline', 'M grainlineTop L grainlineBottom', ['class' => 'grainline']);
-        $p->newTextOnPath('grainline', 'M grainlineTop L grainlineBottom', $this->t('Grainline'), ['class' => 'text-lg fill-fabric text-center', 'dy' => -1]);
-        
-        // Title
-        $p->newPoint('titleAnchor', $p->x(2)/2, $p->y(3)/2);
-        $p->addTitle('titleAnchor', $nr, $this->t($p->title), $cut, $titleOption);
-        
-        // Seam allowance
-        $p->offsetPath('sa', 'seamline', -10, true, ['class' => 'seam-allowance']);
-        
-        // Paperless
-        if ($this->isPaperless) {
-// Measures
+        /** @var \Freesewing\Part $p */
+        $p = $this->parts['front'];
+    }
+
+    /**
+     * Adds paperless info for cuff
+     *
+     * @param \Freesewing\Model $model The model to draft for
+     *
+     * @return void
+     */
+    public function paperlessCuff($model)
+    {
+        /** @var \Freesewing\Part $p */
+        $p = $this->parts['cuff'];
+
+        $this->paperlessRectangle($p);
+    }
+
+    /**
+     * Adds paperless info for waistband
+     *
+     * @param \Freesewing\Model $model The model to draft for
+     *
+     * @return void
+     */
+    public function paperlessWaistband($model)
+    {
+        /** @var \Freesewing\Part $p */
+        $p = $this->parts['waistband'];
+
+        $this->paperlessRectangle($p);
+    }
+
+    /**
+     * Adds paperless info for neck binding
+     *
+     * @param \Freesewing\Model $model The model to draft for
+     *
+     * @return void
+     */
+    public function paperlessNeckBinding($model)
+    {
+        /** @var \Freesewing\Part $p */
+        $p = $this->parts['neckBinding'];
+
+        $this->paperlessRectangle($p);
+    }
+
+    /**
+     * Adds paperless info for a rectangular part
+     *
+     * @param \Freesewing\Model $model The model to draft for
+     *
+     * @return void
+     */
+    public function paperlessRectangle($p)
+    {
             $pAttr = ['class' => 'measure-lg'];
             $hAttr = ['class' => 'stroke-note stroke-sm'];
 
@@ -1315,6 +1437,5 @@ class HugoHoodie extends JoostBodyBlock
             // Notes
             $p->newPoint(200, $p->x(3), $p->y('grainlineTop') - 20);
             $p->newNote('saNote', 200, $this->t("Standard\nseam\nallowance")."\n(".$this->unit(10).')', 9, 10, -3, ['line-height' => 6, 'class' => 'text-lg', 'dy' => -10]);
-        }
     }
 }

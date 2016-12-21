@@ -155,11 +155,12 @@ class TamikoTop extends Pattern
         $p->newGrainline('grainlineStart','grainlineEnd',$this->t('Grainline'));
 
         // Logo
-        $p->addPoint('logoAnchor', $p->shift('titleAnchor',90,120));
+        $p->addPoint('logoAnchor', $p->shift('titleAnchor',90,130));
         $p->newSnippet('logo', 'logo', 'logoAnchor');
+        $p->newSnippet('cc', 'cc', 'logoAnchor');
 
         // Scalebox
-        $p->addPoint('scaleboxAnchor', $p->shift('logoAnchor',-90,20));
+        $p->addPoint('scaleboxAnchor', $p->shift('logoAnchor',-90,40));
         $p->newSnippet('scalebox', 'scalebox', 'scaleboxAnchor');
 
         // Seam allowance

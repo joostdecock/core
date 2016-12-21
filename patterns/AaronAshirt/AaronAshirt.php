@@ -2,6 +2,8 @@
 /** Freesewing\Patterns\AaronAshirt class */
 namespace Freesewing\Patterns;
 
+use Freesewing\Part;
+
 /**
  * The Aaron A-Shirt pattern
  *
@@ -260,6 +262,7 @@ class AaronAshirt extends JoostBodyBlock
      */
     public function finalizeFront($model)
     {
+        /** @var Part $p */
         $p = $this->parts['front'];
 
         // Seam allowance | Point indexes from 200 upward
@@ -288,9 +291,10 @@ class AaronAshirt extends JoostBodyBlock
         // Logo
         $p->addPoint('logoAnchor', $p->shift('titleAnchor', -90, 50));
         $p->newSnippet('logo', 'logo', 'logoAnchor');
+        $p->newSnippet('cc', 'cc', 'logoAnchor');
 
         // Scalebox
-        $p->addPoint('scaleboxAnchor', $p->shift('titleAnchor', -90, 80));
+        $p->addPoint('scaleboxAnchor', $p->shift('titleAnchor', -90, 90));
         $p->newSnippet('scalebox', 'scalebox', 'scaleboxAnchor');
 
         // Notes

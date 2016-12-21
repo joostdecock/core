@@ -717,9 +717,10 @@ class WahidWaistcoat extends JoostBodyBlock
         // Logo
         $p->newPoint('logoAnchor', $p->x(10)/2, $p->y(10));
         $p->newSnippet('logo', 'logo', 'logoAnchor');
+        $p->newSnippet('cc', 'cc', 'logoAnchor');
         
         // Scalebox
-        $p->addPoint('scaleboxAnchor', $p->shift('logoAnchor', -90, 20));
+        $p->addPoint('scaleboxAnchor', $p->shift('logoAnchor', -90, 40));
         $p->newSnippet('scalebox', 'scalebox', 'scaleboxAnchor');
 
         // Grainline

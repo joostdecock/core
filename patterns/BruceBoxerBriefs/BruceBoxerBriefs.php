@@ -378,6 +378,7 @@ class BruceBoxerBriefs extends Pattern
         // Logo 
         $p->newPoint('logoAnchor', 0, $p->y('gridAnchor')+120);
         $p->newSnippet('logo', 'logo', 'logoAnchor');
+        $p->newSnippet('cc', 'cc', 'logoAnchor');
         
         // Seam allowance
         $p->offsetPath('sa', 'seamline', -10, 1, ['class' => 'seam-allowance']);

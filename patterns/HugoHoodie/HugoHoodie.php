@@ -571,7 +571,7 @@ class HugoHoodie extends JoostBodyBlock
 
         // Title
         $p->newPoint('titleAnchor', $p->x(5)/2, $p->y(2)+$p->deltaY(2, 3)/2);
-        $p->addTitle('titleAnchor', 1, $this->t($p->title), '1x '.$this->t('from main fabric')."\n".$this->t('Cut on fold'));
+        $p->addTitle('titleAnchor', 1, $this->t($p->title), '1x '.$this->t('from fabric')."\n".$this->t('Cut on fold'));
         
         // Seam allowance
         $sa = 'M 4 L 6 L 5 C 13 16 14 C 15 100 100 C 57 56 9';
@@ -603,7 +603,7 @@ class HugoHoodie extends JoostBodyBlock
         
         // Title
         $p->newPoint('titleAnchor', $p->x(5)/2, $p->y(2)+$p->deltaY(2, 3)/2);
-        $p->addTitle('titleAnchor', 2, $this->t($p->title), '1x '.$this->t('from main fabric')."\n".$this->t('Cut on fold'));
+        $p->addTitle('titleAnchor', 2, $this->t($p->title), '1x '.$this->t('from fabric')."\n".$this->t('Cut on fold'));
         
         // Scalebox
         $p->addPoint('scaleboxAnchor', $p->shift('titleAnchor', -90, 30));
@@ -646,7 +646,7 @@ class HugoHoodie extends JoostBodyBlock
         
         // Title
         $p->clonePoint(8, 'titleAnchor');
-        $p->addTitle('titleAnchor', 3, $this->t($p->title), '2x '.$this->t('from main fabric')."\n".$this->t('Cut with good sides together'));
+        $p->addTitle('titleAnchor', 3, $this->t($p->title), '2x '.$this->t('from fabric')."\n".$this->t('Good sides together'));
         
         // Seam allowance
         $p->offsetPath('sa', 'seamline', -10, true, ['class' => 'seam-allowance']);
@@ -682,7 +682,7 @@ class HugoHoodie extends JoostBodyBlock
 
         // Title
         $p->newPoint('titleAnchor', $p->x('grainlineBottom') + $p->deltaX('grainlineBottom', 101)/2, $p->y(105)+$p->deltaY(105, 4)/2);
-        $p->addTitle('titleAnchor', 4, $this->t($p->title), '1x '.$this->t('from main fabric')."\n".$this->t('Cut on  fold'));
+        $p->addTitle('titleAnchor', 4, $this->t($p->title), '1x '.$this->t('from fabric')."\n".$this->t('Cut on  fold'));
         
         // Seam allowance
         $sa = 'M 105 L 103 C 104 102 102 L 101 L 4';
@@ -708,7 +708,7 @@ class HugoHoodie extends JoostBodyBlock
 
         // Title
         $p->newPoint('titleAnchor', $p->x(111) + $p->deltaX(111, 103)/2, $p->y(111)+35);
-        $p->addTitle('titleAnchor', 5, $this->t($p->title), '2x '.$this->t('from main fabric')."\n".$this->t('Cut with good sides together'), 'vertical');
+        $p->addTitle('titleAnchor', 5, $this->t($p->title), '2x '.$this->t('from fabric')."\n".$this->t('Good sides together'), 'vertical');
         
         // Seam allowance
         $p->offsetPath('sa', 'seamline', 10, true, ['class' => 'seam-allowance']);
@@ -731,7 +731,7 @@ class HugoHoodie extends JoostBodyBlock
         
         // Title
         $p->addPoint('titleAnchor', $p->shift(12, -70, 100));
-        $p->addTitle('titleAnchor', 6, $this->t($p->title), '4x '.$this->t('from main fabric')." (2x2)\n".$this->t('Cut with good sides together'));
+        $p->addTitle('titleAnchor', 6, $this->t($p->title), '4x '.$this->t('from fabric')." (2x2)\n".$this->t('Good sides together'));
         
         // Seam allowance
         $p->offsetPath('sa', 'seamline', -10, true, ['class' => 'seam-allowance']);
@@ -750,7 +750,7 @@ class HugoHoodie extends JoostBodyBlock
      */
     public function finalizeHoodCenter($model, $p)
     {
-        $this->finalizeRectangle($model, $p, 7, '2x '.$this->t('from main fabric')."\n".$this->t('Cut with good sides together'));
+        $this->finalizeRectangle($model, $p, 7, '2x '.$this->t('from fabric')."\n".$this->t('Good sides together'));
     }
     
     /**
@@ -763,7 +763,7 @@ class HugoHoodie extends JoostBodyBlock
      */
     public function finalizeCuff($model, $p)
     {
-        $this->finalizeRectangle($model, $p, 8, '2x '.$this->t('from ribbing')."\n".$this->t('Cut with good sides together'));
+        $this->finalizeRectangle($model, $p, 8, '2x '.$this->t('from ribbing')."\n".$this->t('Good sides together'));
     }
     
     /**
@@ -789,7 +789,7 @@ class HugoHoodie extends JoostBodyBlock
      */
     public function finalizeNeckBinding($model, $p)
     {
-        $this->finalizeRectangle($model, $p, 10, '1x '.$this->t('from main fabric'), 'vertical');
+        $this->finalizeRectangle($model, $p, 10, '1x '.$this->t('from fabric'), 'vertical');
     }
 
     private function textAttr($dy)

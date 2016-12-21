@@ -352,7 +352,7 @@ class BruceBoxerBriefs extends Pattern
 
         // Title 
         $p->newPoint('titleAnchor', 0, $p->y(11) + 70);
-        $p->addTitle('titleAnchor', 1, $this->t($p->title), '1x '.$this->t('From main fabric'));
+        $p->addTitle('titleAnchor', 1, $this->t($p->title), '1x '.$this->t('from fabric'));
         
         /* Scalebox */
         $p->newPoint('scaleboxAnchor', 0, $p->y(11) + 120);
@@ -373,7 +373,7 @@ class BruceBoxerBriefs extends Pattern
 
         // Title 
         $p->newPoint('titleAnchor', 0, $p->y('gridAnchor')+70);
-        $p->addTitle('titleAnchor', 3, $this->t($p->title), $this->t('Cut 2')."\n".$this->t('Good sides together'));
+        $p->addTitle('titleAnchor', 3, $this->t($p->title), '2x '.$this->t('from fabric')."\n".$this->t('Good sides together'));
 
         // Logo 
         $p->newPoint('logoAnchor', 0, $p->y('gridAnchor')+120);
@@ -403,7 +403,7 @@ class BruceBoxerBriefs extends Pattern
         
         // Title 
         $p->newPoint('titleAnchor', 0, $p->y('gridAnchor')+70);
-        $p->addTitle('titleAnchor', 2, $this->t($p->title), $this->t('Cut 2')."\n".$this->t('Good sides together'));
+        $p->addTitle('titleAnchor', 2, $this->t($p->title), '2x '.$this->t('from fabric')."\n".$this->t('Good sides together'));
 
         // Standard seam allowance 
         $p->offsetPath('sa', 'seamline', -10, 1, ['class' => 'seam-allowance']);
@@ -423,7 +423,7 @@ class BruceBoxerBriefs extends Pattern
 
         // Title 
         $p->newPoint('titleAnchor', $p->x(3)/2.5, $p->y(401));
-        $p->addTitle('titleAnchor', 4, $this->t($p->title), $this->t('Cut 2')."\n".$this->t('Good sides together'));
+        $p->addTitle('titleAnchor', 4, $this->t($p->title), '2x '.$this->t('from fabric')."\n".$this->t('Good sides together'));
         
         // Seam allowance 
         $p->offsetPath('sa', 'seamline', 10, 1, ['class' => 'seam-allowance']);

@@ -268,9 +268,10 @@ class TrayvonTie extends Pattern
         // logo 
         $p->addPoint('logoAnchor', $p->shift('titleAnchor',-90, 50));
         $p->newSnippet('logo', 'logo', 'logoAnchor');
+        $p->newSnippet('cc', 'cc', 'logoAnchor');
         
         // Scalebox 
-        $p->addPoint('scaleboxAnchor', $p->shift('titleAnchor', -90, 70));
+        $p->addPoint('scaleboxAnchor', $p->shift('titleAnchor', -90, 90));
         $p->newSnippet('scalebox', 'scalebox', 'scaleboxAnchor');
         
         // Tip seam allowance 

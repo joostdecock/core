@@ -528,9 +528,9 @@ class CathrinCorset extends Pattern
                 $p->paths[$part]->setSample(true);
                 $p->clonePoint("gridAnchor$i", 'gridAnchor');
                 if ($i == 1) {
-                    $msg =  $this->t('Cut 1 on fold');
+                    $msg =  '1x '.$this->t('from fabric')."\n".$this->t('Cut on fold');
                 } else {
-                    $msg = $this->t('Cut 2');
+                    $msg = '2x '.$this->t('from fabric');
                 }
                 $p->addTitle("titleAnchor$i", $i, $this->t('Panel')." $i", $msg, 'vertical');
                 $p->offsetPathString($part.'-sa', $this->{"path$i"}, 10, 1, ['class' => 'seam-allowance']);

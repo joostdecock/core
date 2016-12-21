@@ -106,6 +106,9 @@ abstract class Theme
     {
         $this->messages = $pattern->getMessages();
         $this->debug = $pattern->getDebug();
+
+        $pattern->replace('__SCALEBOX_METRIC__', $pattern->t('__SCALEBOX_METRIC__'));
+        $pattern->replace('__SCALEBOX_IMPERIAL__', $pattern->t('__SCALEBOX_IMPERIAL__'));
     }
 
     /**
@@ -287,8 +290,8 @@ abstract class Theme
         $locations = $this->getClassChain();
         $translations = array();
         foreach ($locations as $location) {
-            $locfile = "$location/translations/messages.$locale.yml";
-            $altfile = "$location/translations/messages.$altloc.yml";
+            $locfile = sprintf("%s/translations/messages.%s.yml", $location, $locale);
+            $altfile = sprintf("%s/translations/messages.%s.yml", $location, $altloc);
             if (is_readable($locfile)) {
                 $translations[$locale][] = $locfile;
             }

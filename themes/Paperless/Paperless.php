@@ -29,6 +29,8 @@ class Paperless extends Svg
     public function themePattern($pattern)
     {
         $this->messages = $pattern->getMessages();
+        $pattern->replace('__SCALEBOX_METRIC__', $pattern->t('__SCALEBOX_METRIC__'));
+        $pattern->replace('__SCALEBOX_IMPERIAL__', $pattern->t('__SCALEBOX_IMPERIAL__'));
         $units = $pattern->getUnits();
         $templateDir = $this->getTemplateDir();
         $this->defs = file_get_contents("$templateDir/defs/grid.".$units['out']);

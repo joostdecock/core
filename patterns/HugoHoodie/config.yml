@@ -25,6 +25,7 @@ parts:
 languages:
     en: English
     nl: Nederlands
+    de: Deutsch
 
 measurements:
     acrossBack: 450

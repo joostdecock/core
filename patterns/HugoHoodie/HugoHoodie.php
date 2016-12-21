@@ -682,7 +682,7 @@ class HugoHoodie extends JoostBodyBlock
 
         // Title
         $p->newPoint('titleAnchor', $p->x('grainlineBottom') + $p->deltaX('grainlineBottom', 101)/2, $p->y(105)+$p->deltaY(105, 4)/2);
-        $p->addTitle('titleAnchor', 4, $this->t($p->title), '1x '.$this->t('from fabric')."\n".$this->t('Cut on  fold'));
+        $p->addTitle('titleAnchor', 4, $this->t($p->title), '1x '.$this->t('from fabric')."\n".$this->t('Cut on fold'));
         
         // Seam allowance
         $sa = 'M 105 L 103 C 104 102 102 L 101 L 4';

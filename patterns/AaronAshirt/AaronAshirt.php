@@ -377,7 +377,7 @@ class AaronAshirt extends JoostBodyBlock
         $armholeLen = $p->curveLen(102, 106, 107, 5) + $this->parts['front']->curveLen(102, 106, 107, 5);
         $neckholeLen = $p->curveLen(103, 105, 104, 100) + $this->parts['front']->curveLen(103, 105, 104, 100);
 
-        $msg = $this->t('Cut two trips to finish the armholes').
+        $msg = $this->t('Cut two strips to finish the armholes').
             ":\n".
             $this->t('width').
             ': '.

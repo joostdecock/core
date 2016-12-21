@@ -2168,6 +2168,30 @@ class Part
     }
 
     /** 
+     * Adds a (small) width dimension to the pattern
+     *
+     * @param string $fromId ID of the point that the dimension starts from
+     * @param string $toId ID of the point that is the end of the dimension
+     * @param float $y Y-coordinate where the dimension should be placed
+     * @param string $text The text to put on the dimension label
+     * @param array $pathAttributes Attributes for the path the label goes on
+     * @param array $labelAttributes Attributes for the text of the label
+     * @param array $leaderAttributes Attributes for the leader paths
+     *
+     */
+    public function newWidthDimensionSm(
+        $fromId, 
+        $toId, 
+        $y = false, 
+        $text = false, 
+        $pathAttributes=['class' => 'dimension dimension-sm'], 
+        $labelAttributes=['class' => 'dimension-label text-sm', 'dy' => -2],
+        $leaderAttributes=['class' => 'dimension-leader']
+    ) {
+        $this->newWidthDimension($fromId,$toId,$y,$text,$pathAttributes,$labelAttributes);
+    }
+
+    /** 
      * Adds a width dimension to the pattern
      *
      * @param string $fromId ID of the point that the dimension starts from
@@ -2184,7 +2208,7 @@ class Part
         $toId, 
         $y = false, 
         $text = false, 
-        $pathAttributes=['class' => 'dimension dimension-width'], 
+        $pathAttributes=['class' => 'dimension'], 
         $labelAttributes=['class' => 'dimension-label', 'dy' => -2],
         $leaderAttributes=['class' => 'dimension-leader']
     ) {
@@ -2237,6 +2261,30 @@ class Part
     }
 
     /** 
+     * Adds a (small) height dimension to the pattern
+     *
+     * @param string $fromId ID of the point that the dimension starts from
+     * @param string $toId ID of the point that is the end of the dimension
+     * @param float $x X-coordinate where the dimension should be placed
+     * @param string $text The text to put on the dimension label
+     * @param array $pathAttributes Attributes for the path the label goes on
+     * @param array $labelAttributes Attributes for the text of the label
+     * @param array $leaderAttributes Attributes for the leader paths
+     *
+     */
+    public function newHeightDimensionSm(
+        $fromId, 
+        $toId, 
+        $x = false, 
+        $text = false, 
+        $pathAttributes=['class' => 'dimension dimension-sm'], 
+        $labelAttributes=['class' => 'dimension-label text-sm', 'dy' => -2],
+        $leaderAttributes=['class' => 'dimension-leader']
+    ) {
+        $this->newHeightDimension($fromId,$toId,$x,$text,$pathAttributes,$labelAttributes,$leaderAttributes);
+    }
+
+    /** 
      * Adds a height dimension to the pattern
      *
      * @param string $fromId ID of the point that the dimension starts from
@@ -2253,7 +2301,7 @@ class Part
         $toId, 
         $x = false, 
         $text = false, 
-        $pathAttributes=['class' => 'dimension dimension-width'], 
+        $pathAttributes=['class' => 'dimension'], 
         $labelAttributes=['class' => 'dimension-label', 'dy' => -2],
         $leaderAttributes=['class' => 'dimension-leader']
     ) {

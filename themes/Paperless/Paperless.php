@@ -28,7 +28,8 @@ class Paperless extends Svg
      */
     public function themePattern($pattern)
     {
-        $this->messages = $pattern->getMessages();
+        parent::themePattern($pattern);
+
         $units = $pattern->getUnits();
         $templateDir = $this->getTemplateDir();
         $this->defs = file_get_contents("$templateDir/defs/grid.".$units['out']);
@@ -39,9 +40,6 @@ class Paperless extends Svg
                 $this->addGridToPart($part);
             }
         }
-
-        $pattern->replace('__SCALEBOX_METRIC__', $pattern->t('__SCALEBOX_METRIC__'));
-        $pattern->replace('__SCALEBOX_IMPERIAL__', $pattern->t('__SCALEBOX_IMPERIAL__'));
     }
 
     /**

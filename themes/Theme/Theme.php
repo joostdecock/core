@@ -106,6 +106,9 @@ abstract class Theme
     {
         $this->messages = $pattern->getMessages();
         $this->debug = $pattern->getDebug();
+
+        $pattern->replace('__SCALEBOX_METRIC__', $pattern->t('__SCALEBOX_METRIC__'));
+        $pattern->replace('__SCALEBOX_IMPERIAL__', $pattern->t('__SCALEBOX_IMPERIAL__'));
     }
 
     /**

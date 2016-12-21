@@ -287,8 +287,8 @@ abstract class Theme
         $locations = $this->getClassChain();
         $translations = array();
         foreach ($locations as $location) {
-            $locfile = "$location/translations/messages.$locale.yml";
-            $altfile = "$location/translations/messages.$altloc.yml";
+            $locfile = sprintf("%s/translations/messages.%s.yml", $location, $locale);
+            $altfile = sprintf("%s/translations/messages.%s.yml", $location, $altloc);
             if (is_readable($locfile)) {
                 $translations[$locale][] = $locfile;
             }

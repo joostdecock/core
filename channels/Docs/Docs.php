@@ -19,6 +19,27 @@ namespace Freesewing\Channels;
 class Docs extends Channel
 {
     /**
+     * Allows the channel designer to implement access control
+     *
+     * You may not want to make your channel publically accessible.
+     * You can limit access here in whatever way you like.
+     * You have access to the entire context to decide what to do.
+     *
+     * @param \Freesewing\Context $context The context object
+     *
+     * @return bool true Always true in this case
+     */
+    public function isValidRequest($context)
+    {
+        // The only thing we check is whether the pattern you request does actually exist
+        $patternServed = basename($context->getPattern()->getClassChain()[0]);
+        $patternRequested = $context->getRequest()->getData('pattern');
+
+        if($patternRequested == $patternServed) return true;
+        else return false;
+    }
+
+    /**
      * Turn input into model measurements that we understand.
      *
      * This loads measurement names from the pattern config file

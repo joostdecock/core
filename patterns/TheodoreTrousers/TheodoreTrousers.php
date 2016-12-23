@@ -225,7 +225,7 @@ class TheodoreTrousers extends Pattern
         $p->addPoint(-901602, $p->shift(901602,$p->angle(901603,901601)+90,10));
         $p->addPoint(-901901, $p->shift(901901,$p->angle(901901,9019)+90,10));
         $p->addPoint(  -9019, $p->shift(9019,$p->angle(901901,9019)+90,10));
-  
+
         // Extra SA at back seam
         $p->addPoint(9021, $p->shift(-21,$p->angle(-2501,-2101)+180,40));
   
@@ -236,26 +236,37 @@ class TheodoreTrousers extends Pattern
         $p->addPoint(-20210, $p->shift(202,-90,60));
         $p->addPoint(-20310, $p->shift(203,-90,60));
   
-        // Back pocket
-        $p->addPoint(902511, $p->shift(-2504,$p->angle(9024,9025),70), '[902511]');
-        $p->addPoint(902512, $p->shift(-2503,$p->angle(9024,9025),-70), '[902512]');
-        $p->addPoint(902513, $p->rotate(902511,-2504,($p->angle(902502,902503)-$p->angle(902502,902504))/2));
-        $p->addPoint(902514, $p->rotate(902512,-2504,($p->angle(902502,902504)-$p->angle(902502,902503))/2));
-  
+        // Raise waistband 
         $p->addPoint(66601, $p->shiftTowards(-2101, -21, $this->o('waistbandRise')));
+        
+        // Original dart without raise
         $p->addPoint(66602, $p->beamsCross(66601, -2104, 902502, -2501));
         $p->addPoint(66603, $p->beamsCross(66601, -2104, 902502, -2502));
         $p->addPoint(66605, $p->shiftTowards(-2101, -21, $this->o('waistbandRise')+10));
         $p->newPoint(66606, $p->x(66602)+$p->deltaX(66601,66605), $p->y(66602)+$p->deltaY(66601,66605));
         $p->addPoint(66607, $p->beamsCross(66606, 66605, 901601, 9021));
+        
+        // Construct the back dart with raise
+        $p->addPoint('dartTop', $p->shiftTowards(66601,-2104,$p->distance(66601,-2104)/2));
+        $p->addPoint('dartTip', $p->shift('dartTop',$p->angle(-2104,66601)-90,$p->distance('dartTop',902502)));
+        $p->addPoint('dartTopLeft', $p->shiftTowards('dartTop',66601,$p->distance(66602,66603)/2));
+        $p->addPoint('dartTopRight', $p->shiftTowards('dartTop',-2104,$p->distance(66602,66603)/2));
+
+        // Reconstruct back pocket with raise
+        $p->addPoint('pocketCenterLeft', $p->shiftTowards('dartTopLeft','dartTip',60));
+        $p->addPoint('pocketCenterRight', $p->shiftTowards('dartTopRight','dartTip',60));
+        $p->addPoint('pocketEdgeLeft', $p->shift('pocketCenterLeft',$p->angle('pocketCenterLeft','dartTip')+90,70));
+        $p->addPoint('pocketEdgeRight', $p->shift('pocketCenterRight',$p->angle('pocketCenterRight','dartTip')-90,70));
   
+        // Extend back pleat to include rise
+        $p->addPoint(-900, $p->beamsCross(900,-900,66601,66602)); 
   
         // Paths
         // This is the original Aldrich path, which includes seam allowance
         //$aldrich = 'M 23 C 23 901603 901601 C 901602 901901 9019 L 9021 L 902504 L 902502 L 902503 L 9024 L 26 C 902601 2901 29 C 29 2701 27 C 27 202 201 C 203 28 28 C 2702 30 30 C 3001 23 23 z';
-        
+
         // This is the path we use, no seam allowance
-        if($this->o('waistbandRise') > 0) $seamline = 'M 66601 L 66602 L 902502 L 66603 L -2104 L -26 C -2601 -2901 -29 C -29 -2701 -27 C -27 202 201 C 203 -28 -28 C -2702 -30 -30 C -3001 -2301 -2301 C -2301 -901603 -901601 C -901602 -901901 -9019 z';
+        if($this->o('waistbandRise') > 0) $seamline = 'M 66601 L dartTopLeft L dartTip L dartTopRight L -2104 L -26 C -2601 -2901 -29 C -29 -2701 -27 C -27 202 201 C 203 -28 -28 C -2702 -30 -30 C -3001 -2301 -2301 C -2301 -901603 -901601 C -901602 -901901 -9019 z';
         else  $seamline = 'M -2101 L -2501 L 902502 L -2502 L -2104 L -26 C -2601 -2901 -29 C -29 -2701 -27 C -27 202 201 C 203 -28 -28 C -2702 -30 -30 C -3001 -2301 -2301 C -2301 -901603 -901601 C -901602 -901901 -9019 z';
         
         $p->newPath('seamline',$seamline);
@@ -403,7 +414,11 @@ class TheodoreTrousers extends Pattern
         $p->newPoint('grainlineTop',$p->x(0) + 25, $p->y(0) + 10);
         $p->newPoint('grainlineBottom', $p->x(2) + 25, $p->y(2));
         $p->newPoint('scaleboxAnchor', $p->x('titleAnchor') - 50.8 , $p->y('titleAnchor') + 50);
-        
+
+        // Pocket
+        $pocket = 'M pocketEdgeLeft L pocketCenterLeft M pocketCenterRight L pocketEdgeRight';
+        $p->newPath('pocket',$pocket,['class' => 'helpline']);
+
         
         // FIXME This clutter below
         $pleatline = 'M -900 L 201';
@@ -414,7 +429,6 @@ class TheodoreTrousers extends Pattern
         $extraback = 'M -2101 L 66601 L -2104 z';
         $p->newPath('saline',$extra1);
         $p->newPath('cutline',$extra2);
-        $p->newPath('pocket',$pocket);
         $p->newPath('fold',$pleatline);
         if($this->o('waistbandRise') > 0) $p->newPath('help','M -2101 L -2104');
 

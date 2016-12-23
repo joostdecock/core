@@ -15,6 +15,7 @@ languages:
     en: "English"
     nl: "Nederlands"
     de: "Deutsch"
+    fr: "French"
 measurements:
     acrossBack: 450
     bicepsCircumference: 335

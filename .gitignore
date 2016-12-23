@@ -8,3 +8,5 @@ patterns/HnameHoodie/HomeboyHoodie
 docs/bootstrap/
 docs/css/style.css
 docs/fonts/
+composer.phar
+.htaccess

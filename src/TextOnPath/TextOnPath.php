@@ -16,7 +16,7 @@ class TextOnPath
 {
     /** @var \Freesewing\Path $path Path to place the text on */
     public $path;
-    
+
     /** @var string $text The text itself */
     public $text;
 

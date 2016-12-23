@@ -23,7 +23,7 @@ measurements:
     shoulderLength: 160
     shoulderSlope: 40
     hipsCircumference: 950
-    sleeveLengthToWrist: 700  
+    sleeveLengthToWrist: 700
     wristCircumference: 190
 options:
     chestEase:

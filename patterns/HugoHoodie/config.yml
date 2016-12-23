@@ -37,7 +37,7 @@ measurements:
     shoulderLength: 160
     shoulderSlope: 40
     hipsCircumference: 950
-    sleeveLengthToWrist: 700  
+    sleeveLengthToWrist: 700
     wristCircumference: 190
     headCircumference: 590
 
@@ -68,6 +68,6 @@ options:
         max: 100
         default: 90
 
-inMemoryOf:   
+inMemoryOf:
     name: "Hugo De Cock"
     link: "https://www.instagram.com/p/p6CnG3rpir/"

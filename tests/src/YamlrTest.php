@@ -22,7 +22,7 @@ class YamlrTest extends \PHPUnit\Framework\TestCase
 
         $this->assertEquals($data, $config);
     }
-    
+
     /**
      * @expectedException Symfony\Component\Yaml\Exception\ParseException
      * @expectedExceptionMessage Unable to parse

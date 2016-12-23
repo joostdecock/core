@@ -13,13 +13,13 @@ class SvgRenderbot
 {
     /** @var string TAB In the holy war of tab vs spaces, we're on the spaces side. Richard Hendricks be damned. */
     const TAB = '    ';
-    
+
     /** @var int $tabs Keeps track of how many times we need to indent */
     private $tabs = 0;
-    
+
     /** @var int $freeId Counter to give as an unused ID */
     private $freeId = 1;
-    
+
     /** @var array $openGroups Where we keep track of currently opened groups */
     private $openGroups = array();
 
@@ -360,7 +360,7 @@ class SvgRenderbot
     {
         // Label
         $svg = $this->renderTextOnPath($dimension->getLabel(), $part);
-        
+
         // Leaders
         $leaders = $dimension->getLeaders();
         if(is_array($leaders) && count($leaders)>0) {
@@ -395,7 +395,7 @@ class SvgRenderbot
         if(!$id || strlen($id) < 1) {
             $id = $this->getUid();
             $path->setAttribute('id', $id);
-        } 
+        }
         $svg = $this->renderPath($path, $part);
         $svg .= $this->nl();
         $svg .= '<text ';

@@ -26,7 +26,7 @@ class ApiHandlerTest extends \PHPUnit\Framework\TestCase
 
     public function testConstructorTest()
     {
-       $api = new \Freesewing\ApiHandler(null); 
+       $api = new \Freesewing\ApiHandler(null);
        $context = $api->getContext();
        $this->assertEquals('Channel', $context['channel']);
        $this->assertEquals('Pattern', $context['pattern']);
@@ -38,10 +38,10 @@ class ApiHandlerTest extends \PHPUnit\Framework\TestCase
      */
     public function testHandle()
     {
-       $api = new \Freesewing\ApiHandler(null); 
+       $api = new \Freesewing\ApiHandler(null);
        $expectedResult = file_get_contents(__DIR__.'/ApiHandler.output.svg');
        $api->handle();
-       $this->expectOutputString($expectedResult); 
+       $this->expectOutputString($expectedResult);
     }
 
     /**
@@ -56,10 +56,10 @@ class ApiHandlerTest extends \PHPUnit\Framework\TestCase
            'model' => 'joost',
        ];
 
-       $api = new \Freesewing\ApiHandler($data); 
+       $api = new \Freesewing\ApiHandler($data);
        $expectedResult = '{"error":"Bad Request","info":"Channel ThisChannelDoesNotExist not found"}';
        $api->handle();
-       $this->expectOutputString($expectedResult); 
+       $this->expectOutputString($expectedResult);
     }
 
 }

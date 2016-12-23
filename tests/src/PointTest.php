@@ -39,7 +39,7 @@ class PointTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals($expectedResult, $point->{$getMethod}());
     }
 
-    public function providerGettersReturnWhatSettersSet() 
+    public function providerGettersReturnWhatSettersSet()
     {
         return [
             ['X', 52],
@@ -47,7 +47,7 @@ class PointTest extends \PHPUnit\Framework\TestCase
             ['Description', 'The description'],
         ];
     }
-    
+
     /**
      * @param string $methodSuffix The part of the method to call without 'set'
      *
@@ -62,7 +62,7 @@ class PointTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals(0, $point->{$getMethod}());
     }
 
-    public function providerSetXAndSetYSetNonNumericValuesToZero() 
+    public function providerSetXAndSetYSetNonNumericValuesToZero()
     {
         return [
             ['X'],

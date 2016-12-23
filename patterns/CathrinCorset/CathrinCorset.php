@@ -12,12 +12,12 @@ namespace Freesewing\Patterns;
 class CathrinCorset extends Pattern
 {
     /*
-        ___       _ _   _       _ _          
-       |_ _|_ __ (_) |_(_) __ _| (_)___  ___ 
+        ___       _ _   _       _ _
+       |_ _|_ __ (_) |_(_) __ _| (_)___  ___
         | || '_ \| | __| |/ _` | | / __|/ _ \
         | || | | | | |_| | (_| | | \__ \  __/
        |___|_| |_|_|\__|_|\__,_|_|_|___/\___|
-              
+
       Things we need to do before we can draft a pattern
     */
 
@@ -30,7 +30,7 @@ class CathrinCorset extends Pattern
      * When extending this pattern so we can just implement the
      * initialize() method and re-use the other methods.
      *
-     * Good to know: 
+     * Good to know:
      * Options are typically provided by the user, but sometimes they are fixed
      * Values are calculated for re-use later
      *
@@ -40,7 +40,7 @@ class CathrinCorset extends Pattern
      */
     public function initialize($model)
     {
-      
+
         /* Where to divide our corset into panels */
         if ($this->o('panels') == 11) {
             $this->setValue('panels', 11);
@@ -64,12 +64,12 @@ class CathrinCorset extends Pattern
     }
 
     /*
-        ____             __ _   
-       |  _ \ _ __ __ _ / _| |_ 
+        ____             __ _
+       |  _ \ _ __ __ _ / _| |_
        | | | | '__/ _` | |_| __|
-       | |_| | | | (_| |  _| |_ 
+       | |_| | | | (_| |  _| |_
        |____/|_|  \__,_|_|  \__|
-        
+
       The actual sampling/drafting of the pattern
     */
 
@@ -84,7 +84,7 @@ class CathrinCorset extends Pattern
      *
      * @return void
      */
-    
+
     /**
      * Generates a sample of the pattern
      *
@@ -103,7 +103,7 @@ class CathrinCorset extends Pattern
 
         $this->draftBase($model);
         $this->draftPanels($model);
-        
+
         // Don't render base
         $this->parts['base']->setRender(false);
     }
@@ -120,7 +120,7 @@ class CathrinCorset extends Pattern
                 $this->{"paperless$name"}();
             }
         }
-        
+
         // Don't render panels
         $this->parts['panels']->setRender(false);
     }
@@ -147,26 +147,26 @@ class CathrinCorset extends Pattern
         $p->newPoint(   7, 0, $model->m('naturalWaistToUnderbust'), 'Waist @ CF' );
         $p->newPoint(   8, $p->x(3), $p->y(7), 'Waist @ side' );
 
-        // frontRise | Point index 10-> 
+        // frontRise | Point index 10->
         $p->addPoint(   10, $p->shift( 1, 90, $this->o('frontRise'), 'Corset top edge @ CF'));
         $p->addPoint(   11, $p->shift(10, 0, $this->v('width') * 0.11, 'Control point for 10'));
         $p->addPoint(   12, $p->shift( 1, 0, $this->v('width') * 0.11, 'Control point fo 13'));
         $p->addPoint(   13, $p->shift( 1, 0, $this->v('width') * 0.15, 'frontRise curve ends here'));
-        
-        // frontDrop | Point index 20-> 
+
+        // frontDrop | Point index 20->
         $p->addPoint(   20, $p->shift( 2, -90, $this->o('frontDrop'), 'Corset bottom edge @ CF'));
         $p->addPoint(   21, $p->shift(20, 0, $this->v('width') * 0.11, 'Control point for 10'));
 
-        // hipRise | Point index 30-> 
+        // hipRise | Point index 30->
         $p->addPoint(   30, $p->shift( 6, 90, $this->o('hipRise'), 'Corset bottom edge @ CF'));
         $p->addPoint(   31, $p->shift(30, 180, $this->v('width') * 0.3, 'Control point for 30'));
         $p->addPoint(   32, $p->shift(30, 0, $this->v('width') * 0.2, 'Control point for 30'));
 
-        // backDrop | Point index 40-> 
+        // backDrop | Point index 40->
         $p->addPoint(   40, $p->shift( 3, -90, $this->o('backDrop'), 'Corset bottom edge @ side'));
         $p->addPoint(   41, $p->shift(40, 180, $this->v('width') * 0.3, 'Control point for 40'));
 
-        // backRise | Point index 50-> 
+        // backRise | Point index 50->
         $p->addPoint(   50, $p->shift( 4, 90, $this->o('backRise'), 'Corset top edge @ side'));
         $p->addPoint(   51, $p->shift(50, 0, $this->v('width') * -0.4, 'Control point for 50'));
         $p->addPoint(   52, $p->shift(5, 0, $this->v('width') * 0.2, 'Control point for 5'));
@@ -177,7 +177,7 @@ class CathrinCorset extends Pattern
         $path = 'M 20 C 21 31 30 C 32 41 40 L 50 C 51 52 5 L 13 C 12 11 10 z';
         $p->newPath('outline', $path, ['class' => 'seamline']);
     }
-    
+
     /**
      * Drafts the corset panels
      *
@@ -194,14 +194,14 @@ class CathrinCorset extends Pattern
         $helpLines = '';
         foreach ($this->v('gaps') as $g => $gap) {
             $i = $g+1; // Avoid zero
-            // Underbust 
+            // Underbust
             $p->newPoint(   100*$i, $this->v('width')*$gap, 0, "Gap $i center @ underbust" );
             $p->addPoint(   100*$i+1, $p->shift(100*$i, 180, $this->v('bustIntake') * 0.1), "Right edge @ underbust" );
             $p->addPoint(   100*$i+2, $p->shift(100*$i, 0, $this->v('bustIntake') * 0.1), "Left edge @ ubderbust" );
             $p->addPoint(   100*$i+3, $p->shift(100*$i+1, -90, $model->m('naturalWaistToUnderbust') * 0.15), "Control point for ".(100*$i+1) );
             $p->addPoint(   100*$i+4, $p->shift(100*$i+2, -90, $model->m('naturalWaistToUnderbust') * 0.15), "Control point for ".(100*$i+2) );
-  
-            // Waist 
+
+            // Waist
             $p->newPoint(   100*$i+40, $this->v('width')*$gap, $p->y(7), "Gap $i center @ waist" );
             $p->addPoint(   100*$i+41, $p->shift(100*$i+40, 180, $this->v('waistIntake') * 0.1), "Right edge @ waist" );
             $p->addPoint(   100*$i+42, $p->shift(100*$i+40, 0, $this->v('waistIntake') * 0.1), "Left edge @ waist" );
@@ -209,8 +209,8 @@ class CathrinCorset extends Pattern
             $p->addPoint(   100*$i+44, $p->shift(100*$i+42, 90, $model->m('naturalWaistToUnderbust') * 0.2), "Control point for ".(100*$i+42) );
             $p->addPoint(   100*$i+45, $p->shift(100*$i+41, -90, $model->m('naturalWaistToUnderbust') * 0.2), "Control point for ".(100*$i+43) );
             $p->addPoint(   100*$i+46, $p->shift(100*$i+42, -90, $model->m('naturalWaistToUnderbust') * 0.2), "Control point for ".(100*$i+44) );
-  
-            // Hips 
+
+            // Hips
             $p->newPoint(   100*$i+80, $this->v('width')*$gap, $p->y(2), "Gap $i center @ hips" );
             $helpLines .= ' M '.(100*$i).' L '.(100*$i+80);
             $helpLines .= ' M '.(100*$i+1).' C '.(100*$i+3).' '.(100*$i+43).' '.(100*$i+41).' C '.(100*$i+45).' '.(100*$i+80).' '.(100*$i+80);
@@ -253,17 +253,17 @@ class CathrinCorset extends Pattern
         $p->curveCrossesX(10, 11, 12, 13, $p->x(11), '50-');
         $p->addSplitCurve(10, 11, 12, 13, '50-1', '51-');
 
-        // Joint between panel 1 and to at the bottom 
+        // Joint between panel 1 and to at the bottom
         $p->curveCrossesX(20, 21, 31, 30, $p->x(180)/2.5, '52-');
         $p->addSplitCurve(20, 21, 31, 30, '52-1', '53-');
 
-        // path 
+        // path
         $this->path1 = 'M 10 L 20 C 53-2 53-3 52-1 L 50-1 C 51-3 51-2 10 z';
 
-        // Title anchor 
+        // Title anchor
         $p->newPoint('titleAnchor1', $p->x('50-1')/2, $p->y(7)/2, 'Title anchor panel 1');
 
-        // Grid anchor 
+        // Grid anchor
         $p->clonePoint(7, 'gridAnchor1');
     }
 
@@ -294,9 +294,9 @@ class CathrinCorset extends Pattern
             $this->path3 = 'M 102 C 104 144 142 C 146 180 180 L 190-1 ';
         }
         $this->path2 .= 'C 143 103 101 C 51-6 51-7 50-1 z';
-        // Title anchor 
+        // Title anchor
         $p->newPoint('titleAnchor2', $p->x(140)/1.5, $p->y(2)*0.7, 'Title anchor panel 2');
-        // Grid anchor 
+        // Grid anchor
         $p->newPoint('gridAnchor2', $p->x('titleAnchor2'), $p->y(7), 'Grid anchor panel 2');
     }
 
@@ -312,7 +312,7 @@ class CathrinCorset extends Pattern
         /** @var \Freesewing\Part $p */
         $p = $this->parts['panels'];
 
-        // Where does gap center cut through bottom curve 
+        // Where does gap center cut through bottom curve
         $p->curveCrossesX(20, 21, 31, 30, $p->x(280), '290-'); // Intersection in 290-1
         $p->addSplitCurve('190-1', '191-7', '191-6', 30, '290-1', '291-');
         if ($p->y('290-1') < $p->y(180)) {
@@ -327,9 +327,9 @@ class CathrinCorset extends Pattern
             $this->path4 = 'M 202 C 204 244 242 C 246 280 280 L 290-1 ';
         }
         $this->path3 .= 'C 243 203 201 z';
-        // Title anchor 
+        // Title anchor
         $p->newPoint('titleAnchor3', $p->x(240)-$p->deltaX(140, 240)/2, $p->y('titleAnchor2'), 'Title anchor panel 3');
-        // Grid anchor 
+        // Grid anchor
         $p->newPoint('gridAnchor3', $p->x('titleAnchor3'), $p->y(7), 'Grid anchor panel 3');
     }
 
@@ -344,7 +344,7 @@ class CathrinCorset extends Pattern
     {
         /** @var \Freesewing\Part $p */
         $p = $this->parts['panels'];
-        
+
         // Where does gap center cut through bottom curve
         $p->curveCrossesX(20, 21, 31, 30, $p->x(380), '390-'); // Intersection in 390-1
         $p->addSplitCurve('290-1', '291-7', '291-6', 30, '390-1', '391-');
@@ -352,7 +352,7 @@ class CathrinCorset extends Pattern
             // Dart still open at edge
             $p->curveCrossesY(341, 345, 380, 380, $p->y('390-1'), '392-'); // Intersection is in 392-1
             $p->curveCrossesY(342, 346, 380, 380, $p->y('390-1'), '393-'); // Intersection is in 393-1
-            // Dart is not symmetric 
+            // Dart is not symmetric
             $p->addPoint('cpPart4', $p->shift('392-1', 90, $p->deltaY(7, '392-1')/1.6), 'Control point for assymetric dart');
             $this->path4 .= 'C 391-2 391-3 392-1 C cpPart4 345 341 ';
             $this->path5 = 'C 304 344 342 C 346 393-1 393-1 ';
@@ -364,10 +364,10 @@ class CathrinCorset extends Pattern
         }
         $this->path4 .= 'C 343 303 301 z';
 
-        // Title anchor 
+        // Title anchor
         $p->newPoint('titleAnchor4', $p->x(340)-$p->deltaX(240, 340)/2, $p->y('titleAnchor2'), 'Title anchor panel 4');
 
-        // Grid anchor 
+        // Grid anchor
         $p->newPoint('gridAnchor4', $p->x('titleAnchor4'), $p->y(7), 'Grid anchor panel 4');
     }
 
@@ -382,12 +382,12 @@ class CathrinCorset extends Pattern
     {
         /** @var \Freesewing\Part $p */
         $p = $this->parts['panels'];
-        
-        // Where does the right edge cut through top curve 
+
+        // Where does the right edge cut through top curve
         $p->curveCrossesX(50, 51, 52, 5, $p->x(401), '410-'); // Intersection in 410-1
         $p->addSplitCurve(50, 51, 52, 5, '410-1', '411-');
         $this->path5 = 'M 441 C 443 403 401 L 410-1 C 411-7 411-6 5 L 302 '. $this->path5;
-        // Where does gap center cut through bottom curve 
+        // Where does gap center cut through bottom curve
         $p->curveCrossesX(30, 32, 41, 40, $p->x(480), '490-'); // Intersection in 490-1
         $p->addSplitCurve(40, 41, 32, 30, '490-1', '491-');
         if ($p->y('490-1') < $p->y(180)) {
@@ -405,10 +405,10 @@ class CathrinCorset extends Pattern
             $this->path6 = 'C 446 cpPart6 480 L 490-1 ';
         }
 
-        // Title anchor 
+        // Title anchor
         $p->newPoint('titleAnchor5', $p->x(440)-$p->deltaX(340, 440)/2, $p->y('titleAnchor2'), 'Title anchor panel 5');
 
-        // Grid anchor 
+        // Grid anchor
         $p->newPoint('gridAnchor5', $p->x('titleAnchor5'), $p->y(7), 'Grid anchor panel 5');
     }
 
@@ -423,12 +423,12 @@ class CathrinCorset extends Pattern
     {
         /** @var \Freesewing\Part $p */
         $p = $this->parts['panels'];
-        
-        // Where does the left edge cut through top curve 
+
+        // Where does the left edge cut through top curve
         $p->curveCrossesX(50, 51, 52, 5, $p->x(402), '420-'); // Intersection in 420-1
         $p->addSplitCurve('410-1', '411-3', '411-2', 50, '420-1', '421-');
 
-        // Where does the right edge cut through top curve 
+        // Where does the right edge cut through top curve
         $p->curveCrossesX(50, 51, 52, 5, $p->x(501), '510-'); // Intersection in 510-1
         $p->addSplitCurve('420-1', '421-7', '421-6', 50, '510-1', '421-');
         if ($this->o('backRise') == 0) {
@@ -440,7 +440,7 @@ class CathrinCorset extends Pattern
             $p->addPoint('420-1', $p->shift('420-1', 90, $deltaY));
             $p->addPoint('421-2', $p->shift('421-2', 90, $deltaY));
         }
-    
+
         // Where does gap center cut through bottom curve
         $p->curveCrossesX(30, 32, 41, 40, $p->x(580), '590-'); // Intersection in 490-1
         $p->addSplitCurve(40, '491-2', '491-3', '490-1', '590-1', '591-');
@@ -454,10 +454,10 @@ class CathrinCorset extends Pattern
             $this->path6 .= 'C 591-6 591-7 590-1 L 580 C 580 543 541 z';
         }
 
-        // Title anchor 
+        // Title anchor
         $p->newPoint('titleAnchor6', $p->x(540)-$p->deltaX(440, 540)/2, $p->y('titleAnchor2'), 'Title anchor panel 6');
 
-        // Grid anchor 
+        // Grid anchor
         $p->newPoint('gridAnchor6', $p->x('titleAnchor6'), $p->y(7), 'Grid anchor panel 6');
     }
 
@@ -472,8 +472,8 @@ class CathrinCorset extends Pattern
     {
         /** @var \Freesewing\Part $p */
         $p = $this->parts['panels'];
-        
-        // Where does the left edge cut through top curve 
+
+        // Where does the left edge cut through top curve
         $p->curveCrossesX(50, 51, 52, 5, $p->x(502), '520-'); // Intersection in 520-1
         $p->addSplitCurve('510-1', '421-7', '421-6', 50, '520-1', '521-');
 
@@ -491,23 +491,23 @@ class CathrinCorset extends Pattern
         }
         $this->path7 .= 'C 591-3 591-2 40 z';
 
-        // Title anchor 
+        // Title anchor
         $p->newPoint('titleAnchor7', $p->x(8)-$p->deltaX(540, 8)/2, $p->y('titleAnchor2'), 'Title anchor panel 7');
 
-        // Grid anchor 
+        // Grid anchor
         $p->clonePoint(8, 'gridAnchor7');
     }
-        
+
     /*
-       _____ _             _ _         
-      |  ___(_)_ __   __ _| (_)_______ 
+       _____ _             _ _
+      |  ___(_)_ __   __ _| (_)_______
       | |_  | | '_ \ / _` | | |_  / _ \
       |  _| | | | | | (_| | | |/ /  __/
       |_|   |_|_| |_|\__,_|_|_/___\___|
-                                       
+
       Adding titles/logos/seam-allowance/grainline and so on
     */
-    
+
     /**
      * Finalizes the corset panels
      *
@@ -559,7 +559,7 @@ class CathrinCorset extends Pattern
     {
         /** @var \Freesewing\Part $p */
         $p = $this->parts['panel1'];
-        
+
         $p->addPoint('cofTop', $p->shift(10, -90, 20));
         $p->addPoint('cofBottom', $p->shift(20, 90, 20));
         $p->addPoint('grainlineTop', $p->shift(10, -45, 25));
@@ -579,7 +579,7 @@ class CathrinCorset extends Pattern
     {
         /** @var \Freesewing\Part $p */
         $p = $this->parts['panel2'];
-        
+
         $p->newPoint('grainlineTop', $p->x('titleAnchor2'), $p->y(101)+10);
         $p->newPoint('grainlineBottom', $p->x('grainlineTop'), $p->y(2));
         $p->newGrainline('grainlineBottom','grainlineTop',$this->t('Grainline'));
@@ -613,7 +613,7 @@ class CathrinCorset extends Pattern
     {
         /** @var \Freesewing\Part $p */
         $p = $this->parts['panel4'];
-        
+
         $p->newPoint('grainlineTop', $p->x('titleAnchor4'), $p->y(101)+10);
         $p->newPoint('grainlineBottom', $p->x('grainlineTop'), $p->y(2)-$this->o('hipRise')-10);
         $p->newGrainline('grainlineBottom','grainlineTop',$this->t('Grainline'));
@@ -630,7 +630,7 @@ class CathrinCorset extends Pattern
     {
         /** @var \Freesewing\Part $p */
         $p = $this->parts['panel5'];
-        
+
         $p->newPoint('grainlineTop', $p->x('titleAnchor5'), $p->y(101)+10);
         $p->newPoint('grainlineBottom', $p->x('grainlineTop'), $p->y(2)-$this->o('hipRise')-10);
         $p->newGrainline('grainlineBottom','grainlineTop',$this->t('Grainline'));
@@ -652,7 +652,7 @@ class CathrinCorset extends Pattern
     {
         /** @var \Freesewing\Part $p */
         $p = $this->parts['panel6'];
-        
+
         $p->newPoint('grainlineTop', $p->x('titleAnchor6'), $p->y(101)+10);
         $p->newPoint('grainlineBottom', $p->x('grainlineTop'), $p->y(2)-$this->o('hipRise')-10);
         $p->newGrainline('grainlineBottom','grainlineTop',$this->t('Grainline'));
@@ -669,7 +669,7 @@ class CathrinCorset extends Pattern
     {
         /** @var \Freesewing\Part $p */
         $p = $this->parts['panel7'];
-        
+
         $p->newPoint('grainlineTop', $p->x(40)-10, $p->y(101)+10);
         $p->newPoint('grainlineBottom', $p->x('grainlineTop'), $p->y(2)-10);
         $p->newGrainline('grainlineBottom','grainlineTop',$this->t('Grainline'));
@@ -680,16 +680,16 @@ class CathrinCorset extends Pattern
     }
 
     /*
-        ____                       _               
-       |  _ \ __ _ _ __   ___ _ __| | ___  ___ ___ 
+        ____                       _
+       |  _ \ __ _ _ __   ___ _ __| | ___  ___ ___
        | |_) / _` | '_ \ / _ \ '__| |/ _ \/ __/ __|
        |  __/ (_| | |_) |  __/ |  | |  __/\__ \__ \
        |_|   \__,_| .__/ \___|_|  |_|\___||___/___/
-                  |_|                              
-                                       
+                  |_|
+
       Instructions for paperless patterns
     */
-    
+
     /**
      * Adds paperless info for panel1
      *
@@ -716,10 +716,10 @@ class CathrinCorset extends Pattern
 
         //Width at the top
         $p->newWidthDimension(10,'50-1',$p->y(10)-25);
-        
+
         // Width at the bottom
         $p->newWidthDimensionSm(20,'191-1',$p->y(20)+25);
-        
+
         // Width at the waist
         $p->newWidthDimensionSm('gridAnchor','.waist1');
     }
@@ -733,17 +733,17 @@ class CathrinCorset extends Pattern
     {
         /** @var \Freesewing\Part $p */
         $p = $this->parts['panel2'];
-        
+
         // Helpline at waist
         $p->addPoint('.waist2', $p->beamsCross('50-1','52-1','gridAnchor2',141)); // Help point at waist
         $p->newPath('.helpWaist', 'M 141 L .waist2', ['class' => 'helpline']);
 
         // Seam length right
         $p->newCurvedDimension('M 291-1 C 180 145 141 C 143 103 101', 25);
-        
+
         // Seam length left
         $p->newLinearDimension('191-1','50-1', -25);
-        
+
         // Heights on the right
         $xBase = $p->x('291-1');
         $p->newHeightDimension('291-1',141,$xBase+40);
@@ -753,10 +753,10 @@ class CathrinCorset extends Pattern
 
         //Width at the top
         $p->newWidthDimensionSm('50-1',101,$p->y('50-1')-25);
-        
+
         // Width at the bottom
         $p->newWidthDimensionSm('191-1','291-1',$p->y('191-1')+25);
-        
+
         // Width at the waist
         $p->newWidthDimensionSm('.waist2',141);
     }
@@ -770,19 +770,19 @@ class CathrinCorset extends Pattern
     {
         /** @var \Freesewing\Part $p */
         $p = $this->parts['panel3'];
-        
+
         // Width at the waist
         $p->newWidthDimensionSm(142,241);
-        
+
         // Width at the bottom
         $p->newWidthDimension('190-1','292-1',$p->y('190-1')+25);
-        
+
         // Width at the top
         $p->newWidthDimension(102,201,$p->y(201)-25);
-        
+
         // Seam length right
         $p->newCurvedDimension('M 292-1 C 292-1 245 241 C 243 203 201', 45);
-        
+
         // Seam length left
         $p->newCurvedDimension('M 291-1 C 291-1 146 142 C 144 104 102', -40);
 
@@ -804,19 +804,19 @@ class CathrinCorset extends Pattern
     {
         /** @var \Freesewing\Part $p */
         $p = $this->parts['panel4'];
-        
+
         // Width at the waist
         $p->newWidthDimensionSm(242,341);
-        
+
         // Width at the bottom
         $p->newWidthDimension('290-1','392-1',$p->y('290-1')+25);
-        
+
         // Width at the top
         $p->newWidthDimension(202,301,$p->y(301)-25);
-        
+
         // Seam length right
         $p->newCurvedDimension('M 392-1 C 392-1 345 341 C 343 303 301', 45);
-        
+
         // Seam length left
         $p->newCurvedDimension('M 391-1 C 391-1 246 242 C 244 204 202', -40);
 
@@ -838,19 +838,19 @@ class CathrinCorset extends Pattern
     {
         /** @var \Freesewing\Part $p */
         $p = $this->parts['panel5'];
-        
+
         // Width at the waist
         $p->newWidthDimension(342,441);
-        
+
         // Width at the bottom
         $p->newWidthDimension('393-1','492-1',$p->y('390-1')+25);
-        
+
         // Width at the top
         $p->newWidthDimension(302,401,$p->y(401)-25);
-        
+
         // Seam length right
         $p->newCurvedDimension('M 492-1 C 492-1 445 441 C 443 403 401', 45);
-        
+
         // Seam length left
         $p->newCurvedDimension('M 393-1 C 393-1 346 342 C 344 304 302', -40);
 
@@ -872,19 +872,19 @@ class CathrinCorset extends Pattern
     {
         /** @var \Freesewing\Part $p */
         $p = $this->parts['panel6'];
-        
+
         // Width at the waist
         $p->newWidthDimensionSm(442,541);
-        
+
         // Width at the bottom
         $p->newWidthDimension('493-1','592-1',$p->y('490-1')+25);
-        
+
         // Width at the top
         $p->newWidthDimension(402,501,$p->y(501)-25);
-        
+
         // Seam length right
         $p->newCurvedDimension('M 592-1 C 592-1 545 541 C 543 503 501', 45);
-        
+
         // Seam length left
         $p->newCurvedDimension('M 493-1 C 493-1 446 442 C 444 404 402', -40);
 
@@ -906,16 +906,16 @@ class CathrinCorset extends Pattern
     {
         /** @var \Freesewing\Part $p */
         $p = $this->parts['panel7'];
-        
+
         // Width at the waist
         $p->newWidthDimension(542,'gridAnchor');
-        
+
         // Width at the bottom
         $p->newWidthDimension('593-1',40,$p->y(40)+25);
-        
+
         // Width at the top
         $p->newWidthDimension(502,50,$p->y(50)-25);
-        
+
         // Seam length left
         $p->newCurvedDimension('M 593-1 C 593-1 546 542 C 544 504 502', -40);
 

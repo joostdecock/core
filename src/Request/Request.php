@@ -73,7 +73,7 @@ class Request
     {
         return $this->data;
     }
-    
+
     /**
      * Returns the info property
      *

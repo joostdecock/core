@@ -81,7 +81,7 @@ class TamikoTop extends Pattern
         $ad = $model->m('acrossBack')*0.65;
         // Chest depth
         $ch = $model->m('chestCircumference')/2+2;
-  
+
         $p->newPoint(     1, 0, 0);
         $p->newPoint(     2, $p->x(1), sqrt(pow($s2s, 2)-100));
         $p->newPoint(     3, 100, $p->y(2));
@@ -115,7 +115,7 @@ class TamikoTop extends Pattern
         // Mark paths for sample service
         $p->paths['cutline']->setSample(true);
         $p->paths['sewline']->setSample(true);
-         
+
     }
 
     /*
@@ -140,7 +140,7 @@ class TamikoTop extends Pattern
         /** @var \Freesewing\Part $p */
         $p = $this->parts['top'];
 
-        // Title 
+        // Title
         $p->newPoint('titleAnchor', $p->x(42)/2, $p->y(42)/2);
         $p->addTitle('titleAnchor', 1, $this->t($p->title), '1x '.$this->t('From main fabric')."\n".$this->t('Cut on fold'));
 
@@ -148,7 +148,7 @@ class TamikoTop extends Pattern
         $p->newPoint('cofStart', $p->x(1)+40, $p->y(2));
         $p->newPoint('cofEnd', $p->x(42)-40, $p->y(2));
         $p->newCutOnFold('cofStart','cofEnd',$this->t('Cut on fold'),-95);
-     
+
         // Grainline
         $p->newPoint('grainlineStart', $p->x('cofStart'), $p->y('cofStart')-120);
         $p->newPoint('grainlineEnd', $p->x('cofEnd'), $p->y('grainlineStart'));
@@ -167,12 +167,12 @@ class TamikoTop extends Pattern
         $p->offsetPathString('sa', 'M 3 C 3 6 5 C 7 4 4', 10, 1, ['class' => 'seam-allowance']);
     }
 
-    
+
     private function textAttr($dy)
     {
         return ['class' => 'text-lg fill-note text-center', 'dy' => $dy];
     }
-    
+
     /*
         ____                       _
        |  _ \ __ _ _ __   ___ _ __| | ___  ___ ___
@@ -185,7 +185,7 @@ class TamikoTop extends Pattern
     */
 
     /**
-     * Adds paperless info for the top 
+     * Adds paperless info for the top
      *
      * @param \Freesewing\Model $model The model to draft for
      *
@@ -213,7 +213,7 @@ class TamikoTop extends Pattern
         $p->newHeightDimension(38,31,$xBase-30);
         $p->newHeightDimension(2,31,$xBase-45);
         $p->newHeightDimension(42,10,$xBase-15);
-        
+
         // Widths at the top
         $yBase = $p->y(41);
         $p->newWidthDimension(41,22,$yBase-15);
@@ -221,7 +221,7 @@ class TamikoTop extends Pattern
 
         // Extra heigth
         $p->newHeightDimension(23,41,$p->x(23)+15);
-        
+
         // Notes
         $p->addPoint(200, $p->shift(5, -5, 30));
         $p->addPoint(201, $p->shift(8, -90, 50));

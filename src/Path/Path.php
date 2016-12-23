@@ -24,10 +24,10 @@ class Path
 
     /** @var bool $render To render this path or not */
     private $render = true;
-    
+
     /** @var array $attributes The path attributest */
     private $attributes = array();
-    
+
     /** @var string $path The SVG pathstring */
     private $path = null;
 
@@ -322,7 +322,7 @@ class Path
 
         return $paths;
     }
-    
+
     /**
      * Gets the start point of the path
      *
@@ -331,10 +331,10 @@ class Path
     public function getStartPoint()
     {
         $points = Utils::asScrubbedArray($this->getPath());
-    
+
         return $points[1];
     }
-    
+
     /**
      * Gets the end point of the path
      *

@@ -32,7 +32,7 @@ class AaronAshirt extends JoostBodyBlock
      * When extending this pattern so we can just implement the
      * initialize() method and re-use the other methods.
      *
-     * Good to know: 
+     * Good to know:
      * Options are typically provided by the user, but sometimes they are fixed
      * Values are calculated for re-use later
      *
@@ -55,17 +55,17 @@ class AaronAshirt extends JoostBodyBlock
         if ($this->getOption('stretchFactor') < 0.5) {
             $this->setOption('stretchFactor', 0.5);
         }
-        
+
         // Depth of the armhole
         $this->setValue('armholeDepth', 200 + ($model->m('shoulderSlope') / 2 - 27.5) + ($model->m('bicepsCircumference') / 10));
-        
+
         // Collar widht and depth
         $this->setValue('collarWidth', ($model->getMeasurement('neckCircumference') / self::PI) / 2 + 5);
         $this->setValue('collarDepth', ($model->getMeasurement('neckCircumference') + $this->getOption('collarEase')) / 5 - 8);
-        
+
         // Cut front armhole a bit deeper
-        $this->setValue('frontArmholeExtra', 5); 
-        
+        $this->setValue('frontArmholeExtra', 5);
+
     }
 
     /*
@@ -92,10 +92,10 @@ class AaronAshirt extends JoostBodyBlock
     public function draft($model)
     {
         $this->sample($model);
-        
+
         $this->finalizeFront($model);
         $this->finalizeBack($model);
-        
+
         if ($this->isPaperless) {
             $this->paperlessFront($model);
             $this->paperlessBack($model);
@@ -123,7 +123,7 @@ class AaronAshirt extends JoostBodyBlock
 
         $this->draftFront($model);
         $this->draftBack($model);
-        
+
         $this->parts['frontBlock']->setRender(false);
         $this->parts['backBlock']->setRender(false);
     }
@@ -287,7 +287,7 @@ class AaronAshirt extends JoostBodyBlock
         // Title
         $p->newPoint('titleAnchor', $p->x(5) * 0.4, $p->x(5) + 40, 'Title anchor');
         $p->addTitle('titleAnchor', 1, $this->t($p->title), $this->t('Cut 1 on fold'));
-        
+
         // Logo
         $p->addPoint('logoAnchor', $p->shift('titleAnchor', -90, 50));
         $p->newSnippet('logo', 'logo', 'logoAnchor');
@@ -417,7 +417,7 @@ class AaronAshirt extends JoostBodyBlock
     */
 
     /**
-     * Adds paperless info for the front 
+     * Adds paperless info for the front
      *
      * @param \Freesewing\Model $model The model to draft for
      *
@@ -432,7 +432,7 @@ class AaronAshirt extends JoostBodyBlock
         $yBase = $p->y(110);
         $p->newWidthDimension(111,110, $yBase+35);
         $p->newWidthDimension(111,5, $yBase+50);
-        
+
         // Heights left side
         $xBase = $p->x(111);
         $p->newHeightDimension(111,100, $xBase-10);
@@ -452,7 +452,7 @@ class AaronAshirt extends JoostBodyBlock
     }
 
     /**
-     * Adds paperless info for the back 
+     * Adds paperless info for the back
      *
      * @param \Freesewing\Model $model The model to draft for
      *
@@ -462,12 +462,12 @@ class AaronAshirt extends JoostBodyBlock
     {
         /** @var \Freesewing\Part $p */
         $p = $this->parts['back'];
-        
+
         // Widths at bottom
         $yBase = $p->y(110);
         $p->newWidthDimension(111,110, $yBase+35);
         $p->newWidthDimension(111,5, $yBase+50);
-        
+
         // Heights left side
         $xBase = $p->x(111);
         $p->newHeightDimension(111,100, $xBase-10);

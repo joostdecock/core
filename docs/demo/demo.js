@@ -32,7 +32,7 @@ function loadApiInfo() {
     $.getJSON(api+'/info/json', function( data ) {
         $('#content').html('<div class="row" id="contentrow"></div>');
         $('#contentrow').append( "<div class='col-xs-12'><h2>API Information</h2></div>");
-       
+
         $('#contentrow').append( "<div class='col-md-3' id='serviceblock'><h3>Services</h3><ul id='servicesul'></ul></div>");
         $.each( data['services'], function( key, val ) {
             $("#servicesul").append( "<li>" + val + "</li>" );
@@ -63,8 +63,8 @@ function loadApiInfo() {
 }
 
 function loadPatternInfo(pattern) {
-    if($("#patterninfo").length == 0) { 
-        $('#content').append( "<div class='' id='patterninfo'></div>"); 
+    if($("#patterninfo").length == 0) {
+        $('#content').append( "<div class='' id='patterninfo'></div>");
     }
     $('#patterninfo').html(spinner);
     $.getJSON(api+'/info/'+pattern+'/json', function( data ) {
@@ -107,7 +107,7 @@ function loadPatternInfo(pattern) {
             $("#patterninfo-col4-ul").append( "<li><b>" + key + "</b></li>" );
         });
         $('#patterninfo-col4').append( "<p>Measurements and options sampling is available in the <b>sample</b> service</p>");
-        
+
         $('#patterninfo').append( "<div class='row' id='patternrow2'></div>");
 
         $('#patternrow2').append( "<div class='col-md-9' id='patterninfo-col5'></div>");
@@ -129,7 +129,7 @@ function loadPatternInfo(pattern) {
             $('#patterninfo-col6').append( "<h3>Did you know?</h3>");
             $('#patterninfo-col6').append( "<p>This pattern was named in memory of <a href='" +  data['inMemoryOf']['link'] + "' target='_BLANK'>" +  data['inMemoryOf']['name'] + "</a>.</p>");
         }
-        
+
         $('#details').html('');
         $('#details').append( " <p>We made an AJAX call to to:</p> <code>" + api + "/info/" + pattern + "/json</code>");
         $('#details').append( " <p>We used the returned JSON to build the overview above.</p><p>Here's what the response looks like:</p>");
@@ -147,7 +147,7 @@ function sampleDraftPatternList(type) {
         });
         $('#content').html('<div class="row" id="contentrow"></div>');
         $('#contentrow').append( "<h2>Step 1: Pick a pattern to "+type+"</h2>");
-       
+
         $.each( data['patterns'], function( key, val ) {
             $("#contentrow").append( "<div class='col-md-3'><blockquote><h6>" + val + "</h6><a class='btn btn-primary btn-block clickable uppercasefirst pattern-"+type+"' data-pattern='" + key + "'>"+type+"</a></blockquote></div>" );
         });
@@ -180,7 +180,7 @@ function loadPatternForm(pattern, service) {
             if(val['type'] == 'chooseOne') $('#col2-table').append( formRow('chooseOne', key, val, ''));
             else $('#col2-table').append( formRow('input', key, val, 'metric'));
         });
-        if(service == 'compare') { 
+        if(service == 'compare') {
             $('#col3-table').append( '<tr> <td class="key"><label for="samplerGroup">Sampler group</label></td> <td> <select class="form-control" id="samplerGroup" name="samplerGroup"></select> </td> </tr>');
             $.each( data['models']['groups'], function( key, val ) {
                 $('#samplerGroup').append( '<option value="'+key+'">'+key+'</option>');
@@ -201,7 +201,7 @@ function loadPatternForm(pattern, service) {
         $('#unitsOut').append( '<option value="metric">Metric</option>');
         $('#unitsOut').append( '<option value="imperial">Imperial</option>');
         $('#col4-table').append( '<tr><td colspan="2"><blockquote class="comment" id="theme-msg"><p><b>What to expect</b></p><p>The button below will open your pattern in a new window</p></blockquote><a class="btn btn-block btn-primary btn-lg gapabove uppercasefirst" id="'+service+'-submit" data-pattern="'+pattern+'" target="_BLANK">'+service+' the '+pattern+'</a></td></tr>');
-        
+
     });
 
 }
@@ -261,14 +261,14 @@ function inputRow(key, val, units) {
         unitsShort = 'cm';
     }
     if (val instanceof Object) {
-        if(val['type'] == 'percent') { 
-            attr = ' max="100" min="0" '; 
+        if(val['type'] == 'percent') {
+            attr = ' max="100" min="0" ';
             value = val['default'];
             unitsLong = 'percent';
             unitsShort = '%';
-        } 
-        else { 
-            ' max = "'+val['max']+'" min="'+val['min']+'" '; 
+        }
+        else {
+            ' max = "'+val['max']+'" min="'+val['min']+'" ';
             value = val['default']/10;
         }
     } else {
@@ -295,7 +295,7 @@ function chooseOneRow(key, val) {
     var selectThis = val['default'];
     var selected = '';
     $.each( val['options'], function( key, val ) {
-        if(selectThis == key) selected = ' selected '; 
+        if(selectThis == key) selected = ' selected ';
         else  selected = '';
         options = options + "<option value=\"" + key + "\" " + selected + ">" + val + "</option>\n";
     });

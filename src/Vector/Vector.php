@@ -59,7 +59,7 @@ class Vector extends Coords
     {
         return ( $this->getX() * $that->getX() + $this->getY() * $that->getY() );
     }
-    
+
     /**
      * Add a point to anothe to get 2D vector coordinates
      *
@@ -75,7 +75,7 @@ class Vector extends Coords
 
         return $v;
     }
-    
+
     /**
      * Returns vector as point object
      *
@@ -106,7 +106,7 @@ class Vector extends Coords
 
         return $v;
     }
-    
+
     /**
      * Top-left corner
      *
@@ -119,10 +119,10 @@ class Vector extends Coords
         $v = new \Freesewing\Vector();
         $v->setX( min( $this->getX(), $that->getX() ) );
         $v->setY( min( $this->getY(), $that->getY() ) );
-        
+
         return $v;
     }
-    
+
     /**
      * Bottom-right corner
      *
@@ -135,7 +135,7 @@ class Vector extends Coords
         $v = new \Freesewing\Vector();
         $v->setX( max( $this->getX(), $that->getX() ) );
         $v->setY( max( $this->getY(), $that->getY() ) );
-        
+
         return $v;
     }
 

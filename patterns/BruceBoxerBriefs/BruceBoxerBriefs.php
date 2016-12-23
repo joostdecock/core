@@ -24,7 +24,7 @@ class BruceBoxerBriefs extends Pattern
     /**
      * Sets up options and values for our draft
      *
-     * Good to know: 
+     * Good to know:
      * Options are typically provided by the user, but sometimes they are fixed
      * Values are calculated for re-use later
      *
@@ -38,17 +38,17 @@ class BruceBoxerBriefs extends Pattern
         $this->setValue('waistRatioFront', 0.28);
         $this->setValue('waistRatioBack', 0.34);
         $this->setValue('waistRatioSide', (1 - ($this->v('waistRatioFront') + $this->v('waistRatioBack'))) / 2);
-        
+
         /* Ration of leg between parts */
         $this->setValue('legRatioInset', 0.28);
         $this->setValue('legRatioBack', 0.29);
         $this->setValue('legRatioSide', (1 - ($this->v('legRatioInset') + $this->v('legRatioBack'))) / 2);
-        
+
         /* Helpers */
         $this->setValue('halfCross', $model->getMeasurement('crossseamLength')/2);
         $this->setValue('sideWaist', $model->getMeasurement('hipsCircumference') * $this->v('waistRatioSide') * $this->getOption('horizontalStretchFactor'));
         $this->setValue('sideLeg', $model->getMeasurement('upperLegCircumference') * $this->v('legRatioSide') * $this->getOption('horizontalStretchFactor'));
-        
+
         /* Keep stretch ratio to something sensible */
         if ($this->o('verticalStretchFactor')<0.5) {
             $this->setOption('verticalStretchFactor', 0.5);
@@ -83,12 +83,12 @@ class BruceBoxerBriefs extends Pattern
     public function draft($model)
     {
         $this->sample($model);
-        
+
         $this->finalizeBack($model);
         $this->finalizeSide($model);
         $this->finalizeFront($model);
         $this->finalizeInset($model);
-        
+
         if ($this->isPaperless) {
             $this->paperlessBack($model);
             $this->paperlessSide($model);
@@ -118,7 +118,7 @@ class BruceBoxerBriefs extends Pattern
         $this->draftFront($model);
         $this->draftInset($model);
     }
-    
+
     /**
      * Drafts the back
      *
@@ -132,24 +132,24 @@ class BruceBoxerBriefs extends Pattern
         $p = $this->parts['back'];
 
         $p->newPoint(   1, 0, 0, 'Waistline @ center back');
-        $p->newPoint(   
-            2, 
-            $model->getMeasurement('hipsCircumference') * $this->v('waistRatioBack') * $this->getOption('horizontalStretchFactor') / 2, 
-            0 - $this->getOption('rise') * $this->getOption('verticalStretchFactor'), 
+        $p->newPoint(
+            2,
+            $model->getMeasurement('hipsCircumference') * $this->v('waistRatioBack') * $this->getOption('horizontalStretchFactor') / 2,
+            0 - $this->getOption('rise') * $this->getOption('verticalStretchFactor'),
             'Waistline @ center back'
         );
         $p->addPoint( 201, $p->shift(2, 200, 25));
         $p->newPoint(   3, 0, $p->y(2) + $this->v('halfCross') * $this->getOption('verticalStretchFactor'), 'Crossseam point');
-        $p->newPoint(   
-            5, 
-            $p->x(3) + $this->v('halfCross') * $this->getOption('verticalStretchFactor') * 0.145, 
-            $p->y(3) + $this->v('halfCross') * $this->getOption('horizontalStretchFactor') * 0.265, 
+        $p->newPoint(
+            5,
+            $p->x(3) + $this->v('halfCross') * $this->getOption('verticalStretchFactor') * 0.145,
+            $p->y(3) + $this->v('halfCross') * $this->getOption('horizontalStretchFactor') * 0.265,
             'Inside corner leg'
         );
-        $p->newPoint(   
-            4, 
-            $p->x(5) + $model->getMeasurement('upperLegCircumference') * $this->v('legRatioBack') * $this->getOption('horizontalStretchFactor'), 
-            $p->y(5), 
+        $p->newPoint(
+            4,
+            $p->x(5) + $model->getMeasurement('upperLegCircumference') * $this->v('legRatioBack') * $this->getOption('horizontalStretchFactor'),
+            $p->y(5),
             'Pre-rotate outside corner leg'
         );
         $p->addPoint( 401, $p->rotate(4, 5, 14), 'Outside corner leg');
@@ -176,7 +176,7 @@ class BruceBoxerBriefs extends Pattern
 
         // Mark path for sample service
         $p->paths['seamline']->setSample(true);
-        
+
         /* Store seamlength */
         $this->crotchSeamLength = $p->curveLen(5, 502, 6, 3)*2;
     }
@@ -203,11 +203,11 @@ class BruceBoxerBriefs extends Pattern
         foreach ($flip as $i) {
             $p->addPoint(-$i, $p->flipX($i), $p->points[$i]->getDescription());
         }
-      
-        // Storing seam length 
+
+        // Storing seam length
         $this->setValue('frontLength', $p->distance(2, 3));
-        
-        // Path 
+
+        // Path
         $path = 'M 2 L 3 L -3 L -2 z';
         $p->newPath('seamline', $path, ['class' => 'seamline']);
 
@@ -253,14 +253,14 @@ class BruceBoxerBriefs extends Pattern
         foreach ($flip as $i) {
             $p->addPoint(-$i, $p->flipX($i), $p->points[$i]->getDescription());
         }
-  
+
         $path = 'M -2 L 2 L 4 C 404 701 501 L 502 C 503 601 6 C 601 -503 -502 L -501 C -701 -404 -4 z';
         $p->newPath('seamline', $path, ['class' => 'seamline']);
 
         // Mark path for sample service
         $p->paths['seamline']->setSample(true);
     }
-    
+
     /**
      * Drafts the inset
      *
@@ -287,9 +287,9 @@ class BruceBoxerBriefs extends Pattern
         $p->addPoint(   5, $p->shiftAlong(1, 101, 403, 401, 70), 'Notch' );
 
         $points = $p->addSplitCurve(1, 101, 403, 401, 0.5, 'split', true);
-        
+
         $path = 'M 2 L 1 C split2 split3 split4 C split7 split6 401 L 3 z';
-        
+
         $p->newPath('seamline', $path, ['class' => 'seamline']);
 
         // Mark path for sample service
@@ -320,8 +320,8 @@ class BruceBoxerBriefs extends Pattern
 
         // Seam allowance
         $p->offsetPath('sa','seamline', -10, 1, ['class' => 'seam-allowance']);
-        
-        // Extra hem allowance right leg 
+
+        // Extra hem allowance right leg
         $moveThese = [
             'sa-line-401TO2XllXsa-line-401TO5',
             'sa-line-401TO5',
@@ -333,7 +333,7 @@ class BruceBoxerBriefs extends Pattern
             $p->addPoint($i, $p->shift($i, $angle, 10));
         }
 
-        // Extra hem allowance left leg 
+        // Extra hem allowance left leg
         $moveThese = [
             'sa-curve--5TO3XclXsa-line--5TO-401',
             'sa-line--5TO-401',
@@ -350,15 +350,15 @@ class BruceBoxerBriefs extends Pattern
         $p->newPoint('grainlineBottom', $p->x('grainlineTop'), $p->y(-401));
         $p->newGrainline('grainlineBottom','grainlineTop',$this->t('Grainline'));
 
-        // Title 
+        // Title
         $p->newPoint('titleAnchor', 0, $p->y(11) + 70);
         $p->addTitle('titleAnchor', 1, $this->t($p->title), '1x '.$this->t('from fabric'));
-        
+
         /* Scalebox */
         $p->newPoint('scaleboxAnchor', 0, $p->y(11) + 120);
         $p->newSnippet('scalebox', 'scalebox', 'scaleboxAnchor');
     }
-    
+
     /**
      * Finalizes the side
      *
@@ -371,19 +371,19 @@ class BruceBoxerBriefs extends Pattern
         /** @var \Freesewing\Part $p */
         $p = $this->parts['side'];
 
-        // Title 
+        // Title
         $p->newPoint('titleAnchor', 0, $p->y('gridAnchor')+70);
         $p->addTitle('titleAnchor', 3, $this->t($p->title), '2x '.$this->t('from fabric')."\n".$this->t('Good sides together'));
 
-        // Logo 
+        // Logo
         $p->newPoint('logoAnchor', 0, $p->y('gridAnchor')+120);
         $p->newSnippet('logo', 'logo', 'logoAnchor');
         $p->newSnippet('cc', 'cc', 'logoAnchor');
-        
+
         // Seam allowance
         $p->offsetPath('sa', 'seamline', -10, 1, ['class' => 'seam-allowance']);
 
-        // Extra hem allowance 
+        // Extra hem allowance
         $p->addPoint('sa-line-3TO-3', $p->shift('sa-line-3TO-3', -90, 10));
         $p->addPoint('sa-line--3TO3', $p->shift('sa-line--3TO3', -90, 10));
         $p->newPoint('sa-line-3TO2XllXsa-line-3TO-3', $p->x('sa-line-3TO2'), $p->y('sa-line-3TO-3'));
@@ -401,15 +401,15 @@ class BruceBoxerBriefs extends Pattern
     {
         /** @var \Freesewing\Part $p */
         $p = $this->parts['front'];
-        
-        // Title 
+
+        // Title
         $p->newPoint('titleAnchor', 0, $p->y('gridAnchor')+70);
         $p->addTitle('titleAnchor', 2, $this->t($p->title), '2x '.$this->t('from fabric')."\n".$this->t('Good sides together'));
 
-        // Standard seam allowance 
+        // Standard seam allowance
         $p->offsetPath('sa', 'seamline', -10, 1, ['class' => 'seam-allowance']);
     }
-    
+
     /**
      * Finalizes the inset
      *
@@ -422,14 +422,14 @@ class BruceBoxerBriefs extends Pattern
         /** @var \Freesewing\Part $p */
         $p = $this->parts['inset'];
 
-        // Title 
+        // Title
         $p->newPoint('titleAnchor', $p->x(3)/2.5, $p->y(401));
         $p->addTitle('titleAnchor', 4, $this->t($p->title), '2x '.$this->t('from fabric')."\n".$this->t('Good sides together'));
-        
-        // Seam allowance 
+
+        // Seam allowance
         $p->offsetPath('sa', 'seamline', 10, 1, ['class' => 'seam-allowance']);
-    
-        // Extra hem allowance 
+
+        // Extra hem allowance
         $moveThese = [
             'sa-line-2TO3XllXsa-line-2TO1',
             'sa-line-2TO3',
@@ -454,7 +454,7 @@ class BruceBoxerBriefs extends Pattern
     */
 
     /**
-     * Adds paperless info for the back 
+     * Adds paperless info for the back
      *
      * @param \Freesewing\Model $model The model to draft for
      *
@@ -464,7 +464,7 @@ class BruceBoxerBriefs extends Pattern
     {
         /** @var \Freesewing\Part $p */
         $p = $this->parts['back'];
-    
+
         // Heights on the left
         $xBase = $p->x(-401);
         $p->newHeightDimension(3,-2,$xBase-15);
@@ -475,7 +475,7 @@ class BruceBoxerBriefs extends Pattern
         $yBase = $p->y(-5);
         $p->newWidthDimension(-5,5,$yBase+35);
         $p->newWidthDimension(-401,401,$yBase+50);
-        
+
         // Widhts at the top
         $yBase = $p->y(-2);
         $p->newWidthDimension(-2,2,$yBase-25);
@@ -487,7 +487,7 @@ class BruceBoxerBriefs extends Pattern
     }
 
     /**
-     * Adds paperless info for the side 
+     * Adds paperless info for the side
      *
      * @param \Freesewing\Model $model The model to draft for
      *
@@ -497,16 +497,16 @@ class BruceBoxerBriefs extends Pattern
     {
         /** @var \Freesewing\Part $p */
         $p = $this->parts['side'];
-        
+
         // Heights on the left
         $p->newHeightDimension(-3,-2,$p->x(-3)-25);
-        
+
         // Width at the bottom
         $p->newWidthDimension(-3,3,$p->y(3)+35);
-        
+
         // Width at the top
         $p->newWidthDimension(-2,2,$p->y(2)-25);
-        
+
         // Notes
         $p->addPoint(  'noteAnchor1', $p->shiftTowards(2, 3, 100));
         $p->addPoint(  'noteAnchor2', $p->shift(3, 180, 40));
@@ -515,7 +515,7 @@ class BruceBoxerBriefs extends Pattern
     }
 
     /**
-     * Adds paperless info for the front 
+     * Adds paperless info for the front
      *
      * @param \Freesewing\Model $model The model to draft for
      *
@@ -549,7 +549,7 @@ class BruceBoxerBriefs extends Pattern
     }
 
     /**
-     * Adds paperless info for the inset 
+     * Adds paperless info for the inset
      *
      * @param \Freesewing\Model $model The model to draft for
      *
@@ -566,7 +566,7 @@ class BruceBoxerBriefs extends Pattern
         // Widths at the bottom
         $p->newWidthDimension(3,2,$p->y(2)+35);
         $p->newWidthDimension(401,2,$p->y(2)+50);
-        
+
         // Height at the right
         $p->newHeightDimension(2,1,$p->x(1)+25);
     }

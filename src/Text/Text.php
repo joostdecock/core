@@ -13,7 +13,7 @@ class Text
 {
     /** @var \Freesewing\Point $anchor Point to anchor the text on */
     public $anchor;
-    
+
     /** @var string $text The text itself */
     public $text;
 

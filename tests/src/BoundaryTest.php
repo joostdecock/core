@@ -39,7 +39,7 @@ class BoundaryTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals($expectedResult, $object->{$getMethod}());
     }
 
-    public function providerGettersReturnWhatSettersSet() 
+    public function providerGettersReturnWhatSettersSet()
     {
         $point = new \Freesewing\Point();
         $point->setX(52);
@@ -62,10 +62,10 @@ class BoundaryTest extends \PHPUnit\Framework\TestCase
         $object = new \Freesewing\Boundary();
         $object->setTopLeft($topLeft);
         $object->setBottomRight($bottomRight);
-        
+
         $this->assertEquals(17, $object->width);
         $this->assertEquals(5183, $object->height);
 
 
-    } 
+    }
 }

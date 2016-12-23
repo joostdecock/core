@@ -17,7 +17,7 @@ class Dimension
 {
     /** @var \Freesewing\TextOnPath $label The label for the dimension */
     private $label;
-    
+
     /** @var array $leaders Array of leader lines/paths for the dimension */
     private $leaders = array();
 

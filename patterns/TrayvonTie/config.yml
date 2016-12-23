@@ -19,6 +19,7 @@ parts:
 languages:
     en: English
     nl: Nederlands
+    fr: French
 
 measurements:
     centerBackNeckToWaist: 480

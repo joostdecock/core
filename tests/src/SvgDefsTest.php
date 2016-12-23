@@ -8,7 +8,7 @@ class SvgDefsTest extends \PHPUnit\Framework\TestCase
     {
         $data = 'sorcha';
         $expectedResult = "\n<defs id=\"defs\">\n    sorcha\n</defs>\n";
-        
+
         $object = new \Freesewing\SvgDefs();
         $object->add($data);
         $this->assertEquals($expectedResult, $object->load());

@@ -38,7 +38,7 @@ class ResponseTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals($expectedResult, $object->{$getMethod}());
     }
 
-    public function providerGettersReturnWhatSettersSet() 
+    public function providerGettersReturnWhatSettersSet()
     {
         return [
             ['Status', 'bad_request'],
@@ -63,7 +63,7 @@ class ResponseTest extends \PHPUnit\Framework\TestCase
         $object->setFormat($format);
         $object->setBody($body);
 
-        $this->expectOutputString($expectedResult); 
+        $this->expectOutputString($expectedResult);
         $object->send();
     }
 
@@ -80,7 +80,7 @@ class ResponseTest extends \PHPUnit\Framework\TestCase
             ['server_error', 'raw', 'sorcha', 'sorcha'],
         ];
     }
-    
+
     /**
      * @expectedException InvalidArgumentException
      * @expectedExceptionMessage is not a supported response status

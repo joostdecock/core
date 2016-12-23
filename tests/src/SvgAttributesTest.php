@@ -8,7 +8,7 @@ class SvgAttributesTest extends \PHPUnit\Framework\TestCase
     {
         $data = 'sorcha';
         $expectedResult = "\n<svg\n    sorcha\n>\n";
-        
+
         $object = new \Freesewing\SvgAttributes();
         $object->add($data);
         $this->assertEquals($expectedResult, $object->load());

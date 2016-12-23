@@ -524,15 +524,15 @@ class Part
         $bottomRight->setX(-INF);
         $bottomRight->setY(-INF);
 
-        // FIXME We need a getAllPaths() method, since notes can also have paths that 
-        // should be taken into account when calculating the bounding box 
+        // FIXME We need a getAllPaths() method, since notes can also have paths that
+        // should be taken into account when calculating the bounding box
         if(is_array($this->dimensions) && count($this->dimensions) > 0) {
             foreach($this->dimensions as $dimension) $dimensionPaths[] = $dimension->getPath();
             $allPaths = array_merge($this->paths,$dimensionPaths);
         } else {
             $allPaths = $this->paths;
         }
-        
+
         foreach ($allPaths as $path) {
             $path->setBoundary($path->findBoundary($this));
 
@@ -1446,7 +1446,7 @@ class Part
     {
         $len = 0;
         foreach ($path->breakUp() as $chunk) {
-            $points = Utils::asScrubbedArray($chunk['path']); 
+            $points = Utils::asScrubbedArray($chunk['path']);
             if ($chunk['type'] == 'L') {
                 $len += $this->distance($points[1],$points[3]);
             }
@@ -2167,7 +2167,7 @@ class Part
         }
     }
 
-    /** 
+    /**
      * Adds a (small) width dimension to the pattern
      *
      * @param string $fromId ID of the point that the dimension starts from
@@ -2180,18 +2180,18 @@ class Part
      *
      */
     public function newWidthDimensionSm(
-        $fromId, 
-        $toId, 
-        $y = false, 
-        $text = false, 
-        $pathAttributes=['class' => 'dimension dimension-sm'], 
+        $fromId,
+        $toId,
+        $y = false,
+        $text = false,
+        $pathAttributes=['class' => 'dimension dimension-sm'],
         $labelAttributes=['class' => 'dimension-label text-sm', 'dy' => -2],
         $leaderAttributes=['class' => 'dimension-leader']
     ) {
         $this->newWidthDimension($fromId,$toId,$y,$text,$pathAttributes,$labelAttributes);
     }
 
-    /** 
+    /**
      * Adds a width dimension to the pattern
      *
      * @param string $fromId ID of the point that the dimension starts from
@@ -2204,11 +2204,11 @@ class Part
      *
      */
     public function newWidthDimension(
-        $fromId, 
-        $toId, 
-        $y = false, 
-        $text = false, 
-        $pathAttributes=['class' => 'dimension'], 
+        $fromId,
+        $toId,
+        $y = false,
+        $text = false,
+        $pathAttributes=['class' => 'dimension'],
         $labelAttributes=['class' => 'dimension-label', 'dy' => -2],
         $leaderAttributes=['class' => 'dimension-leader']
     ) {
@@ -2245,7 +2245,7 @@ class Part
 
         // Label (a TextOnPath object)
         $label = new \Freesewing\TextOnPath();
-        
+
         // Path
         $path = new \Freesewing\Path();
         $path->setPath("M $pathFrom L $pathTo");
@@ -2260,7 +2260,7 @@ class Part
         $this->addDimension($d);
     }
 
-    /** 
+    /**
      * Adds a (small) height dimension to the pattern
      *
      * @param string $fromId ID of the point that the dimension starts from
@@ -2273,18 +2273,18 @@ class Part
      *
      */
     public function newHeightDimensionSm(
-        $fromId, 
-        $toId, 
-        $x = false, 
-        $text = false, 
-        $pathAttributes=['class' => 'dimension dimension-sm'], 
+        $fromId,
+        $toId,
+        $x = false,
+        $text = false,
+        $pathAttributes=['class' => 'dimension dimension-sm'],
         $labelAttributes=['class' => 'dimension-label text-sm', 'dy' => -2],
         $leaderAttributes=['class' => 'dimension-leader']
     ) {
         $this->newHeightDimension($fromId,$toId,$x,$text,$pathAttributes,$labelAttributes,$leaderAttributes);
     }
 
-    /** 
+    /**
      * Adds a height dimension to the pattern
      *
      * @param string $fromId ID of the point that the dimension starts from
@@ -2297,11 +2297,11 @@ class Part
      *
      */
     public function newHeightDimension(
-        $fromId, 
-        $toId, 
-        $x = false, 
-        $text = false, 
-        $pathAttributes=['class' => 'dimension'], 
+        $fromId,
+        $toId,
+        $x = false,
+        $text = false,
+        $pathAttributes=['class' => 'dimension'],
         $labelAttributes=['class' => 'dimension-label', 'dy' => -2],
         $leaderAttributes=['class' => 'dimension-leader']
     ) {
@@ -2338,7 +2338,7 @@ class Part
 
         // Label (a TextOnPath object)
         $label = new \Freesewing\TextOnPath();
-        
+
         // Path
         $path = new \Freesewing\Path();
         $path->setPath("M $pathFrom L $pathTo");
@@ -2350,11 +2350,11 @@ class Part
         $label->setPath($path);
         $label->setAttributes($labelAttributes);
         $d->setLabel($label);
-    
+
         $this->addDimension($d);
     }
 
-    /** 
+    /**
      * Creates a linear dimension to the part
      *
      * @param string $fromId ID of the point that the dimension starts from
@@ -2364,14 +2364,14 @@ class Part
      * @param array $pathAttributes Attributes for the path the label goes on
      * @param array $labelAttributes Attributes for the text of the label
      * @param array $leaderAttributes Attributes for the leader paths
-     * 
+     *
      */
     public function newLinearDimension(
-        $fromId, 
-        $toId, 
-        $offset = 0, 
-        $text = false, 
-        $pathAttributes=['class' => 'dimension dimension-width'], 
+        $fromId,
+        $toId,
+        $offset = 0,
+        $text = false,
+        $pathAttributes=['class' => 'dimension dimension-width'],
         $labelAttributes=['class' => 'dimension-label', 'dy' => -2],
         $leaderAttributes=['class' => 'dimension-leader']
     ) {
@@ -2396,7 +2396,7 @@ class Part
 
         // Label (a TextOnPath object)
         $label = new \Freesewing\TextOnPath();
-        
+
         // Path
         $path = new \Freesewing\Path();
         $path->setPath("M $pathFrom L $pathTo");
@@ -2408,11 +2408,11 @@ class Part
         $label->setPath($path);
         $label->setAttributes($labelAttributes);
         $d->setLabel($label);
-    
+
         $this->addDimension($d);
     }
-    
-    /** 
+
+    /**
      * Creates and adds a curved dimension to the part
      *
      * @param string $pathString The (unrendered) pathstring of the curve
@@ -2421,13 +2421,13 @@ class Part
      * @param array $pathAttributes Attributes for the path the label goes on
      * @param array $labelAttributes Attributes for the text of the label
      * @param array $leaderAttributes Attributes for the leader paths
-     * 
+     *
      */
     public function newCurvedDimension(
-        $pathString, 
-        $offset = 0, 
-        $text = false, 
-        $pathAttributes=['class' => 'dimension dimension-width'], 
+        $pathString,
+        $offset = 0,
+        $text = false,
+        $pathAttributes=['class' => 'dimension dimension-width'],
         $labelAttributes=['class' => 'dimension-label', 'dy' => -2],
         $leaderAttributes=['class' => 'dimension-leader']
     ) {
@@ -2440,12 +2440,12 @@ class Part
 
         // Label (a TextOnPath object)
         $label = new \Freesewing\TextOnPath();
-        
+
         // Path
         if($offset == 0) {
             $path = new \Freesewing\Path();
-            $path->setPath($pathString);    
-            $path->setAttributes($pathAttributes);    
+            $path->setPath($pathString);
+            $path->setAttributes($pathAttributes);
         } else {
             $id = $this->newId('.dc-');
             $this->offsetPathString($id, $pathString, $offset, true, $pathAttributes);
@@ -2458,16 +2458,16 @@ class Part
         $label->setPath($path);
         $label->setAttributes($labelAttributes);
         $d->setLabel($label);
-    
+
         // Leaders
         if($offset != 0) { // We need leaders
-            
+
             // Start Leader
             $leader = new \Freesewing\Path;
             $leader->setPath('M '.$origPath->getStartPoint().' L '.$path->getStartPoint());
             $leader->setAttributes($leaderAttributes);
             $d->addLeader($leader);
-            
+
             // End Leader
             $leader = new \Freesewing\Path;
             $leader->setPath('M '.$origPath->getEndPoint().' L '.$path->getEndPoint());
@@ -2477,8 +2477,8 @@ class Part
 
         $this->addDimension($d);
     }
-    
-    /** 
+
+    /**
      * Adds a grainline, by calling newLinearDimension() with specific attributes
      *
      * @param string $fromId ID of the point that the dimension starts from
@@ -2486,12 +2486,12 @@ class Part
      * @param string $text The text to put on the grainline
      *
      */
-    public function newGrainline($fromId, $toId, $text=' ') 
+    public function newGrainline($fromId, $toId, $text=' ')
     {
         $this->newLinearDimension($fromId, $toId, 0, $text, ['class' => 'grainline'], ['class' => 'text-lg text-center grainline', 'dy' => -2]);
     }
 
-    /** 
+    /**
      * Adds a cut-on-fold line, by calling dl() with specific attributes
      *
      * @param string $fromId ID of the point that the dimension starts from
@@ -2499,14 +2499,14 @@ class Part
      * @param string $text The text to put on the grainline
      *
      */
-    public function newCutOnFold($fromId, $toId, $text, $offset=20) 
+    public function newCutOnFold($fromId, $toId, $text, $offset=20)
     {
         // Add via points
         $angle = $this->angle($fromId, $toId)+90;
 
         $viaFrom = $this->newId('.cof');
         $this->addPoint($viaFrom, $this->shift($fromId,$angle,$offset));
-        
+
         $viaTo = $this->newId('.cof');
         $this->addPoint($viaTo, $this->shift($toId,$angle,$offset));
 

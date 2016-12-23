@@ -13,10 +13,10 @@ class Transform
 {
     /** @var float $x X value */
     private $x = null;
-    
+
     /** @var float $r Y value */
     private $y = null;
-    
+
     /** @var float $angle Rotation angle */
     private $angle = null;
 

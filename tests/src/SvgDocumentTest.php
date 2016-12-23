@@ -12,17 +12,17 @@ class SvgDocumentTest extends \PHPUnit\Framework\TestCase
   -->
 
 <svg
-    
+
 >
 
 <style type="text/css">
     <![CDATA[
-    
+
     ]]>
 </style>
 
 <defs id="defs">
-    
+
 </defs>
 ';
     public $emptySvgEnd = '
@@ -33,7 +33,7 @@ class SvgDocumentTest extends \PHPUnit\Framework\TestCase
 <!--
   -->
 ';
- 
+
     /**
      * @param string $attribute Attribute to check for
      *
@@ -75,7 +75,7 @@ class SvgDocumentTest extends \PHPUnit\Framework\TestCase
         $expect = $this->emptySvgStart.$this->emptySvgEnd;
         $this->assertEquals($expect, "$svgDocument");
     }
-    
+
     public function testSetSvgBody()
     {
         $headerComments = new \Freesewing\SvgComments();

@@ -43,14 +43,14 @@ class Docs extends Channel
      * Turn input into model measurements that we understand.
      *
      * This loads measurement names from the pattern config file
-     * 
+     *
      * @todo What to do when measurments are missing?
      *
      * @param \Freesewing\Request $request The request object
      * @param \Freesewing\Patterns\[pattern] $pattern The pattern object
      *
      * @return array|null The model measurements or null of there are none
-     */ 
+     */
     public function standardizeModelMeasurements($request, $pattern)
     {
         if(isset($pattern->config['measurements']) && is_array($pattern->config['measurements'])) {
@@ -71,7 +71,7 @@ class Docs extends Channel
      * Turn input into pattern options that we understand.
      *
      * This loads pattern options from the sampler config file
-     * 
+     *
      * @todo What to do when options are missing?
      * @todo What about imperial?
      *
@@ -79,7 +79,7 @@ class Docs extends Channel
      * @param \Freesewing\Patterns\[pattern] $pattern The pattern object
      *
      * @return array|null The pattern options or null of there are none
-     */ 
+     */
     public function standardizePatternOptions($request, $pattern)
     {
         if(isset($pattern->config['options']) && is_array($pattern->config['options'])) {
@@ -103,7 +103,7 @@ class Docs extends Channel
                         else $options[$key] = $val['default'];
                         break;
                 }
-                
+
             }
             return $options;
         } else return null;

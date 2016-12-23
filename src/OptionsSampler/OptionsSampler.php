@@ -40,7 +40,7 @@ class OptionsSampler extends Sampler
     {
         $config = $this->pattern->getConfig();
         $options = $config['options'];
-    
+
         if (isset($options[$option])) {
             return $options[$option];
         }

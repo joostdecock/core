@@ -48,7 +48,7 @@ class JoostBodyBlock extends Pattern
      * When extending this pattern so we can just implement the
      * initialize() method and re-use the other methods.
      *
-     * Good to know: 
+     * Good to know:
      * Options are typically provided by the user, but sometimes they are fixed
      * Values are calculated for re-use later
      *
@@ -64,13 +64,13 @@ class JoostBodyBlock extends Pattern
 
         // Depth of the armhole
         $this->setValue('armholeDepth', 200 + ($model->m('shoulderSlope') / 2 - 27.5) + ($model->m('bicepsCircumference') / 10));
-        
+
         // Collar widht and depth
         $this->setValue('collarWidth', ($model->getMeasurement('neckCircumference') / self::PI) / 2 + 5);
         $this->setValue('collarDepth', ($model->getMeasurement('neckCircumference') + $this->getOption('collarEase')) / 5 - 8);
-        
+
         // Cut front armhole a bit deeper
-        $this->setValue('frontArmholeExtra', 5); 
+        $this->setValue('frontArmholeExtra', 5);
     }
 
     /**

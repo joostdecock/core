@@ -12,12 +12,12 @@ namespace Freesewing\Patterns;
 class HugoHoodie extends JoostBodyBlock
 {
     /*
-        ___       _ _   _       _ _          
-       |_ _|_ __ (_) |_(_) __ _| (_)___  ___ 
+        ___       _ _   _       _ _
+       |_ _|_ __ (_) |_(_) __ _| (_)___  ___
         | || '_ \| | __| |/ _` | | / __|/ _ \
         | || | | | | |_| | (_| | | \__ \  __/
        |___|_| |_|_|\__|_|\__,_|_|_|___/\___|
-              
+
       Things we need to do before we can draft a pattern
     */
 
@@ -26,12 +26,12 @@ class HugoHoodie extends JoostBodyBlock
 
 
     /*
-        ____             __ _   
-       |  _ \ _ __ __ _ / _| |_ 
+        ____             __ _
+       |  _ \ _ __ __ _ / _| |_
        | | | | '__/ _` | |_| __|
-       | |_| | | | (_| |  _| |_ 
+       | |_| | | | (_| |  _| |_
        |____/|_|  \__,_|_|  \__|
-        
+
       The actual sampling/drafting of the pattern
     */
 
@@ -50,7 +50,7 @@ class HugoHoodie extends JoostBodyBlock
     public function sample($model)
     {
         $this->initialize($model);
-        
+
         // Lower the armhole
         $this->setValue('armholeDepth', $this->getValue('armholeDepth') + 50);
 
@@ -58,7 +58,7 @@ class HugoHoodie extends JoostBodyBlock
         foreach ($this->parts as $key => $part) {
             $this->{'draft'.ucfirst($key)}($model);
         }
-        
+
         // Hide base blocks
         $this->parts['frontBlock']->setRender(false);
         $this->parts['backBlock']->setRender(false);
@@ -86,7 +86,7 @@ class HugoHoodie extends JoostBodyBlock
                 $this->{'finalize'.ucfirst($key)}($model,$part);
             }
         }
-        
+
         // Is this a paperless pattern?
         if ($this->isPaperless) {
             foreach ($this->parts as $key => $part) {
@@ -131,7 +131,7 @@ class HugoHoodie extends JoostBodyBlock
         // Making garment longer
         $p->addPoint(  4, $p->shift( 4, -90, 60), 'Center back at front bottom');
         $p->addPoint(  6, $p->shift( 6, -90, 60), 'Quarter chest at front bottom');
-        
+
         // Adding points from index 100 onwards
         $p->addPoint( 100, $p->shiftAlong(8, 20, 21, 9, $p->curveLen(8, 20, 21, 9)/3), 'Raglan front tip');
         $p->addSplitCurve(8, 20, 21, 9, 100, 5);
@@ -142,7 +142,7 @@ class HugoHoodie extends JoostBodyBlock
         $p->newPoint( 103, $p->x(101), $p->y(4)-$p->x(101));
         $p->addPoint( 104, $p->shift(103, 90, $p->deltaY(102, 103)*0.75));
         $p->newPoint( 105, 0, $p->y(103));
-        
+
         // Paths
         $path = 'M 9 L 2 L 3 L 4 L 6 L 5 C 13 16 14 C 15 100 100 C 57 56 9 z';
         $p->newPath('seamline', $path);
@@ -154,10 +154,10 @@ class HugoHoodie extends JoostBodyBlock
         // $frontBlock = 'M 9 L 2 L 3 L 4 L 6 L 5 C 13 16 14 C 15 18 10 C 17 19 12 L 8 C 20 21 9 z';
         // $backBlock = 'M 1 L 2 L 3 L 4 L 6 L 5 C 13 16 14 C 15 18 10 C 17 19 12 L 8 C 20 21 1 z';
         // $p->newPath('frontBlock', $frontBlock,['class' => 'helpline']);
-        
+
         // Mark path for sample service
         $p->paths['seamline']->setSample(true);
-        
+
         // Grid anchor
         $p->clonePoint(4, 'gridAnchor');
     }
@@ -175,7 +175,7 @@ class HugoHoodie extends JoostBodyBlock
 
         /** @var \Freesewing\Part $p */
         $p = $this->parts['back'];
-        
+
         // Making neck opening wider and deeper
         $p->addPoint(  1, $p->shift( 1, -90, 10), 'Center front collar depth');
         $angle = $p->angle(8, 12);
@@ -184,12 +184,12 @@ class HugoHoodie extends JoostBodyBlock
         // Making garment longer
         $p->addPoint(  4, $p->shift( 4, -90, 60), 'Center back at front bottom');
         $p->addPoint(  6, $p->shift( 6, -90, 60), 'Quarter chest at front bottom');
-     
+
         // Adding points from index 100 onwards
         $p->newPoint( 21, $p->x(21), $p->y(1), 'Control point for 1'); // Re-using point 21
         $p->addPoint( 100, $p->shiftAlong(8, 20, 21, 1, $p->curveLen(8, 20, 21, 1)/2), 'Raglan back tip');
         $p->addSplitCurve(8, 20, 21, 1, 100, 5);
-     
+
         // Paths
         $path = 'M 1 L 2 L 3 L 4 L 6 L 5 C 13 16 14 C 15 100 100 C 57 56 1 z';
         $p->newPath('seamline', $path);
@@ -200,10 +200,10 @@ class HugoHoodie extends JoostBodyBlock
          */
         // $backBlock = 'M 1 L 2 L 3 L 4 L 6 L 5 C 13 16 14 C 15 18 10 C 17 19 12 L 8 C 20 21 1 z';
         // $p->newPath('backBlock', $backBlock,['class' => 'helpline']);
-        
+
         // Mark path for sample service
         $p->paths['seamline']->setSample(true);
-        
+
         // Grid anchor
         $p->clonePoint(4, 'gridAnchor');
     }
@@ -220,7 +220,7 @@ class HugoHoodie extends JoostBodyBlock
 
         /** @var \Freesewing\Part $p */
         $p = $this->parts['sleeve'];
-        
+
         // Importing cut off shoulder part from front
         $front = $this->parts['front'];
         $load = [12,8,52,53,20,100,15,14,18,10,17,19];
@@ -242,7 +242,7 @@ class HugoHoodie extends JoostBodyBlock
         foreach ($load as $i) {
             $p->addPoint( 100+$i, $p->flipX( 100+$i, $p->x(1)));
         }
-        
+
         // Importing cut off shoulder part from back
         $back = $this->parts['back'];
         $load = [12,8,52,53,20,100,15,14,18,10,17,19];
@@ -260,7 +260,7 @@ class HugoHoodie extends JoostBodyBlock
         foreach ($load as $i) {
             $p->addPoint( 200+$i, $p->rotate(200+$i, 1, $angle));
         }
-        
+
         // Raglan seam lengths
         $this->setValue('frontRaglan', $front->curveLen(100, 100, 15, 14) + $front->curveLen(14, 14, 13, 5));
         $this->setValue('backRaglan',  $back->curveLen( 100, 100, 15, 14) + $back->curveLen(14, 14, 13, 5));
@@ -325,11 +325,11 @@ class HugoHoodie extends JoostBodyBlock
         $help = 'M 200 L 130 L 230 M 200 C 134 132 133 M 300 C 234 232 233';
         $p->newPath('help', $help, ['class' => 'helpline']);
          */
-        
+
         // Mark path for sample service
         $p->paths['seamline']->setSample(true);
     }
-    
+
     /**
      * Drafts the pocket
      *
@@ -343,14 +343,14 @@ class HugoHoodie extends JoostBodyBlock
 
         /** @var \Freesewing\Part $p */
         $p = $this->parts['pocket'];
-        
+
         $pocket = 'M 105 L 103 C 104 102 102 L 101 L 4 z';
         $p->newPath('seamline', $pocket);
-        
+
         // Mark path for sample service
         $p->paths['seamline']->setSample(true);
     }
-    
+
     /**
      * Drafts the pocket facing
      *
@@ -371,14 +371,14 @@ class HugoHoodie extends JoostBodyBlock
         $p->addPoint( 112, $p->shift(112, -90, $p->deltaY(102, 110)));
         $pocket = 'M 111 C 112 110 110 L 102 C 102 104 103 z';
         $p->newPath('seamline', $pocket);
-        
+
         // Mark path for sample service
         $p->paths['seamline']->setSample(true);
-        
+
         // Grid anchor
         $p->clonePoint(103, 'gridAnchor');
     }
-    
+
     /**
      * Drafts the hood side
      *
@@ -433,18 +433,18 @@ class HugoHoodie extends JoostBodyBlock
         $p->addPoint( 23, $p->shiftTowards(17, 20, 25));
         $p->addPoint( 22, $p->rotate(23, 17, 180));
         $p->addPoint( 25, $p->shift(6, 90, 25));
-        
+
         // Paths
         $path = 'M 11 C 11 15 12 C 14 13 13 C 20 23 17 C 22 25 6 C 8 7 11 z';
         $p->newPath('seamline', $path);
-        
+
         // Mark path for sample service
         $p->paths['seamline']->setSample(true);
-        
+
         // Grid anchor
         $p->clonePoint(6, 'gridAnchor');
     }
-    
+
     /**
      * Drafts the hood center
      *
@@ -457,10 +457,10 @@ class HugoHoodie extends JoostBodyBlock
         /** @var \Freesewing\Part $side */
         $side = $this->parts['hoodSide'];
         $len = $side->curveLen(11, 11, 15, 12) + $side->curveLen(12, 14, 13, 13);
-        
+
         $this->draftRectangle(160, $len, $this->parts['hoodCenter']);
     }
-    
+
     /**
      * Drafts the waistband
      *
@@ -475,7 +475,7 @@ class HugoHoodie extends JoostBodyBlock
         $len = $front->deltaX(4, 6) * 4 * $this->o('ribbingStretchFactor');
         $this->draftRectangle(160, $len, $this->parts['waistband']);
     }
-        
+
     /**
      * Drafts the cuff
      *
@@ -524,18 +524,18 @@ class HugoHoodie extends JoostBodyBlock
         // Paths
         $path = 'M 1 L 2 L 3 L 4 z';
         $p->newPath('seamline', $path);
-        
+
         // Mark path for sample service
         $p->paths['seamline']->setSample(true);
     }
-        
+
     /*
-       _____ _             _ _         
-      |  ___(_)_ __   __ _| (_)_______ 
+       _____ _             _ _
+      |  ___(_)_ __   __ _| (_)_______
       | |_  | | '_ \ / _` | | |_  / _ \
       |  _| | | | | | (_| | | |/ /  __/
       |_|   |_|_| |_|\__,_|_|_/___\___|
-                                       
+
       Adding titles/logos/seam-allowance/grainline and so on
     */
 
@@ -572,15 +572,15 @@ class HugoHoodie extends JoostBodyBlock
         // Title
         $p->newPoint('titleAnchor', $p->x(5)/2, $p->y(2)+$p->deltaY(2, 3)/2);
         $p->addTitle('titleAnchor', 1, $this->t($p->title), '1x '.$this->t('from fabric')."\n".$this->t('Cut on fold'));
-        
+
         // Seam allowance
         $sa = 'M 4 L 6 L 5 C 13 16 14 C 15 100 100 C 57 56 9';
         $p->offsetPathString('sa', $sa, 10, true, ['class' => 'seam-allowance']);
-    
+
         // Close path at the fold
         $p->paths['sa']->setPath('M 4 L sa-line-4TO6 M 9 L sa-curve-9TO100 '.$p->paths['sa']->getPath());
     }
-    
+
     /**
      * Finalizes the back
      *
@@ -595,20 +595,20 @@ class HugoHoodie extends JoostBodyBlock
         $p->newPoint('grainlineTop', $p->x(1)+40, $p->y(1)+20);
         $p->newPoint('grainlineBottom', $p->x('grainlineTop'), $p->y(4)-20);
         $p->newGrainline('grainlineBottom', 'grainlineTop', $this->t('Grainline'));
-        
+
         // Cut on fold (cof)
         $p->newPoint('cofTop', $p->x(1), $p->y(1)+40);
         $p->newPoint('cofBottom', $p->x(1), $p->y(4)-40);
         $p->newCutonfold('cofBottom', 'cofTop', $this->t('Cut on fold'));
-        
+
         // Title
         $p->newPoint('titleAnchor', $p->x(5)/2, $p->y(2)+$p->deltaY(2, 3)/2);
         $p->addTitle('titleAnchor', 2, $this->t($p->title), '1x '.$this->t('from fabric')."\n".$this->t('Cut on fold'));
-        
+
         // Scalebox
         $p->addPoint('scaleboxAnchor', $p->shift('titleAnchor', -90, 30));
         $p->newSnippet('scalebox', 'scalebox', 'scaleboxAnchor');
-        
+
         // Logo & CC
         $p->addPoint('logoAnchor', $p->shift('scaleboxAnchor', -90, 90));
         $p->newSnippet('logo', 'logo', 'logoAnchor');
@@ -619,7 +619,7 @@ class HugoHoodie extends JoostBodyBlock
         $p->offsetPathString('sa', $sa, 10, true, ['class' => 'seam-allowance']);
         // Close path at the fold
         $p->paths['sa']->setPath('M 4 L sa-line-4TO6 M 1 L sa-curve-1TO100 '.$p->paths['sa']->getPath());
-        
+
         // Sleeve notch
         $this->backNotchLen = $p->curveLen(100, 100, 15, 14)/2;
         $p->addPoint('sleeveNotch', $p->shiftAlong(100, 100, 15, 14, $this->backNotchLen), 'Back sleeve notch');
@@ -643,14 +643,14 @@ class HugoHoodie extends JoostBodyBlock
         $p->newPoint('grainlineTop', $p->x(108), $p->y(108)+20);
         $p->newPoint('grainlineBottom', $p->x('grainlineTop'), $p->y(32)-20);
         $p->newGrainline('grainlineBottom', 'grainlineTop', $this->t('Grainline'));
-        
+
         // Title
         $p->clonePoint(8, 'titleAnchor');
         $p->addTitle('titleAnchor', 3, $this->t($p->title), '2x '.$this->t('from fabric')."\n".$this->t('Good sides together'));
-        
+
         // Seam allowance
         $p->offsetPath('sa', 'seamline', -10, true, ['class' => 'seam-allowance']);
-        
+
         // Sleeve notches
         $p->addPoint('frontSleeveNotch', $p->shiftAlong(200, 134, 132, 133, $this->frontNotchLen), 'Front sleeve notch');
         $p->addPoint('backSleeveNotcha', $p->shiftAlong(300, 234, 232, 233, $this->backNotchLen -2.5), 'Back sleeve notch a');
@@ -659,7 +659,7 @@ class HugoHoodie extends JoostBodyBlock
         $p->newSnippet('sleeveNotcha', 'notch', 'backSleeveNotcha');
         $p->newSnippet('sleeveNotchb', 'notch', 'backSleeveNotchb');
     }
-    
+
     /**
      * Finalizes the pocket
      *
@@ -674,7 +674,7 @@ class HugoHoodie extends JoostBodyBlock
         $p->newPoint('grainlineTop', $p->x(105)+35, $p->y(105)+10);
         $p->newPoint('grainlineBottom', $p->x('grainlineTop'), $p->y(4)-10);
         $p->newGrainline('grainlineBottom', 'grainlineTop', $this->t('Grainline'));
-        
+
         // Cut on fold (cof)
         $p->newPoint('cofTop', $p->x(105), $p->y(105)+10);
         $p->newPoint('cofBottom', $p->x(105), $p->y(4)-10);
@@ -683,14 +683,14 @@ class HugoHoodie extends JoostBodyBlock
         // Title
         $p->newPoint('titleAnchor', $p->x('grainlineBottom') + $p->deltaX('grainlineBottom', 101)/2, $p->y(105)+$p->deltaY(105, 4)/2);
         $p->addTitle('titleAnchor', 4, $this->t($p->title), '1x '.$this->t('from fabric')."\n".$this->t('Cut on fold'));
-        
+
         // Seam allowance
         $sa = 'M 105 L 103 C 104 102 102 L 101 L 4';
         $p->offsetPathString('sa', $sa, -10, true, ['class' => 'seam-allowance']);
         $p->paths['sa']->setPath('M 4 L sa-line-4TO101 M 105 L sa-line-105TO103 '.$p->paths['sa']->getPath());
     }
 
-    
+
     /**
      * Finalizes the pocket facing
      *
@@ -709,11 +709,11 @@ class HugoHoodie extends JoostBodyBlock
         // Title
         $p->newPoint('titleAnchor', $p->x(111) + $p->deltaX(111, 103)/2, $p->y(111)+35);
         $p->addTitle('titleAnchor', 5, $this->t($p->title), '2x '.$this->t('from fabric')."\n".$this->t('Good sides together'), 'vertical');
-        
+
         // Seam allowance
         $p->offsetPath('sa', 'seamline', 10, true, ['class' => 'seam-allowance']);
     }
-    
+
     /**
      * Finalizes the hood side
      *
@@ -728,18 +728,18 @@ class HugoHoodie extends JoostBodyBlock
         $p->addPoint( 'grainlineTop', $p->shift(12, -90, 5));
         $p->addPoint( 'grainlineBottom', $p->shift(10, 90, 5));
         $p->newGrainline('grainlineBottom', 'grainlineTop', $this->t('Grainline'));
-        
+
         // Title
         $p->addPoint('titleAnchor', $p->shift(12, -70, 100));
         $p->addTitle('titleAnchor', 6, $this->t($p->title), '4x '.$this->t('from fabric')." (2x2)\n".$this->t('Good sides together'));
-        
+
         // Seam allowance
         $p->offsetPath('sa', 'seamline', -10, true, ['class' => 'seam-allowance']);
 
         // Notch
         $p->newSnippet('sleeveNotch', 'notch', 10);
     }
-    
+
     /**
      * Finalizes the hood center
      *
@@ -752,7 +752,7 @@ class HugoHoodie extends JoostBodyBlock
     {
         $this->finalizeRectangle($model, $p, 7, '2x '.$this->t('from fabric')."\n".$this->t('Good sides together'));
     }
-    
+
     /**
      * Finalizes the cuffs
      *
@@ -765,7 +765,7 @@ class HugoHoodie extends JoostBodyBlock
     {
         $this->finalizeRectangle($model, $p, 8, '2x '.$this->t('from ribbing')."\n".$this->t('Good sides together'));
     }
-    
+
     /**
      * Finalizes the waistband
      *
@@ -778,7 +778,7 @@ class HugoHoodie extends JoostBodyBlock
     {
         $this->finalizeRectangle($model, $p, 9, '1x '.$this->t('from ribbing'));
     }
-    
+
     /**
      * Finalizes the neck binding
      *
@@ -812,28 +812,28 @@ class HugoHoodie extends JoostBodyBlock
         $p->newPoint( 'grainlineTop', $p->x(1)+5, $p->y(3)/1.5);
         $p->newPoint( 'grainlineBottom', $p->x(2)-5, $p->y('grainlineTop'));
         $p->newGrainline('grainlineTop', 'grainlineBottom', $this->t('Grainline'));
-        
+
         // Title
         $p->newPoint('titleAnchor', $p->x(2)/2, $p->y(3)/4);
         $p->addTitle('titleAnchor', $nr, $this->t($p->title), $cut, $titleOption);
-        
+
         // Seam allowance
         $p->offsetPath('sa', 'seamline', -10, true, ['class' => 'seam-allowance']);
     }
 
 
     /*
-        ____                       _               
-       |  _ \ __ _ _ __   ___ _ __| | ___  ___ ___ 
+        ____                       _
+       |  _ \ __ _ _ __   ___ _ __| | ___  ___ ___
        | |_) / _` | '_ \ / _ \ '__| |/ _ \/ __/ __|
        |  __/ (_| | |_) |  __/ |  | |  __/\__ \__ \
        |_|   \__,_| .__/ \___|_|  |_|\___||___/___/
-                  |_|                              
-                                       
+                  |_|
+
       Instructions for paperless patterns
     */
-    
-    
+
+
     /**
      * Adds paperless info for front
      *
@@ -850,7 +850,7 @@ class HugoHoodie extends JoostBodyBlock
         $xBase = $p->x(2);
         $p->newHeightDimension(4,9,$xBase-15);
         $p->newHeightDimension(4,100,$xBase-30);
-        
+
         // Heights on the right
         $xBase = $p->x(6);
         $p->newHeightDimension(6,102,$xBase+25);
@@ -859,17 +859,17 @@ class HugoHoodie extends JoostBodyBlock
 
         // Width at the bottom
         $yBase = $p->y(6);
-        $p->newWidthDimension(4,101,$yBase+25); 
-        $p->newWidthDimension(4,102,$yBase+40); 
-        $p->newWidthDimension(4,6,$yBase+55); 
-    
+        $p->newWidthDimension(4,101,$yBase+25);
+        $p->newWidthDimension(4,102,$yBase+40);
+        $p->newWidthDimension(4,6,$yBase+55);
+
         // Width at the top
         $yBase = $p->y(100);
-        $p->newWidthDimension(9,100,$yBase-30); 
+        $p->newWidthDimension(9,100,$yBase-30);
 
         // Distance to notch
-        $p->newLinearDimension(100,'sleeveNotch',-20); 
-            
+        $p->newLinearDimension(100,'sleeveNotch',-20);
+
         // Notes
         $p->newPoint('saNote', $p->x(5), $p->y(103)-40, 'sa note anchor');
         $p->newNote('saNote', 'saNote', $this->t("Standard\nseam\nallowance")."\n(".$this->unit(10).')', 9, 10, -5);
@@ -886,7 +886,7 @@ class HugoHoodie extends JoostBodyBlock
     {
         /** @var \Freesewing\Part $p */
         $p = $this->parts['back'];
-        
+
         // Heights on the left
         $xBase = $p->x(2);
         $p->newHeightDimension(4,1,$xBase-15);
@@ -903,7 +903,7 @@ class HugoHoodie extends JoostBodyBlock
         $p->newWidthDimension(1,100,$p->y(100)-25);
 
         // Distance to notch
-        $p->newLinearDimension(100,'sleeveNotch',-20); 
+        $p->newLinearDimension(100,'sleeveNotch',-20);
 
         // Notes
         $p->newPoint('saNote', $p->x(5), $p->y(3), 'sa note anchor');
@@ -959,7 +959,7 @@ class HugoHoodie extends JoostBodyBlock
     {
         /** @var \Freesewing\Part $p */
         $p = $this->parts['pocket'];
-        
+
         // Widths at the bottom
         $yBase = $p->y(4);
         $p->newWidthDimension(4,101,$yBase+25);
@@ -982,7 +982,7 @@ class HugoHoodie extends JoostBodyBlock
     {
         /** @var \Freesewing\Part $p */
         $p = $this->parts['pocketFacing'];
-        
+
         // Width at the top
         $p->newWidthDimension(111,103,$p->y(111)-25);
         $p->newWidthDimension(111,102,$p->y(111)-40);
@@ -1008,9 +1008,9 @@ class HugoHoodie extends JoostBodyBlock
         // Edge of curves
         $p->addPoint(201, $p->curveEdgeLeft(12, 15, 11, 11));
         $p->addPoint(202, $p->curveEdgeLeft(13, 20, 23, 17));
-        
+
         // Front depth of the hood
-        $p->newWidthDimension(202,6); 
+        $p->newWidthDimension(202,6);
 
         // Width at the bottom
         $yBase = $p->y(6);
@@ -1021,7 +1021,7 @@ class HugoHoodie extends JoostBodyBlock
         $xBase = $p->x(13);
         $p->newHeightDimension(6,13,$xBase+25);
         $p->newHeightDimension(6,12,$xBase+40);
-            
+
         // Notes
         $p->newNote('saNote', 201, $this->t("Standard\nseam\nallowance")."\n(".$this->unit(10).')', 3, 10, -3, ['line-height' => 6, 'class' => 'text-lg', 'dy' => -10]);
 

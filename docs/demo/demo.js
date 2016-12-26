@@ -8,7 +8,7 @@ function scrollTo(target) {
 }
 
 function loadServices() {
-    $.getJSON(api+'/info/json', function( data ) {
+    $.getJSON(api+'/?service=info&format=json', function( data ) {
         $.each( data['services'], function( key, val ) {
             $("#services").append( "<div class='servicelist'><p><a class='btn btn-primary btn-lock service main-button' id='" + val + "'>Try the " + val + " service</a></p></div>" );
         });
@@ -29,7 +29,7 @@ function markActive(id) {
 function loadApiInfo() {
     markActive('info');
     $('#content').html(spinner);
-    $.getJSON(api+'/info/json', function( data ) {
+    $.getJSON(api+'/?service=info&format=json', function( data ) {
         $('#content').html('<div class="row" id="contentrow"></div>');
         $('#contentrow').append( "<div class='col-xs-12'><h2>API Information</h2></div>");
 
@@ -67,7 +67,7 @@ function loadPatternInfo(pattern) {
         $('#content').append( "<div class='' id='patterninfo'></div>");
     }
     $('#patterninfo').html(spinner);
-    $.getJSON(api+'/info/'+pattern+'/json', function( data ) {
+    $.getJSON(api+'/?service=info&pattern='+pattern+'&format=json', function( data ) {
         $('#patterninfo').html('');
         $('#patterninfo').append( "<div class='row'><div class='col-xs-12'><h2>" + data['info']['name'] + "</h2></div></div>");
 
@@ -141,7 +141,7 @@ function loadPatternInfo(pattern) {
 function sampleDraftPatternList(type) {
     markActive(type);
     $('#content').html(spinner);
-    $.getJSON(api+'/info/json', function( data ) {
+    $.getJSON(api+'/?service=info&format=json', function( data ) {
         $.each( data['themes'], function( key, val ) {
             themes[key] = val; // Store themes so we have them available in step2
         });
@@ -161,7 +161,7 @@ function sampleDraftPatternList(type) {
 }
 
 function loadPatternForm(pattern, service) {
-    $.getJSON(api+'/info/'+pattern+'/json', function( data ) {
+    $.getJSON(api+'/?service=info&pattern='+pattern+'&format=json', function( data ) {
         $('#content').html('<div class="row form-group" id="contentrow"></div>');
         $('#contentrow').append( "<h2>Step 2: Submit a form</h2>");
         $('#contentrow').append( '<form class="form" id="form"></form>');
@@ -224,7 +224,7 @@ function loadCompare(pattern) {
 
 function loadSample(pattern) {
     $('#content').html(spinner);
-    $.getJSON(api+'/info/'+pattern+'/json', function( data ) {
+    $.getJSON(api+'/?service=info&pattern='+pattern+'&format=json', function( data ) {
         $('#content').html('<div class="row form-group" id="contentrow"></div>');
         $('#contentrow').append( "<h2>Step 2: What would you like to sample?</h2>");
         $('#contentrow').append( '<div class="col-md-6" id="col1"></div><div class="col-md-6" id="col2"></div>');
@@ -234,10 +234,10 @@ function loadSample(pattern) {
         $('#col2').append( '<ul id="col2-list"></ul>');
         $.each( data['models']['groups'], function( key, val ) {
 
-            $('#col1-list').append( '<li><a href="'+api+'/sample/'+pattern+'/measurements/?samplerGroup='+key+'" target="_BLANK">'+key+'</a> ('+val.length+' models)</li>');
+            $('#col1-list').append( '<li><a href="'+api+'/?service=sample&pattern='+pattern+'&mode=measurements&samplerGroup='+key+'" target="_BLANK">'+key+'</a> ('+val.length+' models)</li>');
         });
         $.each( data['options'], function( key, val ) {
-            $('#col2-list').append( '<li><a href="'+api+'/sample/'+pattern+'/options/'+key+'/" target="_BLANK">'+key+'</a></li>');
+            $('#col2-list').append( '<li><a href="'+api+'/?service=sample&pattern='+pattern+'&mode=options&option='+key+'" target="_BLANK">'+key+'</a></li>');
         });
     });
     $('#details').html('');
@@ -335,7 +335,7 @@ function draftSubmit (pattern) {
                 ');
         $.ajax({
             type: "POST",
-            url: api+'/draft/'+pattern+'/',
+            url: api+'/?service=draft&pattern='+pattern,
             data: $("#form").serialize(),
             success: function(data) {
                 data = jQuery.parseJSON(data);
@@ -351,7 +351,7 @@ function draftSubmit (pattern) {
         scrollTo('#dev');
     } else {
         data = $("#form").serialize();
-        url = api+'/draft/'+pattern+'/?'+data
+        url = api+'/?service=draft&pattern='+pattern+'&'+data
         $('#draft-submit').attr('href', url);
         $('#draft-submit').attr('target', '_BLANK');
         $('#details').html('');
@@ -369,7 +369,7 @@ function compareSubmit (pattern) {
         $("#dev").html('');
     }
     data = $("#form").serialize();
-    url = api+'/compare/'+pattern+'/measurements/?'+data
+    url = api+'/?service=compare&pattern='+pattern+'&mode=measurements&'+data
         console.log(url);
     $('#compare-submit').attr('href', url);
     $('#compare-submit').attr('target', '_BLANK');

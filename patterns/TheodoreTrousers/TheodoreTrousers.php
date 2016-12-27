@@ -273,6 +273,10 @@ class TheodoreTrousers extends Pattern
   
         // Mark path for sample service
         $p->paths['seamline']->setSample(true);
+    
+        // Store length of the inseam and side seam
+        $this->setValue('backInseamLength', $p->curveLen(-2301,-3001,-30,-30) + $p->curveLen(30,30,-2702,-28));
+        $this->setValue('backSideseamLength', $p->distance(-2104,-26)+$p->curveLen(-26,-2601,-2901,-29) + $p->curveLen(-29,-29,-2701,-27));
     }
 
 
@@ -358,10 +362,6 @@ class TheodoreTrousers extends Pattern
         $p->addPoint(      -6, $p->shift(6,  $p->angle(6,1001)+90,10));
         $p->addPoint(     -40, $p->shiftTowards(40,41,10));
 
-        // Extra SA for hem
-        $p->addPoint(   -1210, $p->shift(-12,-90,60));
-        $p->addPoint(   -1310, $p->flipX(-1210));
-
         // Slant pocket
         $p->addPoint(   60, $p->shiftAlong(-1102, -1102, -1002, -100101,50));
         $curvelen = $p->curveLen(-1102, -1102, -801, -8);
@@ -378,6 +378,14 @@ class TheodoreTrousers extends Pattern
         
         // Mark path for sample service
         $p->paths['seamline']->setSample(true);
+
+        // Store length of the inseam and side seam
+        $this->setValue('frontInseamLength', $p->curveLen(-9,-9,-1402,-15) + $p->curveLen(-15,-15,-1301,-13));
+        $this->setValue('frontSideseamLength', $p->curveLen(-1102,-1102,-801,-8) + $p->curveLen(-8,-802,-1401,-14) + $p->curveLen(-14,-14,-1201,-12));
+
+        // FIXME: Adjust seam lenght
+        $this->msg('Inseam length back is '.$this->v('backInseamLength').' while front is '.$this->v('frontInseamLength'));
+        $this->msg('Sideseam length back is '.$this->v('backSideseamLength').' while front is '.$this->v('frontSideseamLength'));
     }
 
 
@@ -407,31 +415,45 @@ class TheodoreTrousers extends Pattern
         /** @var Part $p */
         $p = $this->parts['back'];
         
+        // Seam allowance, without the dart
+        $seamline = str_replace('L dartTopLeft L dartTip L dartTopRight ','',$p->paths['seamline']->getPath());
+        $p->offsetPathString('sa', $seamline, -10, 1, ['class' => 'seam-allowance']);
+     
+        // 5cm extra hem allowance
+        $shiftThese = [
+            'sa-curve--27TO-29XccXsa-curve--27TO201',
+            'sa-curve--28TO201XccXsa-curve--28TO-30',
+            'sa-curve--28TO201',
+            'sa-curve-201TO-27',
+            'sa-curve--27TO201',
+            'cp2--201.203.-28.-28',
+            'cp1--201.203.-28.-28',
+            'cp2---27.-27.202.201',
+            'cp1---27.-27.202.201',
+        ];
+        foreach($shiftThese as $shiftThis) $p->addPoint($shiftThis,$p->shift($shiftThis,-90,50));
+
         // Title
         $p->newPoint('titleAnchor', $p->x(5) + 50, $p->y(5) + 50);
         $p->addTitle('titleAnchor', 1, $this->t($p->title), '2x '.$this->t('from fabric')."\n".$this->t('Good sides together'));
+
+        // Logo
+        $p->addPoint('logoAnchor', $p->shift('titleAnchor',-90,70));
+        $p->newSnippet('logo', 'logo', 'logoAnchor');
+        $p->newSnippet('cc', 'cc', 'logoAnchor');
         
-        $p->newPoint('grainlineTop',$p->x(0) + 25, $p->y(0) + 10);
-        $p->newPoint('grainlineBottom', $p->x(2) + 25, $p->y(2));
-        $p->newPoint('scaleboxAnchor', $p->x('titleAnchor') - 50.8 , $p->y('titleAnchor') + 50);
+        // Scalebox
+        $p->addPoint('scaleboxAnchor', $p->shift('logoAnchor',-90,70));
+        $p->newSnippet('scalebox', 'scalebox', 'scaleboxAnchor');
+
+        // Grainline 
+        $p->newPoint('grainlineTop',$p->x(900), $p->y(900));
+        $p->newPoint('grainlineBottom', $p->x(201), $p->y(201));
+        $p->newGrainline('grainlineBottom', 'grainlineTop',$this->t('Grainline').' + '.$this->t('Pleat'));
 
         // Pocket
         $pocket = 'M pocketEdgeLeft L pocketCenterLeft M pocketCenterRight L pocketEdgeRight';
         $p->newPath('pocket',$pocket,['class' => 'helpline']);
-
-        
-        // FIXME This clutter below
-        $pleatline = 'M -900 L 201';
-        if($this->o('waistbandRise') > 0) $extra1 = 'M 66605 L 66607 C 901601 901601 23 L 16 z';
-        else $extra1 = 'M -21 L 9021 C 901601 901601 23 L 16 z';
-        $extra2 = 'M -28 L -2810 C -2810 -20310 -20110 C -20210 -2710 -2710 L -27 z';
-        $pocket = 'M 902513 L -2504 M -2503 L 902514';
-        $extraback = 'M -2101 L 66601 L -2104 z';
-        $p->newPath('saline',$extra1);
-        $p->newPath('cutline',$extra2);
-        $p->newPath('fold',$pleatline);
-        if($this->o('waistbandRise') > 0) $p->newPath('help','M -2101 L -2104');
-
     }
 
     /**
@@ -450,28 +472,36 @@ class TheodoreTrousers extends Pattern
         /** @var Part $p */
         $p = $this->parts['front'];
 
+        // Seam allowance
+        $p->offsetPath('sa', 'seamline', -10, 1, ['class' => 'seam-allowance']);
+     
+        // 5cm extra hem allowance
+        $shiftThese = [
+            'sa-line--13TO-12XlcXsa-curve--13TO-15',
+            'sa-line--13TO-12',
+            'sa-line--12TO-13',
+            'sa-curve--12TO-14XclXsa-line--12TO-13',
+            ];
+        foreach($shiftThese as $shiftThis) $p->addPoint($shiftThis,$p->shift($shiftThis,-90,50));
+
         // Title
         $p->newPoint('titleAnchor' , $p->x(5) + 50 , $p->y(5) + 50, 'Title anchor point');
         $p->addTitle('titleAnchor', 2, $this->t($p->title), '2x '.$this->t('from fabric')."\n".$this->t('Good sides together'));
 
         // Grainline
-        $p->newPoint('grainlineTop' , $p->x(1002) + 25, $p->y(1002) + 10, 'Grainline anchor point');
-        $p->newPoint('grainlineBottom' , $p->x(1002) + 25, $p->y(2) - 10, 'Grainline anchor point');
-        $p->newGrainline('grainlineBottom' ,'grainlineTop', $this->t('Grainline'));
+        $p->newPoint('grainlineTop' , $p->x(2), $p->y(-100101) , 'Grainline anchor point');
+        $p->newPoint('grainlineBottom' , $p->x(2), $p->y(2), 'Grainline anchor point');
+        $p->newGrainline('grainlineBottom', 'grainlineTop',$this->t('Grainline').' + '.$this->t('Pleat'));
 
-        // FIXME This clutter below
-        $p->addPoint(    53 , $p->shift('titleAnchor', -110, 70));
-        $pleatline = 'M 1002 L 2';
-        $fly = "M 40 L 41 C 45 44 43 L 42";
-        $extra = 'M -13 L -1310 L -1210 L -12 z';
-        $pocket = 'M 60 L 61';
-        $lining = 'M 14 L 15';
-        $p->newPath('cutline',$extra);
-        $p->newPath('pleat',$pleatline);
-        $p->newPath('help',$fly);
-        $p->newPath('lining',$lining);
-        $p->newPath('pocket',$pocket);
+        // Fly
+        $p->curveCrossesLine(-100101,-1002,-1102,-1102,41,40,'fly'); // Adds point 'fly1'
+        $p->newPath('fly', 'M fly1 L 41 C 45 44 43 L 42', ['class' => 'helpline']);
 
+        // Pocket
+        $p->newPath('pocket', 'M 60 L 61', ['class' => 'helpline']);
+        
+        // Lining
+        $p->newPath('lining', 'M -14 L -15', ['class' => 'helpline']);
     }
 
     /*

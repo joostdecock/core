@@ -1344,8 +1344,9 @@ class Part
             }
         }
 
-        $cp1Id = $this->newId();
-        $cp2Id = $this->newId();
+        // Avoid volatile IDs
+        $cp1Id = "cp1--$from.$cp1.$cp2.$to";
+        $cp2Id = "cp2--$from.$cp1.$cp2.$to";
 
         $this->addPoint($fromId, $offset[0]);
         $this->addPoint($cp1Id, $offset[1]);

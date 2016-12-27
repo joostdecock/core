@@ -1,0 +1,45 @@
+info:
+    name: "Theodore trousers (being ported)"
+    version: "2.0"
+    date: 20161222
+    author: "Joost De Cock"
+    email: "joost@decock.org"
+    company: "freesewing.org"
+    link: "freesewing.org/pattern/theodore-trouser-block/"
+parts:
+    front: "Front"
+    back: "Back"
+languages:
+    en: "English"
+    nl: "Nederlands"
+    de: "Deutsch"
+measurements:
+    hipsCircumference: 950
+    seatCircumference: 1045
+    inseam: 910
+    bodyRise: 200
+options:
+    waistbandWidth:
+        type: "measure"
+        min: -10
+        max: 60
+        default: 40
+    waistbandRise:
+        type: "measure"
+        min: 0
+        max: 60
+        default: 40
+    lengthBonus:
+        type: "measure"
+        min: -60
+        max: 80
+        default: 0
+    waistbandStyle:
+        type: "chooseOne"
+        options:
+            1: "Split"
+            2: "Single"
+        default: 1
+inMemoryOf:   
+    name: "Aaron Swartz"
+    link: "https://en.wikipedia.org/wiki/Aaron_Swartz"

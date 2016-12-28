@@ -6,18 +6,37 @@ info:
     email: "joost@decock.org"
     company: "freesewing.org"
     link: "freesewing.org/pattern/theodore-trouser-block/"
+
 parts:
     front: "Front"
     back: "Back"
+    waistbandInterfacingLeft: "Waistband interfacing left"
+    waistbandInterfacingRight: "Waistband interfacing right"
+    waistbandLeft: "Waistband left"
+    waistbandRight: "Waistband right"
+    waistbandLiningLeft: "Waistband lining left"
+    waistbandLiningRight: "Waistband lining right"
+    flyPiece: "Fly piece"
+    flyShield: "Fly shield"
+    sidePiece: "Side piece"
+    frontPocketBag: "Front pocket bag"
+    backInnerPocketBag: "Back inner pocket bag"
+    backOuterPocketBag: "Back outer pocket bag"
+    backPocketFacing: "Back pocket facing"
+    backPocketInterfacing: "Back pocket interfacing"
+    beltLoop: "Belt loop"
+
 languages:
     en: "English"
     nl: "Nederlands"
     de: "Deutsch"
+
 measurements:
     hipsCircumference: 950
     seatCircumference: 1045
     inseam: 910
     bodyRise: 200
+
 options:
     waistbandWidth:
         type: "measure"
@@ -40,6 +59,3 @@ options:
             1: "Split"
             2: "Single"
         default: 1
-inMemoryOf:   
-    name: "Aaron Swartz"
-    link: "https://en.wikipedia.org/wiki/Aaron_Swartz"

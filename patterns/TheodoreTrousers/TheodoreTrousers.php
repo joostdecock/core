@@ -74,6 +74,23 @@ class TheodoreTrousers extends Pattern
         $this->finalizeFront($model);
         $this->finalizeBack($model);
         
+        $this->finalizeWaistbandInterfacingLeft($model);
+        $this->finalizeWaistbandInterfacingRight($model);
+        $this->finalizeWaistbandLeft($model);
+        $this->finalizeWaistbandRight($model);
+        $this->finalizeWaistbandLiningLeft($model);
+        $this->finalizeWaistbandLiningRight($model);
+        
+        $this->finalizeFlyPiece($model);
+        $this->finalizeFlyShield($model);
+        $this->finalizeSidePiece($model);
+        $this->finalizeFrontPocketBag($model);
+        $this->finalizeBackInnerPocketBag($model);
+        $this->finalizeBackOuterPocketBag($model);
+        $this->finalizeBackPocketFacing($model);
+        $this->finalizeBackPocketInterfacing($model);
+        $this->finalizeBeltLoop($model);
+        
         if ($this->isPaperless) {
             $this->paperlessFront($model);
             $this->paperlessBack($model);
@@ -98,7 +115,23 @@ class TheodoreTrousers extends Pattern
 
         $this->draftBack($model);
         $this->draftFront($model);
-
+        
+        $this->draftWaistbandInterfacingLeft($model);
+        $this->draftWaistbandInterfacingRight($model);
+        $this->draftWaistbandLeft($model);
+        $this->draftWaistbandRight($model);
+        $this->draftWaistbandLiningLeft($model);
+        $this->draftWaistbandLiningRight($model);
+        
+        $this->draftFlyPiece($model);
+        $this->draftFlyShield($model);
+        $this->draftSidePiece($model);
+        $this->draftFrontPocketBag($model);
+        $this->draftBackInnerPocketBag($model);
+        $this->draftBackOuterPocketBag($model);
+        $this->draftBackPocketFacing($model);
+        $this->draftBackPocketInterfacing($model);
+        $this->draftBeltLoop($model);
     }
     
     /**
@@ -333,9 +366,10 @@ class TheodoreTrousers extends Pattern
         $p->addPoint(    40 , $p->shiftAlong(1001, 1002, 11, 11, 50), 'Fly top');
         $p->newPoint(    41 , $p->x(40) + $p->deltaX(1001,6), $p->y(40) + $p->deltaY(1001,6), 'Fly 6');
         $p->addPoint(    42 , $p->shiftAlong(6, 6, 502, 501, $p->curveLen(6, 6, 502, 501)/2), 'Fly bottom');
-        $p->addPoint(    43 , $p->shift(42, -35, 10), 'Fly pretip');
+        $p->addPoint(    43 , $p->shift(42, -35, 10), 'Fly pretip'); 
+        $p->addPoint(    '43beam' , $p->shift(42, -35, 40), 'Fly pretip'); // We use this to find curve intersection later
         $p->addPoint(    44 , $p->shift(43, 0, 20), 'Fly cp1');
-        $p->addPoint(    45 , $p->shiftTowards(40, 41, $p->distance(40,41)+30), 'Fly cp2');
+        $p->addPoint(    45 , $p->shiftTowards(40, 41, $p->distance(40,41)+20), 'Fly cp2');
         $p->addPoint( -1001 , $p->shiftAlong(1001,1002,11,11,10));
         $p->addPoint(-100101, $p->shift(-1001,$p->angle(1001,6),-10));
         $p->addPoint(  -1002, $p->shift(1002,90,-10));
@@ -362,6 +396,13 @@ class TheodoreTrousers extends Pattern
         $p->addPoint(      -6, $p->shift(6,  $p->angle(6,1001)+90,10));
         $p->addPoint(     -40, $p->shiftTowards(40,41,10));
 
+        // Smooth fly curve a bit at -6
+        $p->addPoint('-6cp', $p->shiftTowards(-100101,-6,$p->distance(-100101,-6)+$p->distance(-6,-502)/2));
+        
+        // Make sure fly ends on curve
+        $p->curveCrossesLine(-501,-502,'-6cp',-6,42,'43beam','flyPretipX');
+        $p->newPoint(43, $p->x('flyPretipX1'), $p->y('flyPretipX1'));
+
         // Slant pocket
         $p->addPoint(   60, $p->shiftAlong(-1102, -1102, -1002, -100101,50));
         $curvelen = $p->curveLen(-1102, -1102, -801, -8);
@@ -373,7 +414,7 @@ class TheodoreTrousers extends Pattern
         //$aldrich = 'M 9 C 9 503 501 C 502 6 6 L 1001 C 1002 11 11 C 11 801 8 C 802 1401 14 C 14 1201 12 L 13 C 1301 15 15 C 1402 9 9 z';
         
         // This is the path we use, no seam allowance
-        $seamline = 'M -100101 C -1002 -1102 -1102 C -1102 -801 -8 C -802 -1401 -14 C -14 -1201 -12 L -13 C -1301 -15 -15 C -1402 -9 -9 C -9 -503 -501 C -502 -6 -6 z';
+        $seamline = 'M -100101 C -1002 -1102 -1102 C -1102 -801 -8 C -802 -1401 -14 C -14 -1201 -12 L -13 C -1301 -15 -15 C -1402 -9 -9 C -9 -503 -501 C -502 -6cp -6 z';
         $p->newPath('seamline', $seamline);
         
         // Mark path for sample service
@@ -388,6 +429,384 @@ class TheodoreTrousers extends Pattern
         $this->msg('Sideseam length back is '.$this->v('backSideseamLength').' while front is '.$this->v('frontSideseamLength'));
     }
 
+    /**
+     * Drafts the waistband interfacing left part
+     *
+     * @param \Freesewing\Model $model The model to draft for
+     *
+     * @return void
+     */
+    public function draftWaistbandInterfacingLeft($model)
+    {
+        /** @var Part $p */
+        $p = $this->parts['waistbandInterfacingLeft'];
+        
+        $p->newPoint(0 , 0, 0, 'Top left');
+        $p->newPoint(2 , $this->o('waistbandWidth'), $model->m('hipsCircumference')/2 + 60, 'Bottom right');
+        $p->newPoint(1 , $p->x(2),$p->y(0), 'Top right');
+        $p->newPoint(3 , $p->x(0),$p->y(2), 'Bottom left');
+        
+        $p->newPath('outline', 'M 0 L 1 L 2 L 3 z');
+    }
+
+    /**
+     * Drafts the waistband interfacing right part
+     *
+     * @param \Freesewing\Model $model The model to draft for
+     *
+     * @return void
+     */
+    public function draftWaistbandInterfacingRight($model)
+    {
+        /** @var Part $p */
+        $p = $this->parts['waistbandInterfacingRight'];
+        
+        $p->newPoint(0 , 0, 0, 'Top left');
+        $p->newPoint(2 , $this->o('waistbandWidth'), $model->m('hipsCircumference')/2 + 40, 'Bottom right');
+        $p->newPoint(1 , $p->x(2),$p->y(0), 'Top right');
+        $p->newPoint(3 , $p->x(0),$p->y(2), 'Bottom left');
+        
+        $p->newPath('outline', 'M 0 L 1 L 2 L 3 z');
+    }
+
+    /**
+     * Drafts the waistband left part
+     *
+     * @param \Freesewing\Model $model The model to draft for
+     *
+     * @return void
+     */
+    public function draftWaistbandLeft($model)
+    {
+        // Cloning points
+        $this->clonePoints('waistbandInterfacingLeft', 'waistbandLeft');
+
+        /** @var Part $p */
+        $p = $this->parts['waistbandLeft'];
+        
+        $p->newPath('outline', 'M 0 L 1 L 2 L 3 z');
+    }
+
+    /**
+     * Drafts the waistband right part
+     *
+     * @param \Freesewing\Model $model The model to draft for
+     *
+     * @return void
+     */
+    public function draftWaistbandRight($model)
+    {
+        // Cloning points
+        $this->clonePoints('waistbandInterfacingRight', 'waistbandRight');
+
+        /** @var Part $p */
+        $p = $this->parts['waistbandRight'];
+        
+        $p->newPath('outline', 'M 0 L 1 L 2 L 3 z');
+    }
+
+    /**
+     * Drafts the waistband lining left part
+     *
+     * @param \Freesewing\Model $model The model to draft for
+     *
+     * @return void
+     */
+    public function draftWaistbandLiningLeft($model)
+    {
+        // Cloning points
+        $this->clonePoints('waistbandInterfacingLeft', 'waistbandLiningLeft');
+
+        /** @var Part $p */
+        $p = $this->parts['waistbandLiningLeft'];
+
+        // Make 8cm wider
+        $p->addPoint(0, $p->shift(0,180,80));
+        $p->addPoint(3, $p->shift(3,180,80));
+        
+        $p->newPath('outline', 'M 0 L 1 L 2 L 3 z');
+    }
+
+    /**
+     * Drafts the waistband lining right part
+     *
+     * @param \Freesewing\Model $model The model to draft for
+     *
+     * @return void
+     */
+    public function draftWaistbandLiningRight($model)
+    {
+        // Cloning points
+        $this->clonePoints('waistbandInterfacingRight', 'waistbandLiningRight');
+
+        /** @var Part $p */
+        $p = $this->parts['waistbandLiningRight'];
+        
+        // Make 8cm wider
+        $p->addPoint(0, $p->shift(0,180,80));
+        $p->addPoint(3, $p->shift(3,180,80));
+        
+        $p->newPath('outline', 'M 0 L 1 L 2 L 3 z');
+    }
+
+    /**
+     * Drafts the fly piece
+     *
+     * @param \Freesewing\Model $model The model to draft for
+     *
+     * @return void
+     */
+    public function draftFlyPiece($model)
+    {
+        // Cloning points
+        $this->clonePoints('front', 'flyPiece');
+
+        /** @var Part $p */
+        $p = $this->parts['flyPiece'];
+
+        // We need to split the crotch curve at the bottom of the fly
+        $p->addSplitCurve(-501,-502,'-6cp',-6,43,'fly');
+        
+        // We need to split the waist curve at the edge of the fly
+        $p->addSplitCurve(-100101,-1002,-1102,-1102,-40,'waistFly');
+
+        // Path 
+        $p->newPath('outline', 'M -100101 L -6 C fly6 fly7 43 C 44 45 41 L -40 C waistFly3 waistFly2 -100101 z');
+    }
+
+    /**
+     * Drafts the fly shield
+     *
+     * @param \Freesewing\Model $model The model to draft for
+     *
+     * @return void
+     */
+    public function draftFlyShield($model)
+    {
+        // Cloning points
+        $this->clonePoints('flyPiece', 'flyShield');
+
+        /** @var Part $p */
+        $p = $this->parts['flyShield'];
+
+        // Add points to make shift not impact curves
+        $p->addPoint('leftTop', $p->shift(-100101,180,20));
+        $p->addPoint('old43', $p->shift(43,180,0));
+
+        // Shift the rest
+        $shiftThese = [-6, 'fly6', 'fly7', 43];
+        foreach($shiftThese as $shiftThis) $p->addPoint($shiftThis, $p->shift($shiftThis,180,20));
+        
+
+        // Path 
+        $p->newPath('outline', 'M leftTop L -6 C fly6 fly7 43 L old43 C 44 45 41 L -40 C waistFly3 waistFly2 -100101 L leftTop z');
+    }
+
+    /**
+     * Drafts the side piece
+     *
+     * @param \Freesewing\Model $model The model to draft for
+     *
+     * @return void
+     */
+    public function draftSidePiece($model)
+    {
+        // Cloning points
+        $this->clonePoints('front', 'sidePiece');
+
+        /** @var Part $p */
+        $p = $this->parts['sidePiece'];
+
+        // Add points
+        $p->addPoint('topLeft', $p->shiftAlong(-1102,-1102,-1002,-100101,100));
+        $p->addPoint('bottomLeft', $p->shift(61,180,50));
+
+        // Split waist curve
+        $p->addSplitCurve(-1102,-1102,-1002,-100101,'topLeft','waist');
+        
+        // Split side curve
+        $p->addSplitCurve(-8,-802,-1401,-14,61,'side');
+        
+        // Paths 
+        $p->newPath('outline', 'M topLeft L bottomLeft L 61 C side3 side2 -8 C -801 -1102 -1102 C -1102 waist3 topLeft z');
+        $p->newPath('pocket', 'M 60 L 61', ['class' => 'helpline']);
+    }
+
+    /**
+     * Drafts the front pocket bag
+     *
+     * @param \Freesewing\Model $model The model to draft for
+     *
+     * @return void
+     */
+    public function draftFrontPocketBag($model)
+    {
+        // Cloning points
+        $this->clonePoints('front', 'frontPocketBag');
+
+        /** @var Part $p */
+        $p = $this->parts['frontPocketBag'];
+
+        // Additional points
+        $p->newPoint(810 , $p->x(60),$p->y(-1102)+300);
+        $p->newPoint(811 , $p->x(-8),$p->y(810));
+        $p->newPoint(812 , $p->x(0),$p->y(810));
+        $p->addPoint(813 , $p->shiftTowards(-100101,-6, 70));
+        $p->addPoint(814 , $p->shift(813,0,40));
+        $p->newPoint(815 , $p->x(0), $p->y(814));
+        $p->addPoint(816 , $p->shift(-1001,0,30));
+        $p->addPoint(817 , $p->shift(813,0,30));
+        $p->addPoint(818 , $p->shift(817,$p->angle(-100101,813),-10));
+
+        // Paths
+        $p->newPath('outline', 'M -100101 C -1002 -1102 -1102 C -1102 -801 -8 C -802 811 810 C 812 815 814 L 813 z'); 
+        $p->newPath('flyEdge', 'M -40 L 814');
+        $p->newPath('flyEdgeSa', 'M 816 L 818', ['class' => 'seam-allowance']);
+        $p->newPath('pocket', 'M 60 L 61', ['class' => 'helpline']);
+    }
+
+    /**
+     * Drafts the back inner pocket bag
+     *
+     * @param \Freesewing\Model $model The model to draft for
+     *
+     * @return void
+     */
+    public function draftBackInnerPocketBag($model)
+    {
+        /** @var Part $p */
+        $p = $this->parts['backInnerPocketBag'];
+        
+        $p->newPoint(  0 , -80, 0, 'Top left');
+        $p->newPoint(  2 , 80, 230, 'Bottom right');
+        $p->newPoint(  1 , $p->x(2),$p->y(0), 'Top right');
+        $p->newPoint(  3 , $p->x(0),$p->y(2), 'Bottom left');
+        
+        $p->addPoint( 31 , $p->shift(3,0,25));
+        $p->addPoint( 32 , $p->shift(31,180,$p->bezierCircle(25)));
+        $p->addPoint( 33 , $p->shift(3,90,25));
+        $p->addPoint( 34 , $p->shift(33,-90,$p->bezierCircle(25)));
+        $p->addPoint( 21 , $p->flipX(31));
+        $p->addPoint( 22 , $p->flipX(32));
+        $p->addPoint( 23 , $p->flipX(33));
+        $p->addPoint( 24 , $p->flipX(34));
+
+        $p->newPoint(  5 , -65, 55);
+        $p->addPoint(  6 , $p->flipX (5));
+        $p->addPoint(  7 , $p->shift(5,90,5));
+        $p->addPoint(  8 , $p->shift(5,-90,5));
+        $p->addPoint(  9 , $p->flipX(7));
+        $p->addPoint( 10 , $p->flipX(8));
+
+        // Paths
+        $p->newPath('outline', 'M 0 L 33 C 34 32 31 L 21 C 22 24 23 L 1 z');
+        $p->newPath('welt', 'M 7 L 8 M 9 L 10 M 5 L 6', ['class' => 'helpline']);
+    }
+
+    /**
+     * Drafts the back outer pocket bag
+     *
+     * @param \Freesewing\Model $model The model to draft for
+     *
+     * @return void
+     */
+    public function draftBackOuterPocketBag($model)
+    {
+        // Cloning points
+        $this->clonePoints('backInnerPocketBag', 'backOuterPocketBag');
+
+        /** @var Part $p */
+        $p = $this->parts['backOuterPocketBag'];
+
+        // Make bag 2cm longer
+        $shiftThese = [21,22,23,24,31,32,33,34];
+        foreach($shiftThese as $shiftThis) $p->addPoint($shiftThis, $p->shift($shiftThis,-90,20));
+        
+        // Shift welt 1cm down
+        $shiftThese = [5,6,7,8,9,10];
+        foreach($shiftThese as $shiftThis) $p->addPoint($shiftThis, $p->shift($shiftThis,-90,10));
+        
+        // Paths
+        $p->newPath('outline', 'M 0 L 33 C 34 32 31 L 21 C 22 24 23 L 1 z');
+        $p->newPath('welt', 'M 7 L 8 M 9 L 10 M 5 L 6', ['class' => 'helpline']);
+    }
+
+    /**
+     * Drafts the back pocket facing
+     *
+     * @param \Freesewing\Model $model The model to draft for
+     *
+     * @return void
+     */
+    public function draftBackPocketFacing($model)
+    {
+        // Cloning points
+        $this->clonePoints('backInnerPocketBag', 'backPocketFacing');
+
+        /** @var Part $p */
+        $p = $this->parts['backPocketFacing'];
+
+        // Shift welt 1cm up
+        $shiftThese = [5,6,7,8,9,10];
+        foreach($shiftThese as $shiftThis) $p->addPoint($shiftThis, $p->shift($shiftThis,-90,-10));
+        
+        // Bottom corners
+        $p->newPoint(2, $p->x(2),90);
+        $p->newPoint(3, $p->x(3),90);
+
+        // Paths
+        $p->newPath('outline', 'M 0 L 3 L 2 L 1 z');
+        $p->newPath('welt', 'M 7 L 8 M 9 L 10 M 5 L 6', ['class' => 'helpline']);
+    }
+
+    /**
+     * Drafts the back pocket inter facing
+     *
+     * @param \Freesewing\Model $model The model to draft for
+     *
+     * @return void
+     */
+    public function draftBackPocketInterfacing($model)
+    {
+        // Cloning points
+        $this->clonePoints('backInnerPocketBag', 'backPocketInterfacing');
+
+        /** @var Part $p */
+        $p = $this->parts['backPocketInterfacing'];
+
+        // Shift welt 2cm up
+        $shiftThese = [5,6,7,8,9,10];
+        foreach($shiftThese as $shiftThis) $p->addPoint($shiftThis, $p->shift($shiftThis,-90,-20));
+        
+        // Bottom corners
+        $p->newPoint(2, $p->x(2),70);
+        $p->newPoint(3, $p->x(3),70);
+
+        // Paths
+        $p->newPath('outline', 'M 0 L 3 L 2 L 1 z');
+        $p->newPath('welt', 'M 7 L 8 M 9 L 10 M 5 L 6', ['class' => 'helpline']);
+    }
+
+    /**
+     * Drafts the belt loop
+     *
+     * @param \Freesewing\Model $model The model to draft for
+     *
+     * @return void
+     */
+    public function draftBeltLoop($model)
+    {
+        /** @var Part $p */
+        $p = $this->parts['beltLoop'];
+
+        $p->newPoint(     0 , 0, 0, 'Top left');
+        $p->newPoint(     2 , 22, $this->o('waistbandWidth') + 30, 'Bottom right');
+        $p->newPoint(     1 , $p->x(2),$p->y(0), 'Top right');
+        $p->newPoint(     3 , $p->x(0),$p->y(2), 'Bottom left');
+        
+        // Paths
+        $p->newPath('outline', 'M 0 L 3 L 2 L 1 z');
+    }
 
     /*
        _____ _             _ _
@@ -459,10 +878,6 @@ class TheodoreTrousers extends Pattern
     /**
      * Finalizes the front block
      *
-     * Only draft() calls this method, sample() does not.
-     * It does things like adding a title, logo, and any
-     * text or instructions that go on the pattern.
-     *
      * @param \Freesewing\Model $model The model to draft for
      *
      * @return void
@@ -502,6 +917,358 @@ class TheodoreTrousers extends Pattern
         
         // Lining
         $p->newPath('lining', 'M -14 L -15', ['class' => 'helpline']);
+    }
+
+    /**
+     * Finalizes the waistband interfacing left part
+     *
+     * @param \Freesewing\Model $model The model to draft for
+     *
+     * @return void
+     */
+    public function finalizeWaistbandInterfacingLeft($model)
+    {
+        /** @var Part $p */
+        $p = $this->parts['waistbandInterfacingLeft'];
+
+        // Title
+        $p->newPoint('titleAnchor', $p->x(2)/2, 135);
+        $p->addTitle('titleAnchor', '3a', $this->t($p->title), '1x '.$this->t('from interfacing'),'vertical');
+    }
+
+    /**
+     * Finalizes the waistband interfacing right part
+     *
+     * @param \Freesewing\Model $model The model to draft for
+     *
+     * @return void
+     */
+    public function finalizeWaistbandInterfacingRight($model)
+    {
+        /** @var Part $p */
+        $p = $this->parts['waistbandInterfacingRight'];
+
+        // Title
+        $p->newPoint('titleAnchor', $p->x(2)/2, 135);
+        $p->addTitle('titleAnchor', '3b', $this->t($p->title), '1x '.$this->t('from interfacing'),'vertical');
+    }
+
+    /**
+     * Finalizes the waistband left part
+     *
+     * @param \Freesewing\Model $model The model to draft for
+     *
+     * @return void
+     */
+    public function finalizeWaistbandLeft($model)
+    {
+        /** @var Part $p */
+        $p = $this->parts['waistbandLeft'];
+
+        // Title
+        $p->newPoint('titleAnchor', $p->x(2)/2, 135);
+        $p->addTitle('titleAnchor', '4a', $this->t($p->title), '1x '.$this->t('from fabric'),'vertical');
+
+        // Grainline 
+        $p->addPoint('grainlineLeft', $p->shift(3,90,50));
+        $p->addPoint('grainlineRight', $p->shift(2,90,50));
+        $p->newGrainline('grainlineLeft', 'grainlineRight', $this->t('Grainline'));
+
+        // Seam allowance
+        $p->offsetPath('sa', 'outline', -10, true, ['class' => 'seam-allowance']);
+    }
+
+    /**
+     * Finalizes the waistband right part
+     *
+     * @param \Freesewing\Model $model The model to draft for
+     *
+     * @return void
+     */
+    public function finalizeWaistbandRight($model)
+    {
+        /** @var Part $p */
+        $p = $this->parts['waistbandRight'];
+
+        // Title
+        $p->newPoint('titleAnchor', $p->x(2)/2, 135);
+        $p->addTitle('titleAnchor', '4b', $this->t($p->title), '1x '.$this->t('from fabric'),'vertical');
+
+        // Grainline 
+        $p->addPoint('grainlineLeft', $p->shift(3,90,50));
+        $p->addPoint('grainlineRight', $p->shift(2,90,50));
+        $p->newGrainline('grainlineLeft', 'grainlineRight', $this->t('Grainline'));
+
+        // Seam allowance
+        $p->offsetPath('sa', 'outline', -10, true, ['class' => 'seam-allowance']);
+    }
+
+
+    /**
+     * Finalizes the waistband lining left part
+     *
+     * @param \Freesewing\Model $model The model to draft for
+     *
+     * @return void
+     */
+    public function finalizeWaistbandLiningLeft($model)
+    {
+        /** @var Part $p */
+        $p = $this->parts['waistbandLiningLeft'];
+
+        // Title
+        $p->newPoint('titleAnchor', $p->x(2)/2-40, 135);
+        $p->addTitle('titleAnchor', '5a', $this->t($p->title), '1x '.$this->t('from lining'),'vertical');
+
+        // Grainline 
+        $p->addPoint('grainlineLeft', $p->shift(3,90,50));
+        $p->addPoint('grainlineRight', $p->shift(2,90,50));
+        $p->newGrainline('grainlineLeft', 'grainlineRight', $this->t('Grainline'));
+
+        // Seam allowance
+        $p->offsetPath('sa', 'outline', -10, true, ['class' => 'seam-allowance']);
+    }
+
+    /**
+     * Finalizes the waistband lining right part
+     *
+     * @param \Freesewing\Model $model The model to draft for
+     *
+     * @return void
+     */
+    public function finalizeWaistbandLiningRight($model)
+    {
+        /** @var Part $p */
+        $p = $this->parts['waistbandLiningRight'];
+
+        // Title
+        $p->newPoint('titleAnchor', $p->x(2)/2-40, 135);
+        $p->addTitle('titleAnchor', '5b', $this->t($p->title), '1x '.$this->t('from lining'),'vertical');
+
+        // Grainline 
+        $p->addPoint('grainlineLeft', $p->shift(3,90,50));
+        $p->addPoint('grainlineRight', $p->shift(2,90,50));
+        $p->newGrainline('grainlineLeft', 'grainlineRight', $this->t('Grainline'));
+
+        // Seam allowance
+        $p->offsetPath('sa', 'outline', -10, true, ['class' => 'seam-allowance']);
+    }
+
+    /**
+     * Finalizes the fly piece
+     *
+     * @param \Freesewing\Model $model The model to draft for
+     *
+     * @return void
+     */
+    public function finalizeFlyPiece($model)
+    {
+        /** @var Part $p */
+        $p = $this->parts['flyPiece'];
+
+        // Title
+        $p->newPoint('titleAnchor', $p->x(-100101)+20, $p->y(-100101)+40);
+        $p->addTitle('titleAnchor', '6', $this->t($p->title), '2x '.$this->t('from fabric'),'vertical');
+
+        // Grain line
+        $p->addPoint('grainlineTop', $p->shift(-100101,-45,10));
+        $p->newPoint('grainlineBottom', $p->x('grainlineTop'), $p->y(41));
+        $p->newGrainline('grainlineBottom', 'grainlineTop', $this->t('Grainline'));
+
+        // Seam allowance
+        $p->offsetPath('sa', 'outline', 10, true, ['class' => 'seam-allowance']);
+    }
+
+    /**
+     * Finalizes the fly shield
+     *
+     * @param \Freesewing\Model $model The model to draft for
+     *
+     * @return void
+     */
+    public function finalizeFlyShield($model)
+    {
+        /** @var Part $p */
+        $p = $this->parts['flyShield'];
+
+        // Title
+        $p->newPoint('titleAnchor', $p->x('leftTop')+30, $p->y(-100101)+40);
+        $p->addTitle('titleAnchor', '7', $this->t($p->title), '1x '.$this->t('from lining'),'vertical');
+
+        // Grain line
+        $p->addPoint('grainlineTop', $p->shift('leftTop',-45,10));
+        $p->newPoint('grainlineBottom', $p->x('grainlineTop'), $p->y(41));
+        $p->newGrainline('grainlineBottom', 'grainlineTop', $this->t('Grainline'));
+
+        // Seam allowance
+        $p->offsetPath('sa', 'outline', 10, true, ['class' => 'seam-allowance']);
+    }
+
+    /**
+     * Finalizes the side piece
+     *
+     * @param \Freesewing\Model $model The model to draft for
+     *
+     * @return void
+     */
+    public function finalizeSidePiece($model)
+    {
+        /** @var Part $p */
+        $p = $this->parts['sidePiece'];
+
+        // Title
+        $p->addPoint('titleAnchor', $p->shift(60,-75, 50));
+        $p->addTitle('titleAnchor', '8', $this->t($p->title), '2x '.$this->t('from fabric'),'vertical');
+
+        // Grain line
+        $p->addPoint('grainlineTop', $p->shift(-1102,-135, 10));
+        $p->newPoint('grainlineBottom', $p->x('grainlineTop'), $p->y(61)-7);
+        $p->newGrainline('grainlineBottom', 'grainlineTop', $this->t('Grainline'));
+
+        // Seam allowance
+        $p->offsetPath('sa', 'outline', 10, true, ['class' => 'seam-allowance']);
+    }
+
+    /**
+     * Finalizes the front pocket bag
+     *
+     * @param \Freesewing\Model $model The model to draft for
+     *
+     * @return void
+     */
+    public function finalizeFrontPocketBag($model)
+    {
+        /** @var Part $p */
+        $p = $this->parts['frontPocketBag'];
+
+        // Title
+        $p->newPoint('titleAnchor', $p->x(60)-50 , $p->y(60) + 60);
+        $p->addTitle('titleAnchor', 9, $this->t($p->title), '2x2 '.$this->t('from lining'));
+        
+        // Grain line
+        $p->newPoint('grainlineTop', $p->x(810), $p->y(60) + 10);
+        $p->newPoint('grainlineBottom', $p->x('grainlineTop'), $p->y(810)-10);
+        $p->newGrainline('grainlineBottom', 'grainlineTop', $this->t('Grainline'));
+
+        // Seam allowance
+        $p->offsetPath('sa', 'outline', -10, true, ['class' => 'seam-allowance']);
+    }
+
+    /**
+     * Finalizes the back inner pocket bag
+     *
+     * @param \Freesewing\Model $model The model to draft for
+     *
+     * @return void
+     */
+    public function finalizeBackInnerPocketBag($model)
+    {
+        /** @var Part $p */
+        $p = $this->parts['backInnerPocketBag'];
+
+        // Title
+        $p->newPoint('titleAnchor',0,100);
+        $p->addTitle('titleAnchor', 10, $this->t($p->title), '2x '.$this->t('from lining'));
+
+        // Grain line
+        $p->newPoint('grainlineTop', 40, 10);
+        $p->newPoint('grainlineBottom', 40, 220);
+        $p->newGrainline('grainlineBottom', 'grainlineTop', $this->t('Grainline'));
+        
+        // Seam allowance
+        $p->offsetPath('sa', 'outline', 10, true,['class' => 'seam-allowance']);
+    }
+
+    /**
+     * Finalizes the back outer pocket bag
+     *
+     * @param \Freesewing\Model $model The model to draft for
+     *
+     * @return void
+     */
+    public function finalizeBackOuterPocketBag($model)
+    {
+        /** @var Part $p */
+        $p = $this->parts['backOuterPocketBag'];
+
+        // Title
+        $p->newPoint('titleAnchor',0,100);
+        $p->addTitle('titleAnchor', 11, $this->t($p->title), '2x '.$this->t('from lining'));
+
+        // Grain line
+        $p->newPoint('grainlineTop', 40, 10);
+        $p->newPoint('grainlineBottom', 40, 220);
+        $p->newGrainline('grainlineBottom', 'grainlineTop', $this->t('Grainline'));
+        
+        // Seam allowance
+        $p->offsetPath('sa', 'outline', 10, true,['class' => 'seam-allowance']);
+    }
+
+    /**
+     * Finalizes the back pocket facing 
+     *
+     * @param \Freesewing\Model $model The model to draft for
+     *
+     * @return void
+     */
+    public function finalizeBackPocketFacing($model)
+    {
+        /** @var Part $p */
+        $p = $this->parts['backPocketFacing'];
+
+        // Title
+        $p->newPoint('titleAnchor', 0, 70);
+        $p->addTitle('titleAnchor', 12, $this->t($p->title), '4x '.$this->t('from fabric'));
+
+        // Grain line
+        $p->newPoint('grainlineTop', 50,10);
+        $p->newPoint('grainlineBottom', 50,80);
+        $p->newGrainline('grainlineBottom', 'grainlineTop', $this->t('Grainline'));
+    }
+
+    /**
+     * Finalizes the back pocket interfacing 
+     *
+     * @param \Freesewing\Model $model The model to draft for
+     *
+     * @return void
+     */
+    public function finalizeBackPocketInterfacing($model)
+    {
+        /** @var Part $p */
+        $p = $this->parts['backPocketInterfacing'];
+
+        // Title
+        $p->newPoint('titleAnchor', 0, 50);
+        $p->addTitle('titleAnchor', 13, $this->t($p->title), '4x '.$this->t('from interfacing'));
+
+        // Grain line
+        $p->newPoint('grainlineTop', 50,5);
+        $p->newPoint('grainlineBottom', 50,65);
+        $p->newGrainline('grainlineBottom', 'grainlineTop', $this->t('Grainline'));
+    }
+
+    /**
+     * Finalizes the belt loop 
+     *
+     * @param \Freesewing\Model $model The model to draft for
+     *
+     * @return void
+     */
+    public function finalizeBeltLoop($model)
+    {
+        /** @var Part $p */
+        $p = $this->parts['beltLoop'];
+
+        // Title
+        $p->newPoint('titleAnchor', 10, 40);
+        $p->addTitle('titleAnchor', 14, $this->t($p->title), '8x '.$this->t('from fabric'), 'vertical');
+
+        // Grain line
+        $p->newPoint('grainlineTop', 10,5);
+        $p->newPoint('grainlineBottom', 10,$p->y(2)-5);
+        $p->newGrainline('grainlineBottom', 'grainlineTop', $this->t('Grainline'));
+
     }
 
     /*

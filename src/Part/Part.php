@@ -1363,7 +1363,8 @@ class Part
         // Find out how we're doing
         $tolerance = $this->offsetTolerance($chunks[0], $distance);
 
-        if ($tolerance['score'] > $this->maxOffsetTolerance) {
+        $score = $tolerance['score'];
+        if ($score > $this->maxOffsetTolerance) {
             // Not good enough, let's subdivide
             $subdivide++;
             $splitId = '.tmp_' . $key . '.splitcurve:' . $this->newId();
@@ -1397,41 +1398,53 @@ class Part
             return ['score' => 1, 'index' => 0.5];
         }
 
-        $origFrom = $this->loadPoint($entry['original'][0]);
-        $origCp1 = $this->loadPoint($entry['original'][1]);
-        $origCp2 = $this->loadPoint($entry['original'][2]);
-        $origTo = $this->loadPoint($entry['original'][3]);
-
-        $offsetFrom = $this->loadPoint($entry['offset'][0]);
-        $offsetCp1 = $this->loadPoint($entry['offset'][1]);
-        $offsetCp2 = $this->loadPoint($entry['offset'][2]);
-        $offsetTo = $this->loadPoint($entry['offset'][3]);
-
-        $this->newPoint('-po_orig', 0, 0);
-        $this->newPoint('-po_offset', 0, 0);
+        $orCurveLen = $this->curveLen($entry['original'][0], $entry['original'][1], $entry['original'][2], $entry['original'][3]);
+        $ofCurveLen = $this->curveLen($entry['offset'][0], $entry['offset'][1], $entry['offset'][2], $entry['offset'][3]);
 
         $worstDelta = 0;
         $worstIndex = false;
         for ($i = 0; $i < 20; ++$i) {
             $t = $i / 20;
-            $xOrig = Utils::bezierPoint($t, $origFrom->getX(), $origCp1->getX(), $origCp2->getX(), $origTo->getX());
-            $yOrig = Utils::bezierPoint($t, $origFrom->getY(), $origCp1->getY(), $origCp2->getY(), $origTo->getY());
-            $xOffset = Utils::bezierPoint($t, $offsetFrom->getX(), $offsetCp1->getX(), $offsetCp2->getX(), $offsetTo->getX());
-            $yOffset = Utils::bezierPoint($t, $offsetFrom->getY(), $offsetCp1->getY(), $offsetCp2->getY(), $offsetTo->getY());
 
-            $this->points['-po_orig']->setX($xOrig);
-            $this->points['-po_orig']->setY($yOrig);
-            $this->points['-po_offset']->setX($xOffset);
-            $this->points['-po_offset']->setY($yOffset);
+            $orHalfCurveLen = $orCurveLen * $t;
+            $ofHalfCurveLen = $ofCurveLen * $t;
 
-            $offset = $this->distance('-po_orig', '-po_offset');
-            $delta = abs($offset / (abs($distance) / 100) - 100);
+            $orHalfPoint = $this->shiftAlong($entry['original'][0], $entry['original'][1], $entry['original'][2], $entry['original'][3], $orHalfCurveLen);
+            $ofhalfPoint = $this->shiftAlong($entry['offset'][0], $entry['offset'][1], $entry['offset'][2], $entry['offset'][3], $ofHalfCurveLen);
+            $this->addPoint('orHalfPoint' . $i, $orHalfPoint);
+            $this->addPoint('ofHalfPoint' . $i, $ofhalfPoint);
+
+            $h = false;
+            if ($i > 1) {
+                // Calculating the height of a triangle thru 3 points
+                // using one point on the original curve and one on the seam-curve
+                //
+                // hc=(2/c)sqrt[s(s-a)(s-b)(s-c)].
+                // Darin ist s=(1/2)(a+b+c).
+                $okey1 = 'orHalfPoint' . ($i - 1);
+                $okey2 = 'orHalfPoint' . ($i);
+                $ofkey1 = 'ofHalfPoint' . ($i);
+                $c = $this->distance($okey1, $okey2);
+                $b = $this->distance($okey1, $ofkey1);
+                $a = $this->distance($ofkey1, $okey2);
+                $s = ($a + $b + $c) / 2;
+                $h = (2 / $c) * sqrt(($s*($s - $a) * ($s - $b) * ($s - $c)));
+            }
+
+
+            $halfPointDistance = Utils::distance($orHalfPoint, $ofhalfPoint);
+            if ($h) {
+                $halfPointDistance = $h;
+            }
+            $delta = abs($halfPointDistance / (abs($distance) / 100) - 100);
+
             if ($delta > $worstDelta) {
                 $worstDelta = round($delta, 2);
                 $worstIndex = $t;
             }
         }
-
+        $this->purgePoints('orHalfPoint');
+        $this->purgePoints('ofHalfPoint');
         return ['score' => $worstDelta, 'index' => $worstIndex];
     }
 

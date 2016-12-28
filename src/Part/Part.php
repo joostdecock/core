@@ -1362,6 +1362,7 @@ class Part
         ];
         // Find out how we're doing
         $tolerance = $this->offsetTolerance($chunks[0], $distance);
+
         $score = $tolerance['score'];
         if ($score > $this->maxOffsetTolerance) {
             // Not good enough, let's subdivide
@@ -1417,7 +1418,7 @@ class Part
             if ($i > 1) {
                 // Calculating the height of a triangle thru 3 points
                 // using one point on the original curve and one on the seam-curve
-                // 
+                //
                 // hc=(2/c)sqrt[s(s-a)(s-b)(s-c)].
                 // Darin ist s=(1/2)(a+b+c).
                 $okey1 = 'orHalfPoint' . ($i - 1);
@@ -1442,7 +1443,8 @@ class Part
                 $worstIndex = $t;
             }
         }
-
+        $this->purgePoints('orHalfPoint');
+        $this->purgePoints('ofHalfPoint');
         return ['score' => $worstDelta, 'index' => $worstIndex];
     }
 

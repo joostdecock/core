@@ -151,7 +151,7 @@ class Path
      */
     public function getAttribute($key)
     {
-        return $this->attributes[$key];
+        if(isset($this->attributes[$key])) return $this->attributes[$key];
     }
 
     /**

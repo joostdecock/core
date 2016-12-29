@@ -117,7 +117,9 @@ class CathrinCorset extends Pattern
         for ($i=1; $i<8; $i++) {
             $name = "Panel$i";
             if (!($this->v('panels') == 11 && $i == 4)) {
-                $this->{"paperless$name"}();
+                if ($this->isPaperless) {
+                    $this->{"paperless$name"}();
+                }
             }
         }
 

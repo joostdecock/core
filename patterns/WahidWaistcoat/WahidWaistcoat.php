@@ -683,7 +683,7 @@ class WahidWaistcoat extends JoostBodyBlock
         $p = $this->parts['front'];
 
         // Seam allowance
-//        $p->offsetPath('sa', 'saBase', 10, 1, ['class' => 'seam-allowance']);
+        $p->offsetPath('sa', 'saBase', 10, 1, ['class' => 'seam-allowance']);
 
         // Title
         $p->newPoint('titleAnchor', $p->x(8), $p->y(5000));

@@ -642,7 +642,6 @@ class Part
          */
         $stack = $this->findAllStackIntersections($stack);
         
-        //if($this->title == 'Front') print_r($stack);
         foreach ($stack->intersections as $intersection) {
             $delta = $intersection['b'] - $intersection['a'];
             $a = $stack->items[$intersection['a']];
@@ -677,6 +676,16 @@ class Part
                 }
             }
         }
+
+        if($delta > 1) {
+            // Intersecting path segments are not adjacent in the stack
+            // We need to remove the chunks in between
+            for($i=1;$i<$delta;$i++) {
+                // Removing this would mess up the indexes, so we'll replace it with nothing
+                $stack->replace($stack->items[$i+$intersection['a']], ['type' => 'removed']);
+            }
+        }
+
         return $stack;
     }
 
@@ -762,9 +771,8 @@ class Part
             // 1 line, 1 curve
             if ($this->curveLen($s2['offset'][0], $s2['offset'][1], $s2['offset'][2], $s2['offset'][3]) > 10) {
                 $i = BezierToolbox::findLineCurveIntersections(
-                    $this->loadPoint($s1['offset'][0]),
-                    $this->loadPoint($s1['offset'][1]), $this->loadPoint($s2['offset'][0]), $this->loadPoint($s2['offset'][1]),
-                    $this->loadPoint($s2['offset'][2]), $this->loadPoint($s2['offset'][3])
+                    $this->loadPoint($s1['offset'][0]), $this->loadPoint($s1['offset'][1]), 
+                    $this->loadPoint($s2['offset'][0]), $this->loadPoint($s2['offset'][1]), $this->loadPoint($s2['offset'][2]), $this->loadPoint($s2['offset'][3])
                 );
                 if ($i) {
                     foreach ($i as $key => $point) {
@@ -790,9 +798,8 @@ class Part
             // 1 curve, 1 line
             if ($this->curveLen($s1['offset'][0], $s1['offset'][1], $s1['offset'][2], $s1['offset'][3]) > 10) {
                 $i = BezierToolbox::findLineCurveIntersections(
-                    $this->loadPoint($s1['offset'][0]),
-                    $this->loadPoint($s1['offset'][1]), $this->loadPoint($s1['offset'][2]), $this->loadPoint($s1['offset'][3]),
-                    $this->loadPoint($s2['offset'][0]), $this->loadPoint($s2['offset'][1])
+                    $this->loadPoint($s2['offset'][0]), $this->loadPoint($s2['offset'][1]),
+                    $this->loadPoint($s1['offset'][0]), $this->loadPoint($s1['offset'][1]), $this->loadPoint($s1['offset'][2]), $this->loadPoint($s1['offset'][3])
                 );
                 if ($i) {
                     foreach ($i as $key => $point) {

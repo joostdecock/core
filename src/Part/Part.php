@@ -1098,14 +1098,23 @@ class Part
                             // Cubic Bezier, we can just use the control point
                             $this->clonePoint($next['offset'][1], '.helpNext');
                         }
-                        $id = $chunk['offset'][3] . 'XccX' . $next['offset'][0];
-                        $this->addPoint(
-                            $id,
-                            $this->beamsCross('.helpChunk', $chunk['offset'][3], '.helpNext', $next['offset'][0])
-                        );
-                        $new[] = $chunk;
-                        $new[] = ['type' => 'line', 'offset' => [$chunk['offset'][3], $id]];
-                        $new[] = ['type' => 'line', 'offset' => [$id, $next['offset'][0]]];
+                        
+                        $intersectionPoint = $this->beamsCross('.helpChunk', $chunk['offset'][3], '.helpNext', $next['offset'][0]);
+                        if($intersectionPoint instanceof Point) {
+                            // Beams do cross, proceed as normal
+                            $id = $chunk['offset'][3] . 'XccX' . $next['offset'][0];
+                            $this->addPoint(
+                                $id,
+                                $this->beamsCross('.helpChunk', $chunk['offset'][3], '.helpNext', $next['offset'][0])
+                            );
+                            $new[] = $chunk;
+                            $new[] = ['type' => 'line', 'offset' => [$chunk['offset'][3], $id]];
+                            $new[] = ['type' => 'line', 'offset' => [$id, $next['offset'][0]]];
+                        } else {
+                            // Beams are parallel. Just connect the start/end points
+                            $new[] = $chunk;
+                            $new[] = ['type' => 'line', 'offset' => [$chunk['offset'][3], $next['offset'][0]]];
+                        }
                         $stack->replace($chunk, $new);
                     }
                 }

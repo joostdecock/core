@@ -44,6 +44,12 @@ class TheodoreTrousers extends Pattern
     {
         // This option is fixed in the legacy code
         $this->setOption('trouserBottomWidth', 226);   
+        
+        // These allows the TheoTrousers pattern to just extend this pattern with different options
+        $this->setValue('legReduction', 0);   
+        $this->setValue('legExtension', 0);   
+        $this->setValue('frontReduction', 0);   
+        $this->setValue('backReduction', 0);   
     }
 
     /*
@@ -151,14 +157,14 @@ class TheodoreTrousers extends Pattern
 
         $p->newPoint(   0, 0, 0, 'Center front @ Waistline');
         $p->newPoint(   1, 0, $model->m('bodyRise') - $this->o('waistbandWidth') + 10, 'Center front crutch line');
-        $p->newPoint(   2, 0, $p->y(1) + $model->m('inseam'), 'Center front bottom');
+        $p->newPoint(   2, 0, $p->y(1) + $model->m('inseam') + $this->v('legExtension'), 'Center front bottom');
         $p->newPoint( 201, 0 , $p->y(2) + 10);
         $p->newPoint( 202, $this->o('trouserBottomWidth')/4, $p->y(201));
         $p->addPoint( 203, $p->flipX(202));
         $p->newPoint(   3, 0, $p->y(1) + $model->m('inseam')/2 + 50, 'Center front knee');
         $p->newPoint(   4, 0, $p->y(1) - $model->m('bodyRise')/4, 'Center front seat line');
         $p->newPoint(   5, 10 - $model->m('seatCircumference')/8, $p->y(1));
-        $p->newPoint(   9, $p->x(5) - $model->m('seatCircumference')/16 - 5, $p->y(5));
+        $p->newPoint(   9, $p->x(5) - $model->m('seatCircumference')/16 - 5 + $this->v('backReduction'), $p->y(5));
         $p->newPoint(  16, $p->x(5) - $p->deltaX(1,5)/4, $p->y(5));
         $p->addPoint(1601, $p->shift(16, 135, 45));
         $p->addPoint(1602, $p->shift(1601, 45, 25));
@@ -169,7 +175,7 @@ class TheodoreTrousers extends Pattern
         $p->newPoint(  20, $p->x(18) + 20, $p->y(18));
         $p->addPoint(1901, $p->shiftTowards(20, 19,$p->distance(19,20)+25));
         $p->addPoint(  21, $p->shiftTowards(19,20,$p->distance(19,20)+10));
-        $p->newPoint(  22, $p->x(9) + $p->deltaX(5,9)/2 - 5, $p->y(9));
+        $p->newPoint(  22, $p->x(9) + $p->deltaX(5,9)/2 - 5 + $this->v('backReduction'), $p->y(9));
         $p->newPoint(  23, $p->x(22), $p->y(22) + 5);
         $p->newPoint(  24, $p->x(20) + $model->m('hipsCircumference')/4 + 45, $p->y(20));
         $p->addPoint(  25, $p->shiftTowards(21,24, $p->distance(21,24)/2));
@@ -179,11 +185,11 @@ class TheodoreTrousers extends Pattern
         $p->addPoint(2504, $p->shiftTowards(25,21, 12.5));
         $p->newPoint(  26, $p->x(17) + $model->m('seatCircumference')/4 + 30, $p->y(17));
         $p->addPoint(2601, $p->shiftTowards(24,26, $p->deltaY(24,26)*1.4));
-        $p->newPoint(  27, $p->x(2) + $this->o('trouserBottomWidth')/2 + 20, $p->y(2));
+        $p->newPoint(  27, $p->x(2) + $this->o('trouserBottomWidth')/2 + 20 - $this->v('legReduction')/2, $p->y(2));
         $p->newPoint(2701, $p->x(27), $p->y(27) - 50);
         $p->addPoint(2702, $p->flipX(2701));
         $p->addPoint(  28, $p->flipX(27));
-        $p->newPoint(  29, $p->x(3) + $this->o('trouserBottomWidth')/2 + 15 + 20, $p->y(3));
+        $p->newPoint(  29, $p->x(3) + $this->o('trouserBottomWidth')/2 + 15 + 20 - $this->v('legReduction')/2, $p->y(3));
         $p->addPoint(2901, $p->shiftTowards(27,29, $p->deltaY(27,29)*1.6));
         $p->addPoint(  30, $p->flipX(29));
         $p->addPoint(3001, $p->shiftTowards(28,30, $p->deltaY(28,30)*1.6));
@@ -310,7 +316,7 @@ class TheodoreTrousers extends Pattern
 
         $p->newPoint(     0 , 0, 0, 'Center front waistline');
         $p->newPoint(     1 , $p->x(0), $model->m('bodyRise') - $this->o('waistbandWidth') + 10, 'Center front crutch line');
-        $p->newPoint(     2 , $p->x(0) , $p->y(1) + $model->m('inseam'), 'Center front bottom');
+        $p->newPoint(     2 , $p->x(0) , $p->y(1) + $model->m('inseam') + $this->v('legExtension'), 'Center front bottom');
         $p->newPoint(     3 , $p->x(0) , $p->y(1) + $model->m('inseam')/2 + 50, 'Center front knee');
         $p->newPoint(     4 , $p->x(0) , $p->y(1) - $model->m('bodyRise')/4, 'Center front seat line');
         $p->newPoint(     5 , $p->x(0) - $model->m('seatCircumference')/8 + 10 , $p->y(1));
@@ -322,16 +328,16 @@ class TheodoreTrousers extends Pattern
         $p->newPoint(     8 , $p->x(6) + $model->m('seatCircumference')/4 + 20 , $p->y(6));
         $p->newPoint(   801 , $p->x(8) , $p->y(8) - $model->m('bodyRise')/4);
         $p->newPoint(   802 , $p->x(8) , $p->y(8) + $model->m('bodyRise')/4);
-        $p->newPoint(     9 , $p->x(5) - $model->m('seatCircumference')/16 - 5 , $p->y(5));
+        $p->newPoint(     9 , $p->x(5) - $model->m('seatCircumference')/16 - 5 + $this->v('frontReduction'), $p->y(5));
         $p->newPoint(    10 , $p->x(7) + 10 , $p->y(7));
         $p->addPoint(  1001 , $p->shiftTowards(10,6,10));
         $p->newPoint(  1002 , $p->x(0), $p->y(1001));
         $p->newPoint(    11 , $p->x(10) + $model->m('hipsCircumference')/4 + 25 , $p->y(10));
-        $p->newPoint(    12 , $p->x(2) + $this->o('trouserBottomWidth')/2 , $p->y(2));
+        $p->newPoint(    12 , $p->x(2) + $this->o('trouserBottomWidth')/2 - $this->v('legReduction')/2, $p->y(2));
         $p->newPoint(  1201 , $p->x(12) , $p->y(12) - 50);
         $p->addPoint(    13 , $p->flipX(12));
         $p->addPoint(  1301 , $p->flipX(1201));
-        $p->newPoint(    14 , $p->x(3) + $this->o('trouserBottomWidth')/2 + 15 , $p->y(3));
+        $p->newPoint(    14 , $p->x(3) + $this->o('trouserBottomWidth')/2 + 15 - $this->v('legReduction')/2, $p->y(3));
         $p->addPoint(  1401 , $p->shiftTowards(12,14, $p->distance(12,14)+$p->deltaY(1,3)/2));
         $p->addPoint(  1402 , $p->flipX(1401));
         $p->addPoint(    15 , $p->flipX(14));

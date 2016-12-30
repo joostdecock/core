@@ -1278,6 +1278,44 @@ class TheodoreTrousers extends Pattern
     {
         /** @var Part $p */
         $p = $this->parts['back'];
+
+        // Dart
+        $p->newPath('dartCenter', 'M dartTopLeft L dartTopRight M dartTop L dartTip', ['class' => 'helpline']);
+        $p->newLinearDimension('dartTip', 'dartTop', $p->distance('dartTop','dartTopRight')+15); // Dart length
+        $p->newLinearDimension('dartTopLeft', 'dartTopRight', 20); // Dart width
+        $p->newLinearDimension(66601, 'dartTop', -20); // Dart placement
+
+        // Pocket
+        $p->newLinearDimension('pocketCenterLeft', 'dartTopLeft', -15); // Pocket height
+        $p->newLinearDimension('pocketEdgeLeft', 'pocketCenterLeft', 25); // Pocket width left side
+        $p->newLinearDimension('pocketCenterRight', 'pocketEdgeRight', 25); // Pocket width right side
+
+        // Waist
+        $p->newLinearDimension(66601, -2104, -35); // Waist seam length
+        $p->newWidthDimension(66601, -2104, $p->y(66601)-50); // Waist horizontal
+        $p->newHeightDimension(-2104,66601,$p->x(-2104)+25); // Waist vertical
+        
+        // Cross seam
+        $p->newWidthDimension(-2301,66601, $p->y(66601)-50); // Crossseam horizontal
+        $p->newCurvedDimension('M -2301 C -2301 -901603 -901601 C -901602 -901901 -9019', -25); // Cross seam lenght, curved part
+        $p->newWidthDimension(-9019,66601); // Crossseam linear part, width
+        $p->newHeightDimension(-9019,66601); // Crossseam linear part, height
+        $p->newHeightDimension(-2301,66601, $p->x(-2301)-25); // Crossseam height
+
+        // Inseam
+        $p->newCurvedDimension('M -28 C -2702 -30 -30 C -3001 -2301 -2301', -25); // Inseam length
+        $p->newHeightDimension(-28,-2301, $p->x(-2301)-40); // Inseam height
+        $p->newWidthDimension(-2301,-28, $p->y(-28)+80); // Inseam width
+
+        // Outseam
+        $p->newCurvedDimension('M -27 C -2701 -29 -29 C -2901 -2601 -26 L -2104', 25); // Outseam length
+        $p->newHeightDimension(-27,-2104, $p->x(-2104)+40); // Outseam height
+        $p->newWidthDimension(-27,-2104, $p->y(-27)+80); // Outseam width
+
+        // Hem
+        $p->newWidthDimension(-28,-27, $p->y(-27)+80); // Leg width
+        $p->newHeightDimensionSm(201,-28, $p->x(201)+15); // Hem curve depth
+        $p->newNote($p->newId(), -20110, $this->t("Hem\nallowance")." : ".$this->unit(60), 12, 30, 15,['dy' => -6, 'line-height' => 6]);
     }
     
     /**

@@ -1343,9 +1343,9 @@ class TheodoreTrousers extends Pattern
         $p->newHeightDimension(-8,-1102, $p->x(-1102)-25); // Outseam, vertical
 
         // Hem
+        $p->newWidthDimension(-13,-12, $p->y(-12)+80); // Leg width
         $p->newPoint('hemNoteAnchor', $p->x(2), $p->y('sa-line--13TO-12'));
         $p->newNote($p->newId(), 'hemNoteAnchor', $this->t("Hem\nallowance")." : ".$this->unit(60), 12, 30, 15,['dy' => -6, 'line-height' => 6]);
-        $p->newWidthDimension(-13,-12, $p->y(-12)+80); // Leg width
     }
     
     /**
@@ -1461,6 +1461,20 @@ class TheodoreTrousers extends Pattern
     {
         /** @var Part $p */
         $p = $this->parts['flyPiece'];
+        
+        // Seam length fly side
+        $p->newCurvedDimension('M 43 C fly7 fly6 -6 L waistFly1', -25);
+
+        // Width
+        $p->newWidthDimension('waistFly1', -40, $p->y(-40)-25);
+
+        // Note to trace from front
+        $front = $this->parts['front'];
+        $p->newNote($p->newId(), 'grainlineBottom', $this->unit($p->distance('waistFly1',-40)).' '.$this->t("wide")."\n".$this->t("Trace shape from").' '.$this->t($front->getTitle()), 6, 40, 5);
+        // Fixme: Notes don't extend the bounding box (yet) 
+        // so let's draw an invisible path to prevent the note from being cropped
+        $p->addPoint('noteCropBust', $p->shift('grainlineBottom', -90, 60)); 
+        $p->newPath($p->newId(), 'M grainlineBottom L noteCropBust', ['class' => 'hidden']); 
     }
     
     /**
@@ -1474,6 +1488,17 @@ class TheodoreTrousers extends Pattern
     {
         /** @var Part $p */
         $p = $this->parts['flyShield'];
+
+        // Width
+        $p->newWidthDimension('leftTop', -40, $p->y(-40)-25);
+
+        // Note to trace from front
+        $flyPiece = $this->parts['flyPiece'];
+        $p->newNote($p->newId(), 'grainlineBottom', $this->unit($p->distance('leftTop',-40)).' '.$this->t("wide")."\n".$this->t("Trace shape from").' '.$this->t($flyPiece->getTitle()), 6, 40, 5);
+        // Fixme: Notes don't extend the bounding box (yet) 
+        // so let's draw an invisible path to prevent the note from being cropped
+        $p->addPoint('noteCropBust', $p->shift('grainlineBottom', -90, 60)); 
+        $p->newPath($p->newId(), 'M grainlineBottom L noteCropBust', ['class' => 'hidden']); 
     }
     
     /**
@@ -1487,6 +1512,18 @@ class TheodoreTrousers extends Pattern
     {
         /** @var Part $p */
         $p = $this->parts['sidePiece'];
+        
+        // Width
+        $p->newWidthDimension('topLeft', -1102, $p->y(-1102)-25);
+        $p->newWidthDimension('bottomLeft', 61, $p->y(61)+25);
+        
+        // Height
+        $p->newHeightDimension(61, -1102, $p->x(61)+35);
+
+        // Note to trace from front
+        $front = $this->parts['front'];
+        $p->addPoint('noteAnchor', $p->shift('bottomLeft',90,30));
+        $p->newNote($p->newId(), 'noteAnchor', $this->t("Trace shape from").' '.$this->t($front->getTitle()), 12, 15, 0);
     }
 
     /**
@@ -1500,6 +1537,22 @@ class TheodoreTrousers extends Pattern
     {
         /** @var Part $p */
         $p = $this->parts['frontPocketBag'];
+        
+        // Width top
+        $p->newWidthDimension(-100101, -40, $p->y(-1102)-25);
+        $p->newWidthDimension(-40,'grainlineTop', $p->y(-1102)-25);
+        $p->newWidthDimension('grainlineTop',-1102, $p->y(-1102)-25);
+
+        // Height left
+        $p->newHeightDimension(813,-100101, $p->x(813)-25);
+        $p->newHeightDimension(810,-1102, $p->x(-1102)+35);
+        
+        // Width bottom
+        $p->newWidthDimension(810,-1102, $p->y(810)+25);
+
+        // Note
+        $front = $this->parts['front'];
+        $p->newNote($p->newId(), 'titleAnchor', $this->t("Match shape to").' '.$this->t($front->getTitle()), 6, 55, 30);
     }
 
     /**
@@ -1513,6 +1566,14 @@ class TheodoreTrousers extends Pattern
     {
         /** @var Part $p */
         $p = $this->parts['backInnerPocketBag'];
+        
+        // Size
+        $p->newWidthDimension(33,23,$p->y(23)+25); // Width
+        $p->newHeightDimension(21,1, $p->x(1)+25); // Length
+
+        // Welt
+        $p->newHeightDimension(5,1,$p->x(5)+15); // From top
+        $p->newWidthDimension(8,10,$p->y(10)-15); // Width
     }
 
     /**
@@ -1526,6 +1587,14 @@ class TheodoreTrousers extends Pattern
     {
         /** @var Part $p */
         $p = $this->parts['backOuterPocketBag'];
+        
+        // Size
+        $p->newWidthDimension(33,23,$p->y(23)+25); // Width
+        $p->newHeightDimension(21,1, $p->x(1)+25); // Length
+
+        // Welt
+        $p->newHeightDimension(5,1,$p->x(5)+15); // From top
+        $p->newWidthDimension(8,10,$p->y(10)-15); // Width
     }
 
     /**
@@ -1539,6 +1608,14 @@ class TheodoreTrousers extends Pattern
     {
         /** @var Part $p */
         $p = $this->parts['backPocketFacing'];
+        
+        // Size
+        $p->newWidthDimension(3,2,$p->y(2)+25); // Width
+        $p->newHeightDimension(2,1, $p->x(1)+25); // Length
+
+        // Welt
+        $p->newHeightDimension(5,1,$p->x(5)+15); // From top
+        $p->newWidthDimension(8,10,$p->y(10)-20); // Width
     }
 
     /**
@@ -1552,6 +1629,14 @@ class TheodoreTrousers extends Pattern
     {
         /** @var Part $p */
         $p = $this->parts['backPocketInterfacing'];
+        
+        // Size
+        $p->newWidthDimension(3,2,$p->y(2)+25); // Width
+        $p->newHeightDimension(2,1, $p->x(1)+25); // Length
+
+        // Welt
+        $p->newHeightDimension(5,1,$p->x(5)+15); // From top
+        $p->newWidthDimension(8,10,$p->y(10)-20); // Width
     }
 
     /**
@@ -1565,5 +1650,9 @@ class TheodoreTrousers extends Pattern
     {
         /** @var Part $p */
         $p = $this->parts['beltLoop'];
+        
+        // Size
+        $p->newWidthDimension(3,2,$p->y(2)+45); // Width
+        $p->newHeightDimension(2,1, $p->x(1)+15); // Length
     }
 }

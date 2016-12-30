@@ -1265,6 +1265,36 @@ class TheodoreTrousers extends Pattern
     {
         /** @var Part $p */
         $p = $this->parts['front'];
+        
+        // Waist
+        $p->newCurvedDimension('M -100101 C -1002 -1102 -1102', -25); // Waist seam length
+        $p->newWidthDimension(-100101, -1102, $p->y(-1102)-40); // Waist horizontal length
+        $p->newHeightDimensionSm(-100101,-1102, $p->x(-1002)+25); // Height of the waist slope
+
+        // Fly
+        $p->newWidthDimensionSm(-6,-100101, $p->y(-6)+40); // To fly curve, horizontal 
+        $p->newHeightDimension(-6,-100101, $p->x(-6)-25); // To fly curve, vertical
+        $p->newWidthDimension(-9,-100101, $p->y(-100101)-25); // Crotch curve width
+        $p->newHeightDimension(-9,-100101, $p->x(-9)-25); // Crotch curve width
+
+        // Inseam
+        $p->newCurvedDimension('M -13 C -1301 -15 -15 C -1402 -9 -9', -25); // Inseam length
+        $p->newHeightDimension(-13,-9, $p->x(-9)-40); // Inseam, vertical
+        $p->newWidthDimension(-9,-13, $p->y(-13)+80); // Inseam, horizontal
+
+        // Outseam
+        $p->newCurvedDimension('M -12 C -1201 -14 -14 C -1401 -802 -8 C -801 -1102 -1102', 25); // Outseam length
+        $p->newHeightDimension(-12,-1102, $p->x(-1102)+50); // Outseam, vertical
+        $p->newWidthDimension(-12,-1102, $p->y(-12)+80); // Outseam, horizontal
+        
+        // Hip bump
+        $p->newWidthDimensionSm(-1102,-8, $p->y(-8)); // Outseam, horizontal
+        $p->newHeightDimension(-8,-1102, $p->x(-1102)-25); // Outseam, vertical
+
+        // Hem
+        $p->newPoint('hemNoteAnchor', $p->x(2), $p->y('sa-line--13TO-12'));
+        $p->newNote($p->newId(), 'hemNoteAnchor', $this->t("Hem\nallowance")." : ".$this->unit(60), 12, 30, 15,['dy' => -6, 'line-height' => 6]);
+        $p->newWidthDimension(-13,-12, $p->y(-12)+80); // Leg width
     }
     
     /**

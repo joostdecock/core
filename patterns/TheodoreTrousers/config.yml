@@ -8,8 +8,8 @@ info:
     link: "freesewing.org/pattern/theodore-trouser-block/"
 
 parts:
-    front: "Front"
     back: "Back"
+    front: "Front"
     waistbandInterfacingLeft: "Waistband interfacing left"
     waistbandInterfacingRight: "Waistband interfacing right"
     waistbandLeft: "Waistband left"

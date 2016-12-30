@@ -845,10 +845,10 @@ class TheodoreTrousers extends Pattern
             'sa-curve--28TO201',
             'sa-curve-201TO-27',
             'sa-curve--27TO201',
-            'cp2--201.203.-28.-28',
-            'cp1--201.203.-28.-28',
-            'cp2---27.-27.202.201',
-            'cp1---27.-27.202.201',
+            'sa-cp2--201.203.-28.-28',
+            'sa-cp1--201.203.-28.-28',
+            'sa-cp2---27.-27.202.201',
+            'sa-cp1---27.-27.202.201',
         ];
         foreach($shiftThese as $shiftThis) $p->addPoint($shiftThis,$p->shift($shiftThis,-90,50));
 

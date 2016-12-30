@@ -636,10 +636,12 @@ class Part
     {
         /**
          * A few assumptions here:
+         *
          * - the index of a is lower than that of b (should be the case)
          * - we are removing what's between a and b, not what's between b and a
          */
         $stack = $this->findAllStackIntersections($stack);
+        
         foreach ($stack->intersections as $intersection) {
             $delta = $intersection['b'] - $intersection['a'];
             $a = $stack->items[$intersection['a']];
@@ -648,10 +650,7 @@ class Part
                 $this->addPoint($key, $point);
                 // split a here
                 if ($a['type'] == 'curve') {
-                    $points = $this->splitCurve($a['offset'][0], $a['offset'][1], $a['offset'][2], $a['offset'][3], $key);
-                    for ($i = 1; $i < 9; $i++) {
-                        $this->addPoint("$key-a-$i", $points[$i - 1]);
-                    }
+                    $this->addSplitCurve($a['offset'][0], $a['offset'][1], $a['offset'][2], $a['offset'][3], $key, "$key-a-");
                     $new[] = [
                         'type'         => 'curve',
                         'offset'       => ["$key-a-1", "$key-a-2", "$key-a-3", "$key-a-4"],
@@ -664,10 +663,7 @@ class Part
                 }
                 // split b here
                 if ($b['type'] == 'curve') {
-                    $points = $this->splitCurve($b['offset'][0], $b['offset'][1], $b['offset'][2], $b['offset'][3], $key);
-                    for ($i = 1; $i < 9; $i++) {
-                        $this->addPoint("$key-b-$i", $points[$i - 1]);
-                    }
+                    $this->addSplitCurve($b['offset'][0], $b['offset'][1], $b['offset'][2], $b['offset'][3], $key, "$key-b-");
                     $new[] = [
                         'type'         => 'curve',
                         'offset'       => ["$key-b-5", "$key-b-6", "$key-b-7", "$key-b-8"],
@@ -680,6 +676,16 @@ class Part
                 }
             }
         }
+
+        if($delta > 1) {
+            // Intersecting path segments are not adjacent in the stack
+            // We need to remove the chunks in between
+            for($i=1;$i<$delta;$i++) {
+                // Removing this would mess up the indexes, so we'll replace it with nothing
+                $stack->replace($stack->items[$i+$intersection['a']], ['type' => 'removed']);
+            }
+        }
+
         return $stack;
     }
 
@@ -765,9 +771,8 @@ class Part
             // 1 line, 1 curve
             if ($this->curveLen($s2['offset'][0], $s2['offset'][1], $s2['offset'][2], $s2['offset'][3]) > 10) {
                 $i = BezierToolbox::findLineCurveIntersections(
-                    $this->loadPoint($s1['offset'][0]),
-                    $this->loadPoint($s1['offset'][1]), $this->loadPoint($s2['offset'][0]), $this->loadPoint($s2['offset'][1]),
-                    $this->loadPoint($s2['offset'][2]), $this->loadPoint($s2['offset'][3])
+                    $this->loadPoint($s1['offset'][0]), $this->loadPoint($s1['offset'][1]), 
+                    $this->loadPoint($s2['offset'][0]), $this->loadPoint($s2['offset'][1]), $this->loadPoint($s2['offset'][2]), $this->loadPoint($s2['offset'][3])
                 );
                 if ($i) {
                     foreach ($i as $key => $point) {
@@ -793,9 +798,8 @@ class Part
             // 1 curve, 1 line
             if ($this->curveLen($s1['offset'][0], $s1['offset'][1], $s1['offset'][2], $s1['offset'][3]) > 10) {
                 $i = BezierToolbox::findLineCurveIntersections(
-                    $this->loadPoint($s1['offset'][0]),
-                    $this->loadPoint($s1['offset'][1]), $this->loadPoint($s1['offset'][2]), $this->loadPoint($s1['offset'][3]),
-                    $this->loadPoint($s2['offset'][0]), $this->loadPoint($s2['offset'][1])
+                    $this->loadPoint($s2['offset'][0]), $this->loadPoint($s2['offset'][1]),
+                    $this->loadPoint($s1['offset'][0]), $this->loadPoint($s1['offset'][1]), $this->loadPoint($s1['offset'][2]), $this->loadPoint($s1['offset'][3])
                 );
                 if ($i) {
                     foreach ($i as $key => $point) {
@@ -1098,14 +1102,23 @@ class Part
                             // Cubic Bezier, we can just use the control point
                             $this->clonePoint($next['offset'][1], '.helpNext');
                         }
-                        $id = $chunk['offset'][3] . 'XccX' . $next['offset'][0];
-                        $this->addPoint(
-                            $id,
-                            $this->beamsCross('.helpChunk', $chunk['offset'][3], '.helpNext', $next['offset'][0])
-                        );
-                        $new[] = $chunk;
-                        $new[] = ['type' => 'line', 'offset' => [$chunk['offset'][3], $id]];
-                        $new[] = ['type' => 'line', 'offset' => [$id, $next['offset'][0]]];
+                        
+                        $intersectionPoint = $this->beamsCross('.helpChunk', $chunk['offset'][3], '.helpNext', $next['offset'][0]);
+                        if($intersectionPoint instanceof Point) {
+                            // Beams do cross, proceed as normal
+                            $id = $chunk['offset'][3] . 'XccX' . $next['offset'][0];
+                            $this->addPoint(
+                                $id,
+                                $this->beamsCross('.helpChunk', $chunk['offset'][3], '.helpNext', $next['offset'][0])
+                            );
+                            $new[] = $chunk;
+                            $new[] = ['type' => 'line', 'offset' => [$chunk['offset'][3], $id]];
+                            $new[] = ['type' => 'line', 'offset' => [$id, $next['offset'][0]]];
+                        } else {
+                            // Beams are parallel. Just connect the start/end points
+                            $new[] = $chunk;
+                            $new[] = ['type' => 'line', 'offset' => [$chunk['offset'][3], $next['offset'][0]]];
+                        }
                         $stack->replace($chunk, $new);
                     }
                 }

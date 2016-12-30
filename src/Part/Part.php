@@ -677,7 +677,7 @@ class Part
             }
         }
 
-        if($delta > 1) {
+        if(isset($delta) && $delta > 1) {
             // Intersecting path segments are not adjacent in the stack
             // We need to remove the chunks in between
             for($i=1;$i<$delta;$i++) {

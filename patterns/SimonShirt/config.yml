@@ -1,0 +1,263 @@
+info:
+    name: "Simon Shirt"
+    version: "2.0"
+    date: 20161229
+    author: "Joost De Cock"
+    email: "joost@decock.org"
+    company: "freesewing.org"
+    link: "freesewing.org/pattern/simon-shirt/"
+
+parts:
+    back: "Back"
+    front: "Front"
+    waistbandInterfacingLeft: "Waistband interfacing left"
+    waistbandInterfacingRight: "Waistband interfacing right"
+    waistbandLeft: "Waistband left"
+    waistbandRight: "Waistband right"
+    waistbandLiningLeft: "Waistband lining left"
+    waistbandLiningRight: "Waistband lining right"
+    flyPiece: "Fly piece"
+    flyShield: "Fly shield"
+    sidePiece: "Side piece"
+    frontPocketBag: "Front pocket bag"
+    backInnerPocketBag: "Back inner pocket bag"
+    backOuterPocketBag: "Back outer pocket bag"
+    backPocketFacing: "Back pocket facing"
+    backPocketInterfacing: "Back pocket interfacing"
+    beltLoop: "Belt loop"
+
+languages:
+    en: "English"
+    nl: "Nederlands"
+    de: "Deutsch"
+
+measurements:
+    acrossBack: 450
+    bicepsCircumference: 335
+    centerBackNeckToWaist: 480
+    chestCircumference: 1080
+    naturalWaistToHip: 120
+    neckCircumference: 420
+    shoulderLength: 150
+    shoulderSlope: 55
+    hipsCircumference: 950
+    naturalWaist: 885
+    sleeveLengthToWrist: 700
+    wristCircumference: 190
+    shoulderToElbow: 410 
+
+options:
+    sleevecapEase:
+        type: "measure"
+        min: 0
+        max: 20
+        default: 5
+    chestEase:
+        type: "measure"
+        min: 0
+        max: 240
+        default: 80
+    waistEase:
+        type: "measure"
+        min: 0
+        max: 280
+        default: 100
+    hipsEase:
+        type: "measure"
+        min: 0
+        max: 240
+        default: 80
+    bicepsEase:
+        type: "measure"
+        min: 0
+        max: 120
+        default: 30
+    collarEase:
+        type: "measure"
+        min: 0
+        max: 40
+        default: 15
+    cufEase:
+        type: "measure"
+        min: 20
+        max: 80
+        default: 35
+    lengthBonus:
+        type: "measure"
+        min: -50
+        max: 250
+        default: 150
+    hemStyle:
+        type: "chooseOne"
+        options:
+            1: "Straight hem"
+            2: "Baseball hem"
+            3: "Slashed hem"
+        default: 1
+    hemCurve:
+        type: "measure"
+        min: 40
+        max: 120
+        default: 80
+    hipFlare:
+        type: "measure"
+        min: 0
+        max: 50
+        default: 20
+    backNeckCutout:
+        type: "measure"
+        min: 5
+        max: 40
+        default: 20
+    buttonPlacketType:
+        type: "chooseOne"
+        options:
+            1: "Cut-on"
+            2: "Separate"
+        default: 1
+    buttonPlacketStyle:
+        type: "chooseOne"
+        options:
+            1: "Classic style"
+            2: "French style (seamless)"
+        default: 1
+    buttonholePlacketType:
+        type: "chooseOne"
+        options:
+            1: "Cut-on"
+            2: "Separate"
+        default: 1
+    buttonholePlacketStyle:
+        type: "chooseOne"
+        options:
+            1: "Classic style"
+            2: "French style (seamless)"
+        default: 2
+    buttonPlacketWidth:
+        type: "measure"
+        min: 10
+        max: 30
+        default: 20
+    buttonholePlacketWidth:
+        type: "measure"
+        min: 20
+        max: 45
+        default: 35
+    buttonholePlacketFoldWidth:
+        type: "measure"
+        min: 3
+        max: 10
+        default: 6.35
+    buttons:
+        type: "chooseOne"
+        options:
+            4: 4
+            5: 5
+            6: 6
+            7: 7
+            8: 8
+            9: 9
+            10: 10
+            11: 11
+            12: 12
+        default: 7
+    extraTopButton:
+        type: "chooseOne"
+        options:
+            0: "No extra top button"
+            1: "Extra top button"
+        default: 1
+    buttonfreeLenght:
+        type: "measure"
+        min: -50
+        max: 30
+        default: 10
+    splitYoke:
+        type: "chooseOne"
+        options:
+            0: "Regular yoke"
+            1: "Split yoke"
+        default: 1
+    collarStandWidth:
+        type: "measure"
+        min: 15
+        max: 70
+        default: 35
+    collarStandBend:
+        type: "measure"
+        min: 0
+        max: 15
+        default: 5
+    collarStandCurve:
+        type: "measure"
+        min: 0
+        max: 15
+        default: 5
+    collarGap:
+        type: "measure"
+        min: 5
+        max: 30
+        default: 25
+    collarBend:
+        type: "measure"
+        min: 5
+        max: 30
+        default: 15
+    collarFlare:
+        type: "measure"
+        min: 0
+        max: 30
+        default: 10
+    collarAngle:
+        type: "measure"
+        min: 60
+        max: 130
+        default: 85
+    collarRoll:
+        type: "measure"
+        min: 0
+        max: 15
+        default: 7
+    cuffStyle:
+        type: "chooseOne"
+        options:
+            1: "Rounded barrel cuff"
+            2: "Angled barrel cuff"
+            3: "Straight barrel cuff"
+            4: "Rounded French cuff"
+            5: "Angled French cuff"
+            6: "Straight French cuff"
+        default: 2
+    cuffLenght:
+        type: "measure"
+        min: 30
+        max: 120
+        default: 65
+    cuffButtonRows:
+        type: "chooseOne"
+        options:
+            1: "Single cuff button row"
+            2: "Double cuff button row"
+        default: 1
+    barrelcuffNarrowButton:
+        type: "chooseOne"
+        options:
+            0: "No narrow button"
+            1: "Include narrow button"
+        default: 1
+    cuffDrape:
+        type: "measure"
+        min: 0
+        max: 80
+        default: 40
+    sleevePlacketWidth:
+        type: "measure"
+        min: 15
+        max: 35
+        default: 25
+    sleevePlacketLength:
+        type: "measure"
+        min: 100
+        max: 200
+        default: 145
+

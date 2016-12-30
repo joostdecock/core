@@ -636,10 +636,13 @@ class Part
     {
         /**
          * A few assumptions here:
+         *
          * - the index of a is lower than that of b (should be the case)
          * - we are removing what's between a and b, not what's between b and a
          */
         $stack = $this->findAllStackIntersections($stack);
+        
+        //if($this->title == 'Front') print_r($stack);
         foreach ($stack->intersections as $intersection) {
             $delta = $intersection['b'] - $intersection['a'];
             $a = $stack->items[$intersection['a']];
@@ -648,10 +651,7 @@ class Part
                 $this->addPoint($key, $point);
                 // split a here
                 if ($a['type'] == 'curve') {
-                    $points = $this->splitCurve($a['offset'][0], $a['offset'][1], $a['offset'][2], $a['offset'][3], $key);
-                    for ($i = 1; $i < 9; $i++) {
-                        $this->addPoint("$key-a-$i", $points[$i - 1]);
-                    }
+                    $this->addSplitCurve($a['offset'][0], $a['offset'][1], $a['offset'][2], $a['offset'][3], $key, "$key-a-");
                     $new[] = [
                         'type'         => 'curve',
                         'offset'       => ["$key-a-1", "$key-a-2", "$key-a-3", "$key-a-4"],
@@ -664,10 +664,7 @@ class Part
                 }
                 // split b here
                 if ($b['type'] == 'curve') {
-                    $points = $this->splitCurve($b['offset'][0], $b['offset'][1], $b['offset'][2], $b['offset'][3], $key);
-                    for ($i = 1; $i < 9; $i++) {
-                        $this->addPoint("$key-b-$i", $points[$i - 1]);
-                    }
+                    $this->addSplitCurve($b['offset'][0], $b['offset'][1], $b['offset'][2], $b['offset'][3], $key, "$key-b-");
                     $new[] = [
                         'type'         => 'curve',
                         'offset'       => ["$key-b-5", "$key-b-6", "$key-b-7", "$key-b-8"],

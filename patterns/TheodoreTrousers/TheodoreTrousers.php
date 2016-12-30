@@ -71,29 +71,16 @@ class TheodoreTrousers extends Pattern
     {
         $this->sample($model);
         
-        $this->finalizeFront($model);
-        $this->finalizeBack($model);
-        
-        $this->finalizeWaistbandInterfacingLeft($model);
-        $this->finalizeWaistbandInterfacingRight($model);
-        $this->finalizeWaistbandLeft($model);
-        $this->finalizeWaistbandRight($model);
-        $this->finalizeWaistbandLiningLeft($model);
-        $this->finalizeWaistbandLiningRight($model);
-        
-        $this->finalizeFlyPiece($model);
-        $this->finalizeFlyShield($model);
-        $this->finalizeSidePiece($model);
-        $this->finalizeFrontPocketBag($model);
-        $this->finalizeBackInnerPocketBag($model);
-        $this->finalizeBackOuterPocketBag($model);
-        $this->finalizeBackPocketFacing($model);
-        $this->finalizeBackPocketInterfacing($model);
-        $this->finalizeBeltLoop($model);
+        // Finalize all parts
+        foreach ($this->parts as $key => $part) {
+            $this->{'finalize'.ucfirst($key)}($model);
+        }
         
         if ($this->isPaperless) {
-            $this->paperlessFront($model);
-            $this->paperlessBack($model);
+            // Finalize all parts
+            foreach ($this->parts as $key => $part) {
+                $this->{'paperless'.ucfirst($key)}($model);
+            }
         }
     }
 
@@ -113,25 +100,10 @@ class TheodoreTrousers extends Pattern
     {
         $this->initialize($model);
 
-        $this->draftBack($model);
-        $this->draftFront($model);
-        
-        $this->draftWaistbandInterfacingLeft($model);
-        $this->draftWaistbandInterfacingRight($model);
-        $this->draftWaistbandLeft($model);
-        $this->draftWaistbandRight($model);
-        $this->draftWaistbandLiningLeft($model);
-        $this->draftWaistbandLiningRight($model);
-        
-        $this->draftFlyPiece($model);
-        $this->draftFlyShield($model);
-        $this->draftSidePiece($model);
-        $this->draftFrontPocketBag($model);
-        $this->draftBackInnerPocketBag($model);
-        $this->draftBackOuterPocketBag($model);
-        $this->draftBackPocketFacing($model);
-        $this->draftBackPocketInterfacing($model);
-        $this->draftBeltLoop($model);
+        // Draft all parts
+        foreach ($this->parts as $key => $part) {
+            $this->{'draft'.ucfirst($key)}($model);
+        }
     }
     
     /**
@@ -1306,5 +1278,200 @@ class TheodoreTrousers extends Pattern
     {
         /** @var Part $p */
         $p = $this->parts['back'];
+    }
+    
+    /**
+     * Adds paperless info for the waistband interfacing left
+     *
+     * @param \Freesewing\Model $model The model to draft for
+     *
+     * @return void
+     */
+    public function paperlessWaistbandInterfacingLeft($model)
+    {
+        /** @var Part $p */
+        $p = $this->parts['waistbandInterfacingLeft'];
+    }
+    
+    /**
+     * Adds paperless info for the waistband interfacing right
+     *
+     * @param \Freesewing\Model $model The model to draft for
+     *
+     * @return void
+     */
+    public function paperlessWaistbandInterfacingRight($model)
+    {
+        /** @var Part $p */
+        $p = $this->parts['waistbandInterfacingRight'];
+    }
+    
+    /**
+     * Adds paperless info for the waistband left
+     *
+     * @param \Freesewing\Model $model The model to draft for
+     *
+     * @return void
+     */
+    public function paperlessWaistbandLeft($model)
+    {
+        /** @var Part $p */
+        $p = $this->parts['waistbandLeft'];
+    }
+    
+    /**
+     * Adds paperless info for the waistband right
+     *
+     * @param \Freesewing\Model $model The model to draft for
+     *
+     * @return void
+     */
+    public function paperlessWaistbandRight($model)
+    {
+        /** @var Part $p */
+        $p = $this->parts['waistbandRight'];
+    }
+    
+    /**
+     * Adds paperless info for the waistband lining left
+     *
+     * @param \Freesewing\Model $model The model to draft for
+     *
+     * @return void
+     */
+    public function paperlessWaistbandLiningLeft($model)
+    {
+        /** @var Part $p */
+        $p = $this->parts['waistbandLiningLeft'];
+    }
+    
+    /**
+     * Adds paperless info for the waistband lining right
+     *
+     * @param \Freesewing\Model $model The model to draft for
+     *
+     * @return void
+     */
+    public function paperlessWaistbandLiningRight($model)
+    {
+        /** @var Part $p */
+        $p = $this->parts['waistbandLiningRight'];
+    }
+    
+    /**
+     * Adds paperless info for the flyPiece
+     *
+     * @param \Freesewing\Model $model The model to draft for
+     *
+     * @return void
+     */
+    public function paperlessFlyPiece($model)
+    {
+        /** @var Part $p */
+        $p = $this->parts['flyPiece'];
+    }
+    
+    /**
+     * Adds paperless info for the flyShield
+     *
+     * @param \Freesewing\Model $model The model to draft for
+     *
+     * @return void
+     */
+    public function paperlessFlyShield($model)
+    {
+        /** @var Part $p */
+        $p = $this->parts['flyShield'];
+    }
+    
+    /**
+     * Adds paperless info for the sidePiece
+     *
+     * @param \Freesewing\Model $model The model to draft for
+     *
+     * @return void
+     */
+    public function paperlessSidePiece($model)
+    {
+        /** @var Part $p */
+        $p = $this->parts['sidePiece'];
+    }
+
+    /**
+     * Adds paperless info for the front pocket bag
+     *
+     * @param \Freesewing\Model $model The model to draft for
+     *
+     * @return void
+     */
+    public function paperlessFrontPocketBag($model)
+    {
+        /** @var Part $p */
+        $p = $this->parts['frontPocketBag'];
+    }
+
+    /**
+     * Adds paperless info for the back inner pocket bag
+     *
+     * @param \Freesewing\Model $model The model to draft for
+     *
+     * @return void
+     */
+    public function paperlessBackInnerPocketBag($model)
+    {
+        /** @var Part $p */
+        $p = $this->parts['backInnerPocketBag'];
+    }
+
+    /**
+     * Adds paperless info for the back inner pocket bag
+     *
+     * @param \Freesewing\Model $model The model to draft for
+     *
+     * @return void
+     */
+    public function paperlessBackOuterPocketBag($model)
+    {
+        /** @var Part $p */
+        $p = $this->parts['backOuterPocketBag'];
+    }
+
+    /**
+     * Adds paperless info for the back pocket facing
+     *
+     * @param \Freesewing\Model $model The model to draft for
+     *
+     * @return void
+     */
+    public function paperlessBackPocketFacing($model)
+    {
+        /** @var Part $p */
+        $p = $this->parts['backPocketFacing'];
+    }
+
+    /**
+     * Adds paperless info for the back pocket facing
+     *
+     * @param \Freesewing\Model $model The model to draft for
+     *
+     * @return void
+     */
+    public function paperlessBackPocketInterfacing($model)
+    {
+        /** @var Part $p */
+        $p = $this->parts['backPocketInterfacing'];
+    }
+
+    /**
+     * Adds paperless info for the belt loop
+     *
+     * @param \Freesewing\Model $model The model to draft for
+     *
+     * @return void
+     */
+    public function paperlessBeltLoop($model)
+    {
+        /** @var Part $p */
+        $p = $this->parts['beltLoop'];
     }
 }

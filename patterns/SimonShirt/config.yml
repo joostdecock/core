@@ -1,5 +1,5 @@
 info:
-    name: "Simon Shirt"
+    name: "Simon Shirt (being ported)"
     version: "2.0"
     date: 20161229
     author: "Joost De Cock"
@@ -8,23 +8,25 @@ info:
     link: "freesewing.org/pattern/simon-shirt/"
 
 parts:
+    backBlock: "Back block"
+    frontBlock: "Front block"
+    sleeveBlock: "Sleeve block"
+    block: "Block"
+    frontAndBackBlock: "Front and back block"
+    frontRight: "Front right"
+    frontLeft: "Front left"
+    yoke: "Yoke"
     back: "Back"
-    front: "Front"
-    waistbandInterfacingLeft: "Waistband interfacing left"
-    waistbandInterfacingRight: "Waistband interfacing right"
-    waistbandLeft: "Waistband left"
-    waistbandRight: "Waistband right"
-    waistbandLiningLeft: "Waistband lining left"
-    waistbandLiningRight: "Waistband lining right"
-    flyPiece: "Fly piece"
-    flyShield: "Fly shield"
-    sidePiece: "Side piece"
-    frontPocketBag: "Front pocket bag"
-    backInnerPocketBag: "Back inner pocket bag"
-    backOuterPocketBag: "Back outer pocket bag"
-    backPocketFacing: "Back pocket facing"
-    backPocketInterfacing: "Back pocket interfacing"
-    beltLoop: "Belt loop"
+    sleeve: "Sleeve"
+    collarStand: "Collar stand"
+    collar: "Collar"
+    undercollar: "Undercollar"
+    cuffguard: "Cuffguard"
+    cuffPlacket: "Cuff placket"
+    barrelCuff: "Barrel cuff"
+    frenchCuff: "French cuff"
+    buttonPlacket: "Button placket"
+    buttonholePlacket: "Buttonhole placket"
 
 languages:
     en: "English"
@@ -77,7 +79,7 @@ options:
         min: 0
         max: 40
         default: 15
-    cufEase:
+    cuffEase:
         type: "measure"
         min: 20
         max: 80
@@ -167,7 +169,7 @@ options:
             0: "No extra top button"
             1: "Extra top button"
         default: 1
-    buttonfreeLenght:
+    buttonfreeLength:
         type: "measure"
         min: -50
         max: 30
@@ -228,7 +230,7 @@ options:
             5: "Angled French cuff"
             6: "Straight French cuff"
         default: 2
-    cuffLenght:
+    cuffLength:
         type: "measure"
         min: 30
         max: 120
@@ -260,4 +262,9 @@ options:
         min: 100
         max: 200
         default: 145
+    armholeDrop:
+        type: "measure"
+        min: 0
+        max: 50
+        default: 0
 

@@ -148,7 +148,8 @@ class SimonShirt extends JoostBodyBlock
         // Now let's make that into a shirt
         $this->draftFrontRight($model);
         $this->draftFrontLeft($model);
-
+        if($this->o('buttonPlacketType') ==  2) $this->draftButtonPlacket($model); // Sewn-on button placket
+        if($this->o('buttonholePlacketType') ==  2) $this->draftButtonholePlacket($model); // Sewn-on buttonhole placket
     }
     
     /**
@@ -428,7 +429,6 @@ class SimonShirt extends JoostBodyBlock
           if($this->o('buttonholePlacketType')==1) $p->newSnippet($p->newId('buttonhole'), 'buttonhole', $extrapid);
         }
 
-
         // Construct paths
         
         if($this->o('buttonholePlacketType')==1) { 
@@ -488,6 +488,96 @@ class SimonShirt extends JoostBodyBlock
         $p->paths['seamline']->setSample(true);
     }
 
+    /**
+     * Drafts the button placket
+     *
+     * @param \Freesewing\Model $model The model to draft for
+     *
+     * @return void
+     */
+    public function draftButtonPlacket($model)
+    {
+        $this->clonePoints('frontRight', 'buttonPlacket');
+        
+        /** @var Part $p */
+        $p = $this->parts['buttonPlacket'];
+        
+        // First buttonhole
+        $p->newSnippet($p->newId('button'), 'button', 3000);
+        
+        // Next buttonholes
+        for($i=1;$i<$this->o('buttons');$i++) {
+          $pid = 3000+$i;
+          $p->newSnippet($p->newId('button'), 'button', $pid);
+        }
+        // Extra top buttonhole
+        if($this->o('extraTopButton')) {
+          $extrapid = $pid +1;
+          $p->newSnippet($p->newId('button'), 'button', $extrapid);
+        }
+
+        // Paths
+        
+        $foldline = 'M 2042 L 2045';
+        $helpline = 'M 4 L 9';
+
+        $outline = 'M 2153 C 2152 2151 9 L -2017 C -2051 -2052 -2053 ';
+        if($this->o('buttonPlacketStyle') == 2) {
+            $outline .= 'C -2055 -2054 -2056 ';
+            $foldline .= ' M -2053 L 2046';
+        }
+        $outline .= 'L 2043 L 2044 L 2040 z';
+
+        $p->newPath('outline', $outline);
+        $p->newPath('helpline', $helpline, ['class' => 'helpline']);
+        $p->newPath('foldline', $foldline, ['class' => 'foldline']);
+        
+    }
+
+
+    /**
+     * Drafts the buttonhole placket
+     *
+     * @param \Freesewing\Model $model The model to draft for
+     *
+     * @return void
+     */
+    public function draftButtonholePlacket($model)
+    {
+        $this->clonePoints('frontLeft', 'buttonholePlacket');
+        
+        /** @var Part $p */
+        $p = $this->parts['buttonholePlacket'];
+        
+        // First buttonhole
+        $p->newSnippet($p->newId('buttonhole'), 'buttonhole', 3000);
+        
+        // Next buttonholes
+        for($i=1;$i<$this->o('buttons');$i++) {
+          $pid = 3000+$i;
+          $p->newSnippet($p->newId('buttonhole'), 'buttonhole', $pid);
+        }
+        // Extra top buttonhole
+        if($this->o('extraTopButton')) {
+          $extrapid = $pid +1;
+          $p->newSnippet($p->newId('buttonhole'), 'buttonhole', $extrapid);
+        }
+
+        // Paths
+        if($this->o('buttonholePlacketStyle') == 1) {
+            $outline = 'M 4108 C 41082 41081 9 L 4107 L 4007 L 4008 z'; // Classic style
+            $foldline = 'M 4104 L 4004 M 4101 L 4001';
+            $helpline = 'M 4105 L 4005 M 4106 L 4006 M 4103 L 4003 M 4102 L 4002 M 4100 L 4000';
+        } else {
+            $outline = 'M 4108 C 41082 41081 4100 L 41086 C 41084 41085 41083 C 41088 41087 41089 L 4107 L 4007 L 4008 z'; // Seamless/French style
+            $foldline = 'M 41083 L 4002 M 4101 L 4001';
+            $helpline = 'M 4100 L 4000';
+        }
+        
+        $p->newPath('outline', $outline);
+        $p->newPath('helpline', $helpline, ['class' => 'helpline']);
+        $p->newPath('foldline', $foldline, ['class' => 'foldline']);
+    }
 
     /*
        _____ _             _ _

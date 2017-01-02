@@ -412,12 +412,29 @@ class SimonShirt extends JoostBodyBlock
         break;
         }
 
+        // First buttonhole
+        $p->newPoint(3000 , $p->x(4100), $p->y(3000), 'button start');
+        if($this->o('buttonholePlacketType')==1) $p->newSnippet($p->newId('buttonhole'), 'buttonhole', 3000);
+        // Next buttonholes
+        for($i=1;$i<$this->o('buttons');$i++) {
+          $pid = 3000+$i;
+          $p->newPoint($pid, $p->x(4100), $p->y($pid), 'Button');
+          if($this->o('buttonholePlacketType')==1) $p->newSnippet($p->newId('buttonhole'), 'buttonhole', $pid);
+        }
+        // Extra top buttonhole
+        if($this->o('extraTopButton')) {
+          $extrapid = $pid +1;
+          $p->newPoint($extrapid, $p->x(4100), $p->y($extrapid), 'Extra button');
+          if($this->o('buttonholePlacketType')==1) $p->newSnippet($p->newId('buttonhole'), 'buttonhole', $extrapid);
+        }
+
+
         // Construct paths
         
         if($this->o('buttonholePlacketType')==1) { 
             // Cut-on buttonhole placket
-            if($this->o('buttonholePlacketStyle')==1) $seamline = 'M 17 L 4107 L 4007 '; // Classic style buttonhole placket
-            else $seamline = 'M 17 L 41086 C 41084 41085 41083 C 41088 41087 41089 L 4107 L 4007 '; // Seamless/French style buttonhole placket
+            if($this->o('buttonholePlacketStyle')==1) $seamline = 'M 9 L 4107 L 4007 '; // Classic style buttonhole placket
+            else $seamline = 'M 9 L 41086 C 41084 41085 41083 C 41088 41087 41089 L 4107 L 4007 '; // Seamless/French style buttonhole placket
         } else { 
             // Sewn-on buttonhole placket
             $seamline = 'M 4008 ';

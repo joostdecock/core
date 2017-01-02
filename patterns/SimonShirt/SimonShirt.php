@@ -147,6 +147,7 @@ class SimonShirt extends JoostBodyBlock
 
         // Now let's make that into a shirt
         $this->draftFrontRight($model);
+        $this->draftFrontLeft($model);
 
     }
     
@@ -329,15 +330,147 @@ class SimonShirt extends JoostBodyBlock
         if($this->o('hemStyle') == 1) $flatFelledSideSeam = 'M 8001 M 5 C 5001 6011 6021 C 6031 8002 8001 C 6661 6662 6663 L 6667';
         else $flatFelledSideSeam = 'M 8001 M 5 C 5001 6011 6021 C 6031 8002 8001 C 6661 6662 6663';
         $p->newPath('flatFelledSideSeam',$flatFelledSideSeam, ['class' => 'debug']);
-/*
-        Legacy points conversion
-        -4 = 4
-        -17 = 9
-        -501 = 13
-        -9 = 20
-        -171 = 21
- */
     }
+
+    /**
+     * Drafts the front left
+     *
+     * @param \Freesewing\Model $model The model to draft for
+     *
+     * @return void
+     */
+    public function draftFrontLeft($model)
+    {
+        $this->clonePoints('frontRight', 'frontLeft');
+        
+        /** @var Part $p */
+        $p = $this->parts['frontLeft'];
+
+        // Since we're cloning frontLeft, every point needs to be mirrored
+        foreach($p->points as $i => $point) $p->addPoint($i, $p->flipX($i,0));
+        
+        $width = $this->o('buttonholePlacketWidth');
+      switch($this->o('buttonholePlacketStyle')) {
+        case 1: // Classic placket
+            $edge = $this->o('buttonholePlacketFoldWidth');
+            $p->addPoint(4000, $p->shift(4,180,$edge*2), 'New center front');
+            $p->addPoint(4001, $p->shift(4000,0,$width/2), 'Fold here');
+            $p->addPoint(4002, $p->shift(4000,0,$width/2+$edge), 'Stitches');
+            $p->addPoint(4003, $p->shift(4000,0,$width/2-$edge), 'Stitches');
+            $p->addPoint(4004, $p->shift(4000,180,$width/2), 'Fold here');
+            $p->addPoint(4005, $p->shift(4000,180,$width/2+$edge), 'Stitches');
+            $p->addPoint(4006, $p->shift(4000,180,$width/2-$edge), 'Stitches');
+            $p->addPoint(4007, $p->shift(4004,180,$width), 'Edge');
+
+            for($i=0;$i<8;$i++){
+              $pid = 4100+$i;
+              $oid = 4000+$i;
+              $p->newPoint($pid,$p->x($oid),$p->y(9));
+            }
+            $p->curveCrossesX(8,20,21,9,$p->x(4102),'.4108'); // Creates helper point .41081
+            $p->clonePoint('.41081', 4108); // Store .41081 in 4108
+            $p->newPoint(4008, $p->x(4108),$p->y(4001));
+            
+            // Need to split the neckcurve for a seperate placket or folding over
+            $p->addSplitCurve(8,20,21,9,4108,'splitNeckCurve');
+
+            $p->clonepoint('splitNeckCurve7', 41081);
+            $p->clonepoint('splitNeckCurve6', 41082);
+            $p->clonepoint('splitNeckCurve2', 41091);
+            $p->clonepoint('splitNeckCurve3', 41092);
+          break;
+        case 2: // Seamless
+            $edge = $this->o('buttonholePlacketFoldWidth');
+            $p->clonePoint(4,4000); // New center front
+            $p->addPoint(4001, $p->shift(4000,180,$width/2), 'Fold here');
+            $p->addPoint(4002, $p->shift(4000,180,$width*1.5), 'Fold again');
+            $p->addPoint(4007, $p->shift(4000,180,$width*2.5), 'Edge');
+            $p->newPoint(4100, $p->x(4000), $p->y(9), 'New center front');
+            $p->newPoint(4101, $p->x(4001), $p->y(9), 'Fold here');
+            $p->newPoint(4102, $p->x(4002), $p->y(9), 'Fold again');
+            $p->newPoint(4107, $p->x(4007), $p->y(9), 'Edge');
+            
+            $p->addPoint('curveSplitHelper', $p->flipX(4101,$p->x(4100)));
+            $p->curveCrossesX(8,20,21,9,$p->x('curveSplitHelper'),'.4108'); // Creates helper point .41081
+            $p->clonePoint('.41081', 4108); // Store .41081 in 4108
+            $p->newPoint(4008, $p->x(4108),$p->y(4001));
+            
+            // Need to split the neckcurve for a seperate placket or folding over
+            $p->addSplitCurve(8,20,21,9,4108,'splitNeckCurve');
+           
+            $p->clonepoint('splitNeckCurve7', 41081);
+            $p->clonepoint('splitNeckCurve6', 41082);
+            $p->clonepoint('splitNeckCurve2', 41091);
+            $p->clonepoint('splitNeckCurve3', 41092);
+            $p->addPoint(41083, $p->flipX(4108,$p->x(4101)));
+            $p->addPoint(41084, $p->flipX(41081,$p->x(4101)));
+            $p->addPoint(41085, $p->flipX(41082,$p->x(4101)));
+            $p->addPoint(41086, $p->flipX(4100,$p->x(4101)));
+            $p->addPoint(41087, $p->flipX(41084,$p->x(4102)));
+            $p->addPoint(41088, $p->flipX(41085,$p->x(4102)));
+            $p->addPoint(41089, $p->flipX(41086,$p->x(4102)));
+        break;
+        }
+
+        // Construct paths
+        
+        if($this->o('buttonholePlacketType')==1) { 
+            // Cut-on buttonhole placket
+            if($this->o('buttonholePlacketStyle')==1) $seamline = 'M 17 L 4107 L 4007 '; // Classic style buttonhole placket
+            else $seamline = 'M 17 L 41086 C 41084 41085 41083 C 41088 41087 41089 L 4107 L 4007 '; // Seamless/French style buttonhole placket
+        } else { 
+            // Sewn-on buttonhole placket
+            $seamline = 'M 4008 ';
+          }
+        
+        if($this->o('buttonholePlacketType')==2 && $this->o('buttonholePlacketStyle')==2) { 
+            if($this->o('hemStyle')) $seamline .= 'L 6669 C 6668 6667 6666 '; 
+        } else {
+            $seamline .= 'L 6669 C 6668 6667 6666 ';
+        }
+        
+        $seamline .= 'C 6665 6664 6663 C 6662 6661 8001 C 8002 6031 6021 C 6011 5001 5 C 13 16 14 C 15 18 10 C 17 19 12 L 8 ';
+        
+        if($this->o('buttonholePlacketType')==2) $seamline .= 'C 41091 41092 4108 z'; // Sewn-on
+        else $seamline .= 'C 20 21 9 z'; // Cut-on
+
+        if($this->o('buttonholePlacketType')==1) { // Cut-on
+            switch($this->o('buttonholePlacketStyle')) {
+                case 1: // Classic placket
+                    $placketHelpLines = 'M 4105 L 4005 M 4106 L 4006 M 4103 L 4003 M 4102 L 4002 M 4100 L 4000';
+                    $placketFoldLines = 'M 4104 L 4004 M 4101 L 4001';
+                break;
+                case 2: // Seamless
+                    $placketHelpLines = 'M 4100 L 4000 M 4102 L 4002';
+                    $placketFoldLines = 'M 4101 L 4001'; 
+                break;
+            }
+            $p->newPath('placketHelpLines', $placketHelpLines, ['class' => 'helpline']);
+            $p->newPath('placketFoldLines', $placketFoldLines, ['class' => 'foldline']);
+        }
+
+        // Add paths to part
+        
+        // Helplines
+        $p->newPath('acrossBackLine', 'M acrossBackHeight L 10', ['class' => 'helpline']);
+        $p->newPath('chestLine', 'M 5 L 2', ['class' => 'helpline']);
+        $p->newPath('waistLine', 'M 6021 L 3', ['class' => 'helpline']);
+        $p->newPath('hipsLine', 'M 8001 L 8003', ['class' => 'helpline']);
+        
+        if($this->o('hemStyle') == 1) {
+            $flatFelledSideSeam = 'M 5 C 5001 6011 6021 C 6031 8002 8001 C 6661 6662 6663 L 6667';
+        } else {
+            $flatFelledSideSeam = 'M 5 C 5001 6011 6021 C 6031 8002 8001 C 6661 6662 6663';
+        }
+        $p->newPath('flatFelledSideSeam',$flatFelledSideSeam, ['class' => 'debug']);
+
+        // Seamline path 
+        $p->newPath('seamline',$seamline);
+
+        // Mark path for sample service
+        $p->paths['seamline']->setSample(true);
+    }
+
 
     /*
        _____ _             _ _

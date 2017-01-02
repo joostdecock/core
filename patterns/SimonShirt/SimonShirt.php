@@ -145,11 +145,14 @@ class SimonShirt extends JoostBodyBlock
         $this->parts['frontBlock']->setRender(false);
         $this->parts['sleeveBlock']->setRender(false);
 
-        // Now let's make that into a shirt
+        // Front
         $this->draftFrontRight($model);
         $this->draftFrontLeft($model);
         if($this->o('buttonPlacketType') ==  2) $this->draftButtonPlacket($model); // Sewn-on button placket
         if($this->o('buttonholePlacketType') ==  2) $this->draftButtonholePlacket($model); // Sewn-on buttonhole placket
+        
+        // Back
+        $this->draftYoke($model);
     }
     
     /**
@@ -577,6 +580,32 @@ class SimonShirt extends JoostBodyBlock
         $p->newPath('outline', $outline);
         $p->newPath('helpline', $helpline, ['class' => 'helpline']);
         $p->newPath('foldline', $foldline, ['class' => 'foldline']);
+    }
+
+    /**
+     * Drafts the yoke
+     *
+     * @param \Freesewing\Model $model The model to draft for
+     *
+     * @return void
+     */
+    public function draftYoke($model)
+    {
+        $this->clonePoints('backBlock', 'yoke');
+
+        /** @var Part $p */
+        $p = $this->parts['yoke'];
+    
+        $mirrorThese = [8, 20, 12, 19, 17, 10];
+        foreach($mirrorThese as $mirrorThis) $p->addPoint("-$mirrorThis", $p->flipX($mirrorThis,0)); 
+
+        $p->newPoint('centerBottom', 0, $p->y(10)); 
+        
+        // Paths
+        if($this->o('splitYoke') == 1) $outline = 'M 1 L centerBottom L 10 C 17 19 12 L 8 C 20 1 1 z'; // Split yoke
+        else $outline = 'M 10 C 17 19 12 L 8 C 20 1 1 C 1 -20 -8 L -12 C -19 -17 -10 z';
+
+        $p->newPath('seamline', $outline);
     }
 
     /*

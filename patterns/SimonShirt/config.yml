@@ -89,6 +89,11 @@ options:
         min: -50
         max: 250
         default: 150
+    sleeveLengthBonus:
+        type: "measure"
+        min: 0
+        max: 50
+        default: 30
     hemStyle:
         type: "chooseOne"
         options:
@@ -259,9 +264,9 @@ options:
         default: 25
     sleevePlacketLength:
         type: "measure"
-        min: 100
-        max: 200
-        default: 145
+        min: 130
+        max: 230
+        default: 180
     armholeDrop:
         type: "measure"
         min: 0

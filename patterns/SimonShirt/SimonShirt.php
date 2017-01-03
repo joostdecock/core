@@ -153,6 +153,7 @@ class SimonShirt extends JoostBodyBlock
         
         // Back
         $this->draftYoke($model);
+        $this->draftBack($model);
     }
     
     /**
@@ -606,6 +607,120 @@ class SimonShirt extends JoostBodyBlock
         else $outline = 'M 10 C 17 19 12 L 8 C 20 1 1 C 1 -20 -8 L -12 C -19 -17 -10 z';
 
         $p->newPath('seamline', $outline);
+    }
+
+    /**
+     * Drafts the back
+     *
+     * @param \Freesewing\Model $model The model to draft for
+     *
+     * @return void
+     */
+    public function draftBack($model)
+    {
+        $this->clonePoints('backBlock', 'back');
+
+        /** @var Part $p */
+        $p = $this->parts['back'];
+    
+        //$p->newPoint( 5000 , $p->x(12)*0.666, $p->y(12)); // FIXME Can this be removed?
+        $p->addPoint(8000, $p->shift(4,90,$this->o('lengthBonus')), 'Hips height');        
+        $p->newPoint(8001, $p->x(6), $p->y(8000), 'Hips height');        
+        $hin = ($this->v('hipsReduction'))/4;
+        if ($this->v('waistReduction') <= 100) { // Only shape side seams
+          $in = $this->v('waistReduction')/4;
+        } else { // Back darts too
+          $in = ($this->v('waistReduction')*0.6)/4;
+          $dart = ($this->v('waistReduction')*0.4)/4;
+          $hdart = ($this->v('hipsReduction')*0.4)/4;
+          $p->newPoint( 6100, ($p->x(5)-$in)*0.55, $p->y(3));
+          $p->newPoint( 6300, $p->x(6100), $p->y(8000)-$p->deltaY(3,8000)*0.15);
+          $p->addPoint( 6121, $p->shift(6100,0,$dart));
+          $p->addPoint( 6122, $p->shift(6100,180,$dart));
+          $p->newPoint( 6110, $p->x(6100),$p->y(3)-$p->deltaY(5,3)*0.75);
+          $p->newPoint( 6111, $p->x(6121),$p->y(3)-$p->deltaY(5,3)*0.2);
+          $p->newPoint( 6112, $p->x(6122),$p->y(3)-$p->deltaY(5,3)*0.2);
+          $p->newPoint( 6113, $p->x(6121),$p->y(3)+$p->deltaY(5,3)*0.2);
+          $p->newPoint( 6114, $p->x(6122),$p->y(3)+$p->deltaY(5,3)*0.2);
+        }
+
+        // Side shaping
+        $p->addPoint( 6001, $p->shift(5,-90,$p->deltaY(5,3)*0.2));
+        $p->newPoint( 6011, $p->x(5)-$in,$p->y(3)-$p->deltaY(5,3)/2);
+        $p->newPoint( 6021, $p->x(5)-$in,$p->y(3));
+        $p->newPoint( 6031, $p->x(5)-$in,$p->y(3)+$p->deltaY(3,8000)/2);
+
+        // Hem shape
+        $p->clonePoint(4, 6660);
+        $p->newPoint( 6663 , $p->x(8001)+$this->o('hipFlare')/4,$p->y(8001)+$this->o('lengthBonus')-$this->o('hemCurve'));
+        $p->addPoint( 6662 , $p->shift(6663,90,$p->deltaY(8001,6663)*0.3));
+        $p->addPoint( 6661 , $p->shift(8001,-90,$p->deltaY(8001,6663)*0.3));
+        $p->addPoint( 8002 , $p->shift(8001,90,$p->deltaY(6031,8001)/4));
+
+        switch($this->o('hemStyle')) {
+            case 1: // Straight hem
+                $p->clonePoint(6663,6664);
+                $p->newPoint(6665, $p->x(6663), $p->y(6663)+$this->o('hemCurve'));
+                $p->clonePoint(6665,6666);
+                $p->clonePoint(6666,6667);
+                $p->addPoint(6668, $p->shift(6666,180,$p->deltaX(6660,6666)*0.1));
+                $p->clonePoint(6668,6669);
+                break;
+            case 2: // Baseball hem
+                $p->addPoint(6664, $p->shift(6663,180,$p->deltaX(6660,6663)*0.3));
+                $p->addPoint(6665, $p->shift(6660,0,$p->deltaX(6660,6663)*0.7));
+                $p->addPoint(6666, $p->shift(6660,0,$p->deltaX(6660,6663)*0.2));
+                $p->clonePoint(6666,6667);
+                $p->addPoint(6668, $p->shift(6666,180,$p->deltaX(6660,6666)*0.1));
+                $p->clonePoint(6668,6669);
+                break;
+            case 3: // Slashed hem
+                $p->newPoint(6664, $p->x(6663), $p->y(6663)+$this->o('hemCurve'));
+                $p->newPoint(6665, $p->x(6663), $p->y(6663)+$this->o('hemCurve'));
+                $p->addPoint(6666, $p->shift(6664,180,$p->deltaX(6660,6663)*0.3));
+                $p->clonePoint(6666,6667);
+                $p->addPoint(6668, $p->shift(6666,180,$p->deltaX(6660,6666)*0.1));
+                $p->clonePoint(6668,6669);
+                break;
+        }
+
+        // Smoothing out curve (overwriting points)
+        $p->curveCrossesY(8001,8002,6031,6021,$p->y(8002),'curveSmooth');
+        $p->clonePoint('curveSmooth1',8002);
+        $p->addPoint(6661, $p->rotate(6661,8001,$p->angle(8001,8002)+90));
+
+        // Yoke dart
+        if($this->o('yokeDart') > 0) {
+            $p->curveCrossesY(10,18,15,14,$p->y(10)+$this->o('yokeDart'),'yokeDart'); // Adds yokeDart1 point
+            $p->newPoint('yokeDart2', $p->x(6100), $p->y(10));
+            $p->newPoint('yokeDart3', $p->x(10)*0.8, $p->y(10));
+            $p->newPath('test', 'M yokeDart2 C yokeDart3 yokeDart1 yokeDart1');
+        }
+
+        // Mirror all points (that aren't on the mirror line)
+        foreach($p->points as $pid => $point) {
+            if($p->x($pid) != 0) $p->addPoint("-$pid", $p->flipX($pid,0)); 
+        }
+
+        // Paths
+        if($this->o('yokeDart') > 0) $outline = 'M -yokeDart1';
+        else $outline = 'M -10';
+        $outline .= ' C -18 -15 -14 C -16 -13 -5 C -6001 -6011 -6021 C -6031 -8002 -8001 C -6661 -6662 -6663 C -6664 -6665 -6666 C -6667 -6668 -6669 L 6660 ';
+        $outline .= 'L 6669 C 6668 6667 6666 C 6665 6664 6663 C 6662 6661 8001 C 8002 6031 6021 C 6011 6001 5 C 13 16 14 C 15 18';
+        if($this->o('yokeDart') > 0) $outline .= ' yokeDart1 C yokeDart1 yokeDart3 yokeDart2 L -yokeDart2 C -yokeDart3 -yokeDart1 -yokeDart1 z';
+        else $outline .= ' 10 z';
+
+        if ($this->v('waistReduction') > 100) { 
+            $darts = 'M 6300 C 6300 6114 6122 C 6112 6110 6110 C 6110 6111 6121 C 6113 6300 6300 z ';
+            $darts .= 'M -6300 C -6300 -6114 -6122 C -6112 -6110 -6110 C -6110 -6111 -6121 C -6113 -6300 -6300 z ';
+            $p->newPath('darts', $darts);
+        }
+        
+        $p->newPath('acrossBackLine', 'M -10 L 10', ['class' => 'helpline']);
+        $p->newPath('chestLine', 'M -5 L 5', ['class' => 'helpline']);
+        $p->newPath('waistLine', 'M -6021 L 6021', ['class' => 'helpline']);
+        $p->newPath('hipsLine', 'M 8001 L -8001', ['class' => 'helpline']);
+        $p->newPath('outline', $outline);
     }
 
     /*

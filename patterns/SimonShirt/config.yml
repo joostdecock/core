@@ -15,6 +15,8 @@ parts:
     frontAndBackBlock: "Front and back block"
     frontRight: "Front right"
     frontLeft: "Front left"
+    buttonPlacket: "Button placket"
+    buttonholePlacket: "Buttonhole placket"
     yoke: "Yoke"
     back: "Back"
     sleeve: "Sleeve"
@@ -25,8 +27,6 @@ parts:
     cuffPlacket: "Cuff placket"
     barrelCuff: "Barrel cuff"
     frenchCuff: "French cuff"
-    buttonPlacket: "Button placket"
-    buttonholePlacket: "Buttonhole placket"
 
 languages:
     en: "English"
@@ -267,4 +267,9 @@ options:
         min: 0
         max: 50
         default: 0
+    yokeDart:
+        type: "measure"
+        min: 0
+        max: 10
+        default: 5
 

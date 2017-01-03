@@ -154,6 +154,9 @@ class SimonShirt extends JoostBodyBlock
         // Back
         $this->draftYoke($model);
         $this->draftBack($model);
+
+        // Sleeve
+        $this->draftSleeve($model);
     }
     
     /**
@@ -722,6 +725,121 @@ class SimonShirt extends JoostBodyBlock
         $p->newPath('hipsLine', 'M 8001 L -8001', ['class' => 'helpline']);
         $p->newPath('outline', $outline);
     }
+
+    /**
+     * Drafts the sleeve
+     *
+     * @param \Freesewing\Model $model The model to draft for
+     *
+     * @return void
+     */
+    public function draftSleeve($model)
+    {
+        $this->clonePoints('sleeveBlock', 'sleeve');
+
+        /** @var Part $p */
+        $p = $this->parts['sleeve'];
+        
+        // Lengthen sleeve by sleeveLengthBonus at wrist
+        $moveMe = [3, 9, -9, 6, -6, 31, 32];
+        foreach($moveMe as $move) $p->addPoint($move, $p->shift($move,-90,$this->o('sleeveLengthBonus')));
+        
+        // Move elbow point by by halfsleeveLengthBonus
+        $moveMe = [33, 34, 35];
+        foreach($moveMe as $move) $p->addPoint($move, $p->shift($move,-90,0.5*$this->o('sleeveLengthBonus')));
+        
+        // What is the usable cuff width?
+        if($this->o('cuffStyle') < 4) $cuffwidth = $model->m('wristCircumference')+$this->o('cufEase') + 20;
+        else if($this->o('cuffStyle') == 6) $cuffwidth = $model->m('wristCircumference')+$this->o('cufEase') + 30;
+        else $cuffwidth = $model->m('wristCircumference')+$this->o('cufEase') + 30 - $this->o('cuffLenght')/2;
+        
+        // Sleeve width 
+        $width = $cuffwidth;
+        $p->newPoint('cuffLeft', $width/-2, $p->y(3));
+        $p->addPoint('cuffRight', $p->flipX('cuffLeft',0));
+        $p->addPoint('elbowLeft', $p->beamsCross(-5,31,34,33));
+        $p->addPoint('elbowRight', $p->flipX('elbowLeft',0));
+        $p->newPoint('cuffOneQuarter', $p->x('cuffLeft')+$width/4, $p->y('cuffLeft')); 
+        $p->newPoint('cuffThreeQuarters', $p->x('cuffLeft')+$width*0.75, $p->y('cuffLeft'));
+
+        // Wavy sleeve hem
+        $p->addPoint(411, $p->shift('cuffOneQuarter', 90 , 3)); 
+        $p->addPoint(431, $p->shift('cuffThreeQuarters', -90 , 3)); 
+        $waveLen = $width/8;
+        $p->addPoint(412, $p->shift(411, 0 , $waveLen)); 
+        $p->addPoint(413, $p->shift(411, 180 , $waveLen)); 
+        $p->addPoint(432, $p->shift(431, 0 , $waveLen)); 
+        $p->addPoint(433, $p->shift(431, 180 , $waveLen)); 
+        
+        $drape = $this->o('cuffDrape');
+        if($drape <= 20) { // Single pleat
+            // Create room for single
+            $shiftLeft = ['cuffLeft', 413, 411, 412];
+            foreach($shiftLeft as $pid) $p->addPoint($pid, $p->shift($pid, 180, $drape));
+            // Helplines
+            $p->addPoint('pleatLeft', $p->shift(3,180,$drape));
+            $p->addPoint('pleatCenter', $p->shift(3,180,$drape/2));
+            $p->clonePoint(3,'pleatRight');
+            $p->addPoint('pleatLeftTop', $p->shift('pleatLeft',90,80));
+            $p->addPoint('pleatCenterTop', $p->shift('pleatCenter',90,80));
+            $p->addPoint('pleatRightTop', $p->shift('pleatRight',90,80));
+            $this->setValue( 'cuffFoldlines', 'M pleatCenter L pleatCenterTop M pleatRight L pleatRightTop');
+            $this->setValue('cuffHelplines', 'M pleatLeft L pleatLeftTop ');
+            $this->setValue('cuffHemline',  'M cuffLeft C cuffLeft 413 411 C 412 pleatLeft pleatLeft L pleatRight C pleatRight 433 431 C 432 cuffRight cuffRight');
+        } else { // Double pleat
+            // Create room for first pleat
+            $shiftLeft = ['cuffLeft', 413, 411, 412];
+            foreach($shiftLeft as $pid) $p->addPoint($pid, $p->shift($pid, 180, $drape/2));
+            $p->addPoint('pleatOneLeft', $p->shift(3,180,$drape/2));
+            $p->addPoint('pleatOneCenter', $p->shift(3,180,$drape/4));
+            $p->clonePoint(3,'pleatOneRight');
+            // Split curve at spot for second pleat
+            $p->curveCrossesX(3,3,433,432,$p->x(433),'pleatTwoX'); 
+            $p->addSplitCurve(3,3,433,432,'pleatTwoX1', 'pleatTwo');
+            // Create room for first pleat
+            $p->clonePoint('pleatTwoX1','pleatTwoLeft');
+            $shiftLeft = ['cuffRight', 433, 431, 432, 'pleatTwo7','pleatTwoX1'];
+            foreach($shiftLeft as $pid) $p->addPoint($pid, $p->shift($pid, 0, $drape/2));
+            // Helplines
+            $p->clonePoint('pleatTwoX1','pleatTwoRight');
+            $p->addPoint('pleatTwoCenter', $p->shift('pleatTwoLeft',0,$drape/4));
+            $p->addPoint('pleatOneLeftTop', $p->shift('pleatOneLeft',90,80));
+            $p->addPoint('pleatOneCenterTop', $p->shift('pleatOneCenter',90,80));
+            $p->addPoint('pleatOneRightTop', $p->shift('pleatOneRight',90,80));
+            $p->addPoint('pleatTwoLeftTop', $p->shift('pleatTwoLeft',90,80));
+            $p->addPoint('pleatTwoCenterTop', $p->shift('pleatTwoCenter',90,80));
+            $p->addPoint('pleatTwoRightTop', $p->shift('pleatTwoRight',90,80));
+            $this->setValue(
+                'cuffFoldlines', 
+                'M pleatOneCenter L pleatOneCenterTop '.
+                'M pleatOneRight L pleatOneRightTop '.
+                'M pleatTwoCenter L pleatTwoCenterTop '.
+                'M pleatTwoRight L pleatTwoRightTop '
+            );
+            $this->setValue(
+                'cuffHelplines', 
+                'M pleatOneLeft L pleatOneLeftTop '.
+                'M pleatTwoLeft L pleatTwoLeftTop '
+            );
+            $this->setValue('cuffHemline', 'L cuffRight C cuffRight 432 431 C pleatTwo7 pleatTwoRight pleatTwoRight L pleatTwoLeft C pleatTwo3 pleatOneRight pleatOneRight L pleatOneLeft C pleatOneLeft 412 411 C 413 cuffLeft cuffLeft');
+        }
+
+        // Sleeve placket cut
+        $p->addPoint('sleevePlacketCutTop', $p->shift(411,90,$this->o('sleevePlacketLength')-50));
+        $this->setValue('sleevePacketCut', 'M 411 L sleevePlacketCutTop');
+
+        // Paths
+        $p->newPath('cuffHelplines', $this->v('cuffHelplines'), ['class' => 'helpline']);   
+        $p->newPath('cuffFoldlines', $this->v('cuffFoldlines'), ['class' => 'foldline']);   
+        $p->newPath('sleevePacketCut', $this->v('sleevePacketCut'), ['class' => 'helpline']);   
+        $p->newPath('tmp', $this->v('cuffHemline'));   
+        
+        $outline = 'M -5 C -5 20 16 C 21 10 10 C 10 22 17 C 23 28 30 C 29 25 18 C 24 11 11 C 11 27 19 C 26 5 5  ';
+        $outline .= $this->v('cuffHemline');
+        $outline .= ' z'; 
+        $p->newPath('seamline', $outline);
+    }
+
 
     /*
        _____ _             _ _

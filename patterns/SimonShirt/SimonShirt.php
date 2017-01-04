@@ -89,6 +89,20 @@ class SimonShirt extends JoostBodyBlock
         else $this->setValue('waistReduction', $waistReduction);
         if($hipsReduction < 0) $this->setValue('hipsReduction', 0);
         else $this->setValue('hipsReduction', $hipsReduction);
+
+        // Tweak factors
+        // Front tweaking
+        $this->setValue('frontCollarTweakFactor', 1); 
+        $this->setValue('frontCollarTweakRun', 0); 
+        // Sleave tweaking
+        $this->setValue('sleeveTweakFactor', 1); 
+        $this->setValue('sleeveTweakRun', 0); 
+        // CollarStand tweaking
+        $this->setValue('collarStandTweakFactor', 1); 
+        $this->setValue('collarStandTweakRun', 0); 
+        // Collar tweaking
+        $this->setValue('collarTweakFactor', 1); 
+        $this->setValue('collarTweakRun', 0); 
     }
 
     /*
@@ -138,36 +152,107 @@ class SimonShirt extends JoostBodyBlock
         // Blocks from parent pattern
         $this->draftBackBlock($model);
         $this->draftFrontBlock($model);
-        $this->draftSleeveBlock($model);
+        // note that the draftSleeveBlock() is called in draftSleeve()
+
+        // We need the yoke before we can fit the collar
+        $this->draftYoke($model);
+
+        // Tweak the collar opening until it fits around the model's neck
+        do {
+            $this->draftFrontRight($model);
+        } while (abs($this->collarOpeningDelta($model)) > 0.5);
+        $this->msg('After '.$this->v('frontCollarTweakRun').' attemps, collar opening is '.round($this->collarOpeningDelta($model),1).'mm off.');
+
+        // Draft frontLeft based on frontRight
+        $this->draftFrontLeft($model);
+        
+        // We need the back before we can fit the sleeve
+        $this->draftBack($model);
+
+        // Tweak the sleeve until it fits in our armhole
+        do {
+            $this->draftSleeve($model);
+        } while (abs($this->armholeDelta($model)) > 1);
+        $this->msg('After '.$this->v('sleeveTweakRun').' attemps, the sleeve head is '.round($this->armholeDelta($model),1).'mm off.');
+
+        // Draft remaining sleeve parts
+        $this->draftSleevePlacketUnderlap($model);
+        $this->draftSleevePlacketOverlap($model);
+        if($this->o('cuffStyle') > 3) $this->draftFrenchCuff($model);
+        else $this->draftBarrelCuff($model);
+
+        // Tweak the collar stand until it fits around the model's neck
+        do {
+            $this->draftCollarStand($model);
+        } while (abs($this->collarStandDelta($model)) > 0.5);
+        $this->msg('After '.$this->v('collarStandTweakRun').' attemps, the collar stand is '.round($this->collarStandDelta($model),1).'mm off.');
+
+        // Tweak the collar until it's just right
+        do {
+            $this->draftCollar($model);
+        } while (abs($this->collarDelta($model)) > 0.5);
+        $this->msg('After '.$this->v('collarTweakRun').' attemps, the collar is '.round($this->collarDelta($model),1).'mm off.');
+
+        // Draft undercollar
+        $this->draftUndercollar($model);
 
         // Don't render blocks from parent pattern
         $this->parts['backBlock']->setRender(false);
         $this->parts['frontBlock']->setRender(false);
         $this->parts['sleeveBlock']->setRender(false);
 
-        // Front
-        $this->draftFrontRight($model);
-        $this->draftFrontLeft($model);
-        if($this->o('buttonPlacketType') ==  2) $this->draftButtonPlacket($model); // Sewn-on button placket
-        if($this->o('buttonholePlacketType') ==  2) $this->draftButtonholePlacket($model); // Sewn-on buttonhole placket
-        
-        // Back
-        $this->draftYoke($model);
-        $this->draftBack($model);
-
-        // Sleeve
-        $this->draftSleeve($model);
-        $this->draftSleevePlacketUnderlap($model);
-        $this->draftSleevePlacketOverlap($model);
-        if($this->o('cuffStyle') > 3) $this->draftFrenchCuff($model);
-        else $this->draftBarrelCuff($model);
-
-        // Collar
-        $this->draftCollarStand($model);
-        $this->draftCollar($model);
-        $this->draftUndercollar($model);
     }
-    
+
+    /**
+     * Calculates the difference between the armhole and sleevehead length
+     *
+     * @param \Freesewing\Model $model The model to draft for
+     *
+     * @return float The difference between the armhole and sleevehead
+     */
+    private function armholeDelta($model) 
+    {
+        $this->setValue('armholeLength', $this->v('frontArmholeLength') + $this->v('yokeArmholeLength') + $this->v('backArmholeLength'));
+        return ($this->v('armholeLength') + $this->o('sleevecapEase')) - $this->v('sleeveheadLength');
+    }
+
+    /**
+     * Calculates the difference between collar+ease and the collar opening
+     *
+     * @param \Freesewing\Model $model The model to draft for
+     *
+     * @return float The difference between the collar+ease and the collar opening
+     */
+    private function collarOpeningDelta($model) 
+    {
+        $this->setValue('collarOpeningLength', $this->v('frontCollarOpeningLength') + $this->v('yokeCollarOpeningLength'));
+        return $this->v('collarOpeningLength') - ( $model->m('neckCircumference') + $this->o('collarEase') );
+    }
+
+    /**
+     * Calculates the difference between collar+ease and the collar stand
+     *
+     * @param \Freesewing\Model $model The model to draft for
+     *
+     * @return float The difference between the collar+ease and the collar stand
+     */
+    private function collarStandDelta($model) 
+    {
+        return $this->v('collarStandLength') - ( $model->m('neckCircumference') + $this->o('collarEase') );
+    }
+
+    /**
+     * Calculates the difference between collar+ease-gap and the collar
+     *
+     * @param \Freesewing\Model $model The model to draft for
+     *
+     * @return float The difference between the collar+ease-gap and the collar
+     */
+    private function collarDelta($model) 
+    {
+        return $this->v('collarLength') - ( $model->m('neckCircumference') + $this->o('collarEase') - $this->o('collarGap'));
+    }
+
     /**
      * Drafts the front right
      *
@@ -182,19 +267,57 @@ class SimonShirt extends JoostBodyBlock
      * For sample, this is all we need, but draft calls
      * the finalize[part name] method after this.
      *
+     * 
+     * Something that is particular about this method, and a few others in this pattern
+     * is that it gets called more than once.
+     * That is because it has parts that can be drafted theorethically, but may need some
+     * tweaking to make sure things match in the real world.
+     *
+     * For example, the collar opening should be equal to neckCircumference = collarEase
+     * By default, it will (hopefully) be close, but not perfect.
+     * So, we call this method again until we get it right. Obvisouly doing the same thing
+     * over and over again won't help us, we increase or decrease a 'tweak factor' that is 
+     * taken into account in those points that influence the collar opening.
+     * As such, we keep tweaking things until we are happy.
+     *
+     * You'll see similar tweaking in the sleeve and collar parts
+     * 
      * @param \Freesewing\Model $model The model to draft for
      *
      * @return void
      */
     public function draftFrontRight($model)
     {
-        $this->clonePoints('frontBlock', 'frontRight');
-        
         /** @var Part $p */
         $p = $this->parts['frontRight'];
+        
+        // Is this the first time we're calling draftFrontRight() ?
+        if($this->v('frontCollarTweakRun') == 0) {
+            // Yes it is, this will be the initial draft
+            // Cloning points from the frontBlock
+            $this->clonePoints('frontBlock', 'frontRight');
+            // Front block is drafted as the left half, so every point needs to be mirrored
+            foreach($p->points as $i => $point) $p->addPoint($i, $p->flipX($i,0));
+        } else {
+            // No, this will be a tweaked draft. So let's tweak
+            if($this->collarOpeningDelta($model) > 0) {
+                //  Collar opening is too big. Decrease tweak factor 
+                $this->setValue('frontCollarTweakFactor', $this->v('frontCollarTweakFactor')*0.99);
+            } else {
+                //  Collar opening is too small. Increase tweak factor 
+                $this->setValue('frontCollarTweakFactor', $this->v('frontCollarTweakFactor')*1.01);
+            }
+            // Tweak points that determine the collar
+            $p->clonePoint(9,$p->newId('collarTweakRun')); // Storing the original just because
+            $p->newPoint(9, $p->x(9), $p->y(9)*$this->v('frontCollarTweakFactor')); // Overwriting point 9 with tweaked 9
+            $p->newPoint(21, $p->x(21), $p->y(9)); // Updating 21 with tweaked Y value
+            // Include debug message
+            $this->dbg('Collar tweak run '.$this->v('frontCollarTweakRun').'. Collar opening is '.$this->collarOpeningDelta($model).'mm off');
+        }
 
-        // Front block is drafted as the left half, so every point needs to be mirrored
-        foreach($p->points as $i => $point) $p->addPoint($i, $p->flipX($i,0));
+        // Keep track of tweak runs because why not
+        $this->setValue('frontCollarTweakRun', $this->v('frontCollarTweakRun')+1);
+        
 
         // Button placket
         $width = $this->o('buttonPlacketWidth')/2;
@@ -229,18 +352,18 @@ class SimonShirt extends JoostBodyBlock
         $buttonSpacing = $buttoningLength / ($this->o('buttons'));
         // First button
         $p->newPoint(3000 , $p->x(4), $buttoningLength+$p->y(9), 'button start');
-        if($this->o('buttonPlacketType')==1) $p->newSnippet($p->newId('button'), 'button', 3000);
+        //if($this->o('buttonPlacketType')==1) $p->newSnippet($p->newId('button'), 'button', 3000); // FIXME move to finalize coz tweaking
         // Next buttons
         for($i=1;$i<$this->o('buttons');$i++) {
           $pid = 3000+$i;
           $p->addPoint($pid, $p->shift(3000, 90, $buttonSpacing * $i), 'Button');
-          if($this->o('buttonPlacketType')==1) $p->newSnippet($p->newId('button'), 'button', $pid);
+          //if($this->o('buttonPlacketType')==1) $p->newSnippet($p->newId('button'), 'button', $pid); // FIXME move to finalize coz tweaking
         }
         // Extra top button
         if($this->o('extraTopButton')) {
           $extrapid = $pid +1;
           $p->addPoint($extrapid, $p->shift($pid,90,$buttonSpacing/2), 'Extra button');
-          if($this->o('buttonPlacketType')==1) $p->newSnippet($p->newId('button'), 'button', $extrapid);
+          //if($this->o('buttonPlacketType')==1) $p->newSnippet($p->newId('button'), 'button', $extrapid); // FIXME move to finalize coz tweaking
         }
         // Shaping of side seam
         $p->addPoint(8000, $p->shift(4,90,$this->o('lengthBonus')), 'Hips height');        
@@ -343,6 +466,13 @@ class SimonShirt extends JoostBodyBlock
         // Mark path for sample service
         $p->paths['seamline']->setSample(true);
 
+        // Store armhole curve length
+        $this->setValue('frontArmholeLength', $p->curveLen(5,13,16,14) + $p->curveLen(14,15,18,10) + $p->curveLen(10,17,19,12));
+
+        // Store collar opening length
+        $this->setValue('frontCollarOpeningLength', $p->curveLen(8,20,21,9)*2);
+        
+        
         // FIXME Handle this later with SA
         if($this->o('hemStyle') == 1) $flatFelledSideSeam = 'M 8001 M 5 C 5001 6011 6021 C 6031 8002 8001 C 6661 6662 6663 L 6667';
         else $flatFelledSideSeam = 'M 8001 M 5 C 5001 6011 6021 C 6031 8002 8001 C 6661 6662 6663';
@@ -367,66 +497,66 @@ class SimonShirt extends JoostBodyBlock
         foreach($p->points as $i => $point) $p->addPoint($i, $p->flipX($i,0));
         
         $width = $this->o('buttonholePlacketWidth');
-      switch($this->o('buttonholePlacketStyle')) {
-        case 1: // Classic placket
-            $edge = $this->o('buttonholePlacketFoldWidth');
-            $p->addPoint(4000, $p->shift(4,180,$edge*2), 'New center front');
-            $p->addPoint(4001, $p->shift(4000,0,$width/2), 'Fold here');
-            $p->addPoint(4002, $p->shift(4000,0,$width/2+$edge), 'Stitches');
-            $p->addPoint(4003, $p->shift(4000,0,$width/2-$edge), 'Stitches');
-            $p->addPoint(4004, $p->shift(4000,180,$width/2), 'Fold here');
-            $p->addPoint(4005, $p->shift(4000,180,$width/2+$edge), 'Stitches');
-            $p->addPoint(4006, $p->shift(4000,180,$width/2-$edge), 'Stitches');
-            $p->addPoint(4007, $p->shift(4004,180,$width), 'Edge');
+        switch($this->o('buttonholePlacketStyle')) {
+            case 1: // Classic placket
+                $edge = $this->o('buttonholePlacketFoldWidth');
+                $p->addPoint(4000, $p->shift(4,180,$edge*2), 'New center front');
+                $p->addPoint(4001, $p->shift(4000,0,$width/2), 'Fold here');
+                $p->addPoint(4002, $p->shift(4000,0,$width/2+$edge), 'Stitches');
+                $p->addPoint(4003, $p->shift(4000,0,$width/2-$edge), 'Stitches');
+                $p->addPoint(4004, $p->shift(4000,180,$width/2), 'Fold here');
+                $p->addPoint(4005, $p->shift(4000,180,$width/2+$edge), 'Stitches');
+                $p->addPoint(4006, $p->shift(4000,180,$width/2-$edge), 'Stitches');
+                $p->addPoint(4007, $p->shift(4004,180,$width), 'Edge');
 
-            for($i=0;$i<8;$i++){
-              $pid = 4100+$i;
-              $oid = 4000+$i;
-              $p->newPoint($pid,$p->x($oid),$p->y(9));
-            }
-            $p->curveCrossesX(8,20,21,9,$p->x(4102),'.4108'); // Creates helper point .41081
-            $p->clonePoint('.41081', 4108); // Store .41081 in 4108
-            $p->newPoint(4008, $p->x(4108),$p->y(4001));
-            
-            // Need to split the neckcurve for a seperate placket or folding over
-            $p->addSplitCurve(8,20,21,9,4108,'splitNeckCurve');
+                for($i=0;$i<8;$i++){
+                    $pid = 4100+$i;
+                    $oid = 4000+$i;
+                    $p->newPoint($pid,$p->x($oid),$p->y(9));
+                }
+                $p->curveCrossesX(8,20,21,9,$p->x(4102),'.4108'); // Creates helper point .41081
+                $p->clonePoint('.41081', 4108); // Store .41081 in 4108
+                $p->newPoint(4008, $p->x(4108),$p->y(4001));
+                
+                // Need to split the neckcurve for a seperate placket or folding over
+                $p->addSplitCurve(8,20,21,9,4108,'splitNeckCurve');
 
-            $p->clonepoint('splitNeckCurve7', 41081);
-            $p->clonepoint('splitNeckCurve6', 41082);
-            $p->clonepoint('splitNeckCurve2', 41091);
-            $p->clonepoint('splitNeckCurve3', 41092);
-          break;
-        case 2: // Seamless
-            $edge = $this->o('buttonholePlacketFoldWidth');
-            $p->clonePoint(4,4000); // New center front
-            $p->addPoint(4001, $p->shift(4000,180,$width/2), 'Fold here');
-            $p->addPoint(4002, $p->shift(4000,180,$width*1.5), 'Fold again');
-            $p->addPoint(4007, $p->shift(4000,180,$width*2.5), 'Edge');
-            $p->newPoint(4100, $p->x(4000), $p->y(9), 'New center front');
-            $p->newPoint(4101, $p->x(4001), $p->y(9), 'Fold here');
-            $p->newPoint(4102, $p->x(4002), $p->y(9), 'Fold again');
-            $p->newPoint(4107, $p->x(4007), $p->y(9), 'Edge');
-            
-            $p->addPoint('curveSplitHelper', $p->flipX(4101,$p->x(4100)));
-            $p->curveCrossesX(8,20,21,9,$p->x('curveSplitHelper'),'.4108'); // Creates helper point .41081
-            $p->clonePoint('.41081', 4108); // Store .41081 in 4108
-            $p->newPoint(4008, $p->x(4108),$p->y(4001));
-            
-            // Need to split the neckcurve for a seperate placket or folding over
-            $p->addSplitCurve(8,20,21,9,4108,'splitNeckCurve');
-           
-            $p->clonepoint('splitNeckCurve7', 41081);
-            $p->clonepoint('splitNeckCurve6', 41082);
-            $p->clonepoint('splitNeckCurve2', 41091);
-            $p->clonepoint('splitNeckCurve3', 41092);
-            $p->addPoint(41083, $p->flipX(4108,$p->x(4101)));
-            $p->addPoint(41084, $p->flipX(41081,$p->x(4101)));
-            $p->addPoint(41085, $p->flipX(41082,$p->x(4101)));
-            $p->addPoint(41086, $p->flipX(4100,$p->x(4101)));
-            $p->addPoint(41087, $p->flipX(41084,$p->x(4102)));
-            $p->addPoint(41088, $p->flipX(41085,$p->x(4102)));
-            $p->addPoint(41089, $p->flipX(41086,$p->x(4102)));
-        break;
+                $p->clonepoint('splitNeckCurve7', 41081);
+                $p->clonepoint('splitNeckCurve6', 41082);
+                $p->clonepoint('splitNeckCurve2', 41091);
+                $p->clonepoint('splitNeckCurve3', 41092);
+                break;
+            case 2: // Seamless
+                $edge = $this->o('buttonholePlacketFoldWidth');
+                $p->clonePoint(4,4000); // New center front
+                $p->addPoint(4001, $p->shift(4000,180,$width/2), 'Fold here');
+                $p->addPoint(4002, $p->shift(4000,180,$width*1.5), 'Fold again');
+                $p->addPoint(4007, $p->shift(4000,180,$width*2.5), 'Edge');
+                $p->newPoint(4100, $p->x(4000), $p->y(9), 'New center front');
+                $p->newPoint(4101, $p->x(4001), $p->y(9), 'Fold here');
+                $p->newPoint(4102, $p->x(4002), $p->y(9), 'Fold again');
+                $p->newPoint(4107, $p->x(4007), $p->y(9), 'Edge');
+                
+                $p->addPoint('curveSplitHelper', $p->flipX(4101,$p->x(4100)));
+                $p->curveCrossesX(8,20,21,9,$p->x('curveSplitHelper'),'.4108'); // Creates helper point .41081
+                $p->clonePoint('.41081', 4108); // Store .41081 in 4108
+                $p->newPoint(4008, $p->x(4108),$p->y(4001));
+                
+                // Need to split the neckcurve for a seperate placket or folding over
+                $p->addSplitCurve(8,20,21,9,4108,'splitNeckCurve');
+               
+                $p->clonepoint('splitNeckCurve7', 41081);
+                $p->clonepoint('splitNeckCurve6', 41082);
+                $p->clonepoint('splitNeckCurve2', 41091);
+                $p->clonepoint('splitNeckCurve3', 41092);
+                $p->addPoint(41083, $p->flipX(4108,$p->x(4101)));
+                $p->addPoint(41084, $p->flipX(41081,$p->x(4101)));
+                $p->addPoint(41085, $p->flipX(41082,$p->x(4101)));
+                $p->addPoint(41086, $p->flipX(4100,$p->x(4101)));
+                $p->addPoint(41087, $p->flipX(41084,$p->x(4102)));
+                $p->addPoint(41088, $p->flipX(41085,$p->x(4102)));
+                $p->addPoint(41089, $p->flipX(41086,$p->x(4102)));
+                break;
         }
 
         // First buttonhole
@@ -434,15 +564,15 @@ class SimonShirt extends JoostBodyBlock
         if($this->o('buttonholePlacketType')==1) $p->newSnippet($p->newId('buttonhole'), 'buttonhole', 3000);
         // Next buttonholes
         for($i=1;$i<$this->o('buttons');$i++) {
-          $pid = 3000+$i;
-          $p->newPoint($pid, $p->x(4100), $p->y($pid), 'Button');
-          if($this->o('buttonholePlacketType')==1) $p->newSnippet($p->newId('buttonhole'), 'buttonhole', $pid);
+            $pid = 3000+$i;
+            $p->newPoint($pid, $p->x(4100), $p->y($pid), 'Button');
+            if($this->o('buttonholePlacketType')==1) $p->newSnippet($p->newId('buttonhole'), 'buttonhole', $pid);
         }
         // Extra top buttonhole
         if($this->o('extraTopButton')) {
-          $extrapid = $pid +1;
-          $p->newPoint($extrapid, $p->x(4100), $p->y($extrapid), 'Extra button');
-          if($this->o('buttonholePlacketType')==1) $p->newSnippet($p->newId('buttonhole'), 'buttonhole', $extrapid);
+            $extrapid = $pid +1;
+            $p->newPoint($extrapid, $p->x(4100), $p->y($extrapid), 'Extra button');
+            if($this->o('buttonholePlacketType')==1) $p->newSnippet($p->newId('buttonhole'), 'buttonhole', $extrapid);
         }
 
         // Construct paths
@@ -619,6 +749,12 @@ class SimonShirt extends JoostBodyBlock
         else $outline = 'M 10 C 17 19 12 L 8 C 20 1 1 C 1 -20 -8 L -12 C -19 -17 -10 z';
 
         $p->newPath('seamline', $outline);
+        
+        // Store armhole curve length
+        $this->setValue('yokeArmholeLength', $p->curveLen(10,17,19,12));
+        
+        // Store collar opening length
+        $this->setValue('yokeCollarOpeningLength', $p->curveLen(8,20,1,1)*2);
     }
 
     /**
@@ -733,6 +869,10 @@ class SimonShirt extends JoostBodyBlock
         $p->newPath('waistLine', 'M -6021 L 6021', ['class' => 'helpline']);
         $p->newPath('hipsLine', 'M 8001 L -8001', ['class' => 'helpline']);
         $p->newPath('outline', $outline);
+        
+        // Store armhole curve length
+        if($this->o('yokeDart') > 0) $this->setValue('backArmholeLength', $p->curveLen('yokeDart1',18,15,14) + $p->curveLen(14,16,13,5));
+        else $this->setValue('backArmholeLength', $p->curveLen(10,18,15,14) + $p->curveLen(14,16,13,5));
     }
 
     /**
@@ -744,6 +884,26 @@ class SimonShirt extends JoostBodyBlock
      */
     public function draftSleeve($model)
     {
+        // Is this the first time we're calling draftSleeve() ?
+        if($this->v('sleeveTweakRun') > 0) {
+            // No, this will be a tweaked draft. So let's tweak
+            if($this->armholeDelta($model) > 0) {
+                //  Armhole is larger than sleeve head. Increase tweak factor 
+                $this->setValue('sleeveTweakFactor', $this->v('sleeveTweakFactor')*1.01);
+            } else {
+                //  Armhole is smaller than sleeve head. Decrease tweak factor 
+                $this->setValue('sleeveTweakFactor', $this->v('sleeveTweakFactor')*0.99);
+            }
+            // Include debug message
+            $this->dbg('Sleeve tweak run '.$this->v('sleeveTweakRun').'. Sleeve head is '.$this->armholeDelta($model).'mm off');
+        }
+        // Keep track of tweak runs because why not
+        $this->setValue('sleeveTweakRun', $this->v('sleeveTweakRun')+1);
+        
+        // (re-)Drafting sleeveBlock from parent pattern
+        $this->draftSleeveBlock($model);
+        
+        // Cloning points from the sleeveBlock
         $this->clonePoints('sleeveBlock', 'sleeve');
 
         /** @var Part $p */
@@ -794,7 +954,7 @@ class SimonShirt extends JoostBodyBlock
             $p->addPoint('pleatRightTop', $p->shift('pleatRight',90,80));
             $this->setValue( 'cuffFoldlines', 'M pleatCenter L pleatCenterTop M pleatRight L pleatRightTop');
             $this->setValue('cuffHelplines', 'M pleatLeft L pleatLeftTop ');
-            $this->setValue('cuffHemline',  'M cuffLeft C cuffLeft 413 411 C 412 pleatLeft pleatLeft L pleatRight C pleatRight 433 431 C 432 cuffRight cuffRight');
+            $this->setValue('cuffHemline',  'L cuffRight C cuffRight 432 431 C 433 pleatRight pleatRight L pleatLeft C pleatLeft 412 411 C 413 cuffLeft cuffLeft');
         } else { // Double pleat
             // Create room for first pleat
             $shiftLeft = ['cuffLeft', 413, 411, 412];
@@ -847,6 +1007,9 @@ class SimonShirt extends JoostBodyBlock
         $outline .= $this->v('cuffHemline');
         $outline .= ' z'; 
         $p->newPath('seamline', $outline);
+    
+        // Store sleevehead length
+        $this->setValue('sleeveheadLength', $p->curveLen(-5,-5,20,16) + $p->curveLen(16,21,10,10) + $p->curveLen(10,10,22,17) + $p->curveLen(17,23,28,30) + $p->curveLen(30,29,25,18) + $p->curveLen(18,14,11,11) + $p->curveLen(11,11,27,19) + $p->curveLen(19,26,5,5));
     }
 
     /**
@@ -858,10 +1021,27 @@ class SimonShirt extends JoostBodyBlock
      */
     public function draftCollarStand($model)
     {
+        // Is this the first time we're calling draftCollarStand() ?
+        if($this->v('collarStandTweakRun') > 0) {
+            // No, this will be a tweaked draft. So let's tweak
+            if($this->collarStandDelta($model) > 0) {
+                //  Collar stand is too big. Decrease tweak factor 
+                $this->setValue('collarStandTweakFactor', $this->v('collarStandTweakFactor')*0.985);
+            } else {
+                //  Collar stand is too small. Increase tweak factor 
+                $this->setValue('collarStandTweakFactor', $this->v('collarStandTweakFactor')*1.01);
+            }
+            // Include debug message
+            $this->dbg('Collar stand tweak run '.$this->v('collarStandTweakRun').'. Collar stand is '.$this->collarStandDelta($model).'mm off');
+        }
+
+        // Keep track of tweak runs because why not
+        $this->setValue('collarStandTweakRun', $this->v('collarStandTweakRun')+1);
+        
         /** @var Part $p */
         $p = $this->parts['collarStand'];
 
-        $base = $model->m('neckCircumference')/2 + $this->o('collarEase')/2;
+        $base = ($model->m('neckCircumference')/2 + $this->o('collarEase')/2) * $this->v('collarStandTweakFactor');
         $extra = $this->o('buttonholePlacketWidth')/2 + $this->o('buttonPlacketWidth')/2;
 
         $p->newPoint( 1, 0,0);
@@ -906,14 +1086,17 @@ class SimonShirt extends JoostBodyBlock
         $p->addPoint(55,$p->shift(55,$this->o('collarStandCurve')+180,3));
         
         // Button and buttonhole
-        $p->newSnippet($p->newId('button'), 'button', -55, ['transform' => 'rotate('.(90-$p->angle(-32,-31)).' '.$p->x(-55).' '.$p->y(-55).')']);
-        $p->newSnippet($p->newId('buttonhole'), 'buttonhole', 55, ['transform' => 'rotate('.(90-$p->angle(32,31)).' '.$p->x(55).' '.$p->y(55).')']);
+        // FIXME move to finalize
+        //$p->newSnippet($p->newId('button'), 'button', -55, ['transform' => 'rotate('.(90-$p->angle(-32,-31)).' '.$p->x(-55).' '.$p->y(-55).')']);
+        //$p->newSnippet($p->newId('buttonhole'), 'buttonhole', 55, ['transform' => 'rotate('.(90-$p->angle(32,31)).' '.$p->x(55).' '.$p->y(55).')']);
 
         // Paths  
         $outline = 'M 42 C 43 6 61 C 62 33 32 L 31 C 51 21 22 C 23 72 71 C 7 13 12 C -13 -7 -71 C -72 -23 -22 C -21 -51 -31 L -32 C -33 -62 -61 C -6 -43 -42 z';
         $p->newPath('outline', $outline);
         $p->newPath('helpline', 'M 22 L 32 M -22 L -32', ['class' => 'helpline']);
-    
+
+        // Store collar stand length
+        $this->setValue('collarStandLength', 2 * ($p->curveLen(42,43,6,61) + $p->curveLen(61,62,33,32))); 
     }
 
 
@@ -926,10 +1109,27 @@ class SimonShirt extends JoostBodyBlock
      */
     public function draftCollar($model)
     {
+        // Is this the first time we're calling draftCollar() ?
+        if($this->v('collarTweakRun') > 0) {
+            // No, this will be a tweaked draft. So let's tweak
+            if($this->collarDelta($model) > 0) {
+                //  Collar is too big. Decrease tweak factor 
+                $this->setValue('collarTweakFactor', $this->v('collarTweakFactor')*0.985);
+            } else {
+                //  Collar is too small. Increase tweak factor 
+                $this->setValue('collarTweakFactor', $this->v('collarTweakFactor')*1.01);
+            }
+            // Include debug message
+            $this->dbg('Collar tweak run '.$this->v('collarTweakRun').'. Collar is '.$this->collarDelta($model).'mm off');
+        }
+
+        // Keep track of tweak runs because why not
+        $this->setValue('collarTweakRun', $this->v('collarTweakRun')+1);
+        
         /** @var Part $p */
         $p = $this->parts['collar'];
 
-        $base = ($model->m('neckCircumference')/2+$this->o('collarEase')/2);
+        $base = ($model->m('neckCircumference')/2+$this->o('collarEase')/2) * $this->v('collarTweakFactor');
         $p->newPoint( 0 , 0, 0);
         $p->newPoint( 1 , $base,0);  
         $p->newPoint( 2 , $p->x(1),-1*($this->o('collarStandWidth')+$this->o('collarRoll')+$this->o('collarBend')));
@@ -957,6 +1157,9 @@ class SimonShirt extends JoostBodyBlock
         $outline = 'M 5 C 6 4 4 L 8 C 8 9 12 L -12 C -9 -8 -8 L -4 C -4 -6 5 z';  
         $p->newPath('outline', $outline);
         $p->newPath('helpine', 'M 5 L 3', ['class' => 'helpline']);
+
+        // Store collar length
+        $this->setValue('collarLength', 2 * ($p->curveLen(5,6,4,4))); 
     }
 
     /**

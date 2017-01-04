@@ -184,7 +184,7 @@ options:
         options:
             0: "Regular yoke"
             1: "Split yoke"
-        default: 1
+        default: 0
     collarStandWidth:
         type: "measure"
         min: 15

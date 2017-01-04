@@ -374,9 +374,8 @@ class WahidWaistcoat extends JoostBodyBlock
             $p->newSnippet("buttonhole$i", 'buttonhole', 5000+$i);
             $p->newSnippet("button$i", 'button', 5000+$i);
         }
-        // $p->newSnippet("buttonholeTop", 'buttonhole', 5000);
-        $p->newSnippet("buttonholeTop", 'buttonhole', 5000, ['transform' => 'rotate(90 '.$p->x(5000).' '.$p->y(5000).')'] );
-        // $p->newSnippet("buttonTop", 'button', 5000);
+        $p->newSnippet("buttonholeTop", 'buttonhole', 5000);
+        $p->newSnippet("buttonTop", 'button', 5000);
         $p->newSnippet("buttonholeBottom", 'buttonhole', 5050);
         $p->newSnippet("buttonBottom", 'button', 5050);
 

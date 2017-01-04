@@ -928,9 +928,9 @@ class Part
                 }
             } else {
                 // All other steps
-                if ($chunk['type'] == 'line') {
+                if (isset($chunk['type']) && $chunk['type'] == 'line') {
                     $path .= ' L ' . $chunk['offset'][1];
-                } elseif ($chunk['type'] == 'curve') {
+                } elseif (isset($chunk['type']) && $chunk['type'] == 'curve') {
                     $path .= ' C ' . $chunk['offset'][1] . ' ' . $chunk['offset'][2] . ' ' . $chunk['offset'][3];
                 }
             }
@@ -994,7 +994,7 @@ class Part
             }
             if (!isset($chunk['intersection'])) {
                 // Intersections have no gaps
-                if ($chunk['type'] == 'line' && $next['type'] == 'line') {
+                if (isset($chunk['type']) && $chunk['type'] == 'line' && $next['type'] == 'line') {
                     if (!$this->isSamePoint($chunk['offset'][1], $next['offset'][0])) {
                         // Gap to fill
                         $id = $chunk['offset'][1] . 'XllX' . $next['offset'][0];
@@ -1007,7 +1007,7 @@ class Part
                         $new[] = ['type' => 'line', 'offset' => [$id, $next['offset'][0]]];
                         $stack->replace($chunk, $new);
                     }
-                } elseif ($chunk['type'] == 'line' && $next['type'] == 'curve') {
+                } elseif (isset($chunk['type']) && $chunk['type'] == 'line' && $next['type'] == 'curve') {
                     if (!$this->isSamePoint($chunk['offset'][1], $next['offset'][0])) {
                         // Gap to fill
                         /**
@@ -1043,7 +1043,7 @@ class Part
                         $new[] = ['type' => 'line', 'offset' => [$id, $next['offset'][0]]];
                         $stack->replace($chunk, $new);
                     }
-                } elseif ($chunk['type'] == 'curve' && $next['type'] == 'line') {
+                } elseif (isset($chunk['type']) && $chunk['type'] == 'curve' && $next['type'] == 'line') {
                     if (!$this->isSamePoint($chunk['offset'][3], $next['offset'][0])) {
                         // Gap to fill
                         if ($this->isSamePoint($chunk['offset'][2], $chunk['offset'][3])) {
@@ -1069,7 +1069,7 @@ class Part
                         $new[] = ['type' => 'line', 'offset' => [$id, $next['offset'][0]]];
                         $stack->replace($chunk, $new);
                     }
-                } elseif ($chunk['type'] == 'curve' && $next['type'] == 'curve') {
+                } elseif (isset($chunk['type']) && $chunk['type'] == 'curve' && $next['type'] == 'curve') {
                     if (!$this->isSamePoint($chunk['offset'][3], $next['offset'][0]) && $this->curveLen(
                         $next['offset'][0],
                         $next['offset'][1], $next['offset'][2], $next['offset'][3]

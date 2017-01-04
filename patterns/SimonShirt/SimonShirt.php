@@ -161,6 +161,7 @@ class SimonShirt extends JoostBodyBlock
         // Collar
         $this->draftCollarStand($model);
         $this->draftCollar($model);
+        $this->draftUndercollar($model);
     }
     
     /**
@@ -913,7 +914,7 @@ class SimonShirt extends JoostBodyBlock
 
 
     /**
-     * Drafts the collar stand
+     * Drafts the collar
      *
      * @param \Freesewing\Model $model The model to draft for
      *
@@ -947,6 +948,30 @@ class SimonShirt extends JoostBodyBlock
           $id = $pf*-1;
           $p->addPoint($id,$p->flipX($pf));
         }
+        
+        // Paths
+        $outline = 'M 5 C 6 4 4 L 8 C 8 9 12 L -12 C -9 -8 -8 L -4 C -4 -6 5 z';  
+        $p->newPath('outline', $outline);
+        $p->newPath('helpine', 'M 5 L 3', ['class' => 'helpline']);
+    }
+
+    /**
+     * Drafts the undercollar
+     *
+     * @param \Freesewing\Model $model The model to draft for
+     *
+     * @return void
+     */
+    public function draftUndercollar($model)
+    {
+        $this->clonePoints('collar', 'undercollar');
+
+        /** @var Part $p */
+        $p = $this->parts['undercollar'];
+
+        $p->addPoint(5,$p->shift(5,90,3));
+        $p->addPoint(6,$p->shift(6,90,2));
+        $p->addPoint(-6,$p->shift(-6,90,2));
         
         // Paths
         $outline = 'M 5 C 6 4 4 L 8 C 8 9 12 L -12 C -9 -8 -8 L -4 C -4 -6 5 z';  

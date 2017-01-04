@@ -157,6 +157,9 @@ class SimonShirt extends JoostBodyBlock
 
         // Sleeve
         $this->draftSleeve($model);
+
+        // Collar
+        $this->draftCollarStand($model);
     }
     
     /**
@@ -749,9 +752,9 @@ class SimonShirt extends JoostBodyBlock
         foreach($moveMe as $move) $p->addPoint($move, $p->shift($move,-90,0.5*$this->o('sleeveLengthBonus')));
         
         // What is the usable cuff width?
-        if($this->o('cuffStyle') < 4) $cuffwidth = $model->m('wristCircumference')+$this->o('cufEase') + 20;
-        else if($this->o('cuffStyle') == 6) $cuffwidth = $model->m('wristCircumference')+$this->o('cufEase') + 30;
-        else $cuffwidth = $model->m('wristCircumference')+$this->o('cufEase') + 30 - $this->o('cuffLenght')/2;
+        if($this->o('cuffStyle') < 4) $cuffwidth = $model->m('wristCircumference')+$this->o('cuffEase') + 20;
+        else if($this->o('cuffStyle') == 6) $cuffwidth = $model->m('wristCircumference')+$this->o('cuffEase') + 30;
+        else $cuffwidth = $model->m('wristCircumference')+$this->o('cuffEase') + 30 - $this->o('cuffLenght')/2;
         
         // Sleeve width 
         $width = $cuffwidth;
@@ -840,6 +843,72 @@ class SimonShirt extends JoostBodyBlock
         $p->newPath('seamline', $outline);
     }
 
+    /**
+     * Drafts the collar stand
+     *
+     * @param \Freesewing\Model $model The model to draft for
+     *
+     * @return void
+     */
+    public function draftCollarStand($model)
+    {
+        /** @var Part $p */
+        $p = $this->parts['collarStand'];
+
+        $base = $model->m('neckCircumference')/2 + $this->o('collarEase')/2;
+        $extra = $this->o('buttonholePlacketWidth')/2 + $this->o('buttonPlacketWidth')/2;
+
+        $p->newPoint( 1, 0,0);
+        $p->newPoint( 2, $base,0);
+        $p->newPoint(21,$p->x(2)+$extra/2,$p->y(2));
+        $p->newPoint( 3, $p->x(2),$this->o('collarStandWidth'));
+        $p->newPoint(31,$p->x(3)+$extra/2,$p->y(3));
+        $p->newPoint( 4,$p->x(1),$p->y(3));
+        $p->newPoint( 5,$p->x(2),$p->y(3)/2);
+        $p->addPoint(21,$p->rotate(21,5,$this->o('collarStandCurve')));
+        $p->addPoint(21,$p->shift(21,90,$this->o('collarStandBend')/2));
+        $p->addPoint(31,$p->rotate(31,5,$this->o('collarStandCurve')));
+        $p->addPoint(31,$p->shift(31,90,$this->o('collarStandBend')/2));
+        $p->addPoint(22,$p->rotate(2,5,$this->o('collarStandCurve')));
+        $p->addPoint(22,$p->shift(22,90,$this->o('collarStandBend')/2));
+        $p->addPoint(32,$p->rotate(3,5,$this->o('collarStandCurve')));
+        $p->addPoint(32,$p->shift(32,90,$this->o('collarStandBend')/2));
+        $p->addPoint(23,$p->shift(22,$this->o('collarStandCurve')+180,10));
+        $p->addPoint(33,$p->shift(32,$this->o('collarStandCurve')+180,10));
+        $p->addPoint(52,$p->shift(5,90,$this->o('collarStandBend')));
+        $p->addPoint(12,$p->shift(1,90,$this->o('collarStandBend')));
+        $p->addPoint(42,$p->shift(4,90,$this->o('collarStandBend')));
+        $p->newPoint(43,$p->x(2)*0.4,$p->y(42));
+        $p->newPoint( 6,$p->x(2)*0.6,$p->y(3));
+        $p->newPoint(61,$p->x(2)*0.75,$p->y(3));
+        $p->newPoint(62,$p->x(2)*0.95,$p->y(3));
+        $p->newPoint( 7,$p->x(6),$p->y(1));
+        $p->newPoint(71,$p->x(2)*0.75,$p->y(1));
+        $p->newPoint(72,$p->x(2)*0.95,$p->y(1));
+        $p->newPoint(13,$p->x(43),$p->y(12));
+        $p->addPoint(51,$p->shiftTowards(21,31,$p->distance(21,31)/2));
+        $p->addPoint(55,$p->shiftTowards(22,32,$p->distance(22,32)/2));
+        $p->newPoint(56,0,$p->y(3)/2);
+        $p->newPoint(57,$p->x(61),$p->y(56));
+        $flip = array(2,3,5,6,7,12,13,21,22,23,31,32,33,42,43,51,52,55,57,61,62,71,72);
+        foreach($flip as $pf) {
+            $id = $pf*-1;
+            $p->addPoint($id,$p->flipX($pf));
+        }
+       
+        // Move buttonhole to not be centered
+        $p->addPoint(55,$p->shift(55,$this->o('collarStandCurve')+180,3));
+        
+        // Button and buttonhole
+        $p->newSnippet($p->newId('button'), 'button', -55, ['transform' => 'rotate('.(90-$p->angle(-32,-31)).' '.$p->x(-55).' '.$p->y(-55).')']);
+        $p->newSnippet($p->newId('buttonhole'), 'buttonhole', 55, ['transform' => 'rotate('.(90-$p->angle(32,31)).' '.$p->x(55).' '.$p->y(55).')']);
+
+        // Paths  
+        $outline = 'M 42 C 43 6 61 C 62 33 32 L 31 C 51 21 22 C 23 72 71 C 7 13 12 C -13 -7 -71 C -72 -23 -22 C -21 -51 -31 L -32 C -33 -62 -61 C -6 -43 -42 z';
+        $p->newPath('outline', $outline);
+        $p->newPath('helpline', 'M 22 L 32 M -22 L -32', ['class' => 'helpline']);
+    
+    }
 
     /*
        _____ _             _ _

@@ -71,6 +71,12 @@ class JoostBodyBlock extends Pattern
 
         // Cut front armhole a bit deeper
         $this->setValue('frontArmholeExtra', 5);
+        
+        // Tweak factors
+        $this->setValue('frontCollarTweakFactor', 1); 
+        $this->setValue('frontCollarTweakRun', 0); 
+        $this->setValue('sleeveTweakFactor', 1); 
+        $this->setValue('sleeveTweakRun', 0); 
     }
 
     /**
@@ -162,7 +168,7 @@ class JoostBodyBlock extends Pattern
         $p->newPoint(8, $p->x(7), $p->y(1) - $this->getOption('backNeckCutout'), 'Half collar width @ top of garment');
 
         // Front collar
-        $p->newPoint(9, 0, $p->y(1) + $this->v('collarDepth'), 'Center front collar depth');
+        $p->newPoint(9, 0, $p->y(1) + $this->v('collarDepth') * $this->v('frontCollarTweakFactor'), 'Center front collar depth');
 
         // Armhole
         $p->newPoint(10, $model->getMeasurement('acrossBack') / 2, $p->y(1) + $p->deltaY(1, 2) / 2, 'Armhole pitch point');
@@ -293,7 +299,7 @@ class JoostBodyBlock extends Pattern
         /** @var \Freesewing\Part $p */
         $p = $this->parts['sleeveBlock'];
 
-        $this->setValue('sleevecapSeamLength', ($this->armholeLen() + $this->o('sleevecapEase')));
+        $this->setValue('sleevecapSeamLength', ($this->armholeLen() + $this->o('sleevecapEase'))*$this->v('sleeveTweakFactor'));
 
         // Sleeve center
         $p->newPoint(1, 0, 0, 'Origin (Center sleeve @ shoulder)');

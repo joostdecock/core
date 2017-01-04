@@ -160,6 +160,7 @@ class SimonShirt extends JoostBodyBlock
 
         // Collar
         $this->draftCollarStand($model);
+        $this->draftCollar($model);
     }
     
     /**
@@ -909,6 +910,50 @@ class SimonShirt extends JoostBodyBlock
         $p->newPath('helpline', 'M 22 L 32 M -22 L -32', ['class' => 'helpline']);
     
     }
+
+
+    /**
+     * Drafts the collar stand
+     *
+     * @param \Freesewing\Model $model The model to draft for
+     *
+     * @return void
+     */
+    public function draftCollar($model)
+    {
+        /** @var Part $p */
+        $p = $this->parts['collar'];
+
+        $base = ($model->m('neckCircumference')/2+$this->o('collarEase')/2);
+        $p->newPoint( 0 , 0, 0);
+        $p->newPoint( 1 , $base,0);  
+        $p->newPoint( 2 , $p->x(1),-1*($this->o('collarStandWidth')+$this->o('collarRoll')+$this->o('collarBend')));
+        $p->newPoint( 3 , $p->x(0),$p->y(2));
+        $p->newPoint( 4 , $p->x(1)-$this->o('collarGap')/2,0);
+        $p->newPoint( 5 , 0,-1*$this->o('collarBend'));
+        $p->newPoint( 6 , $p->x(1)*0.8,$p->y(5));
+        $p->addPoint(401 , $p->shift(4,180,20));
+        $p->addPoint(402 , $p->rotate(401,4,$this->o('collarAngle')));
+        $p->newPoint( 7 , 0,$p->y(2)-$this->o('collarFlare'));
+        $p->addPoint(701 , $p->shift(7,0,20));
+        $p->addPoint( 8 , $p->beamsCross(7,701,4,402),'Collar tip');
+        $p->newPoint( 9 , $p->x(1)*0.7,$p->y(3));
+        $p->addPoint( 10, $p->shift(5,90,$p->distance(5,3)/2));
+        $p->newPoint( 11, $p->x(6),$p->y(10));
+        $p->newPoint( 12, $p->x(8)/2,$p->y(3));
+        $p->addPoint( 13, $p->shiftAlong(5,6,4,4,$len));
+        $flip = array(1,2,4,6,8,9,11,12,13);
+        foreach($flip as $pf) {
+          $id = $pf*-1;
+          $p->addPoint($id,$p->flipX($pf));
+        }
+        
+        // Paths
+        $outline = 'M 5 C 6 4 4 L 8 C 8 9 12 L -12 C -9 -8 -8 L -4 C -4 -6 5 z';  
+        $p->newPath('outline', $outline);
+        $p->newPath('helpine', 'M 5 L 3', ['class' => 'helpline']);
+    }
+
 
     /*
        _____ _             _ _

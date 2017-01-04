@@ -157,6 +157,8 @@ class SimonShirt extends JoostBodyBlock
 
         // Sleeve
         $this->draftSleeve($model);
+        $this->draftSleevePlacketUnderlap($model);
+        $this->draftSleevePlacketOverlap($model);
 
         // Collar
         $this->draftCollarStand($model);
@@ -979,6 +981,111 @@ class SimonShirt extends JoostBodyBlock
         $p->newPath('helpine', 'M 5 L 3', ['class' => 'helpline']);
     }
 
+    /**
+     * Drafts the sleeve placket underlap
+     *
+     * @param \Freesewing\Model $model The model to draft for
+     *
+     * @return void
+     */
+    public function draftSleevePlacketUnderlap($model)
+    {
+        /** @var Part $p */
+        $p = $this->parts['sleevePlacketUnderlap'];
+
+        if ($this->o('sleevePlacketWidth')>=20) {
+            $width = 10;
+            $btndist = 5;
+            $fold = 8;
+        } else {
+            $btndist = $this->o('sleevePlacketWidth')/4;
+            $width = $this->o('sleevePlacketWidth')/2;
+            $fold = $width-1.5;
+        }
+        $p->newPoint(0,0,0);
+        $p->newPoint(1,$this->o('sleevePlacketLength')+10+$this->o('sleevePlacketWidth')*0.25,0);
+        $p->addPoint(2,$p->shift(1,-90,$fold));
+        $p->addPoint(3,$p->shift(2,-90,$width));
+        $p->addPoint(4,$p->shift(3,-90,$width));
+        $p->addPoint(5,$p->shift(4,-90,$fold));
+        $p->addPoint(6,$p->shift(0,-90,$fold));
+        $p->addPoint(7,$p->shift(6,-90,$width));
+        $p->addPoint(8,$p->shift(7,-90,$width));
+        $p->addPoint(9,$p->shift(8,-90,$fold));
+        $p->addPoint(10,$p->shift(0,0,10));
+        $p->addPoint(11,$p->shift(9,0,10));
+        $p->newPoint(12,$p->x(1)/2,$p->y(3)+$btndist);
+        
+        // Button
+        $p->newSnippet($p->newId('button'), 'button', 12);
+        
+        // Paths
+        $p->newPath('outline', 'M 0 L 1 L 5 L 9 z');
+        $p->newPath('foldline', 'M 2 L 6 M 7 L 3 M 4 L 8', ['class' => 'foldline']);
+    }
+
+    /**
+     * Drafts the sleeve placket overlap
+     *
+     * @param \Freesewing\Model $model The model to draft for
+     *
+     * @return void
+     */
+    public function draftSleevePlacketOverlap($model)
+    {
+        /** @var Part $p */
+        $p = $this->parts['sleevePlacketOverlap'];
+
+        if ($this->o('sleevePlacketWidth')>=20) {
+            $width = 10;
+            $btndist = 5;
+            $fold = 8;
+        } else {
+            $btndist = $this->o('sleevePlacketWidth')/4;
+            $width = $this->o('sleevePlacketWidth')/2;
+            $fold = $width-1.5;
+        }
+        $p->newPoint(0 , 0, 0);
+        // 1.5 for fixed part, 0.7 for fold = 2.2 times 
+        $p->newPoint(1,$this->o('sleevePlacketLength')+10+$this->o('sleevePlacketWidth')*2.2,0);
+        $p->addPoint(2,$p->shift(1,-90,$fold));
+        $p->addPoint(3,$p->shift(2,-90,$this->o('sleevePlacketWidth')));
+        $p->addPoint(4,$p->shift(3,-90,$this->o('sleevePlacketWidth')+2));
+        $p->addPoint(5,$p->shift(4,-90,$fold));
+        $p->newPoint(6,$this->o('sleevePlacketLength')+$this->o('sleevePlacketWidth')*1.5+10,0);
+        $p->addPoint(7,$p->shift(6,-90,$fold));
+        $p->addPoint(8,$p->shift(7,-90,$this->o('sleevePlacketWidth')));
+        $p->addPoint(9,$p->shift(8,-90,$this->o('sleevePlacketWidth')+2));
+        $p->addPoint(10,$p->shift(9,-90,$fold));
+        $p->newPoint(11,$this->o('sleevePlacketLength')+10,$fold);
+        $p->addPoint(12,$p->shift(11,-90,$this->o('sleevePlacketWidth')));
+        $p->addPoint(13,$p->shift(3,-90,$this->o('sleevePlacketWidth')/3));
+        $p->addPoint(14,$p->shift(13,180,$this->o('sleevePlacketWidth')*0.75));
+        $p->newPoint(15,$p->x(12)+$this->o('sleevePlacketWidth')*0.35,$p->y(3)+2*$this->o('sleevePlacketWidth')/3);
+        $p->newPoint(16,$p->x(15),$p->y(5));
+        $p->newPoint(17,$p->x(15)+$this->o('sleevePlacketWidth')*0.5,$p->y(15));
+        $p->newPoint(18,$p->y(0),$p->y(16));
+        $p->newPoint(19,$p->y(0),$p->y(2));
+        $p->newPoint(20,$p->y(0),$p->y(3));
+        $p->newPoint(21,$p->y(0),$p->y(4));
+        $p->addPoint(22,$p->beamsCross(2,8,3,7));
+        $p->newPoint(23,$p->x(15),$p->y(4));
+        $p->newPoint(24,$p->x(0)+10,$p->y(0));
+        $p->newPoint(25,$p->x(0)+10,$p->y(5));
+        $p->addPoint(26,$p->flipY(22,$p->y(2)));
+        $p->addPoint(27,$p->flipY(22,$p->y(3)));
+        $p->addPoint(28,$p->beamsCross(6,1,7,26));
+        $p->addPoint(29,$p->beamsCross(13,14,8,27));
+        $p->newPoint(30,$p->x(11)/2+5,$p->y(22));
+        
+        // Buttonhole
+        $p->newSnippet($p->newId('buttonhole'), 'buttonhole', 30, ['transform' => 'rotate(90 '.$p->x(30).' '.$p->y(30).')']);
+        
+        // Paths
+        $p->newPath('outline', 'M 0 L 1 L 13 L 14 L 17 L 15 L 16 L 18 z');
+        $p->newPath('foldline', 'M 19 L 2 M 7 L 22 L 8 M 3 L 20 M 2 L 22 L 3 M 21 L 23 M 7 L 28 M 8 L 29', ['class' => 'foldline']);
+        $p->newPath('helpline', 'M 11 L 12 M 24 L 25', ['class' => 'helpline']);
+    }
 
     /*
        _____ _             _ _

@@ -23,8 +23,8 @@ parts:
     collarStand: "Collar stand"
     collar: "Collar"
     undercollar: "Undercollar"
-    cuffguard: "Cuffguard"
-    cuffPlacket: "Cuff placket"
+    sleevePlacketUnderlap: "Sleeve placket underlap"
+    sleevePlacketOverlap: "Sleeve placket overlap"
     barrelCuff: "Barrel cuff"
     frenchCuff: "French cuff"
 

@@ -159,6 +159,8 @@ class SimonShirt extends JoostBodyBlock
         $this->draftSleeve($model);
         $this->draftSleevePlacketUnderlap($model);
         $this->draftSleevePlacketOverlap($model);
+        if($this->o('cuffStyle') > 3) $this->draftFrenchCuff($model);
+        else $this->draftBarrelCuff($model);
 
         // Collar
         $this->draftCollarStand($model);
@@ -758,7 +760,7 @@ class SimonShirt extends JoostBodyBlock
         // What is the usable cuff width?
         if($this->o('cuffStyle') < 4) $cuffwidth = $model->m('wristCircumference')+$this->o('cuffEase') + 20;
         else if($this->o('cuffStyle') == 6) $cuffwidth = $model->m('wristCircumference')+$this->o('cuffEase') + 30;
-        else $cuffwidth = $model->m('wristCircumference')+$this->o('cuffEase') + 30 - $this->o('cuffLenght')/2;
+        else $cuffwidth = $model->m('wristCircumference')+$this->o('cuffEase') + 30 - $this->o('cuffLength')/2;
         
         // Sleeve width 
         $width = $cuffwidth;
@@ -1087,6 +1089,124 @@ class SimonShirt extends JoostBodyBlock
         $p->newPath('helpline', 'M 11 L 12 M 24 L 25', ['class' => 'helpline']);
     }
 
+    /**
+     * Drafts a barrel cuff
+     *
+     * @param \Freesewing\Model $model The model to draft for
+     *
+     * @return void
+     */
+    public function draftBarrelCuff($model)
+    {
+        /** @var Part $p */
+        $p = $this->parts['barrelCuff'];
+
+        $p->newPoint(0,0,0);
+        $p->newPoint(1,$model->m('wristCircumference')/2+$this->o('cuffEase')/2,0,'Button line');  
+        $p->addPoint(2,$p->shift(1,0,10));
+        $p->newPoint(3,$p->x(1),$this->o('cuffLength'));
+        $p->newPoint(4,$p->x(2),$p->y(3));
+        $p->newPoint(5,$model->m('wristCircumference')/2-$this->o('cuffEase')/2+20,0, 'Narrow button line');
+        $p->newPoint(6, $p->x(1), $p->y(3)*0.45,'Single button');
+        $p->newPoint(7, $p->x(1), $p->y(3)*0.3,'Double button, A');
+        $p->newPoint(8, $p->x(1), $p->y(3)*0.7,'Double button, B');
+        $p->newPoint(9, $p->x(5), $p->y(3)*0.45,'Single button');
+        $p->newPoint(10, $p->x(5), $p->y(3)*0.3,'Double button, A');
+        $p->newPoint(11, $p->x(5), $p->y(3)*0.7,'Double button, B');
+        $p->newPoint(12, $p->x(2), $p->y(3)*0.25);
+        $p->addPoint(13, $p->shift(2,180,$p->distance(2,12)));
+        $p->addPoint(14, $p->shift(13,0,\Freesewing\BezierToolbox::bezierCircle($p->distance(2,12))));
+        $p->addPoint(15, $p->shift(12,90,\Freesewing\BezierToolbox::bezierCircle($p->distance(2,12))));
+        $flip = array(1,2,3,4,6,7,8,12,13,14,15);
+        foreach($flip as $pf) {
+          $id = $pf*-1;
+          $p->addPoint($id,$p->flipX($pf));
+        }
+        // Shift for buttonholes
+        $p->addPoint(-6,$p->shift(-6,0,4));
+        $p->addPoint(-7,$p->shift(-7,0,4));
+        $p->addPoint(-8,$p->shift(-8,0,4));
+        if($this->o('cuffButtonRows') == 2) {
+            $p->newSnippet($p->newId('button'), 'button', 7);
+            $p->newSnippet($p->newId('button'), 'button', 8);
+            $p->newSnippet($p->newId('buttonhole'), 'buttonhole', -7, ['transform' => 'rotate(90 '.$p->x(-7).' '.$p->y(-7).')']);
+            $p->newSnippet($p->newId('buttonhole'), 'buttonhole', -8, ['transform' => 'rotate(90 '.$p->x(-8).' '.$p->y(-8).')']);
+            if($this->o('barrelcuffNarrowButton') == 1) {
+                $p->newSnippet($p->newId('button'), 'button', 10);
+                $p->newSnippet($p->newId('button'), 'button', 11);
+            }
+        } else {
+            $p->newSnippet($p->newId('button'), 'button', 6);
+            $p->newSnippet($p->newId('buttonhole'), 'buttonhole', -6, ['transform' => 'rotate(90 '.$p->x(-6).' '.$p->y(-6).')']);
+            if($this->o('barrelcuffNarrowButton') == 1) {
+                $p->newSnippet($p->newId('button'), 'button', 9);
+            }
+        }
+        
+        // Paths
+        if($this->o('cuffStyle') == 1) $outline = 'M 0 L 13 C 14 15 12 L 4 L -4 L -12 C -15 -14 -13 z';
+        else if($this->o('cuffStyle') == 2) $outline = 'M 0 L 13 L 12 L 4 L -4 L -12 L -13 z';
+        else $outline = 'M 0 L 2 L 4 L -4 L -2 z';
+
+        $p->newPath('outline', $outline);
+    }
+
+    /**
+     * Drafts a French cuff
+     *
+     * @param \Freesewing\Model $model The model to draft for
+     *
+     * @return void
+     */
+    public function draftFrenchCuff($model)
+    {
+        /** @var Part $p */
+        $p = $this->parts['frenchCuff'];
+
+        $p->newPoint(0,0,0);
+        $p->newPoint(1,$model->m('wristCircumference')/2+$this->o('cuffEase')/2,0,'Button line');  
+        $p->addPoint(2,$p->shift(1,0,15));
+        $p->newPoint(3,$p->x(1),$this->o('cuffLength'));
+        $p->newPoint(4,$p->x(2),$p->y(3));
+        $p->newPoint(6, $p->x(1), $p->y(3)*0.45,'First buttonhole');
+        $p->addPoint(7, $p->shift(6,-90,$p->distance(6,3)*2), 'Second buttonhole');
+        // Shift buttonholes
+        $p->addPoint(6,$p->shift(6,180,4));
+        $p->addPoint(7,$p->shift(7,180,4));
+        $p->newPoint(12, $p->x(2), $p->y(3)*0.25);
+        $p->addPoint(13, $p->shift(2,180,$p->distance(2,12)));
+        $p->addPoint(14, $p->shift(13,0,\Freesewing\BezierToolbox::bezierCircle($p->distance(2,12))));
+        $p->addPoint(15, $p->shift(12,90,\Freesewing\BezierToolbox::bezierCircle($p->distance(2,12))));
+        $p->newPoint(16,$p->x(2),$p->y(3)*2);
+        $p->addPoint(17,$p->flipY(12,$p->y(4)));
+        $p->addPoint(18,$p->flipY(13,$p->y(4)));
+        $p->addPoint(19,$p->flipY(14,$p->y(4)));
+        $p->addPoint(20,$p->flipY(15,$p->y(4)));
+        $p->addPoint(21,$p->flipY(1,$p->y(4)));
+        $flip = array(1,2,3,4,6,7,12,13,14,15,16,17,18,19,20,21);
+        foreach($flip as $pf) {
+          $id = $pf*-1;
+          $p->addPoint($id,$p->flipX($pf));
+        }
+        // Need to move foldline a bit and buttonholes at back
+        // This way first half coverd the seam
+        $foldshift = 1.5;
+        $p->addPoint(4, $p->shift(4,-90,$foldshift));
+        $p->addPoint(-4, $p->shift(-4,-90,$foldshift));
+        $p->addPoint(7, $p->shift(7,-90,$foldshift*2));
+        $p->addPoint(-7, $p->shift(-7,-90,$foldshift*2));
+        $p->newSnippet($p->newId('buttonhole'), 'buttonhole', 6, ['transform' => 'rotate(90 '.$p->x(6).' '.$p->y(6).')']);
+        $p->newSnippet($p->newId('buttonhole'), 'buttonhole', 7, ['transform' => 'rotate(90 '.$p->x(7).' '.$p->y(7).')']);
+        $p->newSnippet($p->newId('buttonhole'), 'buttonhole', -6, ['transform' => 'rotate(90 '.$p->x(-6).' '.$p->y(-6).')']);
+        $p->newSnippet($p->newId('buttonhole'), 'buttonhole', -7, ['transform' => 'rotate(90 '.$p->x(-7).' '.$p->y(-7).')']);
+        
+        //Paths
+        if($this->o('cuffStyle') == 4) $outline = 'M 0 L 13 C 14 15 12 L 17 C 20 19 18 L -18 C -19 -20 -17 L -12 C -15 -14 -13 z';
+        else if($this->o('cuffStyle') == 5) $outline = 'M 0 L 13 L 12 L 17 L 18 L -18 L -17 L -12 L -13 z';
+        else $outline = 'M 0 L 2 L 16 L -16 L -2 z';
+
+        $p->newPath('outline', $outline);
+    }
     /*
        _____ _             _ _
       |  ___(_)_ __   __ _| (_)_______

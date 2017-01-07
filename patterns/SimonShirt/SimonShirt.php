@@ -134,7 +134,7 @@ class SimonShirt extends JoostBodyBlock
         $this->finalizeFrontLeft($model);
         // Front plackets, if needed
         if($this->o('buttonPlacketType') == 2) $this->finalizeButtonPlacket($model);
-        //if($this->o('buttonholePlacketType') == 2) $this->finalizeButtonholePlacket($model);
+        if($this->o('buttonholePlacketType') == 2) $this->finalizeButtonholePlacket($model);
     }
 
     /**
@@ -696,20 +696,6 @@ class SimonShirt extends JoostBodyBlock
         /** @var Part $p */
         $p = $this->parts['buttonholePlacket'];
         
-        // First buttonhole
-        $p->newSnippet($p->newId('buttonhole'), 'buttonhole', 3000);
-        
-        // Next buttonholes
-        for($i=1;$i<$this->o('buttons');$i++) {
-          $pid = 3000+$i;
-          $p->newSnippet($p->newId('buttonhole'), 'buttonhole', $pid);
-        }
-        // Extra top buttonhole
-        if($this->o('extraTopButton')) {
-          $extrapid = $pid +1;
-          $p->newSnippet($p->newId('buttonhole'), 'buttonhole', $extrapid);
-        }
-
         // Paths
         if($this->o('buttonholePlacketStyle') == 1) {
             $outline = 'M 4108 C 41082 41081 9 L 4107 L 4007 L 4008 z'; // Classic style
@@ -1577,6 +1563,46 @@ class SimonShirt extends JoostBodyBlock
         $p->addPoint('grainlineBottom', $p->shift(2045,45,10));
         $p->newGrainline('grainlineBottom', 'grainlineTop', $this->t('Grainline'));
     }
+
+
+    /**
+     * Finalizes the buttonhole placket
+     *
+     * Only draft() calls this method, sample() does not.
+     * It does things like adding a title, logo, and any
+     * text or instructions that go on the pattern.
+     *
+     * @param \Freesewing\Model $model The model to draft for
+     *
+     * @return void
+     */
+    public function finalizeButtonholePlacket($model)
+    {
+        /** @var Part $p */
+        $p = $this->parts['buttonholePlacket'];
+
+        // First buttonhole
+        $p->newSnippet($p->newId('buttonhole'), 'buttonhole', 3000);
+        
+        // Next buttonholes
+        for($i=1;$i<$this->o('buttons');$i++) {
+          $pid = 3000+$i;
+          $p->newSnippet($p->newId('buttonhole'), 'buttonhole', $pid);
+        }
+        // Extra top buttonhole
+        if($this->o('extraTopButton')) {
+          $extrapid = $pid +1;
+          $p->newSnippet($p->newId('buttonhole'), 'buttonhole', $extrapid);
+        }
+
+        // Seam allowance
+        $p->offsetPath('sa', 'outline', 10, 1, ['class' => 'seam-allowance']);
+        
+        // Title
+        $p->newPoint('titleAnchor', $p->x(41086), $p->y(2)+50);
+        $p->addTitle('titleAnchor', '2b', $this->t($p->title), '1x '.$this->t('from main fabric'), 'vertical');
+    }
+
 
     /*
         ____                       _

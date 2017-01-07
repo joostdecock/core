@@ -131,6 +131,7 @@ class SimonShirt extends JoostBodyBlock
         $this->sample($model);
         
         $this->finalizeFrontRight($model);
+        $this->finalizeFrontLeft($model);
     }
 
     /**
@@ -475,7 +476,6 @@ class SimonShirt extends JoostBodyBlock
         // Store collar opening length
         $this->setValue('frontCollarOpeningLength', $p->curveLen(8,20,21,9)*2);
         
-        
         // Store flat felled seam path
         if($this->o('hemStyle') == 1) $this->setValue('frontRightSideBase', 'M 8001 M 5 C 5001 6011 6021 C 6031 8002 8001 C 6661 6662 6663 L 6667');
         else $this->setValue('frontRightSideBase','M 8001 M 5 C 5001 6011 6021 C 6031 8002 8001 C 6661 6662 6663');
@@ -563,42 +563,40 @@ class SimonShirt extends JoostBodyBlock
 
         // First buttonhole
         $p->newPoint(3000 , $p->x(4100), $p->y(3000), 'button start');
-        if($this->o('buttonholePlacketType')==1) $p->newSnippet($p->newId('buttonhole'), 'buttonhole', 3000);
         // Next buttonholes
         for($i=1;$i<$this->o('buttons');$i++) {
             $pid = 3000+$i;
             $p->newPoint($pid, $p->x(4100), $p->y($pid), 'Button');
-            if($this->o('buttonholePlacketType')==1) $p->newSnippet($p->newId('buttonhole'), 'buttonhole', $pid);
         }
         // Extra top buttonhole
         if($this->o('extraTopButton')) {
             $extrapid = $pid +1;
             $p->newPoint($extrapid, $p->x(4100), $p->y($extrapid), 'Extra button');
-            if($this->o('buttonholePlacketType')==1) $p->newSnippet($p->newId('buttonhole'), 'buttonhole', $extrapid);
         }
 
         // Construct paths
+
+        $seamline = 'M 5 C 13 16 14 C 15 18 10 C 17 19 12 L 8 '; 
         
-        if($this->o('buttonholePlacketType')==1) { 
-            // Cut-on buttonhole placket
-            if($this->o('buttonholePlacketStyle')==1) $seamline = 'M 9 L 4107 L 4007 '; // Classic style buttonhole placket
-            else $seamline = 'M 9 L 41086 C 41084 41085 41083 C 41088 41087 41089 L 4107 L 4007 '; // Seamless/French style buttonhole placket
-        } else { 
-            // Sewn-on buttonhole placket
-            $seamline = 'M 4008 ';
-          }
-        
+        if($this->o('buttonholePlacketType')==2) {
+            // Sewn-on
+            $seamline .= 'C 41091 41092 4108 '; 
+            $this->setValue('frontLeftSaBase', $seamline);
+            $seamline .= 'L 4008 ';
+        } else {
+            // Cut-on
+            $seamline .= 'C 20 21 9 '; 
+            if($this->o('buttonholePlacketStyle')==1) $seamline .= 'L 4107 '; // Classic style buttonhole placket
+            else $seamline .= 'L 41086 C 41084 41085 41083 C 41088 41087 41089 L 4107 '; // Seamless/French style buttonhole placket
+            $this->setValue('frontLeftSaBase', $seamline);
+            $seamline .= 'L 4007 ';
+        }
+
         if($this->o('buttonholePlacketType')==2 && $this->o('buttonholePlacketStyle')==2) { 
             if($this->o('hemStyle')) $seamline .= 'L 6669 C 6668 6667 6666 '; 
         } else {
             $seamline .= 'L 6669 C 6668 6667 6666 ';
         }
-        
-        $seamline .= 'C 6665 6664 6663 C 6662 6661 8001 C 8002 6031 6021 C 6011 5001 5 C 13 16 14 C 15 18 10 C 17 19 12 L 8 ';
-        
-        if($this->o('buttonholePlacketType')==2) $seamline .= 'C 41091 41092 4108 z'; // Sewn-on
-        else $seamline .= 'C 20 21 9 z'; // Cut-on
-
         if($this->o('buttonholePlacketType')==1) { // Cut-on
             switch($this->o('buttonholePlacketStyle')) {
                 case 1: // Classic placket
@@ -613,6 +611,8 @@ class SimonShirt extends JoostBodyBlock
             $p->newPath('placketHelpLines', $placketHelpLines, ['class' => 'helpline']);
             $p->newPath('placketFoldLines', $placketFoldLines, ['class' => 'foldline']);
         }
+        $seamline .= ' C 6665 6664 6663 C 6662 6661 8001 C 8002 6031 6021 C 6011 5001 5';
+        $p->newPath('seamline', $seamline, ['class' => 'debug']);
 
         // Add paths to part
         
@@ -622,18 +622,24 @@ class SimonShirt extends JoostBodyBlock
         $p->newPath('waistLine', 'M 6021 L 3', ['class' => 'helpline']);
         $p->newPath('hipsLine', 'M 8001 L 8003', ['class' => 'helpline']);
         
-        if($this->o('hemStyle') == 1) {
-            $flatFelledSideSeam = 'M 5 C 5001 6011 6021 C 6031 8002 8001 C 6661 6662 6663 L 6667';
-        } else {
-            $flatFelledSideSeam = 'M 5 C 5001 6011 6021 C 6031 8002 8001 C 6661 6662 6663';
-        }
-        $p->newPath('flatFelledSideSeam',$flatFelledSideSeam, ['class' => 'debug']);
-
         // Seamline path 
         $p->newPath('seamline',$seamline);
 
         // Mark path for sample service
         $p->paths['seamline']->setSample(true);
+        
+        // Store flat felled seam path
+        if($this->o('hemStyle') == 1) $this->setValue('frontLeftSideBase', 'M 5 C 5001 6011 6021 C 6031 8002 8001 C 6661 6662 6663 L 6667');
+        else $this->setValue('frontLeftSideBase', 'M 5 C 5001 6011 6021 C 6031 8002 8001 C 6661 6662 6663');
+        
+        // Store hem path
+        if($this->o('hemStyle') == 1) {
+            if($this->o('buttonholePlacketType') == 1) $this->setValue('frontLeftHemBase', 'M 6666 L 4007');
+            else $this->setValue('frontLeftHemBase', 'M 6666 L 4008');
+        } else {
+            if($this->o('buttonholePlacketType') == 1) $this->setValue('frontLeftHemBase', 'M 6663 C 6664 6665 6666 L 4007');
+            else $this->setValue('frontLeftHemBase', 'M 6663 C 6664 6665 6666 L 4008');
+        }
     }
 
     /**
@@ -1483,6 +1489,61 @@ class SimonShirt extends JoostBodyBlock
         $p->newGrainline('grainlineBottom', 'grainlineTop', $this->t('Grainline'));
     }
     
+    /**
+     * Finalizes the front left
+     *
+     * Only draft() calls this method, sample() does not.
+     * It does things like adding a title, logo, and any
+     * text or instructions that go on the pattern.
+     *
+     * @param \Freesewing\Model $model The model to draft for
+     *
+     * @return void
+     */
+    public function finalizeFrontLeft($model)
+    {
+        /** @var Part $p */
+        $p = $this->parts['frontLeft'];
+        
+        // First button
+        if($this->o('buttonholePlacketType')==1) $p->newSnippet($p->newId('buttonhole'), 'buttonhole', 3000); 
+        // Next buttons
+        for($i=1;$i<$this->o('buttons');$i++) {
+          $pid = 3000+$i;
+          if($this->o('buttonholePlacketType')==1) $p->newSnippet($p->newId('buttonhole'), 'buttonhole', $pid); 
+        }
+        
+        // Extra top button
+        if($this->o('extraTopButton')) {
+          $extrapid = $pid +1;
+          if($this->o('buttonholePlacketType')==1) $p->newSnippet($p->newId('buttonhole'), 'buttonhole', $extrapid); 
+        }
+        
+        // Seam allowance
+        $p->offsetPathString('sa', $this->v('frontLeftSaBase'), 10, 1, ['class' => 'seam-allowance']);
+
+        // Flat felled seam allowance
+        $p->offsetPathString('ffsa', $this->v('frontLeftSideBase'), -20, 1, ['class' => 'seam-allowance']);
+        
+        // Hem seam allowance
+        $p->offsetPathString('hemSa', $this->v('frontLeftHemBase'), -30, 1, ['class' => 'seam-allowance']);
+        
+        // Join different offsets
+        if($this->o('buttonholePlacketType') == 1) {
+            $joinStart = 4107;
+            $joinEnd = 4007;
+        } else {
+            $joinStart = 4108;
+            $joinEnd = 4008;
+        }
+        $p->newPath('joinSa', "M $joinStart L sa-endPoint M sa-startPoint L ffsa-startPoint M ffsa-endPoint L hemSa-startPoint M hemSa-endPoint L $joinEnd", ['class' => 'seam-allowance']);
+        
+        // Title
+        $p->newPoint('titleAnchor', $p->x(5)/2, $p->y(2)+50);
+        $p->addTitle('titleAnchor', 2, $this->t($p->title), '1x '.$this->t('from main fabric'));
+    }
+
+
     /*
         ____                       _
        |  _ \ __ _ _ __   ___ _ __| | ___  ___ ___

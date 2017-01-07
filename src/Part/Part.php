@@ -625,6 +625,9 @@ class Part
             $this->paths[$newKey]->setRender(false);
         }
         $this->purgePoints('.tmp_');
+        // Add aliases for start and end point
+        $this->clonePoint($this->paths[$newKey]->getStartPoint(),"$newKey-startPoint");
+        $this->clonePoint($this->paths[$newKey]->getEndPoint(),"$newKey-endPoint");
     }
 
     /**

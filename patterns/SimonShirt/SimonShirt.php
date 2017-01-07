@@ -352,18 +352,15 @@ class SimonShirt extends JoostBodyBlock
         $buttonSpacing = $buttoningLength / ($this->o('buttons'));
         // First button
         $p->newPoint(3000 , $p->x(4), $buttoningLength+$p->y(9), 'button start');
-        //if($this->o('buttonPlacketType')==1) $p->newSnippet($p->newId('button'), 'button', 3000); // FIXME move to finalize coz tweaking
         // Next buttons
         for($i=1;$i<$this->o('buttons');$i++) {
           $pid = 3000+$i;
           $p->addPoint($pid, $p->shift(3000, 90, $buttonSpacing * $i), 'Button');
-          //if($this->o('buttonPlacketType')==1) $p->newSnippet($p->newId('button'), 'button', $pid); // FIXME move to finalize coz tweaking
         }
         // Extra top button
         if($this->o('extraTopButton')) {
           $extrapid = $pid +1;
           $p->addPoint($extrapid, $p->shift($pid,90,$buttonSpacing/2), 'Extra button');
-          //if($this->o('buttonPlacketType')==1) $p->newSnippet($p->newId('button'), 'button', $extrapid); // FIXME move to finalize coz tweaking
         }
         // Shaping of side seam
         $p->addPoint(8000, $p->shift(4,90,$this->o('lengthBonus')), 'Hips height');        
@@ -400,6 +397,7 @@ class SimonShirt extends JoostBodyBlock
                 $p->clonePoint(6666,6667);
                 $p->addPoint(6668, $p->shift(6666,180,$p->deltaX(6660,6666)*0.1));
                 $p->clonePoint(6668,6669);
+                $hemLine = 'M 6665 L ';
                 break;
             case 2: // Baseball hem
                 $p->addPoint(6664, $p->shift(6663,180,$p->deltaX(6660,6663)*0.3));
@@ -408,6 +406,7 @@ class SimonShirt extends JoostBodyBlock
                 $p->clonePoint(6666,6667);
                 $p->addPoint(6668, $p->shift(6666,180,$p->deltaX(6660,6666)*0.1));
                 $p->clonePoint(6668,6669);
+                $hemLine = 'M 6663 C 6664 6665 6666 L ';
                 break;
             case 3: // Slashed hem
                 $p->newPoint(6664, $p->x(6663), $p->y(6663)+$this->o('hemCurve'));
@@ -416,6 +415,7 @@ class SimonShirt extends JoostBodyBlock
                 $p->clonePoint(6666,6667);
                 $p->addPoint(6668, $p->shift(6666,180,$p->deltaX(6660,6666)*0.1));
                 $p->clonePoint(6668,6669);
+                $hemLine = 'M 6663 C 6664 6665 6666 L ';
                 break;
         }
         
@@ -425,32 +425,35 @@ class SimonShirt extends JoostBodyBlock
         $p->addPoint(6661, $p->rotate(6661,8001,$p->angle(8001,8002)+90));
 
         // Construct paths
-        if($this->o('buttonPlacketType') == 2) $seamline = 'M 2041 L 2040 '; // Separate button placket
-        else { // Cut-on button placket
+        $seamline = 'M 5 C 13 16 14 C 15 18 10 C 17 19 12 L 8 ';
+        if($this->o('buttonPlacketType') == 2) {
+            // Separate button placket
+            $seamline .= 'C 2051 2052 2041 L 2040 '; 
+            $hemStart = 2040;
+        } else { 
+            // Cut-on button placket
+            $seamline .= 'C 20 21 9 ';
+            $hemStart = 2044; 
+            $p->newPath('buttonPlacketHelp1','M 4 L 9', ['class' => 'helpline']);
+            $p->newPath('buttonPlacketFold1','M 2042 L 2045', ['class' => 'foldline']);
             switch($this->o('buttonPlacketStyle')) {
                 case 1: 
                     // Classic style placket
-                    $seamline = 'M 9 L -2017 C -2051 -2052 -2053 L 2043 L 2044 ';
+                    $seamline .= 'L -2017 C -2051 -2052 -2053 L 2043 L 2044 ';
                     $plackethelp = 'M 2153 2040';
-                    $p->newPath('placketHelp', 'M 2153 L 2040', ['class' => 'helpline']);
+                    $p->newPath('buttonPlacketHelp2', 'M 2153 L 2040', ['class' => 'helpline']);
                     break;
                 case 2: 
                     // Seamless or French style placket
-                    $seamline = 'M 9 L -2017 C -2051 -2052 -2053 C -2055 -2054 -2056 L 2043 L 2044 ';
-                    $p->newPath($p->newId('buttonPlacketFold'), 'M -2053 L 2046', ['class' => 'foldline']);
+                    $seamline .= 'L -2017 C -2051 -2052 -2053 C -2055 -2054 -2056 L 2043 L 2044 ';
+                    $p->newPath('buttonPlacketFold2', 'M -2053 L 2046', ['class' => 'foldline']);
                     break;
             }
         }
+        $this->setValue('frontRightSaBase', $seamline);
+        $this->setValue('frontRightHemBase', $hemLine.$hemStart);
+        $seamline .= 'L 6669 C 6668 6667 6666 C 6665 6664 6663 C 6662 6661 8001 C 8002 6031 6021 C 6011 5001 5 ';
 
-        $seamline .= 'L 6669 C 6668 6667 6666 C 6665 6664 6663 C 6662 6661 8001 C 8002 6031 6021 C 6011 5001 5 C 13 16 14 C 15 18 10 C 17 19 12 L 8 ';
-        
-        if($this->o('buttonPlacketType') == 2) $seamline .= 'C 2051 2052 2041 z'; // Separate button placket
-        else { // Cut-on button placket
-            $seamline .= 'C 20 21 9 z'; 
-            $p->newPath($p->newId('buttonPlacketHelp'),'M 4 L 9', ['class' => 'helpline']);
-            $p->newPath($p->newId('buttonPlacketFold'),'M 2042 L 2045', ['class' => 'foldline']);
-        }
-        
         // Add paths to part
         
         // Helplines
@@ -473,10 +476,9 @@ class SimonShirt extends JoostBodyBlock
         $this->setValue('frontCollarOpeningLength', $p->curveLen(8,20,21,9)*2);
         
         
-        // FIXME Handle this later with SA
-        if($this->o('hemStyle') == 1) $flatFelledSideSeam = 'M 8001 M 5 C 5001 6011 6021 C 6031 8002 8001 C 6661 6662 6663 L 6667';
-        else $flatFelledSideSeam = 'M 8001 M 5 C 5001 6011 6021 C 6031 8002 8001 C 6661 6662 6663';
-        $p->newPath('flatFelledSideSeam',$flatFelledSideSeam, ['class' => 'debug']);
+        // Store flat felled seam path
+        if($this->o('hemStyle') == 1) $this->setValue('frontRightSideBase', 'M 8001 M 5 C 5001 6011 6021 C 6031 8002 8001 C 6661 6662 6663 L 6667');
+        else $this->setValue('frontRightSideBase','M 8001 M 5 C 5001 6011 6021 C 6031 8002 8001 C 6661 6662 6663');
     }
 
     /**
@@ -1001,7 +1003,6 @@ class SimonShirt extends JoostBodyBlock
         $p->newPath('cuffHelplines', $this->v('cuffHelplines'), ['class' => 'helpline']);   
         $p->newPath('cuffFoldlines', $this->v('cuffFoldlines'), ['class' => 'foldline']);   
         $p->newPath('sleevePacketCut', $this->v('sleevePacketCut'), ['class' => 'helpline']);   
-        $p->newPath('tmp', $this->v('cuffHemline'));   
         
         $outline = 'M -5 C -5 20 16 C 21 10 10 C 10 22 17 C 23 28 30 C 29 25 18 C 24 11 11 C 11 27 19 C 26 5 5  ';
         $outline .= $this->v('cuffHemline');
@@ -1146,8 +1147,7 @@ class SimonShirt extends JoostBodyBlock
         $p->addPoint( 10, $p->shift(5,90,$p->distance(5,3)/2));
         $p->newPoint( 11, $p->x(6),$p->y(10));
         $p->newPoint( 12, $p->x(8)/2,$p->y(3));
-        $p->addPoint( 13, $p->shiftAlong(5,6,4,4,$len));
-        $flip = array(1,2,4,6,8,9,11,12,13);
+        $flip = array(1,2,4,6,8,9,11,12);
         foreach($flip as $pf) {
           $id = $pf*-1;
           $p->addPoint($id,$p->flipX($pf));
@@ -1436,6 +1436,51 @@ class SimonShirt extends JoostBodyBlock
         /** @var Part $p */
         $p = $this->parts['frontRight'];
         
+        // First button
+        if($this->o('buttonPlacketType')==1) $p->newSnippet($p->newId('button'), 'button', 3000); 
+        
+        // Next buttons
+        for($i=1;$i<$this->o('buttons');$i++) {
+          $pid = 3000+$i;
+          if($this->o('buttonPlacketType')==1) $p->newSnippet($p->newId('button'), 'button', $pid); 
+        }
+        
+        // Extra top button
+        if($this->o('extraTopButton')) {
+          $extrapid = $pid +1;
+          if($this->o('buttonPlacketType')==1) $p->newSnippet($p->newId('button'), 'button', $extrapid); 
+        }
+        
+        // Seam allowance
+        $p->offsetPathString('sa', $this->v('frontRightSaBase'), -10, 1, ['class' => 'seam-allowance']);
+
+        // Flat felled seam allowance
+        $p->offsetPathString('ffsa', $this->v('frontRightSideBase'), 20, 1, ['class' => 'seam-allowance']);
+        
+        // Hem seam allowance
+        $p->offsetPathString('hemSa', $this->v('frontRightHemBase'), 30, 1, ['class' => 'seam-allowance']);
+        
+        // Join different offsets
+        $p->newPath('joinSa', 'M ffsa-startPoint L sa-startPoint M ffsa-endPoint L hemSa-startPoint M hemSa-endPoint L sa-endPoint', ['class' => 'seam-allowance']);
+
+
+        // Title
+        $p->newPoint('titleAnchor', $p->x(5)/2, $p->y(2)+50);
+        $p->addTitle('titleAnchor', 1, $this->t($p->title), '1x '.$this->t('from main fabric'));
+
+        // Logo
+        $p->addPoint('logoAnchor', $p->shift('titleAnchor',-90, 50));
+        $p->newSnippet('logo', 'logo', 'logoAnchor');
+        $p->newSnippet('cc', 'cc', 'logoAnchor');
+
+        // Scalebox
+        $p->addPoint('scaleboxAnchor', $p->shift('logoAnchor', -90, 40));
+        $p->newSnippet('scalebox', 'scalebox', 'scaleboxAnchor');
+
+        // Grainline
+        $p->addPoint('grainlineTop', $p->shift(9,180,50));
+        $p->newPoint('grainlineBottom', $p->x('grainlineTop'), $p->y(6660)-10);
+        $p->newGrainline('grainlineBottom', 'grainlineTop', $this->t('Grainline'));
     }
     
     /*

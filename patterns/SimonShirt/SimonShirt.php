@@ -135,6 +135,7 @@ class SimonShirt extends JoostBodyBlock
         // Front plackets, if needed
         if($this->o('buttonPlacketType') == 2) $this->finalizeButtonPlacket($model);
         if($this->o('buttonholePlacketType') == 2) $this->finalizeButtonholePlacket($model);
+        $this->finalizeYoke();
     }
 
     /**
@@ -1603,6 +1604,39 @@ class SimonShirt extends JoostBodyBlock
         $p->addTitle('titleAnchor', '2b', $this->t($p->title), '1x '.$this->t('from main fabric'), 'vertical');
     }
 
+    /**
+     * Finalizes the yoke
+     *
+     * Only draft() calls this method, sample() does not.
+     * It does things like adding a title, logo, and any
+     * text or instructions that go on the pattern.
+     *
+     * @param \Freesewing\Model $model The model to draft for
+     *
+     * @return void
+     */
+    public function finalizeYoke($model)
+    {
+        /** @var Part $p */
+        $p = $this->parts['yoke'];
+        
+        // Seam allowance
+        $p->offsetPath('sa', 'seamline', 10, 1, ['class' => 'seam-allowance']);
+
+        // Title
+        if($this->o('splitYoke') == 1) {
+            $p->newPoint('titleAnchor', $p->x(8), $p->y(1)+40); 
+            $p->addTitle('titleAnchor', '4', $this->t($p->title), '4x '.$this->t('from main fabric'));
+        } else {
+            $p->newPoint('titleAnchor', $p->x(1), $p->y(1)+60); 
+            $p->addTitle('titleAnchor', '4', $this->t($p->title), '2x '.$this->t('from main fabric'));
+        }
+
+        // Grainline
+        $p->addPoint('grainlineTop', $p->shift(1,-25,20));
+        $p->addPoint('grainlineBottom', $p->shift('centerBottom',25,20));
+        $p->newGrainline('grainlineBottom', 'grainlineTop', $this->t('Grainline'));
+    }
 
     /*
         ____                       _

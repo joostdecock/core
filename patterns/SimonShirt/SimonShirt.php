@@ -145,6 +145,8 @@ class SimonShirt extends JoostBodyBlock
         $this->finalizeSleeve($model);
         $this->finalizeSleevePlacketUnderlap($model);
         $this->finalizeSleevePlacketOverlap($model);
+        if($this->o('cuffStyle') > 3) $this->finalizeFrenchCuff($model);
+        else $this->finalizeBarrelCuff($model);
         
         // Collar
         $this->finalizeCollarStand($model);
@@ -1287,9 +1289,6 @@ class SimonShirt extends JoostBodyBlock
         $p->addPoint(29,$p->beamsCross(13,14,8,27));
         $p->newPoint(30,$p->x(11)/2+5,$p->y(22));
         
-        // Buttonhole
-        $p->newSnippet($p->newId('buttonhole'), 'buttonhole', 30, ['transform' => 'rotate(90 '.$p->x(30).' '.$p->y(30).')']);
-        
         // Paths
         $p->newPath('outline', 'M 0 L 1 L 13 L 14 L 17 L 15 L 16 L 18 z');
         $p->newPath('foldline', 'M 19 L 2 M 7 L 22 L 8 M 3 L 20 M 2 L 22 L 3 M 21 L 23 M 7 L 28 M 8 L 29', ['class' => 'foldline']);
@@ -1826,17 +1825,48 @@ class SimonShirt extends JoostBodyBlock
         /** @var Part $p */
         $p = $this->parts['sleevePlacketOverlap'];
        
-        // Button
-        //$p->newSnippet($p->newId('button'), 'button', 12);
-        
-        // Grainline
-        //$p->newGrainline(-11, 11, $this->t('Grainline'));
+        // Buttonhole
+        $p->newSnippet($p->newId('buttonhole'), 'buttonhole', 30, ['transform' => 'rotate(90 '.$p->x(30).' '.$p->y(30).')']);
         
         // Title
         $p->addPoint('titleAnchor', $p->shift(20,-35,30));
         $p->addTitle('titleAnchor', 11, $this->t($p->title), '2x '.$this->t('from main fabric'),'horizontal');
     }
 
+
+    /**
+     * Finalizes the barrelCuff
+     *
+     * @param \Freesewing\Model $model The model to draft for
+     *
+     * @return void
+     */
+    public function finalizeBarrelCuff($model)
+    {
+        /** @var Part $p */
+        $p = $this->parts['barrelCuff'];
+
+        // Title
+        $p->newPoint('titleAnchor', 0, $p->y(-8));
+        $p->addTitle('titleAnchor', 11, $this->t($p->title), '4x '.$this->t('from main fabric'));
+    }
+
+    /**
+     * Finalizes the frenchCuff
+     *
+     * @param \Freesewing\Model $model The model to draft for
+     *
+     * @return void
+     */
+    public function finalizeFrenchCuff($model)
+    {
+        /** @var Part $p */
+        $p = $this->parts['frenchCuff'];
+
+        // Title
+        $p->newPoint('titleAnchor', 0, $p->y(-3));
+        $p->addTitle('titleAnchor', 11, $this->t($p->title), '4x '.$this->t('from main fabric'));
+    }
 
     /*
         ____                       _

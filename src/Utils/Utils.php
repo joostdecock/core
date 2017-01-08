@@ -214,7 +214,7 @@ class Utils
      */
     public static function isSamePoint($point1, $point2)
     {
-        if (round($point1->getX(), 2) == round($point2->getX(), 2) && round($point1->getY(), 2) == round($point2->getY(), 2)) {
+        if (round($point1->getX(), 1) == round($point2->getX(), 1) && round($point1->getY(), 1) == round($point2->getY(), 1)) {
             return true;
         } else {
             return false;

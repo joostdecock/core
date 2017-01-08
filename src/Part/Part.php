@@ -660,22 +660,26 @@ class Part
                         'intersection' => true
                     ];
                     $stack->replace($a, $new);
+                    unset($new);
                 } else {
                     $new[] = ['type' => 'line', 'offset' => [$a['offset'][0], $key], 'intersection' => true];
                     $stack->replace($a, $new);
+                    unset($new);
                 }
                 // split b here
                 if ($b['type'] == 'curve') {
                     $this->addSplitCurve($b['offset'][0], $b['offset'][1], $b['offset'][2], $b['offset'][3], $key, "$key-b-");
                     $new[] = [
                         'type'         => 'curve',
-                        'offset'       => ["$key-b-5", "$key-b-6", "$key-b-7", "$key-b-8"],
+                        'offset'       => ["$key-b-8", "$key-b-7", "$key-b-6", "$key-b-5"],
                         'intersection' => true
                     ];
                     $stack->replace($b, $new);
+                    unset($new);
                 } else {
                     $new[] = ['type' => 'line', 'offset' => [$key, $b['offset'][1]]];
                     $stack->replace($b, $new);
+                    unset($new);
                 }
             }
         }
@@ -745,10 +749,8 @@ class Part
             ) > 10
             ) {
                 $i = BezierToolbox::findCurveCurveIntersections(
-                    $this->loadPoint($s1['offset'][0]),
-                    $this->loadPoint($s1['offset'][1]), $this->loadPoint($s1['offset'][2]), $this->loadPoint($s1['offset'][3]),
-                    $this->loadPoint($s2['offset'][0]), $this->loadPoint($s2['offset'][1]), $this->loadPoint($s2['offset'][2]),
-                    $this->loadPoint($s2['offset'][3])
+                    $this->loadPoint($s1['offset'][0]), $this->loadPoint($s1['offset'][1]), $this->loadPoint($s1['offset'][2]), $this->loadPoint($s1['offset'][3]),
+                    $this->loadPoint($s2['offset'][0]), $this->loadPoint($s2['offset'][1]), $this->loadPoint($s2['offset'][2]), $this->loadPoint($s2['offset'][3])
                 );
                 if ($i) {
                     foreach ($i as $key => $point) {
@@ -1073,10 +1075,9 @@ class Part
                         $stack->replace($chunk, $new);
                     }
                 } elseif (isset($chunk['type']) && $chunk['type'] == 'curve' && $next['type'] == 'curve') {
-                    if (!$this->isSamePoint($chunk['offset'][3], $next['offset'][0]) && $this->curveLen(
-                        $next['offset'][0],
-                        $next['offset'][1], $next['offset'][2], $next['offset'][3]
-                    ) > 0
+                    if (
+                        !$this->isSamePoint($chunk['offset'][3], $next['offset'][0]) && 
+                        $this->curveLen( $next['offset'][0], $next['offset'][1], $next['offset'][2], $next['offset'][3]) > 0
                     ) {
                         // Gap to fill
                         if ($this->isSamePoint($chunk['offset'][2], $chunk['offset'][3])) {

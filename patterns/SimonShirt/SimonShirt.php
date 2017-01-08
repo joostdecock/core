@@ -138,11 +138,14 @@ class SimonShirt extends JoostBodyBlock
         if($this->o('buttonholePlacketType') == 2) $this->finalizeButtonholePlacket($model);
 
         // Yoke and back
-        $this->finalizeYoke();
-        $this->finalizeBack();
+        $this->finalizeYoke($model);
+        $this->finalizeBack($model);
 
         // Sleeve
-        $this->finalizeSleeve();
+        $this->finalizeSleeve($model);
+        
+        // Collar
+        $this->finalizeCollarStand($model);
     }
 
     /**
@@ -1091,11 +1094,6 @@ class SimonShirt extends JoostBodyBlock
         // Move buttonhole to not be centered
         $p->addPoint(55,$p->shift(55,$this->o('collarStandCurve')+180,3));
         
-        // Button and buttonhole
-        // FIXME move to finalize
-        //$p->newSnippet($p->newId('button'), 'button', -55, ['transform' => 'rotate('.(90-$p->angle(-32,-31)).' '.$p->x(-55).' '.$p->y(-55).')']);
-        //$p->newSnippet($p->newId('buttonhole'), 'buttonhole', 55, ['transform' => 'rotate('.(90-$p->angle(32,31)).' '.$p->x(55).' '.$p->y(55).')']);
-
         // Paths  
         $outline = 'M 42 C 43 6 61 C 62 33 32 L 31 C 51 21 22 C 23 72 71 C 7 13 12 C -13 -7 -71 C -72 -23 -22 C -21 -51 -31 L -32 C -33 -62 -61 C -6 -43 -42 z';
         $p->newPath('outline', $outline);
@@ -1719,6 +1717,35 @@ class SimonShirt extends JoostBodyBlock
         $p->newPoint('grainlineBottom', $p->x('grainlineTop'), $p->y('cuffRight')-10);
         $p->newGrainline('grainlineBottom', 'grainlineTop', $this->t('Grainline'));
         
+    }
+
+
+    /**
+     * Finalizes the collar stand
+     *
+     * @param \Freesewing\Model $model The model to draft for
+     *
+     * @return void
+     */
+    public function finalizeCollarStand($model)
+    {
+        /** @var Part $p */
+        $p = $this->parts['collarStand'];
+       
+        // Seam allowance
+        $p->offsetPath('sa', 'outline', 10, 1, ['class' => 'seam-allowance']);
+
+        // Button and buttonhole
+        // FIXME move to finalize
+        $p->newSnippet($p->newId('button'), 'button', -55, ['transform' => 'rotate('.(90-$p->angle(-32,-31)).' '.$p->x(-55).' '.$p->y(-55).')']);
+        $p->newSnippet($p->newId('buttonhole'), 'buttonhole', 55, ['transform' => 'rotate('.(90-$p->angle(32,31)).' '.$p->x(55).' '.$p->y(55).')']);
+
+        // Grainline
+        $p->newGrainline(-57, 57, $this->t('Grainline'));
+        
+        // Title
+        $p->clonePoint(56,'titleAnchor');
+        $p->addTitle('titleAnchor', 6, $this->t($p->title), '2x '.$this->t('from main fabric'),'horizontal');
     }
 
     /*

@@ -146,6 +146,8 @@ class SimonShirt extends JoostBodyBlock
         
         // Collar
         $this->finalizeCollarStand($model);
+        $this->finalizeCollar($model);
+        $this->finalizeUndercollar($model);
     }
 
     /**
@@ -1719,7 +1721,6 @@ class SimonShirt extends JoostBodyBlock
         
     }
 
-
     /**
      * Finalizes the collar stand
      *
@@ -1736,7 +1737,6 @@ class SimonShirt extends JoostBodyBlock
         $p->offsetPath('sa', 'outline', 10, 1, ['class' => 'seam-allowance']);
 
         // Button and buttonhole
-        // FIXME move to finalize
         $p->newSnippet($p->newId('button'), 'button', -55, ['transform' => 'rotate('.(90-$p->angle(-32,-31)).' '.$p->x(-55).' '.$p->y(-55).')']);
         $p->newSnippet($p->newId('buttonhole'), 'buttonhole', 55, ['transform' => 'rotate('.(90-$p->angle(32,31)).' '.$p->x(55).' '.$p->y(55).')']);
 
@@ -1747,6 +1747,54 @@ class SimonShirt extends JoostBodyBlock
         $p->clonePoint(56,'titleAnchor');
         $p->addTitle('titleAnchor', 6, $this->t($p->title), '2x '.$this->t('from main fabric'),'horizontal');
     }
+
+    /**
+     * Finalizes the collar
+     *
+     * @param \Freesewing\Model $model The model to draft for
+     *
+     * @return void
+     */
+    public function finalizeCollar($model)
+    {
+        /** @var Part $p */
+        $p = $this->parts['collar'];
+       
+        // Seam allowance
+        $p->offsetPath('sa', 'outline', 10, 1, ['class' => 'seam-allowance']);
+
+        // Grainline
+        $p->newGrainline(-11, 11, $this->t('Grainline'));
+        
+        // Title
+        $p->clonePoint(5,'titleAnchor');
+        $p->addTitle('titleAnchor', 7, $this->t($p->title), '1x '.$this->t('from main fabric'),'horizontal');
+    }
+
+    /**
+     * Finalizes the undercollar
+     *
+     * @param \Freesewing\Model $model The model to draft for
+     *
+     * @return void
+     */
+    public function finalizeUndercollar($model)
+    {
+        /** @var Part $p */
+        $p = $this->parts['undercollar'];
+       
+        // Seam allowance
+        // FIXME: This breaks things :(
+        //$p->offsetPath('sa', 'outline', 10, 1, ['class' => 'seam-allowance']);
+
+        // Grainline
+        $p->newGrainline(-11, 11, $this->t('Grainline'));
+        
+        // Title
+        $p->clonePoint(5,'titleAnchor');
+        $p->addTitle('titleAnchor', 8, $this->t($p->title), '1x '.$this->t('from main fabric'),'horizontal');
+    }
+
 
     /*
         ____                       _

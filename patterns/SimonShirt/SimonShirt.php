@@ -140,6 +140,9 @@ class SimonShirt extends JoostBodyBlock
         // Yoke and back
         $this->finalizeYoke();
         $this->finalizeBack();
+
+        // Sleeve
+        $this->finalizeSleeve();
     }
 
     /**
@@ -1005,6 +1008,8 @@ class SimonShirt extends JoostBodyBlock
         $p->newPath('sleevePacketCut', $this->v('sleevePacketCut'), ['class' => 'helpline']);   
         
         $outline = 'M -5 C -5 20 16 C 21 10 10 C 10 22 17 C 23 28 30 C 29 25 18 C 24 11 11 C 11 27 19 C 26 5 5  ';
+        $this->setValue('sleeveFfsaBase', "$outline L cuffRight");
+        $this->setValue('sleeveSaBase', 'M cuffRight '.$this->v('cuffHemline').' L -5');
         $outline .= $this->v('cuffHemline');
         $outline .= ' z'; 
         $p->newPath('seamline', $outline);
@@ -1682,6 +1687,38 @@ class SimonShirt extends JoostBodyBlock
         $p->newPoint('grainlineTop', $p->x(2)+40, $p->y(10)+10);
         $p->newPoint('grainlineBottom', $p->x('grainlineTop'), $p->y(4)-10);
         $p->newGrainline('grainlineBottom', 'grainlineTop', $this->t('Grainline'));
+    }
+
+    /**
+     * Finalizes the sleeve
+     *
+     * @param \Freesewing\Model $model The model to draft for
+     *
+     * @return void
+     */
+    public function finalizeSleeve($model)
+    {
+        /** @var Part $p */
+        $p = $this->parts['sleeve'];
+       
+        // Seam allowance
+        $p->offsetPathString('sa', $this->v('sleeveSaBase'), -10, 1, ['class' => 'seam-allowance']);
+
+        // Hem allowance
+        $p->offsetPathString('ffsa', $this->v('sleeveFfsaBase'), -20, 1, ['class' => 'seam-allowance']);
+
+        // Join SA
+        $p->newPath('saJoin', 'M sa-endPoint L ffsa-startPoint M ffsa-endPoint L sa-startPoint', ['class' => 'seam-allowance']);
+
+        // Title
+        $p->clonePoint(2,'titleAnchor');
+        $p->addTitle('titleAnchor', '3', $this->t($p->title), '2x '.$this->t('from main fabric'));
+        
+        // Grainline
+        $p->newPoint('grainlineTop', $p->x(14), $p->y(14));
+        $p->newPoint('grainlineBottom', $p->x('grainlineTop'), $p->y('cuffRight')-10);
+        $p->newGrainline('grainlineBottom', 'grainlineTop', $this->t('Grainline'));
+        
     }
 
     /*

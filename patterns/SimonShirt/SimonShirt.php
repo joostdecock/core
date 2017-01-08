@@ -132,10 +132,14 @@ class SimonShirt extends JoostBodyBlock
         
         $this->finalizeFrontRight($model);
         $this->finalizeFrontLeft($model);
+
         // Front plackets, if needed
         if($this->o('buttonPlacketType') == 2) $this->finalizeButtonPlacket($model);
         if($this->o('buttonholePlacketType') == 2) $this->finalizeButtonholePlacket($model);
+
+        // Yoke and back
         $this->finalizeYoke();
+        $this->finalizeBack();
     }
 
     /**
@@ -839,12 +843,22 @@ class SimonShirt extends JoostBodyBlock
         }
 
         // Paths
-        if($this->o('yokeDart') > 0) $outline = 'M -yokeDart1';
-        else $outline = 'M -10';
-        $outline .= ' C -18 -15 -14 C -16 -13 -5 C -6001 -6011 -6021 C -6031 -8002 -8001 C -6661 -6662 -6663 C -6664 -6665 -6666 C -6667 -6668 -6669 L 6660 ';
-        $outline .= 'L 6669 C 6668 6667 6666 C 6665 6664 6663 C 6662 6661 8001 C 8002 6031 6021 C 6011 6001 5 C 13 16 14 C 15 18';
-        if($this->o('yokeDart') > 0) $outline .= ' yokeDart1 C yokeDart1 yokeDart3 yokeDart2 L -yokeDart2 C -yokeDart3 -yokeDart1 -yokeDart1 z';
-        else $outline .= ' 10 z';
+        if($this->o('hemStyle') == 1) $outline = 'M 6666 L 6663 ';
+        else $outline = 'M 6663 ';
+        $outline .= 'C 6662 6661 8001 C 8002 6031 6021 C 6011 6001 5 C 13 16 14 C 15 18 ';
+        if($this->o('yokeDart') > 0) $outline .= ' yokeDart1 C yokeDart1 yokeDart3 yokeDart2 L -yokeDart2 C -yokeDart3 -yokeDart1 -yokeDart1 ';
+        else $outline .= ' 10 L -10 ';
+        $outline .= ' C -18 -15 -14 C -16 -13 -5 C -6001 -6011 -6021 C -6031 -8002 -8001 C -6661 -6662 -6663 ';
+        if($this->o('hemStyle') == 1) {
+            $outline .= 'L -6666 ';
+            $this->setValue('backHemBase', 'M -6666 C -6667 -6668 -6669 L 6660 L 6669 C 6668 6667 6666 ');
+            $this->setValue('backSaBase', $outline);
+        } else {
+            $this->setValue('backSaBase', $outline);
+            $outline .= 'C -6664 -6665 -6666 ';
+            $this->setValue('backHemBase', 'M -6663 C -6664 -6665 -6666 C -6667 -6668 -6669 L 6660 L 6669 C 6668 6667 6666 C 6665 6664 6663');
+        }
+        $outline .= 'C -6667 -6668 -6669 L 6660 L 6669 C 6668 6667 6666 C 6665 6664 6663 z';
 
         if ($this->v('waistReduction') > 100) { 
             $darts = 'M 6300 C 6300 6114 6122 C 6112 6110 6110 C 6110 6111 6121 C 6113 6300 6300 z ';
@@ -1635,6 +1649,38 @@ class SimonShirt extends JoostBodyBlock
         // Grainline
         $p->addPoint('grainlineTop', $p->shift(1,-25,20));
         $p->addPoint('grainlineBottom', $p->shift('centerBottom',25,20));
+        $p->newGrainline('grainlineBottom', 'grainlineTop', $this->t('Grainline'));
+    }
+
+    /**
+     * Finalizes the back
+     *
+     * @param \Freesewing\Model $model The model to draft for
+     *
+     * @return void
+     */
+    public function finalizeBack($model)
+    {
+        /** @var Part $p */
+        $p = $this->parts['back'];
+        
+        // Seam allowance
+        $p->offsetPathString('sa', $this->v('backSaBase'), 10, 1, ['class' => 'seam-allowance']);
+
+        // Hem allowance
+        $p->offsetPathString('hemSa', $this->v('backHemBase'), 30, 1, ['class' => 'seam-allowance']);
+
+        // Join SA
+        $p->newPath('saJoin', 'M sa-endPoint L hemSa-startPoint M hemSa-endPoint L sa-startPoint', ['class' => 'seam-allowance']);
+
+
+        // Title
+        $p->addPoint('titleAnchor', $p->shift(2,-90, 80)); 
+        $p->addTitle('titleAnchor', '3', $this->t($p->title), '1x '.$this->t('from main fabric'));
+        
+        // Grainline
+        $p->newPoint('grainlineTop', $p->x(2)+40, $p->y(10)+10);
+        $p->newPoint('grainlineBottom', $p->x('grainlineTop'), $p->y(4)-10);
         $p->newGrainline('grainlineBottom', 'grainlineTop', $this->t('Grainline'));
     }
 

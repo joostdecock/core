@@ -143,6 +143,8 @@ class SimonShirt extends JoostBodyBlock
 
         // Sleeve
         $this->finalizeSleeve($model);
+        $this->finalizeSleevePlacketUnderlap($model);
+        $this->finalizeSleevePlacketOverlap($model);
         
         // Collar
         $this->finalizeCollarStand($model);
@@ -1226,9 +1228,6 @@ class SimonShirt extends JoostBodyBlock
         $p->addPoint(11,$p->shift(9,0,10));
         $p->newPoint(12,$p->x(1)/2,$p->y(3)+$btndist);
         
-        // Button
-        $p->newSnippet($p->newId('button'), 'button', 12);
-        
         // Paths
         $p->newPath('outline', 'M 0 L 1 L 5 L 9 z');
         $p->newPath('foldline', 'M 2 L 6 M 7 L 3 M 4 L 8', ['class' => 'foldline']);
@@ -1793,6 +1792,49 @@ class SimonShirt extends JoostBodyBlock
         // Title
         $p->clonePoint(5,'titleAnchor');
         $p->addTitle('titleAnchor', 8, $this->t($p->title), '1x '.$this->t('from main fabric'),'horizontal');
+    }
+
+    /**
+     * Finalizes the sleevePlacketUnderlap
+     *
+     * @param \Freesewing\Model $model The model to draft for
+     *
+     * @return void
+     */
+    public function finalizeSleevePlacketUnderlap($model)
+    {
+        /** @var Part $p */
+        $p = $this->parts['sleevePlacketUnderlap'];
+       
+        // Button
+        $p->newSnippet($p->newId('button'), 'button', 12);
+        
+        // Title
+        $p->addPoint('titleAnchor', $p->shift(8,0,30));
+        $p->addTitle('titleAnchor', 10, $this->t($p->title), '2x '.$this->t('from main fabric'),'horizontal');
+    }
+
+    /**
+     * Finalizes the sleevePlacketOverlap
+     *
+     * @param \Freesewing\Model $model The model to draft for
+     *
+     * @return void
+     */
+    public function finalizeSleevePlacketOverlap($model)
+    {
+        /** @var Part $p */
+        $p = $this->parts['sleevePlacketOverlap'];
+       
+        // Button
+        //$p->newSnippet($p->newId('button'), 'button', 12);
+        
+        // Grainline
+        //$p->newGrainline(-11, 11, $this->t('Grainline'));
+        
+        // Title
+        $p->addPoint('titleAnchor', $p->shift(20,-35,30));
+        $p->addTitle('titleAnchor', 11, $this->t($p->title), '2x '.$this->t('from main fabric'),'horizontal');
     }
 
 

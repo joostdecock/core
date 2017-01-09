@@ -993,7 +993,9 @@ class Part
             } else {
                 $next = $array[$count];
             }
-            if (!isset($chunk['intersection'])) {
+            // FIXME: This check is disable because as it turns out, intersections can have gaps on their other end
+            // Before permanently removing this, I'd like to see whether this breaks other things
+            if (true or !isset($chunk['intersection'])) {
                 // Intersections have no gaps
                 if (isset($chunk['type']) && $chunk['type'] == 'line' && $next['type'] == 'line') {
                     if (!$this->isSamePoint($chunk['offset'][1], $next['offset'][0])) {

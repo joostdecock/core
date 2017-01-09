@@ -152,6 +152,7 @@ class SimonShirt extends JoostBodyBlock
         $this->finalizeCollarStand($model);
         $this->finalizeCollar($model);
         $this->finalizeUndercollar($model);
+
     }
 
     /**
@@ -716,10 +717,12 @@ class SimonShirt extends JoostBodyBlock
         // Paths
         if($this->o('buttonholePlacketStyle') == 1) {
             $outline = 'M 4108 C 41082 41081 9 L 4107 L 4007 L 4008 z'; // Classic style
+            $this->setValue('buttonholePlacketSaBase', 'M 4107 L 9 C 41081 41082 4108 L 4008 L 4007');
             $foldline = 'M 4104 L 4004 M 4101 L 4001';
             $helpline = 'M 4105 L 4005 M 4106 L 4006 M 4103 L 4003 M 4102 L 4002 M 4100 L 4000';
         } else {
             $outline = 'M 4108 C 41082 41081 4100 L 41086 C 41084 41085 41083 C 41088 41087 41089 L 4107 L 4007 L 4008 z'; // Seamless/French style
+            $this->setValue('buttonholePlacketSaBase', 'M 4107 L 41089 C 41087 41088 41083 C 41085 41084 41086 L 4100 C 41082 41081 4108 L 4008 L 4007');
             $foldline = 'M 41083 L 4002 M 4101 L 4001';
             $helpline = 'M 4100 L 4000';
         }
@@ -1614,10 +1617,13 @@ class SimonShirt extends JoostBodyBlock
         }
 
         // Seam allowance
-        $p->offsetPath('sa', 'outline', 10, 1, ['class' => 'seam-allowance']);
-        
+        $p->offsetPathString('sa', $this->v('buttonholePlacketSaBase'), -10, 1, ['class' => 'seam-allowance']);
+
+        // Join seam allowance ends
+        $p->newPath('joinSa', 'M 4107 L sa-startPoint M 4007 L sa-endPoint', ['class' => 'seam-allowance']); 
         // Title
-        $p->newPoint('titleAnchor', $p->x(41086), $p->y(2)+50);
+        if($this->o('buttonholePlacketStyle') == 2) $p->newPoint('titleAnchor', $p->x(41086), $p->y(2)+50);
+        else $p->newPoint('titleAnchor', $p->x(4100), $p->y(2)+50);
         $p->addTitle('titleAnchor', '2b', $this->t($p->title), '1x '.$this->t('from main fabric'), 'vertical');
     }
 

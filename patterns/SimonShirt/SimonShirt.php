@@ -455,6 +455,7 @@ class SimonShirt extends JoostBodyBlock
         if($this->o('buttonPlacketType') == 2) {
             // Separate button placket
             $seamline .= 'C 2051 2052 2041 L 2040 '; 
+            $this->setValue('frontRightSaBase', $seamline);
             $hemStart = 2040;
         } else { 
             // Cut-on button placket
@@ -466,17 +467,19 @@ class SimonShirt extends JoostBodyBlock
                 case 1: 
                     // Classic style placket
                     $seamline .= 'L -2017 C -2051 -2052 -2053 L 2043 L 2044 ';
+                    $this->setValue('frontRightSaBase', $seamline);
                     $plackethelp = 'M 2153 2040';
                     $p->newPath('buttonPlacketHelp2', 'M 2153 L 2040', ['class' => 'helpline']);
                     break;
                 case 2: 
                     // Seamless or French style placket
-                    $seamline .= 'L -2017 C -2051 -2052 -2053 C -2055 -2054 -2056 L 2043 L 2044 ';
+                    $seamline .= 'L -2017 C -2051 -2052 -2053 C -2055 -2054 -2056 L 2043 ';
+                    $this->setValue('frontRightSaBase', $seamline);
+                    $seamline .= 'L 2044 '; 
                     $p->newPath('buttonPlacketFold2', 'M -2053 L 2046', ['class' => 'foldline']);
                     break;
             }
         }
-        $this->setValue('frontRightSaBase', $seamline);
         $this->setValue('frontRightHemBase', $hemLine.$hemStart);
         $seamline .= 'L 6669 C 6668 6667 6666 C 6665 6664 6663 C 6662 6661 8001 C 8002 6031 6021 C 6011 5001 5 ';
 

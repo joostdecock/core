@@ -689,12 +689,14 @@ class SimonShirt extends JoostBodyBlock
         $foldline = 'M 2042 L 2045';
         $helpline = 'M 4 L 9';
 
-        $outline = 'M 2153 C 2152 2151 9 L -2017 C -2051 -2052 -2053 ';
+        $outline = 'M 2044 L 2040 L 2153 C 2152 2151 9 L -2017 C -2051 -2052 -2053 ';
         if($this->o('buttonPlacketStyle') == 2) {
             $outline .= 'C -2055 -2054 -2056 ';
             $foldline .= ' M -2053 L 2046';
         }
-        $outline .= 'L 2043 L 2044 L 2040 z';
+        $outline .= 'L 2043 ';
+        $this->setValue('buttonPlacketSeamlessSaBase', $outline);
+        $outline .= 'z';
 
         $p->newPath('outline', $outline);
         $p->newPath('helpline', $helpline, ['class' => 'helpline']);
@@ -1576,7 +1578,12 @@ class SimonShirt extends JoostBodyBlock
           $p->newSnippet($p->newId('button'), 'button', $extrapid);
         }
         // Seam allowance
-        $p->offsetPath('sa', 'outline', -10, 1, ['class' => 'seam-allowance']);
+        if($this->o('buttonPlacketStyle') == 2) {
+            $p->offsetPathString('sa', $this->v('buttonPlacketSeamlessSaBase'), -10, 1, ['class' => 'seam-allowance']);
+            // Join seam allowance ends
+            $p->newPath('joinSa', 'M 
+        } 
+        else $p->offsetPath('sa', 'outline', -10, 1, ['class' => 'seam-allowance']);
 
         // Title
         $p->newPoint('titleAnchor', $p->x(2042), $p->y(2)+50);

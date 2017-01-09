@@ -205,14 +205,14 @@ class Utils
      * Checks whether two points are (almost) the same.
      *
      * Checks whether two points are the same, or close enough to be considered the same.
-     * Close enough means less than 0.01 mm difference between their coordinates on each axis.
+     * Close enough means less than 0.1 mm difference between their coordinates on each axis.
      *
      * @param Point $point1 Point 1
      * @param Point $point2 Point 2
      *
      * @return bool True is they are the same. False if not.
      */
-    public static function isSamePoint($point1, $point2)
+    public static function isSamePoint(Point $point1, Point $point2)
     {
         if (round($point1->getX(), 1) == round($point2->getX(), 1) && round($point1->getY(), 1) == round($point2->getY(), 1)) {
             return true;

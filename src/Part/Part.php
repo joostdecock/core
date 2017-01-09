@@ -723,20 +723,16 @@ class Part
             // 2 lines
             $i = $this->linesCross($s1['offset'][0], $s1['offset'][1], $s2['offset'][0], $s2['offset'][1]);
             if ($i) {
-                foreach ($i as $key => $point) {
-                    // Ignore intersections at line end points
-                    if (Utils::isSamePoint($point, $this->loadPoint($s1['offset'][0])) or Utils::isSamePoint(
-                        $point,
-                        $this->loadPoint($s1['offset'][1])
-                    ) or Utils::isSamePoint(
-                        $point,
-                        $this->loadPoint($s2['offset'][0])
-                    ) or Utils::isSamePoint($point, $this->loadPoint($s2['offset'][1]))
-                    ) {
-                        unset($i[$key]);
-                    }
+                // Ignore intersections at line end points
+                if (
+                    Utils::isSamePoint($i, $this->loadPoint($s1['offset'][0])) or 
+                    Utils::isSamePoint($i, $this->loadPoint($s1['offset'][1])) or 
+                    Utils::isSamePoint($i, $this->loadPoint($s2['offset'][0])) or 
+                    Utils::isSamePoint($i, $this->loadPoint($s2['offset'][1]))
+                ) {
+                    unset($i);
                 }
-                $intersections = $this->keyArray(array($i), 'intersection-');
+                else $intersections = $this->keyArray(array($i), 'intersection-');
             }
         } elseif ($s1['type'] == 'curve' && $s2['type'] == 'curve') {
             // 2 curves

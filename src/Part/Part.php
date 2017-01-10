@@ -357,28 +357,41 @@ class Part
     {
         switch ($mode) {
             case 'vertical':
+            case 'vertical-small':
+                if($mode == 'vertical-small') $class = 'vertical small';
+                else $class = 'vertical';
                 if ($title != '') {
                     $msg = "\n$msg";
                 }
                 $anchor = $this->loadPoint($anchorKey);
                 $x = $anchor->getX();
                 $y = $anchor->getY();
-                $this->newText('partNumber', $anchorKey, $nr, ['class' => 'part-nr-vertical']);
+                $this->newText('partNumber', $anchorKey, $nr, ['class' => "part-nr $class"]);
                 $this->newText(
                     'partTitle', $anchorKey, $title,
-                    ['class' => 'part-title-vertical', 'transform' => "rotate(-90 $x $y)"]
+                    ['class' => "part-title $class", 'transform' => "rotate(-90 $x $y)"]
                 );
-                $this->newText('partMsg', $anchorKey, $msg, ['class' => 'part-msg-vertical', 'transform' => "rotate(-90 $x $y)"]);
+                $this->newText('partMsg', $anchorKey, $msg, ['class' => "part-msg $class", 'transform' => "rotate(-90 $x $y)"]);
                 break;
             case 'horizontal':
-                $this->newText('partNumber', $anchorKey, $nr, ['class' => 'part-nr-horizontal']);
-                $this->newText('partTitle', $anchorKey, $title, ['class' => 'part-title-horizontal']);
-                $this->newText('partMsg', $anchorKey, $msg, ['class' => 'part-msg-horizontal']);
+            case 'horizontal-small':
+                if($mode == 'horizontal-small') $class = 'horizontal small';
+                else $class = 'horizontal';
+                $this->newText('partNumber', $anchorKey, $nr, ['class' => "part-nr $class"]);
+                $this->newText('partTitle', $anchorKey, $title, ['class' => "part-title $class"]);
+                $this->newText('partMsg', $anchorKey, $msg, ['class' => "part-msg $class"]);
                 break;
+                $this->newText('partNumber', $anchorKey, $nr, ['class' => 'part-nr small']);
+                $this->newText('partTitle', $anchorKey, $title, ['class' => 'part-title small']);
+                $this->newText('partMsg', $anchorKey, $msg, ['class' => 'part-msg small']);
+                break;
+            case 'small':
             default:
-                $this->newText('partNumber', $anchorKey, $nr, ['class' => 'part-nr']);
-                $this->newText('partTitle', $anchorKey, $title, ['class' => 'part-title']);
-                $this->newText('partMsg', $anchorKey, $msg, ['class' => 'part-msg']);
+                if($mode == 'small') $class = 'small';
+                else $class = '';
+                $this->newText('partNumber', $anchorKey, $nr, ['class' => "part-nr $class"]);
+                $this->newText('partTitle', $anchorKey, $title, ['class' => "part-title $class"]);
+                $this->newText('partMsg', $anchorKey, $msg, ['class' => "part-msg $class"]);
         }
     }
 

@@ -58,59 +58,67 @@ text {
     text-anchor:start;
 }
 
-text.part-nr,
-text.part-nr-vertical,
-text.part-nr-horizontal { 
+/* Part title */
+
+text.part-nr {
     font-size: @font-size-nr; 
     text-anchor:middle; 
     fill: @black;
     font-family: @font-title; 
-}
-
-text.part-nr,
-text.part-nr-vertical {
     transform: translate(0px, -16px); /* FIXME: How do we do this with LESS based on @font-size-nr? */
 }
 
-text.part-nr-horizontal { 
-    text-anchor:end; 
+text.part-nr.horizontal { 
+    text-anchor:start; 
 }
 
-text.part-title, 
-text.part-title-vertical, 
-text.part-title-horizontal { 
+text.part-title { 
     font-size: @font-size-title;
     text-anchor:middle; 
     fill: @black;
     font-family: @font-title; 
 }
 
-text.part-title-horizontal { 
+text.part-title.horizontal { 
     text-anchor:start; 
-    transform: translate(5px, -7px); /* FIXME: How do we do this with LESS based on @font-size-nr? */
-}
-
-text.part-msg,
-text.part-msg-vertical,
-text.part-msg-horizontal { 
-    font-size: @font-size-lg;
-    text-anchor:middle; 
-    fill: @black; 
 }
 
 text.part-msg {
+    font-size: @font-size-lg;
+    text-anchor:middle; 
+    fill: @black; 
     transform: translate(0, 10px ); /* FIXME: How do we do this with LESS based on @font-size-title? */
 }
 
-text.part-title-vertical,
-text.part-msg-vertical { 
+text.part-title.vertical,
+text.part-msg.vertical { 
     text-anchor: end; 
 }
 
-text.part-msg-horizontal { 
+text.part-msg.horizontal { 
     text-anchor:start; 
-    transform: translate(5px, 3px ); /* FIXME: How do we do this with LESS based on @font-size-title? */
 }
+
+text.part-msg.vertical , 
+text.part-msg.small.vertical {
+    transform: inherit;
+}
+
+text.part-nr.small {
+    font-size: @font-size-nr-small; 
+    transform: translate(0px, -8px); /* FIXME: How do we do this with LESS based on @font-size-nr? */
+}
+
+text.part-title.small {
+    font-size: @font-size-title-small; 
+}
+
+text.part-msg.small {
+    font-size: @font-size-sm; 
+    transform: translate(0, 5px ); /* FIXME: How do we do this with LESS based on @font-size-title? */
+}
+
+/* Notes */
 
 text.note , 
 text.dimension-label { 

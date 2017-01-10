@@ -46,59 +46,63 @@ text {
   fill: #000000;
   text-anchor: start;
 }
-text.part-nr,
-text.part-nr-vertical,
-text.part-nr-horizontal {
+/* Part title */
+text.part-nr {
   font-size: 24px;
   text-anchor: middle;
   fill: #000000;
   font-family: 'Abril Fatface';
-}
-text.part-nr,
-text.part-nr-vertical {
   transform: translate(0px, -16px);
   /* FIXME: How do we do this with LESS based on @font-size-nr? */
 
 }
-text.part-nr-horizontal {
-  text-anchor: end;
+text.part-nr.horizontal {
+  text-anchor: start;
 }
-text.part-title,
-text.part-title-vertical,
-text.part-title-horizontal {
+text.part-title {
   font-size: 14px;
   text-anchor: middle;
   fill: #000000;
   font-family: 'Abril Fatface';
 }
-text.part-title-horizontal {
+text.part-title.horizontal {
   text-anchor: start;
-  transform: translate(5px, -7px);
-  /* FIXME: How do we do this with LESS based on @font-size-nr? */
-
 }
-text.part-msg,
-text.part-msg-vertical,
-text.part-msg-horizontal {
+text.part-msg {
   font-size: 7px;
   text-anchor: middle;
   fill: #000000;
-}
-text.part-msg {
   transform: translate(0, 10px);
   /* FIXME: How do we do this with LESS based on @font-size-title? */
 
 }
-text.part-title-vertical,
-text.part-msg-vertical {
+text.part-title.vertical,
+text.part-msg.vertical {
   text-anchor: end;
 }
-text.part-msg-horizontal {
+text.part-msg.horizontal {
   text-anchor: start;
-  transform: translate(5px, 3px);
+}
+text.part-msg.vertical,
+text.part-msg.small.vertical {
+  transform: inherit;
+}
+text.part-nr.small {
+  font-size: 12px;
+  transform: translate(0px, -8px);
+  /* FIXME: How do we do this with LESS based on @font-size-nr? */
+
+}
+text.part-title.small {
+  font-size: 7px;
+}
+text.part-msg.small {
+  font-size: 4px;
+  transform: translate(0, 5px);
   /* FIXME: How do we do this with LESS based on @font-size-title? */
 
 }
+/* Notes */
 text.note,
 text.dimension-label {
   fill: #4285f4;

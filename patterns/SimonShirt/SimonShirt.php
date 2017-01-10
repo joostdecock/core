@@ -1553,11 +1553,28 @@ class SimonShirt extends JoostBodyBlock
             $joinStart = 4108;
             $joinEnd = 4008;
         }
-        $p->newPath('joinSa', "M $joinStart L sa-endPoint M sa-startPoint L ffsa-startPoint M ffsa-endPoint L hemSa-startPoint M hemSa-endPoint L $joinEnd", ['class' => 'seam-allowance']);
+        $p->newPoint('joinArmhole', $p->x('ffsa-startPoint'), $p->y('sa-startPoint'));
+        $p->newPoint('joinSideHem', $p->x('ffsa-endPoint'), $p->y('hemSa-startPoint'));
+        $p->newPoint('joinHem', $p->x('sa-endPoint'), $p->y('hemSa-endPoint'));
+        $p->newPath('joinSa', 'M ffsa-startPoint L joinArmhole L sa-startPoint M ffsa-endPoint L joinSideHem L hemSa-startPoint M hemSa-endPoint L joinHem L sa-endPoint', ['class' => 'seam-allowance']);
         
         // Title
         $p->newPoint('titleAnchor', $p->x(5)/2, $p->y(2)+50);
         $p->addTitle('titleAnchor', 2, $this->t($p->title), '1x '.$this->t('from main fabric'));
+        
+        // Grainline
+        $p->addPoint('grainlineTop', $p->shift(9,0,50));
+        $p->newPoint('grainlineBottom', $p->x('grainlineTop'), $p->y(6660)-10);
+        $p->newGrainline('grainlineBottom', 'grainlineTop', $this->t('Grainline'));
+
+        // Notches
+        $notchHere = [10, 6021, 8001];
+        if($this->o('buttonholePlacketType') == 1) {
+            if($this->o('buttonPlacketStyle') == 1) $notchAlso = [4005, 6660, 4006, 4000, 4003, 4001, 4002, 4105, 4104, 4106, 4100, 4103, 4101, 4102];
+            else if($this->o('buttonPlacketStyle') == 2) $notchAlso = [4, 2045, 2046, -2053, 2042, 9];
+            $notchHere = array_merge($notchHere, $notchAlso);
+        }
+        foreach($notchHere as $i) $p->newSnippet($p->newId('notch'), 'notch', $i); 
     }
 
     /**

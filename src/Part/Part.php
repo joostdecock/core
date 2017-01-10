@@ -2568,4 +2568,17 @@ class Part
         $this->dimensions[] = $dimension;
     }
 
+
+    /**
+     * Adds notches to point IDs passed in an array
+     *
+     * This adds a notch snippet to all point IDs in the array passed to it
+     *
+     * @param array $points Array of point IDs
+     * @return void
+     */
+    public function notch($points)
+    {
+        foreach($points as $i) $this->newSnippet($this->newId('notch'), 'notch', $i); 
+    }
 }

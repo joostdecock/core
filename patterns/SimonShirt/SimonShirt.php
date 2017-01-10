@@ -1570,8 +1570,8 @@ class SimonShirt extends JoostBodyBlock
         // Notches
         $notchHere = [10, 6021, 8001];
         if($this->o('buttonholePlacketType') == 1) {
-            if($this->o('buttonPlacketStyle') == 1) $notchAlso = [4005, 6660, 4006, 4000, 4003, 4001, 4002, 4105, 4104, 4106, 4100, 4103, 4101, 4102];
-            else if($this->o('buttonPlacketStyle') == 2) $notchAlso = [4, 2045, 2046, -2053, 2042, 9];
+            if($this->o('buttonholePlacketStyle') == 1) $notchAlso = [4005, 6660, 4006, 4000, 4003, 4001, 4002, 4105, 4104, 4106, 4100, 4103, 4101, 4102];
+            else if($this->o('buttonholePlacketStyle') == 2) $notchAlso = [4002, 4001, 4, 41083, 4101, 9];
             $notchHere = array_merge($notchHere, $notchAlso);
         }
         foreach($notchHere as $i) $p->newSnippet($p->newId('notch'), 'notch', $i); 
@@ -1616,12 +1616,17 @@ class SimonShirt extends JoostBodyBlock
 
         // Title
         $p->newPoint('titleAnchor', $p->x(2042), $p->y(2)+50);
-        $p->addTitle('titleAnchor', '1b', $this->t($p->title), '1x '.$this->t('from main fabric'), 'vertical');
+        $p->addTitle('titleAnchor', '1b', $this->t($p->title), '1x '.$this->t('from main fabric'), 'vertical-small');
 
         // Grainline
         $p->addPoint('grainlineTop', $p->shift(2042,-45,10));
         $p->addPoint('grainlineBottom', $p->shift(2045,45,10));
         $p->newGrainline('grainlineBottom', 'grainlineTop', $this->t('Grainline'));
+
+        // Notches
+        if($this->o('buttonPlacketStyle') == 1) $notchHere = [4, 2045, 2042, 9];
+        else if($this->o('buttonPlacketStyle') == 2) $notchHere = [4, 2045, 2046, -2053, 2042, 9];
+        foreach($notchHere as $i) $p->newSnippet($p->newId('notch'), 'notch', $i); 
     }
 
 
@@ -1663,7 +1668,13 @@ class SimonShirt extends JoostBodyBlock
         // Title
         if($this->o('buttonholePlacketStyle') == 2) $p->newPoint('titleAnchor', $p->x(41086), $p->y(2)+50);
         else $p->newPoint('titleAnchor', $p->x(4100), $p->y(2)+50);
-        $p->addTitle('titleAnchor', '2b', $this->t($p->title), '1x '.$this->t('from main fabric'), 'vertical');
+        $p->addTitle('titleAnchor', '2b', $this->t($p->title), '1x '.$this->t('from main fabric'), 'vertical-small');
+        
+        // Notches
+        $notchHere = [10, 6021, 8001];
+        if($this->o('buttonholePlacketStyle') == 1) $notchHere = [4005, 6660, 4006, 4000, 4003, 4001, 4105, 4104, 4106, 4100, 4103, 4101];
+        else if($this->o('buttonholePlacketStyle') == 2) $notchHere = [4002, 4001, 4, 41083, 4101, 9];
+        foreach($notchHere as $i) $p->newSnippet($p->newId('notch'), 'notch', $i); 
     }
 
     /**
@@ -1855,7 +1866,7 @@ class SimonShirt extends JoostBodyBlock
         
         // Title
         $p->addPoint('titleAnchor', $p->shift(8,0,30));
-        $p->addTitle('titleAnchor', 10, $this->t($p->title), '2x '.$this->t('from main fabric'),'horizontal');
+        $p->addTitle('titleAnchor', 10, $this->t($p->title), '2x '.$this->t('from main fabric'),'horizontal-small');
     }
 
     /**

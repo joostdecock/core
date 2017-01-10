@@ -1472,7 +1472,10 @@ class SimonShirt extends JoostBodyBlock
         $p->offsetPathString('hemSa', $this->v('frontRightHemBase'), 30, 1, ['class' => 'seam-allowance']);
         
         // Join different offsets
-        $p->newPath('joinSa', 'M ffsa-startPoint L sa-startPoint M ffsa-endPoint L hemSa-startPoint M hemSa-endPoint L sa-endPoint', ['class' => 'seam-allowance']);
+        $p->newPoint('joinArmhole', $p->x('ffsa-startPoint'), $p->y('sa-startPoint'));
+        $p->newPoint('joinSideHem', $p->x('ffsa-endPoint'), $p->y('hemSa-startPoint'));
+        $p->newPoint('joinHem', $p->x('sa-endPoint'), $p->y('hemSa-endPoint'));
+        $p->newPath('joinSa', 'M ffsa-startPoint L joinArmhole L sa-startPoint M ffsa-endPoint L joinSideHem L hemSa-startPoint M hemSa-endPoint L joinHem L sa-endPoint', ['class' => 'seam-allowance']);
 
 
         // Title
@@ -1492,6 +1495,15 @@ class SimonShirt extends JoostBodyBlock
         $p->addPoint('grainlineTop', $p->shift(9,180,50));
         $p->newPoint('grainlineBottom', $p->x('grainlineTop'), $p->y(6660)-10);
         $p->newGrainline('grainlineBottom', 'grainlineTop', $this->t('Grainline'));
+
+        // Notches
+        $notchHere = [10, 6021, 8001];
+        if($this->o('buttonPlacketType') == 1) {
+            if($this->o('buttonPlacketStyle') == 1) $notchAlso = [2040, 4, 2045, 2041, 2042, 9];
+            else if($this->o('buttonPlacketStyle') == 2) $notchAlso = [4, 2045, 2046, -2053, 2042, 9];
+            $notchHere = array_merge($notchHere, $notchAlso);
+        }
+        foreach($notchHere as $i) $p->newSnippet($p->newId('notch'), 'notch', $i); 
     }
     
     /**
@@ -1581,7 +1593,7 @@ class SimonShirt extends JoostBodyBlock
         if($this->o('buttonPlacketStyle') == 2) {
             $p->offsetPathString('sa', $this->v('buttonPlacketSeamlessSaBase'), -10, 1, ['class' => 'seam-allowance']);
             // Join seam allowance ends
-            $p->newPath('joinSa', 'M 
+            $p->newPath('joinSa', 'M 2043 L sa-endPoint M 2044 L sa-startPoint', ['class' => 'seam-allowance']);
         } 
         else $p->offsetPath('sa', 'outline', -10, 1, ['class' => 'seam-allowance']);
 

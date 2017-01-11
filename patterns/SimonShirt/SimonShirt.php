@@ -1193,7 +1193,7 @@ class SimonShirt extends JoostBodyBlock
         $p->addPoint(-6,$p->shift(-6,90,2));
         
         // Paths
-        $outline = 'M 5 C 6 4 4 L 8 C 8 9 12 L -12 C -9 -8 -8 L -4 C -4 -6 5 z';  
+        $outline = 'M 4 L 8 C 8 9 12 L -12 C -9 -8 -8 L -4 C -4 -6 5 C 6 4 4 z';  
         $p->newPath('outline', $outline);
         $p->newPath('helpine', 'M 5 L 3', ['class' => 'helpline']);
     }
@@ -1806,7 +1806,7 @@ class SimonShirt extends JoostBodyBlock
         }
         else {
             // Closer to shoulder, shift along curve after joint point
-            $shift= $p->curveLen(5,5,26,19) + $p->curveLen(19,27,11,11);
+            $shift = $this->v('frontSleeveNotchDistance') - ($p->curveLen(5,5,26,19) + $p->curveLen(19,27,11,11));
             $p->addPoint('frontSleeveNotch', $p->shiftAlong(11,11,24,18,$shift));
         }
         // Distance to curveJoint at back
@@ -1838,11 +1838,6 @@ class SimonShirt extends JoostBodyBlock
             $p->addPoint('backSleeveNotch2', $p->shiftAlong(10,10,22,17,$shift-1.5));
         }
 
-
-        $this->msg("Front sleeve notch distance is ".$this->v('frontSleeveNotchDistance'));
-        $this->msg("Back sleeve notch distance is ".$this->v('backSleeveNotchDistance'));
-        $this->msg("Front split is $frontSplit ");
-        $this->msg("Back split is $backSplit ");
         $notchHere = [411, 'sleevePlacketCutTop', 30, 'frontSleeveNotch', 'backSleeveNotch1', 'backSleeveNotch2'];
         if($this->o('cuffDrape') <= 20) $notchAlso = ['pleatLeft', 'pleatCenter', 'pleatRight'];
         else $notchAlso = ['pleatOneLeft', 'pleatOneCenter', 'pleatOneRight','pleatTwoLeft', 'pleatTwoCenter', 'pleatTwoRight'];
@@ -1873,8 +1868,13 @@ class SimonShirt extends JoostBodyBlock
         $p->newGrainline(-57, 57, $this->t('Grainline'));
         
         // Title
-        $p->clonePoint(56,'titleAnchor');
-        $p->addTitle('titleAnchor', 6, $this->t($p->title), '2x '.$this->t('from main fabric'),'horizontal');
+        $p->addPoint('titleAnchor', $p->shift(56,0,30));
+        $p->addTitle('titleAnchor', 6, $this->t($p->title), '2x '.$this->t('from main fabric')." + ".'2x '.$this->t('from interfacing'), 'horizontal-small');
+
+        // Notches
+        $p->addPoint('collarStandNotch1', $p->shiftAlong(42,43,6,61,$this->v('yokeCollarOpeningLength')/2));
+        $p->addPoint('collarStandNotch2', $p->flipX('collarStandNotch1',0));
+        $p->notch(['collarStandNotch1', 'collarStandNotch2']);
     }
 
     /**
@@ -1896,8 +1896,8 @@ class SimonShirt extends JoostBodyBlock
         $p->newGrainline(-11, 11, $this->t('Grainline'));
         
         // Title
-        $p->clonePoint(5,'titleAnchor');
-        $p->addTitle('titleAnchor', 7, $this->t($p->title), '1x '.$this->t('from main fabric'),'horizontal');
+        $p->addPoint('titleAnchor', $p->shift(10,0,40));
+        $p->addTitle('titleAnchor', 7, $this->t($p->title), '1x '.$this->t('from main fabric'),'small');
     }
 
     /**
@@ -1913,15 +1913,14 @@ class SimonShirt extends JoostBodyBlock
         $p = $this->parts['undercollar'];
        
         // Seam allowance
-        // FIXME: This breaks things :(
-        //$p->offsetPath('sa', 'outline', 10, 1, ['class' => 'seam-allowance']);
+        $p->offsetPath('sa', 'outline', 10, 1, ['class' => 'seam-allowance']);
 
         // Grainline
         $p->newGrainline(-11, 11, $this->t('Grainline'));
         
         // Title
-        $p->clonePoint(5,'titleAnchor');
-        $p->addTitle('titleAnchor', 8, $this->t($p->title), '1x '.$this->t('from main fabric'),'horizontal');
+        $p->addPoint('titleAnchor', $p->shift(10,0,40));
+        $p->addTitle('titleAnchor', 8, $this->t($p->title), '1x '.$this->t('from main fabric'),'small');
     }
 
     /**
@@ -1938,9 +1937,11 @@ class SimonShirt extends JoostBodyBlock
        
         // Button
         $p->newSnippet($p->newId('button'), 'button', 12);
-        
+
+        // Helpline
+        $p->newPath('sa', 'M 10 L 11', ['class' => 'helpline']); 
         // Title
-        $p->addPoint('titleAnchor', $p->shift(8,0,30));
+        $p->addPoint('titleAnchor', $p->shift(8,0,15));
         $p->addTitle('titleAnchor', 10, $this->t($p->title), '2x '.$this->t('from main fabric'),'horizontal-small');
     }
 
@@ -1961,7 +1962,7 @@ class SimonShirt extends JoostBodyBlock
         
         // Title
         $p->addPoint('titleAnchor', $p->shift(20,-35,30));
-        $p->addTitle('titleAnchor', 11, $this->t($p->title), '2x '.$this->t('from main fabric'),'horizontal');
+        $p->addTitle('titleAnchor', 11, $this->t($p->title), '2x '.$this->t('from main fabric'),'horizontal-small');
     }
 
 
@@ -1977,9 +1978,12 @@ class SimonShirt extends JoostBodyBlock
         /** @var Part $p */
         $p = $this->parts['barrelCuff'];
 
+        // Seam allowance
+        $p->offsetPath('sa', 'outline', -10, 1, ['class' => 'seam-allowance']);
+
         // Title
         $p->newPoint('titleAnchor', 0, $p->y(-8));
-        $p->addTitle('titleAnchor', 11, $this->t($p->title), '4x '.$this->t('from main fabric'));
+        $p->addTitle('titleAnchor', 11, $this->t($p->title), '4x '.$this->t('from main fabric'), 'small');
     }
 
     /**
@@ -1993,6 +1997,9 @@ class SimonShirt extends JoostBodyBlock
     {
         /** @var Part $p */
         $p = $this->parts['frenchCuff'];
+
+        // Seam allowance
+        $p->offsetPath('sa', 'outline', -10, 1, ['class' => 'seam-allowance']);
 
         // Title
         $p->newPoint('titleAnchor', 0, $p->y(-3));

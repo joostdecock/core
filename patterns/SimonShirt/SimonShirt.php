@@ -783,7 +783,6 @@ class SimonShirt extends JoostBodyBlock
         /** @var Part $p */
         $p = $this->parts['back'];
     
-        //$p->newPoint( 5000 , $p->x(12)*0.666, $p->y(12)); // FIXME Can this be removed?
         $p->addPoint(8000, $p->shift(4,90,$this->o('lengthBonus')), 'Hips height');        
         $p->newPoint(8001, $p->x(6), $p->y(8000), 'Hips height');        
         $hin = ($this->v('hipsReduction'))/4;
@@ -886,10 +885,6 @@ class SimonShirt extends JoostBodyBlock
             $p->newPath('darts', $darts);
         }
         
-        $p->newPath('acrossBackLine', 'M -10 L 10', ['class' => 'helpline']);
-        $p->newPath('chestLine', 'M -5 L 5', ['class' => 'helpline']);
-        $p->newPath('waistLine', 'M -6021 L 6021', ['class' => 'helpline']);
-        $p->newPath('hipsLine', 'M 8001 L -8001', ['class' => 'helpline']);
         $p->newPath('outline', $outline);
         
         // Store armhole curve length
@@ -1503,7 +1498,10 @@ class SimonShirt extends JoostBodyBlock
             else if($this->o('buttonPlacketStyle') == 2) $notchAlso = [4, 2045, 2046, -2053, 2042, 9];
             $notchHere = array_merge($notchHere, $notchAlso);
         }
-        foreach($notchHere as $i) $p->newSnippet($p->newId('notch'), 'notch', $i); 
+        $p->notch($notchHere);
+
+        // Store front sleeveNotch distance
+        $this->setValue('frontSleeveNotchDistance', $p->curveLen(5,13,16,14) + $p->curveLen(14,15,18,10));
     }
     
     /**
@@ -1574,7 +1572,7 @@ class SimonShirt extends JoostBodyBlock
             else if($this->o('buttonholePlacketStyle') == 2) $notchAlso = [4002, 4001, 4, 41083, 4101, 9];
             $notchHere = array_merge($notchHere, $notchAlso);
         }
-        foreach($notchHere as $i) $p->newSnippet($p->newId('notch'), 'notch', $i); 
+        $p->notch($notchHere);
     }
 
     /**
@@ -1626,7 +1624,7 @@ class SimonShirt extends JoostBodyBlock
         // Notches
         if($this->o('buttonPlacketStyle') == 1) $notchHere = [4, 2045, 2042, 9];
         else if($this->o('buttonPlacketStyle') == 2) $notchHere = [4, 2045, 2046, -2053, 2042, 9];
-        foreach($notchHere as $i) $p->newSnippet($p->newId('notch'), 'notch', $i); 
+        $p->notch($notchHere);
     }
 
 
@@ -1674,7 +1672,7 @@ class SimonShirt extends JoostBodyBlock
         $notchHere = [10, 6021, 8001];
         if($this->o('buttonholePlacketStyle') == 1) $notchHere = [4005, 6660, 4006, 4000, 4003, 4001, 4105, 4104, 4106, 4100, 4103, 4101];
         else if($this->o('buttonholePlacketStyle') == 2) $notchHere = [4002, 4001, 4, 41083, 4101, 9];
-        foreach($notchHere as $i) $p->newSnippet($p->newId('notch'), 'notch', $i); 
+        $p->notch($notchHere);
     }
 
     /**
@@ -1698,7 +1696,7 @@ class SimonShirt extends JoostBodyBlock
 
         // Title
         if($this->o('splitYoke') == 1) {
-            $p->newPoint('titleAnchor', $p->x(8), $p->y(1)+40); 
+            $p->newPoint('titleAnchor', $p->x(12)/2, $p->y(10)/2); 
             $p->addTitle('titleAnchor', '4', $this->t($p->title), '4x '.$this->t('from main fabric'));
         } else {
             $p->newPoint('titleAnchor', $p->x(1), $p->y(1)+60); 
@@ -1706,9 +1704,13 @@ class SimonShirt extends JoostBodyBlock
         }
 
         // Grainline
-        $p->addPoint('grainlineTop', $p->shift(1,-25,20));
-        $p->addPoint('grainlineBottom', $p->shift('centerBottom',25,20));
+        $p->addPoint('grainlineTop', $p->shift(8,-90,5));
+        $p->newPoint('grainlineBottom', $p->x('grainlineTop'), $p->y('centerBottom')-5);
         $p->newGrainline('grainlineBottom', 'grainlineTop', $this->t('Grainline'));
+        
+        // Notches
+        $p->notch([10]);
+        if($this->o('splitYoke') == 0) $p->notch(-10);
     }
 
     /**
@@ -1730,8 +1732,15 @@ class SimonShirt extends JoostBodyBlock
         $p->offsetPathString('hemSa', $this->v('backHemBase'), 30, 1, ['class' => 'seam-allowance']);
 
         // Join SA
-        $p->newPath('saJoin', 'M sa-endPoint L hemSa-startPoint M hemSa-endPoint L sa-startPoint', ['class' => 'seam-allowance']);
+        $p->newPoint('joinHemLeft', $p->x('sa-endPoint'), $p->y('hemSa-startPoint'));
+        $p->addPoint('joinHemRight', $p->flipX('joinHemLeft', 0));
 
+        $p->newPath('saJoin', 'M sa-endPoint L joinHemLeft L hemSa-startPoint M hemSa-endPoint L joinHemRight L sa-startPoint', ['class' => 'seam-allowance']);
+
+        // Helplines
+        $p->newPath('chestLine', 'M -5 L 5', ['class' => 'helpline']);
+        $p->newPath('waistLine', 'M -6021 L 6021', ['class' => 'helpline']);
+        $p->newPath('hipsLine', 'M 8001 L -8001', ['class' => 'helpline']);
 
         // Title
         $p->addPoint('titleAnchor', $p->shift(2,-90, 80)); 
@@ -1741,6 +1750,15 @@ class SimonShirt extends JoostBodyBlock
         $p->newPoint('grainlineTop', $p->x(2)+40, $p->y(10)+10);
         $p->newPoint('grainlineBottom', $p->x('grainlineTop'), $p->y(4)-10);
         $p->newGrainline('grainlineBottom', 'grainlineTop', $this->t('Grainline'));
+        
+        // Notches
+        $p->notch([6021, -6021, 8001, -8001]);
+        if($this->o('yokeDart') > 0) $p->notch(['yokeDart1', '-yokeDart1']);
+        else $p->notch([10, -10]);
+        
+        // Store back sleeveNotch distance
+        if($this->o('yokeDart') > 0) $this->setValue('backSleeveNotchDistance', $p->curveLen(5,13,16,14) + $p->curveLen(14,15,18,'yokeDart1'));
+        else $this->setValue('backSleeveNotchDistance', $p->curveLen(5,13,16,14) + $p->curveLen(14,15,18,10));
     }
 
     /**
@@ -1760,9 +1778,10 @@ class SimonShirt extends JoostBodyBlock
 
         // Hem allowance
         $p->offsetPathString('ffsa', $this->v('sleeveFfsaBase'), -20, 1, ['class' => 'seam-allowance']);
-
+        
         // Join SA
-        $p->newPath('saJoin', 'M sa-endPoint L ffsa-startPoint M ffsa-endPoint L sa-startPoint', ['class' => 'seam-allowance']);
+        $p->newPoint('joinHemRight', $p->x('ffsa-endPoint'), $p->y('sa-startPoint'));
+        $p->newPath('saJoin', 'M sa-endPoint L ffsa-startPoint M ffsa-endPoint L joinHemRight L sa-startPoint', ['class' => 'seam-allowance']);
 
         // Title
         $p->clonePoint(2,'titleAnchor');
@@ -1772,7 +1791,63 @@ class SimonShirt extends JoostBodyBlock
         $p->newPoint('grainlineTop', $p->x(14), $p->y(14));
         $p->newPoint('grainlineBottom', $p->x('grainlineTop'), $p->y('cuffRight')-10);
         $p->newGrainline('grainlineBottom', 'grainlineTop', $this->t('Grainline'));
-        
+
+        // Notches
+        // Distance to curveJoint at front
+        $frontSplit = $p->curveLen(5,5,26,19) + $p->curveLen(19,27,11,11);
+        if($frontSplit == $this->v('frontSleeveNotchDistance')) {
+            // Falls at curve joint, just clone joint point 11
+            $p->clonePoint(11, 'frontSleeveNotch'); 
+        }
+        else if ($frontSplit > $this->v('frontSleeveNotchDistance')) {
+            // Closer to armhole, shift along curve before joint point 11
+            $shift = $this->v('frontSleeveNotchDistance') - $p->curveLen(5,5,26,19);
+            $p->addPoint( 'frontSleeveNotch', $p->shiftAlong(19,27,11,11,$shift));
+        }
+        else {
+            // Closer to shoulder, shift along curve after joint point
+            $shift= $p->curveLen(5,5,26,19) + $p->curveLen(19,27,11,11);
+            $p->addPoint('frontSleeveNotch', $p->shiftAlong(11,11,24,18,$shift));
+        }
+        // Distance to curveJoint at back
+        $backSplit = $p->curveLen(-5,-5,20,16) + $p->curveLen(16,21,10,10);
+        if($backSplit == $this->v('backSleeveNotchDistance')) {
+            // Falls at curve joint, just clone joint point 10
+            $p->clonePoint(10, 'backSleeveNotch'); 
+            $p->addPoint('frontSleeveNotch1', $p->shiftAlong(10,10,21,16,2.5));
+            $p->addPoint('frontSleeveNotch2', $p->shiftAlong(10,10,22,17,2.5));
+        }
+        else if ($backSplit > $this->v('backSleeveNotchDistance')) {
+            // Closer to armhole, shift along curve before joint point 11
+            // FIXME: there is a bug lurking here where it is possible our shift brings
+            // us closer than 1.5 mm to the edge of the curve
+            // In that case, this shiftAlong() operation will run out of
+            // curve to move along and throw an exception
+            $shift = $this->v('backSleeveNotchDistance') - $p->curveLen(-5,-5,20,16);
+            $p->addPoint( 'backSleeveNotch1', $p->shiftAlong(16,21,10,10,$shift+1.5));
+            $p->addPoint( 'backSleeveNotch1', $p->shiftAlong(16,21,10,10,$shift-1.5));
+        }
+        else {
+            // Closer to shoulder, shift along curve after joint point
+            $shift = $this->v('backSleeveNotchDistance') - ( $p->curveLen(-5,-5,20,16) + $p->curveLen(16,21,10,10) );
+            // FIXME: there is a bug lurking here where it is possible our shift brings
+            // us closer than 1.5 mm to the edge of the curve
+            // In that case, this shiftAlong() operation will run out of
+            // curve to move along and throw an exception
+            $p->addPoint('backSleeveNotch1', $p->shiftAlong(10,10,22,17,$shift+1.5));
+            $p->addPoint('backSleeveNotch2', $p->shiftAlong(10,10,22,17,$shift-1.5));
+        }
+
+
+        $this->msg("Front sleeve notch distance is ".$this->v('frontSleeveNotchDistance'));
+        $this->msg("Back sleeve notch distance is ".$this->v('backSleeveNotchDistance'));
+        $this->msg("Front split is $frontSplit ");
+        $this->msg("Back split is $backSplit ");
+        $notchHere = [411, 'sleevePlacketCutTop', 30, 'frontSleeveNotch', 'backSleeveNotch1', 'backSleeveNotch2'];
+        if($this->o('cuffDrape') <= 20) $notchAlso = ['pleatLeft', 'pleatCenter', 'pleatRight'];
+        else $notchAlso = ['pleatOneLeft', 'pleatOneCenter', 'pleatOneRight','pleatTwoLeft', 'pleatTwoCenter', 'pleatTwoRight'];
+        $notchHere = array_merge($notchHere, $notchAlso);
+        $p->notch($notchHere);
     }
 
     /**

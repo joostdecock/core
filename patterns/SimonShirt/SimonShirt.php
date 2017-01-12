@@ -158,6 +158,9 @@ class SimonShirt extends JoostBodyBlock
             $this->paperlessFrontRight($model);
             $this->paperlessFrontLeft($model);
             if($this->o('buttonPlacketType') == 2) $this->paperlessButtonPlacket($model);
+            if($this->o('buttonholePlacketType') == 2) $this->paperlessButtonholePlacket($model);
+            $this->paperlessYoke($model);
+            $this->paperlessBack($model);
         }
     }
 
@@ -1678,6 +1681,11 @@ class SimonShirt extends JoostBodyBlock
         else $p->newPoint('titleAnchor', $p->x(4100), $p->y(2)+50);
         $p->addTitle('titleAnchor', '2b', $this->t($p->title), '1x '.$this->t('from main fabric'), 'vertical-small');
         
+        // Extra hem allowance
+        if($this->o('buttonholePlacketStyle') == 1) $shiftThese = ['sa-endPoint', 'sa-line-4007TO4008', 'sa-line-4008TO4007', 'sa-line-4008TO4108XllXsa-line-4008TO4007'];
+        else $shiftThese = ['sa-line-4007TO4008', 'sa-line-4008TO4007', 'sa-line-4008TO4108XllXsa-line-4008TO4007'];
+        foreach($shiftThese as $i) $p->addPoint($i, $p->shift($i,-90,20));
+        
         // Notches
         $notchHere = [10, 6021, 8001];
         if($this->o('buttonholePlacketStyle') == 1) $notchHere = [4005, 6660, 4006, 4000, 4003, 4001, 4105, 4104, 4106, 4100, 4103, 4101];
@@ -2239,8 +2247,103 @@ class SimonShirt extends JoostBodyBlock
         }
 
         // Height
-        $p->newHeightDimension(2044, 9, $p->x(2044)+40);  // Distance to next button
-        
-        
+        $p->newHeightDimension(2044, 9, $p->x(2044)+40);  // Total height
     }
+    
+    /**
+     * Adds paperless info for the buttonhole placket
+     *
+     * @param \Freesewing\Model $model The model to draft for
+     *
+     * @return void
+     */
+    public function paperlessButtonholePlacket($model)
+    {
+        /** @var Part $p */
+        $p = $this->parts['buttonholePlacket'];
+        
+        // Widths
+        if($this->o('buttonholePlacketStyle') == 2) {
+            $p->newWidthDimensionSm(4007, 4002, $p->y(4002)+45);  // To buttonholes
+            $p->newWidthDimensionSm(4007, 4001, $p->y(4002)+55);  // To fold
+            $p->newWidthDimensionSm(4007, 4, $p->y(4002)+65);  // To second fold
+            $p->newWidthDimension(4007, 4008, $p->y(4002)+80);  // To second fold
+        } else {
+            $p->newWidthDimensionSm(4007, 4004, $p->y(4007)+45);  // To first fold
+            $p->newWidthDimensionSm(4007, 4000, $p->y(4007)+55);  // To buttonholes
+            $p->newWidthDimensionSm(4007, 4003, $p->y(4007)+65);  // To second fold
+            $p->newWidthDimension(4007, 4008, $p->y(4007)+80);  // To second fold
+
+        }
+        
+        // Button heighs
+        // First button
+        $p->newHeightDimension(4008,3000, $p->x(4008)+25);  // Distance to first button
+        // Next buttons
+        for($i=1;$i<$this->o('buttons');$i++) {
+            $pid = 2999+$i;
+            $nid = 3000+$i;
+            $p->newHeightDimension($pid, $nid, $p->x(4008)+25);  // Distance to next button
+        }
+        // Extra top button
+        if($this->o('extraTopButton')) {
+            $pid++;
+            $nid++;
+            $p->newHeightDimension($pid, $nid, $p->x(4008)+25);  // Distance to next button
+        }
+
+        // Height
+        $p->newHeightDimension(4008, 9, $p->x(4008)+40);  // Total height
+    }
+    
+    /**
+     * Adds paperless info for the yoke
+     *
+     * @param \Freesewing\Model $model The model to draft for
+     *
+     * @return void
+     */
+    public function paperlessYoke($model)
+    {
+        /** @var Part $p */
+        $p = $this->parts['yoke'];
+
+        // Widths
+        if($this->o('splitYoke') == 1) { // Split yoke
+            $p->newWidthDimension('centerBottom', 10, $p->y(10)+25);  // Total width
+            $p->newWidthDimension(1, 8, $p->y(8)-25);  // Neck cutout width
+            $p->newWidthDimension(1, 12, $p->y(8)-40);  // Shoulder width
+            $p->newHeightDimensionSm(1, 8, $p->x(1)-25);  // Neck cutout depth
+        } else {
+            $p->newWidthDimension(-10, 10, $p->y(10)+25);  // Total width
+            $p->newWidthDimension(-8, 8, $p->y(8)-25);  // Neck cutout width
+            $p->newWidthDimension(-12, 12, $p->y(8)-40);  // Shoulder width
+            $p->newHeightDimensionSm(1, -8, $p->x(1));  // Neck cutout depth
+        }
+
+        // Heights
+        $p->newHeightDimension(10, 12, $p->x(10)+40);  // Shoulder height
+        $p->newHeightDimension(10, 8, $p->x(10)+55);  // Total height
+
+        // Linear
+        $p->newLinearDimension(8, 12, -15);  // Shoulder length
+
+        // Curved
+        $p->newCurvedDimension('M 10 C 17 19 12', 25);  // Armhole curve length
+
+    }
+    
+    /**
+     * Adds paperless info for the back
+     *
+     * @param \Freesewing\Model $model The model to draft for
+     *
+     * @return void
+     */
+    public function paperlessBack($model)
+    {
+        /** @var Part $p */
+        $p = $this->parts['back'];
+    }
+
 }

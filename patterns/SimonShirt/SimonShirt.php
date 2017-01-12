@@ -153,6 +153,12 @@ class SimonShirt extends JoostBodyBlock
         $this->finalizeCollar($model);
         $this->finalizeUndercollar($model);
 
+        if ($this->isPaperless) {
+            // Add paperless info to all parts
+            $this->paperlessFrontRight($model);
+            $this->paperlessFrontLeft($model);
+            if($this->o('buttonPlacketType') == 2) $this->paperlessButtonPlacket($model);
+        }
     }
 
     /**
@@ -608,9 +614,8 @@ class SimonShirt extends JoostBodyBlock
         
         if($this->o('buttonholePlacketType')==2) {
             // Sewn-on
-            $seamline .= 'C 41091 41092 4108 '; 
+            $seamline .= 'C 41091 41092 4108 L 4008 '; 
             $this->setValue('frontLeftSaBase', $seamline);
-            $seamline .= 'L 4008 ';
         } else {
             // Cut-on
             $seamline .= 'C 20 21 9 '; 
@@ -1612,6 +1617,11 @@ class SimonShirt extends JoostBodyBlock
         } 
         else $p->offsetPath('sa', 'outline', -10, 1, ['class' => 'seam-allowance']);
 
+        // Extra hem allowance
+        if($this->o('buttonPlacketStyle') == 1) $shiftThese = ['sa-line-2040TO2044XllXsa-line-2040TO2153', 'sa-line-2040TO2044', 'sa-line-2044TO2043XllXsa-line-2044TO2040', 'sa-line-2044TO2040'];
+        else $shiftThese = ['sa-line-2040TO2044XllXsa-line-2040TO2153', 'sa-line-2040TO2044', 'sa-line-2044TO2040', 'sa-startPoint'];
+        foreach($shiftThese as $i) $p->addPoint($i, $p->shift($i,-90,20));
+
         // Title
         $p->newPoint('titleAnchor', $p->x(2042), $p->y(2)+50);
         $p->addTitle('titleAnchor', '1b', $this->t($p->title), '1x '.$this->t('from main fabric'), 'vertical-small');
@@ -1814,8 +1824,8 @@ class SimonShirt extends JoostBodyBlock
         if($backSplit == $this->v('backSleeveNotchDistance')) {
             // Falls at curve joint, just clone joint point 10
             $p->clonePoint(10, 'backSleeveNotch'); 
-            $p->addPoint('frontSleeveNotch1', $p->shiftAlong(10,10,21,16,2.5));
-            $p->addPoint('frontSleeveNotch2', $p->shiftAlong(10,10,22,17,2.5));
+            $p->addPoint('backSleeveNotch1', $p->shiftAlong(10,10,21,16,2.5));
+            $p->addPoint('backSleeveNotch2', $p->shiftAlong(10,10,22,17,2.5));
         }
         else if ($backSplit > $this->v('backSleeveNotchDistance')) {
             // Closer to armhole, shift along curve before joint point 11
@@ -1824,6 +1834,7 @@ class SimonShirt extends JoostBodyBlock
             // In that case, this shiftAlong() operation will run out of
             // curve to move along and throw an exception
             $shift = $this->v('backSleeveNotchDistance') - $p->curveLen(-5,-5,20,16);
+            $p->addPoint( 'backSleeveNotch', $p->shiftAlong(16,21,10,10,$shift));
             $p->addPoint( 'backSleeveNotch1', $p->shiftAlong(16,21,10,10,$shift+1.5));
             $p->addPoint( 'backSleeveNotch1', $p->shiftAlong(16,21,10,10,$shift-1.5));
         }
@@ -1834,6 +1845,7 @@ class SimonShirt extends JoostBodyBlock
             // us closer than 1.5 mm to the edge of the curve
             // In that case, this shiftAlong() operation will run out of
             // curve to move along and throw an exception
+            $p->addPoint('backSleeveNotch', $p->shiftAlong(10,10,22,17,$shift));
             $p->addPoint('backSleeveNotch1', $p->shiftAlong(10,10,22,17,$shift+1.5));
             $p->addPoint('backSleeveNotch2', $p->shiftAlong(10,10,22,17,$shift-1.5));
         }
@@ -2028,5 +2040,207 @@ class SimonShirt extends JoostBodyBlock
     {
         /** @var Part $p */
         $p = $this->parts['frontRight'];
+
+        // Widths
+        $yBase = $p->y(2045);
+        if($this->o('buttonPlacketType') == 1) {
+            if($this->o('buttonPlacketStyle') == 1) {
+                $p->newWidthDimensionSm(2045, 2044, $yBase+45);  // To placket fold
+                $p->newWidthDimensionSm(4, 2044, $yBase+55);  // To buttons
+                $p->newWidthDimensionSm(2040, 2044, $yBase+65);  // To placket seam
+            } else {
+                $p->newWidthDimensionSm(2046, 2044, $yBase+45);  // To first placket fold
+                $p->newWidthDimensionSm(2045, 2044, $yBase+55);  // To second placket fold
+                $p->newWidthDimensionSm(4, 2044, $yBase+65);  // To buttons
+            }
+        }
+        
+        if($this->o('buttonPlacketType') == 1) $rightEdge = 2044;
+        else $rightEdge = 2040;
+    
+        $p->newWidthDimension(6663, $rightEdge, $yBase+80);  // Width at hem
+        $p->newWidthDimension(8001, $rightEdge, $p->y(8001)+15);  // Width at hips
+        $p->newWidthDimension(6021, $rightEdge, $p->y(6021)+15);  // Width at waist
+        $p->newWidthDimension(5   , $rightEdge, $p->y(5)+15);  // Width at arm hole bottom
+        $p->newWidthDimension(10  , $rightEdge, $p->y(10)+15);  // Width at arm pitch point
+        $p->newWidthDimension(8   , $rightEdge, $p->y(8)-25);  // Width at the neck opening
+        $p->newWidthDimension(12  , $rightEdge, $p->y(8)-40);  // Width to the shoulder point
+
+        // Heights on the left
+        $xBase = $p->x(6663)-20;
+        if($this->o('hemStyle') == 2 || $this->o('hemStyle') == 3) {
+            $xBase -= 15;
+            $p->newHeightDimension(2045,6663,$xBase);  // Height of baseball/slashed hem
+        }
+        $p->newHeightDimension(2045,8000, $xBase-15);  // Height of the hip line
+        $p->newHeightDimension(2045,6021, $xBase-30);  // Height of the waist line
+        $p->newHeightDimension(2045,5, $xBase-45);  // Height of the armhole
+        $p->newHeightDimension(2045,10, $xBase-60);  // Height of arm pitch point
+        $p->newHeightDimension(2045,12, $xBase-75);  // Height of the shoulder point
+        $p->newHeightDimension(2045,8, $xBase-90);  // Height total
+
+        // Button heighs, only if placket is attached
+        if($this->o('buttonPlacketType') == 1) {
+            // First button
+            $p->newHeightDimension(2045,3000, $p->x(2044)+25);  // Distance to next button
+            // Next buttons
+            for($i=1;$i<$this->o('buttons');$i++) {
+                $pid = 2999+$i;
+                $nid = 3000+$i;
+                $p->newHeightDimension($pid, $nid, $p->x(2044)+25);  // Distance to next button
+            }
+            // Extra top button
+            if($this->o('extraTopButton')) {
+                $pid++;
+                $nid++;
+                $p->newHeightDimension($pid, $nid, $p->x(2044)+25);  // Distance to next button
+            }
+        
+        }
+
+        // Linear dimensions
+        $p->newLinearDimension(12,8,-25);  // Shoulder length
+
+        // Curve lengths
+        $p->newCurvedDimension('M 5 C 13 16 14 C 15 18 10 C 17 19 12', -25);  // Armhole length
+        if($this->o('buttonPlacketType') == 1) $p->newCurvedDimension('M 8 C 20 21 9', -25);  // Neckopening length
+        else $p->newCurvedDimension('M 8 C 2051 2052 2153', -25);
+
+        // Notes
+        $p->addPoint('saNoteAnchor', $p->shift(10,180,5));
+        $p->newNote('saNote', 'saNoteAnchor', $this->t("Standard\nseam\nallowance"), 2, 40, 0);
+        $p->addPoint('ffsaNoteAnchor', $p->shift(6021,180,10));
+        $p->newNote('ffsaNote', 'ffsaNoteAnchor', $this->t("Flat-felled\nseam\nallowance")."\n(".$this->unit(20).')', 2, 40, 0);
+        $p->addPoint('hemNoteAnchor', $p->shift(6668,-90,15));
+        $p->newNote('hemNote', 'hemNoteAnchor', $this->t("Hem\nseam\nallowance")."\n(".$this->unit(30).')', 12, 40, 0);
+
+    }
+
+    /**
+     * Adds paperless info for the front left
+     *
+     * @param \Freesewing\Model $model The model to draft for
+     *
+     * @return void
+     */
+    public function paperlessFrontLeft($model)
+    {
+        /** @var Part $p */
+        $p = $this->parts['frontLeft'];
+
+        // Widths
+        $yBase = $p->y(6660);
+        if($this->o('buttonholePlacketType') == 1) {
+            if($this->o('buttonholePlacketStyle') == 1) {
+                $p->newWidthDimensionSm(4007, 4004, $yBase+45);  // To first fold
+                $p->newWidthDimensionSm(4007, 4000, $yBase+55);  // To buttonholes
+                $p->newWidthDimensionSm(4007, 4001, $yBase+65);  // To second fold
+                $p->newWidthDimensionSm(4005, 4006, $yBase-10);  // First fold width
+                $p->newWidthDimensionSm(4003, 4002, $yBase-10);  // Second fold width
+            } else {
+                $p->newWidthDimensionSm(4007, 4002, $yBase+45);  // To first placket fold
+                $p->newWidthDimensionSm(4007, 4001, $yBase+55);  // To second placket fold
+                $p->newWidthDimensionSm(4007, 4000, $yBase+65);  // To buttonholes
+            }
+        }
+        if($this->o('buttonholePlacketType') == 1) $leftEdge = 4007;
+        else $leftEdge = 4008;
+    
+        $p->newWidthDimension($leftEdge, 6663,$yBase+80);  // Width at hem
+        $p->newWidthDimension($leftEdge, 8001,$p->y(8001)+15);  // Width at hips
+        $p->newWidthDimension($leftEdge, 6021,$p->y(6021)+15);  // Width at waist
+        $p->newWidthDimension($leftEdge, 5,$p->y(5)+15);  // Width at arm hole bottom
+        $p->newWidthDimension($leftEdge, 10,$p->y(10)+15);  // Width at arm pitch point
+        $p->newWidthDimension($leftEdge, 8,$p->y(8)-25);  // Width at the neck opening
+        $p->newWidthDimension($leftEdge, 12,$p->y(8)-40);  // Width to the shoulder point
+
+        // Heights on the left
+        $xBase = $p->x(6663)+20;
+        if($this->o('hemStyle') == 2 || $this->o('hemStyle') == 3) {
+            $xBase += 20;
+            $p->newHeightDimension(2045,6663,$xBase);  // Height of baseball/slashed hem
+        }
+        $p->newHeightDimension(2045,8000, $xBase+15);  // Height of the hip line
+        $p->newHeightDimension(2045,6021, $xBase+30);  // Height of the waist line
+        $p->newHeightDimension(2045,5, $xBase+45);  // Height of the armhole
+        $p->newHeightDimension(2045,10, $xBase+60);  // Height of arm pitch point
+        $p->newHeightDimension(2045,12, $xBase+75);  // Height of the shoulder point
+        $p->newHeightDimension(2045,8, $xBase+90);  // Height total
+
+        // Button heighs, only if placket is attached
+        if($this->o('buttonholePlacketType') == 1) {
+            // First button
+            $p->newHeightDimension(2045,3000, $p->x(4007)-25);  // Distance to next button
+            // Next buttons
+            for($i=1;$i<$this->o('buttons');$i++) {
+                $pid = 2999+$i;
+                $nid = 3000+$i;
+                $p->newHeightDimension($pid, $nid, $p->x(4007)-25);  // Distance to next button
+            }
+            // Extra top button
+            if($this->o('extraTopButton')) {
+                $pid++;
+                $nid++;
+                $p->newHeightDimension($pid, $nid, $p->x(4007)-25);  // Distance to next button
+            }
+        
+        }
+
+        // Linear dimensions
+        $p->newLinearDimension(8,12,-25);  // Shoulder length
+
+        // Curve lengths
+        $p->newCurvedDimension('M 5 C 13 16 14 C 15 18 10 C 17 19 12', 25);  // Armhole length
+        if($this->o('buttonholePlacketType') == 1) $p->newCurvedDimension('M 4100 L 9 C 21 20 8', -25);  // Neckopening length
+        else $p->newCurvedDimension('M 4108 C 41092 41091 8', -25);
+
+        // Notes
+        $p->addPoint('saNoteAnchor', $p->shift(10,0,5));
+        $p->newNote('saNote', 'saNoteAnchor', $this->t("Standard\nseam\nallowance"), 10, 40, 0);
+        $p->addPoint('ffsaNoteAnchor', $p->shift(6021,0,10));
+        $p->newNote('ffsaNote', 'ffsaNoteAnchor', $this->t("Flat-felled\nseam\nallowance")."\n(".$this->unit(20).')', 10, 40, 0);
+        $p->addPoint('hemNoteAnchor', $p->shift(6668,-90,15));
+        $p->newNote('hemNote', 'hemNoteAnchor', $this->t("Hem\nseam\nallowance")."\n(".$this->unit(30).')', 12, 40, 0);
+    }
+    
+    /**
+     * Adds paperless info for the button placket
+     *
+     * @param \Freesewing\Model $model The model to draft for
+     *
+     * @return void
+     */
+    public function paperlessButtonPlacket($model)
+    {
+        /** @var Part $p */
+        $p = $this->parts['buttonPlacket'];
+        // Widths
+        $p->newWidthDimensionSm(2040, 4, $p->y(2040)+45);  // To buttons
+        $p->newWidthDimensionSm(2040, 2045, $p->y(2040)+55);  // To fold
+        if($this->o('buttonPlacketStyle') == 2) {
+            $p->newWidthDimensionSm(2040, 2046, $p->y(2040)+65);  // To second fold
+        }
+        $p->newWidthDimension(2040, 2044, $p->y(2040)+75);  // To second fold
+        
+        // Button heighs
+        // First button
+        $p->newHeightDimension(2044,3000, $p->x(2044)+25);  // Distance to first button
+        // Next buttons
+        for($i=1;$i<$this->o('buttons');$i++) {
+            $pid = 2999+$i;
+            $nid = 3000+$i;
+            $p->newHeightDimension($pid, $nid, $p->x(2044)+25);  // Distance to next button
+        }
+        // Extra top button
+        if($this->o('extraTopButton')) {
+            $pid++;
+            $nid++;
+            $p->newHeightDimension($pid, $nid, $p->x(2044)+25);  // Distance to next button
+        }
+
+        // Height
+        $p->newHeightDimension(2044, 9, $p->x(2044)+40);  // Distance to next button
+        
+        
     }
 }

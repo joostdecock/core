@@ -162,6 +162,11 @@ class SimonShirt extends JoostBodyBlock
             $this->paperlessYoke($model);
             $this->paperlessBack($model);
             $this->paperlessSleeve($model);
+            $this->paperlessCollarStand($model);
+            $this->paperlessCollar($model);
+            $this->paperlessUndercollar($model);
+            $this->paperlessSleevePlacketUnderlap($model);
+            $this->paperlessSleevePlacketOverlap($model);
         }
     }
 
@@ -1895,7 +1900,7 @@ class SimonShirt extends JoostBodyBlock
         // Notches
         $p->addPoint('collarStandNotch1', $p->shiftAlong(42,43,6,61,$this->v('yokeCollarOpeningLength')/2));
         $p->addPoint('collarStandNotch2', $p->flipX('collarStandNotch1',0));
-        $p->notch(['collarStandNotch1', 'collarStandNotch2']);
+        $p->notch(['collarStandNotch1', 'collarStandNotch2',-32,32]);
     }
 
     /**
@@ -2445,5 +2450,126 @@ class SimonShirt extends JoostBodyBlock
         $p->newNote('saNote', 'saNoteAnchor', $this->t("Standard\nseam\nallowance"), 4, 40, 0);
         $p->addPoint('ffsaNoteAnchor', $p->shift(5,-30,10));
         $p->newNote('ffsaNote', 'ffsaNoteAnchor', $this->t("Flat-felled\nseam\nallowance")."\n(".$this->unit(20).')', 8, 40, 0);
+    }
+
+    /**
+     * Adds paperless info for the collar stand
+     *
+     * @param \Freesewing\Model $model The model to draft for
+     *
+     * @return void
+     */
+    public function paperlessCollarStand($model)
+    {
+        /** @var Part $p */
+        $p = $this->parts['collarStand'];
+
+        // Length
+        $p->newLinearDimensionSm(-31,-32,25);
+        $p->newLinearDimensionSm(32,31,25);
+        $p->newCurvedDimension('M -32 C -32 -62 -61 C -6 -43 -42 C 43 6 61 C 62 33 32', 55);
+    
+        $p->newWidthDimension('collarStandNotch2', 'collarStandNotch1', $p->y(61)+25);
+        $p->newWidthDimension(-31, 31, $p->y(61)+40);
+        $p->newHeightDimension(-42,12,$p->x(12));
+        $p->newHeightDimensionSm(-61,42,$p->x(12));
+        $p->newHeightDimensionSm(-61,-31,$p->x(-31)-15);
+
+    }
+
+    /**
+     * Adds paperless info for the collar 
+     *
+     * @param \Freesewing\Model $model The model to draft for
+     *
+     * @return void
+     */
+    public function paperlessCollar($model)
+    {
+        /** @var Part $p */
+        $p = $this->parts['collar'];
+
+        $p->newHeightDimensionSm(5,3,$p->x(3));
+        $p->newHeightDimensionSm(-4,5,$p->x(3));
+        $p->newHeightDimensionSm(3,-8,$p->x(3));
+        
+        $p->newWidthDimension(-4,4,$p->y(-4)+25);
+        $p->newWidthDimension(-8,8,$p->y(-8)-15);
+
+        $p->newLinearDimension(4,8,25);
+    }
+    
+    /**
+     * Adds paperless info for the undercollar 
+     *
+     * @param \Freesewing\Model $model The model to draft for
+     *
+     * @return void
+     */
+    public function paperlessUndercollar($model)
+    {
+        /** @var Part $p */
+        $p = $this->parts['undercollar'];
+
+        $p->newHeightDimensionSm(5,3,$p->x(3));
+        $p->newHeightDimensionSm(-4,5,$p->x(3));
+        $p->newHeightDimensionSm(3,-8,$p->x(3));
+        
+        $p->newWidthDimension(-4,4,$p->y(-4)+25);
+        $p->newWidthDimension(-8,8,$p->y(-8)-15);
+
+        $p->newLinearDimension(4,8,25);
+    }
+    
+    /**
+     * Adds paperless info for the sleeve placket underlap
+     *
+     * @param \Freesewing\Model $model The model to draft for
+     *
+     * @return void
+     */
+    public function paperlessSleevePlacketUnderlap($model)
+    {
+        /** @var Part $p */
+        $p = $this->parts['sleevePlacketUnderlap'];
+
+        $p->newWidthDimensionSm(9,11,$p->y(9)+15);
+        $p->newWidthDimension(9,12,$p->y(9)+25);
+        $p->newWidthDimension(9,5,$p->y(9)+40);
+        $p->newHeightDimensionSm(11,12,$p->x(12)+15);
+        $p->newHeightDimensionSm(5,1,$p->x(1)+25);
+        $p->newHeightDimensionSm(5,4,$p->x(1)+15);
+        $p->newHeightDimensionSm(4,3,$p->x(1)+15);
+        $p->newHeightDimensionSm(3,2,$p->x(1)+15);
+        $p->newHeightDimensionSm(2,1,$p->x(1)+15);
+    }
+    
+    /**
+     * Adds paperless info for the sleeve placket overlap
+     *
+     * @param \Freesewing\Model $model The model to draft for
+     *
+     * @return void
+     */
+    public function paperlessSleevePlacketOverlap($model)
+    {
+        /** @var Part $p */
+        $p = $this->parts['sleevePlacketOverlap'];
+
+        $p->newWidthDimensionSm(18,25,$p->y(18)+10);
+        $p->newWidthDimensionSm(14,13,$p->y(14)+15);
+        $p->newWidthDimensionSm(17,13,$p->y(17)+15);
+        $p->newWidthDimension(18,30,$p->y(16)+15);
+        $p->newWidthDimension(16,13,$p->y(16)+15);
+        $p->newWidthDimension(18,16,$p->y(16)+30);
+        $p->newWidthDimension(18,13,$p->y(16)+45);
+        
+        $p->newHeightDimensionSm(13,3,$p->x(1)+15);
+        $p->newHeightDimensionSm(3,2,$p->x(1)+15);
+        $p->newHeightDimensionSm(2,1,$p->x(1)+15);
+        $p->newHeightDimensionSm(17,13,$p->x(1)+15);
+        $p->newHeightDimensionSm(16,17,$p->x(1)+15);
+        $p->newHeightDimension(16,1,$p->x(1)+30);
+        $p->newHeightDimensionSm(30,24,$p->x(30)+15);
     }
 }

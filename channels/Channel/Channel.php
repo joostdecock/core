@@ -62,7 +62,7 @@ abstract class Channel
      */
     public function handleInValidRequest($context)
     {
-        header("location: /api/docs/");
+        header("location: /docs/");
     }
 
     /**

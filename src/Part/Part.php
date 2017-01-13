@@ -2417,7 +2417,7 @@ class Part
         $labelAttributes=['class' => 'dimension-label text-sm', 'dy' => -2],
         $leaderAttributes=['class' => 'dimension-leader']
     ) {
-        $this->newLinearDimension($fromId,$toId,$x,$text,$pathAttributes,$labelAttributes,$leaderAttributes);
+        $this->newLinearDimension($fromId,$toId,$offset,$text,$pathAttributes,$labelAttributes,$leaderAttributes);
     }
 
     /**

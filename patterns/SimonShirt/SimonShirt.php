@@ -161,6 +161,7 @@ class SimonShirt extends JoostBodyBlock
             if($this->o('buttonholePlacketType') == 2) $this->paperlessButtonholePlacket($model);
             $this->paperlessYoke($model);
             $this->paperlessBack($model);
+            $this->paperlessSleeve($model);
         }
     }
 
@@ -1859,7 +1860,7 @@ class SimonShirt extends JoostBodyBlock
         }
 
         $notchHere = [411, 'sleevePlacketCutTop', 30, 'frontSleeveNotch', 'backSleeveNotch1', 'backSleeveNotch2'];
-        if($this->o('cuffDrape') <= 20) $notchAlso = ['pleatLeft', 'pleatCenter', 'pleatRight'];
+        if($this->v('cuffPleats') == 1) $notchAlso = ['pleatLeft', 'pleatCenter', 'pleatRight'];
         else $notchAlso = ['pleatOneLeft', 'pleatOneCenter', 'pleatOneRight','pleatTwoLeft', 'pleatTwoCenter', 'pleatTwoRight'];
         $notchHere = array_merge($notchHere, $notchAlso);
         $p->notch($notchHere);
@@ -2395,4 +2396,54 @@ class SimonShirt extends JoostBodyBlock
         $p->newNote('hemNote', 'hemNoteAnchor', $this->t("Hem\nseam\nallowance")."\n(".$this->unit(30).')', 10, 60, 0);
     }
 
+    /**
+     * Adds paperless info for the sleeve
+     *
+     * @param \Freesewing\Model $model The model to draft for
+     *
+     * @return void
+     */
+    public function paperlessSleeve($model)
+    {
+        /** @var Part $p */
+        $p = $this->parts['sleeve'];
+
+        // Helplines
+        $p->newPath('sleeveHead1', 'M -5 L 5', ['class' => 'helpline']);
+        $p->newPath('sleeveHead2', 'M 1 L 2', ['class' => 'helpline']);
+        // Cuff
+        $p->newWidthDimension('cuffLeft', 411, $p->y('cuffLeft')+25); // To placket cut
+        $p->newHeightDimension('cuffLeft', 'sleevePlacketCutTop', $p->x('cuffLeft')-35); // To placket cut
+        if($this->v('cuffPleats') == 1) {
+            $p->newWidthDimensionSm('pleatLeftTop', 'pleatRightTop', $p->y('pleatRightTop')-10); // Pleat width
+            $p->newWidthDimension('cuffLeft', 'pleatLeft', $p->y('cuffLeft')+40); // To pleat
+            $p->newWidthDimension('cuffLeft', 'cuffRight', $p->y('cuffLeft')+55); // Cuff width
+        } else {
+            $p->newWidthDimensionSm('pleatOneLeftTop', 'pleatOneRightTop', $p->y('pleatOneRightTop')-10); // Pleat width
+            $p->newWidthDimensionSm('pleatTwoLeftTop', 'pleatTwoRightTop', $p->y('pleatTwoRightTop')-10); // Pleat width
+            $p->newWidthDimension('cuffLeft', 'pleatOneLeft', $p->y('cuffLeft')+40); // To pleat 1
+            $p->newWidthDimension('cuffLeft', 'pleatTwoLeft', $p->y('cuffLeft')+55); // To pleat 2
+            $p->newWidthDimension('cuffLeft', 'cuffRight', $p->y('cuffLeft')+70); // Cuff width
+        }
+
+        // Heights
+        $p->newHeightDimension('cuffRight', 5, $p->x(5)+35); // To sleevehead
+        $p->newHeightDimension('cuffRight', 1, $p->x(5)+50); // Total height
+
+        // Sleevehead
+        $p->newWidthDimension(1,'frontSleeveNotch', $p->y('frontSleeveNotch')+15); // Front notch width
+        $p->newWidthDimension('backSleeveNotch',1, $p->y('frontSleeveNotch')+15); // Back notch width
+        $p->newHeightDimension('backSleeveNotch',1, $p->x(28)); // Back notch height
+        $p->newHeightDimension('frontSleeveNotch',1, $p->x(29)); // Back notch height
+        $p->newWidthDimensionSm(1,30, $p->y(1)-10); // Shoulder notch
+        $p->newWidthDimension(-5,5, $p->y(1)-45); // Sleeve head width
+        $p->newCurvedDimension('M -5 C -5 20 16 C 21 10 10 C 10 22 17 C 23 28 1', -35);
+        $p->newCurvedDimension('M 1 C 29 25 18 C 24 11 11 C 11 27 19 C 26 5 5', -35);
+        
+        // Notes
+        $p->addPoint('saNoteAnchor', $p->shift(-5,-120,10));
+        $p->newNote('saNote', 'saNoteAnchor', $this->t("Standard\nseam\nallowance"), 4, 40, 0);
+        $p->addPoint('ffsaNoteAnchor', $p->shift(5,-30,10));
+        $p->newNote('ffsaNote', 'ffsaNoteAnchor', $this->t("Flat-felled\nseam\nallowance")."\n(".$this->unit(20).')', 8, 40, 0);
+    }
 }

@@ -2397,6 +2397,30 @@ class Part
     }
 
     /**
+     * Adds a (small) linear dimension to the pattern
+     *
+     * @param string $fromId ID of the point that the dimension starts from
+     * @param string $toId ID of the point that is the end of the dimension
+     * @param float $offset The amount to offset the dimension by
+     * @param string $text The text to put on the dimension label
+     * @param array $pathAttributes Attributes for the path the label goes on
+     * @param array $labelAttributes Attributes for the text of the label
+     * @param array $leaderAttributes Attributes for the leader paths
+     *
+     */
+    public function newLinearDimensionSm(
+        $fromId,
+        $toId,
+        $offset = 0,
+        $text = false,
+        $pathAttributes=['class' => 'dimension dimension-sm'],
+        $labelAttributes=['class' => 'dimension-label text-sm', 'dy' => -2],
+        $leaderAttributes=['class' => 'dimension-leader']
+    ) {
+        $this->newLinearDimension($fromId,$toId,$x,$text,$pathAttributes,$labelAttributes,$leaderAttributes);
+    }
+
+    /**
      * Creates a linear dimension to the part
      *
      * @param string $fromId ID of the point that the dimension starts from

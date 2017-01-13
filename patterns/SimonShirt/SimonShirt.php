@@ -1765,7 +1765,7 @@ class SimonShirt extends JoostBodyBlock
         $p->addTitle('titleAnchor', '3', $this->t($p->title), '1x '.$this->t('from main fabric'));
         
         // Grainline
-        $p->newPoint('grainlineTop', $p->x(2)+40, $p->y(10)+10);
+        $p->newPoint('grainlineTop', $p->x(2), $p->y(10)+10);
         $p->newPoint('grainlineBottom', $p->x('grainlineTop'), $p->y(4)-10);
         $p->newGrainline('grainlineBottom', 'grainlineTop', $this->t('Grainline'));
         
@@ -2344,6 +2344,55 @@ class SimonShirt extends JoostBodyBlock
     {
         /** @var Part $p */
         $p = $this->parts['back'];
+
+        // Widths  
+        $p->newWidthDimension(-8001, 8001, $p->y(8001)+15);  // Hips width
+        $p->newWidthDimension(-6663, 6663, $p->y(4)+45);  // Total width
+        $p->newWidthDimension(-6021, 6021, $p->y(6021)-15);  // Waist width
+        if($this->o('yokeDart') > 0) $p->newWidthDimension('-yokeDart1', 'yokeDart1', $p->y(10)-25);  // Across back width
+        else $p->newWidthDimension(-10,10, $p->y(10)-25);  // Across back width
+        $p->newWidthDimension(-5, 5, $p->y(10)-40);  // Underarm width
+
+        // Heights
+        if($this->o('hemStyle') == 3) $xBase = $p->x(6663) +45;
+        else $xBase = $p->x(6663) +25;
+        if($this->o('hemStyle') > 1) {
+            $p->newHeightDimension(6666, 6663, $xBase);  // Hem curve height
+            $xBase += 15;
+        }
+        $p->newHeightDimension(6666, 8001, $xBase);  // Hips height
+        $p->newHeightDimension(6666, 6021, $xBase+15);  // Waist height
+        $p->newHeightDimension(6666, 5, $xBase+30);  // Armhole height
+        if($this->o('yokeDart') > 0) {
+            $p->newHeightDimension(5,'yokeDart2', $xBase+30);  // Armhole height
+            $p->newHeightDimension(6666,'yokeDart2', $xBase+45);  // Total height
+            // Yoke dart
+            $p->newHeightDimensionSm('yokeDart1','yokeDart2', $p->x('yokeDart2'));  // Yoke dart height
+            $p->newWidthDimensionSm('yokeDart2','yokeDart1', $p->y('yokeDart1')+10);  // Yoke dart width
+            $curveEnd = 'yokeDart1';
+        } else {
+            $p->newHeightDimension(5,10, $xBase+30);  // Armhole height
+            $p->newHeightDimension(6666,10, $xBase+45);  // Total height
+            $curveEnd = 10;
+        }
+
+        // Darts
+        if($p->isPoint(6100)) { // Do we have darts?
+            $p->newWidthDimension(-6300, 6300, $p->y(6300)+15);  // Distance between darts
+            $p->newLinearDimensionSm(-6121, -6122);  // Left dart width
+            $p->newLinearDimensionSm(6122, 6121);  // Right dart width
+            $p->newHeightDimension(6300, 6121, $p->x(6121)+15);  // Dart bottom half height
+            $p->newHeightDimension(6121, 6110, $p->x(6121)+15);  // Dart bottom half height
+        }
+
+        // Armhole curve
+        $p->newCurvedDimension("M 5 C 13 16 14 C 15 18 $curveEnd", 25);  // Dart bottom half height
+
+        // Notes
+        $p->addPoint('saNoteAnchor', $p->shift(-6021,-115,10));
+        $p->newNote('saNote', 'saNoteAnchor', $this->t("Standard\nseam\nallowance"), 4, 40, 0);
+        $p->addPoint('hemNoteAnchor', $p->shift(6660,-155,30));
+        $p->newNote('hemNote', 'hemNoteAnchor', $this->t("Hem\nseam\nallowance")."\n(".$this->unit(30).')', 10, 60, 0);
     }
 
 }

@@ -1,0 +1,16 @@
+info:
+  name:     "Test pattern"
+  version:  "1.0"
+  date:     "20170114"
+  author:   "Joost De Cock"
+  email:    "joost@decock.org"
+  company:  "freesewing.org"
+  link:     "freesewing.org/"
+
+parts:
+  test:   "Test part"
+
+languages:
+    en: English
+    nl: Nederlands
+

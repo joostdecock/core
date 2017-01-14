@@ -80,25 +80,124 @@ class ContextTest extends \PHPUnit\Framework\TestCase
     }
     
     /**
-     * @param string $methodSuffix The part of the method to call without 'set'
-     *
-     * @dataProvider providerSetXAndSetYSetNonNumericValuesToZero
+     * Tests the addTheme() method
      */
- /*   public function testSetXAndSetYSetNonNumericValuesToZero($methodSuffix)
+    public function testAddTheme()
     {
-        $point = new \Freesewing\Point();
-        $setMethod = 'set'.$methodSuffix;
-        $getMethod = 'get'.$methodSuffix;
-        $point->{$setMethod}('sorcha');
-        $this->assertEquals(0, $point->{$getMethod}());
+        $context = new Context();
+        $context->setRequest(new \Freesewing\Request(['theme' => 'Paperless']));
+        $context->addTheme();
+        $this->assertEquals($context->getTheme(), new \Freesewing\Themes\Paperless());
     }
 
-    public function providerSetXAndSetYSetNonNumericValuesToZero()
+    /**
+     * Tests whether service gets loaded
+     */
+    public function testLoadService()
+    {
+        $context = new Context();
+        $context->setRequest(new \Freesewing\Request(['service' => 'info']));
+        $context->configure();
+        $this->assertEquals($context->getService(), new \Freesewing\Services\InfoService());
+    }
+
+    /**
+     * Tests fallback service loading
+     */
+    public function testFallbackServiceLoading()
+    {
+        $context = new Context();
+        $context->setRequest(new \Freesewing\Request(['service' => 'nonexisting']));
+        $context->configure();
+        $this->assertEquals($context->getService(), new \Freesewing\Services\DraftService());
+    }
+
+    /**
+     * Tests local loading
+     */
+    public function testLoadLocale()
+    {
+        $context = new Context();
+        $context->setRequest(new \Freesewing\Request(['lang' => 'nl']));
+        $context->configure();
+        $this->assertEquals($context->getLocale(), 'nl');
+    }
+
+    /**
+     * Tests channel loading
+     */
+    public function testLoadChannel()
+    {
+        $context = new Context();
+        $context->setRequest(new \Freesewing\Request(['channel' => 'Docs']));
+        $context->configure();
+        $this->assertEquals($context->getChannel(), new \Freesewing\Channels\Docs());
+    }
+
+    /**
+     * Tests non existing channel exception
+     *
+     * @expectedException InvalidArgumentException
+     * @expectedExceptionMessage Cannot load channel nonexisting, it does not exist
+     */
+    public function testNonExistingChannel()
+    {
+        $context = new Context();
+        $context->setRequest(new \Freesewing\Request(['channel' => 'nonexisting']));
+        $context->configure();
+        
+    }
+
+    /**
+     * Tests addMethods
+     *
+     * @dataProvider providerTestAddMethods
+     */
+    public function testAddMethods($object)
+    {
+        $addMethod = 'add'.$object;
+        $getMethod = 'get'.$object;
+        $class = "\\freesewing\\$object";
+        
+        $context = new Context();
+        $context->setRequest(new \Freesewing\Request(['channel' => 'Docs', 'theme' => 'Paperless']));
+        $context->{$addMethod}();
+        $this->assertEquals($context->{$getMethod}(), new $class());
+    }
+
+    public function providerTestAddMethods()
     {
         return [
-            ['X'],
-            ['Y'],
-        ];
+            ['Model'],
+            ['OptionsSampler'],
+            ['MeasurementsSampler'],
+            ];
+    }   
+       
+    /**
+     * Tests addPattern
+     */
+    public function testAddPattern()
+    {
+        $context = new Context();
+        $context->setRequest(new \Freesewing\Request(['channel' => 'Docs', 'theme' => 'Info', 'pattern' => 'TestPattern']));
+        $context->configure();
+        $context->addPattern();
+        $this->assertEquals($context->getPattern(), new \Freesewing\patterns\TestPattern());
     }
-  */
+
+    /**
+     * Tests runService
+     */
+    public function testRunService()
+    {
+        $context = new Context();
+        $context->setRequest(new \Freesewing\Request(['service' => 'info', 'channel' => 'Docs']));
+        $context->configure();
+        $expected = '{"services":["info","draft","sample","compare"],"patterns":{"AaronAshirt":"Aaron A-Shirt","BruceBoxerBriefs":"Bruce Boxer Briefs","CathrinCorset":"Cathrin Corset","HugoHoodie":"Hugo Hoodie","JoostBodyBlock":"Joost Body Block","SimonShirt":"Simon Shirt","TamikoTop":"Tamiko Top","TestPattern":"Test pattern","TheoTrousers":"Theo trousers","TheodoreTrousers":"Theodore trousers","TrayvonTie":"Trayvon Tie","WahidWaistcoat":"Wahid Waistcoat"},"channels":["Docs"],"themes":["Compare","Designer","Developer","Paperless","Svg"]}';
+        $context->runService();
+        $this->expectOutputString($expected);
+    }
+
+       
 }

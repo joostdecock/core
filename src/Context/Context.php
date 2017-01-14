@@ -166,7 +166,7 @@ class Context
      */
     public function addRenderbot()
     {
-        $this->setRenderbot($this->loadRenderbot());
+        $this->setRenderbot(new \Freesewing\SvgRenderbot());
     }
 
     /**
@@ -194,7 +194,7 @@ class Context
      *
      * @param \Freesewing\Response
      */
-    public function setResponse($response)
+    public function setResponse(\Freesewing\Response $response)
     {
         $this->response = $response;
     }
@@ -243,16 +243,6 @@ class Context
         }
         $this->theme->cleanUp();
         $this->channel->cleanUp();
-    }
-
-    /**
-     * Creates a new \Freesewing\SvgRenderbot
-     *
-     * @return \Freesewing\SvgRenderbot
-     */
-    private function loadRenderbot()
-    {
-        return new \Freesewing\SvgRenderbot();
     }
 
     /**
@@ -398,12 +388,7 @@ class Context
         $class = '\\Freesewing\\Services\\'.ucfirst($service).'Service';
         if (class_exists($class)) {
             $serviceObject = new $class();
-            if($serviceObject instanceof \Freesewing\Services\AbstractService) {
-                return $serviceObject;
-            }
-            else throw new \InvalidArgumentException('Cannot load service '.ucfirst($service).'Service, it is not an instance of AbstractService');
-        } else {
-            throw new \InvalidArgumentException('Cannot load service '.ucfirst($service).'Service, it does not exist');
+            return $serviceObject;
         }
     }
 
@@ -483,7 +468,7 @@ class Context
     /**
      * @param AbstractService $service
      */
-    public function setService($service)
+    public function setService(\Freesewing\Services\AbstractService $service)
     {
         $this->service = $service;
     }
@@ -497,7 +482,7 @@ class Context
     }
 
     /**
-     * @param Themes\Theme $theme
+     * @param \Freesewing\Themes\Theme or \Freesewing\Themes\Info $theme
      */
     public function setTheme($theme)
     {
@@ -515,7 +500,7 @@ class Context
     /**
      * @param Channels\Channel $channel
      */
-    public function setChannel($channel)
+    public function setChannel(\Freesewing\Channels\Channel $channel)
     {
         $this->channel = $channel;
     }
@@ -565,7 +550,7 @@ class Context
      *
      * @param \Freesewing\Request request
      */
-    public function setRequest($request)
+    public function setRequest(\Freesewing\Request $request)
     {
         $this->request = $request;
     }
@@ -585,8 +570,10 @@ class Context
 
     /**
      * @param Model $model
+     *
+     * @param \Freesewing\Model $model The model
      */
-    public function setModel($model)
+    public function setModel(\Freesewing\Model $model)
     {
         $this->model = $model;
     }
@@ -601,8 +588,10 @@ class Context
 
     /**
      * @param OptionsSampler $optionsSampler
+     *
+     * @param \Freesewing\OptionsSampler $optionsSampler The options sampler
      */
-    public function setOptionsSampler($optionsSampler)
+    public function setOptionsSampler(\Freesewing\OptionsSampler $optionsSampler)
     {
         $this->optionsSampler = $optionsSampler;
     }
@@ -617,8 +606,10 @@ class Context
 
     /**
      * @param MeasurementsSampler $measurementsSampler
+     *
+     * @param \Freesewing\MeasurementsSampler $measurementsSampler The measurements sampler
      */
-    public function setMeasurementsSampler($measurementsSampler)
+    public function setMeasurementsSampler(\Freesewing\MeasurementsSampler $measurementsSampler)
     {
         $this->measurementsSampler = $measurementsSampler;
     }
@@ -633,8 +624,10 @@ class Context
 
     /**
      * @param SvgRenderbot $renderbot
+     *
+     * @param \Freesewing\SvgRenderbot $renderbot The Svg Renderbot
      */
-    public function setRenderbot($renderbot)
+    public function setRenderbot(\Freesewing\SvgRenderbot $renderbot)
     {
         $this->renderbot = $renderbot;
     }
@@ -649,8 +642,10 @@ class Context
 
     /**
      * @param SvgDocument $svgDocument
+     *
+     * @param \Freesewing\SvgDocument $svgDocument The SvgDocument
      */
-    public function setSvgDocument($svgDocument)
+    public function setSvgDocument(\Freesewing\SvgDocument $svgDocument)
     {
         $this->svgDocument = $svgDocument;
     }

@@ -36,11 +36,20 @@ class Request
     public function __construct($data = null)
     {
         $this->data = $data;
-        $this->info['client'] = $_SERVER['REMOTE_ADDR'];
-        $this->info['userAgent'] = $_SERVER['HTTP_USER_AGENT'];
-        $this->info['host'] = $_SERVER['HTTP_HOST'];
-        $this->info['uri'] = $_SERVER['REQUEST_URI'];
-        $this->info['time'] = $_SERVER['REQUEST_TIME_FLOAT'];
+        if(isset($_SERVER['REMOTE_ADDR'])) $this->info['client'] = $_SERVER['REMOTE_ADDR'];
+        else $this->info['client'] = 'unknown';
+        
+        if(isset($_SERVER['HTTP_USER_AGENT'])) $this->info['userAgent'] = $_SERVER['HTTP_USER_AGENT'];
+        else $this->info['userAgent'] = 'unknown';
+        
+        if(isset($_SERVER['HTTP_HOST'])) $this->info['host'] = $_SERVER['HTTP_HOST'];
+        else $this->info['host'] = 'unknown';
+        
+        if(isset($_SERVER['REQUEST_URI'])) $this->info['uri'] = $_SERVER['REQUEST_URI'];
+        else $this->info['uri'] = 'unknown';
+        
+        if(isset($_SERVER['REQUEST_TIME_FLOAT'])) $this->info['time'] = $_SERVER['REQUEST_TIME_FLOAT'];
+        else $this->info['time'] = microtime();
     }
 
     /**

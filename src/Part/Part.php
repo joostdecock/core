@@ -357,28 +357,41 @@ class Part
     {
         switch ($mode) {
             case 'vertical':
+            case 'vertical-small':
+                if($mode == 'vertical-small') $class = 'vertical small';
+                else $class = 'vertical';
                 if ($title != '') {
                     $msg = "\n$msg";
                 }
                 $anchor = $this->loadPoint($anchorKey);
                 $x = $anchor->getX();
                 $y = $anchor->getY();
-                $this->newText('partNumber', $anchorKey, $nr, ['class' => 'part-nr-vertical']);
+                $this->newText('partNumber', $anchorKey, $nr, ['class' => "part-nr $class"]);
                 $this->newText(
                     'partTitle', $anchorKey, $title,
-                    ['class' => 'part-title-vertical', 'transform' => "rotate(-90 $x $y)"]
+                    ['class' => "part-title $class", 'transform' => "rotate(-90 $x $y)"]
                 );
-                $this->newText('partMsg', $anchorKey, $msg, ['class' => 'part-msg-vertical', 'transform' => "rotate(-90 $x $y)"]);
+                $this->newText('partMsg', $anchorKey, $msg, ['class' => "part-msg $class", 'transform' => "rotate(-90 $x $y)"]);
                 break;
             case 'horizontal':
-                $this->newText('partNumber', $anchorKey, $nr, ['class' => 'part-nr-horizontal']);
-                $this->newText('partTitle', $anchorKey, $title, ['class' => 'part-title-horizontal']);
-                $this->newText('partMsg', $anchorKey, $msg, ['class' => 'part-msg-horizontal']);
+            case 'horizontal-small':
+                if($mode == 'horizontal-small') $class = 'horizontal small';
+                else $class = 'horizontal';
+                $this->newText('partNumber', $anchorKey, $nr, ['class' => "part-nr $class"]);
+                $this->newText('partTitle', $anchorKey, $title, ['class' => "part-title $class"]);
+                $this->newText('partMsg', $anchorKey, $msg, ['class' => "part-msg $class"]);
                 break;
+                $this->newText('partNumber', $anchorKey, $nr, ['class' => 'part-nr small']);
+                $this->newText('partTitle', $anchorKey, $title, ['class' => 'part-title small']);
+                $this->newText('partMsg', $anchorKey, $msg, ['class' => 'part-msg small']);
+                break;
+            case 'small':
             default:
-                $this->newText('partNumber', $anchorKey, $nr, ['class' => 'part-nr']);
-                $this->newText('partTitle', $anchorKey, $title, ['class' => 'part-title']);
-                $this->newText('partMsg', $anchorKey, $msg, ['class' => 'part-msg']);
+                if($mode == 'small') $class = 'small';
+                else $class = '';
+                $this->newText('partNumber', $anchorKey, $nr, ['class' => "part-nr $class"]);
+                $this->newText('partTitle', $anchorKey, $title, ['class' => "part-title $class"]);
+                $this->newText('partMsg', $anchorKey, $msg, ['class' => "part-msg $class"]);
         }
     }
 
@@ -723,20 +736,16 @@ class Part
             // 2 lines
             $i = $this->linesCross($s1['offset'][0], $s1['offset'][1], $s2['offset'][0], $s2['offset'][1]);
             if ($i) {
-                foreach ($i as $key => $point) {
-                    // Ignore intersections at line end points
-                    if (Utils::isSamePoint($point, $this->loadPoint($s1['offset'][0])) or Utils::isSamePoint(
-                        $point,
-                        $this->loadPoint($s1['offset'][1])
-                    ) or Utils::isSamePoint(
-                        $point,
-                        $this->loadPoint($s2['offset'][0])
-                    ) or Utils::isSamePoint($point, $this->loadPoint($s2['offset'][1]))
-                    ) {
-                        unset($i[$key]);
-                    }
+                // Ignore intersections at line end points
+                if (
+                    Utils::isSamePoint($i, $this->loadPoint($s1['offset'][0])) or 
+                    Utils::isSamePoint($i, $this->loadPoint($s1['offset'][1])) or 
+                    Utils::isSamePoint($i, $this->loadPoint($s2['offset'][0])) or 
+                    Utils::isSamePoint($i, $this->loadPoint($s2['offset'][1]))
+                ) {
+                    unset($i);
                 }
-                $intersections = $this->keyArray(array($i), 'intersection-');
+                else $intersections = $this->keyArray(array($i), 'intersection-');
             }
         } elseif ($s1['type'] == 'curve' && $s2['type'] == 'curve') {
             // 2 curves
@@ -997,7 +1006,9 @@ class Part
             } else {
                 $next = $array[$count];
             }
-            if (!isset($chunk['intersection'])) {
+            // FIXME: This check is disable because as it turns out, intersections can have gaps on their other end
+            // Before permanently removing this, I'd like to see whether this breaks other things
+            if (true or !isset($chunk['intersection'])) {
                 // Intersections have no gaps
                 if (isset($chunk['type']) && $chunk['type'] == 'line' && $next['type'] == 'line') {
                     if (!$this->isSamePoint($chunk['offset'][1], $next['offset'][0])) {
@@ -2386,6 +2397,30 @@ class Part
     }
 
     /**
+     * Adds a (small) linear dimension to the pattern
+     *
+     * @param string $fromId ID of the point that the dimension starts from
+     * @param string $toId ID of the point that is the end of the dimension
+     * @param float $offset The amount to offset the dimension by
+     * @param string $text The text to put on the dimension label
+     * @param array $pathAttributes Attributes for the path the label goes on
+     * @param array $labelAttributes Attributes for the text of the label
+     * @param array $leaderAttributes Attributes for the leader paths
+     *
+     */
+    public function newLinearDimensionSm(
+        $fromId,
+        $toId,
+        $offset = 0,
+        $text = false,
+        $pathAttributes=['class' => 'dimension dimension-sm'],
+        $labelAttributes=['class' => 'dimension-label text-sm', 'dy' => -2],
+        $leaderAttributes=['class' => 'dimension-leader']
+    ) {
+        $this->newLinearDimension($fromId,$toId,$offset,$text,$pathAttributes,$labelAttributes,$leaderAttributes);
+    }
+
+    /**
      * Creates a linear dimension to the part
      *
      * @param string $fromId ID of the point that the dimension starts from
@@ -2557,4 +2592,17 @@ class Part
         $this->dimensions[] = $dimension;
     }
 
+
+    /**
+     * Adds notches to point IDs passed in an array
+     *
+     * This adds a notch snippet to all point IDs in the array passed to it
+     *
+     * @param array $points Array of point IDs
+     * @return void
+     */
+    public function notch($points)
+    {
+        foreach($points as $i) $this->newSnippet($this->newId('notch'), 'notch', $i); 
+    }
 }

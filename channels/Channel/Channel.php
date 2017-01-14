@@ -19,7 +19,7 @@ abstract class Channel
 
     /**
      * Constructor loads the Yaml config into the config property
-     * 
+     *
      * Note that by default, a channel has no config file.
      * This is just here for extensibility
      *
@@ -50,8 +50,8 @@ abstract class Channel
     /**
      * What to do when a request is considered to be invalid
      *
-     * If you return false isValidRequest() then we need to do 
-     * something with the ongoing request. Since you decided it's 
+     * If you return false isValidRequest() then we need to do
+     * something with the ongoing request. Since you decided it's
      * no good, you get to decide what to do with it.
      *
      * By default, we redirect to the documentation.
@@ -59,10 +59,10 @@ abstract class Channel
      * @param \Freesewing\Context $context The context object
      *
      * @return void Redirect to the documentation
-     */ 
+     */
     public function handleInValidRequest($context)
     {
-        header("location: /api/docs/");
+        header("location: /docs/");
     }
 
     /**
@@ -87,7 +87,7 @@ abstract class Channel
      * @param \Freesewing\Patterns\[pattern] $pattern The pattern object
      *
      * @return array The model measurements
-     */ 
+     */
     abstract public function standardizeModelMeasurements($request, $pattern);
 
     /**
@@ -99,6 +99,6 @@ abstract class Channel
      * @param \Freesewing\Patterns\[pattern] $pattern The pattern object
      *
      * @return array The pattern options
-     */ 
+     */
     abstract public function standardizePatternOptions($request, $pattern);
 }

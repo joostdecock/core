@@ -2,7 +2,7 @@ default:
     group: maleStandardUsSizes
 groups:
     realMen:
-        - usSize44
+        - joost
     maleStandardUsSizes:
         - usSize34
         - usSize36
@@ -66,7 +66,7 @@ measurements:
         usSize44: 429
     
     shoulderLength:
-        joost   : 160
+        joost   : 150
         usSize34: 148
         usSize36: 151
         usSize38: 154
@@ -75,7 +75,7 @@ measurements:
         usSize44: 163
     
     shoulderSlope:
-        joost   : 40
+        joost   : 55
         usSize34: 43
         usSize36: 46
         usSize38: 49

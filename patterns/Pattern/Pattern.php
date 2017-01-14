@@ -117,6 +117,7 @@ abstract class Pattern
         foreach ($this->config['parts'] as $part => $title) {
             $this->addPart($part);
             $this->parts[$part]->setTitle($title);
+            $this->parts[$part]->setUnits($this->units['out']);
         }
     }
 
@@ -179,7 +180,7 @@ abstract class Pattern
     }
 
     /**
-     * Takes a value in mm and returns it as text in the chose units
+     * Takes a value in mm and returns it as text in the chosen units
      *
      * For example, this returns 25.4 as either '2.54cm' or '1"'
      *

@@ -8,7 +8,7 @@ class SvgCommentsTest extends \PHPUnit\Framework\TestCase
     {
         $data = 'sorcha';
         $expectedResult = "\n<!--sorcha\n  -->\n";
-        
+
         $object = new \Freesewing\SvgComments();
         $object->add($data);
         $this->assertEquals($expectedResult, $object->load());

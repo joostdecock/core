@@ -42,7 +42,7 @@ class TestPatternTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals($p->getTranslationsDir(),"$dir/translations");
 
     }
-    
+
     public function testUnits()
     {
         $p = new \Freesewing\patterns\TestPattern;
@@ -52,7 +52,7 @@ class TestPatternTest extends \PHPUnit\Framework\TestCase
         $p->setUnits(['in' => 'metric', 'out' => 'metric']);
         $this->assertEquals($p->unit(123), '12.3cm');
     }
-    
+
     /**
      * @param string $methodSuffix The part of the method to call without 'get' or 'set'
      * @param $expectedResult Result to check for
@@ -68,7 +68,7 @@ class TestPatternTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals($expectedResult, $p->{$getMethod}());
     }
 
-    public function providerGettersReturnWhatSettersSet() 
+    public function providerGettersReturnWhatSettersSet()
     {
         return [
             ['Width', 52],
@@ -76,7 +76,7 @@ class TestPatternTest extends \PHPUnit\Framework\TestCase
             ['PartMargin', 4],
         ];
     }
-    
+
     public function testGetSetOptions()
     {
         $p = new \Freesewing\patterns\TestPattern;
@@ -107,7 +107,7 @@ class TestPatternTest extends \PHPUnit\Framework\TestCase
         $part1->newPoint(1, 52, 69);
         $part1->newPoint(2, 100, 300);
         $part1->newPath(1, 'M 1 L 2');
-        
+
         $pattern->addPart('part2');
         $part2 = $pattern->parts['part2'];
         $part2->newPoint(1, 10, 30);
@@ -128,7 +128,7 @@ class TestPatternTest extends \PHPUnit\Framework\TestCase
         $part1->newPoint(1, 52, 69);
         $part1->newPoint(2, 100, 300);
         $part1->newPath(1, 'M 1 L 2');
-        
+
         $pattern->addPart('part2');
         $part2 = $pattern->parts['part2'];
         $part2->newPoint(1, 10, 30);
@@ -140,7 +140,7 @@ class TestPatternTest extends \PHPUnit\Framework\TestCase
         $transform1 = new \Freesewing\Transform('translate', round(-52+$pattern->getPartMargin(),1), round(-69+$pattern->getPartMargin(),1));
         $transform2 = new \Freesewing\Transform('translate', round(-10+$pattern->getPartMargin(),1), round(-30+$pattern->getPartMargin(),1));
         $this->assertEquals($part1->transforms['#pileParts'], $transform1);
-           
+
     }
 
 

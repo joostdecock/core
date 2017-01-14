@@ -98,10 +98,10 @@ header("Location: /docs/demo/");
               <li>An RESTfull API through which the app can access the backend, and makes sure only EP users can access our news.</li>
             </ul>
             <p>This is the documentation of the API. The CMS and its documentation is available <a href="http://itec.ep.europa.eu/itecnews/cms/">here</a>, and the app is a work in progress.</p>
-            
+
             <p class="totop"><a href="#contents">back to contents</a></p>
 
-            
+
             <h2><a class="anchor" name="entry-point">Entry point</a></h2>
             <p>The calls in this API documentation are relative to the API's entry point:</p>
             <code>http://itec.ep.europa.eu/itecnews/api/<span class="label label-info">version</span>/</code>
@@ -170,7 +170,7 @@ header("Location: /docs/demo/");
                 </tr>
               </tbody>
             </table>
-           
+
 
             <h2><a class="anchor" name="debugging">Debugging</a></h2>
             <p>Add debug=1 as a parameter in the request to get pretty HTML output instead of JSON, along with a bunch of info to facilitate debugging.</p>
@@ -210,7 +210,7 @@ header("Location: /docs/demo/");
     activationid : <em>ID of this activation - Needed for activating this client</em>
     status : <em>Will be 'registered'</em>
     client_url : <em>A URL like http://itec.ep.europa.eu/itecnews/api/0.1/clients/[clientid]/ where you can load client details</em>
-  
+
 } </pre>
             <blockquote class="comment">
               <p><b>This will trigger an email with a random pin code</b></p>
@@ -225,11 +225,11 @@ header("Location: /docs/demo/");
       <form method="POST" action="/itecnews/api/0.1/clients/">
         <div class="form-group">
           <label for="deviceId">Device ID</label>
-          <input type="text" class="form-control" id="deviceId" name="deviceId" placeholder="Enter the device ID" value="<?php echo $deviceid; ?>">
+          <input type="text" class="form-control" id="deviceId" name="deviceId" placeholder="Enter the device ID" value="<?php //echo $deviceid; ?>">
         </div>
         <div class="form-group">
           <label for="userName">Username</label>
-          <input type="text" class="form-control" id="userName" name="userName" placeholder="Enter username" value="<?php echo $user; ?>">
+          <input type="text" class="form-control" id="userName" name="userName" placeholder="Enter username" value="<?php //echo $user; ?>">
         </div>
         <div class="checkbox">
         <label>
@@ -294,15 +294,15 @@ header("Location: /docs/demo/");
               <form id="clientsForm" method="POST">
                 <div class="form-group">
                   <label for="activationId">Activation ID</label>
-                  <input type="text" class="form-control" id="activationId" name="activationId" placeholder="Enter the activation ID" value="<?php echo $activationid; ?>">
+                  <input type="text" class="form-control" id="activationId" name="activationId" placeholder="Enter the activation ID" value="<?php //echo $activationid; ?>">
                 </div>
                 <div class="form-group">
                   <label for="clientId">Client ID</label>
-                  <input type="text" class="form-control" id="clientId" name="clientId" placeholder="Enter the client ID" value="<?php echo $clientid; ?>">
+                  <input type="text" class="form-control" id="clientId" name="clientId" placeholder="Enter the client ID" value="<?php //echo $clientid; ?>">
                 </div>
                 <div class="form-group">
                   <label for="pinCode">Pin Code</label>
-                  <input type="text" class="form-control" id="pinCode" name="pinCode" placeholder="Enter the pin code" value="<?php echo $pincode; ?>">
+                  <input type="text" class="form-control" id="pinCode" name="pinCode" placeholder="Enter the pin code" value="<?php //echo $pincode; ?>">
                 </div>
                 <div class="checkbox">
                   <label>
@@ -311,7 +311,7 @@ header("Location: /docs/demo/");
                 </div>
                 <a class="btn btn-primary btn-lg" id="clientsFormSubmit">Submit</a>
               </form>
-            </div> 
+            </div>
 
             <blockquote class="comment">
               <p><b>Tip for testing the API</b></p>
@@ -352,7 +352,7 @@ header("Location: /docs/demo/");
               </tbody>
             </table>
             <p>Once registered, the API will require the client to be in the active state.</p>
-            <blockquote class="comment"> 
+            <blockquote class="comment">
               <p>You can probably safely ignore this for now, as the administrative states aren't actually used yet.</p>
             </blockquote>
             <p class="totop"><a href="#contents">back to contents</a></p>

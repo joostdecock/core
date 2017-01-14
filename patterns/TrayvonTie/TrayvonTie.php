@@ -11,26 +11,52 @@ namespace Freesewing\Patterns;
  */
 class TrayvonTie extends Pattern
 {
+    /*
+        ___       _ _   _       _ _
+       |_ _|_ __ (_) |_(_) __ _| (_)___  ___
+        | || '_ \| | __| |/ _` | | / __|/ _ \
+        | || | | | | |_| | (_| | | \__ \  __/
+       |___|_| |_|_|\__|_|\__,_|_|_|___/\___|
+
+      Things we need to do before we can draft a pattern
+    */
+
     /**
-     * Generates a draft of the pattern
+     * Sets up options and values for our draft
      *
-     * This creates a draft of this pattern for a given model
-     * and set of options. You get a complete pattern with
-     * all bells and whistles.
+     * By branching this out of the sample/draft methods, we can
+     * set a bunch of options and values the influence the draft
+     * without having to touch the sample/draft methods
+     * When extending this pattern so we can just implement the
+     * initialize() method and re-use the other methods.
      *
-     * @param \Freesewing\Model $model The model to draft for
+     * Good to know:
+     * Options are typically provided by the user, but sometimes they are fixed
+     * Values are calculated for re-use later
+     *
+     * @param \Freesewing\Model $model The model to sample for
      *
      * @return void
      */
-    public function draft($model)
+    public function initialize($model)
     {
-        $this->sample($model);
-        
-        foreach ($this->parts as $key => $part) {
-            $method = 'finalize'.ucfirst($key);
-            $this->$method($model, $part);
-        }
+        // Some helper vars
+        $this->setValue('halfLength',($model->getMeasurement('centerBackNeckToWaist') * 2 + $model->getMeasurement('neckCircumference') +150) / 2);
+        $this->setValue('halfTip', $this->getOption('tipWidth') / 2);
+        $this->setValue('halfKnot', $this->getOption('knotWidth') / 2);
+        $this->setValue('halfBackTip', $this->v('halfKnot') + ($this->v('halfTip') - $this->v('halfKnot')) / 2);
     }
+
+
+    /*
+        ____             __ _
+       |  _ \ _ __ __ _ / _| |_
+       | | | | '__/ _` | |_| __|
+       | |_| | | | (_| |  _| |_
+       |____/|_|  \__,_|_|  \__|
+
+      The actual sampling/drafting of the pattern
+    */
 
     /**
      * Generates a sample of the pattern
@@ -46,300 +72,50 @@ class TrayvonTie extends Pattern
      */
     public function sample($model)
     {
-        $this->loadHelp($model);
-        
-        $this->draftTieShape($this->parts['interfacingTip'], $this->halfTip*2, $this->halfKnot*2);
-        $this->draftTieShape($this->parts['interfacingTail'], $this->halfBackTip*2, $this->halfKnot*2);
-        $this->draftTieShape($this->parts['fabricTip'], $this->halfTip*4+40, $this->halfKnot*4+40);
-        $this->draftTieShape($this->parts['fabricTail'], $this->halfBackTip*4+40, $this->halfKnot*4+40);
+        $this->initialize($model);
 
-        $this->draftLiningShape($this->parts['liningTip'], $this->halfTip*4+40, $this->halfKnot*4+40);
-        $this->draftLiningShape($this->parts['liningTail'], $this->halfBackTip*4+40, $this->halfKnot*4+40);
-        
+        // Reusing code for similar shapes
+        $this->draftTieShape($this->parts['interfacingTip'], $this->v('halfTip')*2, $this->v('halfKnot')*2);
+        $this->draftTieShape($this->parts['interfacingTail'], $this->v('halfBackTip')*2, $this->v('halfKnot')*2);
+        $this->draftTieShape($this->parts['fabricTip'], $this->v('halfTip')*4+40, $this->v('halfKnot')*4+40);
+        $this->draftTieShape($this->parts['fabricTail'], $this->v('halfBackTip')*4+40, $this->v('halfKnot')*4+40);
+
+        // Reusing code for similar shapes
+        $this->draftLiningShape($this->parts['liningTip'], $this->v('halfTip')*4+40, $this->v('halfKnot')*4+40);
+        $this->draftLiningShape($this->parts['liningTail'], $this->v('halfBackTip')*4+40, $this->v('halfKnot')*4+40);
+
+        // Drafting the loop
         $this->draftLoop($model, $this->parts['loop']);
-        
     }
 
     /**
-     * Sets up some properties shared between methods
+     * Generates a draft of the pattern
      *
-     * @param \Freesewing\Model $model The model to sample for
-     *
-     * @return void
-     */
-    public function loadHelp($model)
-    {
-        $this->halfLength = ($model->getMeasurement('centerBackNeckToWaist') * 2 + $model->getMeasurement('neckCircumference') +150) / 2;
-        $this->halfTip = $this->getOption('tipWidth') / 2;
-        $this->halfKnot = $this->getOption('knotWidth') / 2;
-        $this->halfBackTip = $this->halfKnot + ($this->halfTip - $this->halfKnot) / 2;
-    }
-
-    /**
-     * Finalizes the Interfacing Tip
-     *
-     * @param \Freesewing\Model $model The model to finalize the part for
-     * @param \Freesewing\Part $p The part object
-     *
-     * @return void
-     */
-    public function finalizeInterfacingTip($model, $p)
-    {
-        /* Title */
-        $p->addTitle('titleAnchor', 1, $this->t($p->title), '1x '.$this->t('from tie interfacing'), 'vertical');
-
-        /* Paperless instructions (or not) */
-        if ($this->isPaperless) {
-            $this->addInstructions($p, true);
-        } else {
-            $p->newPath('grainline', 'M 1 L 2', ['class' => 'grainline']); // Only add grainline on non-paperless
-        }
-    }
-
-
-    /**
-     * Finalizes the Interfacing Tail
-     *
-     * @see \Freesewing\Patterns\TrayvonTie::finalizeInterfacingTip()
-     *
-     * @param \Freesewing\Model $model The model to finalize the part for
-     * @param \Freesewing\Part $p The part object
-     *
-     * @return void
-     */
-    public function finalizeInterfacingTail($model, $p)
-    {
-        /* Title */
-        $p->addTitle('titleAnchor', 2, $this->t($p->title), '1x '.$this->t('from tie interfacing'), 'vertical');
-        
-        /* Paperless instructions (or not) */
-        if (!$this->isPaperless) {
-            $p->newPath('grainline', 'M 1 L 2', ['class' => 'grainline']);
-        }
-        /* Paperless instructions (or not) */
-        if ($this->isPaperless) {
-            $this->addInstructions($p, true);
-        } else {
-            $p->newPath('grainline', 'M 1 L 2', ['class' => 'grainline']); // Only add grainline on non-paperless
-        }
-    }
-
-    /**
-     * Finalizes the Fabric Tip
-     *
-     * @see \Freesewing\Patterns\TrayvonTie::finalizeInterfacingTip()
-     *
-     * @param \Freesewing\Model $model The model to finalize the part for
-     * @param \Freesewing\Part $p The part object
-     *
-     * @return void
-     */
-    public function finalizeFabricTip($model, $p)
-    {
-        /* Title */
-        $p->addTitle('titleAnchor', 3, $this->t($p->title), '1x '.$this->t('from fabric'));
-        
-        /* Scalebox */
-        $p->addPoint('scaleboxAnchor', $p->shift('titleAnchor', -90, 50));
-        $p->newSnippet('scalebox', 'scalebox', 'scaleboxAnchor');
-        
-        /* Tip seam allowance */
-        $p->offsetPathString('tipSA', 'M 4 L 1 L 3', -10, 0);
-        $p->addPoint(10, $p->beamsCross('tipSA-line-1TO4', 'tipSA-line-4TO1', 6, 4), 'Left edge of tip SA');
-        $p->addPoint(11, $p->flipX(10), 'Right edge of tip SA');
-        $p->newPath('tipSA', 'M 4 L 10 L tipSA-line-1TO4XllXtipSA-line-1TO3 L 11 L 3', ['class' => 'seam-allowance']);
-        
-        /* Mid-tie seam allowance */
-        $p->offsetPathString('midSA', 'M 5 L 6', -10, 0);
-        $p->newPath('midSA', 'M 5 L midSA-line-5TO6 L midSA-line-6TO5 L 6', ['class' => 'seam-allowance']);
-        
-        /* Notch */
-        $p->newSnippet('notch1', 'notch', 'notch1');
-        $p->newSnippet('notch2', 'notch', 'notch2');
-        
-        /* Paperless instructions (or not) */
-        if ($this->isPaperless) {
-            $this->addInstructions($p);
-        } else {
-            $p->newPath('grainline', 'M 1 L 2', ['class' => 'grainline']); // Only add grainline on non-paperless
-        }
-    }
-    /**
-     * Finalizes the Fabric Tail
-     *
-     * @see \Freesewing\Patterns\TrayvonTie::finalizeInterfacingTip()
-     *
-     * @param \Freesewing\Model $model The model to finalize the part for
-     * @param \Freesewing\Part $p The part object
-     *
-     * @return void
-     */
-    public function finalizeFabricTail($model, $p)
-    {
-        /* Title */
-        $p->addTitle('titleAnchor', 4, $this->t($p->title), '1x '.$this->t('from fabric'));
-
-        /* Tail seam allowance */
-        $p->offsetPathString('tailSA', 'M 4 L 1 L 3', -10, 0);
-        $p->addPoint(10, $p->beamsCross('tailSA-line-1TO4', 'tailSA-line-4TO1', 6, 4), 'Left edge of tail SA');
-        $p->addPoint(11, $p->flipX(10), 'Right edge of tail SA');
-        $p->newPath('tailSA', 'M 4 L 10 L tailSA-line-1TO4XllXtailSA-line-1TO3 L 11 L 3', ['class' => 'seam-allowance']);
-        
-        /* Mid-tie seam allowance */
-        $p->offsetPathString('midSA', 'M 5 L 6', -10, 0);
-        $p->newPath('midSA', 'M 5 L midSA-line-5TO6 L midSA-line-6TO5 L 6', ['class' => 'seam-allowance']);
-        
-        /* Notch */
-        $p->newSnippet('notch1', 'notch', 'notch1');
-        $p->newSnippet('notch2', 'notch', 'notch2');
-        
-        /* Paperless instructions (or not) */
-        if ($this->isPaperless) {
-            $this->addInstructions($p);
-        } else {
-            $p->newPath('grainline', 'M 1 L 2', ['class' => 'grainline']); // Only add grainline on non-paperless
-        }
-    }
-
-    /**
-     * Finalizes the Lining Tip
-     *
-     * @see \Freesewing\Patterns\TrayvonTie::finalizeInterfacingTip()
-     *
-     * @param \Freesewing\Model $model The model to finalize the part for
-     * @param \Freesewing\Part $p The part object
-     *
-     * @return void
-     */
-    public function finalizeLiningTip($model, $p)
-    {
-        /* Re-using the fabric tip points */
-        $this->clonePoints('fabricTip', 'liningTip');
-        
-        /* Title */
-        $p->addTitle('titleAnchor', 5, $this->t($p->title), '1x '.$this->t('from lining'));
-        
-        /* Tip seam allowance */
-        $p->newPath('tipSA', 'M 4 L 10 L tipSA-line-1TO4XllXtipSA-line-1TO3 L 11 L 3', ['class' => 'seam-allowance']);
-
-        /* Notch */
-        $p->newSnippet('notch', 'notch', 1);
-        
-        /* Paperless instructions */
-        if ($this->isPaperless) {
-            /* The length measure along the middle */
-            $p->newPath('center1', 'M 7 L 89', ['class' => 'double-arrow stroke-note stroke-lg']);
-            $p->newTextOnPath('length1', 'M 89 L 7', $this->unit($p->distance(7, 89)), ['class' => 'text-lg fill-note text-center', 'dy' => -3, 'dx' => 30]);
-            $p->newPath('center2', 'M 7 L 1', ['class' => 'double-arrow stroke-note stroke-lg']);
-            $p->newTextOnPath('length2', 'M 7 L 1', $this->unit($p->distance(7, 1)), ['class' => 'text-lg fill-note text-center', 'dy' => -3]);
-                
-            /* The width measure of the tip */
-            $p->newPath('width', 'M 4 L 3', ['class' => 'double-arrow stroke-note stroke-lg']);
-            $p->newTextOnPath('width', 'M 4 L 3', $this->unit($p->distance(3, 4)), ['class' => 'text-lg fill-note text-center', 'dy' => -3, 'dx' => 12]);
-            
-            /* Seam allowance note */
-            $p->newNote(1, 1, $this->t("Standard\nseam\nallowance")."(".$this->unit(10).')', 9, 25, 8, ['line-height' => 7, 'class' => 'text-lg']);
-        }
-    }
-
-    /**
-     * Finalizes the Lining Tail
-     *
-     * @see \Freesewing\Patterns\TrayvonTie::finalizeInterfacingTip()
-     *
-     * @param \Freesewing\Model $model The model to finalize the part for
-     * @param \Freesewing\Part $p The part object
-     *
-     * @return void
-     */
-    public function finalizeLiningTail($model, $p)
-    {
-        /* Re-using the fabric tail points */
-        $this->clonePoints('fabricTail', 'liningTail');
-
-        /* Title */
-        $p->addTitle('titleAnchor', 6, $this->t($p->title), '1x '.$this->t('from lining'));
-        
-        /* Tip seam allowance */
-        $p->newPath('tailSA', 'M 4 L 10 L tailSA-line-1TO4XllXtailSA-line-1TO3 L 11 L 3', ['class' => 'seam-allowance']);
-        
-        /* Notch */
-        $p->newSnippet('notch', 'notch', 1);
-        
-        /* Paperless instructions */
-        if ($this->isPaperless) {
-            /* The length measure along the middle */
-            $p->newPath('center1', 'M 7 L 89', ['class' => 'double-arrow stroke-note stroke-lg']);
-            $p->newTextOnPath('length1', 'M 89 L 7', $this->unit($p->distance(7, 89)), ['class' => 'text-lg fill-note text-center', 'dy' => -3, 'dx' => 30]);
-            $p->newPath('center2', 'M 7 L 1', ['class' => 'double-arrow stroke-note stroke-lg']);
-            $p->newTextOnPath('length2', 'M 7 L 1', $this->unit($p->distance(7, 1)), ['class' => 'text-lg fill-note text-center', 'dy' => -3]);
-                
-            /* The width measure of the tip */
-            $p->newPath('width', 'M 4 L 3', ['class' => 'double-arrow stroke-note stroke-lg']);
-            $p->newTextOnPath('width', 'M 4 L 3', $this->unit($p->distance(3, 4)), ['class' => 'text-lg fill-note text-center', 'dy' => -3, 'dx' => 12]);
-
-            /* Seam allowance note */
-            $p->newNote(1, 1, $this->t("Standard\nseam\nallowance")."(".$this->unit(10).')', 9, 25, 8, ['line-height' => 7, 'class' => 'text-lg']);
-        }
-    }
-
-    /**
-     * Drafts the Loop
-     *
-     * @see \Freesewing\Patterns\TrayvonTie::draftInterfacingTip()
+     * This creates a draft of this pattern for a given model
+     * and set of options. You get a complete pattern with
+     * all bells and whistles.
      *
      * @param \Freesewing\Model $model The model to draft for
-     * @param \Freesewing\Part $p The part object
      *
      * @return void
      */
-    public function draftLoop($model, $p)
+    public function draft($model)
     {
-        $p->newPoint(1, 0, 0, 'Top left');
-        $p->newPoint(2, $this->halfBackTip*4 + 40, 40, 'Bottom right');
-        $p->newPoint(3, $p->x(2), 0, 'Top right');
-        $p->newPoint(4, 0, $p->y(2), 'Bottom left');
+        $this->sample($model);
 
-        /* Paths */
-        $path = 'M 1 L 3 L 2 L 4 z';
-        $p->newPath('outline', $path, ['class' => 'seamline']);
-        
-        /* Anchors */
-        $p->newPoint('titleAnchor', $p->x(2)/3, $p->y(2)/2, 'Title anchor point');
-        $p->newPoint('gridAnchor', 0, $p->y(2), 'Grid anchor point');
-    }
-
-    /**
-     * Finalizes the Loop
-     *
-     * @see \Freesewing\Patterns\TrayvonTie::finalizeInterfacingTip()
-     *
-     * @param \Freesewing\Model $model The model to finalize the part for
-     * @param \Freesewing\Part $p The part object
-     *
-     * @return void
-     */
-    public function finalizeLoop($model, $p)
-    {
-        /* Title */
-        $p->addTitle('titleAnchor', 7, $this->t($p->title), '1x '.$this->t('from fabric'), 'horizontal');
-    
-        /* Paperless instructions */
-        if ($this->isPaperless) {
-            /* Height measure */
-            $p->addPoint( 100, $p->shift(1, 0, 20));
-            $p->addPoint( 101, $p->shift(4, 0, 20));
-            $p->newPath('height', 'M 101 L 100', ['class' => 'double-arrow stroke-note stroke-lg']);
-            $p->newTextOnPath('height', 'M 101 L 100', $this->unit($p->distance(1, 4)), ['class' => 'text-lg fill-note text-center', 'dy' => -3]);
-
-            /* Width measure */
-            $p->addPoint( 102, $p->shift(4, 90, 5));
-            $p->addPoint( 103, $p->shift(2, 90, 5));
-            $p->newPath('width', 'M 102 L 103', ['class' => 'double-arrow stroke-note stroke-lg']);
-            $p->newTextOnPath('width', 'M 102 L 103', $this->unit($p->distance(2, 4)), ['class' => 'text-lg fill-note text-center', 'dy' => -3]);
-
+        // Finalize all parts
+        foreach ($this->parts as $key => $part) {
+            $method = 'finalize'.ucfirst($key);
+            $this->$method($model, $part);
         }
-    
+
+        // Is this a paperless pattern?
+        if ($this->isPaperless) {
+            foreach ($this->parts as $key => $part) {
+                $method = 'paperless'.ucfirst($key);
+                $this->$method($model, $part);
+            }
+        }
     }
 
     /**
@@ -359,7 +135,7 @@ class TrayvonTie extends Pattern
         $halfTip = $tipWidth/2;
         $halfKnot = $knotWidth/2;
         $p->newPoint(1, 0, 0, 'Tip');
-        $p->newPoint(2, 0, $this->halfLength, 'Middle');
+        $p->newPoint(2, 0, $this->v('halfLength'), 'Middle');
         $p->newPoint(3, $halfTip, $halfTip, 'Right tip corner');
         $p->addPoint(4, $p->flipX(3), 'Left tip corner');
         $p->addPoint('5a', $p->shift(2, 0, $halfKnot), 'Join right, 90 deg');
@@ -371,18 +147,16 @@ class TrayvonTie extends Pattern
         $p->addPoint('notch1', $p->shift(1, -45, 19));
         $p->addPoint('notch2', $p->flipX('notch1'));
 
-        /** Outline */
+        // Outline
         $p->newPath('outline', 'M 1 L 3 L 5 L 6 L 4 z', ['class' => 'seamline']);
-        
-        /** Mark for sampler */
+
+        // Mark for sampler
         $p->paths['outline']->setSample(true);
-        $p->paths['outline']->setSample(true);
-        
-        /** Anchors */
-        $p->newPoint('titleAnchor', 0, $this->halfLength/4, 'Title anchor point');
+
+        // Anchors
+        $p->newPoint('titleAnchor', 0, $this->v('halfLength')/4, 'Title anchor point');
         $p->newPoint('gridAnchor', 0, $p->y(7), 'Grid anchor point');
     }
-
 
     /**
      * Drafts a basic lining shape for a given tipWidth and knotWidth
@@ -400,19 +174,320 @@ class TrayvonTie extends Pattern
     {
         $this->draftTieShape($p, $tipWidth, $knotWidth);
 
-        /** Cut lining short */
+        // Cut lining short
         $p->addPoint(8, $p->shiftTowards(3, 5, $p->distance(1, 3)*1.5), 'End of the lining, right side');
         $p->addPoint(9, $p->flipX(8), 'End of the lining, left side');
         $p->newPoint(89, 0, $p->y(8), 'End of the lining, center');
 
-        /** Outline */
+        // Outline
         $p->newPath('outline', 'M 1 L 3 L 8 L 9 L 4 z', ['class' => 'seamline']);
-        
-        /** Mark for sampler */
+
+        // Mark for sampler
         $p->paths['outline']->setSample(true);
     }
+
     /**
-     * Adds instructions for paperless
+     * Drafts the Loop
+     *
+     * @see \Freesewing\Patterns\TrayvonTie::draftInterfacingTip()
+     *
+     * @param \Freesewing\Model $model The model to draft for
+     * @param \Freesewing\Part $p The part object
+     *
+     * @return void
+     */
+    public function draftLoop($model, $p)
+    {
+        $p->newPoint(1, 0, 0, 'Top left');
+        $p->newPoint(2, $this->v('halfBackTip')*4 + 40, 40, 'Bottom right');
+        $p->newPoint(3, $p->x(2), 0, 'Top right');
+        $p->newPoint(4, 0, $p->y(2), 'Bottom left');
+
+        // Paths
+        $path = 'M 1 L 3 L 2 L 4 z';
+        $p->newPath('outline', $path, ['class' => 'seamline']);
+
+        // Anchors
+        $p->newPoint('titleAnchor', $p->x(2)/3, $p->y(2)/2, 'Title anchor point');
+        $p->newPoint('gridAnchor', 0, $p->y(2), 'Grid anchor point');
+    }
+
+
+    /*
+       _____ _             _ _
+      |  ___(_)_ __   __ _| (_)_______
+      | |_  | | '_ \ / _` | | |_  / _ \
+      |  _| | | | | | (_| | | |/ /  __/
+      |_|   |_|_| |_|\__,_|_|_/___\___|
+
+      Adding titles/logos/seam-allowance/grainline and so on
+    */
+
+    /**
+     * Finalizes the Interfacing Tip
+     *
+     * @param \Freesewing\Model $model The model to finalize the part for
+     * @param \Freesewing\Part $p The part object
+     *
+     * @return void
+     */
+    public function finalizeInterfacingTip($model, $p)
+    {
+        // Title
+        $p->addTitle('titleAnchor', 1, $this->t($p->title), '1x '.$this->t('from tie interfacing'), 'vertical');
+    }
+
+
+    /**
+     * Finalizes the Interfacing Tail
+     *
+     * @param \Freesewing\Model $model The model to finalize the part for
+     * @param \Freesewing\Part $p The part object
+     *
+     * @return void
+     */
+    public function finalizeInterfacingTail($model, $p)
+    {
+        // Title
+        $p->addTitle('titleAnchor', 2, $this->t($p->title), '1x '.$this->t('from tie interfacing'), 'vertical');
+    }
+
+    /**
+     * Finalizes the Fabric Tip
+     *
+     * @param \Freesewing\Model $model The model to finalize the part for
+     * @param \Freesewing\Part $p The part object
+     *
+     * @return void
+     */
+    public function finalizeFabricTip($model, $p)
+    {
+        // Title
+        $p->addTitle('titleAnchor', 3, $this->t($p->title), '1x '.$this->t('from fabric'));
+
+        // logo
+        $p->addPoint('logoAnchor', $p->shift('titleAnchor',-90, 50));
+        $p->newSnippet('logo', 'logo', 'logoAnchor');
+        $p->newSnippet('cc', 'cc', 'logoAnchor');
+
+        // Scalebox
+        $p->addPoint('scaleboxAnchor', $p->shift('titleAnchor', -90, 90));
+        $p->newSnippet('scalebox', 'scalebox', 'scaleboxAnchor');
+
+        // Tip seam allowance
+        $p->offsetPathString('tipSA', 'M 4 L 1 L 3', -10, 0);
+        $p->addPoint(10, $p->beamsCross('tipSA-line-1TO4', 'tipSA-line-4TO1', 6, 4), 'Left edge of tip SA');
+        $p->addPoint(11, $p->flipX(10), 'Right edge of tip SA');
+        $p->newPath('tipSA', 'M 4 L 10 L tipSA-line-1TO4XllXtipSA-line-1TO3 L 11 L 3', ['class' => 'seam-allowance']);
+
+        // Mid-tie seam allowance
+        $p->offsetPathString('midSA', 'M 5 L 6', -10, 0);
+        $p->newPath('midSA', 'M 5 L midSA-line-5TO6 L midSA-line-6TO5 L 6', ['class' => 'seam-allowance']);
+
+        // Notches
+        $p->newSnippet('notch1', 'notch', 'notch1');
+        $p->newSnippet('notch2', 'notch', 'notch2');
+    }
+
+    /**
+     * Finalizes the Fabric Tail
+     *
+     * @param \Freesewing\Model $model The model to finalize the part for
+     * @param \Freesewing\Part $p The part object
+     *
+     * @return void
+     */
+    public function finalizeFabricTail($model, $p)
+    {
+        // Title
+        $p->addTitle('titleAnchor', 4, $this->t($p->title), '1x '.$this->t('from fabric'));
+
+        // Tail seam allowance
+        $p->offsetPathString('tailSA', 'M 4 L 1 L 3', -10, 0);
+        $p->addPoint(10, $p->beamsCross('tailSA-line-1TO4', 'tailSA-line-4TO1', 6, 4), 'Left edge of tail SA');
+        $p->addPoint(11, $p->flipX(10), 'Right edge of tail SA');
+        $p->newPath('tailSA', 'M 4 L 10 L tailSA-line-1TO4XllXtailSA-line-1TO3 L 11 L 3', ['class' => 'seam-allowance']);
+
+        // Mid-tie seam allowance
+        $p->offsetPathString('midSA', 'M 5 L 6', -10, 0);
+        $p->newPath('midSA', 'M 5 L midSA-line-5TO6 L midSA-line-6TO5 L 6', ['class' => 'seam-allowance']);
+
+        // Notches
+        $p->newSnippet('notch1', 'notch', 'notch1');
+        $p->newSnippet('notch2', 'notch', 'notch2');
+    }
+
+    /**
+     * Finalizes the Lining Tip
+     *
+     * @param \Freesewing\Model $model The model to finalize the part for
+     * @param \Freesewing\Part $p The part object
+     *
+     * @return void
+     */
+    public function finalizeLiningTip($model, $p)
+    {
+        // Re-using the fabric tip points
+        $this->clonePoints('fabricTip', 'liningTip');
+
+        // Title
+        $p->addTitle('titleAnchor', 5, $this->t($p->title), '1x '.$this->t('from lining'));
+
+        // Tip seam allowance
+        $p->newPath('tipSA', 'M 4 L 10 L tipSA-line-1TO4XllXtipSA-line-1TO3 L 11 L 3', ['class' => 'seam-allowance']);
+
+        // Notch
+        $p->newSnippet('notch', 'notch', 1);
+    }
+
+    /**
+     * Finalizes the Lining Tail
+     *
+     * @see \Freesewing\Patterns\TrayvonTie::finalizeInterfacingTip()
+     *
+     * @param \Freesewing\Model $model The model to finalize the part for
+     * @param \Freesewing\Part $p The part object
+     *
+     * @return void
+     */
+    public function finalizeLiningTail($model, $p)
+    {
+        // Re-using the fabric tail points
+        $this->clonePoints('fabricTail', 'liningTail');
+
+        // Title
+        $p->addTitle('titleAnchor', 6, $this->t($p->title), '1x '.$this->t('from lining'));
+
+        // Tip seam allowance
+        $p->newPath('tailSA', 'M 4 L 10 L tailSA-line-1TO4XllXtailSA-line-1TO3 L 11 L 3', ['class' => 'seam-allowance']);
+
+        // Notch
+        $p->newSnippet('notch', 'notch', 1);
+    }
+
+    /**
+     * Finalizes the Loop
+     *
+     * @param \Freesewing\Model $model The model to finalize the part for
+     * @param \Freesewing\Part $p The part object
+     *
+     * @return void
+     */
+    public function finalizeLoop($model, $p)
+    {
+        // Title
+        $p->addTitle('titleAnchor', 7, $this->t($p->title), '1x '.$this->t('from fabric'), 'horizontal');
+    }
+
+
+    /*
+        ____                       _
+       |  _ \ __ _ _ __   ___ _ __| | ___  ___ ___
+       | |_) / _` | '_ \ / _ \ '__| |/ _ \/ __/ __|
+       |  __/ (_| | |_) |  __/ |  | |  __/\__ \__ \
+       |_|   \__,_| .__/ \___|_|  |_|\___||___/___/
+                  |_|
+
+      Instructions for paperless patterns
+    */
+
+    /**
+     * Paperless instructions for the Interfacing Tip
+     *
+     * @param \Freesewing\Model $model The model to finalize the part for
+     * @param \Freesewing\Part $p The part object
+     *
+     * @return void
+     */
+    public function paperlessInterfacingTip($model, $p)
+    {
+        $this->paperlessTieShape($p,true);
+    }
+
+    /**
+     * Paperless instructions for the Interfacing Tail
+     *
+     * @param \Freesewing\Model $model The model to finalize the part for
+     * @param \Freesewing\Part $p The part object
+     *
+     * @return void
+     */
+    public function paperlessInterfacingTail($model, $p)
+    {
+        $this->paperlessTieShape($p,true);
+    }
+
+    /**
+     * Paperless instructions for the Fabric Tip
+     *
+     * @param \Freesewing\Model $model The model to finalize the part for
+     * @param \Freesewing\Part $p The part object
+     *
+     * @return void
+     */
+    public function paperlessFabricTip($model, $p)
+    {
+        $this->paperlessTieShape($p,false);
+    }
+
+    /**
+     * Paperless instructions for the Fabric Tail
+     *
+     * @param \Freesewing\Model $model The model to finalize the part for
+     * @param \Freesewing\Part $p The part object
+     *
+     * @return void
+     */
+    public function paperlessFabricTail($model, $p)
+    {
+        $this->paperlessTieShape($p,false);
+    }
+
+    /**
+     * Paperless instructions for the Lining Tip
+     *
+     * @param \Freesewing\Model $model The model to finalize the part for
+     * @param \Freesewing\Part $p The part object
+     *
+     * @return void
+     */
+    public function paperlessLiningTip($model, $p)
+    {
+        $this->paperlessLiningShape($p);
+    }
+
+    /**
+     * Paperless instructions for the Lining Tail
+     *
+     * @param \Freesewing\Model $model The model to finalize the part for
+     * @param \Freesewing\Part $p The part object
+     *
+     * @return void
+     */
+    public function paperlessLiningTail($model, $p)
+    {
+        $this->paperlessLiningShape($p);
+    }
+
+    /**
+     * Paperless instructions for the Loop
+     *
+     * @param \Freesewing\Model $model The model to finalize the part for
+     * @param \Freesewing\Part $p The part object
+     *
+     * @return void
+     */
+    public function paperlessLoop($model, $p)
+    {
+        // Width
+        $p->newWidthDimension(4,2,$p->y(2)+15);
+
+        // Height
+        $p->newHeightDimension(4,1,$p->x(1)-15);
+    }
+
+    /**
+     * Adds instructions for paperless to a lining shaped part
      *
      * Because these different pattern parts are so similar, we can simply
      * reuse these instructions.
@@ -422,40 +497,61 @@ class TrayvonTie extends Pattern
      *
      * @return void
      */
-    public function addInstructions($p, $interfacing = false)
+    public function paperlessLiningShape($p)
+    {
+        // Height on the left
+        $xBase = $p->x(4);
+        $p->newHeightDimension(4,1,$xBase-10);
+        $p->newHeightDimension(9,1,$xBase-25);
+
+        // Tip dimension
+        $p->newWidthDimension(4,3,$p->y(1)-25);
+
+        // Knot dimensions
+        $p->newWidthDimension(9,8, $p->y(8)+15);
+
+        // Seam allowance note
+        $p->newNote(1, 'notch1', $this->t("Standard\nseam\nallowance")."(".$this->unit(10).')', 6, 20, -7);
+    }
+
+    /**
+     * Adds instructions for paperless to a tie shaped part
+     *
+     * Because these different pattern parts are so similar, we can simply
+     * reuse these instructions.
+     *
+     * @param \Freesewing\Part $p The part to add instructions to
+     * $param bool $interfacing Whether this is one of the interfacing pieces
+     *
+     * @return void
+     */
+    public function paperlessTieShape($p, $interfacing = false)
     {
         if ($interfacing) {
             $size= 'sm';
+            $offset = 10;
         } else {
             $size='lg';
+            $offset = 25;
         }
-        /* The big length measure along the middle */
-        $p->newPath('center1', 'M 7 L 2', ['class' => 'double-arrow stroke-note stroke-lg']);
-        $p->newTextOnPath('length1', 'M 2 L 1', $this->unit($p->distance(7, 2)), ['class' => 'text-lg fill-note text-center', 'dy' => -3]);
-        $p->newPath('center2', 'M 7 L 1', ['class' => 'double-arrow stroke-note stroke-lg']);
-        $p->newTextOnPath('length2', 'M 7 L 1', $this->unit($p->distance(7, 1)), ['class' => 'text-lg fill-note text-center', 'dy' => -3]);
+        // Height on the left
+        $xBase = $p->x(4);
+        $p->newHeightDimension(4,1,$xBase-10);
+        $p->newHeightDimension(2,1,$xBase-25);
 
-        /* The measure for the knot width. Since the pattern is under 45 degrees I'm also adding a helpline for this */
-        $p->newPath('knot1', 'M 5a L 5', ['class' => 'stroke-note dotted']);
-        $p->newPath('knotWidth', 'M 6a 5a', ['class' => 'double-arrow stroke-note stroke-lg']);
-        $p->newTextOnPath('knotWidth', 'M 6a L 5a', $this->unit($p->distance('6a', '5a')), ['class' => 'text-lg fill-note text-center', 'dy' => 7, 'dx' => 5]);
-        
-        /* * The 45 degree angle notation.  I'm adding some points to draw this curve */
-        $p->addPoint(100, $p->shift('6a', -90, $p->distance('6a', 6)/4));
-        $p->addPoint(101, $p->rotate('6a', 2, 45));
-        $p->addPoint(102, $p->shift(101, 135, $p->distance('6a', 6)/4));
-        $p->newPath('angle', 'M 101 C 102 100 6a', ['class' => "double-arrow stroke-note stroke-$size"]);
-        $p->newTextOnPath('angle', 'M 101 C 102 100 6a', '45 &#176;', ['class' => "text-$size fill-note text-center", 'dy' => -4]);
-        
-        /* The measure for the tip width */
-        $p->newPath('tip', 'M 3 L 4', ['class' => 'double-arrow stroke-note stroke-lg']);
-        $p->newTextOnPath('tipWidth', 'M 4 L 3', $this->unit($p->distance(3, 4)), ['class' => 'fill-note text-center', 'dy' => -2, 'dx' => 12]);
-    
+        // Tip dimensions
+        if (!$interfacing) $p->newLinearDimension(1,'notch1',12,false,['class' => 'dimension dimension-sm'],['class' => 'note text-center', 'dy' => -2]);
+        $p->newWidthDimension(4,3,$p->y(1)-$offset);
+
+        // Knot dimensions
+        $p->newWidthDimension('6a','5a', $p->y(6)+$offset);
+        $p->newPath('knotHelpline', 'M 5 L 5a L 6a', ['class' => 'stroke-note dotted']);
+        $p->newNote(1, '5b', '45 &#176;', 11, 15,0);
+
         if (!$interfacing) {
-            /* Seam allowance notes */
-            $noteAttr = ['line-height' => 7, 'class' => 'text-lg'];
-            $p->newNote(1, 101, $this->t("Standard\nseam\nallowance")."(".$this->unit(10).')', 3, 20, 8, $noteAttr);
-            $p->newNote(1, 1, $this->t("Standard\nseam\nallowance")."(".$this->unit(10).')', 9, 25, 8, $noteAttr);
+            // Seam allowance notes
+            $p->newNote(2, 2, $this->t("Standard\nseam\nallowance")."(".$this->unit(10).')', 11, 20, -4, ['class' => 'note', 'dy' => -10, 'line-height' => 6]);
+            $p->newNote(3, 'notch2', $this->t("Standard\nseam\nallowance")."(".$this->unit(10).')', 6, 25, -6, $noteAttr);
         }
     }
 }

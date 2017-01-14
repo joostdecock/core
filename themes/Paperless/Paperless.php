@@ -28,12 +28,13 @@ class Paperless extends Svg
      */
     public function themePattern($pattern)
     {
-        $this->messages = $pattern->getMessages();
+        parent::themePattern($pattern);
+
         $units = $pattern->getUnits();
         $templateDir = $this->getTemplateDir();
         $this->defs = file_get_contents("$templateDir/defs/grid.".$units['out']);
         foreach ($pattern->parts as $key => $part) {
-            if ($part->getRender() === true) {
+            if ($part->getRender() === true && $part->hasPathToRender()) {
                 $id = $part->newId('grid');
                 $this->defs .= "\n".'<pattern id="grid-'.$key.'" xlink:href="grid"></pattern>';
                 $this->addGridToPart($part);
@@ -61,6 +62,7 @@ class Paperless extends Svg
      */
     private function addGridToPart($part, $units = 'metric')
     {
+        if(is_array($part->boundary)) print_r($part);
         $topLeft = $part->boundary->getTopLeft();
         $w = $part->boundary->width;
         $h = $part->boundary->height;

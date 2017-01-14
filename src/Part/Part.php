@@ -48,6 +48,9 @@ class Part
     /** @var array List of transforms */
     public $transforms = [];
 
+    /** @var array List of dimensions */
+    public $dimensions = [];
+
     /** @var array Holds temporary variables */
     public $tmp = [];
 
@@ -109,6 +112,34 @@ class Part
     public function getTitle()
     {
         return $this->title;
+    }
+
+    /**
+     * Sets the units property.
+     *
+     * @param string
+     */
+    public function setUnits($units)
+    {
+        $this->units = $units;
+    }
+
+    /**
+     * Takes a value in mm and returns it as text in the chosen units
+     *
+     * For example, this returns 25.4 as either '2.54cm' or '1"'
+     *
+     * @param string $val The value to convert
+     *
+     * @return string $text The converted text
+     */
+    public function unit($val)
+    {
+        if ($this->units == 'imperial') {
+            return round($val / 25.4, 2) . '"';
+        } else {
+            return round($val / 10, 2) . 'cm';
+        }
     }
 
     /**
@@ -229,7 +260,7 @@ class Part
      * @param string $offset     How far from the anchor does the note arrow start
      * @param array  $attributes Optional array of attributes for the snippet
      */
-    public function newNote($key, $anchorKey, $msg, $direction = 3, $length = 25, $offset = 3, $attributes = null)
+    public function newNote($key, $anchorKey, $msg, $direction = 3, $length = 25, $offset = 3, $attributes = ['class' => 'note', 'line-height' => 7])
     {
         $note = new Note();
 
@@ -326,28 +357,41 @@ class Part
     {
         switch ($mode) {
             case 'vertical':
+            case 'vertical-small':
+                if($mode == 'vertical-small') $class = 'vertical small';
+                else $class = 'vertical';
                 if ($title != '') {
                     $msg = "\n$msg";
                 }
                 $anchor = $this->loadPoint($anchorKey);
                 $x = $anchor->getX();
                 $y = $anchor->getY();
-                $this->newText('partNumber', $anchorKey, $nr, ['class' => 'part-nr-vertical']);
+                $this->newText('partNumber', $anchorKey, $nr, ['class' => "part-nr $class"]);
                 $this->newText(
                     'partTitle', $anchorKey, $title,
-                    ['class' => 'part-title-vertical', 'transform' => "rotate(-90 $x $y)"]
+                    ['class' => "part-title $class", 'transform' => "rotate(-90 $x $y)"]
                 );
-                $this->newText('partMsg', $anchorKey, $msg, ['class' => 'part-msg-vertical', 'transform' => "rotate(-90 $x $y)"]);
+                $this->newText('partMsg', $anchorKey, $msg, ['class' => "part-msg $class", 'transform' => "rotate(-90 $x $y)"]);
                 break;
             case 'horizontal':
-                $this->newText('partNumber', $anchorKey, $nr, ['class' => 'part-nr-horizontal']);
-                $this->newText('partTitle', $anchorKey, $title, ['class' => 'part-title-horizontal']);
-                $this->newText('partMsg', $anchorKey, $msg, ['class' => 'part-msg-horizontal']);
+            case 'horizontal-small':
+                if($mode == 'horizontal-small') $class = 'horizontal small';
+                else $class = 'horizontal';
+                $this->newText('partNumber', $anchorKey, $nr, ['class' => "part-nr $class"]);
+                $this->newText('partTitle', $anchorKey, $title, ['class' => "part-title $class"]);
+                $this->newText('partMsg', $anchorKey, $msg, ['class' => "part-msg $class"]);
                 break;
+                $this->newText('partNumber', $anchorKey, $nr, ['class' => 'part-nr small']);
+                $this->newText('partTitle', $anchorKey, $title, ['class' => 'part-title small']);
+                $this->newText('partMsg', $anchorKey, $msg, ['class' => 'part-msg small']);
+                break;
+            case 'small':
             default:
-                $this->newText('partNumber', $anchorKey, $nr, ['class' => 'part-nr']);
-                $this->newText('partTitle', $anchorKey, $title, ['class' => 'part-title']);
-                $this->newText('partMsg', $anchorKey, $msg, ['class' => 'part-msg']);
+                if($mode == 'small') $class = 'small';
+                else $class = '';
+                $this->newText('partNumber', $anchorKey, $nr, ['class' => "part-nr $class"]);
+                $this->newText('partTitle', $anchorKey, $title, ['class' => "part-title $class"]);
+                $this->newText('partMsg', $anchorKey, $msg, ['class' => "part-msg $class"]);
         }
     }
 
@@ -493,7 +537,16 @@ class Part
         $bottomRight->setX(-INF);
         $bottomRight->setY(-INF);
 
-        foreach ($this->paths as $path) {
+        // FIXME We need a getAllPaths() method, since notes can also have paths that
+        // should be taken into account when calculating the bounding box
+        if(is_array($this->dimensions) && count($this->dimensions) > 0) {
+            foreach($this->dimensions as $dimension) $dimensionPaths[] = $dimension->getPath();
+            $allPaths = array_merge($this->paths,$dimensionPaths);
+        } else {
+            $allPaths = $this->paths;
+        }
+
+        foreach ($allPaths as $path) {
             $path->setBoundary($path->findBoundary($this));
 
             // topLeft
@@ -512,6 +565,7 @@ class Part
                 $bottomRight->setY($path->boundary->bottomRight->getY());
             }
         }
+
         $topLeft->setX($topLeft->getX() - $margin);
         $topLeft->setY($topLeft->getY() - $margin);
         $bottomRight->setX($bottomRight->getX() + $margin);
@@ -520,6 +574,25 @@ class Part
         $this->boundary = new Boundary();
         $this->boundary->setTopLeft($topLeft);
         $this->boundary->setBottomRight($bottomRight);
+    }
+
+    /**
+     * Returns true if a part has a path that needs to be rendered
+     *
+     * This avoids things breaking when no paths are rendered
+     * and thus a bounding box can't be calculated.
+     * Just check whether this returns true
+     *
+     * @return bool true or false
+     */
+    public function hasPathToRender()
+    {
+        $render = 0;
+        foreach($this->paths as $path) {
+            if($path->getRender()) $render++;
+        }
+        if($render) return true;
+        else return false;
     }
 
     /**
@@ -565,6 +638,9 @@ class Part
             $this->paths[$newKey]->setRender(false);
         }
         $this->purgePoints('.tmp_');
+        // Add aliases for start and end point
+        $this->clonePoint($this->paths[$newKey]->getStartPoint(),"$newKey-startPoint");
+        $this->clonePoint($this->paths[$newKey]->getEndPoint(),"$newKey-endPoint");
     }
 
     /**
@@ -576,10 +652,12 @@ class Part
     {
         /**
          * A few assumptions here:
+         *
          * - the index of a is lower than that of b (should be the case)
          * - we are removing what's between a and b, not what's between b and a
          */
         $stack = $this->findAllStackIntersections($stack);
+        
         foreach ($stack->intersections as $intersection) {
             $delta = $intersection['b'] - $intersection['a'];
             $a = $stack->items[$intersection['a']];
@@ -588,38 +666,46 @@ class Part
                 $this->addPoint($key, $point);
                 // split a here
                 if ($a['type'] == 'curve') {
-                    $points = $this->splitCurve($a['offset'][0], $a['offset'][1], $a['offset'][2], $a['offset'][3], $key);
-                    for ($i = 1; $i < 9; $i++) {
-                        $this->addPoint("$key-a-$i", $points[$i - 1]);
-                    }
+                    $this->addSplitCurve($a['offset'][0], $a['offset'][1], $a['offset'][2], $a['offset'][3], $key, "$key-a-");
                     $new[] = [
                         'type'         => 'curve',
                         'offset'       => ["$key-a-1", "$key-a-2", "$key-a-3", "$key-a-4"],
                         'intersection' => true
                     ];
                     $stack->replace($a, $new);
+                    unset($new);
                 } else {
                     $new[] = ['type' => 'line', 'offset' => [$a['offset'][0], $key], 'intersection' => true];
                     $stack->replace($a, $new);
+                    unset($new);
                 }
                 // split b here
                 if ($b['type'] == 'curve') {
-                    $points = $this->splitCurve($b['offset'][0], $b['offset'][1], $b['offset'][2], $b['offset'][3], $key);
-                    for ($i = 1; $i < 9; $i++) {
-                        $this->addPoint("$key-b-$i", $points[$i - 1]);
-                    }
+                    $this->addSplitCurve($b['offset'][0], $b['offset'][1], $b['offset'][2], $b['offset'][3], $key, "$key-b-");
                     $new[] = [
                         'type'         => 'curve',
-                        'offset'       => ["$key-b-5", "$key-b-6", "$key-b-7", "$key-b-8"],
+                        'offset'       => ["$key-b-8", "$key-b-7", "$key-b-6", "$key-b-5"],
                         'intersection' => true
                     ];
                     $stack->replace($b, $new);
+                    unset($new);
                 } else {
                     $new[] = ['type' => 'line', 'offset' => [$key, $b['offset'][1]]];
                     $stack->replace($b, $new);
+                    unset($new);
                 }
             }
         }
+
+        if(isset($delta) && $delta > 1) {
+            // Intersecting path segments are not adjacent in the stack
+            // We need to remove the chunks in between
+            for($i=1;$i<$delta;$i++) {
+                // Removing this would mess up the indexes, so we'll replace it with nothing
+                $stack->replace($stack->items[$i+$intersection['a']], ['type' => 'removed']);
+            }
+        }
+
         return $stack;
     }
 
@@ -650,20 +736,16 @@ class Part
             // 2 lines
             $i = $this->linesCross($s1['offset'][0], $s1['offset'][1], $s2['offset'][0], $s2['offset'][1]);
             if ($i) {
-                foreach ($i as $key => $point) {
-                    // Ignore intersections at line end points
-                    if (Utils::isSamePoint($point, $this->loadPoint($s1['offset'][0])) or Utils::isSamePoint(
-                        $point,
-                        $this->loadPoint($s1['offset'][1])
-                    ) or Utils::isSamePoint(
-                        $point,
-                        $this->loadPoint($s2['offset'][0])
-                    ) or Utils::isSamePoint($point, $this->loadPoint($s2['offset'][1]))
-                    ) {
-                        unset($i[$key]);
-                    }
+                // Ignore intersections at line end points
+                if (
+                    Utils::isSamePoint($i, $this->loadPoint($s1['offset'][0])) or 
+                    Utils::isSamePoint($i, $this->loadPoint($s1['offset'][1])) or 
+                    Utils::isSamePoint($i, $this->loadPoint($s2['offset'][0])) or 
+                    Utils::isSamePoint($i, $this->loadPoint($s2['offset'][1]))
+                ) {
+                    unset($i);
                 }
-                $intersections = $this->keyArray(array($i), 'intersection-');
+                else $intersections = $this->keyArray(array($i), 'intersection-');
             }
         } elseif ($s1['type'] == 'curve' && $s2['type'] == 'curve') {
             // 2 curves
@@ -676,10 +758,8 @@ class Part
             ) > 10
             ) {
                 $i = BezierToolbox::findCurveCurveIntersections(
-                    $this->loadPoint($s1['offset'][0]),
-                    $this->loadPoint($s1['offset'][1]), $this->loadPoint($s1['offset'][2]), $this->loadPoint($s1['offset'][3]),
-                    $this->loadPoint($s2['offset'][0]), $this->loadPoint($s2['offset'][1]), $this->loadPoint($s2['offset'][2]),
-                    $this->loadPoint($s2['offset'][3])
+                    $this->loadPoint($s1['offset'][0]), $this->loadPoint($s1['offset'][1]), $this->loadPoint($s1['offset'][2]), $this->loadPoint($s1['offset'][3]),
+                    $this->loadPoint($s2['offset'][0]), $this->loadPoint($s2['offset'][1]), $this->loadPoint($s2['offset'][2]), $this->loadPoint($s2['offset'][3])
                 );
                 if ($i) {
                     foreach ($i as $key => $point) {
@@ -705,9 +785,8 @@ class Part
             // 1 line, 1 curve
             if ($this->curveLen($s2['offset'][0], $s2['offset'][1], $s2['offset'][2], $s2['offset'][3]) > 10) {
                 $i = BezierToolbox::findLineCurveIntersections(
-                    $this->loadPoint($s1['offset'][0]),
-                    $this->loadPoint($s1['offset'][1]), $this->loadPoint($s2['offset'][0]), $this->loadPoint($s2['offset'][1]),
-                    $this->loadPoint($s2['offset'][2]), $this->loadPoint($s2['offset'][3])
+                    $this->loadPoint($s1['offset'][0]), $this->loadPoint($s1['offset'][1]), 
+                    $this->loadPoint($s2['offset'][0]), $this->loadPoint($s2['offset'][1]), $this->loadPoint($s2['offset'][2]), $this->loadPoint($s2['offset'][3])
                 );
                 if ($i) {
                     foreach ($i as $key => $point) {
@@ -733,9 +812,8 @@ class Part
             // 1 curve, 1 line
             if ($this->curveLen($s1['offset'][0], $s1['offset'][1], $s1['offset'][2], $s1['offset'][3]) > 10) {
                 $i = BezierToolbox::findLineCurveIntersections(
-                    $this->loadPoint($s1['offset'][0]),
-                    $this->loadPoint($s1['offset'][1]), $this->loadPoint($s1['offset'][2]), $this->loadPoint($s1['offset'][3]),
-                    $this->loadPoint($s2['offset'][0]), $this->loadPoint($s2['offset'][1])
+                    $this->loadPoint($s2['offset'][0]), $this->loadPoint($s2['offset'][1]),
+                    $this->loadPoint($s1['offset'][0]), $this->loadPoint($s1['offset'][1]), $this->loadPoint($s1['offset'][2]), $this->loadPoint($s1['offset'][3])
                 );
                 if ($i) {
                     foreach ($i as $key => $point) {
@@ -864,9 +942,9 @@ class Part
                 }
             } else {
                 // All other steps
-                if ($chunk['type'] == 'line') {
+                if (isset($chunk['type']) && $chunk['type'] == 'line') {
                     $path .= ' L ' . $chunk['offset'][1];
-                } elseif ($chunk['type'] == 'curve') {
+                } elseif (isset($chunk['type']) && $chunk['type'] == 'curve') {
                     $path .= ' C ' . $chunk['offset'][1] . ' ' . $chunk['offset'][2] . ' ' . $chunk['offset'][3];
                 }
             }
@@ -928,9 +1006,11 @@ class Part
             } else {
                 $next = $array[$count];
             }
-            if (!isset($chunk['intersection'])) {
+            // FIXME: This check is disable because as it turns out, intersections can have gaps on their other end
+            // Before permanently removing this, I'd like to see whether this breaks other things
+            if (true or !isset($chunk['intersection'])) {
                 // Intersections have no gaps
-                if ($chunk['type'] == 'line' && $next['type'] == 'line') {
+                if (isset($chunk['type']) && $chunk['type'] == 'line' && $next['type'] == 'line') {
                     if (!$this->isSamePoint($chunk['offset'][1], $next['offset'][0])) {
                         // Gap to fill
                         $id = $chunk['offset'][1] . 'XllX' . $next['offset'][0];
@@ -943,7 +1023,7 @@ class Part
                         $new[] = ['type' => 'line', 'offset' => [$id, $next['offset'][0]]];
                         $stack->replace($chunk, $new);
                     }
-                } elseif ($chunk['type'] == 'line' && $next['type'] == 'curve') {
+                } elseif (isset($chunk['type']) && $chunk['type'] == 'line' && $next['type'] == 'curve') {
                     if (!$this->isSamePoint($chunk['offset'][1], $next['offset'][0])) {
                         // Gap to fill
                         /**
@@ -979,7 +1059,7 @@ class Part
                         $new[] = ['type' => 'line', 'offset' => [$id, $next['offset'][0]]];
                         $stack->replace($chunk, $new);
                     }
-                } elseif ($chunk['type'] == 'curve' && $next['type'] == 'line') {
+                } elseif (isset($chunk['type']) && $chunk['type'] == 'curve' && $next['type'] == 'line') {
                     if (!$this->isSamePoint($chunk['offset'][3], $next['offset'][0])) {
                         // Gap to fill
                         if ($this->isSamePoint($chunk['offset'][2], $chunk['offset'][3])) {
@@ -1005,11 +1085,10 @@ class Part
                         $new[] = ['type' => 'line', 'offset' => [$id, $next['offset'][0]]];
                         $stack->replace($chunk, $new);
                     }
-                } elseif ($chunk['type'] == 'curve' && $next['type'] == 'curve') {
-                    if (!$this->isSamePoint($chunk['offset'][3], $next['offset'][0]) && $this->curveLen(
-                        $next['offset'][0],
-                        $next['offset'][1], $next['offset'][2], $next['offset'][3]
-                    ) > 0
+                } elseif (isset($chunk['type']) && $chunk['type'] == 'curve' && $next['type'] == 'curve') {
+                    if (
+                        !$this->isSamePoint($chunk['offset'][3], $next['offset'][0]) && 
+                        $this->curveLen( $next['offset'][0], $next['offset'][1], $next['offset'][2], $next['offset'][3]) > 0
                     ) {
                         // Gap to fill
                         if ($this->isSamePoint($chunk['offset'][2], $chunk['offset'][3])) {
@@ -1038,14 +1117,23 @@ class Part
                             // Cubic Bezier, we can just use the control point
                             $this->clonePoint($next['offset'][1], '.helpNext');
                         }
-                        $id = $chunk['offset'][3] . 'XccX' . $next['offset'][0];
-                        $this->addPoint(
-                            $id,
-                            $this->beamsCross('.helpChunk', $chunk['offset'][3], '.helpNext', $next['offset'][0])
-                        );
-                        $new[] = $chunk;
-                        $new[] = ['type' => 'line', 'offset' => [$chunk['offset'][3], $id]];
-                        $new[] = ['type' => 'line', 'offset' => [$id, $next['offset'][0]]];
+                        
+                        $intersectionPoint = $this->beamsCross('.helpChunk', $chunk['offset'][3], '.helpNext', $next['offset'][0]);
+                        if($intersectionPoint instanceof Point) {
+                            // Beams do cross, proceed as normal
+                            $id = $chunk['offset'][3] . 'XccX' . $next['offset'][0];
+                            $this->addPoint(
+                                $id,
+                                $this->beamsCross('.helpChunk', $chunk['offset'][3], '.helpNext', $next['offset'][0])
+                            );
+                            $new[] = $chunk;
+                            $new[] = ['type' => 'line', 'offset' => [$chunk['offset'][3], $id]];
+                            $new[] = ['type' => 'line', 'offset' => [$id, $next['offset'][0]]];
+                        } else {
+                            // Beams are parallel. Just connect the start/end points
+                            $new[] = $chunk;
+                            $new[] = ['type' => 'line', 'offset' => [$chunk['offset'][3], $next['offset'][0]]];
+                        }
                         $stack->replace($chunk, $new);
                     }
                 }
@@ -1284,8 +1372,9 @@ class Part
             }
         }
 
-        $cp1Id = $this->newId();
-        $cp2Id = $this->newId();
+        // Avoid volatile IDs
+        $cp1Id = "$key-cp1--$from.$cp1.$cp2.$to";
+        $cp2Id = "$key-cp2--$from.$cp1.$cp2.$to";
 
         $this->addPoint($fromId, $offset[0]);
         $this->addPoint($cp1Id, $offset[1]);
@@ -1302,7 +1391,8 @@ class Part
         // Find out how we're doing
         $tolerance = $this->offsetTolerance($chunks[0], $distance);
 
-        if ($tolerance['score'] > $this->maxOffsetTolerance) {
+        $score = $tolerance['score'];
+        if ($score > $this->maxOffsetTolerance) {
             // Not good enough, let's subdivide
             $subdivide++;
             $splitId = '.tmp_' . $key . '.splitcurve:' . $this->newId();
@@ -1336,44 +1426,79 @@ class Part
             return ['score' => 1, 'index' => 0.5];
         }
 
-        $origFrom = $this->loadPoint($entry['original'][0]);
-        $origCp1 = $this->loadPoint($entry['original'][1]);
-        $origCp2 = $this->loadPoint($entry['original'][2]);
-        $origTo = $this->loadPoint($entry['original'][3]);
-
-        $offsetFrom = $this->loadPoint($entry['offset'][0]);
-        $offsetCp1 = $this->loadPoint($entry['offset'][1]);
-        $offsetCp2 = $this->loadPoint($entry['offset'][2]);
-        $offsetTo = $this->loadPoint($entry['offset'][3]);
-
-        $this->newPoint('-po_orig', 0, 0);
-        $this->newPoint('-po_offset', 0, 0);
+        $orCurveLen = $this->curveLen($entry['original'][0], $entry['original'][1], $entry['original'][2], $entry['original'][3]);
+        $ofCurveLen = $this->curveLen($entry['offset'][0], $entry['offset'][1], $entry['offset'][2], $entry['offset'][3]);
 
         $worstDelta = 0;
         $worstIndex = false;
         for ($i = 0; $i < 20; ++$i) {
             $t = $i / 20;
-            $xOrig = Utils::bezierPoint($t, $origFrom->getX(), $origCp1->getX(), $origCp2->getX(), $origTo->getX());
-            $yOrig = Utils::bezierPoint($t, $origFrom->getY(), $origCp1->getY(), $origCp2->getY(), $origTo->getY());
-            $xOffset = Utils::bezierPoint($t, $offsetFrom->getX(), $offsetCp1->getX(), $offsetCp2->getX(), $offsetTo->getX());
-            $yOffset = Utils::bezierPoint($t, $offsetFrom->getY(), $offsetCp1->getY(), $offsetCp2->getY(), $offsetTo->getY());
 
-            $this->points['-po_orig']->setX($xOrig);
-            $this->points['-po_orig']->setY($yOrig);
-            $this->points['-po_offset']->setX($xOffset);
-            $this->points['-po_offset']->setY($yOffset);
+            $orHalfCurveLen = $orCurveLen * $t;
+            $ofHalfCurveLen = $ofCurveLen * $t;
 
-            $offset = $this->distance('-po_orig', '-po_offset');
-            $delta = abs($offset / (abs($distance) / 100) - 100);
+            $orHalfPoint = $this->shiftAlong($entry['original'][0], $entry['original'][1], $entry['original'][2], $entry['original'][3], $orHalfCurveLen);
+            $ofhalfPoint = $this->shiftAlong($entry['offset'][0], $entry['offset'][1], $entry['offset'][2], $entry['offset'][3], $ofHalfCurveLen);
+            $this->addPoint('orHalfPoint' . $i, $orHalfPoint);
+            $this->addPoint('ofHalfPoint' . $i, $ofhalfPoint);
+
+            $h = false;
+            if ($i > 1) {
+                // Calculating the height of a triangle thru 3 points
+                // using one point on the original curve and one on the seam-curve
+                //
+                // hc=(2/c)sqrt[s(s-a)(s-b)(s-c)].
+                // Darin ist s=(1/2)(a+b+c).
+                $okey1 = 'orHalfPoint' . ($i - 1);
+                $okey2 = 'orHalfPoint' . ($i);
+                $ofkey1 = 'ofHalfPoint' . ($i);
+                $c = $this->distance($okey1, $okey2);
+                $b = $this->distance($okey1, $ofkey1);
+                $a = $this->distance($ofkey1, $okey2);
+                $s = ($a + $b + $c) / 2;
+                $h = (2 / $c) * sqrt(($s*($s - $a) * ($s - $b) * ($s - $c)));
+            }
+
+
+            $halfPointDistance = Utils::distance($orHalfPoint, $ofhalfPoint);
+            if ($h) {
+                $halfPointDistance = $h;
+            }
+            $delta = abs($halfPointDistance / (abs($distance) / 100) - 100);
+
             if ($delta > $worstDelta) {
                 $worstDelta = round($delta, 2);
                 $worstIndex = $t;
             }
         }
-
+        $this->purgePoints('orHalfPoint');
+        $this->purgePoints('ofHalfPoint');
         return ['score' => $worstDelta, 'index' => $worstIndex];
     }
 
+
+    /**
+     * Calculated the length of a path
+     *
+     * @param Path   $path     The path of which to calculate the length
+     *
+     * @return float The path length
+     */
+    private function pathLen(Path $path)
+    {
+        $len = 0;
+        foreach ($path->breakUp() as $chunk) {
+            $points = Utils::asScrubbedArray($chunk['path']);
+            if ($chunk['type'] == 'L') {
+                $len += $this->distance($points[1],$points[3]);
+            }
+            if ($chunk['type'] == 'C') {
+                $len += $this->curveLen($points[1],$points[3],$points[4],$points[5]);
+            }
+        }
+
+        return $len;
+    }
 
     /*  Helper functions for pattern designers start here  */
 
@@ -2082,5 +2207,402 @@ class Part
             $this->addPoint("$prefix-$i", $point);
             $i++;
         }
+    }
+
+    /**
+     * Adds a (small) width dimension to the pattern
+     *
+     * @param string $fromId ID of the point that the dimension starts from
+     * @param string $toId ID of the point that is the end of the dimension
+     * @param float $y Y-coordinate where the dimension should be placed
+     * @param string $text The text to put on the dimension label
+     * @param array $pathAttributes Attributes for the path the label goes on
+     * @param array $labelAttributes Attributes for the text of the label
+     * @param array $leaderAttributes Attributes for the leader paths
+     *
+     */
+    public function newWidthDimensionSm(
+        $fromId,
+        $toId,
+        $y = false,
+        $text = false,
+        $pathAttributes=['class' => 'dimension dimension-sm'],
+        $labelAttributes=['class' => 'dimension-label text-sm', 'dy' => -2],
+        $leaderAttributes=['class' => 'dimension-leader']
+    ) {
+        $this->newWidthDimension($fromId,$toId,$y,$text,$pathAttributes,$labelAttributes);
+    }
+
+    /**
+     * Adds a width dimension to the pattern
+     *
+     * @param string $fromId ID of the point that the dimension starts from
+     * @param string $toId ID of the point that is the end of the dimension
+     * @param float $y Y-coordinate where the dimension should be placed
+     * @param string $text The text to put on the dimension label
+     * @param array $pathAttributes Attributes for the path the label goes on
+     * @param array $labelAttributes Attributes for the text of the label
+     * @param array $leaderAttributes Attributes for the leader paths
+     *
+     */
+    public function newWidthDimension(
+        $fromId,
+        $toId,
+        $y = false,
+        $text = false,
+        $pathAttributes=['class' => 'dimension'],
+        $labelAttributes=['class' => 'dimension-label', 'dy' => -2],
+        $leaderAttributes=['class' => 'dimension-leader']
+    ) {
+        /** @var \Freesewing\Dimension $d */
+        $d = new \Freesewing\Dimension();
+
+        // Do we need a from leader?
+        if($this->y($fromId) == $y || $y === false) { // Nope
+            $pathFrom = $fromId;
+        } else { // We do
+            $i = $this->newId('.dw-');
+            $this->newPoint($i, $this->x($fromId), $y);
+            $pathFrom = $i;
+            // Leader
+            $fromLeader = new \Freesewing\Path;
+            $fromLeader->setPath("M $fromId L $pathFrom");
+            $fromLeader->setAttributes($leaderAttributes);
+            $d->addLeader($fromLeader);
+        }
+
+        // Do we need a To leader?
+        if($this->y($toId) == $y) { // Nope
+            $pathTo = $toId;
+        } else { // We do
+            $i = $this->newId('.dw-');
+            $this->newPoint($i, $this->x($toId), $this->y($pathFrom));
+            $pathTo = $i;
+            // Leader
+            $toLeader = new \Freesewing\Path;
+            $toLeader->setPath("M $toId L $pathTo");
+            $toLeader->setAttributes($leaderAttributes);
+            $d->addLeader($toLeader);
+        }
+
+        // Label (a TextOnPath object)
+        $label = new \Freesewing\TextOnPath();
+
+        // Path
+        $path = new \Freesewing\Path();
+        $path->setPath("M $pathFrom L $pathTo");
+        $path->setAttributes($pathAttributes);
+
+        // Text
+        if($text === false) $text = $this->unit($this->distance($pathFrom, $pathTo));
+        $label->setText($text);
+        $label->setPath($path);
+        $label->setAttributes($labelAttributes);
+        $d->setLabel($label);
+        $this->addDimension($d);
+    }
+
+    /**
+     * Adds a (small) height dimension to the pattern
+     *
+     * @param string $fromId ID of the point that the dimension starts from
+     * @param string $toId ID of the point that is the end of the dimension
+     * @param float $x X-coordinate where the dimension should be placed
+     * @param string $text The text to put on the dimension label
+     * @param array $pathAttributes Attributes for the path the label goes on
+     * @param array $labelAttributes Attributes for the text of the label
+     * @param array $leaderAttributes Attributes for the leader paths
+     *
+     */
+    public function newHeightDimensionSm(
+        $fromId,
+        $toId,
+        $x = false,
+        $text = false,
+        $pathAttributes=['class' => 'dimension dimension-sm'],
+        $labelAttributes=['class' => 'dimension-label text-sm', 'dy' => -2],
+        $leaderAttributes=['class' => 'dimension-leader']
+    ) {
+        $this->newHeightDimension($fromId,$toId,$x,$text,$pathAttributes,$labelAttributes,$leaderAttributes);
+    }
+
+    /**
+     * Adds a height dimension to the pattern
+     *
+     * @param string $fromId ID of the point that the dimension starts from
+     * @param string $toId ID of the point that is the end of the dimension
+     * @param float $x X-coordinate where the dimension should be placed
+     * @param string $text The text to put on the dimension label
+     * @param array $pathAttributes Attributes for the path the label goes on
+     * @param array $labelAttributes Attributes for the text of the label
+     * @param array $leaderAttributes Attributes for the leader paths
+     *
+     */
+    public function newHeightDimension(
+        $fromId,
+        $toId,
+        $x = false,
+        $text = false,
+        $pathAttributes=['class' => 'dimension'],
+        $labelAttributes=['class' => 'dimension-label', 'dy' => -2],
+        $leaderAttributes=['class' => 'dimension-leader']
+    ) {
+        /** @var \Freesewing\Dimension $d */
+        $d = new \Freesewing\Dimension();
+
+        // Do we need a from leader?
+        if($this->x($fromId) == $x || $x === false) { // Nope
+            $pathFrom = $fromId;
+        } else { // We do
+            $i = $this->newId('.dw-');
+            $this->newPoint($i, $x, $this->y($fromId));
+            $pathFrom = $i;
+            // Leader
+            $fromLeader = new \Freesewing\Path;
+            $fromLeader->setPath("M $fromId L $i");
+            $fromLeader->setAttributes($leaderAttributes);
+            $d->addLeader($fromLeader);
+        }
+
+        // Do we need a To leader?
+        if($this->x($toId) == $x) { // Nope
+            $pathTo = $toId;
+        } else { // We do
+            $i = $this->newId('.dw-');
+            $this->newPoint($i, $this->x($pathFrom), $this->y($toId));
+            $pathTo = $i;
+            // Leader
+            $toLeader = new \Freesewing\Path;
+            $toLeader->setPath("M $toId L $i");
+            $toLeader->setAttributes($leaderAttributes);
+            $d->addLeader($toLeader);
+        }
+
+        // Label (a TextOnPath object)
+        $label = new \Freesewing\TextOnPath();
+
+        // Path
+        $path = new \Freesewing\Path();
+        $path->setPath("M $pathFrom L $pathTo");
+        $path->setAttributes($pathAttributes);
+
+        // Text
+        if($text === false) $text = $this->unit($this->distance($pathFrom, $pathTo));
+        $label->setText($text);
+        $label->setPath($path);
+        $label->setAttributes($labelAttributes);
+        $d->setLabel($label);
+
+        $this->addDimension($d);
+    }
+
+    /**
+     * Adds a (small) linear dimension to the pattern
+     *
+     * @param string $fromId ID of the point that the dimension starts from
+     * @param string $toId ID of the point that is the end of the dimension
+     * @param float $offset The amount to offset the dimension by
+     * @param string $text The text to put on the dimension label
+     * @param array $pathAttributes Attributes for the path the label goes on
+     * @param array $labelAttributes Attributes for the text of the label
+     * @param array $leaderAttributes Attributes for the leader paths
+     *
+     */
+    public function newLinearDimensionSm(
+        $fromId,
+        $toId,
+        $offset = 0,
+        $text = false,
+        $pathAttributes=['class' => 'dimension dimension-sm'],
+        $labelAttributes=['class' => 'dimension-label text-sm', 'dy' => -2],
+        $leaderAttributes=['class' => 'dimension-leader']
+    ) {
+        $this->newLinearDimension($fromId,$toId,$offset,$text,$pathAttributes,$labelAttributes,$leaderAttributes);
+    }
+
+    /**
+     * Creates a linear dimension to the part
+     *
+     * @param string $fromId ID of the point that the dimension starts from
+     * @param string $toId ID of the point that is the end of the dimension
+     * @param float $offset The amount to offset the dimension by
+     * @param string $text The text to put on the dimension label
+     * @param array $pathAttributes Attributes for the path the label goes on
+     * @param array $labelAttributes Attributes for the text of the label
+     * @param array $leaderAttributes Attributes for the leader paths
+     *
+     */
+    public function newLinearDimension(
+        $fromId,
+        $toId,
+        $offset = 0,
+        $text = false,
+        $pathAttributes=['class' => 'dimension dimension-width'],
+        $labelAttributes=['class' => 'dimension-label', 'dy' => -2],
+        $leaderAttributes=['class' => 'dimension-leader']
+    ) {
+        /** @var \Freesewing\Dimension $d */
+        $d = new \Freesewing\Dimension();
+
+        if($offset != 0) { // We need leaders
+            $angle = $this->angle($fromId,$toId)+90;
+            foreach(['pathFrom' => $fromId, 'pathTo' => $toId] as $i => $point) {
+                ${$i} = $this->newId('.dw-');
+                $this->addPoint(${$i}, $this->shift($point, $angle, $offset));
+                // Leader
+                $leader = new \Freesewing\Path;
+                $leader->setPath("M $point L ".${$i});
+                $leader->setAttributes($leaderAttributes);
+                $d->addLeader($leader);
+            }
+        } else { // No leaders
+            $pathFrom = $fromId;
+            $pathTo = $toId;
+        }
+
+        // Label (a TextOnPath object)
+        $label = new \Freesewing\TextOnPath();
+
+        // Path
+        $path = new \Freesewing\Path();
+        $path->setPath("M $pathFrom L $pathTo");
+        $path->setAttributes($pathAttributes);
+
+        // Text
+        if($text === false) $text = $this->unit($this->distance($pathFrom, $pathTo));
+        $label->setText($text);
+        $label->setPath($path);
+        $label->setAttributes($labelAttributes);
+        $d->setLabel($label);
+
+        $this->addDimension($d);
+    }
+
+    /**
+     * Creates and adds a curved dimension to the part
+     *
+     * @param string $pathString The (unrendered) pathstring of the curve
+     * @param float $offset X-coordinate where the dimension should be placed
+     * @param string $text The text to put on the dimension label
+     * @param array $pathAttributes Attributes for the path the label goes on
+     * @param array $labelAttributes Attributes for the text of the label
+     * @param array $leaderAttributes Attributes for the leader paths
+     *
+     */
+    public function newCurvedDimension(
+        $pathString,
+        $offset = 0,
+        $text = false,
+        $pathAttributes=['class' => 'dimension dimension-width'],
+        $labelAttributes=['class' => 'dimension-label', 'dy' => -2],
+        $leaderAttributes=['class' => 'dimension-leader']
+    ) {
+        /** @var \Freesewing\Dimension $d */
+        $d = new \Freesewing\Dimension();
+
+        // Make pathstring into a path object
+        $origPath = new \Freesewing\Path();
+        $origPath->setPath($pathString);
+
+        // Label (a TextOnPath object)
+        $label = new \Freesewing\TextOnPath();
+
+        // Path
+        if($offset == 0) {
+            $path = new \Freesewing\Path();
+            $path->setPath($pathString);
+            $path->setAttributes($pathAttributes);
+        } else {
+            $id = $this->newId('.dc-');
+            $this->offsetPathString($id, $pathString, $offset, true, $pathAttributes);
+            $path = $this->paths[$id];
+        }
+
+        // Text
+        if($text === false) $text = $this->unit($this->pathLen($origPath));
+        $label->setText($text);
+        $label->setPath($path);
+        $label->setAttributes($labelAttributes);
+        $d->setLabel($label);
+
+        // Leaders
+        if($offset != 0) { // We need leaders
+
+            // Start Leader
+            $leader = new \Freesewing\Path;
+            $leader->setPath('M '.$origPath->getStartPoint().' L '.$path->getStartPoint());
+            $leader->setAttributes($leaderAttributes);
+            $d->addLeader($leader);
+
+            // End Leader
+            $leader = new \Freesewing\Path;
+            $leader->setPath('M '.$origPath->getEndPoint().' L '.$path->getEndPoint());
+            $leader->setAttributes($leaderAttributes);
+            $d->addLeader($leader);
+        }
+
+        $this->addDimension($d);
+    }
+
+    /**
+     * Adds a grainline, by calling newLinearDimension() with specific attributes
+     *
+     * @param string $fromId ID of the point that the dimension starts from
+     * @param string $toId ID of the point that is the end of the dimension
+     * @param string $text The text to put on the grainline
+     *
+     */
+    public function newGrainline($fromId, $toId, $text=' ')
+    {
+        $this->newLinearDimension($fromId, $toId, 0, $text, ['class' => 'grainline'], ['class' => 'text-lg text-center grainline', 'dy' => -2]);
+    }
+
+    /**
+     * Adds a cut-on-fold line, by calling dl() with specific attributes
+     *
+     * @param string $fromId ID of the point that the dimension starts from
+     * @param string $toId ID of the point that is the end of the dimension
+     * @param string $text The text to put on the grainline
+     *
+     */
+    public function newCutOnFold($fromId, $toId, $text, $offset=20)
+    {
+        // Add via points
+        $angle = $this->angle($fromId, $toId)+90;
+
+        $viaFrom = $this->newId('.cof');
+        $this->addPoint($viaFrom, $this->shift($fromId,$angle,$offset));
+
+        $viaTo = $this->newId('.cof');
+        $this->addPoint($viaTo, $this->shift($toId,$angle,$offset));
+
+        $this->newCurvedDimension("M $fromId L $viaFrom L $viaTo L $toId", 0, $text, ['class' => 'grainline'], ['class' => 'text-lg text-center grainline', 'dy' => -2]);
+    }
+
+    /**
+     * Adds a dimension to $this->dimensions.
+     *
+     * This takes a pre-created dimension object
+     * and adds it to the dimensions array with key $key.
+     *
+     * @param \Freesewing\Dimension   $dimension The dimension object
+     */
+    public function addDimension($dimension)
+    {
+        $this->dimensions[] = $dimension;
+    }
+
+
+    /**
+     * Adds notches to point IDs passed in an array
+     *
+     * This adds a notch snippet to all point IDs in the array passed to it
+     *
+     * @param array $points Array of point IDs
+     * @return void
+     */
+    public function notch($points)
+    {
+        foreach($points as $i) $this->newSnippet($this->newId('notch'), 'notch', $i); 
     }
 }

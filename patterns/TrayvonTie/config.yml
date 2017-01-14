@@ -19,6 +19,7 @@ parts:
 languages:
     en: English
     nl: Nederlands
+    fr: French
 
 measurements:
     centerBackNeckToWaist: 480
@@ -36,6 +37,6 @@ options:
         max: 70
         default: 35
 
-inMemoryOf:   
+inMemoryOf:
     name: "Trayvon Martin"
     link: "https://en.wikipedia.org/wiki/Trayvon_Martin"

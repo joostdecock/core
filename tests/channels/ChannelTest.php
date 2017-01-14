@@ -23,21 +23,21 @@ class ChannelTest extends \PHPUnit\Framework\TestCase
 
     public function testIsValidRequest()
     {
-        $channel = new \Freesewing\Channels\Channel(); 
+        $channel = new \Freesewing\Channels\Channel();
         $this->assertEquals($channel->isValidrequest('anythinggoes'), true);
     }
 
     public function testCleanUp()
     {
-        $channel1 = new \Freesewing\Channels\Channel(); 
-        $channel2 = new \Freesewing\Channels\Channel(); 
+        $channel1 = new \Freesewing\Channels\Channel();
+        $channel2 = new \Freesewing\Channels\Channel();
         $channel1->cleanUp();
         $this->assertEquals($channel1, $channel2);
     }
 
     public function testStandardizeModelMeasurements()
     {
-        $channel = new \Freesewing\Channels\Channel(); 
+        $channel = new \Freesewing\Channels\Channel();
         $data = $this->getSampleData();
         $measurements = $channel->standardizeModelMeasurements($data['in']['measurements']);
         foreach($data['out']['measurements'] as $key => $m) {
@@ -48,7 +48,7 @@ class ChannelTest extends \PHPUnit\Framework\TestCase
     public function testStandardizePatternOptions()
     {
 
-        $channel = new \Freesewing\Channels\Channel(); 
+        $channel = new \Freesewing\Channels\Channel();
         $data = $this->getSampleData();
         $options = $channel->standardizePatternOptions(array_merge($data['in']['cmoptions'], $data['in']['percentoptions']));
         foreach($data['out']['cmoptions'] as $key => $o) {
@@ -64,7 +64,7 @@ class ChannelTest extends \PHPUnit\Framework\TestCase
             'in' => [
                 'measurements' => [
                     'wc'    => 101,
-                    'cc'    => 102, 
+                    'cc'    => 102,
                     'cbntw' => 103,
                     'ab'    => 104,
                     'nc'    => 105,
@@ -77,21 +77,21 @@ class ChannelTest extends \PHPUnit\Framework\TestCase
                 ],
                 'cmoptions' => [
                     'opt_ssw' => 112,
-                    'opt_nd'  => 114, 
-                    'opt_lb'  => 115, 
-                    'opt_ad'  => 116, 
-                    'opt_se'  => 117, 
-                    'opt_ce'  => 118, 
-                    'opt_cfe' => 119, 
-                    'opt_che' => 120, 
-                    'opt_be'  => 121, 
-                    'opt_bnc' => 122, 
+                    'opt_nd'  => 114,
+                    'opt_lb'  => 115,
+                    'opt_ad'  => 116,
+                    'opt_se'  => 117,
+                    'opt_ce'  => 118,
+                    'opt_cfe' => 119,
+                    'opt_che' => 120,
+                    'opt_be'  => 121,
+                    'opt_bnc' => 122,
                 ],
                 'percentoptions' => [
-                    'opt_sf'  => 123, 
-                    'opt_ssp' => 124, 
-                    'opt_nb'  => 125, 
-                    'opt_bb'  => 126, 
+                    'opt_sf'  => 123,
+                    'opt_ssp' => 124,
+                    'opt_nb'  => 125,
+                    'opt_bb'  => 126,
                 ],
             ],
             'out' => [
@@ -128,8 +128,8 @@ class ChannelTest extends \PHPUnit\Framework\TestCase
                 ],
             ],
         ];
-    
+
         return $data;
     }
-    
+
 }

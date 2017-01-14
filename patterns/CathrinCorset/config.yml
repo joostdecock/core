@@ -14,6 +14,7 @@ parts:
 languages:
     en: English
     nl: Nederlands
+    fr: French
 
 measurements:
     underBust: 720

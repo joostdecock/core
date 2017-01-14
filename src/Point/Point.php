@@ -25,7 +25,7 @@ class Point extends Coords
 {
     /** @var int $precision Precision to round point coordinates on */
     public $precision = 3;
-    
+
     /** @var string $description Point description */
     public $description = null;
 

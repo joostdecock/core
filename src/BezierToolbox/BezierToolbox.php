@@ -155,7 +155,7 @@ class BezierToolbox
 
         return $length;
     }
-    
+
     /**
      * Returns intersection between a curve and a line
      *
@@ -179,7 +179,7 @@ class BezierToolbox
         $p2 = $cC1->asVector();
         $p3 = $cC2->asVector();
         $p4 = $cTo->asVector();
-        
+
         $min = $a1->min($a2); // used to determine if point is on line segment
         $max = $a1->max($a2); // used to determine if point is on line segment
 
@@ -200,7 +200,7 @@ class BezierToolbox
         $b = $p2->multiply(3);
         $c = $a->add($b);
         $c1 = clone $c;
-        
+
         $c0 = clone $p1;
 
         // Convert line to normal form: ax + by + c = 0
@@ -221,7 +221,7 @@ class BezierToolbox
             $n->dot($c0) + $cl,
         ]);
         $roots = $roots->getRoots();
-        
+
         // Any roots in closed interval [0,1] are intersections on Bezier, but
         // might not be on the line segment.
         // Find intersections and calculate point coordinates
@@ -266,7 +266,7 @@ class BezierToolbox
             return false;
         }
     }
-    
+
     /**
      * Returns intersection between a cubic Bezier and a line
      *
@@ -340,7 +340,7 @@ class BezierToolbox
             return false;
         }
     }
-    
+
     /**
      * Returns coefficient of a point on a Bezier curve
      *
@@ -420,7 +420,7 @@ class BezierToolbox
 
         return $t;
     }
-    
+
     /**
      * Returns the sign of number
      *
@@ -436,7 +436,7 @@ class BezierToolbox
 
         return 1;
     }
-    
+
     /**
      * Sorts, but places -1 at the end
      *
@@ -498,7 +498,7 @@ class BezierToolbox
 
         return $best_t;
     }
-    
+
     /**
      * Returns points for a curve splitted on a given delta
      *
@@ -608,7 +608,7 @@ class BezierToolbox
         $a2 = $c1C1->asVector();
         $a3 = $c1C2->asVector();
         $a4 = $c1To->asVector();
-        
+
         $b1 = $c2From->asVector();
         $b2 = $c2C1->asVector();
         $b3 = $c2C2->asVector();
@@ -631,7 +631,7 @@ class BezierToolbox
         $b = $a2->multiply(3);
         $c = $a->add($b);
         $c11 = clone $c;
-        
+
         $c10 = clone $a1;
 
         // Cubic polynomial coefficients of the second curve
@@ -640,7 +640,7 @@ class BezierToolbox
         $c = $b3->multiply(-3);
         $d = $a->add($b->add($c->add($b4)));
         $c23 = clone $d;
-       
+
         $a = $b1->multiply(3);
         $b = $b2->multiply(-6);
         $c = $b3->multiply(3);
@@ -651,7 +651,7 @@ class BezierToolbox
         $b = $b2->multiply(3);
         $c = $a->add($b);
         $c21 = clone $c;
-        
+
         $c20 = clone $b1;
 
         // Moving on
@@ -696,7 +696,7 @@ class BezierToolbox
         // Brace yourself
 
         $coefs = array();
-        
+
         $coefs [] = -$c13x3*$c23y3 + $c13y3*$c23x3 - 3*$c13->getX()*$c13y2*$c23x2*$c23->getY() +
         3*$c13x2*$c13->getY()*$c23->getX()*$c23y2;
 
@@ -903,7 +903,7 @@ class BezierToolbox
                 $c10->getX() - $c20->getX() - $s*$c21->getX() - $s*$s*$c22->getX() - $s*$s*$s*$c23->getX()
             ]);
             $xRoots = $xP->getRoots();
-            
+
             $yP = new \Freesewing\Polynomial([
                 $c13->getY(),
                 $c12->getY(),
@@ -911,7 +911,7 @@ class BezierToolbox
                 $c10->getY() - $c20->getY() - $s*$c21->getY() - $s*$s*$c22->getY() - $s*$s*$s*$c23->getY()
             ]);
             $yRoots = $yP->getRoots();
-            
+
             if (count($xRoots) > 0 && count($yRoots) > 0) {
                 $TOLERANCE = 0.0001;
 
@@ -919,7 +919,7 @@ class BezierToolbox
 // Need a structure to break out of
                     for ($j=0; $j < count($xRoots); $j++) {
                         $xRoot = $xRoots[$j];
-                        
+
                         if (0 <= $xRoot && $xRoot <= 1) {
                             for ($k=0; $k < count($yRoots); $k++) {
                                 if (abs($xRoot - $yRoots[$k] ) < $TOLERANCE) {

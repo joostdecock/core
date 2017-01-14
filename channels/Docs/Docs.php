@@ -19,17 +19,38 @@ namespace Freesewing\Channels;
 class Docs extends Channel
 {
     /**
+     * Allows the channel designer to implement access control
+     *
+     * You may not want to make your channel publically accessible.
+     * You can limit access here in whatever way you like.
+     * You have access to the entire context to decide what to do.
+     *
+     * @param \Freesewing\Context $context The context object
+     *
+     * @return bool true Always true in this case
+     */
+    public function isValidRequest($context)
+    {
+        // The only thing we check is whether the pattern you request does actually exist
+        $patternServed = basename($context->getPattern()->getClassChain()[0]);
+        $patternRequested = $context->getRequest()->getData('pattern');
+
+        if($patternRequested == $patternServed) return true;
+        else return false;
+    }
+
+    /**
      * Turn input into model measurements that we understand.
      *
      * This loads measurement names from the pattern config file
-     * 
+     *
      * @todo What to do when measurments are missing?
      *
      * @param \Freesewing\Request $request The request object
      * @param \Freesewing\Patterns\[pattern] $pattern The pattern object
      *
      * @return array|null The model measurements or null of there are none
-     */ 
+     */
     public function standardizeModelMeasurements($request, $pattern)
     {
         if(isset($pattern->config['measurements']) && is_array($pattern->config['measurements'])) {
@@ -50,7 +71,7 @@ class Docs extends Channel
      * Turn input into pattern options that we understand.
      *
      * This loads pattern options from the sampler config file
-     * 
+     *
      * @todo What to do when options are missing?
      * @todo What about imperial?
      *
@@ -58,7 +79,7 @@ class Docs extends Channel
      * @param \Freesewing\Patterns\[pattern] $pattern The pattern object
      *
      * @return array|null The pattern options or null of there are none
-     */ 
+     */
     public function standardizePatternOptions($request, $pattern)
     {
         if(isset($pattern->config['options']) && is_array($pattern->config['options'])) {
@@ -82,7 +103,7 @@ class Docs extends Channel
                         else $options[$key] = $val['default'];
                         break;
                 }
-                
+
             }
             return $options;
         } else return null;

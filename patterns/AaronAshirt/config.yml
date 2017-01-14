@@ -15,6 +15,7 @@ languages:
     en: "English"
     nl: "Nederlands"
     de: "Deutsch"
+    fr: "French"
 measurements:
     acrossBack: 450
     bicepsCircumference: 335
@@ -72,6 +73,6 @@ options:
         min: -40
         max: 160
         default: 60
-inMemoryOf:   
+inMemoryOf:
     name: "Aaron Swartz"
     link: "https://en.wikipedia.org/wiki/Aaron_Swartz"

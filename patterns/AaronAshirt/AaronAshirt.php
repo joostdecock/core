@@ -2,6 +2,8 @@
 /** Freesewing\Patterns\AaronAshirt class */
 namespace Freesewing\Patterns;
 
+use Freesewing\Part;
+
 /**
  * The Aaron A-Shirt pattern
  *
@@ -11,6 +13,16 @@ namespace Freesewing\Patterns;
  */
 class AaronAshirt extends JoostBodyBlock
 {
+    /*
+        ___       _ _   _       _ _
+       |_ _|_ __ (_) |_(_) __ _| (_)___  ___
+        | || '_ \| | __| |/ _` | | / __|/ _ \
+        | || | | | | |_| | (_| | | \__ \  __/
+       |___|_| |_|_|\__|_|\__,_|_|_|___/\___|
+
+      Things we need to do before we can draft a pattern
+    */
+
     /**
      * Sets up options and values for our draft
      *
@@ -20,7 +32,7 @@ class AaronAshirt extends JoostBodyBlock
      * When extending this pattern so we can just implement the
      * initialize() method and re-use the other methods.
      *
-     * Good to know: 
+     * Good to know:
      * Options are typically provided by the user, but sometimes they are fixed
      * Values are calculated for re-use later
      *
@@ -43,34 +55,29 @@ class AaronAshirt extends JoostBodyBlock
         if ($this->getOption('stretchFactor') < 0.5) {
             $this->setOption('stretchFactor', 0.5);
         }
-        
+
         // Depth of the armhole
         $this->setValue('armholeDepth', 200 + ($model->m('shoulderSlope') / 2 - 27.5) + ($model->m('bicepsCircumference') / 10));
-        
+
         // Collar widht and depth
         $this->setValue('collarWidth', ($model->getMeasurement('neckCircumference') / self::PI) / 2 + 5);
         $this->setValue('collarDepth', ($model->getMeasurement('neckCircumference') + $this->getOption('collarEase')) / 5 - 8);
-        
+
         // Cut front armhole a bit deeper
-        $this->setValue('frontArmholeExtra', 5); 
-        
+        $this->setValue('frontArmholeExtra', 5);
+
     }
 
-    /**
-     * Add parts in config file to pattern
-     *
-     * I override the pattern's class loadParts() here
-     * because I want to not render the blocks that we're
-     * getting from the parent.
-     */
-    public function loadParts()
-    {
-        foreach ($this->config['parts'] as $part => $title) {
-            $this->addPart($part);
-            $this->parts[$part]->setTitle($title);
-        }
-    }
-    
+    /*
+        ____             __ _
+       |  _ \ _ __ __ _ / _| |_
+       | | | | '__/ _` | |_| __|
+       | |_| | | | (_| |  _| |_
+       |____/|_|  \__,_|_|  \__|
+
+      The actual sampling/drafting of the pattern
+    */
+
     /**
      * Generates a draft of the pattern
      *
@@ -85,9 +92,14 @@ class AaronAshirt extends JoostBodyBlock
     public function draft($model)
     {
         $this->sample($model);
-        
+
         $this->finalizeFront($model);
         $this->finalizeBack($model);
+
+        if ($this->isPaperless) {
+            $this->paperlessFront($model);
+            $this->paperlessBack($model);
+        }
     }
 
     /**
@@ -111,7 +123,7 @@ class AaronAshirt extends JoostBodyBlock
 
         $this->draftFront($model);
         $this->draftBack($model);
-        
+
         $this->parts['frontBlock']->setRender(false);
         $this->parts['backBlock']->setRender(false);
     }
@@ -226,6 +238,17 @@ class AaronAshirt extends JoostBodyBlock
         $p->paths['seamline']->setSample();
     }
 
+
+    /*
+       _____ _             _ _
+      |  ___(_)_ __   __ _| (_)_______
+      | |_  | | '_ \ / _` | | |_  / _ \
+      |  _| | | | | | (_| | | |/ /  __/
+      |_|   |_|_| |_|\__,_|_|_/___\___|
+
+      Adding titles/logos/seam-allowance/measurements and so on
+    */
+
     /**
      * Finalizes the front
      *
@@ -239,6 +262,7 @@ class AaronAshirt extends JoostBodyBlock
      */
     public function finalizeFront($model)
     {
+        /** @var Part $p */
         $p = $this->parts['front'];
 
         // Seam allowance | Point indexes from 200 upward
@@ -252,28 +276,25 @@ class AaronAshirt extends JoostBodyBlock
 
         // Instructions | Point indexes from 300 upward
         // Cut on fold line and grainline
-        $p->newPoint(300, 0, $p->y(100) + 20, 'Cut on fold endpoint top');
-        $p->newPoint(301, 20, $p->y(300), 'Cut on fold corner top');
-        $p->newPoint(302, 0, $p->y(111) - 20, 'Cut on fold endpoint bottom');
-        $p->newPoint(303, 20, $p->y(302), 'Cut on fold corner bottom');
-        $p->addPoint(304, $p->shift(301, 0, 15), 'Grainline top');
-        $p->addPoint(305, $p->shift(303, 0, 15), 'Grainline bottom');
+        $p->newPoint('cofTop', 0, $p->y(100) + 20, 'Cut on fold top');
+        $p->newPoint('cofBottom', 0, $p->y(111) - 20, 'Cut on fold bottom');
+        $p->newPoint('grainlineTop', 35, $p->y('cofTop'));
+        $p->newPoint('grainlineBottom', 35, $p->y('cofBottom'));
 
-        $p->newPath('cutOnFold', 'M 300 L 301 L 303 L 302', ['class' => 'double-arrow stroke-note stroke-lg']);
-        $p->newTextOnPath('cutonfold', 'M 303 L 301', $this->t('Cut on fold'), ['line-height' => 12, 'class' => 'text-lg fill-note', 'dy' => -2]);
-        $p->newPath('grainline', 'M 304 L 305', ['class' => 'grainline']);
-        $p->newTextOnPath('grainline', 'M 305 L 304', $this->t('Grainline'), ['line-height' => 12, 'class' => 'text-lg fill-gray1', 'dy' => -2]);
+        $p->newCutonfold('cofBottom', 'cofTop', $this->t('Cut on fold'));
+        $p->newGrainline('grainlineBottom', 'grainlineTop', $this->t('Grainline'));
 
         // Title
         $p->newPoint('titleAnchor', $p->x(5) * 0.4, $p->x(5) + 40, 'Title anchor');
         $p->addTitle('titleAnchor', 1, $this->t($p->title), $this->t('Cut 1 on fold'));
-        
+
         // Logo
         $p->addPoint('logoAnchor', $p->shift('titleAnchor', -90, 50));
         $p->newSnippet('logo', 'logo', 'logoAnchor');
+        $p->newSnippet('cc', 'cc', 'logoAnchor');
 
         // Scalebox
-        $p->addPoint('scaleboxAnchor', $p->shift('titleAnchor', -90, 80));
+        $p->addPoint('scaleboxAnchor', $p->shift('titleAnchor', -90, 90));
         $p->newSnippet('scalebox', 'scalebox', 'scaleboxAnchor');
 
         // Notes
@@ -286,7 +307,7 @@ class AaronAshirt extends JoostBodyBlock
         $p->clonePoint('.help-1', 307);
         $p->newNote(2, 307, $this->t("No\nseam\nallowance"), 4, 15, 0, $noteAttr);
 
-        $p->curveCrossesY(5, 107, 106, 102, $p->y(301), '.help-');
+        $p->curveCrossesY(5, 107, 106, 102, $p->y('grainlineTop'), '.help-');
         $p->clonePoint('.help-1', 308);
         $p->newNote(3, 308, $this->t("No\nseam\nallowance"), 8, 15, 0, $noteAttr);
 
@@ -295,41 +316,6 @@ class AaronAshirt extends JoostBodyBlock
 
         $p->newPoint(310, $p->x(110) - 40, $p->y(110), 'Note 5 anchor');
         $p->newNote(5, 310, $this->t('Hem allowance')."\n(".$this->unit(20).')', 12, 15, -10, ['line-height' => 6, 'class' => 'text-lg', 'dy' => -4]);
-
-        if ($this->isPaperless) {
-            $pAttr = ['class' => 'measure-lg'];
-            $tAttr = ['class' => 'text-lg fill-note text-center', 'dy' => -8];
-
-            $key = 'armholeUnits';
-            $path = 'M 102 C 106 107 5';
-            $p->offsetPathString($key, $path, -5, 1, $pAttr);
-            $p->newTextOnPath($key, $path, $this->t('Curve length').': '.$this->unit($p->curveLen(5, 107, 106, 102)), $tAttr);
-
-            $key = 'neckholeUnits';
-            $path = 'M 100 C 104 105 103';
-            $p->offsetPathString($key, $path, -5, 1, $pAttr);
-            $p->newTextOnPath($key, $path, $this->t('Curve length').': '.$this->unit($p->curveLen(100, 104, 105, 103)), $tAttr);
-
-            $key = 'sideSeamUnits';
-            $path = 'M 110 L 112 C 113 5 5';
-            $p->offsetPathString($key, $path, -5, 1, $pAttr);
-            $p->newTextOnPath($key, $path, $this->t('Seam length').': '.$this->unit($p->curveLen(112, 113, 5, 5) + $p->distance(110, 112)), $tAttr);
-
-            $key = 'hemUnits';
-            $path = 'M 111 L 110';
-            $p->offsetPathString($key, $path, -5, 1, $pAttr);
-            $p->newTextOnPath($key, $path, $this->unit($p->distance(110, 111)), $tAttr);
-
-            $key = 'CBUnits';
-            $path = 'M 111 L 100';
-            $p->offsetPathString($key, $path, -13, 1, $pAttr);
-            $p->newTextOnPath($key, $path, $this->unit($p->distance(100, 111)), ['class' => 'text-lg fill-note text-center', 'dy' => -7]);
-
-            $key = 'StrapUnits';
-            $path = 'M 103 L 102';
-            $p->offsetPathString($key, $path, -20, 1, $pAttr);
-            $p->newTextOnPath($key, $path, $this->unit($p->distance(102, 103)), ['class' => 'text-lg fill-note text-center', 'dy' => -13]);
-        }
     }
 
     /**
@@ -366,17 +352,13 @@ class AaronAshirt extends JoostBodyBlock
 
         // Instructions | Point indexes from 300 upward
         // Cut on fold line and grainline
-        $p->newPoint(300, 0, $p->y(100) + 20, 'Cut on fold endpoint top');
-        $p->newPoint(301, 20, $p->y(300), 'Cut on fold corner top');
-        $p->newPoint(302, 0, $p->y(111) - 20, 'Cut on fold endpoint bottom');
-        $p->newPoint(303, 20, $p->y(302), 'Cut on fold corner bottom');
-        $p->addPoint(304, $p->shift(301, 0, 15), 'Grainline top');
-        $p->addPoint(305, $p->shift(303, 0, 15), 'Grainline bottom');
+        $p->newPoint('cofTop', 0, $p->y(100) + 20, 'Cut on fold top');
+        $p->newPoint('cofBottom', 0, $p->y(111) - 20, 'Cut on fold bottom');
+        $p->newPoint('grainlineTop', 35, $p->y('cofTop'));
+        $p->newPoint('grainlineBottom', 35, $p->y('cofBottom'));
 
-        $p->newPath('cutOnFold', 'M 300 L 301 L 303 L 302', ['class' => 'double-arrow stroke-note stroke-lg']);
-        $p->newTextOnPath('cutonfold', 'M 303 L 301', $this->t('Cut on fold'), ['line-height' => 12, 'class' => 'text-lg fill-note', 'dy' => -2]);
-        $p->newPath('grainline', 'M 304 L 305', ['class' => 'grainline']);
-        $p->newTextOnPath('grainline', 'M 305 L 304', $this->t('Grainline'), ['line-height' => 12, 'class' => 'text-lg grainline', 'dy' => -2]);
+        $p->newCutonfold('cofBottom', 'cofTop', $this->t('Cut on fold'));
+        $p->newGrainline('grainlineBottom', 'grainlineTop', $this->t('Grainline'));
 
         // Notes
         $noteAttr = ['line-height' => 7, 'class' => 'text-lg'];
@@ -399,7 +381,7 @@ class AaronAshirt extends JoostBodyBlock
         $armholeLen = $p->curveLen(102, 106, 107, 5) + $this->parts['front']->curveLen(102, 106, 107, 5);
         $neckholeLen = $p->curveLen(103, 105, 104, 100) + $this->parts['front']->curveLen(103, 105, 104, 100);
 
-        $msg = $this->t('Cut two trips to finish the armholes').
+        $msg = $this->t('Cut two strips to finish the armholes').
             ":\n".
             $this->t('width').
             ': '.
@@ -419,42 +401,89 @@ class AaronAshirt extends JoostBodyBlock
             ': '.
             $this->unit($neckholeLen);
 
-        $p->newPoint('msgAnchor', $p->x(304) + 30, $p->y('logoAnchor')+50, 'Message anchor');
+        $p->newPoint('msgAnchor', $p->x('grainlineTop') + 30, $p->y('logoAnchor')+50, 'Message anchor');
         $p->newText('binding', 'msgAnchor', $msg, ['class' => 'text-lg fill-note', 'line-height' => 9]);
-
-        if ($this->isPaperless) {
-            $pAttr = ['class' => 'measure-lg'];
-            $tAttr = ['class' => 'text-lg fill-note text-center', 'dy' => -8];
-
-            $key = 'armholeUnits';
-            $path = 'M 102 C 106 107 5';
-            $p->offsetPathString($key, $path, -5, 1, $pAttr);
-            $p->newTextOnPath($key, $path, $this->t('Curve length').': '.$this->unit($p->curveLen(5, 107, 106, 102)), $tAttr);
-
-            $key = 'neckholeUnits';
-            $path = 'M 100 C 104 105 103';
-            $p->offsetPathString($key, $path, -5, 1, $pAttr);
-            $p->newTextOnPath($key, $path, $this->t('Curve length').': '.$this->unit($p->curveLen(100, 104, 105, 103)), $tAttr);
-
-            $key = 'sideSeamUnits';
-            $path = 'M 110 L 112 C 113 5 5';
-            $p->offsetPathString($key, $path, -5, 1, $pAttr);
-            $p->newTextOnPath($key, $path, $this->t('Seam length').': '.$this->unit($p->curveLen(112, 113, 5, 5) + $p->distance(110, 112)), $tAttr);
-
-            $key = 'hemUnits';
-            $path = 'M 111 L 110';
-            $p->offsetPathString($key, $path, -5, 1, $pAttr);
-            $p->newTextOnPath($key, $path, $this->unit($p->distance(110, 111)), $tAttr);
-
-            $key = 'CBUnits';
-            $path = 'M 111 L 100';
-            $p->offsetPathString($key, $path, -13, 1, $pAttr);
-            $p->newTextOnPath($key, $path, $this->unit($p->distance(100, 111)), ['class' => 'text-lg fill-note text-center', 'dy' => -7]);
-
-            $key = 'StrapUnits';
-            $path = 'M 103 L 102';
-            $p->offsetPathString($key, $path, -20, 1, $pAttr);
-            $p->newTextOnPath($key, $path, $this->unit($p->distance(102, 103)), ['class' => 'text-lg fill-note text-center', 'dy' => -13]);
-        }
     }
+
+    /*
+        ____                       _
+       |  _ \ __ _ _ __   ___ _ __| | ___  ___ ___
+       | |_) / _` | '_ \ / _ \ '__| |/ _ \/ __/ __|
+       |  __/ (_| | |_) |  __/ |  | |  __/\__ \__ \
+       |_|   \__,_| .__/ \___|_|  |_|\___||___/___/
+                  |_|
+
+      Instructions for paperless patterns
+    */
+
+    /**
+     * Adds paperless info for the front
+     *
+     * @param \Freesewing\Model $model The model to draft for
+     *
+     * @return void
+     */
+    public function paperlessFront($model)
+    {
+        /** @var \Freesewing\Part $p */
+        $p = $this->parts['front'];
+
+        // Widths at bottom
+        $yBase = $p->y(110);
+        $p->newWidthDimension(111,110, $yBase+35);
+        $p->newWidthDimension(111,5, $yBase+50);
+
+        // Heights left side
+        $xBase = $p->x(111);
+        $p->newHeightDimension(111,100, $xBase-10);
+        $p->newHeightDimension(111,103, $xBase-25);
+
+        // Heights right side
+        $xBase = $p->x(5);
+        $p->newCurvedDimension('M 110 L 112 C 113 5 5', 20);
+        $p->newHeightDimension(110,5, $xBase+35);
+        $p->newHeightDimension(110,102, $xBase+50);
+
+        // Widths at top
+        $yBase = $p->y(103);
+        $p->newLinearDimension(103,102, -20);
+        $p->newWidthDimension(100,103, $yBase-20);
+        $p->newWidthDimension(100,102, $yBase-35);
+    }
+
+    /**
+     * Adds paperless info for the back
+     *
+     * @param \Freesewing\Model $model The model to draft for
+     *
+     * @return void
+     */
+    public function paperlessBack($model)
+    {
+        /** @var \Freesewing\Part $p */
+        $p = $this->parts['back'];
+
+        // Widths at bottom
+        $yBase = $p->y(110);
+        $p->newWidthDimension(111,110, $yBase+35);
+        $p->newWidthDimension(111,5, $yBase+50);
+
+        // Heights left side
+        $xBase = $p->x(111);
+        $p->newHeightDimension(111,100, $xBase-10);
+        $p->newHeightDimension(111,103, $xBase-25);
+
+        // Heights right side
+        $xBase = $p->x(5);
+        $p->newCurvedDimension('M 110 L 112 C 113 5 5', 20);
+        $p->newHeightDimension(110,5, $xBase+35);
+        $p->newHeightDimension(110,102, $xBase+50);
+
+        // Widths at top
+        $yBase = $p->y(103);
+        $p->newLinearDimension(103,102, -20);
+        $p->newWidthDimension(100,103, $yBase-20);
+        $p->newWidthDimension(100,102, $yBase-35);
+    }
+
 }

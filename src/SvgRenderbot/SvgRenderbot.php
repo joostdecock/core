@@ -13,13 +13,13 @@ class SvgRenderbot
 {
     /** @var string TAB In the holy war of tab vs spaces, we're on the spaces side. Richard Hendricks be damned. */
     const TAB = '    ';
-    
+
     /** @var int $tabs Keeps track of how many times we need to indent */
     private $tabs = 0;
-    
+
     /** @var int $freeId Counter to give as an unused ID */
     private $freeId = 1;
-    
+
     /** @var array $openGroups Where we keep track of currently opened groups */
     private $openGroups = array();
 
@@ -161,7 +161,7 @@ class SvgRenderbot
     }
 
     /**
-     * Returns SVG code for a pattern
+     * Returns SVG code for a pattern part
      *
      * This renders the following elements contained within the part:
      *  - includes
@@ -170,6 +170,7 @@ class SvgRenderbot
      *  - texts
      *  - textsonpath
      *  - notes
+     *  - dimensions
      *
      * @param \Freesewing\Part The part to render
      *
@@ -207,6 +208,11 @@ class SvgRenderbot
         if (@$part->notes) {
             foreach ($part->notes as $note) {
                 $svg .= $this->renderNote($note, $part);
+            }
+        }
+        if (@$part->dimensions) {
+            foreach ($part->dimensions as $dimension) {
+                $svg .= $this->renderDimension($dimension, $part);
             }
         }
 
@@ -278,10 +284,6 @@ class SvgRenderbot
     /**
      * Returns SVG code for text
      *
-     * This takes care of both text and textOnPath
-     * The latter is simply called with the last parameter set to true
-     * from renderTextOnPath()
-     *
      * There's a special attribute 'line-height' that can be set in the
      * text attributes. If it's present, it will be used to set the offset
      * between lines of text, and somewhat imitating the line-heigt attribute
@@ -291,26 +293,14 @@ class SvgRenderbot
      *
      * @param \Freesewing\Text|\Freesewing\TextOnPath $text The Text or TextOnPath to render
      * @param \Freesewing\Part $part The part this text is part of
-     * @param bool $textOnPath True the text is to be placed on a path
      *
      * @return string The SVG code for the rendered text
      */
-    private function renderText($text, $part, $textOnPath = false)
+    private function renderText($text, $part)
     {
-        if ($textOnPath !== false) {
-// Text on path
-            $path = $text->getPath();
-            $id = $this->getUid();
-            $path->setAttributes(['class' => 'textpath', 'id' => $id]);
-            $svg = $this->renderPath($path, $part);
-            $svg .= $this->nl();
-            $svg .= '<text ';
-        } else {
-// Regular text
-            $anchor = $text->getAnchor();
-            $svg = $this->nl();
-            $svg .= '<text x="'.$anchor->getX().'" y="'.$anchor->getY().'" ';
-        }
+        $anchor = $text->getAnchor();
+        $svg = $this->nl();
+        $svg .= '<text x="'.$anchor->getX().'" y="'.$anchor->getY().'" ';
         if (!isset($text->attributes['id'])) {
             $svg .= 'id="'.$this->getUid().'" ';
         }
@@ -322,22 +312,14 @@ class SvgRenderbot
         $svg .= Utils::flattenAttributes($text->getAttributes(), ['line-height']);
         $svg .= '>';
 
-        if ($textOnPath !== false) {
-// Text on path
-            $svg .= "<textPath xlink:href=\"#$id\" startOffset=\"50%\">".
-                '<tspan '.Utils::flattenAttributes($text->getAttributes()).'>'.$text->getText().'</tspan>'.
-                '</textPath>';
-        } else {
-// Regular text
-            $lines = explode("\n", $text->getText());
-            $attr = '';
-            $this->indent();
-            foreach ($lines as $line) {
-                $svg .= $this->nl()."<tspan $attr>$line</tspan>";
-                $attr = 'x="'.$anchor->getX().'" dy="'.$lineHeight.'"';
-            }
-            $this->outdent();
+        $lines = explode("\n", $text->getText());
+        $attr = '';
+        $this->indent();
+        foreach ($lines as $line) {
+            $svg .= $this->nl()."<tspan $attr>$line</tspan>";
+            $attr = 'x="'.$anchor->getX().'" dy="'.$lineHeight.'"';
         }
+        $this->outdent();
         $svg .= '</text>';
 
         return $svg;
@@ -364,11 +346,41 @@ class SvgRenderbot
     }
 
     /**
+     * Returns SVG code for a dimension
+     *
+     * A dimension has a Path, a TextOnPath and optional leaders (which are
+     * also paths). Se we just render them each
+     *
+     * @param \Freesewing\Dimension $dimension The dimension to render
+     * @param \Freesewing\Part $part The part this dimension is part of
+     *
+     * @return string The SVG code for the rendered dimension
+     */
+    private function renderDimension($dimension, $part)
+    {
+        // Label
+        $svg = $this->renderTextOnPath($dimension->getLabel(), $part);
+
+        // Leaders
+        $leaders = $dimension->getLeaders();
+        if(is_array($leaders) && count($leaders)>0) {
+            foreach($leaders as $leader) {
+                $svg .= $this->renderPath($leader, $part);
+            }
+        }
+
+        return $svg;
+    }
+
+    /**
      * Returns SVG code for a textOnPath
      *
-     * This just calls renderText in textOnPath mode
+     * There's a special attribute 'line-height' that can be set in the
+     * text attributes. If it's present, it will be used to set the offset
+     * between lines of text, and somewhat imitating the line-heigt attribute
+     * of HTML text (SVG has no such thing).
      *
-     * @see \Freesewing\SvgRenderbot::renderText()
+     * To get multi-line text, just include linebreaks (\n) in your input text.
      *
      * @param \Freesewing\TextOnPath $textOnPath The textOnPath to render
      * @param \Freesewing\Part $part The part this textOnPath is part of
@@ -377,6 +389,32 @@ class SvgRenderbot
      */
     private function renderTextOnPath($textOnPath, $part)
     {
-        return $this->renderText($textOnPath, $part, true);
+        $path = $textOnPath->getPath();
+        $id = $path->getAttribute('id');
+        // Make sure path has an ID
+        if(!$id || strlen($id) < 1) {
+            $id = $this->getUid();
+            $path->setAttribute('id', $id);
+        }
+        $svg = $this->renderPath($path, $part);
+        $svg .= $this->nl();
+        $svg .= '<text ';
+        if (!isset($textOnPath->attributes['id'])) {
+            $svg .= 'id="'.$this->getUid().'" ';
+        }
+        if (isset($textOnPath->attributes['line-height'])) {
+            $lineHeight = $textOnPath->attributes['line-height'];
+        } else {
+            $lineHeight = 12;
+        }
+        $svg .= Utils::flattenAttributes($textOnPath->getAttributes(), ['line-height']);
+        $svg .= '>';
+
+        $svg .= "<textPath xlink:href=\"#$id\" startOffset=\"50%\">".
+            '<tspan '.Utils::flattenAttributes($textOnPath->getAttributes()).'>'.$textOnPath->getText().'</tspan>'.
+            '</textPath>';
+        $svg .= '</text>';
+
+        return $svg;
     }
 }

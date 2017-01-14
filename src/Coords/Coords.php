@@ -16,10 +16,10 @@ class Coords
 {
     /** * @var float $x X-coordinate */
     public $x = null;
-    
+
     /** @var float $y Y-coordinate */
     public $y = null;
-    
+
     /**
      * Sets the X-coordinate
      *

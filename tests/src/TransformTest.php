@@ -89,7 +89,7 @@ class TransformTest extends \PHPUnit\Framework\TestCase
     {
         $transform = new \Freesewing\Transform('rotate', 52, null, 30);
     }
-    
+
     /**
      * @expectedException InvalidArgumentException
      * @expectedExceptionMessage Missing parameter x
@@ -116,7 +116,7 @@ class TransformTest extends \PHPUnit\Framework\TestCase
     {
         $transform = new \Freesewing\Transform('translate');
     }
-    
+
     /**
      * @expectedException InvalidArgumentException
      * @expectedExceptionMessage Missing parameter x
@@ -125,7 +125,7 @@ class TransformTest extends \PHPUnit\Framework\TestCase
     {
         $transform = new \Freesewing\Transform('scale');
     }
-    
+
     /**
      * @expectedException InvalidArgumentException
      * @expectedExceptionMessage Missing parameter x
@@ -134,7 +134,7 @@ class TransformTest extends \PHPUnit\Framework\TestCase
     {
         $transform = new \Freesewing\Transform('rotate');
     }
-    
+
     /**
      * @expectedException InvalidArgumentException
      * @expectedExceptionMessage not a supported transform type
@@ -152,7 +152,7 @@ class TransformTest extends \PHPUnit\Framework\TestCase
     {
         $transform = new \Freesewing\Transform('rotate', 52, 'sorcha', 30);
     }
-    
+
     /**
      * @expectedException InvalidArgumentException
      * @expectedExceptionMessage Missing parameter for rotate transform
@@ -161,7 +161,7 @@ class TransformTest extends \PHPUnit\Framework\TestCase
     {
         $transform = new \Freesewing\Transform('rotate', 52, null, 30);
     }
-    
+
     /**
      * @expectedException InvalidArgumentException
      * @expectedExceptionMessage Missing parameter for rotate transform

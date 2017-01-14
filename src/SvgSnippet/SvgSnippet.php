@@ -13,13 +13,13 @@ class SvgSnippet
 {
     /** @var \Freesewing\Point $anchor The point to anchor the snippet on */
     private $anchor;
-    
+
     /** @var string $reference The ID of the element in defs */
     private $reference = null;
-    
+
     /** @var string $description An optional description of the snippet */
     private $description = null;
-    
+
     /** @var array $attributes The snippet attributes */
     private $attributes;
 
@@ -62,7 +62,7 @@ class SvgSnippet
     {
         return $this->attributes;
     }
-    
+
     /**
      * Sets the anchor property
      *

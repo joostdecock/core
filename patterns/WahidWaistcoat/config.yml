@@ -1,5 +1,5 @@
 info:
-    name: "Wahid Waistcoat (being ported)"
+    name: "Wahid Waistcoat"
     version: "2.0"
     date: 20161206
     author: "Joost De Cock"
@@ -13,6 +13,8 @@ parts:
     waistcoatFrontBlock: "Waistcoat front block"
     front: "Front"
     back: "Back"
+    frontFacing: "Front facing"
+    frontLining: "Front lining"
     pocketWelt: "Pocket welt"
     pocketFacing: "Pocket facing"
     pocketBag: "Pocket bag"
@@ -29,10 +31,10 @@ measurements:
     chestCircumference: 1080
     naturalWaistToHip: 120
     neckCircumference: 420
-    shoulderLength: 160
-    shoulderSlope: 40
+    shoulderLength: 150
+    shoulderSlope: 55
     hipsCircumference: 950
-    waistCircumference: 885
+    naturalWaist: 885
 
 options:
     chestEase:
@@ -52,14 +54,9 @@ options:
         default: 40
     lengthBonus:
         type: "measure"
-        min: -40
-        max:  60
+        min:  0
+        max:  50
         default: 15
-    backNeckCutout:
-        type: "measure"
-        min: 10
-        max: 35
-        default: 25
     neckInset:
         type: "measure"
         min: 0
@@ -72,12 +69,12 @@ options:
         default: 20
     backInset:
         type: "measure"
-        min: 0
-        max: 45
+        min: 15
+        max: 55
         default: 25
-    inset:
+    frontInset:
         type: "measure"
-        min: 0
+        min: 15
         max: 45
         default: 30
     frontDrop:
@@ -92,7 +89,7 @@ options:
             2: "Rounded"
         default: 1
     hemStyle:
-        type: chooseOne
+        type: "chooseOne"
         options:
             1: "Classic"
             2: "Rounded"

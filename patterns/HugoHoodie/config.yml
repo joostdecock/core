@@ -5,7 +5,7 @@ info:
     author:     "Joost De Cock"
     email:      "joost@decock.org"
     company:    "freesewing.org"
-    link:       "freesewing.org/pattern/hname-hoodie/"
+    link:       "freesewing.org/pattern/hugo-hoodie/"
 
 parts:
     backBlock:      "Back block"
@@ -25,6 +25,8 @@ parts:
 languages:
     en: English
     nl: Nederlands
+    de: Deutsch
+    fr: French
 
 measurements:
     acrossBack: 450
@@ -36,7 +38,7 @@ measurements:
     shoulderLength: 160
     shoulderSlope: 40
     hipsCircumference: 950
-    sleeveLengthToWrist: 700  
+    sleeveLengthToWrist: 700
     wristCircumference: 190
     headCircumference: 590
 
@@ -67,6 +69,6 @@ options:
         max: 100
         default: 90
 
-inMemoryOf:   
+inMemoryOf:
     name: "Hugo De Cock"
     link: "https://www.instagram.com/p/p6CnG3rpir/"

@@ -1,0 +1,55 @@
+info:
+    name: "Theo trousers"
+    version: "2.0"
+    date: 20161229
+    author: "Joost De Cock"
+    email: "joost@decock.org"
+    company: "freesewing.org"
+    link: "freesewing.org/pattern/theo-trousers/"
+
+parts:
+    back: "Back"
+    front: "Front"
+    waistbandInterfacingLeft: "Waistband interfacing left"
+    waistbandInterfacingRight: "Waistband interfacing right"
+    waistbandLeft: "Waistband left"
+    waistbandRight: "Waistband right"
+    waistbandLiningLeft: "Waistband lining left"
+    waistbandLiningRight: "Waistband lining right"
+    flyPiece: "Fly piece"
+    flyShield: "Fly shield"
+    sidePiece: "Side piece"
+    frontPocketBag: "Front pocket bag"
+    backInnerPocketBag: "Back inner pocket bag"
+    backOuterPocketBag: "Back outer pocket bag"
+    backPocketFacing: "Back pocket facing"
+    backPocketInterfacing: "Back pocket interfacing"
+    beltLoop: "Belt loop"
+
+languages:
+    en: "English"
+    nl: "Nederlands"
+    de: "Deutsch"
+
+measurements:
+    hipsCircumference: 950
+    seatCircumference: 1045
+    inseam: 910
+    bodyRise: 200
+
+options:
+    waistbandWidth:
+        type: "measure"
+        min: -10
+        max: 60
+        default: 40
+    waistbandRise:
+        type: "measure"
+        min: 0
+        max: 60
+        default: 40
+    lengthBonus:
+        type: "measure"
+        min: -60
+        max: 80
+        default: 0

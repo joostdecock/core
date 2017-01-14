@@ -8,7 +8,7 @@ class SvgCssTest extends \PHPUnit\Framework\TestCase
     {
         $data = 'sorcha';
         $expectedResult = "\n<style type=\"text/css\">\n    <![CDATA[\n    sorcha\n    ]]>\n</style>\n";
-        
+
         $object = new \Freesewing\SvgCss();
         $object->add($data);
         $this->assertEquals($expectedResult, $object->load());

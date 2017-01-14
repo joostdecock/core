@@ -24,10 +24,10 @@ class Path
 
     /** @var bool $render To render this path or not */
     private $render = true;
-    
+
     /** @var array $attributes The path attributest */
     private $attributes = array();
-    
+
     /** @var string $path The SVG pathstring */
     private $path = null;
 
@@ -129,6 +129,29 @@ class Path
     public function getAttributes()
     {
         return $this->attributes;
+    }
+
+    /**
+     * Sets a path attribute
+     *
+     * @param string $key
+     * @param scalar $value
+     */
+    public function setAttribute($key, $value)
+    {
+        $this->attributes[$key] = $value;
+    }
+
+    /**
+     * Returns an attribute value
+     *
+     * @param string $key
+     *
+     * @return scalar
+     */
+    public function getAttribute($key)
+    {
+        if(isset($this->attributes[$key])) return $this->attributes[$key];
     }
 
     /**
@@ -298,5 +321,32 @@ class Path
         }
 
         return $paths;
+    }
+
+    /**
+     * Gets the start point of the path
+     *
+     * @return string ID of the path's start point
+     */
+    public function getStartPoint()
+    {
+        $points = Utils::asScrubbedArray($this->getPath());
+
+        return $points[1];
+    }
+
+    /**
+     * Gets the end point of the path
+     *
+     * @return string ID of the path's start point
+     */
+    public function getEndPoint()
+    {
+        $points = Utils::asScrubbedArray($this->getPath());
+
+        $last = array_pop($points);
+
+        if(strtolower($last) == 'z') return $points[1];
+        else return $last;
     }
 }

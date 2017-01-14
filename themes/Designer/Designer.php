@@ -18,6 +18,8 @@ class Designer extends Theme
      */
     public function themePattern($pattern)
     {
+        parent::themePattern($pattern);
+
         foreach ($pattern->parts as $partKey => $part) {
             if ($part->getRender() == true) {
                 // @todo Add a way to highlight a point (Like the old 'only' request parameter)
@@ -26,10 +28,8 @@ class Designer extends Theme
                 $this->highlightPoints($partKey, $part);
             }
         }
-        $this->messages = $pattern->getMessages();
+
         $this->debug = $pattern->getDebug();
-        $pattern->replace('__SCALEBOX_METRIC__', $pattern->t('__SCALEBOX_METRIC__'));
-        $pattern->replace('__SCALEBOX_IMPERIAL__', $pattern->t('__SCALEBOX_IMPERIAL__'));
     }
 
     /**

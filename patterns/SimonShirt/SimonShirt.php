@@ -167,6 +167,8 @@ class SimonShirt extends JoostBodyBlock
             $this->paperlessUndercollar($model);
             $this->paperlessSleevePlacketUnderlap($model);
             $this->paperlessSleevePlacketOverlap($model);
+            if($this->o('cuffStyle') > 3) $this->paperlessFrenchCuff($model);
+            else $this->paperlessBarrelCuff($model);
         }
     }
 
@@ -2009,7 +2011,7 @@ class SimonShirt extends JoostBodyBlock
 
         // Title
         $p->newPoint('titleAnchor', 0, $p->y(-8));
-        $p->addTitle('titleAnchor', 11, $this->t($p->title), '4x '.$this->t('from main fabric'), 'small');
+        $p->addTitle('titleAnchor', 11, $this->t($p->title), '4x '.$this->t('from main fabric').' + 4x '.$this->t('from interfacing'), 'small');
     }
 
     /**
@@ -2024,12 +2026,15 @@ class SimonShirt extends JoostBodyBlock
         /** @var Part $p */
         $p = $this->parts['frenchCuff'];
 
+        // Foldline
+        $p->newPath('foldline', 'M -4 L 4', ['class' => 'foldline']);
+
         // Seam allowance
         $p->offsetPath('sa', 'outline', -10, 1, ['class' => 'seam-allowance']);
 
         // Title
         $p->newPoint('titleAnchor', 0, $p->y(-3));
-        $p->addTitle('titleAnchor', 11, $this->t($p->title), '4x '.$this->t('from main fabric'));
+        $p->addTitle('titleAnchor', 11, $this->t($p->title), '4x '.$this->t('from main fabric').' + 4x '.$this->t('from interfacing'));
     }
 
     /*
@@ -2542,6 +2547,9 @@ class SimonShirt extends JoostBodyBlock
         $p->newHeightDimensionSm(4,3,$p->x(1)+15);
         $p->newHeightDimensionSm(3,2,$p->x(1)+15);
         $p->newHeightDimensionSm(2,1,$p->x(1)+15);
+
+        $p->addPoint('noteAnchor', $p->shift(5,180,50));
+        $p->newNote('saNote', 'noteAnchor', $this->t("No\nseam\nallowance"), 12, 20, 0);
     }
     
     /**
@@ -2571,5 +2579,74 @@ class SimonShirt extends JoostBodyBlock
         $p->newHeightDimensionSm(16,17,$p->x(1)+15);
         $p->newHeightDimension(16,1,$p->x(1)+30);
         $p->newHeightDimensionSm(30,24,$p->x(30)+15);
+
+        $p->addPoint('noteAnchor', $p->shift(16,180,50));
+        $p->newNote('saNote', 'noteAnchor', $this->t("No\nseam\nallowance"), 12, 20, 0);
+
+    }
+    
+    /**
+     * Adds paperless info for the barrel cuff
+     *
+     * @param \Freesewing\Model $model The model to draft for
+     *
+     * @return void
+     */
+    public function paperlessBarrelCuff($model)
+    {
+        /** @var Part $p */
+        $p = $this->parts['barrelCuff'];
+    
+        if($this->o('cuffButtonRows') == 2) {
+            $p->newWidthDimensionSm(-4,-8,$p->y(-4)+25);
+            $p->newWidthDimensionSm(8,4,$p->y(-4)+25);
+            $p->newHeightDimensionSm(4,8,$p->x(4)+20);
+            $p->newHeightDimensionSm(8,7,$p->x(4)+20);
+            if($this->o('barrelcuffNarrowButton') == 1) {
+                $p->newWidthDimensionSm(11,8,$p->y(-4)+25);
+            }
+        } else {
+            $p->newWidthDimensionSm(-4,-6,$p->y(-4)+25);
+            $p->newWidthDimensionSm(6,4,$p->y(-4)+25);
+            $p->newHeightDimensionSm(4,6,$p->x(4)+20);
+            if($this->o('barrelcuffNarrowButton') == 1) {
+                $p->newWidthDimensionSm(9,6,$p->y(-4)+25);
+            }
+        }
+        $p->newWidthDimension(-4,4,$p->y(4)+40);
+        
+        if($this->o('cuffStyle') < 3) {
+            $p->newWidthDimensionSm(-12,-13,$p->y(13)-20);
+            $p->newHeightDimensionSm(-12,-13,$p->x(-12)-20);
+            $p->newHeightDimension(4,13,$p->x(4)+35);
+        } else {
+            $p->newHeightDimension(4,2,$p->x(4)+35);
+        }
+    }
+    
+    /**
+     * Adds paperless info for the French cuff
+     *
+     * @param \Freesewing\Model $model The model to draft for
+     *
+     * @return void
+     */
+    public function paperlessFrenchCuff($model)
+    {
+        /** @var Part $p */
+        $p = $this->parts['frenchCuff'];
+    
+        if($this->o('cuffStyle') < 6) {
+            $p->newWidthDimensionSm(-17,-18,$p->y(-18)+20);
+            $p->newHeightDimensionSm(-18,-17,$p->x(-17)-20);
+        }
+        
+        $p->newWidthDimensionSm(7,17,$p->y(18)+20);
+        $p->newHeightDimensionSm(18,7,$p->x(17)+20);
+        $p->newHeightDimensionSm(6,13,$p->x(17)+20);
+        
+        $p->newWidthDimension(-17,17,$p->y(18)+35);
+        $p->newHeightDimension(18,13,$p->x(17)+35);
     }
 }
+

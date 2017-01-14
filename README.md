@@ -1,28 +1,22 @@
 # fso
-Freesewing development
+Freesewing is a rewrite of the code that runs the MakeMyPattern.com backend.
+
+It is currently feauture-complete with that legacy code, and we're gearing up to our first public release.
 
 ## System Requirements
-* PHP 7 (but PHP 5.6 will work, too)
+* PHP 5.6 (we recommend PHP 7)
 * composer
 
 ## Installation
 
 ### composer
-Taken from the composer installation page: https://getcomposer.org/download/
-<br />(The composer changes from time to time, so always check on the link above for the most current install instructions, specially the hash value)
-```
- php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');"
- php -r "if (hash_file('SHA384', 'composer-setup.php') === '55d6ead61b29c7bdee5cccfb50076874187bd9f21f65d8991d46ec5cc90518f447387fb9f76ebae1fbbacf329e583e30') { echo 'Installer verified'; } else { echo 'Installer corrupt'; unlink('composer-setup.php'); } echo PHP_EOL;"
- php composer-setup.php
- php -r "unlink('composer-setup.php');"
-```
+Install composer. For instructions, see the composer installation page: https://getcomposer.org/download/
 
 ### fso
 ```
  git clone git@github.com:joostdecock/fso.git
  composer install
  composer dump-autoload -o
- copy htaccess to .htaccess
 ```
 
 ## First call

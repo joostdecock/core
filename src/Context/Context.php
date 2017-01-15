@@ -12,14 +12,12 @@ use Symfony\Component\Translation\Loader\YamlFileLoader;
  * This context class holds all information that we need throughout the request.
  *
  * @author Joost De Cock <joost@decock.org>
- * @copyright 2016 Joost De Cock
+ * @copyright 2016-2017 Joost De Cock
  * @license http://opensource.org/licenses/GPL-3.0 GNU General Public License, Version 3
  */
 class Context
 {
-    /**
-     * @var \Freesewing\Services\AbstractService
-     */
+    /** @var \Freesewing\Services\AbstractService */
     protected $service;
 
     /** @var \Freesewing\Patterns\Pattern */
@@ -285,12 +283,6 @@ class Context
         $themeTranslations = $this->theme->getTranslationFiles($locale, $altloc);
         $patternTranslations = $this->pattern->getTranslationFiles($locale, $altloc);
 
-        // Check if there is a theme-localization
-        // allow to translate patterns independent of the theme
-        if (!isset($themeTranslations[$locale])) {
-            $themeTranslations[$locale] = $themeTranslations[$altloc];
-        }
-
         $translations[$locale] = array_merge($themeTranslations[$locale], $patternTranslations[$locale]);
         $translations[$altloc] = array_merge($themeTranslations[$altloc], $patternTranslations[$altloc]);
 
@@ -386,10 +378,8 @@ class Context
             $service = $this->config['defaults']['service'];
         }
         $class = '\\Freesewing\\Services\\'.ucfirst($service).'Service';
-        if (class_exists($class)) {
-            $serviceObject = new $class();
-            return $serviceObject;
-        }
+        
+        return new $class();
     }
 
     /**

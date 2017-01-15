@@ -477,9 +477,6 @@ abstract class Pattern
      */
     public function cleanUp()
     {
-        foreach ($this->parts as $partKey => $part) {
-            unset($part->tmp);
-        }
     }
 
     /**

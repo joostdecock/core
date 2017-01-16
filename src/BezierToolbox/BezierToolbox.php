@@ -28,7 +28,7 @@ class BezierToolbox
      * @param \Freesewing\Point $end The end of the curve
      * @return bool True if it is. False if it is not closed.
      */
-    static function findBezierBoundary($start, $cp1, $cp2, $end)
+    public static function findBezierBoundary($start, $cp1, $cp2, $end)
     {
         $steps = BezierToolbox::$steps;
         for ($i = 0; $i <= $steps; ++$i) {
@@ -88,7 +88,7 @@ class BezierToolbox
      *
      * @return \Freesewing\Point The point at the edge
      */
-    static function findBezierEdge($start, $cp1, $cp2, $end, $direction = 'left')
+    public static function findBezierEdge($start, $cp1, $cp2, $end, $direction = 'left')
     {
         $steps = BezierToolbox::$steps;
         for ($i = 0; $i <= $steps; ++$i) {
@@ -254,7 +254,6 @@ class BezierToolbox
                 } elseif ($p10->gte($min) && $p10->lte($max)) {
                     $points[] = $p10;
                 }
-
             }
         }
         if (isset($points) && is_array($points)) {
@@ -310,7 +309,7 @@ class BezierToolbox
         $D = pow($Q, 3) + pow($R, 2);    // polynomial discriminant
 
         if ($D >= 0) {
-// complex or duplicate roots
+            // complex or duplicate roots
             $S = BezierToolbox::sgn($R + sqrt($D)) * pow(abs($R + sqrt($D)), 1 / 3);
             $T = BezierToolbox::sgn($R - sqrt($D)) * pow(abs($R - sqrt($D)), 1 / 3);
 
@@ -325,7 +324,7 @@ class BezierToolbox
                 $t[2] = -1;
             }
         } else {
-// distinct real roots
+            // distinct real roots
             $th = acos($R / sqrt(pow($Q, 3) * -1));
 
             $t[0] = 2 * sqrt(-1 * $Q) * cos($th / 3) - $A / 3;
@@ -842,13 +841,13 @@ class BezierToolbox
                 $TOLERANCE = 0.0001;
 
                 if (true) {
-// Need a structure to break out of
+                    // Need a structure to break out of
                     for ($j=0; $j < count($xRoots); $j++) {
                         $xRoot = $xRoots[$j];
 
                         if (0 <= $xRoot && $xRoot <= 1) {
                             for ($k=0; $k < count($yRoots); $k++) {
-                                if (abs($xRoot - $yRoots[$k] ) < $TOLERANCE) {
+                                if (abs($xRoot - $yRoots[$k]) < $TOLERANCE) {
                                     $j1  = $c21->multiply($s);
                                     $j2  = $j1->add($c20);
                                     $j3 = $c22->multiply($s*$s);

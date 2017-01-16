@@ -2,6 +2,9 @@
 /** Freesewing\BezierToolbox class */
 namespace Freesewing;
 
+use \Freesewing\Point;
+use \Freesewing\Boundary;
+
 /**
  * Calculations involving Bezier curves.
  *
@@ -11,8 +14,8 @@ namespace Freesewing;
  */
 class BezierToolbox
 {
-    /** @var int Number of steps when walking a path */
-    public static $steps = 100;
+    /** Number of steps when walking a path */
+    const STEPS = 100;
 
     /**
      * Finds the boundary of a Bezier curve
@@ -28,9 +31,9 @@ class BezierToolbox
      * @param \Freesewing\Point $end The end of the curve
      * @return bool True if it is. False if it is not closed.
      */
-    public static function findBezierBoundary($start, $cp1, $cp2, $end)
+    public static function findBezierBoundary(Point $start, Point $cp1, Point $cp2, Point $end)
     {
-        $steps = BezierToolbox::$steps;
+        $steps = self::STEPS;
         for ($i = 0; $i <= $steps; ++$i) {
             $t = $i / $steps;
             $x = Utils::bezierPoint($t, $start->getX(), $cp1->getX(), $cp2->getX(), $end->getX());
@@ -59,14 +62,14 @@ class BezierToolbox
             $previousX = $x;
             $previousY = $y;
         }
-        $topLeft = new \Freesewing\Point();
+        $topLeft = new Point();
         $topLeft->setX($minX);
         $topLeft->setY($minY);
-        $bottomRight = new \Freesewing\Point();
+        $bottomRight = new Point();
         $bottomRight->setX($maxX);
         $bottomRight->setY($maxY);
 
-        $boundary = new \Freesewing\Boundary();
+        $boundary = new Boundary();
         $boundary->setTopLeft($topLeft);
         $boundary->setBottomRight($bottomRight);
 
@@ -88,9 +91,9 @@ class BezierToolbox
      *
      * @return \Freesewing\Point The point at the edge
      */
-    public static function findBezierEdge($start, $cp1, $cp2, $end, $direction = 'left')
+    public static function findBezierEdge(Point $start, Point $cp1, Point $cp2, Point $end, $direction = 'left')
     {
-        $steps = BezierToolbox::$steps;
+        $steps = self::STEPS;
         for ($i = 0; $i <= $steps; ++$i) {
             $t = $i / $steps;
             $x = Utils::bezierPoint($t, $start->getX(), $cp1->getX(), $cp2->getX(), $end->getX());
@@ -114,7 +117,7 @@ class BezierToolbox
             $previousX = $x;
             $previousY = $y;
         }
-        $edge = new \Freesewing\Point();
+        $edge = new Point();
         $edge->setX($edgeX);
         $edge->setY($edgeY);
 
@@ -135,10 +138,10 @@ class BezierToolbox
      *
      * @return float The length of the curve
      */
-    public static function cubicBezierLength($start, $cp1, $cp2, $end)
+    public static function cubicBezierLength(Point $start, Point $cp1, Point $cp2, Point $end)
     {
         $length = 0;
-        $steps = BezierToolbox::$steps;
+        $steps = self::STEPS;
 
         for ($i = 0; $i <= $steps; ++$i) {
             $t = $i / $steps;
@@ -404,7 +407,7 @@ class BezierToolbox
      */
     public static function cubicBezierDelta($from, $cp1, $cp2, $to, $split)
     {
-        $steps = BezierToolbox::$steps;
+        $steps = self::STEPS;
         $best_t = null;
         $best_distance = false;
         $tmp = new \Freesewing\Point();

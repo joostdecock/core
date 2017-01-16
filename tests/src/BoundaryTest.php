@@ -66,6 +66,15 @@ class BoundaryTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals(17, $object->width);
         $this->assertEquals(5183, $object->height);
 
+        $object = new \Freesewing\Boundary();
+        $topLeft->setX(52);
+        $topLeft->setY(69);
+        $bottomRight->setX(2069);
+        $bottomRight->setY(252);
+        $object->setTopLeft($topLeft);
+        $object->setBottomRight($bottomRight);
 
+        $this->assertEquals(2017, $object->width);
+        $this->assertEquals(183, $object->height);
     }
 }

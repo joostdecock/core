@@ -284,6 +284,7 @@ class ContextTest extends \PHPUnit\Framework\TestCase
             new \Freesewing\SvgDefs,
             new \Freesewing\SvgComments
         );
+
         $this->assertEquals($context->getSvgDocument(), $expected);
     }
 

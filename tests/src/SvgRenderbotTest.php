@@ -15,6 +15,7 @@ class SvgRenderbotTest extends \PHPUnit\Framework\TestCase
         $dir = 'tests/src/fixtures';
         return file_get_contents("$dir/SvgRenderbot.$template.svg");
     }
+
     /**
      * @param string $attribute Attribute to check for
      *

@@ -170,4 +170,21 @@ class TransformTest extends \PHPUnit\Framework\TestCase
     {
         $transform = new \Freesewing\Transform('rotate', 52, 69, null);
     }
+    
+    /**
+     * Tests the different get methods:
+     * - getX
+     * - getY
+     * - getType
+     * - getAngle
+     */
+    public function testGetMethods()
+    {
+        $transform = new \Freesewing\Transform('rotate', 52, 69, 42);
+        $this->assertEquals($transform->getX(), 52);
+        $this->assertEquals($transform->getY(), 69);
+        $this->assertEquals($transform->getType(), 'rotate');
+        $this->assertEquals($transform->getAngle(), 42);
+    }
+
 }

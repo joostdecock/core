@@ -33,7 +33,7 @@ class Response
      */
     public function addCacheHeaders($request)
     {
-        if ($request->getData('cache') === null) {
+        if ($request->getData('cache') === NULL) {
             $this->addHeader('cache', "Cache-Control: public, no-cache");
         } else {
             $this->addHeader('cache', "Cache-Control: public, max-age=".$this->cacheTime);

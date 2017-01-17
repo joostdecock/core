@@ -9,7 +9,7 @@ namespace Freesewing;
  * with information about the client
  *
  * @author Joost De Cock <joost@decock.org>
- * @copyright 2016 Joost De Cock
+ * @copyright 20162017 Joost De Cock
  * @license http://opensource.org/licenses/GPL-3.0 GNU General Public License, Version 3
  */
 class Request
@@ -48,8 +48,7 @@ class Request
         if(isset($_SERVER['REQUEST_URI'])) $this->info['uri'] = $_SERVER['REQUEST_URI'];
         else $this->info['uri'] = 'unknown';
         
-        if(isset($_SERVER['REQUEST_TIME_FLOAT'])) $this->info['time'] = $_SERVER['REQUEST_TIME_FLOAT'];
-        else $this->info['time'] = microtime();
+        $this->info['time'] = $_SERVER['REQUEST_TIME_FLOAT'];
     }
 
     /**

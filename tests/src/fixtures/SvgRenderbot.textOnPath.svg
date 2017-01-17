@@ -1,0 +1,27 @@
+
+<!-- Start of group #patternScaleContainer -->
+<g id="patternScaleContainer"  transform=" scale(3.54330709 ) " >
+    <!-- Start of group #frontBlock -->
+    <g id="frontBlock" >
+        
+    </g>
+    <!-- End of group #frontBlock -->
+    <!-- Start of group #backBlock -->
+    <g id="backBlock" >
+        
+    </g>
+    <!-- End of group #backBlock -->
+    <!-- Start of group #front -->
+    <g id="front" >
+        
+        <path id="2"  d=" M  0,0  L  100,100 " />
+        <text id="3" ><textPath xlink:href="#2" startOffset="50%"><tspan line-height="6" >This is an example</tspan></textPath></text>
+    </g>
+    <!-- End of group #front -->
+    <!-- Start of group #back -->
+    <g id="back" >
+        
+    </g>
+    <!-- End of group #back -->
+</g>
+<!-- End of group #patternScaleContainer -->

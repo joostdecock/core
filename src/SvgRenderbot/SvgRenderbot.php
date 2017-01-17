@@ -6,7 +6,7 @@ namespace Freesewing;
  * Renders a pattern into SVG.
  *
  * @author Joost De Cock <joost@decock.org>
- * @copyright 2016 Joost De Cock
+ * @copyright 2016-2017 Joost De Cock
  * @license http://opensource.org/licenses/GPL-3.0 GNU General Public License, Version 3
  */
 class SvgRenderbot
@@ -22,6 +22,80 @@ class SvgRenderbot
 
     /** @var array $openGroups Where we keep track of currently opened groups */
     private $openGroups = array();
+
+    /**
+     * Returns SVG code for a pattern
+     *
+     * This does not return the entire SVG document, but merely the SVG body
+     * Also note that this mostly just calls renderPart() on all parts
+     * that need to be rendered.
+     *
+     * @param \Freesewing\Pattern or equivalent. The pattern to render
+     *
+     * @return string The SVG code for the pattern
+     */
+    public function render($pattern)
+    {
+        // 90dpi/25.4 = 3.54330709
+        $scale = new \Freesewing\Transform('scale', 3.54330709);
+
+        $svg = $this->openGroup(
+            'patternScaleContainer',
+            \Freesewing\Transform::asSvgParameter(array($scale))
+        );
+
+        if (isset($pattern->parts) && count($pattern->parts) > 0) :
+            foreach ($pattern->parts as $partKey => $part) {
+                if ($part->getRender() === true) {
+                    $transforms = '';
+                    if (is_array($part->transforms) && count($part->transforms) > 0) {
+                        $transforms = \Freesewing\Transform::asSvgParameter($part->transforms);
+                    }
+
+                    $svg .= $this->openGroup($partKey, $transforms);
+                    $svg .= $this->renderPart($part);
+                    $svg .= $this->closeGroup();
+                }
+            }
+        endif;
+
+        $svg .= $this->closeGroup();
+
+        return $svg;
+    }
+
+    /**
+     * Returns SVG code for a path
+     *
+     * @param \Freesewing\Path $path The path to render
+     * @param \Freesewing\Part $part The part this path is part of (did you get that?)
+     *
+     * @return string The SVG code for the rendered path
+     */
+    public function renderPath($path, $part)
+    {
+        if ($path->getRender() === false) {
+            return '';
+        }
+        $pathstring = $path->getPath();
+        $points = $part->points;
+        $patharray = explode(' ', $pathstring);
+        $svg = '';
+        foreach ($patharray as $p) {
+            $p = rtrim($p);
+            if ($p != '' && Utils::isAllowedPathCommand($p)) {
+                $svg .= " $p ";
+            } elseif (is_object($points[$p])) {
+                $svg .= ' '.$points[$p]->x.','.$points[$p]->y.' ';
+            }
+        }
+        $attributes = $path->getAttributes();
+        if (!isset($attributes['id'])) {
+            $attributes['id'] = $this->getUid();
+        }
+
+        return $this->nl().'<path '.Utils::flattenAttributes($attributes).' d="'.$svg.'" />';
+    }
 
     /**
      * Returns indentation
@@ -88,11 +162,8 @@ class SvgRenderbot
      *
      * @return string The SVG code to open the group
      */
-    private function openGroup($id = false, $options = null)
+    private function openGroup($id, $options = null)
     {
-        if ($id === false) {
-            $id = $this->getUid();
-        }
         $svg = $this->nl().
             "<!-- Start of group #$id -->".$this->nl().
             "<g id=\"$id\" $options>";
@@ -117,47 +188,6 @@ class SvgRenderbot
         $this->outdent();
 
         return $this->nl().'</g>'.$this->nl()."<!-- End of group #$id -->";
-    }
-
-    /**
-     * Returns SVG code for a pattern
-     *
-     * This does not return the entire SVG document, but merely the SVG body
-     * Also note that this mostly just calls renderPart() on all parts
-     * that need to be rendered.
-     *
-     * @param \Freesewing\Pattern or equivalent. The pattern to render
-     *
-     * @return string The SVG code for the pattern
-     */
-    public function render($pattern)
-    {
-        // 90dpi/25.4 = 3.54330709
-        $scale = new \Freesewing\Transform('scale', 3.54330709);
-
-        $svg = $this->openGroup(
-            'patternScaleContainer',
-            \Freesewing\Transform::asSvgParameter(array($scale))
-        );
-
-        if (isset($pattern->parts) && count($pattern->parts) > 0) :
-            foreach ($pattern->parts as $partKey => $part) {
-                if ($part->getRender() === true) {
-                    $transforms = '';
-                    if (is_array($part->transforms) && count($part->transforms) > 0) {
-                        $transforms = \Freesewing\Transform::asSvgParameter($part->transforms);
-                    }
-
-                    $svg .= $this->openGroup($partKey, $transforms);
-                    $svg .= $this->renderPart($part);
-                    $svg .= $this->closeGroup();
-                }
-            }
-        endif;
-
-        $svg .= $this->closeGroup();
-
-        return $svg;
     }
 
     /**
@@ -217,39 +247,6 @@ class SvgRenderbot
         }
 
         return $svg;
-    }
-
-    /**
-     * Returns SVG code for a path
-     *
-     * @param \Freesewing\Path $path The path to render
-     * @param \Freesewing\Part $part The part this path is part of (did you get that?)
-     *
-     * @return string The SVG code for the rendered path
-     */
-    public function renderPath($path, $part)
-    {
-        if ($path->getRender() === false) {
-            return '';
-        }
-        $pathstring = $path->getPath();
-        $points = $part->points;
-        $patharray = explode(' ', $pathstring);
-        $svg = '';
-        foreach ($patharray as $p) {
-            $p = rtrim($p);
-            if ($p != '' && Utils::isAllowedPathCommand($p)) {
-                $svg .= " $p ";
-            } elseif (is_object($points[$p])) {
-                $svg .= ' '.$points[$p]->x.','.$points[$p]->y.' ';
-            }
-        }
-        $attributes = $path->getAttributes();
-        if (!isset($attributes['id'])) {
-            $attributes['id'] = $this->getUid();
-        }
-
-        return $this->nl().'<path '.Utils::flattenAttributes($attributes).' d="'.$svg.'" />';
     }
 
     /**

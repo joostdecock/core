@@ -5,34 +5,27 @@ namespace Freesewing\Tests;
 class SvgDocumentTest extends \PHPUnit\Framework\TestCase
 {
 
-    public $emptySvgStart = '<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+    protected function setUp()
+    {
+        $this->svgBasic = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>\n\n\n<svg\n    \n>\n\n\n</svg>\n\n";
+        $this->svgWithBody = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>\n\n\n<svg\n    \n>\nsorcha\n\n</svg>\n\n";
+        $headerComments = new \Freesewing\SvgComments();
+        $svgAttributes = new \Freesewing\SvgAttributes();
+        $css = new \Freesewing\SvgCss();
+        $script = new \Freesewing\SvgScript();
+        $defs = new \Freesewing\SvgDefs();
+        $footerComments = new \Freesewing\SvgComments();
 
+        $this->object = new \Freesewing\SvgDocument(
+            $headerComments,
+            $svgAttributes,
+            $css,
+            $script,
+            $defs,
+            $footerComments
+        );
+    }
 
-<!--
-  -->
-
-<svg
-
->
-
-<style type="text/css">
-    <![CDATA[
-
-    ]]>
-</style>
-
-<defs id="defs">
-
-</defs>
-';
-    public $emptySvgEnd = '
-
-</svg>
-
-
-<!--
-  -->
-';
 
     /**
      * @param string $attribute Attribute to check for
@@ -51,6 +44,7 @@ class SvgDocumentTest extends \PHPUnit\Framework\TestCase
             ['headerComments'],
             ['svgAttributes'],
             ['css'],
+            ['script'],
             ['defs'],
             ['footerComments'],
         ];
@@ -58,41 +52,12 @@ class SvgDocumentTest extends \PHPUnit\Framework\TestCase
 
     public function testToStringAndConstructor()
     {
-        $headerComments = new \Freesewing\SvgComments();
-        $svgAttributes = new \Freesewing\SvgAttributes();
-        $css = new \Freesewing\SvgCss();
-        $defs = new \Freesewing\SvgDefs();
-        $footerComments = new \Freesewing\SvgComments();
-
-        $svgDocument = new \Freesewing\SvgDocument(
-            $headerComments,
-            $svgAttributes,
-            $css,
-            $defs,
-            $footerComments
-        );
-
-        $expect = $this->emptySvgStart.$this->emptySvgEnd;
-        $this->assertEquals($expect, "$svgDocument");
+        $this->assertEquals($this->svgBasic, ''.$this->object); // Using to-string conversion
     }
 
     public function testSetSvgBody()
     {
-        $headerComments = new \Freesewing\SvgComments();
-        $svgAttributes = new \Freesewing\SvgAttributes();
-        $css = new \Freesewing\SvgCss();
-        $defs = new \Freesewing\SvgDefs();
-        $footerComments = new \Freesewing\SvgComments();
-
-        $svgDocument = new \Freesewing\SvgDocument(
-            $headerComments,
-            $svgAttributes,
-            $css,
-            $defs,
-            $footerComments
-        );
-        $svgDocument->setSvgBody('sorcha');
-        $expect = $this->emptySvgStart.'sorcha'.$this->emptySvgEnd;
-        $this->assertEquals($expect, "$svgDocument");
+        $this->object->setSvgBody('sorcha');
+        $this->assertEquals($this->svgWithBody, ''.$this->object); // Using to-string conversion
     }
 }

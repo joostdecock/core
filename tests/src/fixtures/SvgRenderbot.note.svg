@@ -1,0 +1,28 @@
+
+<!-- Start of group #patternScaleContainer -->
+<g id="patternScaleContainer"  transform=" scale(3.54330709 ) " >
+    <!-- Start of group #frontBlock -->
+    <g id="frontBlock" >
+        
+    </g>
+    <!-- End of group #frontBlock -->
+    <!-- Start of group #backBlock -->
+    <g id="backBlock" >
+        
+    </g>
+    <!-- End of group #backBlock -->
+    <!-- Start of group #front -->
+    <g id="front" >
+        
+        <path class="note" id="2"  d=" M  0,0  L  34.641,20 " />
+        <text x="38.971" y="22.5" id="3" class="note note note-4" >
+            <tspan >This is an example</tspan></text>
+    </g>
+    <!-- End of group #front -->
+    <!-- Start of group #back -->
+    <g id="back" >
+        
+    </g>
+    <!-- End of group #back -->
+</g>
+<!-- End of group #patternScaleContainer -->

@@ -2,14 +2,14 @@
 
 namespace Freesewing\Tests;
 
-class SvgDefsTest extends \PHPUnit\Framework\TestCase
+class SvgScriptTest extends \PHPUnit\Framework\TestCase
 {
     public function testLoadAfterAdd()
     {
         $data = 'sorcha';
-        $expectedResult = "\n<defs id=\"defs\">\n    sorcha\n    \n</defs>\n";
+        $expectedResult = "\n<script type=\"application/ecmascript\">\n    <![CDATA[\n    $data\n    \n    ]]>\n</script>\n";
 
-        $object = new \Freesewing\SvgDefs();
+        $object = new \Freesewing\SvgScript();
         $object->add($data);
         $this->assertEquals($expectedResult, $object->load());
     }
@@ -19,7 +19,7 @@ class SvgDefsTest extends \PHPUnit\Framework\TestCase
      */
     public function testFalseOnNoData()
     {
-        $object = new \Freesewing\SvgDefs();
+        $object = new \Freesewing\SvgScript();
         $this->assertEquals(false, $object->load());
     }
 }

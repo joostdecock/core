@@ -2,6 +2,8 @@
 /** Freesewing\Channels\Channel */
 namespace Freesewing\Channels;
 
+use Freesewing\Context;
+
 /**
  * Abstract class for channels.
  *
@@ -42,7 +44,7 @@ abstract class Channel
      *
      * @return bool true Always true in this case
      */
-    abstract public function isValidRequest($context);
+    abstract public function isValidRequest(Context $context);
 
     /**
      * What to do when a request is considered to be invalid

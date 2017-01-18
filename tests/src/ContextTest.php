@@ -319,10 +319,16 @@ class ContextTest extends \PHPUnit\Framework\TestCase
         $context = new Context();
         $context->setRequest(new \Freesewing\Request(['service' => 'info', 'channel' => 'Docs']));
         $context->configure();
-        $expected = '{"services":["info","draft","sample","compare"],"patterns":{"AaronAshirt":"Aaron A-Shirt","BruceBoxerBriefs":"Bruce Boxer Briefs","CathrinCorset":"Cathrin Corset","HugoHoodie":"Hugo Hoodie","JoostBodyBlock":"Joost Body Block","SimonShirt":"Simon Shirt","TamikoTop":"Tamiko Top","TheoTrousers":"Theo trousers","TheodoreTrousers":"Theodore trousers","TrayvonTie":"Trayvon Tie","WahidWaistcoat":"Wahid Waistcoat"},"channels":["Docs"],"themes":["Compare","Designer","Developer","Paperless","Svg"]}';
-        $context->runService();
-        $this->expectOutputString($expected);
-    }
 
-       
+        ob_start();
+        $context->runService();
+        $json = json_decode(ob_get_contents(),1);
+        ob_end_clean();
+
+        $this->assertTrue(is_array($json));
+        $this->assertTrue(is_array($json['services']));
+        $this->assertTrue(is_array($json['patterns']));
+        $this->assertTrue(is_array($json['themes']));
+        $this->assertTrue(is_array($json['channels']));
+    }
 }

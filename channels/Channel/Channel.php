@@ -32,7 +32,7 @@ abstract class Channel
     }
 
     /**
-     * Allows the channel designer to implement access control
+     * Channel designer should implement access control
      *
      * You may not want to make your channel publically accessible.
      * You can limit access here in whatever way you like.
@@ -42,10 +42,7 @@ abstract class Channel
      *
      * @return bool true Always true in this case
      */
-    public function isValidRequest($context)
-    {
-        return true;
-    }
+    abstract public function isValidRequest($context);
 
     /**
      * What to do when a request is considered to be invalid

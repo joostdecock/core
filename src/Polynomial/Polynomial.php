@@ -356,4 +356,17 @@ class Polynomial
 
         return $results;
     }
+    
+    /**
+     * Gets roots of a linear polynomial
+     *
+     * @return array $results Array of roots
+     */
+    public function getLinearRoot()
+    {
+        $results = [];
+        $a = $this->coefs[1];
+        if ($a != 0) $results[] = -1 * $this->coefs[1] / $a;
+        return $results;
+    }
 }

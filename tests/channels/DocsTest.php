@@ -9,7 +9,7 @@ class DocsTest extends \PHPUnit\Framework\TestCase
      *
      * @dataProvider providerTestAttributeExists
      */
-    public function testAttributeExists($attribute)
+    public function estAttributeExists($attribute)
     {
         $this->assertClassHasAttribute($attribute, '\Freesewing\Channels\Channel');
     }
@@ -22,16 +22,16 @@ class DocsTest extends \PHPUnit\Framework\TestCase
         ];
     }
 
-    public function testIsValidRequest()
+    public function estIsValidRequest()
     {
-        $context = new \Freesewing\Context(['pattern' => 'TestPattern']);
-        $pattern = new \Freesewing\Patterns\TestPattern();
+        $context = new \Freesewing\Context(['pattern' => 'AaronAshirt']);
+        $pattern = new \Freesewing\Patterns\AaronAshirt();
         $context->setPattern($pattern);
         $channel = new \Freesewing\Channels\Docs();
         $this->assertEquals($channel->isValidrequest($context), true);
     }
 
-    public function testCleanUp()
+    public function estCleanUp()
     {
         $channel1 = new \Freesewing\Channels\Docs();
         $channel2 = new \Freesewing\Channels\Docs();
@@ -39,7 +39,7 @@ class DocsTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals($channel1, $channel2);
     }
 
-    public function testStandardizeModelMeasurements()
+    public function estStandardizeModelMeasurements()
     {
         $channel = new \Freesewing\Channels\Docs();
         $data = $this->getSampleData();
@@ -49,7 +49,7 @@ class DocsTest extends \PHPUnit\Framework\TestCase
         }
     }
 
-    public function testStandardizePatternOptions()
+    public function estStandardizePatternOptions()
     {
 
         $channel = new \Freesewing\Channels\Docs();

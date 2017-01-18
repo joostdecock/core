@@ -62,7 +62,10 @@ abstract class Channel
      */
     public function handleInValidRequest($context)
     {
-        header("location: /docs/");
+        // Redirect to docs
+        $response = new \Freesewing\Response();
+        $response->addHeader('redirect', "Location: /docs/");
+        $context->setResponse($response);
     }
 
     /**

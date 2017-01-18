@@ -47,6 +47,9 @@ class AaronAshirt extends JoostBodyBlock
         $this->setOption('backNeckCutout', self::NECK_CUTOUT);
         $this->setOption('sleevecapEase', self::SLEEVECAP_EASE);
 
+        // Values needed for JoostBodyBlock (but irrelevant here)
+        $this->setValue('frontCollarTweakFactor', 1); 
+        
         // shifTowards can't deal with 0, so shoulderStrapPlacement should be at least 0.001
         if ($this->getOption('shoulderStrapPlacement') == 0) {
             $this->setOption('shoulderStrapPlacement', 0.001);

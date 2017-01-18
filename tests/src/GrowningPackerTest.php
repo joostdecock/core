@@ -108,32 +108,4 @@ class GrowingPackerTest extends \PHPUnit\Framework\TestCase
         fwrite($f,$data);
         fclose($f);
     }
-
-        //$this->saveTemplate(1,serialize($layout));
-        /*
-        $layout = [
-            $this->block1,
-            $this->block2,
-            $this->block3,
-            $this->block4,
-            $this->block5,
-            $this->block6,
-            $this->block7,
-            $this->block8,
-            $this->block9,
-            $this->block10,
-            $this->block11,
-            $this->block12,
-            $this->block13,
-            $this->block14,
-            $this->block15,
-            $this->block16,
-            $this->block17,
-            $this->block18,
-            $this->block19,
-            $this->block20,
-        ];
-        */
-
-
 }

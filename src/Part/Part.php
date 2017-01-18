@@ -72,6 +72,9 @@ class Part
     /** @var bool To render this part or not */
     private $render = true;
 
+    /** @var string The units, either 'metric' or 'imperial' */
+    private $units = 'metric';
+
 
 
     /**
@@ -381,10 +384,6 @@ class Part
                 $this->newText('partTitle', $anchorKey, $title, ['class' => "part-title $class"]);
                 $this->newText('partMsg', $anchorKey, $msg, ['class' => "part-msg $class"]);
                 break;
-                $this->newText('partNumber', $anchorKey, $nr, ['class' => 'part-nr small']);
-                $this->newText('partTitle', $anchorKey, $title, ['class' => 'part-title small']);
-                $this->newText('partMsg', $anchorKey, $msg, ['class' => 'part-msg small']);
-                break;
             case 'small':
             default:
                 if($mode == 'small') $class = 'small';
@@ -624,9 +623,10 @@ class Part
      */
     public function offsetPath($newKey, $srcKey, $distance = 10, $render = false, $attributes = null)
     {
-        $path = $this->paths[$srcKey];
-        if (!$path) {
-            throw new \Exception("Path requires a valid path object");
+        if(isset($this->paths[$srcKey]) && ($this->paths[$srcKey] instanceof \Freesewing\Path)) {
+            $path = $this->paths[$srcKey];
+        } else {
+            throw new \InvalidArgumentException("offsetPath requires a valid path object");
         }
         $stack = $this->pathOffsetAsStack($path, $distance, $newKey);
         /* take care of overlapping parts */

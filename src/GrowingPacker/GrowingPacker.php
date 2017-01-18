@@ -180,11 +180,8 @@ class GrowingPacker extends Packer
         $this->boundingBox = $newBoundingBox;
 
         $space = $this->findSpace($this->boundingBox, $w, $h);
-        if ($space) {
-            return $this->splitSpace($space, $w, $h);
-        } else {
-            return null;
-        }
+        
+        return $this->splitSpace($space, $w, $h);
     }
 
     /**
@@ -214,10 +211,7 @@ class GrowingPacker extends Packer
         $this->boundingBox = $newBoundingBox;
 
         $space = $this->findSpace($this->boundingBox, $w, $h);
-        if ($space) {
-            return $this->splitSpace($space, $w, $h);
-        } else {
-            return null;
-        }
+        
+        return $this->splitSpace($space, $w, $h);
     }
 }

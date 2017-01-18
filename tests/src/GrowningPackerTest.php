@@ -5,66 +5,135 @@ namespace Freesewing\Tests;
 class GrowingPackerTest extends \PHPUnit\Framework\TestCase
 {
 
-    /**
-     * Tests the getFirstBlock method
-     */
-    public function testgetFirstBlock()
+    protected function setUp()
     {
+        $this->block1 = new \Freesewing\LayoutBlock();
+        $this->block2 = new \Freesewing\LayoutBlock();
+        $this->block3 = new \Freesewing\LayoutBlock();
+        $this->block4 = new \Freesewing\LayoutBlock();
+        $this->block5 = new \Freesewing\LayoutBlock();
+        $this->block6 = new \Freesewing\LayoutBlock();
+        $this->block7 = new \Freesewing\LayoutBlock();
+        $this->block8 = new \Freesewing\LayoutBlock();
+        
+
+        $this->block1->setSize(10,10);
+        $this->block2->setSize(10,10);
+        $this->block3->setSize(10,10);
+        $this->block4->setSize(10,10);
+        $this->block5->setSize(10,100);
+        $this->block6->setSize(10,100);
+        $this->block7->setSize(10,100);
+        $this->block8->setSize(10,100);
+        
+    }
+
+    public function test1Block()
+    { 
+        $layout = [
+            $this->block1,
+        ];
+        $packer = new \Freesewing\Growingpacker();
+        $packer->fit($layout); 
+        $this->assertEquals(serialize($layout), $this->loadTemplate(1));
+    }
+
+    public function test2Blocks()
+    { 
+        $layout = [
+            $this->block1,
+            $this->block2,
+        ];
+        $packer = new \Freesewing\Growingpacker();
+        $packer->fit($layout); 
+        $this->assertEquals(serialize($layout), $this->loadTemplate(2));
+    }
+
+    public function test4Blocks()
+    { 
+        $layout = [
+            $this->block1,
+            $this->block2,
+            $this->block3,
+            $this->block4,
+        ];
+        $packer = new \Freesewing\Growingpacker();
+        $packer->fit($layout); 
+        $this->assertEquals(serialize($layout), $this->loadTemplate(4));
+    }
+
+    public function test8Blocks()
+    { 
+        $layout = [
+            $this->block1,
+            $this->block2,
+            $this->block3,
+            $this->block4,
+            $this->block5,
+            $this->block6,
+            $this->block7,
+            $this->block8,
+        ];
+        $packer = new \Freesewing\Growingpacker();
+        $packer->fit($layout); 
+        $this->assertEquals(serialize($layout), $this->loadTemplate(8));
+    }
+
+    public function test1011Blocks()
+    { 
         $block1 = new \Freesewing\LayoutBlock();
         $block2 = new \Freesewing\LayoutBlock();
-        $block3 = new \Freesewing\LayoutBlock();
-        $block4 = new \Freesewing\LayoutBlock();
-        $block5 = new \Freesewing\LayoutBlock();
-
-        $block1->setSize(100,100);
-        $block2->setSize(500,250);
-        $block3->setSize(80,20);
-        $block4->setSize(300,600);
-        $block5->setSize(21,19);
-        
-        $layout = [$block1,$block2,$block3,$block4,$block5];
+        $block1->setSize(10,10);
+        $block2->setSize(1000,1000);
+        $layout = [ $block1, $block2 ];
 
         $packer = new \Freesewing\Growingpacker();
-        $packer->fit($layout);
-
-        $expected2 = new \Freesewing\LayoutBlock();
-        $expected2->setSize(80,20);
-
-        $expected2Right = new \Freesewing\LayoutBlock();
-        $expected2Right->setPosition(100,0);
-        $expected2Right->setSize(0,100);
-        
-        $expected2Fit = new \Freesewing\LayoutBlock();
-        $expected2Fit->setPosition(100,0);
-        $expected2Fit->setSize(80,100);
-        $expected2Fit->setUsed(true);
-
-        $expected2FitDown = new \Freesewing\LayoutBlock();
-        $expected2FitDown->setPosition(100,20);
-        $expected2FitDown->setSize(80,80);
-        $expected2FitDown->setUsed(1);
-        
-        $expected2FitDownDown = new \Freesewing\LayoutBlock();
-        $expected2FitDownDown->setPosition(100,39);
-        $expected2FitDownDown->setSize(80,61);
-        
-        $expected2FitDownRight = new \Freesewing\LayoutBlock();
-        $expected2FitDownRight->setPosition(121,20);
-        $expected2FitDownRight->setSize(59,19);
-        
-        $expected2FitDown->down = $expected2FitDownDown;
-        $expected2FitDown->right = $expected2FitDownRight;
-
-        $expected2FitRight = new \Freesewing\LayoutBlock();
-        $expected2FitRight->setPosition(180,0);
-        $expected2FitRight->setSize(0,20);
-        
-        $expected2Fit->down = $expected2FitDown;
-        $expected2Fit->right = $expected2FitRight;
-
-        $expected2->fit = $expected2Fit;
-
-        $this->assertEquals($layout[2],$expected2);
+        $packer->fit($layout); 
+        $this->saveTemplate(12,serialize($layout));
+        $this->assertEquals(serialize($layout), $this->loadTemplate(12));
     }
+
+    private function loadTemplate($template)
+    {
+        $dir = 'tests/src/fixtures';
+        $file = "$dir/GrowingPacker.$template.layout";
+        return file_get_contents($file);
+    }
+
+    private function saveTemplate($template, $data)
+    {
+        $dir = 'tests/src/fixtures';
+        $file = "$dir/GrowingPacker.$template.layout";
+        $f = fopen($file,'w');
+        fwrite($f,$data);
+        fclose($f);
+    }
+
+        //$this->saveTemplate(1,serialize($layout));
+        /*
+        $layout = [
+            $this->block1,
+            $this->block2,
+            $this->block3,
+            $this->block4,
+            $this->block5,
+            $this->block6,
+            $this->block7,
+            $this->block8,
+            $this->block9,
+            $this->block10,
+            $this->block11,
+            $this->block12,
+            $this->block13,
+            $this->block14,
+            $this->block15,
+            $this->block16,
+            $this->block17,
+            $this->block18,
+            $this->block19,
+            $this->block20,
+        ];
+        */
+
 
 }

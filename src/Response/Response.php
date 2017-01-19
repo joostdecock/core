@@ -98,7 +98,7 @@ class Response
                 $body = $this->body;
                 break;
         }
-        echo $body;
+        printf("%s",$body);
     }
 
     /**

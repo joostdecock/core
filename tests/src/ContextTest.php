@@ -3,9 +3,20 @@
 namespace Freesewing\Tests;
 
 use \Freesewing\Context;
+use \Freesewing\Output;
+require_once __DIR__.'/assets/testFunctions.php';
 
 class ContextTest extends \PHPUnit\Framework\TestCase
 {
+    public function setUp()
+    {
+       Output::reset();
+    }
+
+    public function tearDown()
+    {
+       Output::reset();
+    }
 
     /**
      * @param string $attribute Attribute to check for
@@ -320,10 +331,8 @@ class ContextTest extends \PHPUnit\Framework\TestCase
         $context->setRequest(new \Freesewing\Request(['service' => 'info', 'channel' => 'Docs']));
         $context->configure();
 
-        ob_start();
         $context->runService();
-        $json = json_decode(ob_get_contents(),1);
-        ob_end_clean();
+        $json = json_decode(Output::$body,1);
 
         $this->assertTrue(is_array($json));
         $this->assertTrue(is_array($json['services']));

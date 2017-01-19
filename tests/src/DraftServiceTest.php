@@ -3,9 +3,21 @@
 namespace Freesewing\Tests;
 
 use \Freesewing\Services\DraftService;
+use \Freesewing\Output;
+require_once __DIR__.'/assets/testFunctions.php';
 
 class DraftServiceTest extends \PHPUnit\Framework\TestCase
 {
+    public function setUp()
+    {
+       Output::reset();
+    }
+
+    public function tearDown()
+    {
+       Output::reset();
+    }
+
     /**
      * Tests the getServiceName method
      */
@@ -17,8 +29,6 @@ class DraftServiceTest extends \PHPUnit\Framework\TestCase
 
     /**
      * Tests the run method for basic draft
-     *
-     * @runInSeparateProcess
      */
     public function testRunBasic()
     {
@@ -27,18 +37,14 @@ class DraftServiceTest extends \PHPUnit\Framework\TestCase
         $context->configure();
 
         $service = new DraftService();
-        ob_start();
         $service->run($context);
-        $svg = ob_get_contents();
 
-        $this->assertEquals(substr($svg,0,54), '<?xml version="1.0" encoding="UTF-8" standalone="no"?>');
-        ob_end_clean();
+        $this->assertContains('Content-Type: image/svg+xml', Output::$headers);
+        $this->assertEquals(substr(Output::$body,0,54), '<?xml version="1.0" encoding="UTF-8" standalone="no"?>');
     }
 
     /**
      * Tests the run method for basic draft with viewbox
-     *
-     * @runInSeparateProcess
      */
     public function testRunBasicWithViewbox()
     {
@@ -47,18 +53,14 @@ class DraftServiceTest extends \PHPUnit\Framework\TestCase
         $context->configure();
 
         $service = new DraftService();
-        ob_start();
         $service->run($context);
-        $svg = ob_get_contents();
 
-        $this->assertEquals(substr($svg,0,54), '<?xml version="1.0" encoding="UTF-8" standalone="no"?>');
-        ob_end_clean();
+        $this->assertContains('Content-Type: image/svg+xml', Output::$headers);
+        $this->assertEquals(substr(Output::$body,0,54), '<?xml version="1.0" encoding="UTF-8" standalone="no"?>');
     }
 
     /**
      * Tests the run method for invalid request
-     *
-     * @runInSeparateProcess
      */
     public function testRunPatternInfo()
     {
@@ -67,10 +69,8 @@ class DraftServiceTest extends \PHPUnit\Framework\TestCase
         $context->configure();
 
         $service = new DraftService();
-        ob_start();
         $service->run($context);
-        $headers = xdebug_get_headers();
-        $this->assertEquals($headers[0], 'Location: /docs/');
-        ob_end_clean();
+        
+        $this->assertContains('Location: /docs/', Output::$headers);
     }
 }

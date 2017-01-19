@@ -16,6 +16,5 @@ class SampleTest extends \PHPUnit\Framework\TestCase
         $pattern = new \Freesewing\Patterns\Pattern();
         $theme = new \Freesewing\Themes\Theme();
         $theme->themePattern($pattern, $svgDocument);
-        print_r($svgDocument->css);
     }
 }

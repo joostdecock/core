@@ -95,9 +95,9 @@ class ResponseTest extends \PHPUnit\Framework\TestCase
 
         $response->setFormat('json');
         $response->setBody(['foo' => 'bar', 'gnoo' => 'jar']);
-
-        $this->expectOutputString('{"foo":"bar","gnoo":"jar"}');
         $response->send();
+
+        $this->assertEquals(Output::$body,'{"foo":"bar","gnoo":"jar"}');
     }
     
     /**
@@ -109,8 +109,8 @@ class ResponseTest extends \PHPUnit\Framework\TestCase
 
         $response->setFormat('raw');
         $response->setBody('foobar gnoojar');
-
-        $this->expectOutputString('foobar gnoojar');
         $response->send();
+
+        $this->assertEquals(Output::$body,'foobar gnoojar');
     }
 }

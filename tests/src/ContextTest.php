@@ -68,7 +68,7 @@ class ContextTest extends \PHPUnit\Framework\TestCase
         return [
             ['Response', new \Freesewing\Response()],
             ['Pattern', new \Freesewing\Patterns\AaronAshirt()],
-            ['Theme', new \Freesewing\Themes\Svg()],
+            ['Theme', new \Freesewing\Themes\Basic()],
             ['Service', new \Freesewing\Services\DraftService()],
             ['Channel', new \Freesewing\Channels\Docs()],
             ['Locale', 'en'],
@@ -252,7 +252,7 @@ class ContextTest extends \PHPUnit\Framework\TestCase
     public function testAddTranslator()
     {
         $context = new Context();
-        $context->setRequest(new \Freesewing\Request(['channel' => 'Docs', 'theme' => 'Svg', 'pattern' => 'AaronAshirt']));
+        $context->setRequest(new \Freesewing\Request(['channel' => 'Docs', 'theme' => 'Basic', 'pattern' => 'AaronAshirt']));
         $context->configure();
         $context->addPattern();
         $context->addTranslator();
@@ -265,13 +265,13 @@ class ContextTest extends \PHPUnit\Framework\TestCase
     public function testAddUnits()
     {
         $context = new Context();
-        $context->setRequest(new \Freesewing\Request(['channel' => 'Docs', 'theme' => 'Svg', 'pattern' => 'AaronAshirt', 'unitsIn' => 'imperial', 'unitsOut' => 'metric']));
+        $context->setRequest(new \Freesewing\Request(['channel' => 'Docs', 'theme' => 'Basic', 'pattern' => 'AaronAshirt', 'unitsIn' => 'imperial', 'unitsOut' => 'metric']));
         $context->configure();
         $context->addUnits();
         $expected = [ 'in' => 'imperial', 'out' => 'metric', ];
         $this->assertEquals($context->getUnits(), $expected);
         
-        $context->setRequest(new \Freesewing\Request(['channel' => 'Docs', 'theme' => 'Svg', 'pattern' => 'AaronAshirt', 'unitsIn' => 'metric', 'unitsOut' => 'imperial']));
+        $context->setRequest(new \Freesewing\Request(['channel' => 'Docs', 'theme' => 'Basic', 'pattern' => 'AaronAshirt', 'unitsIn' => 'metric', 'unitsOut' => 'imperial']));
         $context->configure();
         $context->addUnits();
         $expected = [ 'in' => 'metric', 'out' => 'imperial', ];
@@ -284,7 +284,7 @@ class ContextTest extends \PHPUnit\Framework\TestCase
     public function testAddSvgDocument()
     {
         $context = new Context();
-        $context->setRequest(new \Freesewing\Request(['channel' => 'Docs', 'theme' => 'Svg', 'pattern' => 'AaronAshirt']));
+        $context->setRequest(new \Freesewing\Request(['channel' => 'Docs', 'theme' => 'Basic', 'pattern' => 'AaronAshirt']));
         $context->configure();
         $context->addSvgDocument();
         $expected = new \Freesewing\SvgDocument(
@@ -306,7 +306,7 @@ class ContextTest extends \PHPUnit\Framework\TestCase
     {
         // Mock pattern, theme, and channel classes
         $pattern = $this->getMockBuilder('\freesewing\patterns\AaronAshirt')->getMock();
-        $theme = $this->getMockBuilder('\freesewing\themes\Svg')->getMock();
+        $theme = $this->getMockBuilder('\freesewing\themes\Basic')->getMock();
         $channel = $this->getMockBuilder('\freesewing\channels\Docs')->getMock();
 
         // We expect cleanUp() to be called once on pattern, theme, and channel

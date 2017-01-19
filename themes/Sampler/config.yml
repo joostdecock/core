@@ -1,3 +1,7 @@
 settings:
     partMargin: 5
     isPaperless: false
+
+options:
+    - parts
+    - forceParts

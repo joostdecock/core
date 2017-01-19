@@ -33,7 +33,7 @@ class DraftServiceTest extends \PHPUnit\Framework\TestCase
     public function testRunBasic()
     {
         $context = new \Freesewing\Context();
-        $context->setRequest(new \Freesewing\Request(['service' => 'draft', 'pattern' => 'AaronAshirt']));
+        $context->setRequest(new \Freesewing\Request(['service' => 'draft', 'pattern' => 'TestPattern']));
         $context->configure();
 
         $service = new DraftService();
@@ -49,7 +49,7 @@ class DraftServiceTest extends \PHPUnit\Framework\TestCase
     public function testRunBasicWithViewbox()
     {
         $context = new \Freesewing\Context();
-        $context->setRequest(new \Freesewing\Request(['service' => 'draft', 'pattern' => 'AaronAshirt', 'viewbox' => '10,10,200,200']));
+        $context->setRequest(new \Freesewing\Request(['service' => 'draft', 'pattern' => 'TestPattern', 'viewbox' => '10,10,200,200']));
         $context->configure();
 
         $service = new DraftService();

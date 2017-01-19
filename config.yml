@@ -5,7 +5,7 @@ defaults:
     sampleTheme: Sampler
     compareTheme: Compare
     infoTheme: Info
-    pattern: AaronAshirt
+    pattern: TestPattern
     locale: en
 renderers:
     svg: SvgRenderbot

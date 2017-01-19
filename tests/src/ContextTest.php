@@ -67,7 +67,7 @@ class ContextTest extends \PHPUnit\Framework\TestCase
     {
         return [
             ['Response', new \Freesewing\Response()],
-            ['Pattern', new \Freesewing\Patterns\AaronAshirt()],
+            ['Pattern', new \Freesewing\Patterns\TestPattern()],
             ['Theme', new \Freesewing\Themes\Basic()],
             ['Service', new \Freesewing\Services\DraftService()],
             ['Channel', new \Freesewing\Channels\Docs()],
@@ -132,7 +132,7 @@ class ContextTest extends \PHPUnit\Framework\TestCase
         $context->setRequest(new \Freesewing\Request(['service' => 'draft']));
         $context->configure();
         $context->addPattern();
-        $this->assertEquals($context->getPattern(), new \Freesewing\Patterns\AaronAshirt());
+        $this->assertEquals($context->getPattern(), new \Freesewing\Patterns\TestPattern());
     }
 
     /**
@@ -230,10 +230,10 @@ class ContextTest extends \PHPUnit\Framework\TestCase
     public function testAddPattern()
     {
         $context = new Context();
-        $context->setRequest(new \Freesewing\Request(['channel' => 'Docs', 'theme' => 'Info', 'pattern' => 'AaronAshirt']));
+        $context->setRequest(new \Freesewing\Request(['channel' => 'Docs', 'theme' => 'Info', 'pattern' => 'TestPattern']));
         $context->configure();
         $context->addPattern();
-        $this->assertEquals($context->getPattern(), new \Freesewing\patterns\AaronAshirt());
+        $this->assertEquals($context->getPattern(), new \Freesewing\patterns\TestPattern());
     }
     
     /**
@@ -252,7 +252,7 @@ class ContextTest extends \PHPUnit\Framework\TestCase
     public function testAddTranslator()
     {
         $context = new Context();
-        $context->setRequest(new \Freesewing\Request(['channel' => 'Docs', 'theme' => 'Basic', 'pattern' => 'AaronAshirt']));
+        $context->setRequest(new \Freesewing\Request(['channel' => 'Docs', 'theme' => 'Basic', 'pattern' => 'TestPattern']));
         $context->configure();
         $context->addPattern();
         $context->addTranslator();
@@ -265,13 +265,13 @@ class ContextTest extends \PHPUnit\Framework\TestCase
     public function testAddUnits()
     {
         $context = new Context();
-        $context->setRequest(new \Freesewing\Request(['channel' => 'Docs', 'theme' => 'Basic', 'pattern' => 'AaronAshirt', 'unitsIn' => 'imperial', 'unitsOut' => 'metric']));
+        $context->setRequest(new \Freesewing\Request(['channel' => 'Docs', 'theme' => 'Basic', 'pattern' => 'TestPattern', 'unitsIn' => 'imperial', 'unitsOut' => 'metric']));
         $context->configure();
         $context->addUnits();
         $expected = [ 'in' => 'imperial', 'out' => 'metric', ];
         $this->assertEquals($context->getUnits(), $expected);
         
-        $context->setRequest(new \Freesewing\Request(['channel' => 'Docs', 'theme' => 'Basic', 'pattern' => 'AaronAshirt', 'unitsIn' => 'metric', 'unitsOut' => 'imperial']));
+        $context->setRequest(new \Freesewing\Request(['channel' => 'Docs', 'theme' => 'Basic', 'pattern' => 'TestPattern', 'unitsIn' => 'metric', 'unitsOut' => 'imperial']));
         $context->configure();
         $context->addUnits();
         $expected = [ 'in' => 'metric', 'out' => 'imperial', ];
@@ -284,7 +284,7 @@ class ContextTest extends \PHPUnit\Framework\TestCase
     public function testAddSvgDocument()
     {
         $context = new Context();
-        $context->setRequest(new \Freesewing\Request(['channel' => 'Docs', 'theme' => 'Basic', 'pattern' => 'AaronAshirt']));
+        $context->setRequest(new \Freesewing\Request(['channel' => 'Docs', 'theme' => 'Basic', 'pattern' => 'TestPattern']));
         $context->configure();
         $context->addSvgDocument();
         $expected = new \Freesewing\SvgDocument(
@@ -305,7 +305,7 @@ class ContextTest extends \PHPUnit\Framework\TestCase
     public function testCleanUp()
     {
         // Mock pattern, theme, and channel classes
-        $pattern = $this->getMockBuilder('\freesewing\patterns\AaronAshirt')->getMock();
+        $pattern = $this->getMockBuilder('\freesewing\patterns\TestPattern')->getMock();
         $theme = $this->getMockBuilder('\freesewing\themes\Basic')->getMock();
         $channel = $this->getMockBuilder('\freesewing\channels\Docs')->getMock();
 

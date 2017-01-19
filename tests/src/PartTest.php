@@ -62,7 +62,7 @@ class PartTest extends \PHPUnit\Framework\TestCase
     /** 
      * Tests the unit method
      */
-    public function estUnit()
+    public function testUnit()
     {
         $p = new \Freesewing\Part();
         $p->setUnits('metric');

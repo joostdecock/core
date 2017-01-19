@@ -373,42 +373,6 @@ abstract class Pattern
     }
 
     /**
-     * Calculates bounding box and adds boundary object in the boundary property
-     */
-    public function addBoundary()
-    {
-        foreach ($this->parts as $part) {
-            if ($part->getRender() === true) {
-                // @todo: frome where comes the topLeft-variable?
-                if (!@is_object($topLeft)) {
-                    $topLeft = new \Freesewing\Point(
-                        $part->boundary->topLeft->x, $part->boundary->topLeft->y,
-                        'Top-left pattern boundary'
-                    );
-                    $bottomRight = new \Freesewing\Point(
-                        $part->boundary->bottomRight->x, $part->boundary->bottomRight->y,
-                        'Bottom-right pattern boundary'
-                    );
-                } else {
-                    if ($part->boundary->topLeft->x < $topLeft->x) {
-                        $topLeft->setX($part->boundary->topLeft->x);
-                    }
-                    if ($part->boundary->topLeft->y < $topLeft->y) {
-                        $topLeft->setY($part->boundary->topLeft->y);
-                    }
-                    if ($part->boundary->bottomRight->x < $bottomRight->x) {
-                        $bottomRight->setX($part->boundary->bottomRight->x);
-                    }
-                    if ($part->boundary->bottomRight->y < $bottomRight->y) {
-                        $bottomRight->setY($part->boundary->bottomRight->y);
-                    }
-                }
-            }
-        }
-        $this->boundary = new \Freesewing\Boundary($topLeft, $bottomRight);
-    }
-
-    /**
      * Adds a part to the pattern by adding it to the parts array
      *
      * @param string $key The ID in the parts array of the part to add
@@ -643,11 +607,8 @@ abstract class Pattern
             $layoutBlock->h = @$parts[$key]->boundary->height;// FIXME Sample service issues a warning here
             $sorted[$key] = $layoutBlock;
         }
-        if (isset($sorted)) {
-            return $sorted;
-        } else {
-            return false;
-        }
+        
+        return $sorted;
     }
 
     /**

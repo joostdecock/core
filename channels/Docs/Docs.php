@@ -34,11 +34,14 @@ class Docs extends Channel
     public function isValidRequest(Context $context)
     {
         // The only thing we check is whether the pattern you request does actually exist
-        $patternServed = basename($context->getPattern()->getClassChain()[0]);
-        $patternRequested = $context->getRequest()->getData('pattern');
+        $pattern = $context->getPattern();
+        if(isset($pattern)) {
+            $patternServed = basename($context->getPattern()->getClassChain()[0]);
+            $patternRequested = $context->getRequest()->getData('pattern');
 
-        if($patternRequested == $patternServed) return true;
-        else return false;
+            if($patternRequested == $patternServed) return true;
+        }
+        return false;
     }
 
     /**

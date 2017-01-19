@@ -158,7 +158,6 @@ class TestPatternTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals($p->getDebug(), false);
         $p->msg('This is a test message');
         $p->dbg('This is a debug test');
-        var_dump($p->getMessages());
         $this->assertEquals($p->getMessages(), "This is a test message");
         $this->assertEquals($p->getDebug(), "This is a debug test");
         $p->msg('This is a another test message');

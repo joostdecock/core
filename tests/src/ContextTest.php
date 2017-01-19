@@ -3,9 +3,20 @@
 namespace Freesewing\Tests;
 
 use \Freesewing\Context;
+use \Freesewing\Output;
+require_once __DIR__.'/assets/testFunctions.php';
 
 class ContextTest extends \PHPUnit\Framework\TestCase
 {
+    public function setUp()
+    {
+       Output::reset();
+    }
+
+    public function tearDown()
+    {
+       Output::reset();
+    }
 
     /**
      * @param string $attribute Attribute to check for
@@ -56,8 +67,8 @@ class ContextTest extends \PHPUnit\Framework\TestCase
     {
         return [
             ['Response', new \Freesewing\Response()],
-            ['Pattern', new \Freesewing\Patterns\AaronAshirt()],
-            ['Theme', new \Freesewing\Themes\Svg()],
+            ['Pattern', new \Freesewing\Patterns\TestPattern()],
+            ['Theme', new \Freesewing\Themes\Basic()],
             ['Service', new \Freesewing\Services\DraftService()],
             ['Channel', new \Freesewing\Channels\Docs()],
             ['Locale', 'en'],
@@ -121,7 +132,7 @@ class ContextTest extends \PHPUnit\Framework\TestCase
         $context->setRequest(new \Freesewing\Request(['service' => 'draft']));
         $context->configure();
         $context->addPattern();
-        $this->assertEquals($context->getPattern(), new \Freesewing\Patterns\AaronAshirt());
+        $this->assertEquals($context->getPattern(), new \Freesewing\Patterns\TestPattern());
     }
 
     /**
@@ -219,10 +230,10 @@ class ContextTest extends \PHPUnit\Framework\TestCase
     public function testAddPattern()
     {
         $context = new Context();
-        $context->setRequest(new \Freesewing\Request(['channel' => 'Docs', 'theme' => 'Info', 'pattern' => 'AaronAshirt']));
+        $context->setRequest(new \Freesewing\Request(['channel' => 'Docs', 'theme' => 'Info', 'pattern' => 'TestPattern']));
         $context->configure();
         $context->addPattern();
-        $this->assertEquals($context->getPattern(), new \Freesewing\patterns\AaronAshirt());
+        $this->assertEquals($context->getPattern(), new \Freesewing\patterns\TestPattern());
     }
     
     /**
@@ -241,7 +252,7 @@ class ContextTest extends \PHPUnit\Framework\TestCase
     public function testAddTranslator()
     {
         $context = new Context();
-        $context->setRequest(new \Freesewing\Request(['channel' => 'Docs', 'theme' => 'Svg', 'pattern' => 'AaronAshirt']));
+        $context->setRequest(new \Freesewing\Request(['channel' => 'Docs', 'theme' => 'Basic', 'pattern' => 'TestPattern']));
         $context->configure();
         $context->addPattern();
         $context->addTranslator();
@@ -254,13 +265,13 @@ class ContextTest extends \PHPUnit\Framework\TestCase
     public function testAddUnits()
     {
         $context = new Context();
-        $context->setRequest(new \Freesewing\Request(['channel' => 'Docs', 'theme' => 'Svg', 'pattern' => 'AaronAshirt', 'unitsIn' => 'imperial', 'unitsOut' => 'metric']));
+        $context->setRequest(new \Freesewing\Request(['channel' => 'Docs', 'theme' => 'Basic', 'pattern' => 'TestPattern', 'unitsIn' => 'imperial', 'unitsOut' => 'metric']));
         $context->configure();
         $context->addUnits();
         $expected = [ 'in' => 'imperial', 'out' => 'metric', ];
         $this->assertEquals($context->getUnits(), $expected);
         
-        $context->setRequest(new \Freesewing\Request(['channel' => 'Docs', 'theme' => 'Svg', 'pattern' => 'AaronAshirt', 'unitsIn' => 'metric', 'unitsOut' => 'imperial']));
+        $context->setRequest(new \Freesewing\Request(['channel' => 'Docs', 'theme' => 'Basic', 'pattern' => 'TestPattern', 'unitsIn' => 'metric', 'unitsOut' => 'imperial']));
         $context->configure();
         $context->addUnits();
         $expected = [ 'in' => 'metric', 'out' => 'imperial', ];
@@ -273,7 +284,7 @@ class ContextTest extends \PHPUnit\Framework\TestCase
     public function testAddSvgDocument()
     {
         $context = new Context();
-        $context->setRequest(new \Freesewing\Request(['channel' => 'Docs', 'theme' => 'Svg', 'pattern' => 'AaronAshirt']));
+        $context->setRequest(new \Freesewing\Request(['channel' => 'Docs', 'theme' => 'Basic', 'pattern' => 'TestPattern']));
         $context->configure();
         $context->addSvgDocument();
         $expected = new \Freesewing\SvgDocument(
@@ -294,8 +305,8 @@ class ContextTest extends \PHPUnit\Framework\TestCase
     public function testCleanUp()
     {
         // Mock pattern, theme, and channel classes
-        $pattern = $this->getMockBuilder('\freesewing\patterns\AaronAshirt')->getMock();
-        $theme = $this->getMockBuilder('\freesewing\themes\Svg')->getMock();
+        $pattern = $this->getMockBuilder('\freesewing\patterns\TestPattern')->getMock();
+        $theme = $this->getMockBuilder('\freesewing\themes\Basic')->getMock();
         $channel = $this->getMockBuilder('\freesewing\channels\Docs')->getMock();
 
         // We expect cleanUp() to be called once on pattern, theme, and channel
@@ -320,10 +331,8 @@ class ContextTest extends \PHPUnit\Framework\TestCase
         $context->setRequest(new \Freesewing\Request(['service' => 'info', 'channel' => 'Docs']));
         $context->configure();
 
-        ob_start();
         $context->runService();
-        $json = json_decode(ob_get_contents(),1);
-        ob_end_clean();
+        $json = json_decode(Output::$body,1);
 
         $this->assertTrue(is_array($json));
         $this->assertTrue(is_array($json['services']));

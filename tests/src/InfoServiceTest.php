@@ -3,9 +3,21 @@
 namespace Freesewing\Tests;
 
 use \Freesewing\Services\InfoService;
+use \Freesewing\Output;
+require_once __DIR__.'/assets/testFunctions.php';
 
 class InfoServiceTest extends \PHPUnit\Framework\TestCase
 {
+    public function setUp()
+    {
+       Output::reset();
+    }
+
+    public function tearDown()
+    {
+       Output::reset();
+    }
+
     /**
      * Tests the getServiceName method
      */
@@ -25,9 +37,8 @@ class InfoServiceTest extends \PHPUnit\Framework\TestCase
         $context->configure();
 
         $service = new InfoService();
-        ob_start();
         $service->run($context);
-        $json = json_decode(ob_get_clean(),1);
+        $json = json_decode(Output::$body,1);
         
         $this->assertEquals(is_array($json), true);
         $this->assertEquals(is_array($json['services']), true);
@@ -46,9 +57,8 @@ class InfoServiceTest extends \PHPUnit\Framework\TestCase
         $context->configure();
 
         $service = new InfoService();
-        ob_start();
         $service->run($context);
-        $json = json_decode(ob_get_clean(),1);
+        $json = json_decode(Output::$body,1);
 
         $this->assertEquals(is_array($json), true);
         $this->assertEquals(is_array($json['info']), true);

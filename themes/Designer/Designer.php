@@ -2,6 +2,8 @@
 /** Freesewing\Themes\Designer class */
 namespace Freesewing\Themes;
 
+use \Freesewing\Utils;
+
 /**
  * Designer theme adds extra info for pattern designers.
  *
@@ -11,6 +13,9 @@ namespace Freesewing\Themes;
  */
 class Designer extends Theme
 {
+    /** This theme always shows debug info */
+    const SHOW_DEBUG = true;
+    
     /**
      * Adds debug info to pattern
      *
@@ -20,12 +25,13 @@ class Designer extends Theme
     {
         parent::themePattern($pattern);
 
-        foreach ($pattern->parts as $partKey => $part) {
+        foreach ($pattern->parts as $part) {
             if ($part->getRender() == true) {
-                // @todo Add a way to highlight a point (Like the old 'only' request parameter)
-                $this->debugPaths($partKey, $part);
-                $this->debugPoints($partKey, $part);
-                $this->highlightPoints($partKey, $part);
+                $this->debugPaths($part);
+                $this->debugPoints($part);
+                if($this->getOption('markPoints')) {
+                    $this->markPoints(Utils::asScrubbedArray($this->getOption('markPoints')), $part);
+                }
             }
         }
 
@@ -35,13 +41,17 @@ class Designer extends Theme
     /**
      * Adds debug info to points in a part
      *
-     * @param string $partKey Key of the part in the pattern parts array
      * @param \Freesewing\Part $part The pattern part
      */
-    private function debugPoints($partKey, $part)
+    private function debugPoints($part)
     {
+        if($this->getOption('onlyPoints')) {
+            $onlyPoints = Utils::asScrubbedArray($this->getOption('onlyPoints'));
+        }
+        else $onlyPoints = false;
+
         foreach ($part->points as $key => $point) {
-            $this->debugPoint($key, $point, $part, $partKey);
+            if($onlyPoints && in_array($key,$onlyPoints)) $this->debugPoint($key, $point, $part);
         }
     }
 
@@ -51,58 +61,51 @@ class Designer extends Theme
      * @param string $key Key of the point in the part's points array
      * @param \Freesewing\Point $point The point to add debug for
      * @param \Freesewing\Part $part The pattern part
-     * @param string $partKey Key of the part in the pattern parts array
      */
-    private function debugPoint($key, \Freesewing\Point $point, \Freesewing\Part $part, $partKey)
-    {
-        if (!isset($part->tmp['pointsThemed'][$key])) {
-            $title = $this->debugPointDescription($key, $point);
-            $attr = ['id' => "$partKey-$key", 'onmouseover' => "pointHover('$partKey-$key')"];
-            if (substr($key, 0, 1) == '.' || strpos($key, 'volatile')) {
-                $type = 'volatile-point';
-            } else {
-                $type = 'point';
-            }
-            $part->newSnippet($key, $type, $key, $attr, $title);
-            $attr = ['id' => "$partKey-$key-tooltip", 'class' => 'tooltip', 'visibility' => 'hidden'];
-            $part->newText($key, $key, $title, $attr);
-        }
-    }
-
-    /**
-     * Adds highlighted points in a part
-     *
-     * @param string $partKey Key of the part in the pattern parts array
-     * @param \Freesewing\Part $part The pattern part
-     */
-    private function highlightPoints($partKey, $part)
-    {
-        if (isset($_REQUEST['highlightPoints'])) {
-            $toHighlight = \Freesewing\Utils::asScrubbedArray($_REQUEST['highlightPoints'], ',');
-            if (isset($toHighlight) && is_array($toHighlight)) {
-                foreach ($toHighlight as $key) {
-                    if (isset( $part->points[$key])) {
-                        $this->highlightPoint($key, $part->points[$key], $part, $partKey);
-                    }
-                }
-            }
-        }
-    }
-
-    /**
-     * Adds hightlight to a single point
-     *
-     * @param string $key Key of the point in the part's points array
-     * @param \Freesewing\Point $point The point to highlight
-     * @param \Freesewing\Part $part The pattern part
-     * @param string $partKey Key of the part in the pattern parts array
-     */
-    private function highlightPoint($key, \Freesewing\Point $point, \Freesewing\Part $part, $partKey)
+    private function debugPoint($key, \Freesewing\Point $point, \Freesewing\Part $part)
     {
         $title = $this->debugPointDescription($key, $point);
-        $attr = ['id' => "$partKey-$key", 'onmouseover' => "pointHover('$partKey-$key')"];
-        $part->newSnippet($key, 'highlight-point', $key, $attr, $title);
-        $attr = ['id' => "$partKey-$key-tooltip", 'class' => 'tooltip', 'visibility' => 'hidden'];
+        $partSlug = Utils::slug($part->getTitle());
+        $attr = ['id' => "$partSlug-$key", 'onmouseover' => "pointHover('$partSlug-$key')"];
+        if (substr($key, 0, 1) == '.' || strpos($key, 'volatile')) {
+            $type = 'volatile-point';
+        } else {
+            $type = 'point';
+        }
+        $part->newSnippet($key, $type, $key, $attr, $title);
+        $attr = ['id' => "$partSlug-$key-tooltip", 'class' => 'tooltip', 'visibility' => 'hidden'];
+        $part->newText($key, $key, $title, $attr);
+    }
+    
+    /**
+     * Adds marked points in a part
+     *
+     * @param array $points Array of points to mark
+     * @param \Freesewing\Part $part The pattern part
+     */
+    private function markPoints($points, $part)
+    {
+        foreach($points as $id) {
+            if($part->isPoint($id)) {
+                $this->markPoint($id, $part->points[$id], $part);
+            }
+        }
+    }
+
+    /**
+     * Adds mark to a single point
+     *
+     * @param string $key Key of the point in the part's points array
+     * @param \Freesewing\Point $point The point to mark
+     * @param \Freesewing\Part $part The pattern part
+     */
+    private function markPoint($key, \Freesewing\Point $point, \Freesewing\Part $part)
+    {
+        $title = $this->debugPointDescription($key, $point);
+        $partSlug = Utils::slug($part->getTitle());
+        $attr = ['id' => "$partSlug-$key", 'onmouseover' => "pointHover('$partSlug-$key')"];
+        $part->newSnippet($key, 'marked-point', $key, $attr, $title);
+        $attr = ['id' => "$partSlug-$key-tooltip", 'class' => 'tooltip', 'visibility' => 'hidden'];
         $part->newText($key, $key, $title, $attr);
         $part->tmp['pointsThemed'][$key] = true; // Store what points we've seen
     }
@@ -121,13 +124,12 @@ class Designer extends Theme
     /**
      * Adds debug info for to paths in a part
      *
-     * @param string $partKey Key of the part in the pattern parts array
      * @param \Freesewing\Part $part The pattern part
      */
-    private function debugPaths($partKey, $part)
+    private function debugPaths($part)
     {
         foreach ($part->paths as $path) {
-            $this->debugPath($path, $part, $partKey);
+            $this->debugPath($path, $part);
         }
     }
 
@@ -136,10 +138,15 @@ class Designer extends Theme
      *
      * @param \Freesewing\Path $path The path to add debug for
      * @param \Freesewing\Part $part The pattern part
-     * @param string $partKey Key of the part in the pattern parts array
      */
-    private function debugPath($path, $part, $partKey)
+    private function debugPath($path, $part)
     {
+        if($this->getOption('onlyPoints')) {
+            $onlyPoints = Utils::asScrubbedArray($this->getOption('onlyPoints'));
+        }
+        else $onlyPoints = false;
+
+        $partSlug = Utils::slug($part->getTitle());
         foreach (explode(' ', $path->getPath()) as $key) {
             $key = rtrim($key);
 
@@ -163,25 +170,16 @@ class Designer extends Theme
                 } else {
                     $type = 'path-point';
                 }
-                $title = $this->debugPointDescription($key, $part->points[$key]);
-                $attr = ['id' => "$partKey-$key", 'onmouseover' => "pointHover('$partKey-$key')"];
-                $part->newSnippet("$partKey-$key", $type, $key, $attr, $title);
-                $attr = ['id' => "$partKey-$key-tooltip", 'class' => 'tooltip', 'visibility' => 'hidden'];
-                $part->newText($key, $key, $title, $attr);
+                if(!$onlyPoints || in_array($key,$onlyPoints)) {
+                    $title = $this->debugPointDescription($key, $part->points[$key]);
+                    $attr = ['id' => "$partSlug-$key", 'onmouseover' => "pointHover('$partSlug-$key')"];
+                    $part->newSnippet("$partSlug-$key", $type, $key, $attr, $title);
+                    $attr = ['id' => "$partSlug-$key-tooltip", 'class' => 'tooltip', 'visibility' => 'hidden'];
+                    $part->newText($key, $key, $title, $attr);
+                }
                 $previous = $key;
             }
         }
     }
     
-    /**
-     * Determines whether to show debug messages or not
-     *
-     * This is false in the theme we extend, so we set it true here
-     *
-     * @return true Here, always true
-     */
-    protected function showDebug()
-    {
-        return true;
-    }
 }

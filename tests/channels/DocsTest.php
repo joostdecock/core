@@ -28,8 +28,8 @@ class DocsTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals($channel->isValidrequest($context), false);
         
         $context = new \Freesewing\Context();
-        $context->setRequest(new \Freesewing\Request(['service' => 'info', 'pattern' => 'AaronAshirt']));
-        $context->setPattern(new \Freesewing\Patterns\AaronAshirt()); 
+        $context->setRequest(new \Freesewing\Request(['service' => 'info', 'pattern' => 'TestPattern']));
+        $context->setPattern(new \Freesewing\Patterns\TestPattern()); 
         $this->assertEquals($channel->isValidrequest($context), true);
 
     }
@@ -45,10 +45,10 @@ class DocsTest extends \PHPUnit\Framework\TestCase
     public function testStandardizeModelMeasurements()
     {
         $channel = new \Freesewing\Channels\Docs();
-        $pattern = new \Freesewing\Patterns\AaronAshirt();
-        $request = new \Freesewing\Request(['chestCircumference' => 97]);
+        $pattern = new \Freesewing\Patterns\TestPattern();
+        $request = new \Freesewing\Request(['someMeasurement' => 97]);
         $measurements = $channel->standardizeModelMeasurements($request,$pattern);
-        $this->assertEquals($measurements['chestCircumference'], 970);
+        $this->assertEquals($measurements['someMeasurement'], 970);
         unset($pattern->config);
         $this->assertEquals($channel->standardizeModelMeasurements($request,$pattern),null);
     }
@@ -56,15 +56,16 @@ class DocsTest extends \PHPUnit\Framework\TestCase
     public function testStandardizePatternOptions()
     {
         $channel = new \Freesewing\Channels\Docs();
-        $pattern = new \Freesewing\Patterns\WahidWaistcoat();
-        $request = new \Freesewing\Request(['frontDrop' => 5, 'frontStyle' => 2]);
+        $pattern = new \Freesewing\Patterns\TestPattern();
+        $request = new \Freesewing\Request(['measureOption' => 5, 'chooseOneOption' => 2]);
         $options = $channel->standardizePatternOptions($request,$pattern);
-        $this->assertEquals($options['frontDrop'], 50);
-        $this->assertEquals($options['frontStyle'], 2);
-        $pattern = new \Freesewing\Patterns\BruceBoxerBriefs();
-        $request = new \Freesewing\Request(['horizontalStretchFactor' => 95]);
+        $this->assertEquals($options['measureOption'], 50);
+        $this->assertEquals($options['chooseOneOption'], 2);
+
+        $pattern = new \Freesewing\Patterns\TestPattern();
+        $request = new \Freesewing\Request(['percentOption' => 95]);
         $options = $channel->standardizePatternOptions($request,$pattern);
-        $this->assertEquals($options['horizontalStretchFactor'], 0.95);
+        $this->assertEquals($options['percentOption'], 0.95);
         unset($pattern->config);
         $this->assertEquals($channel->standardizePatternOptions($request,$pattern),null);
     }

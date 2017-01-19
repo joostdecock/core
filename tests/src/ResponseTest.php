@@ -2,8 +2,20 @@
 
 namespace Freesewing\Tests;
 
+use \Freesewing\Output;
+require_once __DIR__.'/assets/testFunctions.php';
+
 class ResponseTest extends \PHPUnit\Framework\TestCase
 {
+    public function setUp()
+    {
+       Output::reset();
+    }
+
+    public function tearDown()
+    {
+       Output::reset();
+    }
 
     /**
      * @param string $attribute Attribute to check for
@@ -31,9 +43,6 @@ class ResponseTest extends \PHPUnit\Framework\TestCase
      * Needs to run in a seperate process, because we can't 
      * send headers after starting the output.
      * Also requires the xdebug extension
-     *
-     * @runInSeparateProcess
-     * @requires extension xdebug
      */
     public function testaddCacheHeaders()
     {
@@ -41,21 +50,15 @@ class ResponseTest extends \PHPUnit\Framework\TestCase
         $request = new \Freesewing\Request(['cache'  => 'please']);
         $response->addCacheHeaders($request);
 
-        ob_start();
         $response->send();
-        $headers = xdebug_get_headers();
-        $this->assertEquals($headers[0], 'Cache-Control: public, max-age=15552000');
-        ob_clean();
+        $this->assertContains('Cache-Control: public, max-age=15552000', Output::$headers);
         
         $response = new \Freesewing\Response();
         $request = new \Freesewing\Request();
-        var_dump($request->getData('cache'));
         $response->addCacheHeaders($request);
         
         $response->send();
-        $headers = xdebug_get_headers();
-        $this->assertEquals($headers[0], 'Cache-Control: public, no-cache');
-        ob_end_clean();
+        $this->assertContains('Cache-Control: public, no-cache', Output::$headers);
     }
 
     /**
@@ -92,9 +95,9 @@ class ResponseTest extends \PHPUnit\Framework\TestCase
 
         $response->setFormat('json');
         $response->setBody(['foo' => 'bar', 'gnoo' => 'jar']);
-
-        $this->expectOutputString('{"foo":"bar","gnoo":"jar"}');
         $response->send();
+
+        $this->assertEquals(Output::$body,'{"foo":"bar","gnoo":"jar"}');
     }
     
     /**
@@ -106,8 +109,8 @@ class ResponseTest extends \PHPUnit\Framework\TestCase
 
         $response->setFormat('raw');
         $response->setBody('foobar gnoojar');
-
-        $this->expectOutputString('foobar gnoojar');
         $response->send();
+
+        $this->assertEquals(Output::$body,'foobar gnoojar');
     }
 }

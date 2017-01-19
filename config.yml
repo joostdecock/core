@@ -1,11 +1,11 @@
 defaults:
     service: draft
     channel: Docs
-    draftTheme: Svg
+    draftTheme: Basic
     sampleTheme: Sampler
     compareTheme: Compare
     infoTheme: Info
-    pattern: AaronAshirt
+    pattern: TestPattern
     locale: en
 renderers:
     svg: SvgRenderbot

@@ -251,4 +251,16 @@ class Utils
         \Kint::dump($data);
         return ob_get_clean();
     }
+
+    /**
+     * Returns a slug for a given string
+     *
+     * @param string $string The input string
+     *
+     * @return string
+     */
+    public static function slug($string)
+    {
+        return preg_replace('~[^\pL\d]+~u', '-', $string);
+    }
 }

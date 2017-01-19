@@ -2,20 +2,30 @@
 
 namespace Freesewing\Tests;
 
-class SampleTest extends \PHPUnit\Framework\TestCase
+class PaperlessTest extends \PHPUnit\Framework\TestCase
 {
 
-    public function testThemeResponse() {
+    /**
+     * Tests the isPaperless method
+     *
+     */
+    public function testIsPaperless()
+    {
+        $theme = new \Freesewing\Themes\Paperless();
+        $this->assertTrue($theme->isPaperless());
+    }
+
+    public function estThemeResponse() {
         $svgDocument = new \Freesewing\SvgDocument(
             new \Freesewing\SvgComments(),
             new \Freesewing\SvgAttributes(),
             new \Freesewing\SvgCss(),
+            new \Freesewing\SvgScript(),
             new \Freesewing\SvgDefs(),
             new \Freesewing\SvgComments()
         );
         $pattern = new \Freesewing\Patterns\Pattern();
         $theme = new \Freesewing\Themes\Theme();
         $theme->themePattern($pattern, $svgDocument);
-        print_r($svgDocument->css);
     }
 }

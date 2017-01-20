@@ -1338,11 +1338,6 @@ class Part
      */
     private function offsetCurve($curve, $distance, $key, $subdivide = 0)
     {
-        if ($subdivide >= 20) {
-            // This is here to protect us against egge cases
-            throw new \Exception("Path offset ran $subdivide subdivisions deep. Bailing out before we eat all memory");
-        }
-
         $chunks = [];
         $points = Utils::asScrubbedArray($curve);
         $from = $points[1];
@@ -1794,10 +1789,9 @@ class Part
             $lenD = $this->distance($key3, '.linesCrossCheck') + $this->distance('.linesCrossCheck', $key4);
             if (round($lenA, 1) == round($lenC, 1) and round($lenB, 1) == round($lenD, 1)) {
                 return $point;
-            } else {
-                return false;
             }
         }
+        return false;
     }
 
     /**
@@ -1848,6 +1842,8 @@ class Part
      */
     public function isPoint($key)
     {
+        // Prevent loadPoint from throwing an exception on invalid point id
+        if(!isset($this->points[$key])) return false;
         $point = $this->loadPoint($key);
         if ($point instanceof Point) {
             return true;
@@ -2017,13 +2013,13 @@ class Part
     }
 
     /**
-     * Returns point at the left edge of a Bezier curve
+     * Returns point at the chosen edge of a Bezier curve
      *
      * @param string $curveStartKey    The id of the start of the curve
      * @param string $curveControl1Key The id of the first control point
      * @param string $curveControl2Key The id of the second control point
      * @param string $curveEndKey      The id of the end of the curve
-     * @param string $direction        Either left, right, up, or down
+     * @param string $direction        Either left, right, top, or bottom
      *
      * @return Point The point at the edge
      */
@@ -2063,14 +2059,12 @@ class Part
             $this->loadPoint($curveEndKey)
         );
 
-        if (!is_array($points)) {
-            return;
-        }
-
-        $i = 1;
-        foreach ($points as $point) {
-            $this->addPoint($prefix . $i, $point);
-            $i++;
+        if (is_array($points)) {
+            $i = 1;
+            foreach ($points as $point) {
+                $this->addPoint($prefix . $i, $point);
+                $i++;
+            }
         }
     }
 
@@ -2114,7 +2108,7 @@ class Part
      * @param string     $cp2          The id of the second control point
      * @param string     $to           The id of the end of the curve
      * @param string     $split        The id of the point to split on, or a delta to split on
-     * @param float|bool $splitOnDelta The angle to shift along
+     * @param float|bool $splitOnDelta Whether to split on delta or not
      *
      * @return array the 8 points resulting from the split
      */
@@ -2168,18 +2162,16 @@ class Part
     /**
      * Returns intersections of two cubic Bezier curves
      *
-     * @param string      $curve1StartKey
+     * @param string      $curve1StartKey    The id of the start of the first curve
      * @param string      $curve1Control1Key The id of the first control point of the first curve
      * @param string      $curve1Control2Key The id of the second control point of the first curve
      * @param string      $curve1EndKey      The id of the end of the first curve
-     * @param string      $curve2StartKey
-     * @param string      $curve2Control1Key The id of the first control point of the first curve
-     * @param string      $curve2Control2Key The id of the second control point of the first curve
-     * @param string      $curve2EndKey      The id of the end of the first curve
+     * @param string      $curve2StartKey    The id of the start of the second curve
+     * @param string      $curve2Control1Key The id of the first control point of the second curve
+     * @param string      $curve2Control2Key The id of the second control point of the second curve
+     * @param string      $curve2EndKey      The id of the end of the second curve
      * @param bool|string $prefix            The prefix for points this will create
      *
-     * @internal param string $curve1Startkey The id of the start of the first curve
-     * @internal param string $curve2Startkey The id of the start of the first curve
      */
     public function curvesCross(
         $curve1StartKey,
@@ -2198,14 +2190,12 @@ class Part
             $this->loadPoint($curve2StartKey), $this->loadPoint($curve2Control1Key), $this->loadPoint($curve2Control2Key),
             $this->loadPoint($curve2EndKey)
         );
-        if (!is_array($points)) {
-            return;
-        }
-
-        $i = 1;
-        foreach ($points as $point) {
-            $this->addPoint("$prefix-$i", $point);
-            $i++;
+        if (is_array($points)) {
+            $i = 1;
+            foreach ($points as $point) {
+                $this->addPoint("$prefix-$i", $point);
+                $i++;
+            }
         }
     }
 

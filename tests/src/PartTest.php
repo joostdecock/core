@@ -10,7 +10,7 @@ class PartTest extends \PHPUnit\Framework\TestCase
      *
      * @dataProvider providerTestAttributeExists
      */
-    public function estAttributeExists($attribute)
+    public function testAttributeExists($attribute)
     {
         $this->assertClassHasAttribute($attribute, '\Freesewing\Part');
     }
@@ -41,7 +41,7 @@ class PartTest extends \PHPUnit\Framework\TestCase
      *
      * @dataProvider providerGettersReturnWhatSettersSet
      */
-    public function estGettersReturnWhatSettersSet($methodSuffix, $expectedResult)
+    public function testGettersReturnWhatSettersSet($methodSuffix, $expectedResult)
     {
         $part = new \Freesewing\Part();
         $setMethod = 'set'.$methodSuffix;
@@ -80,7 +80,7 @@ class PartTest extends \PHPUnit\Framework\TestCase
      * Specifically, an orientation that is not between 1 and 12
      * and a missing class attribute
      */
-    public function estNewNoteEdgeCase()
+    public function testNewNoteEdgeCase()
     {
         $p = new \Freesewing\Part();
         $p->newPoint(1,0,0);
@@ -91,7 +91,7 @@ class PartTest extends \PHPUnit\Framework\TestCase
     /** 
      * Tests the addTitle method
      */
-    public function estAddTitle()
+    public function testAddTitle()
     {
         $p = new \Freesewing\Part();
         $p->newPoint(1,0,0);
@@ -119,7 +119,7 @@ class PartTest extends \PHPUnit\Framework\TestCase
     /** 
      * Tests the hasPathToRender method
      */
-    public function estHasPathToRender()
+    public function testHasPathToRender()
     {
         $p = new \Freesewing\Part();
         $this->assertFalse($p->hasPathToRender());
@@ -128,57 +128,140 @@ class PartTest extends \PHPUnit\Framework\TestCase
     }
 
     /** 
-     * Tests that offsetPath throws exception whnen path object is missing
+     * Tests that loadPoint throws exception when point does not exist
+     *
+     * @expectedException InvalidArgumentException
+     s @expectedExceptionMessage Cannot load point 1, it does not exist
+     */
+    public function testLoadPointException()
+    {
+        $p = new \Freesewing\Part();
+        $p->loadPoint(1);
+    }
+    
+    /** 
+     * Tests that offsetPath throws exception when path object is missing
      *
      * @expectedException InvalidArgumentException
      s @expectedExceptionMessage offsetPath requires a valid path object
      */
-    public function estOffsetPathException()
+    public function testOffsetPathException()
     {
         $p = new \Freesewing\Part();
         $p->offsetPath(1,2);
     }
     
     /** 
-     * Tests the path offset code
+     * Tests that shiftAlong throws exception when shift is longer than path
+     *
+     * @expectedException InvalidArgumentException
+     * @expectedExceptionMessage Ran out of curve to move along
      */
-    public function estPathOffsetCode()
+    public function testShiftAlongException()
     {
         $p = new \Freesewing\Part();
         $p->newPoint(1,0,0);
-        $p->newPoint(2,50,0);
-        $p->newPoint(3,100,50);
-        $p->newPoint(4,100,100);
-        $p->newPoint(5,150,100);
-        $p->newPoint(6,200,100);
-        $p->newPoint(7,200,150);
-        $p->newPoint(8,100,150);
-        $p->newPoint(9,95,55);
-        $p->newPath('original', 'M 1 L 2 L 3 C 4 4 5 C 6 6 7 L 8 L 9 z');
-        $p->offsetPath('offset','original', 25);
-
-        $this->assertEquals(serialize($p->paths),$this->loadFixture('offset.1'));
+        $p->newPoint(2,10,0);
+        $p->newPoint(3,10,10);
+        $p->newPoint(4,20,20);
+        $p->shiftAlong(1,2,3,4,500);
     }
-    
     
     /** 
      * Tests the curvesCross method
      */
-    public function testNewWidthDimension()
+    public function testCurvesCross()
     {
         $p = new \Freesewing\Part();
         $p->newPoint(1,0,0);
-        $p->newPoint(2,50,0);
-        $p->newPoint(3,100,50);
-        $p->newPoint(4,150,100);
-        $this->assertEquals($p->curvesCross(1,2,3,4,3,4,1,2), null);
-//        $this->assertEquals($p->curvedimensions),$this->loadFixture('widthDimensions'));
+        $p->newPoint(2,100,0);
+        $p->newPoint(3,0,100);
+        $p->newPoint(4,100,100);
+        $p->curvesCross(1,2,3,4,2,1,3,4,'test');
+        $p1 = new \Freesewing\Point();
+        $p1->setX(43.75);
+        $p1->setY(15.625);
+        $this->assertEquals($p->points['test-1'],$p1);
     }
     
     /** 
+     * Tests the curveCrossesLine method
+     */
+    public function testCurveCrossesLine()
+    {
+        $p = new \Freesewing\Part();
+        $p->newPoint(1,0,0);
+        $p->newPoint(2,100,0);
+        $p->newPoint(3,0,100);
+        $p->newPoint(4,100,100);
+        $p->curveCrossesLine(1,2,3,4,2,3,'test');
+        $p1 = new \Freesewing\Point();
+        $p1->setX(50);
+        $p1->setY(50);
+        $this->assertEquals($p->points['test1'],$p1);
+    }
+    
+    /** 
+     * Tests the curveEdge methods
+     */
+    public function testCurveEdges()
+    {
+        $p = new \Freesewing\Part();
+        $p->newPoint(1,50,50);
+        $p->newPoint(2,40,0);
+        $p->newPoint(3,80,100);
+        $left = $p->curveEdgeLeft(1,2,3,1);
+        $right = $p->curveEdgeRight(1,2,3,1);
+        $top = $p->curveEdgeTop(1,2,3,1);
+        $bottom = $p->curveEdgeBottom(1,2,3,1);
+        
+        $expect = new \Freesewing\Point();
+        $expect->setX(48.353);
+        $expect->setY(37.962);
+        $this->assertEquals($left, $expect);
+        
+        $expect->setX(61.37);
+        $expect->setY(63.306);
+        $this->assertEquals($right, $expect);
+
+        $expect->setX(49.204);
+        $expect->setY(35.567);
+        $this->assertEquals($top, $expect);
+
+        $expect->setX(60.75);
+        $expect->setY(64.433);
+        $this->assertEquals($bottom, $expect);
+    }
+
+    /** 
+     * Tests the curveCrossesXY methods
+     */
+    public function testCurveCrossesXY()
+    {
+        $p = new \Freesewing\Part();
+        $p->newPoint(1,50,50);
+        $p->newPoint(2,40,0);
+        $p->newPoint(3,80,100);
+        $p->curveCrossesX(1,2,3,1,60,'testx');
+        $px = new \Freesewing\Point();
+        $px->setX(60);
+        $px->setY(64.104);
+        $this->assertEquals($p->points['testx1'],$px);
+        $px->setY(56.943);
+        $this->assertEquals($p->points['testx2'],$px);
+        $p->curveCrossesY(1,2,3,1,55,'testy');
+        $py = new \Freesewing\Point();
+        $py->setX(53.081);
+        $py->setY(55);
+        $this->assertEquals($p->points['testy1'],$py);
+        $py->setX(59.362);
+        $this->assertEquals($p->points['testy2'],$py);
+    }
+
+    /** 
      * Tests the newWidhtDimension method
      */
-    public function estNewWidthDimension()
+    public function testNewWidthDimension()
     {
         $p = new \Freesewing\Part();
         $p->newPoint(1,0,0);
@@ -193,7 +276,7 @@ class PartTest extends \PHPUnit\Framework\TestCase
     /** 
      * Tests the newHeightDimension method
      */
-    public function estNewHeightDimension()
+    public function testNewHeightDimension()
     {
         $p = new \Freesewing\Part();
         $p->newPoint(1,0,0);
@@ -208,7 +291,7 @@ class PartTest extends \PHPUnit\Framework\TestCase
     /** 
      * Tests the newLinearDimension method
      */
-    public function estNewLinearDimension()
+    public function testNewLinearDimension()
     {
         $p = new \Freesewing\Part();
         $p->newPoint(1,0,0);
@@ -221,24 +304,23 @@ class PartTest extends \PHPUnit\Framework\TestCase
     }
     
     /** 
-     * Tests the newCurvedDimension method
+     * Tests the pathLen method
      */
-    public function estNewCurvedDimension()
+    public function testPathLen()
     {
         $p = new \Freesewing\Part();
         $p->newPoint(1,0,0);
         $p->newPoint(2,50,0);
         $p->newPoint(3,100,50);
         $p->newPoint(4,100,100);
-        $p->newCurvedDimension('M 1 C 2 3 4');
-        $p->newCurvedDimension('M 2 C 1 3 4', 25, 'Test msg');
-        $this->assertEquals(serialize($p->dimensions),$this->loadFixture('curvedDimensions'));
+        $p->newCurvedDimension('M 1 L 2 L 3 L 4');
+        $label = $p->dimensions[0]->getLabel();
+        $this->assertEquals($label->getText(),'17.07cm');
     }
-    
     /** 
      * Tests the notch method
      */
-    public function estNotch()
+    public function testNotch()
     {
         $p = new \Freesewing\Part();
         $p->newPoint(1,0,0);
@@ -246,10 +328,186 @@ class PartTest extends \PHPUnit\Framework\TestCase
         $p->newPoint(3,100,50);
         $p->notch([1,2,3]);
 
-        $this->saveFixture('notch', serialize($p->snippets));
         $this->assertEquals(serialize($p->snippets),$this->loadFixture('notch'));
     }
     
+    /** 
+     * Tests the addBoundary method
+     */
+    public function testAddBoundary()
+    {
+        $p = new \Freesewing\Part();
+        $p->newPoint(1,0,0);
+        $p->newPoint(2,50,0);
+        $p->newWidthDimension(1,2,100);
+        $p->newPath('test','M 1 L 2');
+        $p->addBoundary();
+        $boundary = new \Freesewing\Boundary();
+        $topLeft = new \Freesewing\Point();
+        $topLeft->setX(0);
+        $topLeft->setY(0);
+        $bottomRight = new \Freesewing\Point();
+        $bottomRight->setX(50);
+        $bottomRight->setY(100);
+        $boundary->setTopLeft($topLeft);
+        $boundary->setBottomRight($bottomRight);
+        $this->assertEquals($p->boundary,$boundary);
+    }
+    
+    /**
+     * Tests the bezierCircle method
+     */
+    public function testBezierCircle()
+    {
+        $p = new \Freesewing\Part();
+        $this->assertEquals($p->bezierCircle(100),55.228474983079359);
+    }
+    
+    /** 
+     * Tests the newGrainline method
+     */
+    public function testNewGrainline()
+    {
+        $p = new \Freesewing\Part();
+        $p->newPoint(1,0,0);
+        $p->newPoint(2,50,0);
+        $p->newGrainline(1,2,'Test');
+        $this->assertEquals(serialize($p->dimensions),$this->loadFixture('grainline'));
+    }
+
+    /** 
+     * Tests the newCutOnFold method
+     */
+    public function testNewCutOnFold()
+    {
+        $p = new \Freesewing\Part();
+        $p->newPoint(1,0,0);
+        $p->newPoint(2,50,0);
+        $p->newCutOnFold(1,2,'Test');
+        $this->saveFixture('cutOnFold',serialize($p->dimensions));
+        $this->assertEquals(serialize($p->dimensions),$this->loadFixture('cutOnFold'));
+    }
+
+    /** 
+     * Tests the isPoint method
+     */
+    public function testIsPoint()
+    {
+        $p = new \Freesewing\Part();
+        $p->newPoint(1,20,30);
+        $p->points[2] = 'test';
+        $this->assertTrue($p->isPoint(1));
+        $this->assertFalse($p->isPoint(2));
+        $this->assertFalse($p->isPoint(3));
+    }
+
+    /** 
+     * Tests the splitCurve method
+     */
+    public function testSpitCurve()
+    {
+        $p = new \Freesewing\Part();
+        $p->newPoint(1,0,0);
+        $p->newPoint(2,100,0);
+        $p->newPoint(3,100,100);
+        $p->addPoint(4,$p->shiftAlong(1,2,2,3,50));
+        
+        $points = $p->splitCurve(1,2,2,3,4);
+        $xVals = [0,21,37.59,50.696,100,100,100,50.696];
+        $yVals = [0,0,0,0.926,100,21,4.41,0.926];
+        for($i=0;$i<8;$i++) {
+            $this->assertEquals($points[$i]->getX(), $xVals[$i]); 
+            $this->assertEquals($points[$i]->getY(), $yVals[$i]); 
+        }
+       
+        $p->addSplitCurve(1,2,2,3,0.7,'test',true);
+        $xVals = [0,70,91,97.3,100,100,100,97.3];
+        $yVals = [0,0,0,34.3,100,70,49,34.3];
+        for($i=0;$i<8;$i++) {
+            $j = $i+1;
+            $this->assertEquals($p->points["test$j"]->getX(), $xVals[$i]); 
+            $this->assertEquals($p->points["test$j"]->getY(), $yVals[$i]); 
+        }
+    }
+
+    /** 
+     * Tests the beamsCross and linesCross method
+     */
+    public function testLinesCrossBeamsCross()
+    {
+        $p = new \Freesewing\Part();
+        $p->newPoint(1,0,0);
+        $p->newPoint(2,25,25);
+        $p->newPoint(3,0,60);
+        $p->newPoint(4,25,35);
+        $this->assertFalse($p->linesCross(1,2,3,4)); 
+        $this->assertFalse($p->beamsCross(1,3,2,4)); 
+        
+        $expect = new \Freesewing\Point();
+        $expect->setX(30);
+        $expect->setY(30);
+        $this->assertEquals($p->beamsCross(1,2,3,4), $expect);
+        
+        $p->newPoint(4,10,-10);
+        $expect->setX(7.5);
+        $expect->setY(7.5);
+        $this->assertEquals($p->linesCross(1,2,3,4), $expect);
+    }
+
+    /** 
+     * Tests the flipXY methods
+     */
+    public function testFlipXY()
+    {
+        $p = new \Freesewing\Part();
+        $p->newPoint(1,20,30);
+        $expect = new \Freesewing\Point();
+        $expect->setX(-20);
+        $expect->setY(30);
+        $flipped = $p->flipX(1);
+        $flipped->setDescription('');
+        $this->assertEquals($flipped,$expect);
+        
+        $flipped = $p->flipX(1,15);
+        $flipped->setDescription('');
+        $expect->setX(10);
+        $this->assertEquals($flipped,$expect);
+        
+        $flipped = $p->flipY(1);
+        $flipped->setDescription('');
+        $expect->setX(20);
+        $expect->setY(-30);
+        $this->assertEquals($flipped,$expect);
+        
+        $flipped = $p->flipY(1,50);
+        $flipped->setDescription('');
+        $expect->setY(70);
+        $this->assertEquals($flipped,$expect);
+    }
+
+    /** 
+     * Tests the angle method
+     */
+    public function testAngle()
+    {
+        $p = new \Freesewing\Part();
+        $p->newPoint(1,0,0);
+        $p->newPoint(2,10,0);
+        $p->newPoint(3,0,10);
+        $p->newPoint(4,-10,0);
+        $p->newPoint(5,0,-10);
+        $p->newPoint(6,10,10);
+        $p->newPoint(7,-10,-10);
+
+        $this->assertEquals($p->angle(1,1),0);
+        $this->assertEquals($p->angle(2,1),0);
+        $this->assertEquals($p->angle(1,3),90);
+        $this->assertEquals($p->angle(1,4),0);
+        $this->assertEquals($p->angle(1,5),270);
+        $this->assertEquals($p->angle(1,6),135);
+        $this->assertEquals($p->angle(1,7),315);
+    }
+
     private function loadFixture($fixture)
     {
         $dir = 'tests/src/fixtures';
@@ -259,6 +517,8 @@ class PartTest extends \PHPUnit\Framework\TestCase
 
     private function saveFixture($fixture, $data)
     {
+        // use as 
+        //$this->saveFixture('grainline',serialize($p->dimensions));
         $dir = 'tests/src/fixtures';
         $file = "$dir/Part.$fixture.data";
         $f = fopen($file,'w');

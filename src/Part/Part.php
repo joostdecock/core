@@ -1420,61 +1420,59 @@ class Part
      */
     private function offsetTolerance($entry, $distance)
     {
+        $originLen = $this->curveLen($entry['original'][0], $entry['original'][1], $entry['original'][2], $entry['original'][3]);
+        $offsetLen = $this->curveLen($entry['offset'][0], $entry['offset'][1], $entry['offset'][2], $entry['offset'][3]);
+        
         // If a curve gets too short things go off the rails, so don't bother
-        if ($this->curveLen($entry['original'][0], $entry['original'][1], $entry['original'][2], $entry['original'][3]) < 10) {
+        if ($originLen < 10) {
             return ['score' => 1, 'index' => 0.5];
         }
 
-        $orCurveLen = $this->curveLen($entry['original'][0], $entry['original'][1], $entry['original'][2], $entry['original'][3]);
-        $ofCurveLen = $this->curveLen($entry['offset'][0], $entry['offset'][1], $entry['offset'][2], $entry['offset'][3]);
+        $originFrom = $this->loadPoint($entry['original'][0]);
+        $originCp1  = $this->loadPoint($entry['original'][1]);
+        $originCp2  = $this->loadPoint($entry['original'][2]);
+        $originTo   = $this->loadPoint($entry['original'][3]);
+        $offsetFrom = $this->loadPoint($entry['offset'][0]);
+        $offsetCp1  = $this->loadPoint($entry['offset'][1]);
+        $offsetCp2  = $this->loadPoint($entry['offset'][2]);
+        $offsetTo   = $this->loadPoint($entry['offset'][3]);
 
         $worstDelta = 0;
         $worstIndex = false;
-        for ($i = 0; $i < 10; ++$i) {
-            $t = $i / 10;
 
-            $orHalfCurveLen = $orCurveLen * $t;
-            $ofHalfCurveLen = $ofCurveLen * $t;
+        for ($i = 1; $i < 5; ++$i) {
+            $t = $i / 5;
 
-            $orHalfPoint = $this->shiftAlong($entry['original'][0], $entry['original'][1], $entry['original'][2], $entry['original'][3], $orHalfCurveLen);
-            $ofhalfPoint = $this->shiftAlong($entry['offset'][0], $entry['offset'][1], $entry['offset'][2], $entry['offset'][3], $ofHalfCurveLen);
-            $this->addPoint('orHalfPoint' . $i, $orHalfPoint);
-            $this->addPoint('ofHalfPoint' . $i, $ofhalfPoint);
-
-            $h = false;
-            if ($i > 1) {
-                // Calculating the height of a triangle thru 3 points
-                // using one point on the original curve and one on the seam-curve
-                //
-                // hc=(2/c)sqrt[s(s-a)(s-b)(s-c)].
-                // Darin ist s=(1/2)(a+b+c).
-                $okey1 = 'orHalfPoint' . ($i - 1);
-                $okey2 = 'orHalfPoint' . ($i);
-                $ofkey1 = 'ofHalfPoint' . ($i);
-                $c = $this->distance($okey1, $okey2);
-                $b = $this->distance($okey1, $ofkey1);
-                $a = $this->distance($ofkey1, $okey2);
-                $s = ($a + $b + $c) / 2;
-                $h = (2 / $c) * sqrt(($s*($s - $a) * ($s - $b) * ($s - $c)));
+            $xOrigin = Utils::bezierPoint($t, $originFrom->getX(), $originCp1->getX(), $originCp2->getX(), $originTo->getX());
+            $yOrigin = Utils::bezierPoint($t, $originFrom->getY(), $originCp1->getY(), $originCp2->getY(), $originTo->getY());
+            $xOffset = Utils::bezierPoint($t, $offsetFrom->getX(), $offsetCp1->getX(), $offsetCp2->getX(), $offsetTo->getX());
+            $yOffset = Utils::bezierPoint($t, $offsetFrom->getY(), $offsetCp1->getY(), $offsetCp2->getY(), $offsetTo->getY());
+            
+            $this->newPoint('.offsetToleranceOrigin', $xOrigin, $yOrigin);
+            $this->newPoint('.offsetToleranceOffset', $xOffset, $yOffset);
+            
+            if($i == 1) {
+                $angle = $this->angle($entry['original'][0], '.offsetToleranceOrigin')+90;
+            } else {
+                $angle = $this->angle('.offsetToleranceOriginPrevious', '.offsetToleranceOrigin')+90;
             }
+            $this->clonePoint('.offsetToleranceOrigin','.offsetToleranceOriginPrevious');
+            
+            $this->addPoint('.offsetToleranceOrigin',$this->shift('.offsetToleranceOrigin',$angle,$distance));
 
-
-            $halfPointDistance = Utils::distance($orHalfPoint, $ofhalfPoint);
-            if ($h) {
-                $halfPointDistance = $h;
-            }
-            $delta = abs($halfPointDistance / (abs($distance) / 100) - 100);
-
-            if ($delta > $worstDelta) {
-                $worstDelta = round($delta, 2);
+            $offset = $this->distance('.offsetToleranceOrigin', '.offsetToleranceOffset')+$distance;
+            $delta = abs($offset/($distance/100) -100);
+           
+            if($delta>$worstDelta) {
+                $worstDelta = round($delta,2);
                 $worstIndex = $t;
             }
         }
-        $this->purgePoints('orHalfPoint');
-        $this->purgePoints('ofHalfPoint');
+        
+        $this->purgePoints('.offsetTolerance');
+        
         return ['score' => $worstDelta, 'index' => $worstIndex];
     }
-
 
     /**
      * Calculated the length of a path

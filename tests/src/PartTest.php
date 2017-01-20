@@ -131,7 +131,7 @@ class PartTest extends \PHPUnit\Framework\TestCase
      * Tests that loadPoint throws exception when point does not exist
      *
      * @expectedException InvalidArgumentException
-     s @expectedExceptionMessage Cannot load point 1, it does not exist
+     * @expectedExceptionMessage Cannot load point 1, it does not exist
      */
     public function testLoadPointException()
     {
@@ -167,6 +167,33 @@ class PartTest extends \PHPUnit\Framework\TestCase
         $p->shiftAlong(1,2,3,4,500);
     }
     
+    /** 
+     * Tests the curveLe method
+     */
+    public function testCurveLen()
+    {
+        $p = new \Freesewing\Part();
+        $p->newPoint(1,0,0);
+        $p->newPoint(2,10,0);
+        $p->newPoint(3,10,10);
+        $p->newPoint(4,20,20);
+        $this->assertEquals($p->curveLen(1,2,3,4),29.451086905068575);
+    }
+
+    /** 
+     * Tests the curvesCross method
+     */
+    public function testNewCurvedDimension()
+    {
+        $p = new \Freesewing\Part();
+        $p->newPoint(1,0,0);
+        $p->newPoint(2,100,0);
+        $p->newPoint(3,0,100);
+        $p->newPoint(4,100,100);
+        $p->newCurvedDimension('M 1 L 2', 10);
+        $this->assertEquals(serialize($p->dimensions),$this->loadFixture('newCurvedDimension'));
+    }
+
     /** 
      * Tests the curvesCross method
      */
@@ -316,6 +343,9 @@ class PartTest extends \PHPUnit\Framework\TestCase
         $p->newCurvedDimension('M 1 L 2 L 3 L 4');
         $label = $p->dimensions[0]->getLabel();
         $this->assertEquals($label->getText(),'17.07cm');
+        $p->newCurvedDimension('M 1 C 2 3 4');
+        $label = $p->dimensions[1]->getLabel();
+        $this->assertEquals($label->getText(),'15.49cm');
     }
     /** 
      * Tests the notch method
@@ -384,7 +414,6 @@ class PartTest extends \PHPUnit\Framework\TestCase
         $p->newPoint(1,0,0);
         $p->newPoint(2,50,0);
         $p->newCutOnFold(1,2,'Test');
-        $this->saveFixture('cutOnFold',serialize($p->dimensions));
         $this->assertEquals(serialize($p->dimensions),$this->loadFixture('cutOnFold'));
     }
 

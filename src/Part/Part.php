@@ -75,8 +75,6 @@ class Part
     /** @var string The units, either 'metric' or 'imperial' */
     private $units = 'metric';
 
-
-
     /**
      * Sets the render property.
      *
@@ -602,12 +600,16 @@ class Part
      * @param float  $distance   The distance to offset the path by
      * @param bool   $render     Render property of the new path
      * @param array  $attributes Optional array of path attributes
+     * 
+     * @throws \Exception
      */
     public function offsetPathString($key, $pathString, $distance = 10.0, $render = false, $attributes = null)
     {
         $this->newPath('.offsetHelper', $pathString);
         $this->paths['.offsetHelper']->setRender(false);
-        $this->offsetPath($key, '.offsetHelper', $distance, $render, $attributes);
+        if($this->offsetPath($key, '.offsetHelper', $distance, $render, $attributes) === false) {
+            throw new \InvalidArgumentException("Could not offset pathstring: $pathString");
+        }
     }
 
     /**
@@ -629,6 +631,7 @@ class Part
             throw new \InvalidArgumentException("offsetPath requires a valid path object");
         }
         $stack = $this->pathOffsetAsStack($path, $distance, $newKey);
+        if($stack === false) return false; // Happens for paths like: M 1 L 1
         /* take care of overlapping parts */
         $stack = $this->fixStackIntersections($stack);
         $stack = $this->fillPathStackGaps($stack, $path);
@@ -1174,7 +1177,8 @@ class Part
             }
         }
 
-        return $stack;
+        if(count($stack->items)>0) return $stack;
+        else return false;
     }
 
     /**
@@ -1426,8 +1430,8 @@ class Part
 
         $worstDelta = 0;
         $worstIndex = false;
-        for ($i = 0; $i < 20; ++$i) {
-            $t = $i / 20;
+        for ($i = 0; $i < 10; ++$i) {
+            $t = $i / 10;
 
             $orHalfCurveLen = $orCurveLen * $t;
             $ofHalfCurveLen = $ofCurveLen * $t;
@@ -1506,7 +1510,10 @@ class Part
      */
     public function clonePoint($sourceKey, $targetKey)
     {
-        $this->points[$targetKey] = $this->points[$sourceKey];
+        if(isset($this->points[$sourceKey])) {
+            $this->points[$targetKey] = $this->points[$sourceKey];
+        }
+        else return false;
     }
 
     /**

@@ -1,0 +1,21 @@
+default: 
+    group: maleStandardUsSizes
+groups:
+    byTheBook:
+        - trent
+measurements:
+    hipsCircumference: 
+        trent   : 810
+    seatCircumference: 
+        trent   : 960 
+    inseam: 
+        trent   : 810 
+    inseam: 
+        trent   : 1070 
+    bodyRise: 
+        trent   : 280 
+    naturalWaistToHip: 
+        trent   : 157.5
+    naturalWaistToSeat: 
+        trent   : 315
+

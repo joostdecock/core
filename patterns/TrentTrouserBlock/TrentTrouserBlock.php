@@ -120,8 +120,9 @@ class TrentTrouserBlock extends Pattern
         // Continue from sample
         $this->sample($model);
 
-        // Finalize our example part
-        $this->finalizeExamplePart($model);
+        // Finalize front and back block
+        $this->finalizeFrontBlock($model);
+        $this->finalizeBackBlock($model);
 
         // Is this a paperless pattern?
         if ($this->isPaperless) {
@@ -234,6 +235,8 @@ class TrentTrouserBlock extends Pattern
 
         // Paths
         $p->newPath('seamLine', 'M frontHemIn L frontKneeIn C frontCpKneeIn frameCrotchEdge frameCrotchEdge C frontCpCrotchEdge frontCrotchVerticalControlPoint frameSeatIn L frontHipsIn L frontHipsOut C frontHipsOut frontCpSeatUp frameSeatOut C frontCpSeatDown frontCpKneeOut frontKneeOut L frontHemOut z');
+        // To knees only for muslin test
+        $p->newPath('seamLine', 'M frontKneeIn C frontCpKneeIn frameCrotchEdge frameCrotchEdge C frontCpCrotchEdge frontCrotchVerticalControlPoint frameSeatIn L frontHipsIn L frontHipsOut C frontHipsOut frontCpSeatUp frameSeatOut C frontCpSeatDown frontCpKneeOut frontKneeOut z');
 
         /**
          * If you are studying this block, uncomment the paths below
@@ -241,7 +244,6 @@ class TrentTrouserBlock extends Pattern
          */
         //$p->newPath('frame', 'M frameCrotchLineIn L frameWaistIn L frameWaistOut L frameHemOut M frameCrotchLineOut L frameCrotchEdge L frameHemIn L frameHemOut', ['class' => 'debug']);
         //$p->newPath('hipsLine', 'M frameHipsIn L frameHipsOut', ['class' => 'helpline']);
-        //$p->newPath('seatLine', 'M frameSeatIn L frameSeatOut', ['class' => 'helpline']);
         //$p->newPath('grainLine', 'M frontPleatWaist L frontPleatHem', ['class' => 'helpline']);
     }
 
@@ -258,8 +260,8 @@ class TrentTrouserBlock extends Pattern
         /** @var \Freesewing\Part $p */
         $p = $this->parts['backBlock'];
 
-        // Raise center back by 25% of frontHips
-        $riseFactor = 0.25;
+        // Raise center back by 30% of frontHips
+        $riseFactor = 0.3;
         $p->addPoint('backHeightIn', $p->shift('frameHipsIn',90,$this->v('frontHips')*$riseFactor),'Height of center back Inside');
         $p->newPoint('backHeightOut', $p->x('frameHipsOut'), $p->y('backHeightIn'),'Height of center back Outside');
         
@@ -320,18 +322,6 @@ class TrentTrouserBlock extends Pattern
         $p->addPoint('backCpSeatOutUp', $p->shift('backSeatOut',$p->angle('backHipsIn','backSeamTiltPoint'), $p->distance('backHipsIn','backSeamTiltPoint')/2), 'Control point above seat, outseam');
         $p->addPoint('backCpSeatOutDown', $p->rotate('backCpSeatOutUp','backSeatOut',180), 'Control point below seat, outseam');
 
-        // Construct back dart, at 55% from center back to side, and 55% of hips to seat deep
-        $angle = $p->angle('backHipsIn','backHipsOut');
-        $p->addPoint('backDartMidPoint', $p->shiftTowards('backHipsIn','backHipsOut',$p->distance('backHipsIn','backHipsOut')*0.55),'Dart midpoint');
-        $p->addPoint('backDartTip', $p->shift('backDartMidPoint',$angle+90,$p->distance('backSeamTiltPoint','backHipsIn')*0.55),'Dart tip');
-        $p->addPoint('backDartLeftOnWaistline', $p->shift('backDartMidPoint',$angle,$this->getValue('backDart')/2),'Dart start on the left (on waistline)'); 
-        $p->addPoint('backDartRightOnWaistline', $p->shift('backDartMidPoint',$angle,$this->getValue('backDart')/-2),'Dart start on the right (on waistline)'); 
-
-        // Extend darts a bit to have a straight waistline after it's been closed
-        $shift - $p->distance('backDartTip','backDartLeftOnWaistline') + 4;
-        $p->addPoint('backDartLeft', $p->shiftTowards('backDartTip','backDartLeftOnWaistline',$shift),'Dart start on the left'); 
-        $p->addPoint('backDartRight', $p->shiftTowards('backDartTip','backDartRightOnWaistline',$shift),'Dart start on the right'); 
-
         // Adjust inseam to match the front
         $inseamDelta = $this->inseamDelta();
         while(abs($inseamDelta)>1) { // bring delta below 1mm
@@ -353,9 +343,29 @@ class TrentTrouserBlock extends Pattern
             $count++;
         }
         $this->msg('Outseam delta is '.$outseamDelta);
+        
+        // Construct back dart, at 55% from center back to side, and 55% of hips to seat deep
+        $angle = $p->angle('backHipsIn','backHipsOut');
+        $p->addPoint('backDartMidPoint', $p->shiftTowards('backHipsIn','backHipsOut',$p->distance('backHipsIn','backHipsOut')*0.55),'Dart midpoint');
+        $p->addPoint('backDartTip', $p->shift('backDartMidPoint',$angle+90,$p->distance('backSeamTiltPoint','backHipsIn')*0.55),'Dart tip');
+        $p->addPoint('backDartLeftOnWaistline', $p->shift('backDartMidPoint',$angle,$this->getValue('backDart')/2),'Dart start on the left (on waistline)'); 
+        $p->addPoint('backDartRightOnWaistline', $p->shift('backDartMidPoint',$angle,$this->getValue('backDart')/-2),'Dart start on the right (on waistline)'); 
+
+        // Extend darts a bit to have a straight waistline after it's been closed
+        $shift = $p->distance('backDartTip','backDartLeftOnWaistline') + 4;
+        $p->addPoint('backDartLeft', $p->shiftTowards('backDartTip','backDartLeftOnWaistline',$shift),'Dart start on the left'); 
+        $p->addPoint('backDartRight', $p->shiftTowards('backDartTip','backDartRightOnWaistline',$shift),'Dart start on the right'); 
+
 
         // Paths
         $p->newPath('seamLine', 'M backHemIn L backKneeIn C backCpKneeIn backCrotchEdge backCrotchEdge C backCrotchEdge backSeamVerticalControlPoint backSeamTiltPoint L backHipsIn L backDartLeft L backDartTip L backDartRight L backHipsOut C backHipsOut backCpSeatOutUp backSeatOut C backCpSeatOutDown backCpKneeOut backKneeOut L backHemOut z');
+        
+        // To knees only for muslin test
+        $p->newPath('seamLine', 'M backKneeIn C backCpKneeIn backCrotchEdge backCrotchEdge C backCrotchEdge backSeamVerticalControlPoint backSeamTiltPoint L backHipsIn L backDartLeft L backDartTip L backDartRight L backHipsOut C backHipsOut backCpSeatOutUp backSeatOut C backCpSeatOutDown backCpKneeOut backKneeOut z');
+        
+        // Same but without darts to use as basis for seam allowance
+        $p->newPath('seamLineNoDarts', 'M backKneeIn C backCpKneeIn backCrotchEdge backCrotchEdge C backCrotchEdge backSeamVerticalControlPoint backSeamTiltPoint L backHipsIn L backDartLeft L backDartRight L backHipsOut C backHipsOut backCpSeatOutUp backSeatOut C backCpSeatOutDown backCpKneeOut backKneeOut z');
+        $p->paths['seamLineNoDarts']->setRender(false);
 
         /**
          * If you are studying this block, uncomment the paths below
@@ -368,7 +378,6 @@ class TrentTrouserBlock extends Pattern
         //$p->newPath('backHeight', 'M backHeightIn L backHeightOut', ['class' => 'helpline']);
         //$p->newPath('grainLine', 'M frontPleatWaist L frontPleatHem', ['class' => 'helpline']);
         //$p->newPath('crotchLine', 'M backCrotchEdge L backCrotchLineOut', ['class' => 'helpline']);
-        //$p->newPath('seatLine', 'M backSeamTiltPoint L backSeatOut', ['class' => 'helpline']);
         //$p->newPath('hipsLine', 'M backHipsIn L backHipsOut', ['class' => 'helpline']);
     
     }
@@ -425,16 +434,60 @@ class TrentTrouserBlock extends Pattern
     */
 
     /**
-     * Finalizes the example part
+     * Finalizes the front block
      *
      * @param \Freesewing\Model $model The model to draft for
      *
      * @return void
      */
-    public function finalizeExamplePart($model)
+    public function finalizeFrontBlock($model)
     {
         /** @var \Freesewing\Part $p */
-        $p = $this->parts['examplePart'];
+        $p = $this->parts['frontBlock'];
+
+        // Title
+        $p->newPoint('titleAnchor', $p->x('frontPleatWaist')+60, $p->y('frameSeatIn')+60);
+        $p->addTitle('titleAnchor', 1, $this->t($p->title), '2x '.$this->t('from main fabric')."\n".$this->t('With good sides together'));
+        
+        // Grainline
+        $p->newPoint('grainlineTop', $p->x('frontPleatWaist'), $p->y('frontHipsIn')+10); 
+        $p->newPoint('grainlineBottom', $p->x('grainlineTop'), $p->y('frontKneeIn')-10);
+        $p->newGrainline('grainlineBottom', 'grainlineTop', $this->t('grainline')); 
+        
+        // Seat helpline
+        $p->newPath('seatLine', 'M frameSeatIn L frameSeatOut', ['class' => 'helpline']);
+        
+        // Seam allowance
+        $p->offsetPath('sa','seamLine', -10, 1, ['class' => 'seam-allowance']);
+    }
+
+
+    /**
+     * Finalizes the back block
+     *
+     * @param \Freesewing\Model $model The model to draft for
+     *
+     * @return void
+     */
+    public function finalizeBackBlock($model)
+    {
+        /** @var \Freesewing\Part $p */
+        $p = $this->parts['backBlock'];
+
+        // Title
+        $p->newPoint('titleAnchor', $p->x('frontPleatWaist')+60, $p->y('frameSeatIn')+60);
+        $p->addTitle('titleAnchor', 1, $this->t($p->title), '2x '.$this->t('from main fabric')."\n".$this->t('With good sides together'));
+
+        // Grainline
+        $p->newPoint('grainlineTop', $p->x('frontPleatWaist'), $p->y('backHipsIn')+20); 
+        $p->newPoint('grainlineBottom', $p->x('grainlineTop'), $p->y('frontKneeIn')-10);
+        $p->newGrainline('grainlineBottom', 'grainlineTop', $this->t('grainline')); 
+        
+        // Seat helpline
+        $p->newPath('seatLine', 'M backSeamTiltPoint L backSeatOut', ['class' => 'helpline']);
+        
+        // Seam allowance - we need to exclude the dart from it
+        $p->offsetPath('sa','seamLineNoDarts', -10, 1, ['class' => 'seam-allowance']);
     }
 
     /*

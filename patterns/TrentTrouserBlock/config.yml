@@ -8,8 +8,8 @@ info:
 
 parts:
     .frame: "Frame"
-    frontBlock: "Front Block"
-    backBlock: "Back Block"
+    frontBlock: "Front"
+    backBlock: "Back"
 
 languages:
     en: "English"

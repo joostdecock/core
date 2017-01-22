@@ -66,10 +66,6 @@ class TrentTrouserBlock extends Pattern
         $seat = $model->m('seatCircumference') + $this->o('seatEase');
         $this->setValue('frontSeat', $seat * $this->v('frontSeatFactor') /2);
         $this->setValue('backSeat', $seat * $this->v('backSeatFactor') /2);
-    
-        // Keep crotchCurveFactor at 30 at least
-        if($this->o('crotchCurveFactor') <= 0.3) $this->setValue('crotchCurveFactor', 0.3);
-        else $this->setValue('crotchCurveFactor', $this->o('crotchCurveFactor'));
     }
 
     /*
@@ -102,6 +98,7 @@ class TrentTrouserBlock extends Pattern
         // Draft the parts
         $this->draftFrame($model);
         $this->draftFrontBlock($model);
+        $this->draftBackBlock($model);
 
         // Don't render the frame
         $this->parts['.frame']->setRender(false);
@@ -161,7 +158,7 @@ class TrentTrouserBlock extends Pattern
         $p->addPoint('frameHipsOut',$p->shift('frameWaistOut',-90,$model->m('naturalWaistToHip')),'Hips at side seam');
         $p->addPoint('frameSeatOut',$p->shift('frameWaistOut',-90,$model->m('naturalWaistToSeat')),'Seat at side seam');
         $p->addPoint('frameCrotchLineOut',$p->shift('frameWaistOut',-90,$model->m('bodyRise')),'Crotch line at side seam');
-        $p->addPoint('frameHemOut',$p->shift('frameWaistOut',-90,$model->m('outSeam')),'Hem at side seam');
+        $p->addPoint('frameHemOut',$p->shift('frameHipsOut',-90,$model->m('outSeam')),'Hem at side seam');
 
         // Points at center/inseam
         $p->addPoint('frameWaistIn',$p->shift('frameWaistOut',180,$this->v('frontSeat')),'Waist center');
@@ -196,62 +193,226 @@ class TrentTrouserBlock extends Pattern
         $p = $this->parts['frontBlock'];
 
         // Pleatline sits 65% of the seat
-        $p->newPoint('pleatWaist',$p->x('frameWaistIn')*0.65,$p->y('frameWaistOut'),'Pleat/Grainline at natural waist');
-        $p->newPoint('pleatHem',$p->x('pleatWaist'),$p->y('frameHemOut'),'Pleat/Grainline at hem');
+        $p->newPoint('frontPleatWaist',$p->x('frameWaistIn')*0.65,$p->y('frameWaistOut'),'Pleat/Grainline at natural waist');
+        $p->newPoint('frontPleatHem',$p->x('frontPleatWaist'),$p->y('frameHemOut'),'Pleat/Grainline at hem');
 
         // Hips width set out from center
-        $p->clonePoint('frameHipsIn','hipsIn');
-        $p->addPoint('hipsOut', $p->shift('hipsIn',0,$this->v('frontHips')), 'Hip size at hip');
+        $p->clonePoint('frameHipsIn','frontHipsIn');
+        $p->addPoint('frontHipsOut', $p->shift('frontHipsIn',0,$this->v('frontHips')), 'Hip size at hip');
 
         // Move waist to take in 60% at side seam and 40% at center
-        $shift = $p->distance('hipsOut','frameHipsOut')*0.6;
-        $p->addPoint('hipsIn', $p->shift('hipsIn',0,$shift));
-        $p->addPoint('hipsOut', $p->shift('hipsOut',0,$shift));
+        $shift = $p->distance('frontHipsOut','frameHipsOut')*0.6;
+        $p->addPoint('frontHipsIn', $p->shift('frontHipsIn',0,$shift));
+        $p->addPoint('frontHipsOut', $p->shift('frontHipsOut',0,$shift));
 
         // Front crotch curve
-        $p->addPoint('crotchVerticalControlEdge', $p->beamsCross('hipsIn','frameSeatIn','frameCrotchEdge','frameCrotchLineIn'));
-        $p->addPoint('crotchVerticalControlPoint', 
-            $p->shiftTowards(
-                'frameSeatIn',
-                'crotchVerticalControlEdge',
-                $p->distance(
-                    'frameSeatIn',
-                    'crotchVerticalControlEdge'
-                ) * $this->v('crotchCurveFactor')
-            ), 'Crotch control point'
-        );
-        $p->addPoint('crotchHorizontalControlPoint', $p->shift( 'frameCrotchEdge', 0,$p->distance('frameCrotchEdge','crotchVerticalControlEdge')*0.3)); 
+        $p->addPoint('frontCrotchVerticalControlEdge', $p->beamsCross('frontHipsIn','frameSeatIn','frameCrotchEdge','frameCrotchLineIn'));
+        // Assure shift is at least 50%, max 100% of delta 
+        $delta = $p->distance('frameSeatIn','frontCrotchVerticalControlEdge');
+        $shift = ($delta * 0.5) + ($delta * 0.5 * $this->o('crotchCurveFactor'));
+        $p->addPoint('frontCrotchVerticalControlPoint', $p->shiftTowards( 'frameSeatIn', 'frontCrotchVerticalControlEdge', $shift), 'Crotch control point');
+        $p->addPoint('frontCrotchHorizontalControlPoint', $p->shift( 'frameCrotchEdge', 0,$p->distance('frameCrotchEdge','frontCrotchVerticalControlEdge')*0.3)); 
 
         // Knee
-        $p->newPoint('pleatKnee', $p->x('pleatWaist'), $p->y('frameKneeOut'),'Pleat/Grainline at the knee');
-        $p->addPoint('kneeIn', $p->shift('pleatKnee',180,$this->v('frontHips')*0.478));
-        $p->addPoint('kneeOut', $p->shift('pleatKnee',0,$this->v('frontHips')*0.522));
+        $p->newPoint('frontPleatKnee', $p->x('frontPleatWaist'), $p->y('frameKneeOut'),'Pleat/Grainline at the knee');
+        $p->addPoint('frontKneeIn', $p->shift('frontPleatKnee',180,$this->v('frontHips')*0.478));
+        $p->addPoint('frontKneeOut', $p->shift('frontPleatKnee',0,$this->v('frontHips')*0.522));
         
-        // Knee
-        $p->addPoint('hemIn', $p->shift('pleatHem',180,$this->v('frontHips')*0.478));
-        $p->addPoint('hemOut', $p->shift('pleatHem',0,$this->v('frontHips')*0.478));
+        // Hem
+        $p->addPoint('frontHemIn', $p->shift('frontPleatHem',180,$this->v('frontHips')*0.478));
+        $p->addPoint('frontHemOut', $p->shift('frontPleatHem',0,$this->v('frontHips')*0.478));
 
         // Control points for seamline
-        $kneeCpBase = $p->deltaY('kneeIn','frameCrotchLineIn');
-        $p->addPoint('cpKneeIn', $p->shift('kneeIn',-90,$kneeCpBase/2),'Control point above knee, inseam');
-        $p->addPoint('cpKneeOutBase', $p->shiftTowards('kneeOut','hemOut', $kneeCpBase/2));
-        $p->addPoint('cpKneeOut', $p->rotate('cpKneeOutBase','kneeOut',180), 'Control point above knee, inseam');
-        $p->addPoint('cpSeatDown', $p->shift('frameSeatOut',90,$kneeCpBase/3),'Control point down from seat');
-        $p->addPoint('cpSeatUp', $p->shift('frameSeatOut',-90,$p->deltaY('frameSeatOut','frameHipsOut')/2),'Control point up from seat');
-        $p->addPoint('cpCrotchEgdeBase', $p->shiftAlong('frameCrotchEdge','frameCrotchEdge','cpKneeIn','kneeIn',$p->distance('frameCrotchEdge','crotchHorizontalControlPoint')));
-        $p->addPoint('cpCrotchEdge', $p->rotate('cpCrotchEgdeBase','frameCrotchEdge',90));
+        $kneeCpBase = $p->deltaY('frontKneeIn','frameCrotchLineIn');
+        $p->addPoint('frontCpKneeIn', $p->shift('frontKneeIn',-90,$kneeCpBase/2),'Control point above knee, inseam');
+        $p->addPoint('frontCpKneeOutBase', $p->shiftTowards('frontKneeOut','frontHemOut', $kneeCpBase/2));
+        $p->addPoint('frontCpKneeOut', $p->rotate('frontCpKneeOutBase','frontKneeOut',180), 'Control point above knee, outseam');
+        $p->addPoint('frontCpSeatDown', $p->shift('frameSeatOut',90,$kneeCpBase/3),'Control point down from seat');
+        $p->addPoint('frontCpSeatUp', $p->shift('frameSeatOut',-90,$p->deltaY('frameSeatOut','frameHipsOut')/2),'Control point up from seat');
+        $p->addPoint('frontCpCrotchEgdeBase', $p->shiftAlong('frameCrotchEdge','frameCrotchEdge','frontCpKneeIn','frontKneeIn',$p->distance('frameCrotchEdge','frontCrotchHorizontalControlPoint')));
+        $p->addPoint('frontCpCrotchEdge', $p->rotate('frontCpCrotchEgdeBase','frameCrotchEdge',90));
 
         // Paths
-        $p->newPath('seamLine', 'M hemIn L kneeIn C cpKneeIn frameCrotchEdge frameCrotchEdge C cpCrotchEdge crotchVerticalControlPoint frameSeatIn L hipsIn L hipsOut C hipsOut cpSeatUp frameSeatOut C cpSeatDown cpKneeOut kneeOut L hemOut z');
+        $p->newPath('seamLine', 'M frontHemIn L frontKneeIn C frontCpKneeIn frameCrotchEdge frameCrotchEdge C frontCpCrotchEdge frontCrotchVerticalControlPoint frameSeatIn L frontHipsIn L frontHipsOut C frontHipsOut frontCpSeatUp frameSeatOut C frontCpSeatDown frontCpKneeOut frontKneeOut L frontHemOut z');
 
-
-
-        $p->newPath('frame', 'M frameCrotchLineIn L frameWaistIn L frameWaistOut L frameHemOut M frameCrotchLineOut L frameCrotchEdge L frameHemIn L frameHemOut', ['class' => 'debug']);
-        $p->newPath('hipsLine', 'M frameHipsIn L frameHipsOut', ['class' => 'helpline']);
-        $p->newPath('seatLine', 'M frameSeatIn L frameSeatOut', ['class' => 'helpline']);
-        $p->newPath('grainLine', 'M pleatWaist L pleatHem', ['class' => 'helpline']);
-        $p->newPath('grainLine', 'M hipsIn L frameSeatIn C crotchVerticalControlPoint crotchHorizontalControlPoint frameCrotchEdge', ['class' => 'helpline']);
+        /**
+         * If you are studying this block, uncomment the paths below
+         * they will help you understand its construction
+         */
+        //$p->newPath('frame', 'M frameCrotchLineIn L frameWaistIn L frameWaistOut L frameHemOut M frameCrotchLineOut L frameCrotchEdge L frameHemIn L frameHemOut', ['class' => 'debug']);
+        //$p->newPath('hipsLine', 'M frameHipsIn L frameHipsOut', ['class' => 'helpline']);
+        //$p->newPath('seatLine', 'M frameSeatIn L frameSeatOut', ['class' => 'helpline']);
+        //$p->newPath('grainLine', 'M frontPleatWaist L frontPleatHem', ['class' => 'helpline']);
     }
+
+    /**
+     * Drafts the back block
+     *
+     * @param \Freesewing\Model $model The model to draft for
+     */
+    public function draftBackBlock($model)
+    {
+        // Clone frame points
+        $this->clonePoints('frontBlock', 'backBlock');
+        
+        /** @var \Freesewing\Part $p */
+        $p = $this->parts['backBlock'];
+
+        // Raise center back by 25% of frontHips
+        $riseFactor = 0.25;
+        $p->addPoint('backHeightIn', $p->shift('frameHipsIn',90,$this->v('frontHips')*$riseFactor),'Height of center back Inside');
+        $p->newPoint('backHeightOut', $p->x('frameHipsOut'), $p->y('backHeightIn'),'Height of center back Outside');
+        
+        // Move center back inwards by 22.5% of frontHips
+        $p->addPoint('backHipsIn', $p->shift('backHeightIn',0,$this->v('frontHips')*0.225), 'Center back');
+
+        // Bring out outside by same factor (in theory, exact point follows below)
+        $p->addPoint('backHipsOutInTheory', $p->shift('frameHipsOut',0,$this->v('frontHips')*$riseFactor),'Back hips outside');
+        
+        // Finding backHipsOut
+        // ♬  Don't know much about history ♬  Don't know much trigonometry ♬ 
+        $p->newPoint('.backHipsOutHelper', $p->x('backHipsIn'), $p->y('frameHipsIn'), 'Helper to find backHipsOut');
+        $shift = sqrt($this->v('backHips')**2 - $p->deltaY('backHeightIn','frameHipsIn')**2);
+        $p->addPoint('backHipsOutWithoutDart', $p->shift('.backHipsOutHelper',0,$shift),'Back hips outside witout dart');
+        // Add back dart of 9.5%
+        $this->setValue('backDart',$p->distance('backHipsIn','backHipsOutWithoutDart')*0.095);
+        $shift = sqrt(($this->v('backDart')+$p->distance('backHipsIn','backHipsOutWithoutDart'))**2 - $p->deltaY('backHeightIn','frameHipsIn')**2);
+        $p->addPoint('backHipsOut', $p->shift('.backHipsOutHelper',0,$shift),'Back hips outside with dart of '.$this->unit($this->v('backDart')));
+
+        // Lower crotch line by 30% of seat/crotch vertical delta
+        $p->addPoint('backCrotchLineHeight', $p->shift('frameCrotchEdge',-90,$p->deltaY('frameSeatIn','frameCrotchEdge')*0.3), 'Back crotch height');
+        // Place same height on the frame, outseam side. 
+        // Note that the real 'backCrotchLineOut point is added after we know the offset at the knee (because we reuse it)
+        $p->newPoint('backCrotchLineOutFrame',$p->x('frameCrotchLineOut'), $p->y('backCrotchLineHeight'),'Back crotch height'); 
+
+        // Raise back seam tilt point: 60% of seat/crotch vertical delta
+        $p->addPoint('backSeamTiltPoint', $p->shift('frameSeatIn',90,$p->deltaY('frameSeatIn','frameCrotchEdge')*0.6), 'Back seam tilt point');
+
+        // Move crotch point out 25% of backSeat
+        $p->newPoint('backCrotchEdge', $p->x('frameCrotchEdge')-$this->v('backSeat')*0.25, $p->y('backCrotchLineHeight'), 'Back crotch edge');
+
+        // Back seam curve
+        $p->addPoint('backSeamVerticalControlEdge', $p->beamsCross('backHipsIn','backSeamTiltPoint','backCrotchEdge','backCrotchLineHeight'));
+        // Assure shift is at least 60%, max 100% of delta 
+        $delta = $p->distance('backSeamTiltPoint','backSeamVerticalControlEdge');
+        $shift = (0.6 * $delta) + (0.4 * $delta * $this->o('backSeamCurveFactor'));
+        $p->addPoint('backSeamVerticalControlPoint',$p->shiftTowards('backSeamTiltPoint','backSeamVerticalControlEdge',$shift), 'Back seam control point');
+        
+        // Knee
+        $p->addPoint('backKneeIn', $p->shift('frontPleatKnee',180,$this->v('backHips')*0.478));
+        $p->addPoint('backKneeOut', $p->shift('frontPleatKnee',0,$this->v('backHips')*0.522));
+
+        // With the knee done, let's add the real 'backCrotchLineOut' point
+        $p->addPoint('backCrotchLineOut',$p->shift('backCrotchLineOutFrame',0,$p->deltaX('backKneeIn','frontKneeIn')),'Back crotch height'); 
+        
+        // Hem
+        $p->newPoint('backHemIn', $p->x('backKneeIn'), $p->y('frontHemIn'), 'Back inside hem'); 
+        $p->addPoint('backHemOut', $p->flipX('backHemIn',$p->x('frontPleatHem')), 'Back outside hem'); 
+
+        // Seat width
+        $p->addPoint('backSeatOut', $p->shift('backSeamTiltPoint',$p->angle('backHipsIn','backHipsOut'),-1*$this->v('backSeat')));
+
+        // Control points for seamline
+        $kneeCpBase = $p->deltaY('backKneeIn','backCrotchEdge');
+        $p->addPoint('backCpKneeIn', $p->shift('backKneeIn',-90,$kneeCpBase/2),'Control point above knee, inseam');
+        $p->addPoint('backCpKneeOutBase', $p->shiftTowards('backKneeOut','backHemOut', $kneeCpBase/2));
+        $p->addPoint('backCpKneeOut', $p->rotate('backCpKneeOutBase','backKneeOut',180), 'Control point above knee, outseam');
+        $p->addPoint('backCpSeatOutUp', $p->shift('backSeatOut',$p->angle('backHipsIn','backSeamTiltPoint'), $p->distance('backHipsIn','backSeamTiltPoint')/2), 'Control point above seat, outseam');
+        $p->addPoint('backCpSeatOutDown', $p->rotate('backCpSeatOutUp','backSeatOut',180), 'Control point below seat, outseam');
+
+        // Construct back dart, at 55% from center back to side, and 55% of hips to seat deep
+        $angle = $p->angle('backHipsIn','backHipsOut');
+        $p->addPoint('backDartMidPoint', $p->shiftTowards('backHipsIn','backHipsOut',$p->distance('backHipsIn','backHipsOut')*0.55),'Dart midpoint');
+        $p->addPoint('backDartTip', $p->shift('backDartMidPoint',$angle+90,$p->distance('backSeamTiltPoint','backHipsIn')*0.55),'Dart tip');
+        $p->addPoint('backDartLeftOnWaistline', $p->shift('backDartMidPoint',$angle,$this->getValue('backDart')/2),'Dart start on the left (on waistline)'); 
+        $p->addPoint('backDartRightOnWaistline', $p->shift('backDartMidPoint',$angle,$this->getValue('backDart')/-2),'Dart start on the right (on waistline)'); 
+
+        // Extend darts a bit to have a straight waistline after it's been closed
+        $shift - $p->distance('backDartTip','backDartLeftOnWaistline') + 4;
+        $p->addPoint('backDartLeft', $p->shiftTowards('backDartTip','backDartLeftOnWaistline',$shift),'Dart start on the left'); 
+        $p->addPoint('backDartRight', $p->shiftTowards('backDartTip','backDartRightOnWaistline',$shift),'Dart start on the right'); 
+
+        // Adjust inseam to match the front
+        $inseamDelta = $this->inseamDelta();
+        while(abs($inseamDelta)>1) { // bring delta below 1mm
+            $id = $p->newId('inseamTweak');
+            $p->clonePoint('backCrotchEdge',$id);
+            $p->addPoint('backCrotchEdge',$p->shift('backCrotchEdge',90,$inseamDelta));
+            $inseamDelta = $this->inseamDelta();
+        }
+        $this->msg('Inseam delta is '.$inseamDelta);
+
+        // Adjust outseam to match the front
+        $outseamDelta = $this->outseamDelta();
+        $count = 1;
+        while(abs($outseamDelta)>1 & $count < 20) { // bring delta below 1mm
+            $id = $p->newId('outseamTweak');
+            $p->clonePoint('backHipsOut',$id);
+            $p->addPoint('backHipsOut',$p->shift('backHipsOut',90,$outseamDelta));
+            $outseamDelta = $this->outseamDelta();
+            $count++;
+        }
+        $this->msg('Outseam delta is '.$outseamDelta);
+
+        // Paths
+        $p->newPath('seamLine', 'M backHemIn L backKneeIn C backCpKneeIn backCrotchEdge backCrotchEdge C backCrotchEdge backSeamVerticalControlPoint backSeamTiltPoint L backHipsIn L backDartLeft L backDartTip L backDartRight L backHipsOut C backHipsOut backCpSeatOutUp backSeatOut C backCpSeatOutDown backCpKneeOut backKneeOut L backHemOut z');
+
+        /**
+         * If you are studying this block, uncomment the paths below
+         * they will help you understand its construction
+         */
+        //$p->newPath('frontseamLine', 'M frontHemIn L frontKneeIn C frontCpKneeIn frameCrotchEdge frameCrotchEdge C frontCpCrotchEdge frontCrotchVerticalControlPoint frameSeatIn L frontHipsIn L frontHipsOut C frontHipsOut frontCpSeatUp frameSeatOut C frontCpSeatDown frontCpKneeOut frontKneeOut L frontHemOut z', ['class' => 'helpline']);
+        //$p->newPath('frame', 'M frameCrotchLineIn L frameWaistIn L frameWaistOut L frameHemOut M frameCrotchLineOut L frameCrotchEdge L frameHemIn L frameHemOut', ['class' => 'debug']);
+        //$p->newPath('hipsLine', 'M frameHipsIn L frameHipsOut', ['class' => 'helpline']);
+        //$p->newPath('frontSeatLine', 'M frameSeatIn L frameSeatOut', ['class' => 'helpline']);
+        //$p->newPath('backHeight', 'M backHeightIn L backHeightOut', ['class' => 'helpline']);
+        //$p->newPath('grainLine', 'M frontPleatWaist L frontPleatHem', ['class' => 'helpline']);
+        //$p->newPath('crotchLine', 'M backCrotchEdge L backCrotchLineOut', ['class' => 'helpline']);
+        //$p->newPath('seatLine', 'M backSeamTiltPoint L backSeatOut', ['class' => 'helpline']);
+        //$p->newPath('hipsLine', 'M backHipsIn L backHipsOut', ['class' => 'helpline']);
+    
+    }
+
+    /**
+     * Returns the difference between the front inseam and back inseam
+     *
+     * Positive values mean the front inseam is longer
+     *
+     * @return float The inseam delta
+     */
+    protected function inseamDelta()
+    {
+        /** @var \Freesewing\Part $p */
+        $front = $this->parts['frontBlock'];
+        $frontLen = $front->curveLen('frameCrotchEdge','frameCrotchEdge','frontCpKneeIn','frontKneeIn') + $front->distance('frontKneeIn','frontHemIn');
+
+        /** @var \Freesewing\Part $p */
+        $back = $this->parts['backBlock'];
+        $backLen = $back->curveLen('backCrotchEdge','backCrotchEdge','backCpKneeIn','backKneeIn') + $back->distance('backKneeIn','backHemIn');
+
+        return ($frontLen - $backLen);
+    }
+
+    /**
+     * Returns the difference between the front outseam and back outseam
+     *
+     * Positive values mean the front outseam is longer
+     *
+     * @return float The outseam delta
+     */
+    protected function outseamDelta()
+    {
+        /** @var \Freesewing\Part $p */
+        $front = $this->parts['frontBlock'];
+        $frontLen =  $front->curveLen('frontHipsOut','frontHipsOut','frontCpSeatUp','frameSeatOut') + $front->curveLen('frameSeatOut','frontCpSeatDown','frontCpKneeOut','frontKneeOut') + $front->distance('frontKneeOut', 'frontHemOut');
+        
+        /** @var \Freesewing\Part $p */
+        $back = $this->parts['backBlock'];
+        $backLen = $back->curveLen('backHipsOut','backHipsOut','backCpSeatOutUp','backSeatOut') + $back->curveLen('backSeatOut','backCpSeatOutDown','backCpKneeOut','backKneeOut') + $back->distance('backKneeOut', 'backHemOut');
+
+        return ($frontLen - $backLen);
+    }
+
 
     /*
        _____ _             _ _

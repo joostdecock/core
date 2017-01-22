@@ -9,6 +9,7 @@ info:
 parts:
     .frame: "Frame"
     frontBlock: "Front Block"
+    backBlock: "Back Block"
 
 languages:
     en: "English"
@@ -34,6 +35,9 @@ options:
         max: 160
         default: 100
     crotchCurveFactor:
+        type: "percent"
+        default: 50
+    backSeamCurveFactor:
         type: "percent"
         default: 50
     chooseOneOption:

@@ -24,7 +24,7 @@ class TestPattern extends Pattern
      */
     public function draft($model)
     {
-        $this->sample($model);
+    
     }
 
     /**

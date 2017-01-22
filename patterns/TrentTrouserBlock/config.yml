@@ -1,0 +1,48 @@
+info:
+    name: "Trent Trouser Block"
+    version: "1.0"
+    date: 20170121
+    author: "Joost De Cock"
+    email: "joost@decock.org"
+    company: "freesewing.org"
+
+parts:
+    .frame: "Frame"
+    frontBlock: "Front"
+    backBlock: "Back"
+
+languages:
+    en: "English"
+
+measurements:
+    hipsCircumference: 950
+    seatCircumference: 1045
+    inSeam: 910
+    outSeam: 1070
+    naturalWaistToHip: 120
+    naturalWaistToSeat: 260
+    bodyRise: 320
+
+options:
+    hipsEase:
+        type: "measure"
+        min: 10
+        max: 60
+        default: 30
+    seatEase:
+        type: "measure"
+        min: 60
+        max: 160
+        default: 100
+    crotchCurveFactor:
+        type: "percent"
+        default: 50
+    backSeamCurveFactor:
+        type: "percent"
+        default: 50
+    chooseOneOption:
+        type: "chooseOne"
+        options:
+            1: "Option 1"
+            2: "Option 2"
+        default: 1

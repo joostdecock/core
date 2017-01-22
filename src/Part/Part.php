@@ -75,8 +75,6 @@ class Part
     /** @var string The units, either 'metric' or 'imperial' */
     private $units = 'metric';
 
-
-
     /**
      * Sets the render property.
      *
@@ -602,12 +600,16 @@ class Part
      * @param float  $distance   The distance to offset the path by
      * @param bool   $render     Render property of the new path
      * @param array  $attributes Optional array of path attributes
+     * 
+     * @throws \Exception
      */
     public function offsetPathString($key, $pathString, $distance = 10.0, $render = false, $attributes = null)
     {
         $this->newPath('.offsetHelper', $pathString);
         $this->paths['.offsetHelper']->setRender(false);
-        $this->offsetPath($key, '.offsetHelper', $distance, $render, $attributes);
+        if($this->offsetPath($key, '.offsetHelper', $distance, $render, $attributes) === false) {
+            throw new \InvalidArgumentException("Could not offset pathstring: $pathString");
+        }
     }
 
     /**
@@ -629,6 +631,7 @@ class Part
             throw new \InvalidArgumentException("offsetPath requires a valid path object");
         }
         $stack = $this->pathOffsetAsStack($path, $distance, $newKey);
+        if($stack === false) return false; // Happens for paths like: M 1 L 1
         /* take care of overlapping parts */
         $stack = $this->fixStackIntersections($stack);
         $stack = $this->fillPathStackGaps($stack, $path);
@@ -1174,7 +1177,8 @@ class Part
             }
         }
 
-        return $stack;
+        if(count($stack->items)>0) return $stack;
+        else return false;
     }
 
     /**
@@ -1338,11 +1342,6 @@ class Part
      */
     private function offsetCurve($curve, $distance, $key, $subdivide = 0)
     {
-        if ($subdivide >= 20) {
-            // This is here to protect us against egge cases
-            throw new \Exception("Path offset ran $subdivide subdivisions deep. Bailing out before we eat all memory");
-        }
-
         $chunks = [];
         $points = Utils::asScrubbedArray($curve);
         $from = $points[1];
@@ -1421,61 +1420,59 @@ class Part
      */
     private function offsetTolerance($entry, $distance)
     {
+        $originLen = $this->curveLen($entry['original'][0], $entry['original'][1], $entry['original'][2], $entry['original'][3]);
+        $offsetLen = $this->curveLen($entry['offset'][0], $entry['offset'][1], $entry['offset'][2], $entry['offset'][3]);
+        
         // If a curve gets too short things go off the rails, so don't bother
-        if ($this->curveLen($entry['original'][0], $entry['original'][1], $entry['original'][2], $entry['original'][3]) < 10) {
+        if ($originLen < 10) {
             return ['score' => 1, 'index' => 0.5];
         }
 
-        $orCurveLen = $this->curveLen($entry['original'][0], $entry['original'][1], $entry['original'][2], $entry['original'][3]);
-        $ofCurveLen = $this->curveLen($entry['offset'][0], $entry['offset'][1], $entry['offset'][2], $entry['offset'][3]);
+        $originFrom = $this->loadPoint($entry['original'][0]);
+        $originCp1  = $this->loadPoint($entry['original'][1]);
+        $originCp2  = $this->loadPoint($entry['original'][2]);
+        $originTo   = $this->loadPoint($entry['original'][3]);
+        $offsetFrom = $this->loadPoint($entry['offset'][0]);
+        $offsetCp1  = $this->loadPoint($entry['offset'][1]);
+        $offsetCp2  = $this->loadPoint($entry['offset'][2]);
+        $offsetTo   = $this->loadPoint($entry['offset'][3]);
 
         $worstDelta = 0;
         $worstIndex = false;
-        for ($i = 0; $i < 20; ++$i) {
-            $t = $i / 20;
 
-            $orHalfCurveLen = $orCurveLen * $t;
-            $ofHalfCurveLen = $ofCurveLen * $t;
+        for ($i = 1; $i < 5; ++$i) {
+            $t = $i / 5;
 
-            $orHalfPoint = $this->shiftAlong($entry['original'][0], $entry['original'][1], $entry['original'][2], $entry['original'][3], $orHalfCurveLen);
-            $ofhalfPoint = $this->shiftAlong($entry['offset'][0], $entry['offset'][1], $entry['offset'][2], $entry['offset'][3], $ofHalfCurveLen);
-            $this->addPoint('orHalfPoint' . $i, $orHalfPoint);
-            $this->addPoint('ofHalfPoint' . $i, $ofhalfPoint);
-
-            $h = false;
-            if ($i > 1) {
-                // Calculating the height of a triangle thru 3 points
-                // using one point on the original curve and one on the seam-curve
-                //
-                // hc=(2/c)sqrt[s(s-a)(s-b)(s-c)].
-                // Darin ist s=(1/2)(a+b+c).
-                $okey1 = 'orHalfPoint' . ($i - 1);
-                $okey2 = 'orHalfPoint' . ($i);
-                $ofkey1 = 'ofHalfPoint' . ($i);
-                $c = $this->distance($okey1, $okey2);
-                $b = $this->distance($okey1, $ofkey1);
-                $a = $this->distance($ofkey1, $okey2);
-                $s = ($a + $b + $c) / 2;
-                $h = (2 / $c) * sqrt(($s*($s - $a) * ($s - $b) * ($s - $c)));
+            $xOrigin = Utils::bezierPoint($t, $originFrom->getX(), $originCp1->getX(), $originCp2->getX(), $originTo->getX());
+            $yOrigin = Utils::bezierPoint($t, $originFrom->getY(), $originCp1->getY(), $originCp2->getY(), $originTo->getY());
+            $xOffset = Utils::bezierPoint($t, $offsetFrom->getX(), $offsetCp1->getX(), $offsetCp2->getX(), $offsetTo->getX());
+            $yOffset = Utils::bezierPoint($t, $offsetFrom->getY(), $offsetCp1->getY(), $offsetCp2->getY(), $offsetTo->getY());
+            
+            $this->newPoint('.offsetToleranceOrigin', $xOrigin, $yOrigin);
+            $this->newPoint('.offsetToleranceOffset', $xOffset, $yOffset);
+            
+            if($i == 1) {
+                $angle = $this->angle($entry['original'][0], '.offsetToleranceOrigin')+90;
+            } else {
+                $angle = $this->angle('.offsetToleranceOriginPrevious', '.offsetToleranceOrigin')+90;
             }
+            $this->clonePoint('.offsetToleranceOrigin','.offsetToleranceOriginPrevious');
+            
+            $this->addPoint('.offsetToleranceOrigin',$this->shift('.offsetToleranceOrigin',$angle,$distance));
 
-
-            $halfPointDistance = Utils::distance($orHalfPoint, $ofhalfPoint);
-            if ($h) {
-                $halfPointDistance = $h;
-            }
-            $delta = abs($halfPointDistance / (abs($distance) / 100) - 100);
-
-            if ($delta > $worstDelta) {
-                $worstDelta = round($delta, 2);
+            $offset = $this->distance('.offsetToleranceOrigin', '.offsetToleranceOffset')+$distance;
+            $delta = abs($offset/($distance/100) -100);
+           
+            if($delta>$worstDelta) {
+                $worstDelta = round($delta,2);
                 $worstIndex = $t;
             }
         }
-        $this->purgePoints('orHalfPoint');
-        $this->purgePoints('ofHalfPoint');
+        
+        $this->purgePoints('.offsetTolerance');
+        
         return ['score' => $worstDelta, 'index' => $worstIndex];
     }
-
 
     /**
      * Calculated the length of a path
@@ -1511,7 +1508,10 @@ class Part
      */
     public function clonePoint($sourceKey, $targetKey)
     {
-        $this->points[$targetKey] = $this->points[$sourceKey];
+        if(isset($this->points[$sourceKey])) {
+            $this->points[$targetKey] = $this->points[$sourceKey];
+        }
+        else return false;
     }
 
     /**
@@ -1794,10 +1794,9 @@ class Part
             $lenD = $this->distance($key3, '.linesCrossCheck') + $this->distance('.linesCrossCheck', $key4);
             if (round($lenA, 1) == round($lenC, 1) and round($lenB, 1) == round($lenD, 1)) {
                 return $point;
-            } else {
-                return false;
             }
         }
+        return false;
     }
 
     /**
@@ -1848,6 +1847,8 @@ class Part
      */
     public function isPoint($key)
     {
+        // Prevent loadPoint from throwing an exception on invalid point id
+        if(!isset($this->points[$key])) return false;
         $point = $this->loadPoint($key);
         if ($point instanceof Point) {
             return true;
@@ -2017,13 +2018,13 @@ class Part
     }
 
     /**
-     * Returns point at the left edge of a Bezier curve
+     * Returns point at the chosen edge of a Bezier curve
      *
      * @param string $curveStartKey    The id of the start of the curve
      * @param string $curveControl1Key The id of the first control point
      * @param string $curveControl2Key The id of the second control point
      * @param string $curveEndKey      The id of the end of the curve
-     * @param string $direction        Either left, right, up, or down
+     * @param string $direction        Either left, right, top, or bottom
      *
      * @return Point The point at the edge
      */
@@ -2063,14 +2064,12 @@ class Part
             $this->loadPoint($curveEndKey)
         );
 
-        if (!is_array($points)) {
-            return;
-        }
-
-        $i = 1;
-        foreach ($points as $point) {
-            $this->addPoint($prefix . $i, $point);
-            $i++;
+        if (is_array($points)) {
+            $i = 1;
+            foreach ($points as $point) {
+                $this->addPoint($prefix . $i, $point);
+                $i++;
+            }
         }
     }
 
@@ -2114,7 +2113,7 @@ class Part
      * @param string     $cp2          The id of the second control point
      * @param string     $to           The id of the end of the curve
      * @param string     $split        The id of the point to split on, or a delta to split on
-     * @param float|bool $splitOnDelta The angle to shift along
+     * @param float|bool $splitOnDelta Whether to split on delta or not
      *
      * @return array the 8 points resulting from the split
      */
@@ -2168,18 +2167,16 @@ class Part
     /**
      * Returns intersections of two cubic Bezier curves
      *
-     * @param string      $curve1StartKey
+     * @param string      $curve1StartKey    The id of the start of the first curve
      * @param string      $curve1Control1Key The id of the first control point of the first curve
      * @param string      $curve1Control2Key The id of the second control point of the first curve
      * @param string      $curve1EndKey      The id of the end of the first curve
-     * @param string      $curve2StartKey
-     * @param string      $curve2Control1Key The id of the first control point of the first curve
-     * @param string      $curve2Control2Key The id of the second control point of the first curve
-     * @param string      $curve2EndKey      The id of the end of the first curve
+     * @param string      $curve2StartKey    The id of the start of the second curve
+     * @param string      $curve2Control1Key The id of the first control point of the second curve
+     * @param string      $curve2Control2Key The id of the second control point of the second curve
+     * @param string      $curve2EndKey      The id of the end of the second curve
      * @param bool|string $prefix            The prefix for points this will create
      *
-     * @internal param string $curve1Startkey The id of the start of the first curve
-     * @internal param string $curve2Startkey The id of the start of the first curve
      */
     public function curvesCross(
         $curve1StartKey,
@@ -2198,14 +2195,12 @@ class Part
             $this->loadPoint($curve2StartKey), $this->loadPoint($curve2Control1Key), $this->loadPoint($curve2Control2Key),
             $this->loadPoint($curve2EndKey)
         );
-        if (!is_array($points)) {
-            return;
-        }
-
-        $i = 1;
-        foreach ($points as $point) {
-            $this->addPoint("$prefix-$i", $point);
-            $i++;
+        if (is_array($points)) {
+            $i = 1;
+            foreach ($points as $point) {
+                $this->addPoint("$prefix-$i", $point);
+                $i++;
+            }
         }
     }
 

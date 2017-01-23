@@ -47,11 +47,13 @@ class Designer extends Theme
     {
         if($this->getOption('onlyPoints')) {
             $onlyPoints = Utils::asScrubbedArray($this->getOption('onlyPoints'));
-        }
-        else $onlyPoints = false;
-
-        foreach ($part->points as $key => $point) {
-            if($onlyPoints && in_array($key,$onlyPoints)) $this->debugPoint($key, $point, $part);
+            foreach ($part->points as $key => $point) {
+                if(in_array($key,$onlyPoints)) $this->debugPoint($key, $point, $part);
+            }
+        } else {
+            foreach ($part->points as $key => $point) {
+                $this->debugPoint($key, $point, $part);
+            }
         }
     }
 

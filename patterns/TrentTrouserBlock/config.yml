@@ -40,9 +40,3 @@ options:
     backSeamCurveFactor:
         type: "percent"
         default: 50
-    chooseOneOption:
-        type: "chooseOne"
-        options:
-            1: "Option 1"
-            2: "Option 2"
-        default: 1

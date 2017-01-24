@@ -83,7 +83,7 @@ class PatternTemplate extends Pattern
         // Setup all options and values we need
         $this->initialize($model);
 
-        // Draft out example part
+        // Draft our example part
         $this->draftExamplePart($model);
     }
 

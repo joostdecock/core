@@ -1,5 +1,5 @@
 info:
-    name: "Trent Trouser Block"
+    name: "Lesley Leggings"
     version: "1.0"
     date: 20170121
     author: "Joost De Cock"
@@ -8,8 +8,11 @@ info:
 
 parts:
     .frame: "Frame"
-    frontBlock: "Front"
-    backBlock: "Back"
+    frontBlock: "Front base"
+    backBlock: "Back base"
+    frontSelvedgeBlock: "Front"
+    backSelvedgeBlock: "Back"
+    leggings: "Leggings"
 
 languages:
     en: "English"
@@ -22,21 +25,17 @@ measurements:
     naturalWaistToHip: 120
     naturalWaistToSeat: 260
     bodyRise: 320
+    ankleCircumference: 255
+    calfCircumference: 390
+    kneeCircumference: 420
+    upperLegCircumference: 620
 
 options:
-    hipsEase:
-        type: "measure"
-        min: 10
-        max: 60
-        default: 30
-    seatEase:
-        type: "measure"
-        min: 60
-        max: 160
+    stretchFactor:
+        type: "percent"
         default: 100
-    crotchCurveFactor:
-        type: "percent"
-        default: 50
-    backSeamCurveFactor:
-        type: "percent"
+    lengthBonus:
+        type: "measure"
+        min: -200
+        max: 100
         default: 50

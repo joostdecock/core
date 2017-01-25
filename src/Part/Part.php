@@ -881,22 +881,6 @@ class Part
     }
 
     /**
-     * Like clonePoint, but applies a prefix to the new point's id
-     *
-     * @param string $key    The key in the points array of the point to clone
-     * @param string $prefix The prefix to apply to the new point's id in the point array
-     *
-     * @return string
-     */
-    private function cloneOffsetPoint($key, $prefix = '.sa')
-    {
-        $newKey = $this->newId($prefix);
-        $this->clonePoint($key, $newKey);
-
-        return $newKey;
-    }
-
-    /**
      * Joins a stack of single path steps into a complete path
      *
      * To offset a path, we divide it up into single atomic steps that we push on a stack
@@ -939,9 +923,7 @@ class Part
                     }
                 } elseif ($chunk['type'] == 'curve') {
                     $path .= ' C ' . $chunk['offset'][1] . ' ' . $chunk['offset'][2] . ' ' . $chunk['offset'][3];
-                    if ($closed) {
-                        $path .= ' z';
-                    }
+                    // On a closed path, the last step is always a line, as we close path with a line, not curve
                 }
             } else {
                 // All other steps

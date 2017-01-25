@@ -732,114 +732,179 @@ class Part
         return $stack;
     }
 
+    /**
+     * Finds intersections between two steps in a path stack
+     *
+     * @param array $s1 A step on the stack
+     * @param array $s2 A step on the stack
+     *
+     * @return array $intersections An array of intersections
+     */
     private function findStackIntersections($s1, $s2)
     {
-        $intersections = false;
         if ($s1['type'] == 'line' && $s2['type'] == 'line') {
-            // 2 lines
-            $i = $this->linesCross($s1['offset'][0], $s1['offset'][1], $s2['offset'][0], $s2['offset'][1]);
-            if ($i) {
-                // Ignore intersections at line end points
-                if (
-                    Utils::isSamePoint($i, $this->loadPoint($s1['offset'][0])) or 
-                    Utils::isSamePoint($i, $this->loadPoint($s1['offset'][1])) or 
-                    Utils::isSamePoint($i, $this->loadPoint($s2['offset'][0])) or 
-                    Utils::isSamePoint($i, $this->loadPoint($s2['offset'][1]))
-                ) {
-                    unset($i);
-                }
-                else $intersections = $this->keyArray(array($i), 'intersection-');
-            }
+            $intersections = $this->findLineLineStackIntersections($s1,$s2);
         } elseif ($s1['type'] == 'curve' && $s2['type'] == 'curve') {
-            // 2 curves
-            if ($this->curveLen(
-                $s1['offset'][0], $s1['offset'][1], $s1['offset'][2],
-                $s1['offset'][3]
-            ) > 10 and $this->curveLen(
-                $s2['offset'][0], $s2['offset'][1], $s2['offset'][2],
-                $s2['offset'][3]
-            ) > 10
-            ) {
-                $i = BezierToolbox::findCurveCurveIntersections(
-                    $this->loadPoint($s1['offset'][0]), $this->loadPoint($s1['offset'][1]), $this->loadPoint($s1['offset'][2]), $this->loadPoint($s1['offset'][3]),
-                    $this->loadPoint($s2['offset'][0]), $this->loadPoint($s2['offset'][1]), $this->loadPoint($s2['offset'][2]), $this->loadPoint($s2['offset'][3])
-                );
-                if ($i) {
-                    foreach ($i as $key => $point) {
-                        // Ignore intersections at curve end points
-                        if (Utils::isSamePoint($point, $this->loadPoint($s1['offset'][0])) or Utils::isSamePoint(
-                            $point,
-                            $this->loadPoint($s1['offset'][3])
-                        ) or Utils::isSamePoint(
-                            $point,
-                            $this->loadPoint($s2['offset'][0])
-                        ) or Utils::isSamePoint(
-                            $point,
-                            $this->loadPoint($s2['offset'][3])
-                        )
-                        ) {
-                            unset($i[$key]);
-                        }
-                    }
-                    $intersections = $this->keyArray($i, 'intersection-');
-                }
-            }
+            $intersections = $this->findCurveCurveStackIntersections($s1,$s2);
         } elseif ($s1['type'] == 'line' && $s2['type'] == 'curve') {
-            // 1 line, 1 curve
-            if ($this->curveLen($s2['offset'][0], $s2['offset'][1], $s2['offset'][2], $s2['offset'][3]) > 10) {
-                $i = BezierToolbox::findLineCurveIntersections(
-                    $this->loadPoint($s1['offset'][0]), $this->loadPoint($s1['offset'][1]), 
-                    $this->loadPoint($s2['offset'][0]), $this->loadPoint($s2['offset'][1]), $this->loadPoint($s2['offset'][2]), $this->loadPoint($s2['offset'][3])
-                );
-                if ($i) {
-                    foreach ($i as $key => $point) {
-                        // Ignore intersections at line/curve end points
-                        if (Utils::isSamePoint($point, $this->loadPoint($s1['offset'][0])) or Utils::isSamePoint(
-                            $point,
-                            $this->loadPoint($s1['offset'][1])
-                        ) or Utils::isSamePoint(
-                            $point,
-                            $this->loadPoint($s2['offset'][0])
-                        ) or Utils::isSamePoint(
-                            $point,
-                            $this->loadPoint($s2['offset'][3])
-                        )
-                        ) {
-                            unset($i[$key]);
-                        }
-                    }
-                    $intersections = $this->keyArray($i, 'intersection-');
-                }
-            }
+            $intersections = $this->findLineCurveStackIntersections($s1, $s2);
         } else {
-            // 1 curve, 1 line
-            if ($this->curveLen($s1['offset'][0], $s1['offset'][1], $s1['offset'][2], $s1['offset'][3]) > 10) {
-                $i = BezierToolbox::findLineCurveIntersections(
-                    $this->loadPoint($s2['offset'][0]), $this->loadPoint($s2['offset'][1]),
-                    $this->loadPoint($s1['offset'][0]), $this->loadPoint($s1['offset'][1]), $this->loadPoint($s1['offset'][2]), $this->loadPoint($s1['offset'][3])
-                );
-                if ($i) {
-                    foreach ($i as $key => $point) {
-                        // Ignore intersections at line/curve end points
-                        if (Utils::isSamePoint($point, $this->loadPoint($s1['offset'][0])) or Utils::isSamePoint(
-                            $point,
-                            $this->loadPoint($s1['offset'][3])
-                        ) or Utils::isSamePoint(
-                            $point,
-                            $this->loadPoint($s2['offset'][0])
-                        ) or Utils::isSamePoint(
-                            $point,
-                            $this->loadPoint($s2['offset'][1])
-                        )
-                        ) {
-                            unset($i[$key]);
-                        }
-                    }
-                    $intersections = $this->keyArray($i, 'intersection-');
-                }
-            }
+            $intersections = $this->findCurveLineStackIntersections($s1, $s2);
         }
         return $intersections;
+    }
+
+    /**
+     * Finds intersections between two curves in a path stack
+     *
+     * @param array $s1 A curve on the stack
+     * @param array $s2 A curve on the stack
+     *
+     * @return array $intersections An array of intersections
+     */
+    private function findCurveCurveStackIntersections($s1, $s2)
+    {
+        if ($this->curveLen(
+            $s1['offset'][0], $s1['offset'][1], $s1['offset'][2],
+            $s1['offset'][3]
+        ) > 10 and $this->curveLen(
+            $s2['offset'][0], $s2['offset'][1], $s2['offset'][2],
+            $s2['offset'][3]
+        ) > 10
+        ) {
+            $i = BezierToolbox::findCurveCurveIntersections(
+                $this->loadPoint($s1['offset'][0]), $this->loadPoint($s1['offset'][1]), $this->loadPoint($s1['offset'][2]), $this->loadPoint($s1['offset'][3]),
+                $this->loadPoint($s2['offset'][0]), $this->loadPoint($s2['offset'][1]), $this->loadPoint($s2['offset'][2]), $this->loadPoint($s2['offset'][3])
+            );
+            if ($i) {
+                foreach ($i as $key => $point) {
+                    // Ignore intersections at curve end points
+                    if (Utils::isSamePoint($point, $this->loadPoint($s1['offset'][0])) or Utils::isSamePoint(
+                        $point,
+                        $this->loadPoint($s1['offset'][3])
+                    ) or Utils::isSamePoint(
+                        $point,
+                        $this->loadPoint($s2['offset'][0])
+                    ) or Utils::isSamePoint(
+                        $point,
+                        $this->loadPoint($s2['offset'][3])
+                    )
+                    ) {
+                        unset($i[$key]);
+                    }
+                }
+                if(count($i)>0) return $this->keyArray($i, 'intersection-');
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * Finds intersections between a curve and a line in a path stack
+     *
+     * @param array $s1 A curve on the stack
+     * @param array $s2 A line on the stack
+     *
+     * @return array $intersections An array of intersections
+     */
+    private function findCurveLineStackIntersections($s1, $s2)
+    {
+        if ($this->curveLen($s1['offset'][0], $s1['offset'][1], $s1['offset'][2], $s1['offset'][3]) > 10) {
+            $i = BezierToolbox::findLineCurveIntersections(
+                $this->loadPoint($s2['offset'][0]), $this->loadPoint($s2['offset'][1]),
+                $this->loadPoint($s1['offset'][0]), $this->loadPoint($s1['offset'][1]), $this->loadPoint($s1['offset'][2]), $this->loadPoint($s1['offset'][3])
+            );
+            if ($i) {
+                foreach ($i as $key => $point) {
+                    // Ignore intersections at line/curve end points
+                    if (Utils::isSamePoint($point, $this->loadPoint($s1['offset'][0])) or Utils::isSamePoint(
+                        $point,
+                        $this->loadPoint($s1['offset'][3])
+                    ) or Utils::isSamePoint(
+                        $point,
+                        $this->loadPoint($s2['offset'][0])
+                    ) or Utils::isSamePoint(
+                        $point,
+                        $this->loadPoint($s2['offset'][1])
+                    )
+                    ) {
+                        unset($i[$key]);
+                    }
+                }
+                if(count($i)>0) return $this->keyArray($i, 'intersection-');
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * Finds intersections between a line and a curve in a path stack
+     *
+     * @param array $s1 A line on the stack
+     * @param array $s2 A curve on the stack
+     *
+     * @return array $intersections An array of intersections
+     */
+    private function findLineCurveStackIntersections($s1, $s2)
+    {
+        if ($this->curveLen($s2['offset'][0], $s2['offset'][1], $s2['offset'][2], $s2['offset'][3]) > 10) {
+            $i = BezierToolbox::findLineCurveIntersections(
+                $this->loadPoint($s1['offset'][0]), $this->loadPoint($s1['offset'][1]), 
+                $this->loadPoint($s2['offset'][0]), $this->loadPoint($s2['offset'][1]), $this->loadPoint($s2['offset'][2]), $this->loadPoint($s2['offset'][3])
+            );
+            if ($i) {
+                foreach ($i as $key => $point) {
+                    // Ignore intersections at line/curve end points
+                    if (Utils::isSamePoint($point, $this->loadPoint($s1['offset'][0])) or Utils::isSamePoint(
+                        $point,
+                        $this->loadPoint($s1['offset'][1])
+                    ) or Utils::isSamePoint(
+                        $point,
+                        $this->loadPoint($s2['offset'][0])
+                    ) or Utils::isSamePoint(
+                        $point,
+                        $this->loadPoint($s2['offset'][3])
+                    )
+                    ) {
+                        unset($i[$key]);
+                    }
+                }
+                if(count($i)>0) return $this->keyArray($i, 'intersection-');
+            }
+        }
+        return false;
+    }
+
+    /**
+     * Finds intersections between two lines in a path stack
+     *
+     * @param array $s1 A line on the stack
+     * @param array $s2 A line on the stack
+     *
+     * @return array $intersections An array of intersections
+     */
+    private function findLineLineStackIntersections($s1, $s2)
+    {
+        $i = $this->linesCross($s1['offset'][0], $s1['offset'][1], $s2['offset'][0], $s2['offset'][1]);
+
+        // Do we have an intersection?
+        if(!$i) {
+            return false;
+        }
+
+        // Ignore intersections at line end points
+        if (
+            Utils::isSamePoint($i, $this->loadPoint($s1['offset'][0])) or 
+            Utils::isSamePoint($i, $this->loadPoint($s1['offset'][1])) or 
+            Utils::isSamePoint($i, $this->loadPoint($s2['offset'][0])) or 
+            Utils::isSamePoint($i, $this->loadPoint($s2['offset'][1]))
+        ) {
+                return false;
+        }
+    
+        return $this->keyArray(array($i), 'intersection-');
     }
 
     /**

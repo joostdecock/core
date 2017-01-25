@@ -178,15 +178,16 @@ class SamplerTest extends \PHPUnit\Framework\TestCase
         $p1->newPath('test3', 'M 3 L 4');
         $p1->paths['test3']->setSample(true);
 
-        $object->sampleParts(2,2, $pattern, new \Freesewing\Themes\Sampler(), new \Freesewing\SvgRenderbot()); 
+        $object->sampleParts(2,1, $pattern, new \Freesewing\Themes\Sampler(), new \Freesewing\SvgRenderbot()); 
 
         $this->assertEquals(count($object->partContainer), 2);
         $this->assertTrue(isset($object->partContainer['test1']));
         $this->assertTrue(isset($object->partContainer['test2']));
-        $this->assertEquals($object->partContainer['test1']['includes']['2-test3'], "\n".'<path transform="translate( 0, 0 )" style="stroke: hsl(538, 55%, 50%);" id="3"  d=" M  -100,-100  L  100,100 " />');
+        $this->assertEquals($object->partContainer['test1']['includes']['2-test3'], "\n".'<path transform="translate( 0, 0 )" style="stroke: hsl(269, 55%, 50%);" id="3"  d=" M  -100,-100  L  100,100 " />');
 
         $object->setPattern($pattern);
         $object->addSampledPartsToPattern();
+        $this->saveFixture('parts',serialize($object));
         $this->assertEquals(serialize($object), $this->loadFixture('parts'));
     }
     

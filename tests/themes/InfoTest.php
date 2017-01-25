@@ -8,22 +8,23 @@ class InfoTest extends \PHPUnit\Framework\TestCase
     /**
      * Tests the themePatternInfo method
      */
-    public function estThemePatternInfo()
+    public function testThemePatternInfo()
     {
         $theme = new \Freesewing\Themes\Info();
         $pattern = new \Freesewing\Patterns\TestPattern();
-        $response = $theme->themePatternInfo($pattern, 'php');
-        $this->saveFixture('patternInfoPhp',$response->getBody());
+        $data = $pattern->getConfig();
+        $data['models'] = $pattern->getSamplerModelConfig();
+        $data['pattern'] = basename(\Freesewing\Utils::getClassDir($pattern));
+        $response = $theme->themePatternInfo($data, 'php');
         $this->assertEquals($response->getBody(),$this->loadFixture('patternInfoPhp'));
         
-        $response = $theme->themePatternInfo($pattern, 'html');
-        $this->saveFixture('patternInfoHtml',$response->getBody());
+        $response = $theme->themePatternInfo($data, 'html');
         $this->assertEquals($response->getBody(),$this->loadFixture('patternInfoHtml'));
         
-        $response = $theme->themePatternInfo($pattern, 'other');
-        $this->saveFixture('patternInfoOther',$response->getBody());
-        $this->assertEquals($response->getBody(),$this->loadFixture('patternInfoOther'));
+        $response = $theme->themePatternInfo($data, 'other');
+        $this->assertEquals(serialize($response->getBody()),$this->loadFixture('patternInfoOther'));
     }
+    
     /**
      * Tests the themeInfo method
      */
@@ -43,11 +44,30 @@ class InfoTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals($response->getBody(),'something');
         
         $response = $theme->themeInfo($data, 'html');
-        $this->saveFixture('infoHtml',$response->getBody());
         $this->assertEquals($response->getBody(),$this->loadFixture('infoHtml'));
 
     }
     
+    /**
+     * Tests the getThemeName method
+     */
+    public function testThemeName()
+    {
+        $theme = new \Freesewing\Themes\Info();
+        $this->assertEquals('Info', $theme->getThemeName());
+    }
+
+    /**
+     * Tests the cleanUp method does noting
+     */
+    public function testCleanUp()
+    {
+        $theme1 = new \Freesewing\Themes\Info();
+        $theme2 = new \Freesewing\Themes\Info();
+        $theme1->cleanUp();
+        $this->assertEquals($theme1,$theme2);
+    }
+
     private function loadFixture($fixture)
     {
         $dir = 'tests/themes/fixtures';

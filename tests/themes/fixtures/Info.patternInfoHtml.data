@@ -1,0 +1,46 @@
+<div class='pattern'>
+	<h3>Test Pattern</h3>
+	<h4>Info</h4>
+	<ul>
+		<li><b>name</b> &raquo; Test Pattern</li>
+		<li><b>version</b> &raquo; 1.0</li>
+		<li><b>date</b> &raquo; 20170118</li>
+		<li><b>author</b> &raquo; Joost De Cock</li>
+		<li><b>email</b> &raquo; joost@decock.org</li>
+		<li><b>company</b> &raquo; freesewing.org</li>
+	</ul>
+	<h4>Parts</h4>
+		<ul>
+		<li><b>testPart</b> &raquo; Test Part</li>
+	</ul>
+	<h4>Measurements</h4>
+	<ul>
+		<li><b>someMeasurement</b>  <small>(default  &raquo; 200mm)</small></li>
+	</ul>
+	<h4>Options</h4>
+	<ul>
+		<li>measureOption<ul><li>Type &raquo; measure</li><li>Min &raquo; 1</li>
+                        <li>Max &raquo; 5</li>
+                        <li>Default &raquo; 3</li></ul></li>
+		<li>percentOption<ul><li>Type &raquo; percent</li><li>Default &raquo; 50</li></ul></li>
+		<li>chooseOneOption<ul><li>Type &raquo; chooseOne</li></ul></li>
+	</ul>
+	<h4>Sampler models</h4>
+	<h5>Defaults</h5>
+	<ul>
+		<li>group &raquo; someGroup</li>
+	</ul>
+	<h5>Groups</h5>
+	<ul>
+		<li>someGroup<ul>
+			<li>someModel</li></ul></li>
+		<li>anotherGroup<ul>
+			<li>anotherModel</li></ul></li>
+	</ul>
+	<h5>Model measurements</h5>
+	<ul>
+		<li>someMeasurement<ul>
+			<li>someModel &raquo; 123</li>
+			<li>anotherModel &raquo; 321</li></ul></li>
+	</ul>
+</div>

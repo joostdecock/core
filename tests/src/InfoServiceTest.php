@@ -53,7 +53,7 @@ class InfoServiceTest extends \PHPUnit\Framework\TestCase
     public function testRunPatternInfo()
     {
         $context = new \Freesewing\Context();
-        $context->setRequest(new \Freesewing\Request(['service' => 'info', 'pattern' => 'AaronAshirt']));
+        $context->setRequest(new \Freesewing\Request(['service' => 'info', 'pattern' => 'TestPattern']));
         $context->configure();
 
         $service = new InfoService();

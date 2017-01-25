@@ -130,8 +130,8 @@ class LesleyLeggings extends SethSelvedgeTrouserBlock
         // Continue from sample
         $this->sample($model);
 
-        // Finalize our example part
-        //$this->finalizeExamplePart($model);
+        // Finalize the legggings
+        $this->finalizeLeggings($model);
 
         // Is this a paperless pattern?
         if ($this->isPaperless) {
@@ -295,16 +295,28 @@ class LesleyLeggings extends SethSelvedgeTrouserBlock
     */
 
     /**
-     * Finalizes the example part
+     * Finalizes the leggings
      *
      * @param \Freesewing\Model $model The model to draft for
      *
      * @return void
      */
-    public function finalizeExamplePart($model)
+    public function finalizeLeggings($model)
     {
         /** @var \Freesewing\Part $p */
-        $p = $this->parts['examplePart'];
+        $p = $this->parts['leggings'];
+
+        // Title
+        $p->newPoint('titleAnchor',0,400);
+        $p->addTitle('titleAnchor', 1, $this->t($p->title), '2x '.$this->t('from main fabric')."\n".$this->t('With good sides together'));
+
+        // Logo
+        $p->newPoint('logoAnchor', $p->x('titleAnchor'), $p->y('titleAnchor')+60);
+        $p->newSnippet('logo', 'logo', 'logoAnchor');
+        $p->newSnippet('cc', 'cc', 'logoAnchor');
+        
+        // Seam allowance
+        $p->offsetPath('sa','seamline',10,1,['class' => 'seam-allowance']);
     }
 
     /*

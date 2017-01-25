@@ -7,13 +7,7 @@ class SvgRenderbotTest extends \PHPUnit\Framework\TestCase
 
     protected function setUp()
     {
-        $this->pattern = new \Freesewing\Patterns\AaronAshirt();
-    }
-
-    private function loadTemplate($template)
-    {
-        $dir = 'tests/src/fixtures';
-        return file_get_contents("$dir/SvgRenderbot.$template.svg");
+        $this->pattern = new \Freesewing\Patterns\TestPattern();
     }
 
     /**
@@ -41,7 +35,8 @@ class SvgRenderbotTest extends \PHPUnit\Framework\TestCase
     public function testRender()
     {
         $bot = new \Freesewing\SvgRenderbot();
-        $this->assertEquals($bot->render($this->pattern), $this->loadTemplate('pattern'));
+        $svg = $bot->render($this->pattern);
+        $this->assertEquals($svg, $this->loadFixture('pattern'));
     }
     
     /**
@@ -50,12 +45,13 @@ class SvgRenderbotTest extends \PHPUnit\Framework\TestCase
     public function testRenderPath()
     {
         $bot = new \Freesewing\SvgRenderbot();
-        $p = $this->pattern->parts['front'];
+        $p = $this->pattern->parts['testPart'];
         $p->newPoint(1,0,0);
         $p->newPoint(2,100,100);
         $path = new \Freesewing\Path();
         $path->setPath('M 1 L 2');
-        $this->assertEquals($bot->renderPath($path,$p), $this->loadTemplate('path'));
+        $svg = $bot->renderPath($path,$p);
+        $this->assertEquals($svg, $this->loadFixture('path'));
         $path->setRender(false);
         $this->assertEquals($bot->renderPath($path,$p), '');
     }
@@ -66,11 +62,12 @@ class SvgRenderbotTest extends \PHPUnit\Framework\TestCase
     public function testRenderPathFromPart()
     {
         $bot = new \Freesewing\SvgRenderbot();
-        $p = $this->pattern->parts['front'];
+        $p = $this->pattern->parts['testPart'];
         $p->newPoint(1,0,0);
         $p->newPoint(2,100,100);
         $p->newPath('test', 'M 1 L 2');
-        $this->assertEquals($bot->render($this->pattern), $this->loadTemplate('pathFromPart'));
+        $svg = $bot->render($this->pattern);
+        $this->assertEquals($svg, $this->loadFixture('pathFromPart'));
     }
 
     /**
@@ -79,10 +76,11 @@ class SvgRenderbotTest extends \PHPUnit\Framework\TestCase
     public function testRenderSnippet()
     {
         $bot = new \Freesewing\SvgRenderbot();
-        $p = $this->pattern->parts['front'];
+        $p = $this->pattern->parts['testPart'];
         $p->newPoint(1,0,0);
         $p->newSnippet('button', 'button', 1);
-        $this->assertEquals($bot->render($this->pattern), $this->loadTemplate('snippet'));
+        $svg = $bot->render($this->pattern);
+        $this->assertEquals($svg, $this->loadFixture('snippet'));
     }
 
     /**
@@ -91,10 +89,11 @@ class SvgRenderbotTest extends \PHPUnit\Framework\TestCase
     public function testRenderText()
     {
         $bot = new \Freesewing\SvgRenderbot();
-        $p = $this->pattern->parts['front'];
+        $p = $this->pattern->parts['testPart'];
         $p->newPoint(1,0,0);
         $p->newText('text', 1, 'This is an example');
-        $this->assertEquals($bot->render($this->pattern), $this->loadTemplate('text'));
+        $svg = $bot->render($this->pattern);
+        $this->assertEquals($svg, $this->loadFixture('text'));
     }
 
     /**
@@ -103,10 +102,11 @@ class SvgRenderbotTest extends \PHPUnit\Framework\TestCase
     public function testRenderNote()
     {
         $bot = new \Freesewing\SvgRenderbot();
-        $p = $this->pattern->parts['front'];
+        $p = $this->pattern->parts['testPart'];
         $p->newPoint(1,0,0);
         $p->newNote('note', 1, 'This is an example', 4, 40, 0);
-        $this->assertEquals($bot->render($this->pattern), $this->loadTemplate('note'));
+        $svg = $bot->render($this->pattern);
+        $this->assertEquals($svg, $this->loadFixture('note'));
     }
 
     /**
@@ -115,13 +115,14 @@ class SvgRenderbotTest extends \PHPUnit\Framework\TestCase
     public function testRenderDimension()
     {
         $bot = new \Freesewing\SvgRenderbot();
-        $p = $this->pattern->parts['front'];
+        $p = $this->pattern->parts['testPart'];
         $p->newPoint(1,0,0);
         $p->newPoint(2,100,100);
         $p->newHeightDimension(1,2,115);
         $p->newWidthDimension(1,2,115);
         $p->newLinearDimension(1,2,15);
-        $this->assertEquals($bot->render($this->pattern), $this->loadTemplate('dimension'));
+        $svg = $bot->render($this->pattern);
+        $this->assertEquals($svg, $this->loadFixture('dimension'));
     }
 
     /**
@@ -130,11 +131,12 @@ class SvgRenderbotTest extends \PHPUnit\Framework\TestCase
     public function testRenderTextOnPath()
     {
         $bot = new \Freesewing\SvgRenderbot();
-        $p = $this->pattern->parts['front'];
+        $p = $this->pattern->parts['testPart'];
         $p->newPoint(1,0,0);
         $p->newPoint(2,100,100);
         $p->newTextOnPath('test', 'M 1 L 2', 'This is an example', ['line-height' => 6]);
-        $this->assertEquals($bot->render($this->pattern), $this->loadTemplate('textOnPath'));
+        $svg = $bot->render($this->pattern);
+        $this->assertEquals($svg, $this->loadFixture('textOnPath'));
     }
 
     /**
@@ -143,9 +145,10 @@ class SvgRenderbotTest extends \PHPUnit\Framework\TestCase
     public function testRenderInclude()
     {
         $bot = new \Freesewing\SvgRenderbot();
-        $p = $this->pattern->parts['front'];
+        $p = $this->pattern->parts['testPart'];
         $p->newInclude('test', '<!-- This is an example -->');
-        $this->assertEquals($bot->render($this->pattern), $this->loadTemplate('include'));
+        $svg = $bot->render($this->pattern);
+        $this->assertEquals($svg, $this->loadFixture('include'));
     }
 
     /**
@@ -154,8 +157,25 @@ class SvgRenderbotTest extends \PHPUnit\Framework\TestCase
     public function testRenderTransform()
     {
         $bot = new \Freesewing\SvgRenderbot();
-        $p = $this->pattern->parts['front'];
+        $p = $this->pattern->parts['testPart'];
         $p->addTransform('test', new \Freesewing\Transform('translate',10,20));
-        $this->assertEquals($bot->render($this->pattern), $this->loadTemplate('transform'));
+        $svg = $bot->render($this->pattern);
+        $this->assertEquals($svg, $this->loadFixture('transform'));
+    }
+    
+    private function loadFixture($fixture)
+    {
+        $dir = 'tests/src/fixtures';
+        $file = "$dir/SvgRenderbot.$fixture.svg";
+        return file_get_contents($file);
+    }
+
+    private function saveFixture($fixture, $data)
+    {
+        $dir = 'tests/src/fixtures';
+        $file = "$dir/SvgRenderbot.$fixture.svg";
+        $f = fopen($file,'w');
+        fwrite($f,$data);
+        fclose($f);
     }
 }

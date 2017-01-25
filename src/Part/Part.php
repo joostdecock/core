@@ -893,7 +893,10 @@ class Part
         if(!$i) {
             return false;
         }
-
+        
+        /**
+         * Looks like this is never happening
+         * FIXME: Can this be removed?
         // Ignore intersections at line end points
         if (
             Utils::isSamePoint($i, $this->loadPoint($s1['offset'][0])) or 
@@ -903,6 +906,7 @@ class Part
         ) {
                 return false;
         }
+         */
     
         return $this->keyArray(array($i), 'intersection-');
     }
@@ -1131,11 +1135,18 @@ class Part
                 $new[] = $chunk;
                 $new[] = ['type' => 'line', 'offset' => [$chunk['offset'][3], $id]];
                 $new[] = ['type' => 'line', 'offset' => [$id, $next['offset'][0]]];
-            } else {
+            } 
+            /**
+             * This probably doesn't happen. So let's comment it out and see what breaks
+             * FIXME: Can we remove this?
+
+            else {
                 // Beams are parallel. Just connect the start/end points
                 $new[] = $chunk;
                 $new[] = ['type' => 'line', 'offset' => [$chunk['offset'][3], $next['offset'][0]]];
             }
+
+             */
             return $new;
         }
         return false;

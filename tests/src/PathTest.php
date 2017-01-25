@@ -162,4 +162,27 @@ class PathTest extends \PHPUnit\Framework\TestCase
 
         $this->assertEquals($path->findBoundary($p), $boundary); 
     }
+    
+    /**
+     * Test exception thrown in findBoundary method
+     *
+     * @expectedException InvalidArgumentException
+     * @expectedExceptionMessage SVG path references non-existing point
+     */
+    public function testFindBoundaryException()
+    {
+        $p = new \Freesewing\Part();
+
+        $p->newPoint(1, 0, 0);
+        $p->newPoint(2, 100, 100);
+        $p->newPoint(3, -400, -20);
+        $p->newPoint(4, 4320, 20);
+        $p->newPoint(5, 540, 430);
+        $p->newPoint(6, -540, -430);
+
+        $path = new \Freesewing\Path();
+        $path->setPath('M 1 L 30 L 4 C 4 5 6 C 1 5 3');
+
+        $path->findBoundary($p); 
+    }
 }

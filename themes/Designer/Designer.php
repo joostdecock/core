@@ -13,9 +13,6 @@ use \Freesewing\Utils;
  */
 class Designer extends Theme
 {
-    /** This theme always shows debug info */
-    const SHOW_DEBUG = true;
-    
     /**
      * Adds debug info to pattern
      *

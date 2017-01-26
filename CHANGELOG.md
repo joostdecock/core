@@ -16,9 +16,9 @@ This is the first release to ship with unit tests.
 
 ### Changed
 
-- isValidRequest is now an abstract method in channels/Channel
-- Type hinting for isValidRequest in channels/Channel
-- Renamed the default Svg theme to Basic
+- _channels\Channel\isValidRequest()_ is now an abstract method
+- Type hinting for _channels\Channel\isValidRequest()_
+- Renamed the default _themes\Svg_ theme to _themes\Basic_
 - Refactored  _Part::offsetTolerance()_
 - Refactored _Part::findStackIntersections()_
 - Refactored _Part::fillPathStackGaps()_

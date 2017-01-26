@@ -61,6 +61,7 @@ class PartOffsetCode extends \PHPUnit\Framework\TestCase
         $p->newPoint(3,0,100);
         $p->newPoint(4,100,100);
         $p->offsetPathString(1,'M 1 C 2 4 3', 10);
+        $this->saveFixture('curveOffset', serialize($p->paths));
         $this->assertEquals(serialize($p->paths),$this->loadFixture('curveOffset'));
     }
 
@@ -74,6 +75,7 @@ class PartOffsetCode extends \PHPUnit\Framework\TestCase
         $p->newPoint(2,100,0);
         $p->newPoint(3,0,100);
         $p->offsetPathString(1,'M 1 C 1 2 3', 10);
+        $this->saveFixture('curveOffsetCp1IsStart', serialize($p->paths));
         $this->assertEquals(serialize($p->paths),$this->loadFixture('curveOffsetCp1IsStart'));
     }
 
@@ -87,6 +89,7 @@ class PartOffsetCode extends \PHPUnit\Framework\TestCase
         $p->newPoint(2,100,0);
         $p->newPoint(3,0,100);
         $p->offsetPathString(1,'M 1 C 2 3 3', 10);
+        $this->saveFixture('curveOffsetCp2IsEnd', serialize($p->paths));
         $this->assertEquals(serialize($p->paths),$this->loadFixture('curveOffsetCp2IsEnd'));
     }
 
@@ -100,6 +103,7 @@ class PartOffsetCode extends \PHPUnit\Framework\TestCase
         $p->newPoint(2,100,0);
         $p->newPoint(3,0,100);
         $p->offsetPathString(1,'M 1 L 2 L 3 z', 10);
+        $this->saveFixture('lineOffsetClosedPath', serialize($p->paths));
         $this->assertEquals(serialize($p->paths),$this->loadFixture('lineOffsetClosedPath'));
     }
 
@@ -113,6 +117,7 @@ class PartOffsetCode extends \PHPUnit\Framework\TestCase
         $p->newPoint(2,50,0);
         $p->newPoint(3,100,0);
         $p->offsetPathString(1,'M 1 L 2 L 3 ', 10); // Lines are parallel, no gap, no intersections
+        $this->saveFixture('offsetLineLine', serialize($p->paths));
         $this->assertEquals(serialize($p->paths),$this->loadFixture('offsetLineLine'));
     }
 
@@ -129,6 +134,7 @@ class PartOffsetCode extends \PHPUnit\Framework\TestCase
         $p->offsetPathString(1,'M 1 L 2 C 3 4 4', 10); // Inside offset, no gap
         $p->offsetPathString(2,'M 1 L 2 C 3 4 4', -10); // Outside offset, gap, cp2 = end
         $p->offsetPathString(3,'M 1 L 2 C 2 3 4', -10); // Outside offset, gap, start = cp1
+        $this->saveFixture('offsetLineCurve', serialize($p->paths));
         $this->assertEquals(serialize($p->paths),$this->loadFixture('offsetLineCurve'));
     }
 
@@ -146,6 +152,7 @@ class PartOffsetCode extends \PHPUnit\Framework\TestCase
         $p->newPoint(1,0,100);
         $p->offsetPathString(2,'M 4 C 4 3 2 L 1', 10); // Outside offset, gap, cp2 = end
         $p->offsetPathString(3,'M 4 C 3 2 2 L 1', 10); // Outside offset, gap, start = cp1
+        $this->saveFixture('offsetCurveLine', serialize($p->paths));
         $this->assertEquals(serialize($p->paths),$this->loadFixture('offsetCurveLine'));
     }
 
@@ -161,6 +168,7 @@ class PartOffsetCode extends \PHPUnit\Framework\TestCase
         $p->newPoint(4,200,100);
         $p->newPoint(5,200,200);
         $p->offsetPathString(1,'M 1 C 2 3 3 C 3 4 5', 10); 
+        $this->saveFixture('offsetCurveCurve', serialize($p->paths));
         $this->assertEquals(serialize($p->paths),$this->loadFixture('offsetCurveCurve'));
     }
 
@@ -177,6 +185,7 @@ class PartOffsetCode extends \PHPUnit\Framework\TestCase
         $p->newPoint(5,0,50);
         $p->newPoint(6,100,50);
         $p->offsetPathString(1,'M 1 C 6 6 2 L 3 C 5 5 4 z', 10);
+        $this->saveFixture('offsetWithTwoCurvesIntersecting', serialize($p->paths));
         $this->assertEquals(serialize($p->paths),$this->loadFixture('offsetWithTwoCurvesIntersecting'));
     }
 
@@ -190,6 +199,7 @@ class PartOffsetCode extends \PHPUnit\Framework\TestCase
 
     private function saveFixture($fixture, $data)
     {
+        return true;
         $dir = 'tests/src/fixtures';
         $file = "$dir/Part.offset.$fixture.data";
         $f = fopen($file,'w');

@@ -11,7 +11,7 @@ use Freesewing\Part;
  * @copyright 2016 Joost De Cock
  * @license http://opensource.org/licenses/GPL-3.0 GNU General Public License, Version 3
  */
-class AaronAshirt extends JoostBodyBlock
+class AaronAshirt extends BrianBodyBlock
 {
     /*
         ___       _ _   _       _ _
@@ -42,12 +42,12 @@ class AaronAshirt extends JoostBodyBlock
      */
     public function initialize($model)
     {
-        // Options needed for JoostBodyBlock (but irrelevant here)
+        // Options needed for BrianBodyBlock (but irrelevant here)
         $this->setOption('collarEase', self::COLLAR_EASE);
         $this->setOption('backNeckCutout', self::NECK_CUTOUT);
         $this->setOption('sleevecapEase', self::SLEEVECAP_EASE);
 
-        // Values needed for JoostBodyBlock (but irrelevant here)
+        // Values needed for BrianBodyBlock (but irrelevant here)
         $this->setValue('frontCollarTweakFactor', 1); 
         
         // shifTowards can't deal with 0, so shoulderStrapPlacement should be at least 0.001

@@ -1,5 +1,5 @@
 <?php
-/** Freesewing\Patterns\JoostBodyBlock class */
+/** Freesewing\Patterns\HugoHoodie class */
 namespace Freesewing\Patterns;
 
 /**
@@ -9,7 +9,7 @@ namespace Freesewing\Patterns;
  * @copyright 2016 Joost De Cock
  * @license http://opensource.org/licenses/GPL-3.0 GNU General Public License, Version 3
  */
-class HugoHoodie extends JoostBodyBlock
+class HugoHoodie extends BrianBodyBlock
 {
     /*
         ___       _ _   _       _ _

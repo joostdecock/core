@@ -11,7 +11,7 @@ use Freesewing\Part;
  * @copyright 2016 Joost De Cock
  * @license http://opensource.org/licenses/GPL-3.0 GNU General Public License, Version 3
  */
-class SimonShirt extends JoostBodyBlock
+class SimonShirt extends BrianBodyBlock
 {
     /*
         ___       _ _   _       _ _

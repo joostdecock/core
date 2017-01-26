@@ -1069,10 +1069,10 @@ class Part
                 } elseif ($chunk['type'] == 'curve' && $next['type'] == 'curve') {
                     $new = $this->fillPathStackCurveCurveGap($chunk,$next);
                 }
-                if (isset($new)) {
+                if (isset($new) && is_array($new)) {
                     $stack->replace($chunk, $new);
-                    unset($new);
                 }
+                unset($new);
             }
             ++$count;
         }

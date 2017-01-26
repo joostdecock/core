@@ -25,6 +25,27 @@ class PolynomialTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
+     * Tests the getRoots method
+     */
+    public function testGetRoots()
+    {
+        $p = new \Freesewing\Polynomial([]);
+        $this->assertEquals($p->getRoots(), []);
+        
+        $p = new \Freesewing\Polynomial([1]);
+        $this->assertEquals($p->getRoots(), []);
+        
+        $p = new \Freesewing\Polynomial([1,2]);
+        $this->assertEquals($p->getRoots(), [-1]);
+        
+        $p = new \Freesewing\Polynomial([1,2,-3]);
+        $this->assertEquals($p->getRoots(), [1,-3]);
+        
+        $p = new \Freesewing\Polynomial([1,2,-3,4]);
+        $this->assertEquals($p->getRoots(), [-3.284277537307]);
+    }
+
+    /**
      * Tests exception thrown in evalu method
      *
      * @expectedException InvalidArgumentException

@@ -89,7 +89,6 @@ class GrowingPackerTest extends \PHPUnit\Framework\TestCase
 
         $packer = new \Freesewing\Growingpacker();
         $packer->fit($layout); 
-        $this->saveTemplate(12,serialize($layout));
         $this->assertEquals(serialize($layout), $this->loadTemplate(12));
     }
 

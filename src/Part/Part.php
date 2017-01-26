@@ -1069,8 +1069,10 @@ class Part
                 } elseif ($chunk['type'] == 'curve' && $next['type'] == 'curve') {
                     $new = $this->fillPathStackCurveCurveGap($chunk,$next);
                 }
-                if ($new) $stack->replace($chunk, $new);
-                unset($new);
+                if (isset($new)) {
+                    $stack->replace($chunk, $new);
+                    unset($new);
+                }
             }
             ++$count;
         }
@@ -1825,26 +1827,13 @@ class Part
         $point1 = $this->loadPoint($key1);
         $point2 = $this->loadPoint($key2);
         $angle = $this->angle($key1, $key2);
-        // cos is x axis, sin is y axis
-        $deltaX = $distance * abs(cos(deg2rad($angle)));
-        $deltaY = $distance * abs(sin(deg2rad($angle)));
-        if ($point1->getX() < $point2->getX() && $point1->getY() > $point2->getY()) {
-            $x = $point1->getX() + abs($deltaX);
-            $y = $point1->getY() - abs($deltaY);
-        } elseif ($point1->getX() < $point2->getX() && $point1->getY() < $point2->getY()) {
-            $x = $point1->getX() + abs($deltaX);
-            $y = $point1->getY() + abs($deltaY);
-        } elseif ($point1->getX() > $point2->getX() && $point1->getY() > $point2->getY()) {
-            $x = $point1->getX() - abs($deltaX);
-            $y = $point1->getY() - abs($deltaY);
-        } elseif ($point1->getX() > $point2->getX() && $point1->getY() < $point2->getY()) {
-            $x = $point1->getX() - abs($deltaX);
-            $y = $point1->getY() + abs($deltaY);
-        } else {
-            $x = $point1->getX() + $deltaX;
-            $y = $point1->getY() + $deltaY;
-        }
-
+        
+        $deltaX = $distance * cos(deg2rad($angle)) * -1;
+        $deltaY = $distance * sin(deg2rad($angle));
+    
+        $x = $point1->getX() + $deltaX;
+        $y = $point1->getY() + $deltaY;
+    
         return $this->createPoint($x, $y, "Point $key1 shifted towards $key2 by $distance");
     }
 

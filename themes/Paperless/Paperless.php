@@ -62,7 +62,6 @@ class Paperless extends Basic
      */
     private function addGridToPart($part, $units = 'metric')
     {
-        if(is_array($part->boundary)) print_r($part);
         $topLeft = $part->boundary->getTopLeft();
         $w = $part->boundary->width;
         $h = $part->boundary->height;

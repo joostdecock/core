@@ -44,25 +44,51 @@ class PaperlessTest extends \PHPUnit\Framework\TestCase
             new \Freesewing\SvgComments()
         );
         $theme->themeSvg($svgDocument);
-        $this->saveFixture('themeSvgDocument',serialize($svgDocument));
         $this->assertEquals(serialize($svgDocument), $this->loadFixture('themeSvgDocument'));
     }
 
-    public function estThemePattern() {
+    /**
+     * Tests the themePattern method
+     */
+    public function testThemePattern()
+    {
         $context = new \Freesewing\Context();
-        $context->setRequest(new \Freesewing\Request(['service' => 'draft', 'pattern' => 'AaronAshirt', 'theme'=>'paperless']));
+        $context->setRequest(
+            new \Freesewing\Request([
+                'service' => 'draft', 
+                'pattern' => 'TestPattern', 
+                'theme' => 'Paperless',
+            ])
+        );
         $context->configure();
+        $context->addPattern();
+        $context->addModel();
+        $context->getModel()->addMeasurements($context->getChannel()->standardizeModelMeasurements($context->getRequest(), $context->getPattern()));
+        $context->getPattern()->addOptions($context->getChannel()->standardizePatternOptions($context->getRequest(), $context->getPattern()));
+        $context->addUnits();
+        $context->getPattern()->setUnits($context->getUnits());
+        $context->addTranslator();
+        $context->getPattern()->setTranslator($context->getTranslator());
+        $context->getTheme()->setOptions($context->getRequest());
 
-        $pattern = $context->pattern;
-        $part = $pattern->parts['front'];
-        $part2 = clone $part1;
-        unset($part2->points['gridAnchhor']);
+        $p = $context->getPattern()->parts['testPart'];
+        $p->newPoint(1,0,0); 
+        $p->newPoint(2,100,100); 
+        $p->newPath('test', 'M 1 L 2');
 
-        $service = new \Freesewing\Services\DraftService();
-        $service->run($context);
+        $context->getPattern()->addPart('part2');
+        $p = $context->getPattern()->parts['part2'];
+        $p->newPoint(1,0,0); 
+        $p->newPoint(2,100,100); 
+        $p->newPath('test', 'M 1 L 2');
+        $p->newPoint('gridAnchor',50,50); 
 
-        $this->assertContains('Content-Type: image/svg+xml', Output::$headers);
-        $this->assertEquals(substr(Output::$body,0,54), '<?xml version="1.0" encoding="UTF-8" standalone="no"?>');
+        $context->getPattern()->setPartMargin($context->getTheme()->config['settings']['partMargin']);
+        $context->getTheme()->applyRenderMask($context->getPattern());
+        $context->getPattern()->layout();
+        $context->getTheme()->themePattern($context->getPattern());
+
+        $this->assertEquals(serialize($context->getPattern()), $this->loadFixture('themePattern'));
     }
 
     private function loadFixture($fixture)

@@ -149,6 +149,22 @@ class TestPatternTest extends \PHPUnit\Framework\TestCase
     }
 
     /** 
+     * Tests the clonePoints method
+     */
+    public function testClonePoints()
+    {
+        $pattern = new \Freesewing\Patterns\TestPattern();
+        $p = $pattern->parts['testPart'];
+        $p->newPoint(1,2,3,'Just another point');
+        $p->addPoint(2, $p->shift(1,0,10),'A shifted point');
+        $pattern->addPart('part2');
+        $pattern->clonePoints('testPart','part2');
+        $this->assertEquals($pattern->parts['part2']->points[2]->getX(), 12);
+        $this->assertEquals($pattern->parts['part2']->points[2]->getY(), 3);
+        $this->assertEquals($pattern->parts['part2']->points[2]->getDescription(), 'A shifted point');
+    }
+
+    /** 
      * Tests messaging and debug
      */
     public function testMessagesAndDebug()

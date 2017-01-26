@@ -4,22 +4,6 @@ namespace Freesewing\Tests;
 
 class PartOffsetCode extends \PHPUnit\Framework\TestCase
 {
-    public function setUp()
-    {
-        //$this->startTime = time();
-    }
-
-    public function tearDown()
-    {
-        //$this->time('at teardown');
-    }
-
-    private function time($s='')
-    {
-        //$this->now = time();
-        //echo "\n".(time() - $this->startTime)." seconds: ".$s;
-    }
-    
     /**
      * Test offset of a line
      */
@@ -145,7 +129,6 @@ class PartOffsetCode extends \PHPUnit\Framework\TestCase
         $p->offsetPathString(1,'M 1 L 2 C 3 4 4', 10); // Inside offset, no gap
         $p->offsetPathString(2,'M 1 L 2 C 3 4 4', -10); // Outside offset, gap, cp2 = end
         $p->offsetPathString(3,'M 1 L 2 C 2 3 4', -10); // Outside offset, gap, start = cp1
-        $this->saveFixture('offsetLineCurve',serialize($p->paths));
         $this->assertEquals(serialize($p->paths),$this->loadFixture('offsetLineCurve'));
     }
 
@@ -163,7 +146,6 @@ class PartOffsetCode extends \PHPUnit\Framework\TestCase
         $p->newPoint(1,0,100);
         $p->offsetPathString(2,'M 4 C 4 3 2 L 1', 10); // Outside offset, gap, cp2 = end
         $p->offsetPathString(3,'M 4 C 3 2 2 L 1', 10); // Outside offset, gap, start = cp1
-        $this->saveFixture('offsetCurveLine',serialize($p->paths));
         $this->assertEquals(serialize($p->paths),$this->loadFixture('offsetCurveLine'));
     }
 
@@ -208,8 +190,6 @@ class PartOffsetCode extends \PHPUnit\Framework\TestCase
 
     private function saveFixture($fixture, $data)
     {
-        // use as 
-        //$this->saveFixture('grainline',serialize($p->dimensions));
         $dir = 'tests/src/fixtures';
         $file = "$dir/Part.offset.$fixture.data";
         $f = fopen($file,'w');

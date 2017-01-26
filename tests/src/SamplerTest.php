@@ -187,7 +187,6 @@ class SamplerTest extends \PHPUnit\Framework\TestCase
 
         $object->setPattern($pattern);
         $object->addSampledPartsToPattern();
-        $this->saveFixture('parts',serialize($object));
         $this->assertEquals(serialize($object), $this->loadFixture('parts'));
     }
     

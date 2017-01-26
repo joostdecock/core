@@ -16,7 +16,7 @@ namespace Freesewing\Themes;
  * @copyright 2016 Joost De Cock
  * @license http://opensource.org/licenses/GPL-3.0 GNU General Public License, Version 3
  */
-class Paperless extends Svg
+class Paperless extends Basic
 {
     /** @var string $defs A grid to be added to the SVG defs */
     private $defs;
@@ -62,7 +62,6 @@ class Paperless extends Svg
      */
     private function addGridToPart($part, $units = 'metric')
     {
-        if(is_array($part->boundary)) print_r($part);
         $topLeft = $part->boundary->getTopLeft();
         $w = $part->boundary->width;
         $h = $part->boundary->height;

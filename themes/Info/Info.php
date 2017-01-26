@@ -208,7 +208,7 @@ class Info
      */
     public function getThemeName()
     {
-        return \Freesewing\Utils::getClassDir($this);
+        return basename(\Freesewing\Utils::getClassDir($this));
     }
     
     /**

@@ -13,7 +13,7 @@ namespace Freesewing;
  * @see \Freesewing\Part::newNote()
  *
  * @author Joost De Cock <joost@decock.org>
- * @copyright 2016 Joost De Cock
+ * @copyright 2016-2017 Joost De Cock
  * @license http://opensource.org/licenses/GPL-3.0 GNU General Public License, Version 3
  */
 class Note extends Text

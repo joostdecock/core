@@ -6,7 +6,7 @@ class ModelTest extends \PHPUnit\Framework\TestCase
 {
     public function testAttributeMeasurements()
     {
-        $this->assertClassHasAttribute('measurements', '\Freesewing\Model');
+        $this->assertClassHasAttribute('measurements','\Freesewing\Model');
     }
 
     public function testSetMeasurement()
@@ -18,15 +18,19 @@ class ModelTest extends \PHPUnit\Framework\TestCase
 
     public function testAddMeasurements()
     {
-        $model = new \Freesewing\Model();
-        $model->addMeasurements([
+        $measurements = [
             'Shoe size' => 52,
             'Toe length' => 6.3,
             'Height' => 198,
-        ]);
+        ];
+        $model = new \Freesewing\Model();
+        $model->addMeasurements($measurements);
 
         $this->assertEquals(52, $model->getMeasurement('Shoe size'));
         $this->assertEquals(6.3, $model->getMeasurement('Toe length'));
         $this->assertEquals(198, $model->getMeasurement('Height'));
+        $this->assertEquals(6.3, $model->m('Toe length'));
+        $this->assertEquals(198, $model->m('Height'));
+        $this->assertEquals($measurements, $model->getMeasurements());
     }
 }

@@ -2,6 +2,8 @@
 /** Freesewing\Channels\Docs */
 namespace Freesewing\Channels;
 
+use Freesewing\Context;
+
 /**
  * Channel used by the Documentation.
  *
@@ -29,14 +31,17 @@ class Docs extends Channel
      *
      * @return bool true Always true in this case
      */
-    public function isValidRequest($context)
+    public function isValidRequest(Context $context)
     {
         // The only thing we check is whether the pattern you request does actually exist
-        $patternServed = basename($context->getPattern()->getClassChain()[0]);
-        $patternRequested = $context->getRequest()->getData('pattern');
+        $pattern = $context->getPattern();
+        if(isset($pattern)) {
+            $patternServed = basename($context->getPattern()->getClassChain()[0]);
+            $patternRequested = $context->getRequest()->getData('pattern');
 
-        if($patternRequested == $patternServed) return true;
-        else return false;
+            if($patternRequested == $patternServed) return true;
+        }
+        return false;
     }
 
     /**

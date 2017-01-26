@@ -9,7 +9,7 @@ namespace Freesewing;
  * with information about the client
  *
  * @author Joost De Cock <joost@decock.org>
- * @copyright 2016 Joost De Cock
+ * @copyright 20162017 Joost De Cock
  * @license http://opensource.org/licenses/GPL-3.0 GNU General Public License, Version 3
  */
 class Request
@@ -36,10 +36,18 @@ class Request
     public function __construct($data = null)
     {
         $this->data = $data;
-        $this->info['client'] = $_SERVER['REMOTE_ADDR'];
-        $this->info['userAgent'] = $_SERVER['HTTP_USER_AGENT'];
-        $this->info['host'] = $_SERVER['HTTP_HOST'];
-        $this->info['uri'] = $_SERVER['REQUEST_URI'];
+        if(isset($_SERVER['REMOTE_ADDR'])) $this->info['client'] = $_SERVER['REMOTE_ADDR'];
+        else $this->info['client'] = 'unknown';
+        
+        if(isset($_SERVER['HTTP_USER_AGENT'])) $this->info['userAgent'] = $_SERVER['HTTP_USER_AGENT'];
+        else $this->info['userAgent'] = 'unknown';
+        
+        if(isset($_SERVER['HTTP_HOST'])) $this->info['host'] = $_SERVER['HTTP_HOST'];
+        else $this->info['host'] = 'unknown';
+        
+        if(isset($_SERVER['REQUEST_URI'])) $this->info['uri'] = $_SERVER['REQUEST_URI'];
+        else $this->info['uri'] = 'unknown';
+        
         $this->info['time'] = $_SERVER['REQUEST_TIME_FLOAT'];
     }
 

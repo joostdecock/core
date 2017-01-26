@@ -4,6 +4,12 @@ namespace Freesewing\Tests;
 
 class YamlrTest extends \PHPUnit\Framework\TestCase
 {
+    private function loadTemplate($template)
+    {
+        $dir = 'tests/src/fixtures';
+        return "$dir/YamlrTest.$template.yml";
+    }
+
     public function testYamlFileLoadAndParsing()
     {
         $data = [
@@ -18,7 +24,7 @@ class YamlrTest extends \PHPUnit\Framework\TestCase
             ]
         ];
         $yamlr = new \Freesewing\Yamlr();
-        $config = $yamlr->loadYamlFile(__DIR__.'/YamlrTestCorrect.yml');
+        $config = $yamlr->loadYamlFile($this->loadTemplate('correct'));
 
         $this->assertEquals($data, $config);
     }
@@ -30,6 +36,6 @@ class YamlrTest extends \PHPUnit\Framework\TestCase
     public function testFaultyYamlFile()
     {
         $yamlr = new \Freesewing\Yamlr();
-        $config = $yamlr->loadYamlFile(__DIR__.'/YamlrTestIncorrect.yml');
+        $config = $yamlr->loadYamlFile($this->loadTemplate('incorrect'));
     }
 }

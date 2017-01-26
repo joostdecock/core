@@ -1,0 +1,11 @@
+default: 
+    group: someGroup
+groups:
+    someGroup:
+        - someModel
+    anotherGroup:
+        - anotherModel
+measurements:
+    someMeasurement:
+        someModel    : 123
+        anotherModel : 321

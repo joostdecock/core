@@ -1,0 +1,22 @@
+
+<!-- Start of group #patternScaleContainer -->
+<g id="patternScaleContainer"  transform=" scale(3.54330709 ) " >
+    <!-- Start of group #testPart -->
+    <g id="testPart" >
+        
+        <path class="dimension" id="2"  d=" M  115,0  L  115,100 " />
+        <text id="3" class="dimension-label" dy="-2" ><textPath xlink:href="#2" startOffset="50%"><tspan class="dimension-label" dy="-2" >10cm</tspan></textPath></text>
+        <path class="dimension-leader" id="4"  d=" M  0,0  L  115,0 " />
+        <path class="dimension-leader" id="5"  d=" M  100,100  L  115,100 " />
+        <path class="dimension" id="6"  d=" M  0,115  L  100,115 " />
+        <text id="7" class="dimension-label" dy="-2" ><textPath xlink:href="#6" startOffset="50%"><tspan class="dimension-label" dy="-2" >10cm</tspan></textPath></text>
+        <path class="dimension-leader" id="8"  d=" M  0,0  L  0,115 " />
+        <path class="dimension-leader" id="9"  d=" M  100,100  L  100,115 " />
+        <path class="dimension dimension-width" id="10"  d=" M  -10.607,10.607  L  89.393,110.607 " />
+        <text id="11" class="dimension-label" dy="-2" ><textPath xlink:href="#10" startOffset="50%"><tspan class="dimension-label" dy="-2" >14.14cm</tspan></textPath></text>
+        <path class="dimension-leader" id="12"  d=" M  0,0  L  -10.607,10.607 " />
+        <path class="dimension-leader" id="13"  d=" M  100,100  L  89.393,110.607 " />
+    </g>
+    <!-- End of group #testPart -->
+</g>
+<!-- End of group #patternScaleContainer -->

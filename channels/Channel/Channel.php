@@ -2,6 +2,8 @@
 /** Freesewing\Channels\Channel */
 namespace Freesewing\Channels;
 
+use Freesewing\Context;
+
 /**
  * Abstract class for channels.
  *
@@ -32,7 +34,7 @@ abstract class Channel
     }
 
     /**
-     * Allows the channel designer to implement access control
+     * Channel designer should implement access control
      *
      * You may not want to make your channel publically accessible.
      * You can limit access here in whatever way you like.
@@ -42,10 +44,7 @@ abstract class Channel
      *
      * @return bool true Always true in this case
      */
-    public function isValidRequest($context)
-    {
-        return true;
-    }
+    abstract public function isValidRequest(Context $context);
 
     /**
      * What to do when a request is considered to be invalid
@@ -62,7 +61,10 @@ abstract class Channel
      */
     public function handleInValidRequest($context)
     {
-        header("location: /docs/");
+        // Redirect to docs
+        $response = new \Freesewing\Response();
+        $response->addHeader('redirect', "Location: /docs/");
+        $context->setResponse($response);
     }
 
     /**

@@ -2,17 +2,20 @@
 /** Freesewing\BezierToolbox class */
 namespace Freesewing;
 
+use \Freesewing\Point;
+use \Freesewing\Boundary;
+
 /**
  * Calculations involving Bezier curves.
  *
  * @author Joost De Cock <joost@decock.org>
- * @copyright 2016 Joost De Cock
+ * @copyright 2016-2017 Joost De Cock
  * @license http://opensource.org/licenses/GPL-3.0 GNU General Public License, Version 3
  */
 class BezierToolbox
 {
-    /** @var int Number of steps when walking a path */
-    public static $steps = 100;
+    /** Number of steps when walking a path */
+    const STEPS = 100;
 
     /**
      * Finds the boundary of a Bezier curve
@@ -28,9 +31,9 @@ class BezierToolbox
      * @param \Freesewing\Point $end The end of the curve
      * @return bool True if it is. False if it is not closed.
      */
-    static function findBezierBoundary($start, $cp1, $cp2, $end)
+    public static function findBezierBoundary(Point $start, Point $cp1, Point $cp2, Point $end)
     {
-        $steps = BezierToolbox::$steps;
+        $steps = self::STEPS;
         for ($i = 0; $i <= $steps; ++$i) {
             $t = $i / $steps;
             $x = Utils::bezierPoint($t, $start->getX(), $cp1->getX(), $cp2->getX(), $end->getX());
@@ -59,14 +62,14 @@ class BezierToolbox
             $previousX = $x;
             $previousY = $y;
         }
-        $topLeft = new \Freesewing\Point();
+        $topLeft = new Point();
         $topLeft->setX($minX);
         $topLeft->setY($minY);
-        $bottomRight = new \Freesewing\Point();
+        $bottomRight = new Point();
         $bottomRight->setX($maxX);
         $bottomRight->setY($maxY);
 
-        $boundary = new \Freesewing\Boundary();
+        $boundary = new Boundary();
         $boundary->setTopLeft($topLeft);
         $boundary->setBottomRight($bottomRight);
 
@@ -88,9 +91,9 @@ class BezierToolbox
      *
      * @return \Freesewing\Point The point at the edge
      */
-    static function findBezierEdge($start, $cp1, $cp2, $end, $direction = 'left')
+    public static function findBezierEdge(Point $start, Point $cp1, Point $cp2, Point $end, $direction = 'left')
     {
-        $steps = BezierToolbox::$steps;
+        $steps = self::STEPS;
         for ($i = 0; $i <= $steps; ++$i) {
             $t = $i / $steps;
             $x = Utils::bezierPoint($t, $start->getX(), $cp1->getX(), $cp2->getX(), $end->getX());
@@ -114,7 +117,7 @@ class BezierToolbox
             $previousX = $x;
             $previousY = $y;
         }
-        $edge = new \Freesewing\Point();
+        $edge = new Point();
         $edge->setX($edgeX);
         $edge->setY($edgeY);
 
@@ -135,10 +138,10 @@ class BezierToolbox
      *
      * @return float The length of the curve
      */
-    public static function cubicBezierLength($start, $cp1, $cp2, $end)
+    public static function cubicBezierLength(Point $start, Point $cp1, Point $cp2, Point $end)
     {
         $length = 0;
-        $steps = BezierToolbox::$steps;
+        $steps = self::STEPS;
 
         for ($i = 0; $i <= $steps; ++$i) {
             $t = $i / $steps;
@@ -254,7 +257,6 @@ class BezierToolbox
                 } elseif ($p10->gte($min) && $p10->lte($max)) {
                     $points[] = $p10;
                 }
-
             }
         }
         if (isset($points) && is_array($points)) {
@@ -268,80 +270,6 @@ class BezierToolbox
     }
 
     /**
-     * Returns intersection between a cubic Bezier and a line
-     *
-     * The number of intersections between a curve and a line
-     * varies. So we return an array of points.
-     *
-     * @deprecated This has been replaced and needs to be ripped out
-     *
-     * @param \Freesewing\Point $lFrom The point at the start of the line
-     * @param \Freesewing\Point $lTo The point at the end of the line
-     * @param \Freesewing\Point $cFrom The point at the start of the curve
-     * @param \Freesewing\Point $cC1 The first control point
-     * @param \Freesewing\Point $cC2 The second control point
-     * @param \Freesewing\Point $cTo The point at the end of the curve
-     *
-     * @return array|false An array of intersection points or false if there are none
-     */
-    public static function OLDfindLineCurveIntersections($lFrom, $lTo, $cFrom, $cC1, $cC2, $cTo)
-    {
-        $points = false;
-
-        $X = array();
-
-        $A = $lTo->getY() - $lFrom->getY(); // A=y2-y1
-        $B = $lFrom->getX() - $lTo->getX(); // B=x1-x2
-        $C = $lFrom->getX() * ($lFrom->getY() - $lTo->getY()) + $lFrom->getY() * ($lTo->getX() - $lFrom->getX()); // C=x1*(y1-y2)+y1*(x2-x1)
-
-        $bx = BezierToolbox::bezierCoeffs($cFrom->getX(), $cC1->getX(), $cC2->getX(), $cTo->getX());
-        $by = BezierToolbox::bezierCoeffs($cFrom->getY(), $cC1->getY(), $cC2->getY(), $cTo->getY());
-
-        $P[0] = $A * $bx[0] + $B * $by[0];         /*t^3*/
-        $P[1] = $A * $bx[1] + $B * $by[1];         /*t^2*/
-        $P[2] = $A * $bx[2] + $B * $by[2];         /*t*/
-        $P[3] = $A * $bx[3] + $B * $by[3] + $C;     /*1*/
-
-        $r = BezierToolbox::cubicRoots($P);
-
-        // Verify the roots are in bounds of the linear segment
-        for ($i = 0; $i < 3; ++$i) {
-            $t = $r[$i];
-
-            $X[0] = $bx[0] * $t * $t * $t + $bx[1] * $t * $t + $bx[2] * $t + $bx[3];
-            $X[1] = $by[0] * $t * $t * $t + $by[1] * $t * $t + $by[2] * $t + $by[3];
-            // above is intersection point assuming infinitely long line segment,
-            // make sure we are also in bounds of the line
-            if (($lTo->getX() - $lFrom->getX()) != 0) {
-// if not vertical line
-                $s = ($X[0] - $lFrom->getX()) / ($lTo->getX() - $lFrom->getX());
-            } else {
-                $s = ($X[1] - $lFrom->getY()) / ($lTo->getY() - $lFrom->getY());
-            }
-
-            // in bounds?
-            if ($t < 0 || $t > 1.0 || $s < 0 || $s > 1.0) {
-                $X[0] = -100;  // move off screen
-                $X[1] = -100;
-            } else {
-                $I[$i] = $X;
-            }
-        }
-        $i = 0;
-        if (isset($I) and is_array($I)) {
-            foreach ($I as $coords) {
-                $point = new \Freesewing\Point();
-                $point->setX($coords[0]);
-                $point->setY($coords[1]);
-                $points[] = $point;
-            }
-            return $points;
-        } else {
-            return false;
-        }
-    }
-
-    /**
      * Returns coefficient of a point on a Bezier curve
      *
      * @param float $P0 Start value
@@ -349,7 +277,7 @@ class BezierToolbox
      * @param float $P2 Control 2 value
      * @param float $P3 End value
      *
-     * @return float $z The coefficient
+     * @return array $z The coefficients
      */
     public static function bezierCoeffs($P0, $P1, $P2, $P3)
     {
@@ -384,7 +312,7 @@ class BezierToolbox
         $D = pow($Q, 3) + pow($R, 2);    // polynomial discriminant
 
         if ($D >= 0) {
-// complex or duplicate roots
+            // complex or duplicate roots
             $S = BezierToolbox::sgn($R + sqrt($D)) * pow(abs($R + sqrt($D)), 1 / 3);
             $T = BezierToolbox::sgn($R - sqrt($D)) * pow(abs($R - sqrt($D)), 1 / 3);
 
@@ -399,7 +327,7 @@ class BezierToolbox
                 $t[2] = -1;
             }
         } else {
-// distinct real roots
+            // distinct real roots
             $th = acos($R / sqrt(pow($Q, 3) * -1));
 
             $t[0] = 2 * sqrt(-1 * $Q) * cos($th / 3) - $A / 3;
@@ -479,7 +407,7 @@ class BezierToolbox
      */
     public static function cubicBezierDelta($from, $cp1, $cp2, $to, $split)
     {
-        $steps = BezierToolbox::$steps;
+        $steps = self::STEPS;
         $best_t = null;
         $best_distance = false;
         $tmp = new \Freesewing\Point();
@@ -916,13 +844,13 @@ class BezierToolbox
                 $TOLERANCE = 0.0001;
 
                 if (true) {
-// Need a structure to break out of
+                    // Need a structure to break out of
                     for ($j=0; $j < count($xRoots); $j++) {
                         $xRoot = $xRoots[$j];
 
                         if (0 <= $xRoot && $xRoot <= 1) {
                             for ($k=0; $k < count($yRoots); $k++) {
-                                if (abs($xRoot - $yRoots[$k] ) < $TOLERANCE) {
+                                if (abs($xRoot - $yRoots[$k]) < $TOLERANCE) {
                                     $j1  = $c21->multiply($s);
                                     $j2  = $j1->add($c20);
                                     $j3 = $c22->multiply($s*$s);

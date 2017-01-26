@@ -18,7 +18,7 @@
     <circle cx="0" cy="0" r="2"  class="stroke-brand stroke-lg" />
     <circle cx="0" cy="0" r="0.8" class="fill-brand" />
 </g>
-<g id="highlight-point">
+<g id="marked-point">
     <circle cx="0" cy="0" r="3.6"  class="stroke-brand stroke-sm" />
     <circle cx="0" cy="0" r="2.8"  class="stroke-brand stroke-sm" />
     <circle cx="0" cy="0" r="2.0"  class="stroke-brand stroke-sm" />

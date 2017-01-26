@@ -9,7 +9,7 @@ namespace Freesewing\Patterns;
  * @copyright 2016 Joost De Cock
  * @license http://opensource.org/licenses/GPL-3.0 GNU General Public License, Version 3
  */
-class WahidWaistcoat extends JoostBodyBlock
+class WahidWaistcoat extends BrianBodyBlock
 {
     /*
         ___       _ _   _       _ _
@@ -139,9 +139,9 @@ class WahidWaistcoat extends JoostBodyBlock
         $this->initialize($model);
 
         // Draft the base block
-        /** @see \Freesewing\Patterns\JoostBodyBlock::draftBackBlock() */
+        /** @see \Freesewing\Patterns\BrianBodyBlock::draftBackBlock() */
         $this->draftBackBlock($model);
-        /** @see \Freesewing\Patterns\JoostBodyBlock::draftFrontBlock() */
+        /** @see \Freesewing\Patterns\BrianBodyBlock::draftFrontBlock() */
         $this->draftFrontBlock($model);
 
         // Draft base front to the point where it differs from back

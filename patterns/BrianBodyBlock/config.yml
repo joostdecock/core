@@ -1,0 +1,44 @@
+info:
+  name: "Brian Body Block"
+  version: "2.0"
+  date: 20160925
+  author: "Joost De Cock"
+  email: "joost@decock.org"
+  company: "freesewing.org"
+  link: "freesewing.org/pattern/joost-body-block/"
+parts:
+  backBlock: "Back block"
+  frontBlock: "Front block"
+  sleeveBlock: "Sleeve block"
+languages:
+    en: English
+    nl: Nederlands
+    fr: French
+measurements:
+    acrossBack: 450
+    bicepsCircumference: 335
+    centerBackNeckToWaist: 480
+    chestCircumference: 1080
+    naturalWaistToHip: 120
+    neckCircumference: 420
+    shoulderLength: 150
+    shoulderSlope: 55
+    hipsCircumference: 950
+    sleeveLengthToWrist: 700
+    wristCircumference: 190
+options:
+    chestEase:
+        type: measure
+        min: -40
+        max: 160
+        default: 30
+    bicepsEase:
+        type: measure
+        min: 0
+        max: 80
+        default: 30
+    cuffEase:
+        type: measure
+        min: 0
+        max: 100
+        default: 45

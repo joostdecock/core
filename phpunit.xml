@@ -18,6 +18,7 @@
             <directory suffix=".php">./themes</directory>
             <file>./patterns/Pattern/Pattern.php</file>
             <file>./patterns/TestPattern/TestPattern.php</file>
+            <file>./patterns/PatternTemplate/PatternTemplate.php</file>
         </whitelist>
     </filter>
     <logging>

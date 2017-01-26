@@ -45,9 +45,9 @@ class SamplerTest extends \PHPUnit\Framework\TestCase
 
     public function providerGettersReturnWhatSettersSet()
     {
-        $pattern = new \Freesewing\Patterns\AaronAshirt();
+        $pattern = new \Freesewing\Patterns\TestPattern();
         return [
-            ['Pattern',  new \Freesewing\Patterns\AaronAshirt()],
+            ['Pattern',  new \Freesewing\Patterns\TestPattern()],
         ];
     }
 
@@ -57,9 +57,9 @@ class SamplerTest extends \PHPUnit\Framework\TestCase
     public function testGetSamplerModelsFile()
     {
         $object = new \Freesewing\Sampler();
-        $file = $object->getSamplerModelsFile(new \Freesewing\Patterns\AaronAshirt());
+        $file = $object->getSamplerModelsFile(new \Freesewing\Patterns\TestPattern());
         $dir = dirname(dirname(__DIR__));
-        $expect = "$dir/patterns/AaronAshirt/sampler/models.yml";
+        $expect = "$dir/patterns/TestPattern/sampler/models.yml";
         $len = strlen($expect);
         $this->assertEquals(substr($file,-$len), $expect);
     }
@@ -128,14 +128,14 @@ class SamplerTest extends \PHPUnit\Framework\TestCase
                 ],
                 'option2' => [
                     'type' => 'percent',
-                    'default' => 100,
+                    'default' => 80,
                 ],
             ],
         ];
 
-        $out = ['option1' => 52, 'option2' => 1];
+        $out = ['option1' => 52, 'option2' => 0.8];
         // Mock the pattern
-        $pattern = $this->getMockBuilder('\freesewing\patterns\AaronAshirt')->getMock();
+        $pattern = $this->getMockBuilder('\freesewing\patterns\TestPattern')->getMock();
         $pattern->method('getConfig')->willReturn($in);
         
         $object = new \Freesewing\Sampler();
@@ -151,11 +151,10 @@ class SamplerTest extends \PHPUnit\Framework\TestCase
     {
         $object = new \Freesewing\Sampler();
 
-        $pattern = new \Freesewing\Patterns\AaronAshirt();
+        $pattern = new \Freesewing\Patterns\TestPattern();
         $pattern->addPart('test1');
         $pattern->addPart('test2');
-        unset($pattern->parts['front']);
-        unset($pattern->parts['back']);
+        unset($pattern->parts['testPart']);
         
         $p1 = $pattern->parts['test1'];
         $p2 = $pattern->parts['test2'];
@@ -179,11 +178,31 @@ class SamplerTest extends \PHPUnit\Framework\TestCase
         $p1->newPath('test3', 'M 3 L 4');
         $p1->paths['test3']->setSample(true);
 
-        $object->sampleParts(2,2, $pattern, new \Freesewing\Themes\Sampler(), new \Freesewing\SvgRenderbot()); 
+        $object->sampleParts(2,1, $pattern, new \Freesewing\Themes\Sampler(), new \Freesewing\SvgRenderbot()); 
 
         $this->assertEquals(count($object->partContainer), 2);
         $this->assertTrue(isset($object->partContainer['test1']));
         $this->assertTrue(isset($object->partContainer['test2']));
-        $this->assertEquals($object->partContainer['test1']['includes']['2-test3'], "\n".'<path transform="translate( 0, 0 )" style="stroke: hsl(538, 55%, 50%);" id="3"  d=" M  -100,-100  L  100,100 " />');
+        $this->assertEquals($object->partContainer['test1']['includes']['2-test3'], "\n".'<path transform="translate( 0, 0 )" style="stroke: hsl(269, 55%, 50%);" id="3"  d=" M  -100,-100  L  100,100 " />');
+
+        $object->setPattern($pattern);
+        $object->addSampledPartsToPattern();
+        $this->assertEquals(serialize($object), $this->loadFixture('parts'));
+    }
+    
+    private function loadFixture($fixture)
+    {
+        $dir = 'tests/src/fixtures';
+        $file = "$dir/Sampler.$fixture.data";
+        return file_get_contents($file);
+    }
+
+    private function saveFixture($fixture, $data)
+    {
+        $dir = 'tests/src/fixtures';
+        $file = "$dir/Sampler.$fixture.data";
+        $f = fopen($file,'w');
+        fwrite($f,$data);
+        fclose($f);
     }
 }

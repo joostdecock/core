@@ -537,6 +537,46 @@ class PartTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals($p->angle(1,7),315);
     }
 
+    /** 
+     * Tests the shiftTowards method
+     */
+    public function testShiftTowards()
+    {
+        $p = new \Freesewing\Part();
+        $p->newPoint(0,50,50);
+        $p->newPoint(1,0,0);
+        $p->newPoint(2,100,0);
+        $p->newPoint(3,100,100);
+        $p->newPoint(4,0,100);
+
+        $p->addPoint(10,$p->shiftTowards(0,1,40));
+        $p->addPoint(11,$p->shiftTowards(0,2,40));
+        $p->addPoint(12,$p->shiftTowards(0,3,40));
+        $p->addPoint(13,$p->shiftTowards(0,4,40));
+        $p->addPoint(14,$p->shiftTowards(1,2,40));
+        $p->addPoint(15,$p->shiftTowards(2,1,40));
+        $p->addPoint(16,$p->shiftTowards(1,4,40));
+        $p->addPoint(17,$p->shiftTowards(4,1,40));
+        
+        $this->assertEquals($p->points[10]->getX(),21.716);
+        $this->assertEquals($p->points[11]->getX(),78.284);
+        $this->assertEquals($p->points[12]->getX(),78.284);
+        $this->assertEquals($p->points[13]->getX(),21.716);
+        $this->assertEquals($p->points[14]->getX(),40);
+        $this->assertEquals($p->points[15]->getX(),60);
+        $this->assertEquals($p->points[16]->getX(),0);
+        $this->assertEquals($p->points[17]->getX(),0);
+        
+        $this->assertEquals($p->points[10]->getY(),21.716);
+        $this->assertEquals($p->points[11]->getY(),21.716);
+        $this->assertEquals($p->points[12]->getY(),78.284);
+        $this->assertEquals($p->points[13]->getY(),78.284);
+        $this->assertEquals($p->points[14]->getY(),0);
+        $this->assertEquals($p->points[15]->getY(),0);
+        $this->assertEquals($p->points[16]->getY(),40);
+        $this->assertEquals($p->points[17]->getY(),60);
+    }
+
     private function loadFixture($fixture)
     {
         $dir = 'tests/src/fixtures';
@@ -546,8 +586,6 @@ class PartTest extends \PHPUnit\Framework\TestCase
 
     private function saveFixture($fixture, $data)
     {
-        // use as 
-        //$this->saveFixture('grainline',serialize($p->dimensions));
         $dir = 'tests/src/fixtures';
         $file = "$dir/Part.$fixture.data";
         $f = fopen($file,'w');

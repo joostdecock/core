@@ -11,19 +11,11 @@ class OptionsSamplerTest extends \PHPUnit\Framework\TestCase
     public function testLoadModelMeasurements()
     {
         $measurements = [
-            'acrossBack' => 450,
-            'bicepsCircumference' => 335,
-            'centerBackNeckToWaist' => 480,
-            'chestCircumference' => 1080,
-            'naturalWaistToHip' => 120,
-            'neckCircumference' => 420,
-            'shoulderLength' => 160,
-            'shoulderSlope' => 40,
-            'hipsCircumference' => 950,
+            'someMeasurement' => 200,
         ];
         
         $sampler = new \Freesewing\OptionsSampler();
-        $sampler->setPattern(new \Freesewing\Patterns\AaronAshirt());
+        $sampler->setPattern(new \Freesewing\Patterns\TestPattern());
 
         $this->assertEquals($sampler->loadModelMeasurements(), $measurements);
     }

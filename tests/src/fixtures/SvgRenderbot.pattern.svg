@@ -1,25 +1,10 @@
 
 <!-- Start of group #patternScaleContainer -->
 <g id="patternScaleContainer"  transform=" scale(3.54330709 ) " >
-    <!-- Start of group #frontBlock -->
-    <g id="frontBlock" >
+    <!-- Start of group #testPart -->
+    <g id="testPart" >
         
     </g>
-    <!-- End of group #frontBlock -->
-    <!-- Start of group #backBlock -->
-    <g id="backBlock" >
-        
-    </g>
-    <!-- End of group #backBlock -->
-    <!-- Start of group #front -->
-    <g id="front" >
-        
-    </g>
-    <!-- End of group #front -->
-    <!-- Start of group #back -->
-    <g id="back" >
-        
-    </g>
-    <!-- End of group #back -->
+    <!-- End of group #testPart -->
 </g>
 <!-- End of group #patternScaleContainer -->

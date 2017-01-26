@@ -35,7 +35,7 @@ class CompareServiceTest extends \PHPUnit\Framework\TestCase
         $context = new \Freesewing\Context();
         $context->setRequest(new \Freesewing\Request([
             'service' => 'compare', 
-            'pattern' => 'AaronAshirt',
+            'pattern' => 'TestPattern',
             'samplerGroup' => 'realMen'
         ]));
         $context->configure();

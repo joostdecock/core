@@ -161,4 +161,12 @@ class UtilsTest extends \PHPUnit\Framework\TestCase
     {
         $this->assertEquals(Utils::debug('test'), $this->loadTemplate('debug'));
     }
+    
+    /**
+     * Tests the slug method
+     */
+    public function testSlug()
+    {
+        $this->assertEquals(Utils::slug('Man, I could murder an ice-cream right now'), 'Man-I-could-murder-an-ice-cream-right-now');
+    }
 }

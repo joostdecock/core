@@ -43,6 +43,8 @@ class OptionsSampler extends Sampler
 
         if (isset($options[$option])) {
             return $options[$option];
+        } else {
+            throw new \InvalidArgumentException($option.' is not an option in the pattern configuration');
         }
     }
 

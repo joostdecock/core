@@ -238,6 +238,81 @@ class Polynomial
     }
 
     /**
+     * Gets roots of a quartic polynomial
+     *
+     * @return array $results Array of roots
+     */
+    public function getQuarticRoots()
+    {
+        $results = array();
+
+        if ($this->getDegree() == 4) {
+            $c4 = $this->coefs[4];
+            $c3 = $this->coefs[3] / $c4;
+            $c2 = $this->coefs[2] / $c4;
+            $c1 = $this->coefs[1] / $c4;
+            $c0 = $this->coefs[0] / $c4;
+
+            $resolveRoots = new Polynomial(1, -$c2, $c3*$c1 - 4*$c0, -$c3*$c3*$c0 + 4*$c2*$c0 -$c1*$c1);
+            $resolveRoots = $resolveRoots->getCubicRoots();
+            var_dump($resolveRoots);
+            $y = $resolveRoots[0];
+            $discrim = $c3*$c3/4 - $c2 + $y;
+
+            if (abs($discrim) <= $this->tolerance ) $discrim = 0;
+
+            if ($discrim > 0) {
+                $e = sqrt($discrim);
+                $t1 = 3*$c3*$c3/4 - $e*$e - 2*$c2;
+                $t2 = (4*$c3*$c2 - 8*$c1 - $c3*$c3*$c3) / (4*$e);
+                $plus  = $t1+$t2;
+                $minus = $t1-$t2;
+
+                if (abs($plus)  <= $this->tolerance) $plus  = 0;
+                if (abs($minus) <= $this->tolerance) $minus = 0;
+
+                if ($plus >= 0) {
+                    $f = sqrt($plus);
+
+                    $results[] = -$c3/4 + ($e+$f)/2;
+                    $results[] = -$c3/4 + ($e-$f)/2;
+                }
+                if ($minus >= 0) {
+                    $f = sqrt($minus);
+
+                    $results[] = -$c3/4 + ($f-$e)/2;
+                    $results[] = -$c3/4 - ($f+$e)/2;
+                }
+            } else if ($discrim < 0) {
+                // no roots
+            } else {
+                $t2 = $y*$y - 4*$c0;
+
+                if ($t2 >= -$this->tolerance) {
+                    if ($t2 < 0) $t2 = 0;
+
+                    $t2 = 2*sqrt($t2);
+                    $t1 = 3*$c3*$c3/4 - 2*$c2;
+                    if ($t1+$t2 >= $this->tolerance) {
+                        $d = sqrt($t1+$t2);
+
+                        $results[] = -$c3/4 + $d/2;
+                        $results[] = -$c3/4 - $d/2;
+                    }
+                    if ($t1-$t2 >= $this->tolerance) {
+                        $d = sqrt($t1-$t2);
+
+                        $results[] = -$c3/4 + $d/2;
+                        $results[] = -$c3/4 - $d/2;
+                    }
+                }
+            }
+        }
+
+        return $results;
+    }
+
+    /**
      * Gets roots of a cubic polynomial
      *
      * @return array $results Array of roots

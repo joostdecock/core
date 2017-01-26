@@ -117,24 +117,4 @@ class MeasurementsSampler extends Sampler
 
         return $models;
     }
-
-    /**
-     * Figures out what model group to load.
-     *
-     * This checks whether the passed argument is a group
-     * It it is, it returns it.
-     * If not, it returns the default group
-     *
-     * @param string group Name of the model group to look for
-     *
-     * @return string Name of the group to load
-     */
-    private function modelGroupToLoad($group)
-    {
-        if (is_array($this->measurementsConfig['groups'][$group])) {
-            return $group;
-        } else {
-            return $this->measurementsConfig['default']['group'];
-        }
-    }
 }

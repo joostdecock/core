@@ -16,9 +16,6 @@ use Freesewing\Utils;
  */
 abstract class Theme
 {
-    /** This theme never shows debug info */
-    const SHOW_DEBUG = false;
-    
     /** @var array $messages Messages to include in the pattern */
     public $messages = array();
 
@@ -106,7 +103,7 @@ abstract class Theme
             $svgDocument->footerComments->add($this->messages);
         }
         
-        if ($this->debug && self::SHOW_DEBUG) {
+        if ($this->debug) {
             $svgDocument->footerComments->add("\n\n\tDEBUG OUTPUT\n\n".$this->debug);
         }
     }

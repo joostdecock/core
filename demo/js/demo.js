@@ -1,6 +1,6 @@
 var api = '';
 var themes = [];
-var spinner =  '<img src="spinner.gif">';
+var spinner =  '<img src="img/spinner.gif">';
 
 function scrollTo(target) {
     var scrollTarget = $(target);

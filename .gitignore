@@ -10,3 +10,5 @@ composer.phar
 .htaccess
 print/
 .php_cs.cache
+Gemfile
+Gemfile.lock

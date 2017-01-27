@@ -1,6 +1,4 @@
-docs/apigen/
 docs/code/
-fsodoc/
 coverage/
 vendor/
 svg/
@@ -11,3 +9,4 @@ docs/fonts/
 composer.phar
 .htaccess
 print/
+.php_cs.cache

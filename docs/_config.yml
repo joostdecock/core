@@ -17,7 +17,7 @@ title: Freesewing documentation
 email: joost@decock.org
 description: > # this means to ignore newlines until "baseurl:"
   Freesewing is a free and open source platform to generate sewing patterns
-baseurl: "" # the subpath of your site, e.g. /blog
+baseurl: "/fso" # the subpath of your site, e.g. /blog
 url: "https://joostdecock.github.io" # the base hostname & protocol for your site, e.g. http://example.com
 twitter_username: j__st
 github_username:  joostdecock

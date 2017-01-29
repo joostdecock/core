@@ -6,7 +6,7 @@ source:
     - channels/
 
 # Target dir for documentation.
-destination: docs/code/
+destination: apigen/
 
 # Access levels of included method and properties. (default: ["public","protected"]) (multiple values allowed)
 accessLevels:           

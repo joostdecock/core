@@ -1,3 +1,14 @@
+body {
+    font-weight: 300;
+}
+h1,h2,h3,h4,h5 {
+    font-weight: 300;
+    line-height: 1.2;
+}
+.post-title {
+    font-weight: 200;
+    font-size: 3rem;
+}
 .site-header a {
     color: #fff !important;
 }
@@ -12,4 +23,11 @@ p a:hover {
     color: #333333;
     text-decoration: none;
 }
-
+img[alt^="Figure"] {
+    box-shadow: 0 0 0.5rem rgba(0,0,0,0.15);
+}
+figure figcaption { 
+    padding-left: 1rem;
+    padding-top: 0.2rem;
+    font-size: 0.9rem;
+}

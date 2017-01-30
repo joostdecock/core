@@ -1,0 +1,15 @@
+.tabcontent > div {display: none; padding: 20px 25px 5px;}
+
+input.tabtoggle {display: none;}
+label.tablabel {display: inline-block; padding: 15px 25px; font-weight: 600; text-align: center;}
+label.tablabel:hover {color: #fff; cursor: pointer;}
+input.tabtoggle:checked + label.tablabel {background: #ed5a6a; color: #fff;}
+
+#tab1:checked ~ .tabcontent #content1,
+#tab2:checked ~ .tabcontent #content2,
+#tab3:checked ~ .tabcontent #content3,
+#tab4:checked ~ .tabcontent #content4 {
+display: block;
+}
+
+@media screen and (max-width: 400px) { label.tablabel {padding: 15px 10px;} }

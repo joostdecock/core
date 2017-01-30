@@ -24,6 +24,7 @@ github_username:  joostdecock
 
 source: /m8/api/docs
 destination: /m8/docs 
+include: apigen
 
 # Build settings
 markdown: kramdown

@@ -7,7 +7,7 @@ source:
     - channels/
 
 # Target dir for documentation.
-destination: docs/apigen/
+destination: /freesewing/git/freesewing-docs/apigen/
 
 # Access levels of included method and properties. (default: ["public","protected"]) (multiple values allowed)
 accessLevels:           

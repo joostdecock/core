@@ -6,6 +6,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Changed
 
+- Documentation is now [in its own repository](https://github.com/joostdecock/freesewing-docs) and [hosted by GitHub](https://joostdecock.github.io/freesewing-docs/)
 - Removed the _BezierToolbox::bezierCoeffs()_ method, as it wasn't used
 - Removed the _BezierToolbox::cubicRoots()_ method, as it wasn't used
 - Removed the _BezierToolbox::sgn()_ method, as it wasn't used

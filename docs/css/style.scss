@@ -1,0 +1,95 @@
+---
+---
+// add bootstrap variable settings here
+@import 'bootstrap';
+
+// add rouge syntax highlighting
+@import 'syntax-highlighting';
+
+// Freesewing overrides
+$font-family-sans-serif:  -apple-system, ".SFNSText-Regular", "San Francisco", "Roboto", "Segoe UI", "Helvetica Neue", "Lucida Grande", sans-serif;
+
+// Add more css stuff here
+
+body {
+  padding-top: 50px;
+}
+
+.content {
+  padding: 40px 15px;
+}
+
+h2,h3,h4,h5 {
+    margin-top: 3rem;
+}
+
+.drop-shadow {
+    box-shadow: 0 0 0.5rem rgba(0,0,0,0.15);
+}
+
+figure.image figcaption {
+    margin-top: 4px;
+    margin-left: 1rem;
+}
+
+blockquote {
+    font-style: italic;
+    background: rgba(0, 119, 195, 0.1);
+}
+
+div.tab-pane {
+    padding-top: 1rem;
+}
+
+p a {
+    box-shadow: 0px -3px 0px #bbe1ed inset;
+    border-bottom: 2px solid #bbe1ed;
+    transition: background 0.15s cubic-bezier(0.33, 0.66, 0.66, 1) 0s;
+    color: #333333;
+}
+
+p a:hover {
+    background: #bbe1ed none repeat scroll 0% 0%;
+    color: #333333;
+    text-decoration: none;
+}
+
+div.tags ul {
+    list-style-type: none;
+    margin-left: 0;
+    padding-left: 0;
+}
+
+div.tags ul li {
+    margin-right: 0.5rem;
+    display: inline;
+}
+
+div.tags ul li a:hover {
+    text-decoration: none;
+}
+
+div.tags ul li a:hover span {
+    background: $brand-primary;
+}
+
+div.toc ul {
+    padding-left: 25px;
+    font-size: 1.5rem;
+}
+
+div.toc > ul {
+    list-style-type: none;
+    margin-left: 0;
+    padding-left: 0;
+    font-size: 1.8rem;
+}
+
+code.highlighter-rouge {
+    color: $brand-primary;
+}
+
+a code.highlighter-rouge {
+    background: $brand-success;
+    color: #fff;
+}

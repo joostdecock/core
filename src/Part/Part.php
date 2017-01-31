@@ -772,7 +772,7 @@ class Part
             $s2['offset'][3]
         ) > 10
         ) {
-            $i = BezierToolbox::findCurveCurveIntersections(
+            $i = BezierToolbox::bezierBezierIntersections(
                 $this->loadPoint($s1['offset'][0]), $this->loadPoint($s1['offset'][1]), $this->loadPoint($s1['offset'][2]), $this->loadPoint($s1['offset'][3]),
                 $this->loadPoint($s2['offset'][0]), $this->loadPoint($s2['offset'][1]), $this->loadPoint($s2['offset'][2]), $this->loadPoint($s2['offset'][3])
             );
@@ -811,7 +811,7 @@ class Part
     private function findCurveLineStackIntersections($s1, $s2)
     {
         if ($this->curveLen($s1['offset'][0], $s1['offset'][1], $s1['offset'][2], $s1['offset'][3]) > 10) {
-            $i = BezierToolbox::findLineCurveIntersections(
+            $i = BezierToolbox::bezierLineIntersections(
                 $this->loadPoint($s2['offset'][0]), $this->loadPoint($s2['offset'][1]),
                 $this->loadPoint($s1['offset'][0]), $this->loadPoint($s1['offset'][1]), $this->loadPoint($s1['offset'][2]), $this->loadPoint($s1['offset'][3])
             );
@@ -850,7 +850,7 @@ class Part
     private function findLineCurveStackIntersections($s1, $s2)
     {
         if ($this->curveLen($s2['offset'][0], $s2['offset'][1], $s2['offset'][2], $s2['offset'][3]) > 10) {
-            $i = BezierToolbox::findLineCurveIntersections(
+            $i = BezierToolbox::bezierLineIntersections(
                 $this->loadPoint($s1['offset'][0]), $this->loadPoint($s1['offset'][1]), 
                 $this->loadPoint($s2['offset'][0]), $this->loadPoint($s2['offset'][1]), $this->loadPoint($s2['offset'][2]), $this->loadPoint($s2['offset'][3])
             );
@@ -1793,7 +1793,7 @@ class Part
     /**
      * Returns the length of a curve
      *
-     * This loads points and calls the cubicBezierLength()
+     * This loads points and calls the bezierLength()
      * method in our BezierToolbox
      *
      * @param string $keyStart    The id of the start of the curve
@@ -1801,13 +1801,13 @@ class Part
      * @param string $keyControl2 The id of the second control point
      * @param string $keyEnd      The id of the end of the curve
      *
-     * @see \Freesewing\BezierToolbox::cubicBezierLength()
+     * @see \Freesewing\BezierToolbox::bezierLength()
      *
      * @return float The length of the curve
      */
     public function curveLen($keyStart, $keyControl1, $keyControl2, $keyEnd)
     {
-        return BezierToolbox::cubicBezierLength(
+        return BezierToolbox::bezierLength(
             $this->loadPoint($keyStart), $this->loadPoint($keyControl1),
             $this->loadPoint($keyControl2), $this->loadPoint($keyEnd)
         );
@@ -2146,7 +2146,7 @@ class Part
      */
     public function curveEdge($curveStartKey, $curveControl1Key, $curveControl2Key, $curveEndKey, $direction)
     {
-        return BezierToolbox::findBezierEdge(
+        return BezierToolbox::bezierEdge(
             $this->loadPoint($curveStartKey), $this->loadPoint($curveControl1Key),
             $this->loadPoint($curveControl2Key), $this->loadPoint($curveEndKey), $direction
         );
@@ -2174,7 +2174,7 @@ class Part
         $lineEndKey,
         $prefix = false
     ) {
-        $points = BezierToolbox::findLineCurveIntersections(
+        $points = BezierToolbox::bezierLineIntersections(
             $this->loadPoint($lineStartKey), $this->loadPoint($lineEndKey),
             $this->loadPoint($curveStartKey), $this->loadPoint($curveControl1Key), $this->loadPoint($curveControl2Key),
             $this->loadPoint($curveEndKey)
@@ -2238,18 +2238,18 @@ class Part
         if ($splitOnDelta) {
             $t = $split;
         } else {
-            $t = BezierToolbox::cubicBezierDelta(
+            $t = BezierToolbox::bezierDelta(
                 $this->loadPoint($from), $this->loadPoint($cp1), $this->loadPoint($cp2),
                 $this->loadPoint($to), $this->loadPoint($split)
             );
         }
 
-        $curve1 = BezierToolbox::calculateSplitCurvePoints(
+        $curve1 = BezierToolbox::bezierSplit(
             $this->loadPoint($from), $this->loadPoint($cp1),
             $this->loadPoint($cp2), $this->loadPoint($to), $t
         );
         $t = 1 - $t;
-        $curve2 = BezierToolbox::calculateSplitCurvePoints(
+        $curve2 = BezierToolbox::bezierSplit(
             $this->loadPoint($to), $this->loadPoint($cp2), $this->loadPoint($cp1),
             $this->loadPoint($from), $t
         );
@@ -2305,7 +2305,7 @@ class Part
         $curve2EndKey,
         $prefix = false
     ) {
-        $points = BezierToolbox::findCurveCurveIntersections(
+        $points = BezierToolbox::bezierBezierIntersections(
             $this->loadPoint($curve1StartKey),
             $this->loadPoint($curve1Control1Key), $this->loadPoint($curve1Control2Key), $this->loadPoint($curve1EndKey),
             $this->loadPoint($curve2StartKey), $this->loadPoint($curve2Control1Key), $this->loadPoint($curve2Control2Key),

@@ -1,0 +1,31 @@
+info:
+    name: "Pattern Tutorial"
+    version: "1.0"
+    date: 20170118
+    author: "Joost De Cock"
+    email: "joost@decock.org"
+    company: "freesewing.org"
+
+parts:
+
+languages:
+    en: "English"
+
+measurements:
+    exampleMeasurement: 520
+
+options:
+    measureOption:
+        type: "measure"
+        min: 1
+        max: 5
+        default: 3
+    percentOption:
+        type: "percent"
+        default: 50
+    chooseOneOption:
+        type: "chooseOne"
+        options:
+            1: "Option 1"
+            2: "Option 2"
+        default: 1

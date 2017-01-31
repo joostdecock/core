@@ -1,0 +1,21 @@
+---
+layout: default
+---
+<header class="post-header">
+    <div class="row">
+        <div class="col-xs-12 col-md-9 col-md-offset-3">
+            <h1 class="post-title"><small>Class {{ page.namespace }}</small> {{ page.title | escape }}</h1>
+            <div class="tags">
+                <ul class="entry-tags">
+                    {% for tag in page.tags %}<li><a href="{{ site.url }}/tags/#{{ tag }}" title="Pages tagged {{ tag }}"><span class="label label-info">{{ tag }}</span></a></li>{% endfor %}
+                </ul>
+            </div>
+        </div> 
+    </div> 
+</header>
+
+<article>
+    <div class="row">
+        {{ content }}
+    </div>
+</article>

@@ -6,6 +6,11 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Changed
 
+- Removed the _BezierToolbox::bezierCoeffs()_ method, as it wasn't used
+- Removed the _BezierToolbox::cubicRoots()_ method, as it wasn't used
+- Removed the _BezierToolbox::sgn()_ method, as it wasn't used
+- Removed the _BezierToolbox::sortSpecial()_ method, as it wasn't used
+
 ### Fixed
 
 ### Added

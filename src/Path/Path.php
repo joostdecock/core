@@ -221,7 +221,7 @@ class Path
                         case 'C':
                             /*
                              * Bezier curves need a bit more work. We calculate their bounding box by stepping through them.
-                             * We need their start and finish point + control points, to pass to $this->findBezierBoundary()
+                             * We need their start and finish point + control points, to pass to $this->bezierBoundary()
                              **/
                             if ($pathAsArray[$index - 1] == 'C') {
                                 /*
@@ -238,7 +238,7 @@ class Path
                                 $curveControlPoint1 = $part->points[$pathAsArray[$index]];
                                 $curveControlPoint2 = $part->points[$pathAsArray[$index + 1]];
                                 $curveEnd = $part->points[$pathAsArray[$index + 2]];
-                                $bezierBoundary = BezierToolbox::findBezierBoundary($curveStart, $curveControlPoint1, $curveControlPoint2, $curveEnd);
+                                $bezierBoundary = BezierToolbox::bezierBoundary($curveStart, $curveControlPoint1, $curveControlPoint2, $curveEnd);
                                 if ($bezierBoundary->topLeft->getX() < $topLeft->getX()) {
                                     $topLeft->setX($bezierBoundary->topLeft->getX());
                                 }

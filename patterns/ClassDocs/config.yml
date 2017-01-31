@@ -7,6 +7,7 @@ info:
     company: "freesewing.org"
 
 parts:
+    part: "A part"
 
 languages:
     en: "English"
@@ -15,17 +16,9 @@ measurements:
     exampleMeasurement: 520
 
 options:
-    measureOption:
-        type: "measure"
-        min: 1
-        max: 5
-        default: 3
-    percentOption:
-        type: "percent"
-        default: 50
-    chooseOneOption:
+    class:
         type: "chooseOne"
-        options:
-            1: "Option 1"
-            2: "Option 2"
-        default: 1
+        default: "BezierToolbox"
+    method:
+        type: "chooseOne"
+        default: "findBezierBoundary"

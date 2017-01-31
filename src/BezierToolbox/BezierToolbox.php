@@ -188,15 +188,15 @@ class BezierToolbox
      * Approximate delta (between 0 and 1) of a point 'split' on
      * a Bezier curve
      *
-     * @param \Freesewing\Point $from Point at the start of the curve
+     * @param \Freesewing\Point $start Point at the start of the curve
      * @param \Freesewing\Point $cp1 Control point 1
      * @param \Freesewing\Point $cp2 Control point 2
-     * @param \Freesewing\Point $to Point at the end of the curve
+     * @param \Freesewing\Point $end Point at the end of the curve
      * @param \Freesewing\Point $split The point to split on
      *
      * @return float The delta between 0 and 1
      */
-    public static function bezierDelta($from, $cp1, $cp2, $to, $split)
+    public static function bezierDelta($start, $cp1, $cp2, $end, $split)
     {
         $steps = self::STEPS;
         $best_t = null;
@@ -204,8 +204,8 @@ class BezierToolbox
         $tmp = new \Freesewing\Point();
         for ($i = 0; $i <= $steps; ++$i) {
             $t = $i / $steps;
-            $x = Utils::bezierPoint($t, $from->getX(), $cp1->getX(), $cp2->getX(), $to->getX());
-            $y = Utils::bezierPoint($t, $from->getY(), $cp1->getY(), $cp2->getY(), $to->getY());
+            $x = Utils::bezierPoint($t, $start->getX(), $cp1->getX(), $cp2->getX(), $end->getX());
+            $y = Utils::bezierPoint($t, $start->getY(), $cp1->getY(), $cp2->getY(), $end->getY());
             $tmp->setX($x);
             $tmp->setY($y);
             $distance = Utils::distance($split, $tmp);
@@ -225,59 +225,59 @@ class BezierToolbox
      *
      * @see \Freesewing\Part::splitCurve()
      *
-     * @param \Freesewing\Point $from The point at the start of the curve
+     * @param \Freesewing\Point $start The point at the start of the curve
      * @param \Freesewing\Point $cp1 The first control point
      * @param \Freesewing\Point $cp2 The second control point
-     * @param \Freesewing\Point $to The point at the end of the curve
-     * @param float $t The delta to split on, between 0 and 1
+     * @param \Freesewing\Point $end The point at the end of the curve
+     * @param float $delta The delta to split on, between 0 and 1
      *
      * @return array the 8 points resulting from the split
      */
-    public static function bezierSplit($from, $cp1, $cp2, $to, $t)
+    public static function bezierSplit($start, $cp1, $cp2, $end, $delta)
     {
-        $x1 = $from->getX();
-        $y1 = $from->getY();
+        $x1 = $start->getX();
+        $y1 = $start->getY();
         $x2 = $cp1->getX();
         $y2 = $cp1->getY();
         $x3 = $cp2->getX();
         $y3 = $cp2->getY();
-        $x4 = $to->getX();
-        $y4 = $to->getY();
+        $x4 = $end->getX();
+        $y4 = $end->getY();
 
-        $x12 = ($x2 - $x1) * $t + $x1;
-        $y12 = ($y2 - $y1) * $t + $y1;
+        $x12 = ($x2 - $x1) * $delta + $x1;
+        $y12 = ($y2 - $y1) * $delta + $y1;
 
-        $x23 = ($x3 - $x2) * $t + $x2;
-        $y23 = ($y3 - $y2) * $t + $y2;
+        $x23 = ($x3 - $x2) * $delta + $x2;
+        $y23 = ($y3 - $y2) * $delta + $y2;
 
-        $x34 = ($x4 - $x3) * $t + $x3;
-        $y34 = ($y4 - $y3) * $t + $y3;
+        $x34 = ($x4 - $x3) * $delta + $x3;
+        $y34 = ($y4 - $y3) * $delta + $y3;
 
-        $x123 = ($x23 - $x12) * $t + $x12;
-        $y123 = ($y23 - $y12) * $t + $y12;
+        $x123 = ($x23 - $x12) * $delta + $x12;
+        $y123 = ($y23 - $y12) * $delta + $y12;
 
-        $x234 = ($x34 - $x23) * $t + $x23;
-        $y234 = ($y34 - $y23) * $t + $y23;
+        $x234 = ($x34 - $x23) * $delta + $x23;
+        $y234 = ($y34 - $y23) * $delta + $y23;
 
-        $x1234 = ($x234 - $x123) * $t + $x123;
-        $y1234 = ($y234 - $y123) * $t + $y123;
+        $x1234 = ($x234 - $x123) * $delta + $x123;
+        $y1234 = ($y234 - $y123) * $delta + $y123;
 
         $cp1 = new \Freesewing\Point();
         $cp2 = new \Freesewing\Point();
-        $to = new \Freesewing\Point();
+        $end = new \Freesewing\Point();
 
         $cp1->setX($x12);
         $cp1->setY($y12);
         $cp2->setX($x123);
         $cp2->setY($y123);
-        $to->setX($x1234);
-        $to->setY($y1234);
+        $end->setX($x1234);
+        $end->setY($y1234);
 
         return [
-            $from,
+            $start,
             $cp1,
             $cp2,
-            $to,
+            $end,
         ];
     }
 
@@ -287,23 +287,23 @@ class BezierToolbox
      * The number of intersections between a curve and a line
      * varies. So we return an array of points.
      *
-     * @param \Freesewing\Point $lFrom The point at the start of the line
-     * @param \Freesewing\Point $lTo The point at the end of the line
-     * @param \Freesewing\Point $cFrom The point at the start of the curve
-     * @param \Freesewing\Point $cC1 The first control point
-     * @param \Freesewing\Point $cC2 The second control point
-     * @param \Freesewing\Point $cTo The point at the end of the curve
+     * @param \Freesewing\Point $lineStart The point at the start of the line
+     * @param \Freesewing\Point $lineEnd The point at the end of the line
+     * @param \Freesewing\Point $curveStart The point at the start of the curve
+     * @param \Freesewing\Point $curveCp1 The first control point
+     * @param \Freesewing\Point $curveCp2 The second control point
+     * @param \Freesewing\Point $curveEnd The point at the end of the curve
      *
      * @return array|false An array of intersection points or false if there are none
      */
-    public static function bezierLineIntersections($lFrom, $lTo, $cFrom, $cC1, $cC2, $cTo)
+    public static function bezierLineIntersections($lineStart, $lineEnd, $curveStart, $curveCp1, $curveCp2, $curveEnd)
     {
-        $a1 = $lFrom->asVector();
-        $a2 = $lTo->asVector();
-        $p1 = $cFrom->asVector();
-        $p2 = $cC1->asVector();
-        $p3 = $cC2->asVector();
-        $p4 = $cTo->asVector();
+        $a1 = $lineStart->asVector();
+        $a2 = $lineEnd->asVector();
+        $p1 = $curveStart->asVector();
+        $p2 = $curveCp1->asVector();
+        $p3 = $curveCp2->asVector();
+        $p4 = $curveEnd->asVector();
 
         $min = $a1->min($a2); // used to determine if point is on line segment
         $max = $a1->max($a2); // used to determine if point is on line segment
@@ -400,30 +400,30 @@ class BezierToolbox
      * This implementation is based on the intersection
      * procedures by Kevin Lindsey (http://www.kevlindev.com)
      *
-     * @param \Freesewing\Point $c1From The point at the start of the first curve
-     * @param \Freesewing\Point $c1C1 The first control point of the first curve
-     * @param \Freesewing\Point $c1C2 The second control point of the first curve
-     * @param \Freesewing\Point $c1To The point at the end of the first curve
-     * @param \Freesewing\Point $c2From The point at the start of the second curve
-     * @param \Freesewing\Point $c2C1 The first control point of the second curve
-     * @param \Freesewing\Point $c2C2 The second control point of the second curve
-     * @param \Freesewing\Point $c2To The point at the end of the second curve
+     * @param \Freesewing\Point $curve1Start The point at the start of the first curve
+     * @param \Freesewing\Point $curve1Cp1 The first control point of the first curve
+     * @param \Freesewing\Point $curve1Cp2 The second control point of the first curve
+     * @param \Freesewing\Point $curve1End The point at the end of the first curve
+     * @param \Freesewing\Point $curve2Start The point at the start of the second curve
+     * @param \Freesewing\Point $curve2Cp1 The first control point of the second curve
+     * @param \Freesewing\Point $curve2Cp2 The second control point of the second curve
+     * @param \Freesewing\Point $curve2End The point at the end of the second curve
      *
      * @return array|false An array of intersection points or false if there are none
      */
-    public static function bezierBezierIntersections($c1From, $c1C1, $c1C2, $c1To, $c2From, $c2C1, $c2C2, $c2To)
+    public static function bezierBezierIntersections($curve1Start, $curve1Cp1, $curve1Cp2, $curve1End, $curve2Start, $curve2Cp1, $curve2Cp2, $curve2End)
     {
         $points = false;
 
-        $a1 = $c1From->asVector();
-        $a2 = $c1C1->asVector();
-        $a3 = $c1C2->asVector();
-        $a4 = $c1To->asVector();
+        $a1 = $curve1Start->asVector();
+        $a2 = $curve1Cp1->asVector();
+        $a3 = $curve1Cp2->asVector();
+        $a4 = $curve1End->asVector();
 
-        $b1 = $c2From->asVector();
-        $b2 = $c2C1->asVector();
-        $b3 = $c2C2->asVector();
-        $b4 = $c2To->asVector();
+        $b1 = $curve2Start->asVector();
+        $b2 = $curve2Cp1->asVector();
+        $b3 = $curve2Cp2->asVector();
+        $b4 = $curve2End->asVector();
 
         // Cubic polynomial coefficients of the first curve
         $a = $a1->multiply(-1);

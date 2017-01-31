@@ -2,10 +2,7 @@
 source:
     - src/
     - patterns/Pattern/
-<<<<<<< HEAD
-=======
     - patterns/PatternTemplate/
->>>>>>> e48d4605c517d4e7e3ed5ea1fc3706a21ea97390
     - themes/
     - channels/
 

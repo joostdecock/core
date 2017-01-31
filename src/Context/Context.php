@@ -120,14 +120,6 @@ class Context
     }
 
     /**
-     * Adds a Theme object to the context
-     */
-    public function addTheme()
-    {
-        $this->setTheme($this->loadTheme());
-    }
-
-    /**
      * Adds a Translator object to the context
      */
     public function addTranslator()

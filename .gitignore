@@ -7,6 +7,11 @@ print/
 .php_cs.cache
 Gemfile
 Gemfile.lock
+<<<<<<< HEAD
 docs/apigen
 metrics/
 olddocs/
+=======
+docs/apigen/
+metrics/
+>>>>>>> e48d4605c517d4e7e3ed5ea1fc3706a21ea97390

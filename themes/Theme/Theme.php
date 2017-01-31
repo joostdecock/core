@@ -279,6 +279,7 @@ abstract class Theme
     {
         return basename(Utils::getClassDir($this));
     }
+
     /**
      * A way for themes to set options based on the request data
      *

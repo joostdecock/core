@@ -1,0 +1,25 @@
+<ul class="nav nav-tabs" role="tablist">
+    <li role="presentation" class="active"><a href="#{{ include.method | donwcase }}-result" aria-controls="result" role="tab" data-toggle="tab">Result</a></li>
+    <li role="presentation"><a href="#{{ include.method | downcase }}-code" aria-controls="code" role="tab" data-toggle="tab">Code</a></li>
+</ul>
+<div class="tab-content">
+    <div role="tabpanel" class="tab-pane active" id="{{ include.method | downcase }}-result">
+        <figure class="image">
+            <img 
+                class="img img-responsive drop-shadow" 
+                src="https://api.freesewing.org/?service=draft&pattern=ClassDocs&theme=Designer&class={{ page.class }}&method={{ include.method}}&mode=result&{{ include.params }}" 
+                alt="An example of the use of {{ include.method }}::{{ page.class }}"
+            >
+            <figcaption>An example of the use of {{ include.method }}::{{ page.class }}</figcaption>
+        </figure>
+    </div>
+    <div role="tabpanel" class="tab-pane" id="findBezierBoundary-code" markdown="1">
+
+```php?start_inline=1
+{% remote_text https://api.freesewing.org/?service=draft&pattern=ClassDocs&theme=Designer&class={{ page.class }}&method={{ include.method}}&mode=result&{{ include.params }} %}
+```
+
+</div>
+</div>
+
+

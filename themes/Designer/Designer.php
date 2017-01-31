@@ -42,10 +42,11 @@ class Designer extends Theme
      */
     private function debugPoints($part)
     {
-        if($this->getOption('onlyPoints')) {
-            $onlyPoints = Utils::asScrubbedArray($this->getOption('onlyPoints'));
-            foreach ($part->points as $key => $point) {
-                if(in_array($key,$onlyPoints)) $this->debugPoint($key, $point, $part);
+        $onlyPoints = $this->getOption('onlyPoints');
+        if(!is_array($onlyPoints) && $onlyPoints != false) $onlyPoints = [$onlyPoints];
+        if(is_array($onlyPoints)) {
+            foreach ($onlyPoints as $key) {
+                $this->debugPoint($key, $part->points[$key], $part);
             }
         } else {
             foreach ($part->points as $key => $point) {
@@ -140,10 +141,8 @@ class Designer extends Theme
      */
     private function debugPath($path, $part)
     {
-        if($this->getOption('onlyPoints')) {
-            $onlyPoints = Utils::asScrubbedArray($this->getOption('onlyPoints'));
-        }
-        else $onlyPoints = false;
+        $onlyPoints = $this->getOption('onlyPoints');
+        if(!is_array($onlyPoints) && $onlyPoints != false) $onlyPoints = [$onlyPoints];
 
         $partSlug = Utils::slug($part->getTitle());
         foreach (explode(' ', $path->getPath()) as $key) {

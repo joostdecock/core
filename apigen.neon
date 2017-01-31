@@ -2,6 +2,10 @@
 source:
     - src/
     - patterns/Pattern/
+<<<<<<< HEAD
+=======
+    - patterns/PatternTemplate/
+>>>>>>> e48d4605c517d4e7e3ed5ea1fc3706a21ea97390
     - themes/
     - channels/
 
@@ -15,7 +19,7 @@ accessLevels:
     - protected
 
 # Base url used for sitemap (useful for public doc).
-baseUrl: http://api.freesewing.org
+baseUrl: http://api.freesewing.org/docs/
 
 # Custom google search engine id (for search box).
 #googleCseId: {put it here!}
@@ -39,7 +43,6 @@ extensions:
 # Directories and files matching this mask will not be parsed (e.g. */tests/*). (multiple values allowed)
 exclude:
     - vendor/
-    - logs/
 
 # Charset of scanned files. (multiple values allowed)
 charset:
@@ -67,7 +70,7 @@ php: false
 #templateConfig:      
 
 # Title of generated documentation.
-title: Freesewing API Docs
+title: Freesewing
 
 # Generate documentation for elements marked as @todo.
 todo: true

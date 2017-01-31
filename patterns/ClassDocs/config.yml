@@ -1,0 +1,24 @@
+info:
+    name: "Class documentation"
+    version: "1.0"
+    date: 20170130
+    author: "Joost De Cock"
+    email: "joost@decock.org"
+    company: "freesewing.org"
+
+parts:
+    part: "A part"
+
+languages:
+    en: "English"
+
+measurements:
+    exampleMeasurement: 520
+
+options:
+    class:
+        type: "chooseOne"
+        default: "BezierToolbox"
+    method:
+        type: "chooseOne"
+        default: "findBezierBoundary"

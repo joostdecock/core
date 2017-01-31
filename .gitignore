@@ -1,14 +1,12 @@
-docs/code/
 coverage/
 vendor/
 svg/
-patterns/HnameHoodie/HomeboyHoodie
-docs/bootstrap/
-docs/css/style.css
-docs/fonts/
 composer.phar
 .htaccess
 print/
 .php_cs.cache
 Gemfile
 Gemfile.lock
+docs/apigen
+metrics/
+olddocs/

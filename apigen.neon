@@ -1,12 +1,12 @@
 # Dirs or files documentation is generated for.
 source:
     - src/
-    - patterns/
+    - patterns/Pattern/
     - themes/
     - channels/
 
 # Target dir for documentation.
-destination: docs/code/
+destination: docs/apigen/
 
 # Access levels of included method and properties. (default: ["public","protected"]) (multiple values allowed)
 accessLevels:           

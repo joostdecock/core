@@ -2289,20 +2289,6 @@ class Part
     }
 
     /**
-     * Returns the distance for a control point to approximate a circle
-     *
-     * Note that circle is not perfect, but close enough
-     *
-     * @param float $radius The radius of the circle to aim for
-     *
-     * @return float The distance to the control point
-     */
-    public function bezierCircle($radius)
-    {
-        return BezierToolbox::bezierCircle($radius);
-    }
-
-    /**
      * Returns intersections of two cubic Bezier curves
      *
      * @param string      $curve1StartKey    The id of the start of the first curve

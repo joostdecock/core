@@ -71,7 +71,7 @@ class InfoService extends AbstractService
      */
     private function getPatternList($context)
     {
-        foreach (glob($context->getApiDir() . '/patterns/*', GLOB_ONLYDIR) as $dir) {
+        foreach (glob(Utils::getApiDir() . '/patterns/*', GLOB_ONLYDIR) as $dir) {
             $name = basename($dir);
             if ($name != 'Pattern') {
                 $config = $this->loadPatternConfig($name);
@@ -107,7 +107,7 @@ class InfoService extends AbstractService
     private function getChannelList($context)
     {
         $list = [];
-        foreach (glob($context->getApiDir() . '/channels/*', GLOB_ONLYDIR) as $dir) {
+        foreach (glob(Utils::getApiDir() . '/channels/*', GLOB_ONLYDIR) as $dir) {
             $name = basename($dir);
             if ($name != 'Channel' && $name != 'Info') {
                 $list[] = $name;
@@ -127,7 +127,7 @@ class InfoService extends AbstractService
     private function getThemeList($context)
     {
         $list = [];
-        foreach (glob($context->getApiDir() . '/themes/*', GLOB_ONLYDIR) as $dir) {
+        foreach (glob(Utils::getApiDir() . '/themes/*', GLOB_ONLYDIR) as $dir) {
             $name = basename($dir);
             if ($name != 'Theme' && $name != 'Info' && $name != 'Sampler') {
                 $list[] = $name;

@@ -172,16 +172,6 @@ class Context
     }
 
     /**
-     * Returns the directory in which freesewing was installed
-     *
-     * @return string
-     */
-    public function getApiDir()
-    {
-        return dirname(dirname(Utils::getClassDir($this)));
-    }
-
-    /**
      * Returns the channel property
      *
      * @return Channels\Channel
@@ -208,7 +198,7 @@ class Context
      */
     private function getConfigFile()
     {
-        return $this->getApiDir().'/config.yml';
+        return \Freesewing\Utils::getApiDir().'/config.yml';
     }
 
     /**

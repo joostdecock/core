@@ -661,9 +661,9 @@ class TheodoreTrousers extends Pattern
         $p->newPoint(  3 , $p->x(0),$p->y(2), 'Bottom left');
         
         $p->addPoint( 31 , $p->shift(3,0,25));
-        $p->addPoint( 32 , $p->shift(31,180,$p->bezierCircle(25)));
+        $p->addPoint( 32 , $p->shift(31,180,\Freesewing\BezierToolbox::bezierCircle(25)));
         $p->addPoint( 33 , $p->shift(3,90,25));
-        $p->addPoint( 34 , $p->shift(33,-90,$p->bezierCircle(25)));
+        $p->addPoint( 34 , $p->shift(33,-90,\Freesewing\BezierToolbox::bezierCircle(25)));
         $p->addPoint( 21 , $p->flipX(31));
         $p->addPoint( 22 , $p->flipX(32));
         $p->addPoint( 23 , $p->flipX(33));

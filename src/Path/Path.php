@@ -184,17 +184,13 @@ class Path
 // Reference to non-existing point. Bail out
                     throw new \InvalidArgumentException('SVG path references non-existing point '.$pointIndex);
                 }
-                if (!@is_object($topLeft)) {
+                if (!isset($topLeft) || !is_object($topLeft)) {
                     /*
                      * Topleft is not set. In other words, this is the first point we look at
                      * store it as both the topLeft and bottomRight point of our path boundary
                      **/
-                    $topLeft = new \Freesewing\Point();
-                    $topLeft->setX($part->points[$pointIndex]->x);
-                    $topLeft->setY($part->points[$pointIndex]->y);
-                    $bottomRight = new \Freesewing\Point();
-                    $bottomRight->setX($part->points[$pointIndex]->x);
-                    $bottomRight->setY($part->points[$pointIndex]->y);
+                    $topLeft = clone $part->loadPoint($pointIndex);
+                    $bottomRight = clone $part->loadPoint($pointIndex);
                 } else {
                     /*
                      * Topleft has been set. Let's compare this point to the current topLeft and bottomRight

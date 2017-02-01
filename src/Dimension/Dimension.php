@@ -32,26 +32,6 @@ class Dimension
     }
 
     /**
-     * Gets the label property
-     *
-     * @return \Freesewing\TextOnPath The label for the dimension
-     */
-    public function getLabel()
-    {
-        return $this->label;
-    }
-
-    /**
-     * Gets the path from the label
-     *
-     * @return \Freesewing\Path The label path
-     */
-    public function getPath()
-    {
-        return $this->label->getPath();
-    }
-
-    /**
      * Sets the leaders property
      *
      * @param array $leaders Array of leaders
@@ -59,6 +39,16 @@ class Dimension
     public function setLeaders($leaders)
     {
         $this->leaders = $leaders;
+    }
+
+    /**
+     * Gets the label property
+     *
+     * @return \Freesewing\TextOnPath The label for the dimension
+     */
+    public function getLabel()
+    {
+        return $this->label;
     }
 
     /**
@@ -72,11 +62,21 @@ class Dimension
     }
 
     /**
+     * Gets the path from the label
+     *
+     * @return \Freesewing\Path The label path
+     */
+    public function getPath()
+    {
+        return $this->label->getPath();
+    }
+
+    /**
      * Adds a leader to the leaders property
      *
      * @param \Freesewing\Path $leader A leader
      */
-    public function addLeader($leader)
+    public function addLeader(\Freesewing\Path $leader)
     {
         $this->leaders[] = $leader;
     }

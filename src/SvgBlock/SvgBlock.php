@@ -58,7 +58,7 @@ abstract class SvgBlock
     public function add($data, $replace = null)
     {
         $caller = debug_backtrace()[0]['file'];
-        if (!@is_array($this->data[$caller])) {
+        if (!is_array($this->data[$caller])) {
             $this->data[$caller] = array();
         }
         foreach (explode("\n", $data) as $line) {

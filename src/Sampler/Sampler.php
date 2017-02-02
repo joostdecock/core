@@ -137,7 +137,7 @@ class Sampler
     {
         foreach ($pattern->parts as $partKey => $part) {
             if ($part->getRender() === true) {
-                if (!@is_object($this->anchors[$partKey])) {
+                if (!is_object($this->anchors[$partKey])) {
                     $this->anchors[$partKey] = $this->getSamplerAnchor($part);
                     $deltaX = 0;
                     $deltaY = 0;
@@ -151,7 +151,7 @@ class Sampler
                 foreach ($part->paths as $pathKey => $path) {
                     if ($path->getSample() === true) {
                         $path->boundary = $path->findBoundary($part);
-                        if (!@is_object($this->boundaries[$partKey]['topLeft'])) {
+                        if (!is_object($this->boundaries[$partKey]['topLeft'])) {
                             $this->boundaries[$partKey]['topLeft'] = new \Freesewing\Point();
                             $this->boundaries[$partKey]['topLeft']->setX($path->boundary->topLeft->x);
                             $this->boundaries[$partKey]['topLeft']->setY($path->boundary->topLeft->y);

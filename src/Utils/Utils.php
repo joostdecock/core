@@ -132,6 +132,16 @@ class Utils
     }
 
     /**
+     * Returns the directory in which freesewing was installed
+     *
+     * @return string
+     */
+    public function getApiDir()
+    {
+        return dirname(dirname(Utils::getClassDir($this)));
+    }
+
+    /**
      * Finds intersection between two (endless) lines
      *
      * @param Point $point1 The id of the start of line A

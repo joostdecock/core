@@ -12,7 +12,7 @@ namespace Freesewing;
  * @copyright 2016 Joost De Cock
  * @license http://opensource.org/licenses/GPL-3.0 GNU General Public License, Version 3
  */
-class Coords
+abstract class Coords
 {
     /** * @var float $x X-coordinate */
     public $x = null;

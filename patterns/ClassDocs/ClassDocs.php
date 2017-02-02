@@ -243,4 +243,39 @@ class ClassDocs extends Pattern
         $this->addBox($p,100,100);
     }
 
+    /**
+     * Dimension::generic example (not tied to a method)
+     */
+    private function example_Dimension_generic($p, $model)
+    {
+        /** @var \Freesewing\Part $p */
+        $p->newPoint(1, 10, 10);
+        $p->newPoint(2, 110, 10);
+
+        $p->newWidthDimension(1,2, 30, 'I am a dimension');
+        
+        $p->newPoint('leaderNoteAnchor', 110, 20);
+        $p->newPoint('labelNoteAnchor', 55, 25);
+
+        $p->newNote(1,'leaderNoteAnchor','Dimension leader',3,15,0);
+        $p->newNote(2,'labelNoteAnchor','Dimension label',12,15,0);
+        
+        $this->addBox($p,50);
+    }
+
+    /**
+     * Note::generic example (not tied to a method)
+     */
+    private function example_Note_generic($p, $model)
+    {
+        /** @var \Freesewing\Part $p */
+        $p->newPoint(1, 70, 30);
+
+        $p->newNote(1, 1, "I am a note",12,25,0);
+        $p->newNote(2, 1, "Hi there,\nI am a note too",9,25,0);
+        $p->newNote(3, 1, "Me too!\nBut I'm keeping my distance",4,45,10);
+        
+        $this->addBox($p,60);
+    }
+
 }

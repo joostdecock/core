@@ -43,18 +43,6 @@ class Model
     }
 
     /**
-     * Gets all measurement. FIXME: remove this later
-     *
-     * @param string $key The key in the measurements array
-     *
-     * @return float The measurement value
-     */
-    public function getMeasurements()
-    {
-        return $this->measurements;
-    }
-
-    /**
      * Alias for getMeasurement()
      *
      * @param string $key The key in the measurements array

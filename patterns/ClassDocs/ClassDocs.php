@@ -263,4 +263,19 @@ class ClassDocs extends Pattern
         $this->addBox($p,50);
     }
 
+    /**
+     * Note::generic example (not tied to a method)
+     */
+    private function example_Note_generic($p, $model)
+    {
+        /** @var \Freesewing\Part $p */
+        $p->newPoint(1, 70, 30);
+
+        $p->newNote(1, 1, "I am a note",12,25,0);
+        $p->newNote(2, 1, "Hi there,\nI am a note too",9,25,0);
+        $p->newNote(3, 1, "Me too!\nBut I'm keeping my distance",4,45,10);
+        
+        $this->addBox($p,60);
+    }
+
 }

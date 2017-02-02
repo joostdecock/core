@@ -11,6 +11,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - Removed the _BezierToolbox::cubicRoots()_ method, as it wasn't used
 - Removed the _BezierToolbox::sgn()_ method, as it wasn't used
 - Removed the _BezierToolbox::sortSpecial()_ method, as it wasn't used
+- Removed the _Model::getMeasurements()_ methods, as it wasn't used
 
 ### Fixed
 

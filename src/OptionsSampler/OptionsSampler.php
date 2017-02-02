@@ -28,7 +28,7 @@ class OptionsSampler extends Sampler
     }
 
     /**
-     * Loads the option we are sampling from the sampler config.
+     * Loads the option we are sampling from the pattern config.
      *
      * @param string $option The option to load
      *

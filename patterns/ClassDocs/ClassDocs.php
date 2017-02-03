@@ -49,9 +49,10 @@ class ClassDocs extends Pattern
      *
      * @return void
      */
-    private function addBox($p,$h=100,$w=200)
+    private function addBox($p,$h=100,$w=200, $topLeft=false)
     {
-        $p->newPoint('boxTopLeft', 0, 0);
+        if($topLeft) $p->addPoint('boxTopLeft', $topLeft);
+        else $p->newPoint('boxTopLeft', 0, 0);
         $p->newPoint('boxTopRight', $w, 0);
         $p->newPoint('boxBottomLeft', 0, $h);
         $p->newPoint('boxBottomRight', $w, $h);
@@ -276,6 +277,190 @@ class ClassDocs extends Pattern
         $p->newNote(3, 1, "Me too!\nBut I'm keeping my distance",4,45,10);
         
         $this->addBox($p,60);
+    }
+
+    /**
+     * Part::unit example
+     */
+    private function example_Part_unit($p, $model)
+    {
+        /** @var \Freesewing\Part $p */
+        $p->newPoint(1, 40, 10);
+        $p->newPoint(2, 40, 20);
+        
+        // If not set explicitly, units are metric by default
+        $p->newNote(1, 1, $p->unit(100),9,15,0);
+
+        $p->setUnits('imperial');
+        $p->newNote(2, 2, $p->unit(100),9,15,0);
+        $this->addBox($p,30);
+    }
+
+    /**
+     * Part::newPath example
+     */
+    private function example_Part_newPath($p, $model)
+    {
+        /** @var \Freesewing\Part $p */
+        $p->newPoint(1, 10, 10);
+        $p->newPoint(2, 100, 20);
+        $p->newPoint(3, 50, 40);
+        $p->newPoint(4, 40, 30);
+        $p->newPoint(5, 40, 0);
+        
+        $p->newPath(1, 'M 1 L 2');
+        $p->newPath('another', 'M 4 C 3 2 5 z', ['class' => 'helpline']);
+
+        $this->addBox($p,35);
+    }
+
+    /**
+     * Part::newPoint example
+     */
+    private function example_Part_newPoint($p, $model)
+    {
+        /** @var \Freesewing\Part $p */
+        $p->newPoint(1, 10, 10);
+        $p->newPoint(2, 100, 20);
+        $p->newPoint(3, 50, 40);
+        $p->newPoint(4, -40, -30, 'Negative coordinates point');
+
+        $this->addBox($p,35,200, $p->loadPoint(4));
+    }
+
+    /**
+     * Part::newSnippet example
+     */
+    private function example_Part_newSnippet($p, $model)
+    {
+        /** @var \Freesewing\Part $p */
+        $p->newPoint(1, 20, 10);
+        $p->newPoint(2, 40, 10);
+        $p->newPoint(3, 60, 10);
+
+        $p->newSnippet(1, 'button', 1);
+        $p->newSnippet('anotherOne', 'buttonhole', 2);
+        $p->newSnippet(3, 'buttonhole', 3, [
+            'transform' => 'rotate(90 '.$p->x(3).' '.$p->y(3).')'
+        ]);
+
+        $this->addBox($p,20);
+    }
+
+    /**
+     * Part::newInclude example
+     */
+    private function example_Part_newInclude($p, $model)
+    {
+        /** @var \Freesewing\Part $p */
+        $p->newInclude(1, '<image x="0" y="0" width="80" height="80" xlink:href="https://upload.wikimedia.org/wikipedia/commons/0/02/SVG_logo.svg" />');
+
+        $this->addBox($p,80);
+    }
+
+    /**
+     * Part::newText example
+     */
+    private function example_Part_newText($p, $model)
+    {
+        /** @var \Freesewing\Part $p */
+        $p->newPoint(1, 50, 5);
+        $p->newPoint(2, 90, 40);
+
+        $p->newText(1, 1, 'This is standard text');
+        $p->newText(2, 1, 'This is text with CSS classes set', ['class' => 'text-center text-lg fill-note', 'dy' => 10]);
+        $p->newText(3, 1, "Multiline text\nsupport is\nshaky", ['dx' => -20, 'dy' => 20,]);
+        $p->newText(4, 2, "Use line-height as attribute\nand avoid the dx and dy attributes\nfor multiline text", ['line-height' => 6] );
+
+        $this->addBox($p,60);
+    }
+
+    /**
+     * Part::newNote example
+     */
+    private function example_Part_newNote($p, $model)
+    {
+        /** @var \Freesewing\Part $p */
+        $p->newPoint(1, 50, 55);
+        $p->newPoint(2, 140, 55);
+        $p->newPoint(3, 220, 55);
+
+        for($i=1;$i<=12;$i++) {
+            $p->newNote("direction$i", 1, $i, $i);
+            $p->newNote("length$i", 2, (15+$i*2), $i, (15+$i*2));
+            $p->newNote("offset$i", 3, ($i*2), $i, 25, $i);
+        }
+        $p->newText(1, 1, "Direction from 1 to 12, like hands of a clock", ['dy' => 40, 'class' => 'text-center']);
+        $p->newText(2, 2, "Lenght of the arrow", ['dy' => 40, 'class' => 'text-center']);
+        $p->newText(3, 3, "Offset from the anchor point", ['dy' => 40, 'class' => 'text-center']);
+        $p->newText(4, 2, "Any attributes you pass will apply to the text, not the arrow", ['dy' => 55, 'class' => 'text-xl text-center fill-warning', 'stroke-width' => 0.1, 'fill' => 'none']);
+
+
+        $this->addBox($p,130,260);
+    }
+
+    /**
+     * Part::newTextOnPath example
+     */
+    private function example_Part_newTextOnPath($p, $model)
+    {
+        /** @var \Freesewing\Part $p */
+        $p->newPoint(1, 0, 10);
+        $p->newPoint(2, 100, 10);
+        $p->newPoint(3, 100, 50);
+        $p->newPoint(4, 60, 40);
+
+        $p->newTextOnPath(1,'M 1 L 2', 'This is text on a path');
+        $p->newTextOnPath(2,'M 2 C 3 4 1', "I'm like, super upside down right now", ['class' => 'text-center fill-warning', 'dy' => -2]);
+        $p->newTextOnPath(3,'M 1 C 4 3 2', "Text on a curved path is a bit more interesting", ['class' => 'text-center', 'dy' => -2]);
+
+        $this->addBox($p,40,120);
+    }
+
+    /**
+     * Part::addTitle example
+     */
+    private function example_Part_addTitle($p, $model)
+    {
+        $modes = [
+            'default',
+            'vertical',
+            'horizontal',
+            'small',
+            'vertical-small',
+            'horizontal-small',
+        ];
+        
+        foreach($modes as $mode) {
+            // Only one title per part, so we need a part for each mode
+            $this->addPart($mode);
+            /** @var \Freesewing\Part $p */
+            $p = $this->parts[$mode];
+            $p->newPoint(1, 20, 35);
+            $p->addTitle(1, 3, 'Title', $mode, $mode);
+
+            if(strpos($mode,'mall')) {
+                if(strpos($mode,'tical')) $this->addBox($p,65,40);
+                else $this->addBox($p,45,30);
+            } else {
+                if(strpos($mode,'tical')) $this->addBox($p,70,40);
+                else $this->addBox($p,50,60);
+            }
+        }
+        
+    }
+
+    /**
+     * Part::addPoint example
+     */
+    private function example_Part_addPoint($p, $model)
+    {
+        /** @var \Freesewing\Part $p */
+        $p->newPoint(1, 10, 10);
+        
+        $p->addPoint(2, $p->flipX(1,30));
+
+        $this->addBox($p,40,120);
     }
 
 }

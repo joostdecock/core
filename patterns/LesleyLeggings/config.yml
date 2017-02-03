@@ -33,7 +33,7 @@ measurements:
 options:
     stretchFactor:
         type: "percent"
-        default: 100
+        default: 85
     lengthBonus:
         type: "measure"
         min: -200

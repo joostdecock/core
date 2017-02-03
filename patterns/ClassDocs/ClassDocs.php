@@ -463,4 +463,42 @@ class ClassDocs extends Pattern
         $this->addBox($p,40,120);
     }
 
+    /**
+     * Part::offsetPath example
+     */
+    private function example_Part_offsetPath($p, $model)
+    {
+        /** @var \Freesewing\Part $p */
+        $p->newPoint(1, 10, 10);
+        $p->newPoint(2, 20, 90);
+        $p->newPoint(3, 30, 10);
+        $p->newPoint(4, 80, 40);
+        $p->newPoint(5, 110, 10);
+        $p->newPoint(6, 110, 80);
+        $p->newPoint(7, 30, 80);
+        
+        $p->newPath(1, 'M 1 L 2');
+        $p->newPath(2, 'M 3 L 4 L 5 C 6 7 3 z');
+
+        $p->offsetPath(4,1,10,1, ['class' => 'seam-allowance']);
+        $p->offsetPath(5,2,-10,1, ['class' => 'seam-allowance']);
+    }
+    
+    /**
+     * Part::offsetPathString example
+     */
+    private function example_Part_offsetPathString($p, $model)
+    {
+        /** @var \Freesewing\Part $p */
+        $p->newPoint(1, 30, 10);
+        $p->newPoint(2, 80, 40);
+        $p->newPoint(3, 110, 10);
+        $p->newPoint(4, 110, 80);
+        $p->newPoint(5, 30, 80);
+        
+        $p->newPath(1, 'M 1 L 2 L 3 C 4 5 1 z');
+
+        $p->offsetPathString(2,'M 3 C 4 5 1',-5,1, ['class' => 'stroke-warning']);
+        $p->offsetPathString(3,'M 1 L 2 L 3',-10,1, ['class' => 'stroke-note']);
+    }
 }

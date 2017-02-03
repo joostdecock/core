@@ -330,7 +330,7 @@ class Part
      *
      * @return Point
      */
-    public function createPoint($x, $y, $description = null)
+    private function createPoint($x, $y, $description = null)
     {
         $point = new Point();
         $point->setX($x);
@@ -420,7 +420,7 @@ class Part
      * @param string     $key     Index in the snippets array
      * @param SvgSnippet $snippet The snippet object
      */
-    public function addSnippet($key, SvgSnippet $snippet)
+    private function addSnippet($key, SvgSnippet $snippet)
     {
         $this->snippets[$key] = $snippet;
     }
@@ -434,7 +434,7 @@ class Part
      * @param string     $key     Index in the includes array
      * @param SvgInclude $include The include object
      */
-    public function addInclude($key, SvgInclude $include)
+    private function addInclude($key, SvgInclude $include)
     {
         $this->includes[$key] = $include;
     }
@@ -448,7 +448,7 @@ class Part
      * @param string $key  Index in the includes array
      * @param Text   $text The text object
      */
-    public function addText($key, Text $text)
+    private function addText($key, Text $text)
     {
         $this->texts[$key] = $text;
     }
@@ -462,7 +462,7 @@ class Part
      * @param string $key  Index in the notes array
      * @param Note   $note The note object
      */
-    public function addNote($key, Note $note)
+    private function addNote($key, Note $note)
     {
         $this->notes[$key] = $note;
     }
@@ -476,7 +476,7 @@ class Part
      * @param string     $key        Index in the textsOnPath array
      * @param TextOnPath $textOnPath The TextOnPath object
      */
-    public function addTextOnPath($key, TextOnPath $textOnPath)
+    private function addTextOnPath($key, TextOnPath $textOnPath)
     {
         $this->textsOnPath[$key] = $textOnPath;
     }
@@ -490,7 +490,7 @@ class Part
      * @param string $key  Index in the paths array
      * @param Path   $path The path object
      */
-    public function addPath($key, Path $path)
+    private function addPath($key, Path $path)
     {
         $this->paths[$key] = $path;
     }

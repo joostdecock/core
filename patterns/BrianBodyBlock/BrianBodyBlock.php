@@ -63,8 +63,11 @@ class BrianBodyBlock extends Pattern
         $this->setOption('sleevecapEase', self::SLEEVECAP_EASE);
 
         // Depth of the armhole
-        $this->setValue('armholeDepth', 200 + ($model->m('shoulderSlope') / 2 - 27.5) + ($model->m('bicepsCircumference') / 10));
+        $this->setValue('armholeDepth', $model->m('shoulderSlope') / 2 + $model->m('bicepsCircumference') * $this->o('armholeDepthFactor'));
 
+        // Heigth of the sleevecap
+        $this->setValue('sleevecapHeight', $model->m('bicepsCircumference') * $this->o('sleevecapHeightFactor'));
+        
         // Collar widht and depth
         $this->setValue('collarWidth', ($model->getMeasurement('neckCircumference') / 2.42) / 2);
         $this->setValue('collarDepth', ($model->getMeasurement('neckCircumference') + $this->getOption('collarEase')) / 5 - 8);
@@ -303,7 +306,7 @@ class BrianBodyBlock extends Pattern
 
         // Sleeve center
         $p->newPoint(1, 0, 0, 'Origin (Center sleeve @ shoulder)');
-        $p->newPoint(2, 0, $this->v('sleevecapSeamLength') / 3, 'Center sleeve @ sleevecap start');
+        $p->newPoint(2, 0, $this->v('sleevecapHeight'), 'Center sleeve @ sleevecap start');
         $p->clonePoint(2, 'gridAnchor');
         $p->newPoint(3, 0, $model->getMeasurement('sleeveLengthToWrist'), 'Center sleeve @ wrist');
 

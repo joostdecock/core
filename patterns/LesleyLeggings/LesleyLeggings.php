@@ -58,9 +58,6 @@ class LesleyLeggings extends SethSelvedgeTrouserBlock
     
         // backSeamCurveFactor
         $this->setOption('backSeamCurveFactor', 0.4);
-        
-        // stretchFactor
-        $this->setOption('stretchFactor', 1);
     }
 
     /*
@@ -227,6 +224,36 @@ class LesleyLeggings extends SethSelvedgeTrouserBlock
         $p->addPoint('kneeCpFrontDown', $p->shiftTowards('kneeFront','ankleFront',$p->distance('kneeFront','ankleFront')/2));
         $p->addPoint('kneeCpFront', $p->rotate('kneeCpFrontDown','kneeFront',180));
 
+
+        // Adjust waistline to be more horizontal
+        $delta = $p->deltaY('backHipsIn','frontHipsIn')/2-5;
+        $p->addPoint('frontHipsIn', $p->shift('frontHipsIn',90,$delta));
+        $p->addPoint('backHipsIn',$p->shiftTowards('backHipsIn', 'backSeamTiltPoint', $delta));
+
+        // Waistline control points
+        $delta = $p->deltaX('backHipsIn','frontHipsIn')/4;
+        $p->addPoint('frontHipsInCp', $p->shift('frontHipsIn',180,$delta));
+        $p->addPoint('backHipsInCp', $p->shift('backHipsIn',0,$delta));
+        
+        // Shape the waist according to stretch
+        $stretch = [
+            'backHipsIn',
+            'backHipsInCp',
+            'frontHipsIn',
+            'frontHipsInCp',
+            'backSeamTiltPoint',
+            'backSeamVerticalControlPoint',
+            'backCrotchEdge',
+            'frameSeatIn',
+            'frontCrotchVerticalControlPoint',
+            'frontCpCrotchEdge',
+            'frameCrotchEdge',
+            ];
+        foreach($stretch as $id) {
+            $p->newPoint($id, $p->x($id) * $this->o('stretchFactor'), $p->y($id));
+        }
+
+
         // Adjust back outseam to match the front
         $seamDelta = $this->seamDelta();
         $count = 1;
@@ -239,15 +266,6 @@ class LesleyLeggings extends SethSelvedgeTrouserBlock
         $this->msg("Run $count, Inseam delta is ".$this->unit($seamDelta));
         }
         
-        // Adjust waistline to be more horizontal
-        $delta = $p->deltaY('backHipsIn','frontHipsIn')/2-5;
-        $p->addPoint('frontHipsIn', $p->shift('frontHipsIn',90,$delta));
-        $p->addPoint('backHipsIn',$p->shiftTowards('backHipsIn', 'backSeamTiltPoint', $delta));
-
-        // Waistline control points
-        $delta = $p->deltaX('backHipsIn','frontHipsIn')/4;
-        $p->addPoint('frontHipsInCp', $p->shift('frontHipsIn',180,$delta));
-        $p->addPoint('backHipsInCp', $p->shift('backHipsIn',0,$delta));
 
         // Paths
         $seamLineFromKnees = 'L kneeFront C kneeCpFront frameCrotchEdge frameCrotchEdge C frontCpCrotchEdge frontCrotchVerticalControlPoint frameSeatIn L frontHipsIn C frontHipsInCp backHipsInCp backHipsIn L backSeamTiltPoint C backSeamVerticalControlPoint backCrotchEdge backCrotchEdge C backCrotchEdge kneeCpBack kneeBack';
@@ -317,6 +335,8 @@ class LesleyLeggings extends SethSelvedgeTrouserBlock
         
         // Seam allowance
         $p->offsetPath('sa','seamline',10,1,['class' => 'seam-allowance']);
+
+        $p->newWidthDimension('hemBack', 'hemFront');
     }
 
     /*

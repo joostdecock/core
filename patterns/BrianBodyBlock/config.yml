@@ -10,7 +10,6 @@ parts:
   backBlock: "Back block"
   frontBlock: "Front block"
   sleeveBlock: "Sleeve block"
-  sleeveBlock2: "Sleeve block 2"
 languages:
     en: "English"
     nl: "Nederlands"
@@ -53,3 +52,9 @@ options:
         min: 45
         max: 60
         default: 55
+    lengthBonus:
+        type: "measure"
+        min: -40
+        max: 120
+        default: 0
+

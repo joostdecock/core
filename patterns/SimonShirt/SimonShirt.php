@@ -42,18 +42,12 @@ class SimonShirt extends BrianBodyBlock
      */
     public function initialize($model)
     {
-        /**
-         *  Armhole Depth 
-         *
-         *  You can lower the armhole depth with the armholeDrop option
-         */
-        $this->setValue('armholeDepth',
-            200
-            + ( $model->m('shoulderSlope') / 2 -27.5 ) 
-            + ( $model->m('bicepsCircumference') / 10 )
-            + $this->o('armholeDrop')
-        );
+        // Depth of the armhole
+        $this->setValue('armholeDepth', $model->m('shoulderSlope') / 2 + $model->m('bicepsCircumference') * $this->o('armholeDepthFactor'));
 
+        // Heigth of the sleevecap
+        $this->setValue('sleevecapHeight', $model->m('bicepsCircumference') * $this->o('sleevecapHeightFactor'));
+         
         // Collar widht and depth
         $this->setValue('collarWidth', ($model->getMeasurement('neckCircumference') / self::PI) / 2 + 5);
         $this->setValue('collarDepth', ($model->getMeasurement('neckCircumference') + $this->getOption('collarEase')) / 5 - 8);
@@ -191,7 +185,7 @@ class SimonShirt extends BrianBodyBlock
         // Blocks from parent pattern
         $this->draftBackBlock($model);
         $this->draftFrontBlock($model);
-        // note that the draftSleeveBlock() is called in draftSleeve()
+        // note that the draftSleeveBlock() method is called in draftSleeve()
 
         // We need the yoke before we can fit the collar
         $this->draftYoke($model);
@@ -1870,7 +1864,7 @@ class SimonShirt extends BrianBodyBlock
         if($this->v('cuffPleats') == 1) $notchAlso = ['pleatLeft', 'pleatCenter', 'pleatRight'];
         else $notchAlso = ['pleatOneLeft', 'pleatOneCenter', 'pleatOneRight','pleatTwoLeft', 'pleatTwoCenter', 'pleatTwoRight'];
         $notchHere = array_merge($notchHere, $notchAlso);
-        $p->notch($notchHere);
+        //$p->notch($notchHere);
     }
 
     /**

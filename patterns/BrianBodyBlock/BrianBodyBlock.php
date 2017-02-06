@@ -311,7 +311,7 @@ class BrianBodyBlock extends Pattern
         $p->newPoint(3, 0, $model->getMeasurement('sleeveLengthToWrist'), 'Center sleeve @ wrist');
 
         // Sleeve half width
-        $p->newPoint(4, $model->getMeasurement('bicepsCircumference') / 2 + $this->getOption('bicepsEase') / 2, 0,
+        $p->newPoint(4, ($model->getMeasurement('bicepsCircumference') / 2 + $this->getOption('bicepsEase') / 2) * $this->v('sleeveTweakFactor'), 0,
             'Half width of sleeve @ shoulder');
         $p->newPoint(5, $p->x(4), $p->y(2), 'Half width of sleeve @ sleevecap start');
         $p->newPoint(6, $p->x(4), $p->y(3), 'Half width of sleeve @ wrist');
@@ -414,7 +414,7 @@ class BrianBodyBlock extends Pattern
      *
      * @return float The armhole length
      */
-    private function armholeLen()
+    protected function armholeLen()
     {
         /** @var \Freesewing\Part $back */
         $back = $this->parts['backBlock'];

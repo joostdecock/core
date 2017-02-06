@@ -267,14 +267,19 @@ options:
         min: 130
         max: 230
         default: 180
-    armholeDrop:
-        type: "measure"
-        min: 0
-        max: 50
-        default: 0
     yokeDart:
         type: "measure"
         min: 0
         max: 10
         default: 5
+    armholeDepthFactor:
+        type: "percent"
+        min: 50
+        max: 65
+        default: 60
+    sleevecapHeightFactor:
+        type: "percent"
+        min: 45
+        max: 60
+        default: 50
 

@@ -340,12 +340,12 @@ class WahidWaistcoat extends BrianBodyBlock
           $p->curveCrossesX(4002,4003,911,2912,$p->x(912), 912);
 
           // Split arc
-          $points = $p->splitCurve(4002,4003,911,2912,9121);
-          $p->addPoint(4006, $points[1]);
-          $p->addPoint(4007, $points[2]);
-          $points = $p->splitCurve(4002,4003,911,2912,9111);
-          $p->addPoint(4008, $points[5]);
-          $p->addPoint(4009, $points[6]);
+          $points = $p->splitCurve(4002,4003,911,2912,9121,'.split');
+          $p->clonePoint('.split2', 4006);
+          $p->clonePoint('.split3', 4007);
+          $points = $p->splitCurve(4002,4003,911,2912,9111,'.split');
+          $p->clonePoint('.split6', 4008);
+          $p->clonePoint('.split7', 4009);
 
           // Hem line
           $hemA = " L 4002 C 4006 4007 9121 ";

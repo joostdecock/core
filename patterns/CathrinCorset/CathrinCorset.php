@@ -253,11 +253,11 @@ class CathrinCorset extends Pattern
 
         // Joint between panel 1 and to at the top
         $p->curveCrossesX(10, 11, 12, 13, $p->x(11), '50-');
-        $p->addSplitCurve(10, 11, 12, 13, '50-1', '51-');
+        $p->splitCurve(10, 11, 12, 13, '50-1', '51-');
 
         // Joint between panel 1 and to at the bottom
         $p->curveCrossesX(20, 21, 31, 30, $p->x(180)/2.5, '52-');
-        $p->addSplitCurve(20, 21, 31, 30, '52-1', '53-');
+        $p->splitCurve(20, 21, 31, 30, '52-1', '53-');
 
         // path
         $this->path1 = 'M 10 L 20 C 53-2 53-3 52-1 L 50-1 C 51-3 51-2 10 z';
@@ -282,7 +282,7 @@ class CathrinCorset extends Pattern
         $p = $this->parts['panels'];
 
         $p->curveCrossesX(20, 21, 31, 30, $p->x(180), '190-'); // Intersection in 190-1
-        $p->addSplitCurve('52-1', '53-7', '53-6', 30, '190-1', '191-');
+        $p->splitCurve('52-1', '53-7', '53-6', 30, '190-1', '191-');
         if ($p->y('190-1') < $p->y(180)) {
             // Dart still open at edge
             $p->curveCrossesY(141, 145, 180, 180, $p->y('190-1'), '192-'); // Intersection is in 192-1
@@ -316,7 +316,7 @@ class CathrinCorset extends Pattern
 
         // Where does gap center cut through bottom curve
         $p->curveCrossesX(20, 21, 31, 30, $p->x(280), '290-'); // Intersection in 290-1
-        $p->addSplitCurve('190-1', '191-7', '191-6', 30, '290-1', '291-');
+        $p->splitCurve('190-1', '191-7', '191-6', 30, '290-1', '291-');
         if ($p->y('290-1') < $p->y(180)) {
             // Dart still open at edge
             $p->curveCrossesY(241, 245, 280, 280, $p->y('290-1'), '292-'); // Intersection is in 292-1
@@ -349,7 +349,7 @@ class CathrinCorset extends Pattern
 
         // Where does gap center cut through bottom curve
         $p->curveCrossesX(20, 21, 31, 30, $p->x(380), '390-'); // Intersection in 390-1
-        $p->addSplitCurve('290-1', '291-7', '291-6', 30, '390-1', '391-');
+        $p->splitCurve('290-1', '291-7', '291-6', 30, '390-1', '391-');
         if ($p->y('390-1') < $p->y(180)) {
             // Dart still open at edge
             $p->curveCrossesY(341, 345, 380, 380, $p->y('390-1'), '392-'); // Intersection is in 392-1
@@ -387,11 +387,11 @@ class CathrinCorset extends Pattern
 
         // Where does the right edge cut through top curve
         $p->curveCrossesX(50, 51, 52, 5, $p->x(401), '410-'); // Intersection in 410-1
-        $p->addSplitCurve(50, 51, 52, 5, '410-1', '411-');
+        $p->splitCurve(50, 51, 52, 5, '410-1', '411-');
         $this->path5 = 'M 441 C 443 403 401 L 410-1 C 411-7 411-6 5 L 302 '. $this->path5;
         // Where does gap center cut through bottom curve
         $p->curveCrossesX(30, 32, 41, 40, $p->x(480), '490-'); // Intersection in 490-1
-        $p->addSplitCurve(40, 41, 32, 30, '490-1', '491-');
+        $p->splitCurve(40, 41, 32, 30, '490-1', '491-');
         if ($p->y('490-1') < $p->y(180)) {
             // Dart still open at edge
             $p->curveCrossesY(441, 445, 480, 480, $p->y('490-1'), '492-'); // Intersection is in 492-1
@@ -428,11 +428,11 @@ class CathrinCorset extends Pattern
 
         // Where does the left edge cut through top curve
         $p->curveCrossesX(50, 51, 52, 5, $p->x(402), '420-'); // Intersection in 420-1
-        $p->addSplitCurve('410-1', '411-3', '411-2', 50, '420-1', '421-');
+        $p->splitCurve('410-1', '411-3', '411-2', 50, '420-1', '421-');
 
         // Where does the right edge cut through top curve
         $p->curveCrossesX(50, 51, 52, 5, $p->x(501), '510-'); // Intersection in 510-1
-        $p->addSplitCurve('420-1', '421-7', '421-6', 50, '510-1', '421-');
+        $p->splitCurve('420-1', '421-7', '421-6', 50, '510-1', '421-');
         if ($this->o('backRise') == 0) {
             $this->path6 = 'M 541 C 543 503 501 L 402 C 404 444 442 '. $this->path6;
         } else {
@@ -445,7 +445,7 @@ class CathrinCorset extends Pattern
 
         // Where does gap center cut through bottom curve
         $p->curveCrossesX(30, 32, 41, 40, $p->x(580), '590-'); // Intersection in 490-1
-        $p->addSplitCurve(40, '491-2', '491-3', '490-1', '590-1', '591-');
+        $p->splitCurve(40, '491-2', '491-3', '490-1', '590-1', '591-');
         if ($p->y('590-1') < $p->y(180)) {
             // Dart still open at edge
             $p->curveCrossesY(541, 545, 580, 580, $p->y('590-1'), '592-'); // Intersection is in 592-1
@@ -477,7 +477,7 @@ class CathrinCorset extends Pattern
 
         // Where does the left edge cut through top curve
         $p->curveCrossesX(50, 51, 52, 5, $p->x(502), '520-'); // Intersection in 520-1
-        $p->addSplitCurve('510-1', '421-7', '421-6', 50, '520-1', '521-');
+        $p->splitCurve('510-1', '421-7', '421-6', 50, '520-1', '521-');
 
         // We need to left edge and control point to keep the same height
         $deltaY = $p->deltaY('510-1', '520-1');

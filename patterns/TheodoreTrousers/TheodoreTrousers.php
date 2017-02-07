@@ -543,10 +543,10 @@ class TheodoreTrousers extends Pattern
         $p = $this->parts['flyPiece'];
 
         // We need to split the crotch curve at the bottom of the fly
-        $p->addSplitCurve(-501,-502,'-6cp',-6,43,'fly');
+        $p->splitCurve(-501,-502,'-6cp',-6,43,'fly');
         
         // We need to split the waist curve at the edge of the fly
-        $p->addSplitCurve(-100101,-1002,-1102,-1102,-40,'waistFly');
+        $p->splitCurve(-100101,-1002,-1102,-1102,-40,'waistFly');
 
         // Path 
         $p->newPath('outline', 'M -100101 L -6 C fly6 fly7 43 C 44 45 41 L -40 C waistFly3 waistFly2 -100101 z');
@@ -600,10 +600,10 @@ class TheodoreTrousers extends Pattern
         $p->addPoint('bottomLeft', $p->shift(61,180,50));
 
         // Split waist curve
-        $p->addSplitCurve(-1102,-1102,-1002,-100101,'topLeft','waist');
+        $p->splitCurve(-1102,-1102,-1002,-100101,'topLeft','waist');
         
         // Split side curve
-        $p->addSplitCurve(-8,-802,-1401,-14,61,'side');
+        $p->splitCurve(-8,-802,-1401,-14,61,'side');
         
         // Paths 
         $p->newPath('outline', 'M topLeft L bottomLeft L 61 C side3 side2 -8 C -801 -1102 -1102 C -1102 waist3 topLeft z');

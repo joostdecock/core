@@ -286,7 +286,7 @@ class BruceBoxerBriefs extends Pattern
         $p->newPoint( 101, $p->x(3)*0.7, 0, 'Control point' );
         $p->addPoint(   5, $p->shiftAlong(1, 101, 403, 401, 70), 'Notch' );
 
-        $points = $p->addSplitCurve(1, 101, 403, 401, 0.5, 'split', true);
+        $points = $p->splitCurve(1, 101, 403, 401, 0.5, 'split', true);
 
         $path = 'M 2 L 1 C split2 split3 split4 C split7 split6 401 L 3 z';
 
@@ -527,7 +527,7 @@ class BruceBoxerBriefs extends Pattern
         $p = $this->parts['front'];
 
         // Most narrow width
-        $p->addPoint('narrowLeft', $p->curveEdgeRight(-4,-404,-701,-501));
+        $p->addPoint('narrowLeft', $p->curveEdge(-4,-404,-701,-501,'right'));
         $p->addPoint('narrowRight', $p->flipX('narrowLeft',0));
         $p->newWidthDimension('narrowLeft','narrowRight');
 

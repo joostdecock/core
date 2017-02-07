@@ -134,7 +134,7 @@ class HugoHoodie extends BrianBodyBlock
 
         // Adding points from index 100 onwards
         $p->addPoint( 100, $p->shiftAlong(8, 20, 21, 9, $p->curveLen(8, 20, 21, 9)/3), 'Raglan front tip');
-        $p->addSplitCurve(8, 20, 21, 9, 100, 5);
+        $p->splitCurve(8, 20, 21, 9, 100, 5);
 
         // Add pocket points
         $p->newPoint( 101, $p->x(6)*0.65 - 25, $p->y(6));
@@ -188,7 +188,7 @@ class HugoHoodie extends BrianBodyBlock
         // Adding points from index 100 onwards
         $p->newPoint( 21, $p->x(21), $p->y(1), 'Control point for 1'); // Re-using point 21
         $p->addPoint( 100, $p->shiftAlong(8, 20, 21, 1, $p->curveLen(8, 20, 21, 1)/2), 'Raglan back tip');
-        $p->addSplitCurve(8, 20, 21, 1, 100, 5);
+        $p->splitCurve(8, 20, 21, 1, 100, 5);
 
         // Paths
         $path = 'M 1 L 2 L 3 L 4 L 6 L 5 C 13 16 14 C 15 100 100 C 57 56 1 z';
@@ -1006,8 +1006,8 @@ class HugoHoodie extends BrianBodyBlock
         $p = $this->parts['hoodSide'];
 
         // Edge of curves
-        $p->addPoint(201, $p->curveEdgeLeft(12, 15, 11, 11));
-        $p->addPoint(202, $p->curveEdgeLeft(13, 20, 23, 17));
+        $p->addPoint(201, $p->curveEdge(12, 15, 11, 11,'left'));
+        $p->addPoint(202, $p->curveEdge(13, 20, 23, 17,'left'));
 
         // Front depth of the hood
         $p->newWidthDimension(202,6);
@@ -1026,7 +1026,7 @@ class HugoHoodie extends BrianBodyBlock
         $p->newNote('saNote', 201, $this->t("Standard\nseam\nallowance")."\n(".$this->unit(10).')', 3, 10, -3, ['line-height' => 6, 'class' => 'text-lg', 'dy' => -10]);
 
         // Split curve for notch distance from left side
-        $p->addSplitCurve(11,7,8,6,10,'.neckCurve');
+        $p->splitCurve(11,7,8,6,10,'.neckCurve');
         $p->newCurvedDimension('M 11 C .neckCurve2 .neckCurve3 10', 25);
         $p->newCurvedDimension('M 10 C .neckCurve7 .neckCurve6 6', 25);
 

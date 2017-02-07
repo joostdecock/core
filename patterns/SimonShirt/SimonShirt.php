@@ -368,7 +368,7 @@ class SimonShirt extends BrianBodyBlock
         $p->addPoint( 2045, $p->shift(4,0,$width));
         if($this->o('buttonPlacketStyle') == 2) $p->addPoint( 2046, $p->shift(4,0,$width*3));
         // Need to split the neckcurve for a seperate placket or folding over
-        $p->addSplitCurve(8,20,21,9,2041,'splitNeckCurve');
+        $p->splitCurve(8,20,21,9,2041,'splitNeckCurve');
         $p->clonePoint('splitNeckCurve2', 2051);
         $p->clonePoint('splitNeckCurve3', 2052);
         $p->clonePoint(2041, 2053);
@@ -560,7 +560,7 @@ class SimonShirt extends BrianBodyBlock
                 $p->newPoint(4008, $p->x(4108),$p->y(4001));
                 
                 // Need to split the neckcurve for a seperate placket or folding over
-                $p->addSplitCurve(8,20,21,9,4108,'splitNeckCurve');
+                $p->splitCurve(8,20,21,9,4108,'splitNeckCurve');
 
                 $p->clonepoint('splitNeckCurve7', 41081);
                 $p->clonepoint('splitNeckCurve6', 41082);
@@ -584,7 +584,7 @@ class SimonShirt extends BrianBodyBlock
                 $p->newPoint(4008, $p->x(4108),$p->y(4001));
                 
                 // Need to split the neckcurve for a seperate placket or folding over
-                $p->addSplitCurve(8,20,21,9,4108,'splitNeckCurve');
+                $p->splitCurve(8,20,21,9,4108,'splitNeckCurve');
                
                 $p->clonepoint('splitNeckCurve7', 41081);
                 $p->clonepoint('splitNeckCurve6', 41082);
@@ -991,7 +991,7 @@ class SimonShirt extends BrianBodyBlock
             $p->clonePoint(3,'pleatOneRight');
             // Split curve at spot for second pleat
             $p->curveCrossesX(3,3,433,432,$p->x(433),'pleatTwoX'); 
-            $p->addSplitCurve(3,3,433,432,'pleatTwoX1', 'pleatTwo');
+            $p->splitCurve(3,3,433,432,'pleatTwoX1', 'pleatTwo');
             // Create room for first pleat
             $p->clonePoint('pleatTwoX1','pleatTwoLeft');
             $shiftLeft = ['cuffRight', 433, 431, 432, 'pleatTwo7','pleatTwoX1'];

@@ -669,7 +669,7 @@ class Part
                 $this->addPoint($key, $point);
                 // split a here
                 if ($a['type'] == 'curve') {
-                    $this->addSplitCurve($a['offset'][0], $a['offset'][1], $a['offset'][2], $a['offset'][3], $key, "$key-a-");
+                    $this->splitCurve($a['offset'][0], $a['offset'][1], $a['offset'][2], $a['offset'][3], $key, "$key-a-");
                     $new[] = [
                         'type'         => 'curve',
                         'offset'       => ["$key-a-1", "$key-a-2", "$key-a-3", "$key-a-4"],
@@ -684,7 +684,7 @@ class Part
                 }
                 // split b here
                 if ($b['type'] == 'curve') {
-                    $this->addSplitCurve($b['offset'][0], $b['offset'][1], $b['offset'][2], $b['offset'][3], $key, "$key-b-");
+                    $this->splitCurve($b['offset'][0], $b['offset'][1], $b['offset'][2], $b['offset'][3], $key, "$key-b-");
                     $new[] = [
                         'type'         => 'curve',
                         'offset'       => ["$key-b-8", "$key-b-7", "$key-b-6", "$key-b-5"],
@@ -1524,7 +1524,7 @@ class Part
             // Not good enough, let's subdivide
             $subdivide++;
             $splitId = '.tmp_' . $key . '.splitcurve:' . $this->newId();
-            $this->addSplitCurve($from, $cp1, $cp2, $to, $tolerance['index'], $splitId . '-', true);
+            $this->splitCurve($from, $cp1, $cp2, $to, $tolerance['index'], $splitId . '-', true);
             unset($chunks);
             $subDivide = $this->offsetCurve("M $splitId-1 C $splitId-2 $splitId-3 $splitId-4", $distance, $key, $subdivide);
             foreach ($subDivide as $chunk) {
@@ -1949,31 +1949,18 @@ class Part
      */
     public function beamsCross($key1, $key2, $key3, $key4)
     {
-        $i = $this->findLineLineIntersection($key1, $key2, $key3, $key4);
+        $i = Utils::findLineLineIntersection(
+            $this->loadPoint($key1), 
+            $this->loadPoint($key2), 
+            $this->loadPoint($key3),
+            $this->loadPoint($key4)
+        );
 
         if (is_array($i)) {
             return $this->createPoint($i[0], $i[1]);
         } else {
             return false;
         }
-    }
-
-    /**
-     * Returns the coordinates of the intersection of two endless lines (beams)
-     *
-     * @param string $key1 The id of the start of line A
-     * @param string $key2 The id of the end line A
-     * @param string $key3 The id of the start of line B
-     * @param string $key4 The id of the end line B
-     *
-     * @return array|null The coordinates of the line intersection or null if lines are parallel
-     */
-    public function findLineLineIntersection($key1, $key2, $key3, $key4)
-    {
-        return Utils::findLineLineIntersection(
-            $this->loadPoint($key1), $this->loadPoint($key2), $this->loadPoint($key3),
-            $this->loadPoint($key4)
-        );
     }
 
     /**
@@ -2096,66 +2083,6 @@ class Part
     }
 
     /**
-     * Returns point that is the left edge of a Bezier curve
-     *
-     * @param string $curveStartKey    The id of the start of the curve
-     * @param string $curveControl1Key The id of the first control point
-     * @param string $curveControl2Key The id of the second control point
-     * @param string $curveEndKey      The id of the end of the curve
-     *
-     * @return Point The point at the edge
-     */
-    public function curveEdgeLeft($curveStartKey, $curveControl1Key, $curveControl2Key, $curveEndKey)
-    {
-        return $this->curveEdge($curveStartKey, $curveControl1Key, $curveControl2Key, $curveEndKey, 'left');
-    }
-
-    /**
-     * Returns point that is the right edge of a Bezier curve
-     *
-     * @param string $curveStartKey    The id of the start of the curve
-     * @param string $curveControl1Key The id of the first control point
-     * @param string $curveControl2Key The id of the second control point
-     * @param string $curveEndKey      The id of the end of the curve
-     *
-     * @return Point The point at the edge
-     */
-    public function curveEdgeRight($curveStartKey, $curveControl1Key, $curveControl2Key, $curveEndKey)
-    {
-        return $this->curveEdge($curveStartKey, $curveControl1Key, $curveControl2Key, $curveEndKey, 'right');
-    }
-
-    /**
-     * Returns point that is the top edge of a Bezier curve
-     *
-     * @param string $curveStartKey    The id of the start of the curve
-     * @param string $curveControl1Key The id of the first control point
-     * @param string $curveControl2Key The id of the second control point
-     * @param string $curveEndKey      The id of the end of the curve
-     *
-     * @return Point The point at the edge
-     */
-    public function curveEdgeTop($curveStartKey, $curveControl1Key, $curveControl2Key, $curveEndKey)
-    {
-        return $this->curveEdge($curveStartKey, $curveControl1Key, $curveControl2Key, $curveEndKey, 'top');
-    }
-
-    /**
-     * Returns point that is the bottom edge of a Bezier curve
-     *
-     * @param string $curveStartKey    The id of the start of the curve
-     * @param string $curveControl1Key The id of the first control point
-     * @param string $curveControl2Key The id of the second control point
-     * @param string $curveEndKey      The id of the end of the curve
-     *
-     * @return Point The point at the edge
-     */
-    public function curveEdgeBottom($curveStartKey, $curveControl1Key, $curveControl2Key, $curveEndKey)
-    {
-        return $this->curveEdge($curveStartKey, $curveControl1Key, $curveControl2Key, $curveEndKey, 'bottom');
-    }
-
-    /**
      * Returns point at the chosen edge of a Bezier curve
      *
      * @param string $curveStartKey    The id of the start of the curve
@@ -2169,8 +2096,11 @@ class Part
     public function curveEdge($curveStartKey, $curveControl1Key, $curveControl2Key, $curveEndKey, $direction)
     {
         return BezierToolbox::bezierEdge(
-            $this->loadPoint($curveStartKey), $this->loadPoint($curveControl1Key),
-            $this->loadPoint($curveControl2Key), $this->loadPoint($curveEndKey), $direction
+            $this->loadPoint($curveStartKey), 
+            $this->loadPoint($curveControl1Key),
+            $this->loadPoint($curveControl2Key), 
+            $this->loadPoint($curveEndKey), 
+            $direction
         );
     }
 
@@ -2212,33 +2142,7 @@ class Part
     }
 
     /**
-     * Splits curve and adds prefixed points for it to $this->points
-     *
-     * @see \Freesewing\Part::splitCurve()
-     *
-     * @param string $from         The id of the start of the curve
-     * @param string $cp1          The id of the first control point
-     * @param string $cp2          The id of the second control point
-     * @param string $to           The id of the end of the curve
-     * @param string $split        The id of the point to split on, or a delta to split on
-     * @param string $prefix       The prefix to add to the new points
-     * @param bool   $splitOnDelta True if we're splitting on delta
-     */
-    public function addSplitCurve($from, $cp1, $cp2, $to, $split, $prefix = '', $splitOnDelta = false)
-    {
-        $points = $this->splitCurve($from, $cp1, $cp2, $to, $split, $splitOnDelta);
-        $this->addPoint($prefix . '1', $points[0]);
-        $this->addPoint($prefix . '2', $points[1]);
-        $this->addPoint($prefix . '3', $points[2]);
-        $this->addPoint($prefix . '4', $points[3]);
-        $this->addPoint($prefix . '5', $points[4]);
-        $this->addPoint($prefix . '6', $points[5]);
-        $this->addPoint($prefix . '7', $points[6]);
-        $this->addPoint($prefix . '8', $points[7]);
-    }
-
-    /**
-     * Splits curve and returns the 8 resulting points
+     * Splits curve and adds 8 resulting points to the part
      *
      * Splitting a curve makes two curves,
      * with a start, end and 2 controlpoints each.
@@ -2253,9 +2157,9 @@ class Part
      * @param string     $split        The id of the point to split on, or a delta to split on
      * @param float|bool $splitOnDelta Whether to split on delta or not
      *
-     * @return array the 8 points resulting from the split
+     * @return void Adds points to the part
      */
-    public function splitCurve($from, $cp1, $cp2, $to, $split, $splitOnDelta = false)
+    public function splitCurve($from, $cp1, $cp2, $to, $split, $prefix=false, $splitOnDelta = false)
     {
         if ($splitOnDelta) {
             $t = $split;
@@ -2276,16 +2180,14 @@ class Part
             $this->loadPoint($from), $t
         );
 
-        return [
-            $curve1[0],
-            $curve1[1],
-            $curve1[2],
-            $curve1[3],
-            $curve2[0],
-            $curve2[1],
-            $curve2[2],
-            $curve2[3],
-        ];
+        $this->addPoint($prefix . '1', $curve1[0]);
+        $this->addPoint($prefix . '2', $curve1[1]);
+        $this->addPoint($prefix . '3', $curve1[2]);
+        $this->addPoint($prefix . '4', $curve1[3]);
+        $this->addPoint($prefix . '5', $curve2[0]);
+        $this->addPoint($prefix . '6', $curve2[1]);
+        $this->addPoint($prefix . '7', $curve2[2]);
+        $this->addPoint($prefix . '8', $curve2[3]);
     }
 
     /**
@@ -2349,7 +2251,7 @@ class Part
         $labelAttributes=['class' => 'dimension-label text-sm', 'dy' => -2],
         $leaderAttributes=['class' => 'dimension-leader']
     ) {
-        $this->newWidthDimension($fromId,$toId,$y,$text,$pathAttributes,$labelAttributes);
+        $this->newWidthDimension($fromId,$toId,$y,$text,$pathAttributes,$labelAttributes,$leaderAttributes);
     }
 
     /**
@@ -2706,7 +2608,7 @@ class Part
      *
      * @param \Freesewing\Dimension   $dimension The dimension object
      */
-    public function addDimension($dimension)
+    private function addDimension($dimension)
     {
         $this->dimensions[] = $dimension;
     }

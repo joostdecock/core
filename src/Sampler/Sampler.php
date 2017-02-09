@@ -111,7 +111,7 @@ class Sampler
      * @param \Freesewing\SvgRenderbot $renderBot The SVG renderbot to render the path
      * @param string                   $mode      sample or compare
      */
-    public function sampleParts($step, $steps, $pattern, $theme, $renderBot, $mode='sample')
+    protected function sampleParts($step, $steps, $pattern, $theme, $renderBot, $mode='sample')
     {
         foreach ($pattern->parts as $partKey => $part) {
             if ($part->getRender() === true) {
@@ -169,7 +169,7 @@ class Sampler
      * That's needed because the sampled paths are stored as rendered snippets
      * and thus we can no longer determine their boundary.
      */
-    public function addSampledPartsToPattern()
+    protected function addSampledPartsToPattern()
     {
         foreach ($this->partContainer as $partKey => $part) {
             $this->pattern->addPart("sampler-$partKey");

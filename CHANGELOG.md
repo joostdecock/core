@@ -19,6 +19,9 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - Removed the _Part::curveEdgeBottom_ method, use _Part::curveEdge_ instead
 - Removed the _Part::findLineLineIntersection_ method, use _Part::beamsCross_ instead
 - _PRECISION_ is now a constant in _Point_
+- Removed the _Sampler::getPattern_ method, as it wasn't used
+- Made _Sampler::addSampledPartsToPattern_ and _Sampler::sampleParts_ protected
+- Removed replace code from _SvgBlock::add_
 
 ### Fixed
 
@@ -27,6 +30,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ### Added
 
 - Class documentation
+- Credits to Polynomial class
 
 ## [0.3.0-beta] - 2017-01-26
 

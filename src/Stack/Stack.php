@@ -38,7 +38,7 @@ class Stack
     /**
      * Adds intersection to the stack
      *
-     * @param array intersections The intersection to add
+     * @param array $intersection The intersection to add
      */
     public function addIntersection($intersection)
     {

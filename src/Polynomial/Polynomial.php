@@ -8,6 +8,17 @@ namespace Freesewing;
  * This class is only used to help us determine the
  * intersections between two cubic Bezier curves.
  *
+ * It is a port of the work by Kevin Lindsey
+ * @see http://www.kevlindev.com/
+ *
+ * Kevin's original code is licensed under a BSD-3-clause license.
+ * We have reached a gentlemen's agreement to dual-license this port.
+ * So that can we include it here under a GPL license, and it is
+ * also be available under the original BSD-3-clause license
+ * for those who prefer that option.
+ *
+ * @see FIXME: Add link to BSD-3-clause licensed repo here
+ *
  * @author    Joost De Cock <joost@decock.org>
  * @copyright 2016 Joost De Cock
  * @license   http://opensource.org/licenses/GPL-3.0 GNU General Public License, Version 3

@@ -59,7 +59,7 @@ class Sampler
      *
      * @return \Freesewing\Point The anchor point
      */
-    public function getSamplerAnchor($part)
+    private function getSamplerAnchor($part)
     {
         if (isset($part->points['samplerAnchor'])) {
             return $part->loadPoint('samplerAnchor');

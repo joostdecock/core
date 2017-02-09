@@ -46,18 +46,6 @@ class Sampler
     }
 
     /**
-     * Returns file names of the sampler models files
-     *
-     * @param \Freesewing\Pattern or equivalent $pattern
-     *
-     * @return string the filename
-     */
-    public function getSamplerModelsFile($pattern)
-    {
-        return Utils::getClassDir($pattern) . '/sampler/models.yml';
-    }
-
-    /**
      * Returns the anchor point to be used for sampling
      *
      * This will check for:

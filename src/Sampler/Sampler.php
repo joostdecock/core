@@ -46,16 +46,6 @@ class Sampler
     }
 
     /**
-     * Returns the pattern property
-     *
-     * @return \Freesewing\Pattern or equivalent
-     */
-    public function getPattern()
-    {
-        return $this->pattern;
-    }
-
-    /**
      * Returns file names of the sampler models files
      *
      * @param \Freesewing\Pattern or equivalent $pattern

@@ -63,7 +63,7 @@ abstract class Channel
     {
         // Redirect to docs
         $response = new \Freesewing\Response();
-        $response->addHeader('redirect', "Location: /docs/");
+        $response->addHeader('redirect', "Location: /demo/");
         $context->setResponse($response);
     }
 

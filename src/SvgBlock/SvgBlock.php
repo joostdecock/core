@@ -37,9 +37,12 @@ abstract class SvgBlock
     /**
      * Returns the data property
      *
+     * Actually, this is used to check whether data
+     * has been added, because it returns false if not
+     *
      * @return array $data The data in the object
      */
-    public function getData()
+    protected function getData()
     {
         return $this->data;
     }

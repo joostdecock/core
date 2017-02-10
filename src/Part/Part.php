@@ -64,7 +64,7 @@ class Part
     public $boundary = array();
 
     /** @var bool Percentage our path offset is allowed to deviate */
-    public $maxOffsetTolerance = 5;
+    public $maxOffsetTolerance = 10;
 
     /** @var int Number of steps when walking a path */
     public $steps = 1000;

@@ -22,6 +22,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - Removed the _Sampler::getPattern_ method, as it wasn't used
 - Made _Sampler::addSampledPartsToPattern_ and _Sampler::sampleParts_ protected
 - Removed replace code from _SvgBlock::add_
+- Removed shoulderLength measurement. Use shoulderToShoulder instead
 
 ### Fixed
 
@@ -31,6 +32,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 - Class documentation
 - Credits to Polynomial class
+- The Sven Sweater pattern
 
 ## [0.3.0-beta] - 2017-01-26
 

@@ -1,24 +1,29 @@
 info:
-  name: "Brian Body Block"
-  version: "2.0"
-  date: 20160925
+  name: "Sven Sweatshirt"
+  version: "1.0"
+  date: 20170210
   author: "Joost De Cock"
   email: "joost@decock.org"
   company: "freesewing.org"
-  link: "freesewing.org/pattern/joost-body-block/"
+  link: "freesewing.org/pattern/sven-sweatshirt/"
+
 parts:
   backBlock: "Back block"
   frontBlock: "Front block"
   sleeveBlock: "Sleeve block"
+  back: "Back"
+  front: "Front"
+  sleeve: "Sleeve"
+
 languages:
     en: "English"
-    nl: "Nederlands"
-    fr: "French"
+
 measurements:
     acrossBack: 450
     bicepsCircumference: 335
     centerBackNeckToWaist: 480
     chestCircumference: 1080
+    naturalWaist: 885
     naturalWaistToHip: 120
     neckCircumference: 420
     shoulderSlope: 55
@@ -26,6 +31,7 @@ measurements:
     hipsCircumference: 950
     sleeveLengthToWrist: 700
     wristCircumference: 190
+
 options:
     chestEase:
         type: "measure"
@@ -34,32 +40,22 @@ options:
         default: 30
     bicepsEase:
         type: "measure"
-        min: 0
-        max: 80
-        default: 30
+        min: 40
+        max: 120
+        default: 80
     cuffEase:
         type: "measure"
         min: 0
         max: 100
-        default: 45
-    armholeDepthFactor:
-        type: "percent"
-        min: 50
-        max: 65
         default: 60
-    sleevecapHeightFactor:
-        type: "percent"
-        min: 45
-        max: 60
-        default: 55
     lengthBonus:
         type: "measure"
-        min: -40
-        max: 120
-        default: 0
+        min: 0
+        max: 220
+        default: 120
     sleeveLengthBonus:
         type: "measure"
         min: -40
         max: 80
-        default: 0
+        default: 60
 

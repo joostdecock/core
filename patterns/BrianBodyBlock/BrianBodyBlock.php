@@ -176,9 +176,8 @@ class BrianBodyBlock extends Pattern
         // Armhole
         $p->newPoint(10, $model->getMeasurement('acrossBack') / 2, $p->y(1) + $p->deltaY(1, 2) / 2, 'Armhole pitch point');
         $p->newPoint(11, $p->x(10), $p->y(2), 'Armhole pitch width @ armhole depth');
-        $p->newPoint(12,
-            $p->x(7) + sqrt(pow($model->getMeasurement('shoulderLength'), 2) - pow($model->getMeasurement('shoulderSlope') / 2,
-                    2)), $model->getMeasurement('shoulderSlope') / 2, 'Shoulder tip');
+        $p->newPoint(12, $model->m('shoulderToShoulder')/2, $model->m('shoulderSlope') / 2, 'Shoulder tip');
+
         $p->addPoint(13, $p->Shift(5, 180, $p->distance(11, 5) / 4), 'Left curve control point for 5');
         $p->addPoint('.help1', $p->shift(11, 45, 5), '45 degrees upwards');
         $p->addPoint('.help2', $p->beamsCross(11, '.help1', 5, 10), 'Intersection');
@@ -308,7 +307,7 @@ class BrianBodyBlock extends Pattern
         $p->newPoint(1, 0, 0, 'Origin (Center sleeve @ shoulder)');
         $p->newPoint(2, 0, $this->v('sleevecapHeight'), 'Center sleeve @ sleevecap start');
         $p->clonePoint(2, 'gridAnchor');
-        $p->newPoint(3, 0, $model->getMeasurement('sleeveLengthToWrist'), 'Center sleeve @ wrist');
+        $p->newPoint(3, 0, $model->getMeasurement('sleeveLengthToWrist') + $this->o('sleeveLengthBonus'), 'Center sleeve @ wrist');
 
         // Sleeve half width
         $p->newPoint(4, ($model->getMeasurement('bicepsCircumference') / 2 + $this->getOption('bicepsEase') / 2) * $this->v('sleeveTweakFactor'), 0,

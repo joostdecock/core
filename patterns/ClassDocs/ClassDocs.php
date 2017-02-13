@@ -280,6 +280,20 @@ class ClassDocs extends Pattern
     }
 
     /**
+     * Text::generic example (not tied to a method)
+     */
+    private function example_Text_generic($p, $model)
+    {
+        /** @var \Freesewing\Part $p */
+        $p->newPoint(1, 10, 10);
+
+        $p->newText(1, 1, "Hello world");
+        $p->newText(2, 1, "I am text with some attributes set",['class' => 'text-sm fill-note', 'dy' => 6]);
+        
+        $this->addBox($p,30);
+    }
+
+    /**
      * Part::unit example
      */
     private function example_Part_unit($p, $model)

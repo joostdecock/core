@@ -1572,10 +1572,10 @@ class Part
         for ($i = 1; $i < 5; ++$i) {
             $t = $i / 5;
 
-            $xOrigin = Utils::bezierPoint($t, $originFrom->getX(), $originCp1->getX(), $originCp2->getX(), $originTo->getX());
-            $yOrigin = Utils::bezierPoint($t, $originFrom->getY(), $originCp1->getY(), $originCp2->getY(), $originTo->getY());
-            $xOffset = Utils::bezierPoint($t, $offsetFrom->getX(), $offsetCp1->getX(), $offsetCp2->getX(), $offsetTo->getX());
-            $yOffset = Utils::bezierPoint($t, $offsetFrom->getY(), $offsetCp1->getY(), $offsetCp2->getY(), $offsetTo->getY());
+            $xOrigin = BezierToolbox::bezierPoint($t, $originFrom->getX(), $originCp1->getX(), $originCp2->getX(), $originTo->getX());
+            $yOrigin = BezierToolbox::bezierPoint($t, $originFrom->getY(), $originCp1->getY(), $originCp2->getY(), $originTo->getY());
+            $xOffset = BezierToolbox::bezierPoint($t, $offsetFrom->getX(), $offsetCp1->getX(), $offsetCp2->getX(), $offsetTo->getX());
+            $yOffset = BezierToolbox::bezierPoint($t, $offsetFrom->getY(), $offsetCp1->getY(), $offsetCp2->getY(), $offsetTo->getY());
             
             $this->newPoint('.offsetToleranceOrigin', $xOrigin, $yOrigin);
             $this->newPoint('.offsetToleranceOffset', $xOffset, $yOffset);
@@ -1888,8 +1888,8 @@ class Part
 
         for ($i = 0; $i <= $this->steps; ++$i) {
             $t = $i / $this->steps;
-            $x = Utils::bezierPoint($t, $start->getX(), $cp1->getX(), $cp2->getX(), $end->getX());
-            $y = Utils::bezierPoint($t, $start->getY(), $cp1->getY(), $cp2->getY(), $end->getY());
+            $x = BezierToolbox::bezierPoint($t, $start->getX(), $cp1->getX(), $cp2->getX(), $end->getX());
+            $y = BezierToolbox::bezierPoint($t, $start->getY(), $cp1->getY(), $cp2->getY(), $end->getY());
             if ($i > 0) {
                 $deltaX = $x - $previousX;
                 $deltaY = $y - $previousY;

@@ -23,6 +23,8 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - Made _Sampler::addSampledPartsToPattern_ and _Sampler::sampleParts_ protected
 - Removed replace code from _SvgBlock::add_
 - Removed shoulderLength measurement. Use shoulderToShoulder instead
+- Removed unused methods from _Transform_
+- Moved _bezierPoint_ method from _Utils_ to _BezierToolbox_
 
 ### Fixed
 

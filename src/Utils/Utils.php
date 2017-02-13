@@ -96,27 +96,6 @@ class Utils
     }
 
     /**
-     * Returns single-axis coordinate of a point along a cubic Bezier curve
-     *
-     * This returns the coordinate for a point $t into a curve
-     * $t is between 0 and 1
-     *
-     * @param float  $t        Value between 0 and 1 to indicate how far along the curve we are
-     * @param string $startval X or Y value for the start of the curve
-     * @param string $cp1val   X or Y  value for the first control point
-     * @param string $cp2val   X or Y value for the second control point
-     * @param string $endval   X or Y value for the end of the curve
-     *
-     * @see http://en.wikipedia.org/wiki/B%C3%A9zier_curve#Cubic_B.C3.A9zier_curves
-     *
-     * @return float The single-axis coordinate
-     */
-    public static function bezierPoint($t, $startval, $cp1val, $cp2val, $endval)
-    {
-        return $startval * (1.0 - $t) * (1.0 - $t) * (1.0 - $t) + 3.0 * $cp1val * (1.0 - $t) * (1.0 - $t) * $t + 3.0 * $cp2val * (1.0 - $t) * $t * $t + $endval * $t * $t * $t;
-    }
-
-    /**
      * Returns the class directory of the object passed to it
      *
      * @param object $class The object for which to return the class directory

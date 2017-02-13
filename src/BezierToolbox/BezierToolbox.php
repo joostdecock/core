@@ -26,6 +26,27 @@ class BezierToolbox
     const STEPS = 100;
 
     /**
+     * Returns single-axis coordinate of a point along a cubic Bezier curve
+     *
+     * This returns the coordinate for a point $t into a curve
+     * $t is between 0 and 1
+     *
+     * @param float  $t        Value between 0 and 1 to indicate how far along the curve we are
+     * @param string $startval X or Y value for the start of the curve
+     * @param string $cp1val   X or Y  value for the first control point
+     * @param string $cp2val   X or Y value for the second control point
+     * @param string $endval   X or Y value for the end of the curve
+     *
+     * @see http://en.wikipedia.org/wiki/B%C3%A9zier_curve#Cubic_B.C3.A9zier_curves
+     *
+     * @return float The single-axis coordinate
+     */
+    public static function bezierPoint($t, $startval, $cp1val, $cp2val, $endval)
+    {
+        return $startval * (1.0 - $t) * (1.0 - $t) * (1.0 - $t) + 3.0 * $cp1val * (1.0 - $t) * (1.0 - $t) * $t + 3.0 * $cp2val * (1.0 - $t) * $t * $t + $endval * $t * $t * $t;
+    }
+
+    /**
      * Returns the distance for a control point to approximate a circle
      *
      * Note that circle is not perfect, but close enough
@@ -60,8 +81,8 @@ class BezierToolbox
 
         for ($i = 0; $i <= $steps; ++$i) {
             $t = $i / $steps;
-            $x = Utils::bezierPoint($t, $start->getX(), $cp1->getX(), $cp2->getX(), $end->getX());
-            $y = Utils::bezierPoint($t, $start->getY(), $cp1->getY(), $cp2->getY(), $end->getY());
+            $x = BezierToolbox::bezierPoint($t, $start->getX(), $cp1->getX(), $cp2->getX(), $end->getX());
+            $y = BezierToolbox::bezierPoint($t, $start->getY(), $cp1->getY(), $cp2->getY(), $end->getY());
             if ($i > 0) {
                 $deltaX = $x - $previousX;
                 $deltaY = $y - $previousY;
@@ -94,8 +115,8 @@ class BezierToolbox
         $steps = self::STEPS;
         for ($i = 0; $i <= $steps; ++$i) {
             $t = $i / $steps;
-            $x = Utils::bezierPoint($t, $start->getX(), $cp1->getX(), $cp2->getX(), $end->getX());
-            $y = Utils::bezierPoint($t, $start->getY(), $cp1->getY(), $cp2->getY(), $end->getY());
+            $x = BezierToolbox::bezierPoint($t, $start->getX(), $cp1->getX(), $cp2->getX(), $end->getX());
+            $y = BezierToolbox::bezierPoint($t, $start->getY(), $cp1->getY(), $cp2->getY(), $end->getY());
             if ($i == 0) {
                 $edgeX = $x;
                 $edgeY = $y;
@@ -142,8 +163,8 @@ class BezierToolbox
         $steps = self::STEPS;
         for ($i = 0; $i <= $steps; ++$i) {
             $t = $i / $steps;
-            $x = Utils::bezierPoint($t, $start->getX(), $cp1->getX(), $cp2->getX(), $end->getX());
-            $y = Utils::bezierPoint($t, $start->getY(), $cp1->getY(), $cp2->getY(), $end->getY());
+            $x = BezierToolbox::bezierPoint($t, $start->getX(), $cp1->getX(), $cp2->getX(), $end->getX());
+            $y = BezierToolbox::bezierPoint($t, $start->getY(), $cp1->getY(), $cp2->getY(), $end->getY());
             if ($i == 0) {
                 $minX = $x;
                 $minY = $y;
@@ -204,8 +225,8 @@ class BezierToolbox
         $tmp = new \Freesewing\Point();
         for ($i = 0; $i <= $steps; ++$i) {
             $t = $i / $steps;
-            $x = Utils::bezierPoint($t, $start->getX(), $cp1->getX(), $cp2->getX(), $end->getX());
-            $y = Utils::bezierPoint($t, $start->getY(), $cp1->getY(), $cp2->getY(), $end->getY());
+            $x = BezierToolbox::bezierPoint($t, $start->getX(), $cp1->getX(), $cp2->getX(), $end->getX());
+            $y = BezierToolbox::bezierPoint($t, $start->getY(), $cp1->getY(), $cp2->getY(), $end->getY());
             $tmp->setX($x);
             $tmp->setY($y);
             $distance = Utils::distance($split, $tmp);

@@ -26,6 +26,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - Removed unused methods from _Transform_
 - Moved _bezierPoint_ method from _Utils_ to _BezierToolbox_
 - Renamed _Utils::findLineLineIntersection_ to _Utils::lineLineIntersection_
+- Renamed _AbstractService_ class to _Service_ to be consistent with other abstract class naming
 
 ### Fixed
 

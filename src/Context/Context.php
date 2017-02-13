@@ -2,7 +2,7 @@
 /** Freesewing\Context class */
 namespace Freesewing;
 
-use Freesewing\Services\AbstractService;
+use Freesewing\Services\Service;
 use Symfony\Component\Translation\Translator;
 use Symfony\Component\Translation\Loader\YamlFileLoader;
 
@@ -47,7 +47,7 @@ class Context
     /** @var \Freesewing\Request */
     protected $request;
     
-    /** @var \Freesewing\Services\AbstractService */
+    /** @var \Freesewing\Services\Service */
     protected $service;
 
     /** @var \Freesewing\SvgDocument */
@@ -283,7 +283,7 @@ class Context
     /**
      * Returns the service property
      *
-     * @return AbstractService
+     * @return Service
      */
     public function getService()
     {
@@ -407,7 +407,7 @@ class Context
     /**
      * Creates a new service based on request data, or the default service
      *
-     * @return \Freesewing\Services\AbstractService|\Freesewing\Services\DraftService|\Freesewing\Services\SampleService|\Freesewing\Services\InfoService
+     * @return \Freesewing\Services\Service|\Freesewing\Services\DraftService|\Freesewing\Services\SampleService|\Freesewing\Services\InfoService
      *
      * @throws \InvalidArgumentException if the specified service cannot be found
      */
@@ -640,9 +640,9 @@ class Context
     /**
      * Sets the service property
      *
-     * @param AbstractService $service
+     * @param Service $service
      */
-    public function setService(\Freesewing\Services\AbstractService $service)
+    public function setService(\Freesewing\Services\Service $service)
     {
         $this->service = $service;
     }

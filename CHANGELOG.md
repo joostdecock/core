@@ -25,6 +25,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - Removed shoulderLength measurement. Use shoulderToShoulder instead
 - Removed unused methods from _Transform_
 - Moved _bezierPoint_ method from _Utils_ to _BezierToolbox_
+- Renamed _Utils::findLineLineIntersection_ to _Utils::lineLineIntersection_
 
 ### Fixed
 

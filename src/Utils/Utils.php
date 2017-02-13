@@ -130,7 +130,7 @@ class Utils
      *
      * @return array|null The coordinates of the intersection, or null if the lines are parallel
      */
-    public static function findLineLineIntersection(Point $point1, Point $point2, Point $point3, Point $point4)
+    public static function lineLineIntersection(Point $point1, Point $point2, Point $point3, Point $point4)
     {
         /* weed out parallel lines */
         if ($point1->getX() == $point2->getX() && $point3->getX() == $point4->getX()) {

@@ -59,11 +59,14 @@ abstract class Channel
      *
      * @return void Redirect to the documentation
      */
-    public function handleInValidRequest($context)
+    public function handleInvalidRequest($context)
     {
+        // Call cleanup before bailing out
+        $this->cleanUp();
+
         // Redirect to docs
         $response = new \Freesewing\Response();
-        $response->addHeader('redirect', "Location: /demo/");
+        $response->addHeader('redirect', "Location: https://joostdecock.github.io/freesewing-docs/");
         $context->setResponse($response);
     }
 

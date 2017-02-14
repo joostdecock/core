@@ -23,7 +23,7 @@ measurements:
     chestCircumference: 1080
     naturalWaistToHip: 120
     neckCircumference: 420
-    shoulderLength: 160
+    shoulderToShoulder: 470
     shoulderSlope: 40
     hipsCircumference: 950
 options:

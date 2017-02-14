@@ -51,6 +51,9 @@ class WahidWaistcoat extends BrianBodyBlock
      */
     const BACK_NECK_CUTOUT = 25;
 
+    /** Armhole depth factor = 81% */
+    const ARMHOLE_DEPTH_FACTOR = 0.81;
+
     /**
      * Sets up options and values for our draft
      *
@@ -74,9 +77,12 @@ class WahidWaistcoat extends BrianBodyBlock
         $this->setOption('collarEase', self::COLLAR_EASE);
         $this->setOption('sleevecapEase', self::SLEEVECAP_EASE);
         $this->setOption('backNeckCutout', self::BACK_NECK_CUTOUT);
+        $this->setOption('armholeDepthFactor', self::ARMHOLE_DEPTH_FACTOR);
 
         // Depth of the armhole
         $this->setValue('armholeDepth', 290 - self::BACK_NECK_CUTOUT + ($model->m('shoulderSlope') / 2 - 27.5) + ($model->m('bicepsCircumference') / 10));
+        // Depth of the armhole
+        $this->setValue('armholeDepth', $model->m('shoulderSlope') / 2 + $model->m('bicepsCircumference') * $this->o('armholeDepthFactor'));
 
         // Collar widht and depth
         $this->setValue('collarWidth', ($model->getMeasurement('neckCircumference') / self::PI) / 2 + 5);

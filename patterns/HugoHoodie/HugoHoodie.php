@@ -21,9 +21,36 @@ class HugoHoodie extends BrianBodyBlock
       Things we need to do before we can draft a pattern
     */
 
+    /** Armhole depth factor = 60% */
+    const ARMHOLE_DEPTH_FACTOR = 0.6;
 
-    // Nothing to do, we call initialize() from the parent class
+    /** Sleevecap height factor = 55% */
+    const SLEEVECAP_HEIGHT_FACTOR = 0.55;
 
+    /**
+     * Sets up options and values for our draft
+     *
+     * By branching this out of the sample/draft methods, we can
+     * set a bunch of options and values the influence the draft
+     * without having to touch the sample/draft methods
+     * When extending this pattern so we can just implement the
+     * initialize() method and re-use the other methods.
+     *
+     * Good to know:
+     * Options are typically provided by the user, but sometimes they are fixed
+     * Values are calculated for re-use later
+     *
+     * @param \Freesewing\Model $model The model to sample for
+     *
+     * @return void
+     */
+    public function initialize($model)
+    {
+        $this->setOption('armholeDepthFactor', self::ARMHOLE_DEPTH_FACTOR);
+        $this->setOption('sleevecapHeightFactor', self::SLEEVECAP_HEIGHT_FACTOR);
+        
+        parent::initialize($model);
+    }
 
     /*
         ____             __ _

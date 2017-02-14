@@ -23,7 +23,7 @@ class Tutorial extends Pattern
 
         // Let's go
         for($i=1;$i<=$total;$i++) {
-            $this->addPart("figure$i");
+            $this->newPart("figure$i");
             $method = "draftFigure$i";
             $this->{$method}($model);
         }

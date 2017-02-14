@@ -523,7 +523,7 @@ class CathrinCorset extends Pattern
         for ($i=1; $i<8; $i++) {
             if (!($this->v('panels') == 11 && $i == 4)) {
                 $part = "panel$i";
-                $this->addPart($part);
+                $this->newPart($part);
                 $p = $this->parts[$part];
                 $this->clonePoints('panels', $part);
                 $p->newPath($part, $this->{"path$i"}, ['class' => 'seamline']);

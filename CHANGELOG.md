@@ -18,15 +18,31 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - Removed the _Part::curveEdgeTop_ method, use _Part::curveEdge_ instead
 - Removed the _Part::curveEdgeBottom_ method, use _Part::curveEdge_ instead
 - Removed the _Part::findLineLineIntersection_ method, use _Part::beamsCross_ instead
-- _PRECISION_ is now a constant in _Point_
-- Removed the _Sampler::getPattern_ method, as it wasn't used
-- Made _Sampler::addSampledPartsToPattern_ and _Sampler::sampleParts_ protected
+- Removed _Pattern::getSamplerModelFile_ 
+- Removed _Pattern::getSamplerModels_
 - Removed replace code from _SvgBlock::add_
 - Removed shoulderLength measurement. Use shoulderToShoulder instead
+- Removed the _Sampler::getPattern_ method, as it wasn't used
 - Removed unused methods from _Transform_
-- Moved _bezierPoint_ method from _Utils_ to _BezierToolbox_
+- Made _Sampler::addSampledPartsToPattern_ protected
+- Made _Sampler::sampleParts_ protected
+- Made _Theme::getOption_ protected
+- Made _Theme::getConfigFile_ protected
+- Made _Theme::getTemplateDir_ protected
+- Made _Pattern::getTranslationsDir_ private
+- Made _Pattern::getConfigFile_ private
+- Made _Pattern::setWidth_ private
+- Made _Pattern::setHeight_ private
+- Made _Pattern::pileParts_ private
+- Made _Pattern::addPartBoundaries_ private
+- Made _Theme::loadTemplates_ private
+- Made _Theme::loadTemplateHierarchy_ private
+- Made _Theme::getClassChain_ private
+- Renamed _Pattern::addPart_ to _Pattern::newPart_ to be consisten with method naming in _Part_
 - Renamed _Utils::findLineLineIntersection_ to _Utils::lineLineIntersection_
 - Renamed _AbstractService_ class to _Service_ to be consistent with other abstract class naming
+- Moved _bezierPoint_ method from _Utils_ to _BezierToolbox_
+- _PRECISION_ is now a constant in _Point_
 
 ### Fixed
 

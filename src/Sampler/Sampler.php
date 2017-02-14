@@ -172,7 +172,7 @@ class Sampler
     protected function addSampledPartsToPattern()
     {
         foreach ($this->partContainer as $partKey => $part) {
-            $this->pattern->addPart("sampler-$partKey");
+            $this->pattern->newPart("sampler-$partKey");
             $p = $this->pattern->parts[$partKey];
             $p->newPoint(1, $part['topLeft']->getX(), $part['topLeft']->getY(), 'Top left');
             $p->newPoint(3, $part['bottomRight']->getX(), $part['bottomRight']->getY(), 'Bottom right');

@@ -115,7 +115,7 @@ abstract class Pattern
     public function loadParts()
     {
         foreach ($this->config['parts'] as $part => $title) {
-            $this->addPart($part);
+            $this->newPart($part);
             $this->parts[$part]->setTitle($title);
             $this->parts[$part]->setUnits($this->units['out']);
         }
@@ -126,7 +126,7 @@ abstract class Pattern
      *
      * @return string $dir The directory holding the transaltion files
      */
-    public function getTranslationsDir()
+    private function getTranslationsDir()
     {
         return \Freesewing\Utils::getClassDir($this) . '/translations';
     }
@@ -136,19 +136,9 @@ abstract class Pattern
      *
      * @return string $config The pattern config file
      */
-    public function getConfigFile()
+    private function getConfigFile()
     {
         return \Freesewing\Utils::getClassDir($this) . '/config.yml';
-    }
-
-    /**
-     * Returns the sampler model file
-     *
-     * @return string $models The sampler model file
-     */
-    public function getSamplerModelFile()
-    {
-        return \Freesewing\Utils::getClassDir($this) . '/sampler/models.yml';
     }
 
     /**
@@ -163,20 +153,6 @@ abstract class Pattern
     public function getConfig()
     {
         return $this->config;
-    }
-
-    /**
-     * Returns the sampler model configuration
-     *
-     * This loads the sampler/models.yml Yaml file and returns it as an array
-     *
-     * @throws ParseException If the Yaml file is invalid
-     *
-     * @return array The sampler models
-     */
-    public function getSamplerModels()
-    {
-        return \Freesewing\Yamlr::loadYamlFile($this->getSamplerModelFile());
     }
 
     /**
@@ -282,7 +258,7 @@ abstract class Pattern
      *
      * @param float $width The width of the pattern
      */
-    public function setWidth($width)
+    private function setWidth($width)
     {
         $this->width = $width;
     }
@@ -302,7 +278,7 @@ abstract class Pattern
      *
      * @param float $height The height of the pattern
      */
-    public function setHeight($height)
+    private function setHeight($height)
     {
         $this->height = $height;
     }
@@ -341,16 +317,6 @@ abstract class Pattern
     }
 
     /**
-     * Sets the partMargin property
-     *
-     * @return float $margin The margin between pattern parts
-     */
-    public function getPartMargin()
-    {
-        return $this->partMargin;
-    }
-
-    /**
      * Stacks all parts in the top left corner in preparation of layout
      *
      * When you draw a part, there's no reason it would have point (0,0) as
@@ -358,7 +324,7 @@ abstract class Pattern
      * the top left (by adding a translate transform). We do this before
      * we layout the pattern with our packer.
      */
-    public function pileParts()
+    private function pileParts()
     {
         if (isset($this->parts) && count($this->parts) > 0) {
             foreach ($this->parts as $part) {
@@ -377,7 +343,7 @@ abstract class Pattern
      *
      * @param string $key The ID in the parts array of the part to add
      */
-    public function addPart($key)
+    public function newPart($key)
     {
         if (is_numeric($key) || is_string($key)) {
             $part = new \Freesewing\Part();
@@ -388,7 +354,7 @@ abstract class Pattern
     /**
      * Calls $part->addBoundary() on all parts
      */
-    public function addPartBoundaries()
+    private function addPartBoundaries()
     {
         if (isset($this->parts) && count($this->parts) > 0) {
             foreach ($this->parts as $part) {

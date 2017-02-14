@@ -447,7 +447,7 @@ class ClassDocs extends Pattern
         
         foreach($modes as $mode) {
             // Only one title per part, so we need a part for each mode
-            $this->addPart($mode);
+            $this->newPart($mode);
             /** @var \Freesewing\Part $p */
             $p = $this->parts[$mode];
             $p->newPoint(1, 20, 35);

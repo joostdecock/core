@@ -44,7 +44,7 @@ abstract class Theme
      *
      * @return mixed The value of the option
      */
-    public function getOption($key)
+    protected function getOption($key)
     {
         if(isset($this->options[$key])) return $this->options[$key];
         else return null;
@@ -53,7 +53,7 @@ abstract class Theme
     /**
      * Returns the location of the theme config file
      */
-    public function getConfigFile()
+    protected function getConfigFile()
     {
         return Utils::getClassDir($this).'/config.yml';
     }
@@ -113,7 +113,7 @@ abstract class Theme
      *
      * @param SvgDocument $svgDocument The SvgDocument
      */
-    public function loadTemplates($svgDocument)
+    private function loadTemplates($svgDocument)
     {
         $templates = $this->loadTemplateHierarchy();
         if (isset($templates['js'])) {
@@ -182,7 +182,7 @@ abstract class Theme
      *
      * @return array $templates Array with template files
      */
-    public function loadTemplateHierarchy()
+    private function loadTemplateHierarchy()
     {
         $locations = $this->getClassChain();
         $templates = array();
@@ -219,7 +219,7 @@ abstract class Theme
      *
      * @return array $locations An array of class directories
      */
-    public function getClassChain()
+    private function getClassChain()
     {
         $reflector = new \ReflectionClass(get_class($this));
         $filename = $reflector->getFileName();
@@ -239,7 +239,7 @@ abstract class Theme
      *
      * @return string $dir The directory path
      */
-    public function getTemplateDir()
+    protected function getTemplateDir()
     {
         return Utils::getClassDir($this).'/templates';
     }
@@ -268,16 +268,6 @@ abstract class Theme
         }
 
         return $translations;
-    }
-
-    /**
-     * Returns the name of the theme
-     *
-     * @return string $name The theme name
-     */
-    public function getThemeName()
-    {
-        return basename(Utils::getClassDir($this));
     }
 
     /**
@@ -322,7 +312,7 @@ abstract class Theme
      *
      * @param \Freesewing\Patterns\Pattern $pattern The pattern object
      */
-    public function applyRenderMaskOnParts(Pattern $pattern)
+    private function applyRenderMaskOnParts(Pattern $pattern)
     {
         $parts = $this->getOption('parts');
         // Force into array, even if it's just 1 part

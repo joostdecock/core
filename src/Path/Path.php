@@ -28,8 +28,8 @@ class Path
     /** @var array $attributes The path attributest */
     private $attributes = array();
 
-    /** @var string $path The SVG pathstring */
-    private $path = null;
+    /** @var string $pathstring The SVG pathstring */
+    private $pathstring = null;
 
     /**
      * Marks path to be sampled by the sample service
@@ -96,19 +96,19 @@ class Path
      *
      * @param string $path The pathstring
      */
-    public function setPath($path)
+    public function setPathstring($path)
     {
-        $this->path = trim(preg_replace('/ {2,}/', ' ', $path));
+        $this->pathstring = trim(preg_replace('/ {2,}/', ' ', $path));
     }
 
     /**
-     * Returns the path property, which is the pathstring
+     * Returns the pathstring property
      *
      * @return string
      */
-    public function getPath()
+    public function getPathstring()
     {
-        return $this->path;
+        return $this->pathstring;
     }
 
     /**
@@ -170,7 +170,7 @@ class Path
     public function findBoundary($part)
     {
         /* Break path into array */
-        $pathAsArray = Utils::asScrubbedArray($this->getPath());
+        $pathAsArray = Utils::asScrubbedArray($this->getPathstring());
         foreach ($pathAsArray as $index => $data) {
             /* Are we dealing with a command or point index? */
             if (Utils::isAllowedPathCommand($data)) {
@@ -271,7 +271,7 @@ class Path
      */
     public function isClosed()
     {
-        if (substr(trim(strtolower($this->getPath())), -2) == ' z') {
+        if (substr(trim(strtolower($this->getPathstring())), -2) == ' z') {
             return true;
         } else {
             return false;
@@ -289,7 +289,7 @@ class Path
      */
     public function breakUp()
     {
-        $array = Utils::asScrubbedArray($this->getPath());
+        $array = Utils::asScrubbedArray($this->getPathstring());
         foreach ($array as $i => $step) {
             if ($step == 'M') {
                 $ongoing = 'M '.$array[$i + 1];
@@ -326,7 +326,7 @@ class Path
      */
     public function getStartPoint()
     {
-        $points = Utils::asScrubbedArray($this->getPath());
+        $points = Utils::asScrubbedArray($this->getPathstring());
 
         return $points[1];
     }
@@ -338,7 +338,7 @@ class Path
      */
     public function getEndPoint()
     {
-        $points = Utils::asScrubbedArray($this->getPath());
+        $points = Utils::asScrubbedArray($this->getPathstring());
 
         $last = array_pop($points);
 

@@ -157,7 +157,7 @@ class Part
     public function newPath($key, $pathString, $attributes = null)
     {
         $path = new Path();
-        $path->setPath($pathString);
+        $path->setPathstring($pathString);
         $path->setAttributes($attributes);
         $this->addPath($key, $path);
     }
@@ -275,7 +275,7 @@ class Part
         $toId = $this->newId('.note');
         $this->addPoint($toId, $this->shift($anchorKey, $angle, $length));
         $path = new Path();
-        $path->setPath("M $fromId L $toId");
+        $path->setPathstring("M $fromId L $toId");
         $path->setAttributes(['class' => 'note']);
         $note->setPath($path);
 
@@ -310,8 +310,8 @@ class Part
     {
         $textOnPath = new TextOnPath();
         $path = new Path();
-        $path->setPath($pathString);
-        $textOnPath->setPath($path);
+        $path->setPathstring($pathString);
+        $textOnPath->setPathstring($path);
         $textOnPath->setText($msg);
         $textOnPath->setAttributes($attributes);
         $this->addTextOnPath($key, $textOnPath);
@@ -966,7 +966,7 @@ class Part
     private function pathStackToPath(Stack $stack, Path $originalPath)
     {
         /* Is the original path closed? */
-        if (substr(trim($originalPath->getPath()), -2) == ' z') {
+        if (substr(trim($originalPath->getPathstring()), -2) == ' z') {
             $closed = true;
         } else {
             $closed = false;
@@ -2287,7 +2287,7 @@ class Part
             $pathFrom = $i;
             // Leader
             $fromLeader = new \Freesewing\Path;
-            $fromLeader->setPath("M $fromId L $pathFrom");
+            $fromLeader->setPathstring("M $fromId L $pathFrom");
             $fromLeader->setAttributes($leaderAttributes);
             $d->addLeader($fromLeader);
         }
@@ -2301,7 +2301,7 @@ class Part
             $pathTo = $i;
             // Leader
             $toLeader = new \Freesewing\Path;
-            $toLeader->setPath("M $toId L $pathTo");
+            $toLeader->setPathstring("M $toId L $pathTo");
             $toLeader->setAttributes($leaderAttributes);
             $d->addLeader($toLeader);
         }
@@ -2311,7 +2311,7 @@ class Part
 
         // Path
         $path = new \Freesewing\Path();
-        $path->setPath("M $pathFrom L $pathTo");
+        $path->setPathstring("M $pathFrom L $pathTo");
         $path->setAttributes($pathAttributes);
 
         // Text
@@ -2380,7 +2380,7 @@ class Part
             $pathFrom = $i;
             // Leader
             $fromLeader = new \Freesewing\Path;
-            $fromLeader->setPath("M $fromId L $i");
+            $fromLeader->setPathstring("M $fromId L $i");
             $fromLeader->setAttributes($leaderAttributes);
             $d->addLeader($fromLeader);
         }
@@ -2394,7 +2394,7 @@ class Part
             $pathTo = $i;
             // Leader
             $toLeader = new \Freesewing\Path;
-            $toLeader->setPath("M $toId L $i");
+            $toLeader->setPathstring("M $toId L $i");
             $toLeader->setAttributes($leaderAttributes);
             $d->addLeader($toLeader);
         }
@@ -2404,7 +2404,7 @@ class Part
 
         // Path
         $path = new \Freesewing\Path();
-        $path->setPath("M $pathFrom L $pathTo");
+        $path->setPathstring("M $pathFrom L $pathTo");
         $path->setAttributes($pathAttributes);
 
         // Text
@@ -2472,7 +2472,7 @@ class Part
                 $this->addPoint(${$i}, $this->shift($point, $angle, $offset));
                 // Leader
                 $leader = new \Freesewing\Path;
-                $leader->setPath("M $point L ".${$i});
+                $leader->setPathstring("M $point L ".${$i});
                 $leader->setAttributes($leaderAttributes);
                 $d->addLeader($leader);
             }
@@ -2486,7 +2486,7 @@ class Part
 
         // Path
         $path = new \Freesewing\Path();
-        $path->setPath("M $pathFrom L $pathTo");
+        $path->setPathstring("M $pathFrom L $pathTo");
         $path->setAttributes($pathAttributes);
 
         // Text
@@ -2523,7 +2523,7 @@ class Part
 
         // Make pathstring into a path object
         $origPath = new \Freesewing\Path();
-        $origPath->setPath($pathString);
+        $origPath->setPathstring($pathString);
 
         // Label (a TextOnPath object)
         $label = new \Freesewing\TextOnPath();
@@ -2531,7 +2531,7 @@ class Part
         // Path
         if($offset == 0) {
             $path = new \Freesewing\Path();
-            $path->setPath($pathString);
+            $path->setPathstring($pathString);
             $path->setAttributes($pathAttributes);
         } else {
             $id = $this->newId('.dc-');
@@ -2551,13 +2551,13 @@ class Part
 
             // Start Leader
             $leader = new \Freesewing\Path;
-            $leader->setPath('M '.$origPath->getStartPoint().' L '.$path->getStartPoint());
+            $leader->setPathstring('M '.$origPath->getStartPoint().' L '.$path->getStartPoint());
             $leader->setAttributes($leaderAttributes);
             $d->addLeader($leader);
 
             // End Leader
             $leader = new \Freesewing\Path;
-            $leader->setPath('M '.$origPath->getEndPoint().' L '.$path->getEndPoint());
+            $leader->setPathstring('M '.$origPath->getEndPoint().' L '.$path->getEndPoint());
             $leader->setAttributes($leaderAttributes);
             $d->addLeader($leader);
         }

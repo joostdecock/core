@@ -605,7 +605,7 @@ class HugoHoodie extends BrianBodyBlock
         $p->offsetPathString('sa', $sa, 10, true, ['class' => 'seam-allowance']);
 
         // Close path at the fold
-        $p->paths['sa']->setPath('M 4 L sa-line-4TO6 M 9 L sa-curve-9TO100 '.$p->paths['sa']->getPath());
+        $p->paths['sa']->setPathstring('M 4 L sa-line-4TO6 M 9 L sa-curve-9TO100 '.$p->paths['sa']->getPathstring());
     }
 
     /**
@@ -645,7 +645,7 @@ class HugoHoodie extends BrianBodyBlock
         $sa = 'M 4 L 6 L 5 C 13 16 14 C 15 100 100 C 57 56 1';
         $p->offsetPathString('sa', $sa, 10, true, ['class' => 'seam-allowance']);
         // Close path at the fold
-        $p->paths['sa']->setPath('M 4 L sa-line-4TO6 M 1 L sa-curve-1TO100 '.$p->paths['sa']->getPath());
+        $p->paths['sa']->setPathstring('M 4 L sa-line-4TO6 M 1 L sa-curve-1TO100 '.$p->paths['sa']->getPathstring());
 
         // Sleeve notch
         $this->backNotchLen = $p->curveLen(100, 100, 15, 14)/2;
@@ -714,7 +714,7 @@ class HugoHoodie extends BrianBodyBlock
         // Seam allowance
         $sa = 'M 105 L 103 C 104 102 102 L 101 L 4';
         $p->offsetPathString('sa', $sa, -10, true, ['class' => 'seam-allowance']);
-        $p->paths['sa']->setPath('M 4 L sa-line-4TO101 M 105 L sa-line-105TO103 '.$p->paths['sa']->getPath());
+        $p->paths['sa']->setPathstring('M 4 L sa-line-4TO101 M 105 L sa-line-105TO103 '.$p->paths['sa']->getPathstring());
     }
 
 

@@ -145,7 +145,7 @@ class Designer extends Theme
         if(!is_array($onlyPoints) && $onlyPoints != false) $onlyPoints = [$onlyPoints];
 
         $partSlug = Utils::slug($part->getTitle());
-        foreach (explode(' ', $path->getPath()) as $key) {
+        foreach (explode(' ', $path->getPathstring()) as $key) {
             $key = rtrim($key);
 
             if ($key != '' && \Freesewing\Utils::isAllowedPathCommand($key)) {

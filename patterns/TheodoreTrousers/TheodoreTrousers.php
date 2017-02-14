@@ -813,7 +813,7 @@ class TheodoreTrousers extends Pattern
         $p = $this->parts['back'];
         
         // Seam allowance, without the dart
-        $seamline = str_replace('L dartTopLeft L dartTip L dartTopRight ','',$p->paths['seamline']->getPath());
+        $seamline = str_replace('L dartTopLeft L dartTip L dartTopRight ','',$p->paths['seamline']->getPathstring());
         $p->offsetPathString('sa', $seamline, -10, 1, ['class' => 'seam-allowance']);
      
         // 5cm extra hem allowance

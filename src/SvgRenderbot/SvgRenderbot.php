@@ -77,7 +77,7 @@ class SvgRenderbot
         if ($path->getRender() === false) {
             return '';
         }
-        $pathstring = $path->getPath();
+        $pathstring = $path->getPathstring();
         $points = $part->points;
         $patharray = explode(' ', $pathstring);
         $svg = '';

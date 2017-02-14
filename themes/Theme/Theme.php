@@ -113,7 +113,7 @@ abstract class Theme
      *
      * @param SvgDocument $svgDocument The SvgDocument
      */
-    private function loadTemplates($svgDocument)
+    protected function loadTemplates($svgDocument)
     {
         $templates = $this->loadTemplateHierarchy();
         if (isset($templates['js'])) {

@@ -10,3 +10,9 @@ Gemfile.lock
 docs/apigen
 metrics/
 olddocs/
+.buildpath
+.externalToolBuilders/
+.metadata/
+.project
+.settings/
+.idea/

@@ -8,7 +8,6 @@ templates:
 settings:
     partMargin: 10
     isPaperless: true
-
 options:
     - parts
     - forceParts

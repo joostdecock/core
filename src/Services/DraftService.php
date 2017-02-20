@@ -96,7 +96,7 @@ class DraftService extends Service
     protected function svgRender(\Freesewing\Context $context)
     {
         // Don't set size for themes with embedFluid options set to true, allows for responsive embedding
-        if($context->getTheme()->embedFluid()) {
+        if(!$context->getTheme()->embedFluid()) {
             $context->getSvgDocument()->svgAttributes->add('width ="' . ($context->getPattern()->getWidth() * self::SCALE) . '"');
             $context->getSvgDocument()->svgAttributes->add('height ="' . ($context->getPattern()->getHeight() * self::SCALE) . '"');
         }

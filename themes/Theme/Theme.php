@@ -215,8 +215,11 @@ abstract class Theme
      */
     public function embedFluid()
     {
-        if($this->options['embedFluid'] === true) return true;
-        else return false;
+        if ($this->config['settings']['embedFluid'] === true) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
     /**

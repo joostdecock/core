@@ -20,6 +20,8 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - Removed the _Part::findLineLineIntersection_ method, use _Part::beamsCross_ instead
 - Removed _Pattern::getSamplerModelFile_ 
 - Removed _Pattern::getSamplerModels_
+- Removed _themes/Sampler::themeResponse_, parent will do
+- Removed _themes/Info::getThemeName_
 - Removed replace code from _SvgBlock::add_
 - Removed shoulderLength measurement. Use shoulderToShoulder instead
 - Removed the _Sampler::getPattern_ method, as it wasn't used
@@ -54,6 +56,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - Credits to Polynomial class
 - The Sven Sweater pattern
 - The _embedFluid_ option to themes
+- The _Info_ theme now output a _Access-Control-Allow-Origin_ header
 
 ## [0.3.0-beta] - 2017-01-26
 

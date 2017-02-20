@@ -26,24 +26,6 @@ class Sampler extends Theme
     }
 
     /**
-     * Returns a response object with our SVG pattern
-     *
-     * @param \Freesewing\Context $context The context object
-     *
-     * @return \Freesewing\Response A response object
-     */
-    public function themeResponse(Context $context)
-    {
-        $response = new \Freesewing\Response();
-        $response->addHeader('Content-Type', 'Content-Type: image/svg+xml');
-        $response->addCacheHeaders($context->getRequest());
-        $response->setFormat('svg');
-        $response->setBody("{$context->getSvgDocument()}");
-
-        return $response;
-    }
-
-    /**
      * Returns a stroke attribute based on the current step and total steps
      *
      * @param int $step Current step (in the sampler)

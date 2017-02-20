@@ -37,6 +37,8 @@ class Info
             $response->setBody($list);
             $response->setFormat('json');
         }
+        // Allow this to be called from AJAX across domains
+        $response->addHeader('Access-Control-Allow-Origin','Access-Control-Allow-Origin: *');
 
         return $response;
     }
@@ -62,6 +64,8 @@ class Info
             $response->setBody($pattern);
             $response->setFormat('json');
         }
+        // Allow this to be called from AJAX across domains
+        $response->addHeader('Access-Control-Allow-Origin','Access-Control-Allow-Origin: *');
 
         return $response;
     }
@@ -199,16 +203,6 @@ class Info
      */
     public function cleanUp()
     {
-    }
-    
-    /**
-     * Returns the name of the theme
-     *
-     * @return string $name The name of the theme
-     */
-    public function getThemeName()
-    {
-        return basename(\Freesewing\Utils::getClassDir($this));
     }
     
     /**

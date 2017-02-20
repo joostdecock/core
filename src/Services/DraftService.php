@@ -95,8 +95,11 @@ class DraftService extends Service
      */
     protected function svgRender(\Freesewing\Context $context)
     {
-        $context->getSvgDocument()->svgAttributes->add('width ="' . ($context->getPattern()->getWidth() * self::SCALE) . '"');
-        $context->getSvgDocument()->svgAttributes->add('height ="' . ($context->getPattern()->getHeight() * self::SCALE) . '"');
+        // Don't set size for themes with embedFluid options set to true, allows for responsive embedding
+        if($context->getTheme()->embedFluid()) {
+            $context->getSvgDocument()->svgAttributes->add('width ="' . ($context->getPattern()->getWidth() * self::SCALE) . '"');
+            $context->getSvgDocument()->svgAttributes->add('height ="' . ($context->getPattern()->getHeight() * self::SCALE) . '"');
+        }
 
         $viewbox = $context->getRequest()->getData('viewbox');
         if ($viewbox !== null) {

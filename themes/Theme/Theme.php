@@ -209,6 +209,17 @@ abstract class Theme
     }
 
     /**
+     * Returns true if the embedFluid options is to to true
+     *
+     * @return bool The value of the option
+     */
+    public function embedFluid()
+    {
+        if($this->options['embedFluid'] === true) return true;
+        else return false;
+    }
+
+    /**
      * Returns an array of classes between this and the abstract theme class
      *
      * If your ptheme extends another theme (and another, and ...) this

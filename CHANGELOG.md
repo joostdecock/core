@@ -29,13 +29,13 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - Made _Theme::getOption_ protected
 - Made _Theme::getConfigFile_ protected
 - Made _Theme::getTemplateDir_ protected
+- Made _Theme::loadTemplates_ protected
 - Made _Pattern::getTranslationsDir_ private
 - Made _Pattern::getConfigFile_ private
 - Made _Pattern::setWidth_ private
 - Made _Pattern::setHeight_ private
 - Made _Pattern::pileParts_ private
 - Made _Pattern::addPartBoundaries_ private
-- Made _Theme::loadTemplates_ private
 - Made _Theme::loadTemplateHierarchy_ private
 - Made _Theme::getClassChain_ private
 - Renamed _Pattern::addPart_ to _Pattern::newPart_ to be consisten with method naming in _Part_
@@ -53,6 +53,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - Class documentation
 - Credits to Polynomial class
 - The Sven Sweater pattern
+- The _embedFluid_ option to themes
 
 ## [0.3.0-beta] - 2017-01-26
 

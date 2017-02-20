@@ -35,6 +35,9 @@ class Developer extends Theme
             'svg'   => "{$context->getSvgDocument()}",
             'debug' => $debug,
         ]);
+        
+        // Allow this to be called from AJAX across domains
+        $response->addHeader('Access-Control-Allow-Origin','Access-Control-Allow-Origin: *');
 
         return $response;
     }

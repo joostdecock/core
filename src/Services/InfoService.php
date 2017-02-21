@@ -75,7 +75,7 @@ class InfoService extends Service
             $name = basename($dir);
             if ($name != 'Pattern') {
                 $config = $this->loadPatternConfig($name);
-                $list[$name] = $config['info']['name'];
+                if($config['hidden'] !== true) $list[$name] = $config['info']['name'];
             }
         }
 

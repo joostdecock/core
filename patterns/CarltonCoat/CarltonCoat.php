@@ -24,6 +24,18 @@ class CarltonCoat extends BentBodyBlock
       Things we need to do before we can draft a pattern
     */
 
+    /** Length bonus is irrelevant */
+    const LENGTH_BONUS = 0;
+
+    /** Armhole depth factor is always 67% */
+    const ARMHOLE_DEPTH_FACTOR = 0.67;
+
+    /** Sleevecap height factor is always 50% */
+    const SLEEVECAP_HEIGHT_FACTOR = 0.5;
+
+    /** Hem from waist factor is always 69% */
+    const HEM_FROM_WAIST_FACTOR = 0.69;
+
     /**
      * Sets up options and values for our draft
      *
@@ -33,10 +45,25 @@ class CarltonCoat extends BentBodyBlock
      */
     public function initialize($model)
     {
-        parent::initialize($model);
-        
         // The (grand)parent pattern's lengthBonus is irrelevant here
-        $this->setOption('lengthBonus', 0);
+        $this->setOption('lengthBonus', self::LENGTH_BONUS);
+        
+        // Fix the armholeDepthFactor to 67%
+        $this->setOption('armholeDepthFactor', self::ARMHOLE_DEPTH_FACTOR);
+        
+        // Fix the sleevecapHeightFactor to 50%
+        $this->setOption('sleevecapHeightFactor', self::SLEEVECAP_HEIGHT_FACTOR);
+        
+        // Fix the hemFromWaistFactor to 69%
+        $this->setOption('hemFromWaistFactor', self::HEM_FROM_WAIST_FACTOR);
+
+        // Make shoulderToShoulder measurement 106.38% of original because coat
+        $model->setMeasurement('shoulderToShoulder', $model->getMeasurement('shoulderToShoulder')*1.0638);
+        
+        // Make acrossBack measurement 106.38% of original because coat
+        $model->setMeasurement('acrossBack', $model->getMeasurement('acrossBack')*1.0638);
+        
+        parent::initialize($model);
     }
 
     /*
@@ -74,8 +101,12 @@ class CarltonCoat extends BentBodyBlock
         $this->draftTopsleeveBlock($model);
         $this->draftUndersleeveBlock($model);
         
-        // Hide the sleeveBlock
+        $this->draftFrontCoatBlock($model);
+
+        // Hide the sleeveBlock, frontBlock, and backBlock
         $this->parts['sleeveBlock']->setRender(false);
+        $this->parts['frontBlock']->setRender(false);
+        $this->parts['backBlock']->setRender(false);
     }
 
     /**
@@ -96,18 +127,23 @@ class CarltonCoat extends BentBodyBlock
         $this->initialize($model);
         
         $this->draftBackBlock($model);
-        $this->finalizeBackBlock($model);
+        //$this->finalizeBackBlock($model);
         
         $this->draftFrontBlock($model);
-        $this->finalizeFrontBlock($model);
+        //$this->finalizeFrontBlock($model);
 
         $this->draftSleeveBlock($model);
         $this->draftTopsleeveBlock($model);
         $this->draftUndersleeveBlock($model);
         //$this->finalizeSleeveBlock($model);
         
-        // Hide the sleeveBlock
+        $this->draftFrontCoatBlock($model);
+        
+        // Hide the sleeveBlock, frontBlock, and backBlock
         $this->parts['sleeveBlock']->setRender(false);
+        $this->parts['frontBlock']->setRender(false);
+        $this->parts['backBlock']->setRender(false);
+        
         // Is this a paperless pattern?
         if ($this->isPaperless) {
             // Add paperless info to our example part
@@ -116,27 +152,28 @@ class CarltonCoat extends BentBodyBlock
     }
 
     /**
-     * Drafts the examplePart
-     *
-     * We are using a draft[part name] scheme here but
-     * don't let that think that this is something specific
-     * to the draft service.
-     *
-     * This draft method does the basic drafting and is
-     * called by both the draft AND sample methods.
-     *
-     * The difference starts after this method is done.
-     * For sample, this is all we need, but draft calls
-     * the finalize[part name] method after this.
+     * Drafts the frontCoatBlock
      *
      * @param \Freesewing\Model $model The model to draft for
      *
      * @return void
      */
-    public function draftExamplePart($model)
+    public function draftFrontCoatBlock($model)
     {
+        $this->clonePoints('frontBlock','frontCoatBlock');
+        
         /** @var \Freesewing\Part $p */
-        $p = $this->parts['examplePart'];
+        $p = $this->parts['frontCoatBlock'];
+
+        // Hem length
+        $p->newPoint('hemMiddle', $p->x(4), $p->y(3) + $model->m('naturalWaistToFloor') * $this->o('hemFromWaistFactor'));
+        $p->newPoint('hemSide', $p->x(5), $p->y('hemMiddle'));
+
+
+        // Paths 
+        $path = 'M 9 L 2 L 3 L 4 L hemMiddle hemSide L 6 L 5 C 13 16 14 C 15 18 10 C 17 19 12 L 8 C 20 21 9 z';
+        $p->newPath('seamline', $path);
+        $p->newPath('hipLine', 'M 4 L 6', ['class' => 'helpline']);
     }
 
     /*

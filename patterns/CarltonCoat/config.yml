@@ -12,6 +12,7 @@ parts:
   sleeveBlock: "Sleeve block"
   topsleeveBlock: "Topsleeve block"
   undersleeveBlock: "Undersleeve block"
+  frontCoatBlock: "Front coat block"
 
 languages:
     en: English
@@ -29,13 +30,14 @@ measurements:
     sleeveLengthToWrist: 700
     wristCircumference: 190
     shoulderToElbow: 410 
+    naturalWaistToFloor: 1270 
 
 options:
     chestEase:
         type: measure
-        min: -40
-        max: 160
-        default: 30
+        min: 180
+        max: 320
+        default: 240
     bicepsEase:
         type: measure
         min: 0
@@ -46,13 +48,3 @@ options:
         min: 0
         max: 100
         default: 45
-    armholeDepthFactor:
-        type: "percent"
-        min: 50
-        max: 65
-        default: 60
-    sleevecapHeightFactor:
-        type: "percent"
-        min: 45
-        max: 60
-        default: 50

@@ -1,0 +1,58 @@
+info:
+    name: "Carlton Coat"
+    version: "1.0"
+    date: 20170203
+    author: "Joost De Cock"
+    email: "joost@decock.org"
+    company: "freesewing.org"
+
+parts:
+  backBlock: "Back block"
+  frontBlock: "Front block"
+  sleeveBlock: "Sleeve block"
+  topsleeveBlock: "Topsleeve block"
+  undersleeveBlock: "Undersleeve block"
+
+languages:
+    en: English
+
+measurements:
+    acrossBack: 450
+    bicepsCircumference: 335
+    centerBackNeckToWaist: 480
+    chestCircumference: 1080
+    naturalWaistToHip: 120
+    neckCircumference: 420
+    shoulderToShoulder: 470
+    shoulderSlope: 55
+    hipsCircumference: 950
+    sleeveLengthToWrist: 700
+    wristCircumference: 190
+    shoulderToElbow: 410 
+
+options:
+    chestEase:
+        type: measure
+        min: -40
+        max: 160
+        default: 30
+    bicepsEase:
+        type: measure
+        min: 0
+        max: 80
+        default: 30
+    cuffEase:
+        type: measure
+        min: 0
+        max: 100
+        default: 45
+    armholeDepthFactor:
+        type: "percent"
+        min: 50
+        max: 65
+        default: 60
+    sleevecapHeightFactor:
+        type: "percent"
+        min: 45
+        max: 60
+        default: 50

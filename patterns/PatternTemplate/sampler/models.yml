@@ -1,3 +1,8 @@
+default: 
+    group: realMen
+groups:
+    realMen:
+        - joost
 measurements:
     naturalWaist:
         joost   : 885

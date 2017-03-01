@@ -8,6 +8,7 @@ templates:
         - "defs/cc"
         - "defs/buttons"
         - "defs/buttonholes"
+        - "defs/snaps"
     footer: 
         - "comments/footer"
     header: 

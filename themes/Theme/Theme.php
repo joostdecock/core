@@ -158,6 +158,8 @@ abstract class Theme
     {
         $response = new \Freesewing\Response();
         $response->addCacheHeaders($context->getRequest());
+        // Allow this to be called from AJAX across domains
+        $response->addHeader('Access-Control-Allow-Origin','Access-Control-Allow-Origin: *');
         $response->addHeader('Content-Type', 'Content-Type: image/svg+xml');
         $response->setFormat('svg');
         $response->setBody("{$context->getSvgDocument()}");

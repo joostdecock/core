@@ -2,6 +2,9 @@
 /** Freesewing\Patterns\PatternTemplate class */
 namespace Freesewing\Patterns;
 
+use Freesewing\Utils;
+use Freesewing\BezierToolbox;
+
 /**
  * A pattern template
  *

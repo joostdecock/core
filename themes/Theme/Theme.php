@@ -44,7 +44,7 @@ abstract class Theme
      *
      * @return mixed The value of the option
      */
-    protected function getOption($key)
+    public function getOption($key)
     {
         if(isset($this->options[$key])) return $this->options[$key];
         else return null;
@@ -158,8 +158,6 @@ abstract class Theme
     {
         $response = new \Freesewing\Response();
         $response->addCacheHeaders($context->getRequest());
-        // Allow this to be called from AJAX across domains
-        $response->addHeader('Access-Control-Allow-Origin','Access-Control-Allow-Origin: *');
         $response->addHeader('Content-Type', 'Content-Type: image/svg+xml');
         $response->setFormat('svg');
         $response->setBody("{$context->getSvgDocument()}");
@@ -208,20 +206,6 @@ abstract class Theme
         }
 
         return $templates;
-    }
-
-    /**
-     * Returns true if the embedFluid options is to to true
-     *
-     * @return bool The value of the option
-     */
-    public function embedFluid()
-    {
-        if ($this->config['settings']['embedFluid'] === true) {
-            return true;
-        } else {
-            return false;
-        }
     }
 
     /**

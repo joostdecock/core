@@ -1,8 +1,8 @@
 settings:
     partMargin: 5
     isPaperless: false
-    embedFluid: false
 
 options:
     - parts
     - forceParts
+    - embedFluid

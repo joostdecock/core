@@ -75,12 +75,18 @@ class DraftService extends Service
 
             /* Last minute replacements on the entire response body */
             $context->getResponse()->setBody($this->replace($context->getResponse()->getBody(), $context->getPattern()->getReplacements()));
+
         else :
             // channel->isValidRequest() !== true
             $context->getChannel()->handleInvalidRequest($context);
         endif;
 
-        $context->getResponse()->send();
+        // Don't send response without approval from the channel
+        if($context->getChannel()->isValidResponse($context)) {
+            $context->getResponse()->send();
+        } else {
+            $context->getChannel()->handleInvalidResponse($context);
+        }
 
         $context->cleanUp();
     }
@@ -96,7 +102,7 @@ class DraftService extends Service
     protected function svgRender(\Freesewing\Context $context)
     {
         // Don't set size for themes with embedFluid options set to true, allows for responsive embedding
-        if(!$context->getTheme()->embedFluid()) {
+        if(!$context->getTheme()->getOption('embedFluid')) {
             $context->getSvgDocument()->svgAttributes->add('width ="' . ($context->getPattern()->getWidth() * self::SCALE) . '"');
             $context->getSvgDocument()->svgAttributes->add('height ="' . ($context->getPattern()->getHeight() * self::SCALE) . '"');
         }

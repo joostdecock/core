@@ -9,3 +9,4 @@ settings:
 options:
     - parts
     - forceParts
+    - embedFluid

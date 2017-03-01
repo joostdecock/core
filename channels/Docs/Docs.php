@@ -45,6 +45,28 @@ class Docs extends Channel
     }
 
     /**
+     * Channel designer gets the final say before we send a response
+     *
+     * Before we send a response, you get a chance to decide
+     * whether you are ok with it or not.
+     *
+     * This is also the place to add headers to the response.
+     *
+     * @param \Freesewing\Context $context The context object
+     *
+     * @return bool true Always true in this case
+     */
+    public function isValidResponse(Context $context) {
+        if(isset($this->config['headers'])) {
+            foreach($this->config['headers'] as $name => $value) {
+                $context->getResponse()->addHeader($name, "$name: $value");
+            }
+        }
+
+        return true;
+    }
+
+    /**
      * Turn input into model measurements that we understand.
      *
      * This loads measurement names from the pattern config file

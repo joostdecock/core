@@ -26,9 +26,9 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - Removed shoulderLength measurement. Use shoulderToShoulder instead
 - Removed the _Sampler::getPattern_ method, as it wasn't used
 - Removed unused methods from _Transform_
+- Removed the _options_ property from _Channel_
 - Made _Sampler::addSampledPartsToPattern_ protected
 - Made _Sampler::sampleParts_ protected
-- Made _Theme::getOption_ protected
 - Made _Theme::getConfigFile_ protected
 - Made _Theme::getTemplateDir_ protected
 - Made _Theme::loadTemplates_ protected
@@ -57,6 +57,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - The Sven Sweater pattern
 - The _embedFluid_ option to themes
 - The _Info_ theme now output a _Access-Control-Allow-Origin_ header
+- The _isValidResponse_ in _Channel_, checked by serviced before sending response
 
 ## [0.3.0-beta] - 2017-01-26
 

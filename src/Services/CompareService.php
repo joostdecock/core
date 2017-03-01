@@ -101,8 +101,12 @@ class CompareService extends DraftService
                 ->handleInvalidRequest($context);
         endif;
 
-        $context->getResponse()
-            ->send();
+        // Don't send response without approval from the channel
+        if($context->getChannel()->isValidResponse($context)) {
+            $context->getResponse()->send();
+        } else {
+            $context->getChannel()->handleInvalidResponse($context);
+        }
 
         $context->cleanUp();
     }

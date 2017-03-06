@@ -95,6 +95,7 @@ class ContextTest extends \PHPUnit\Framework\TestCase
      */
     public function testAddTheme()
     {
+        $this->markTestSkipped ( "method does not exit anymore" );
         $context = new Context();
         $context->setRequest(new \Freesewing\Request(['theme' => 'Paperless']));
         $context->addTheme();

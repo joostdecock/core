@@ -31,6 +31,5 @@ class ModelTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals(198, $model->getMeasurement('Height'));
         $this->assertEquals(6.3, $model->m('Toe length'));
         $this->assertEquals(198, $model->m('Height'));
-        $this->assertEquals($measurements, $model->getMeasurements());
     }
 }

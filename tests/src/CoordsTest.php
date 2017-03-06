@@ -23,28 +23,6 @@ class CoordsTest extends \PHPUnit\Framework\TestCase
         ];
     }
 
-    /**
-     * @param string $methodSuffix The part of the method to call without 'get' or 'set'
-     * @param $expectedResult Result to check for
-     *
-     * @dataProvider providerGettersReturnWhatSettersSet
-     */
-    public function testGettersReturnWhatSettersSet($methodSuffix, $expectedResult)
-    {
-        $point = new \Freesewing\Coords();
-        $setMethod = 'set'.$methodSuffix;
-        $getMethod = 'get'.$methodSuffix;
-        $point->{$setMethod}($expectedResult);
-        $this->assertEquals($expectedResult, $point->{$getMethod}());
-    }
-
-    public function providerGettersReturnWhatSettersSet()
-    {
-        return [
-            ['X', 52],
-            ['Y', 69],
-        ];
-    }
 
     /**
      * @param string $methodSuffix The part of the method to call without 'set'

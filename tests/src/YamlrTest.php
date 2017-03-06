@@ -6,7 +6,7 @@ class YamlrTest extends \PHPUnit\Framework\TestCase
 {
     private function loadTemplate($template)
     {
-        $dir = 'tests/src/fixtures';
+        $dir = \Freesewing\Utils::getApiDir().'/tests/src/fixtures';
         return "$dir/YamlrTest.$template.yml";
     }
 

@@ -233,6 +233,7 @@ class PartTest extends \PHPUnit\Framework\TestCase
      */
     public function testCurveEdges()
     {
+        $this->markTestSkipped ( "method does not exit anymore" );
         $p = new \Freesewing\Part();
         $p->newPoint(1,50,50);
         $p->newPoint(2,40,0);
@@ -389,6 +390,8 @@ class PartTest extends \PHPUnit\Framework\TestCase
      */
     public function testBezierCircle()
     {
+        $this->markTestSkipped ( "method does not exit anymore" );
+
         $p = new \Freesewing\Part();
         $this->assertEquals($p->bezierCircle(100),55.228474983079359);
     }
@@ -579,14 +582,14 @@ class PartTest extends \PHPUnit\Framework\TestCase
 
     private function loadFixture($fixture)
     {
-        $dir = 'tests/src/fixtures';
+        $dir = \Freesewing\Utils::getApiDir().'/tests/src/fixtures';
         $file = "$dir/Part.$fixture.data";
         return file_get_contents($file);
     }
 
     private function saveFixture($fixture, $data)
     {
-        $dir = 'tests/src/fixtures';
+        $dir = \Freesewing\Utils::getApiDir().'/tests/src/fixtures';
         $file = "$dir/Part.$fixture.data";
         $f = fopen($file,'w');
         fwrite($f,$data);

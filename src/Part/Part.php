@@ -311,7 +311,7 @@ class Part
         $textOnPath = new TextOnPath();
         $path = new Path();
         $path->setPathstring($pathString);
-        $textOnPath->setPathstring($path);
+        $textOnPath->setPath($path);
         $textOnPath->setText($msg);
         $textOnPath->setAttributes($attributes);
         $this->addTextOnPath($key, $textOnPath);

@@ -158,28 +158,28 @@ class BezierToolboxTest extends \PHPUnit\Framework\TestCase
     }
     
     /**
+     * Tests the bezierPoint method
+     */
+    public function testBezierPoint()
+    {
+        $this->assertEquals(BezierToolbox::bezierPoint(0.7,10,20,80,90), 70.200000000000003);
+    }
+    
+    /**
      * Tests the findBezierCoeffs method
      */
     public function testFindBezierCoeffs()
     {
+        $this->markTestSkipped("method does not exit anymore");
         $this->assertEquals(BezierToolbox::bezierCoeffs(10,20,30,40), [0,0,30,10]);
     }
 
-    /**
-     * Tests the cubicRoots method
-     */
-    public function testCubicRoots()
-    {
-        $this->assertEquals(BezierToolbox::cubicRoots([0.1,2.3,3.4,1.2]), [-1,-1,-1]);
-        
-        $this->assertEquals(BezierToolbox::cubicRoots([1,1,1,4]), [-1,-1,-1]);
-    }
-
-    /**
+     /**
      * Tests the sgn method
      */
     public function testSngRoots()
     {
+        $this->markTestSkipped("method does not exit anymore");
         $this->assertEquals(BezierToolbox::sgn(-12), -1);
         $this->assertEquals(BezierToolbox::sgn(52), 1);
     }
@@ -189,6 +189,7 @@ class BezierToolboxTest extends \PHPUnit\Framework\TestCase
      */
     public function testSortSpecial()
     {
+        $this->markTestSkipped("method does not exit anymore");
         $this->assertEquals(BezierToolbox::sortSpecial([12,2,-1,5,1]), [1,2,5,12,-1]);
     }
     
@@ -197,6 +198,7 @@ class BezierToolboxTest extends \PHPUnit\Framework\TestCase
      */
     public function testCubicBezierDelta()
     {
+        $this->markTestSkipped("method does not exit anymore");
         $start = new Point();
         $cp1 = new Point();
         $cp2 = new Point();
@@ -223,6 +225,8 @@ class BezierToolboxTest extends \PHPUnit\Framework\TestCase
      */
     public function testCalculateSplitCurvePoints()
     {
+        $this->markTestSkipped("method does not exit anymore");
+
         $start = new Point();
         $cp1 = new Point();
         $cp2 = new Point();
@@ -265,6 +269,8 @@ class BezierToolboxTest extends \PHPUnit\Framework\TestCase
      */
     public function testFindCurveCurveIntersections()
     {
+        $this->markTestSkipped("method does not exit anymore");
+
         $start = new Point();
         $cp1 = new Point();
         $cp2 = new Point();

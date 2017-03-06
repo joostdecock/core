@@ -34,6 +34,7 @@ class TestPatternTest extends \PHPUnit\Framework\TestCase
      */
     public function testGetTranslationsDir()
     {
+        $this->markTestSkipped ( "method is private" );
         $pattern = new \Freesewing\Patterns\TestPattern();
         $dir = dirname(dirname(__DIR__)).'/patterns/TestPattern/translations';
         $this->assertEquals($pattern->getTranslationsDir(), $dir);
@@ -44,6 +45,8 @@ class TestPatternTest extends \PHPUnit\Framework\TestCase
      */
     public function testGetSamplerModelFile()
     {
+        $this->markTestSkipped ( "method does not exit anymore" );
+
         $pattern = new \Freesewing\Patterns\TestPattern();
         $file = dirname(dirname(__DIR__)).'/patterns/TestPattern/sampler/models.yml';
         $this->assertEquals($pattern->getSamplerModelFile(), $file);
@@ -54,6 +57,7 @@ class TestPatternTest extends \PHPUnit\Framework\TestCase
      */
     public function testGetSamplerModels()
     {
+        $this->markTestSkipped ( "method does not exit anymore" );
         $pattern = new \Freesewing\Patterns\TestPattern();
         $data = [
             'default' => [
@@ -95,6 +99,8 @@ class TestPatternTest extends \PHPUnit\Framework\TestCase
      */
     public function testGettersReturnWhatSettersSet($methodSuffix, $value)
     {
+        $this->markTestSkipped ( "method is private" );
+
         $object = new \Freesewing\Patterns\TestPattern();
         $setMethod = 'set'.$methodSuffix;
         $getMethod = 'get'.$methodSuffix;
@@ -157,6 +163,7 @@ class TestPatternTest extends \PHPUnit\Framework\TestCase
         $p = $pattern->parts['testPart'];
         $p->newPoint(1,2,3,'Just another point');
         $p->addPoint(2, $p->shift(1,0,10),'A shifted point');
+        $this->markTestSkipped ( "method does not exit anymore" );
         $pattern->addPart('part2');
         $pattern->clonePoints('testPart','part2');
         $this->assertEquals($pattern->parts['part2']->points[2]->getX(), 12);

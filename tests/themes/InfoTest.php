@@ -53,6 +53,7 @@ class InfoTest extends \PHPUnit\Framework\TestCase
      */
     public function testThemeName()
     {
+        $this->markTestSkipped ( "method does not exit anymore" );
         $theme = new \Freesewing\Themes\Info();
         $this->assertEquals('Info', $theme->getThemeName());
     }
@@ -70,14 +71,14 @@ class InfoTest extends \PHPUnit\Framework\TestCase
 
     private function loadFixture($fixture)
     {
-        $dir = 'tests/themes/fixtures';
+        $dir = \Freesewing\Utils::getApiDir().'/tests/themes/fixtures';
         $file = "$dir/Info.$fixture.data";
         return file_get_contents($file);
     }
 
     private function saveFixture($fixture, $data)
     {
-        $dir = 'tests/themes/fixtures';
+        $dir = \Freesewing\Utils::getApiDir().'/tests/themes/fixtures';
         $file = "$dir/Info.$fixture.data";
         $f = fopen($file,'w');
         fwrite($f,$data);

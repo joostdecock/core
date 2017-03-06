@@ -19,6 +19,7 @@ class BasicTest extends \PHPUnit\Framework\TestCase
      */
     public function testGetThemeName()
     {
+        $this->markTestSkipped ( "method does not exit anymore" );
         $theme = new \Freesewing\Themes\Basic();
         $this->assertEquals($theme->getThemeName(), 'Basic');
     }
@@ -49,10 +50,10 @@ class BasicTest extends \PHPUnit\Framework\TestCase
     {
         $theme = new \Freesewing\Themes\Basic();
         $pattern = new \Freesewing\Patterns\TestPattern();
-        $pattern->addPart('part1');
+        $pattern->newPart('part1');
         $pattern->parts['part1']->setRender(false);
-        $pattern->addPart('part2');
-        $pattern->addPart('part3');
+        $pattern->newPart('part2');
+        $pattern->newPart('part3');
         
         $theme->setOptions(new \Freesewing\Request(['parts' => 'part1,part2']));
         $theme->applyRenderMaskOnParts($pattern);

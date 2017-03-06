@@ -11,6 +11,7 @@ class DocsTest extends \PHPUnit\Framework\TestCase
      */
     public function testAttributeExists($attribute)
     {
+        $this->markTestSkipped ( "attribute does not exit anymore" );
         $this->assertClassHasAttribute($attribute, '\Freesewing\Channels\Docs');
     }
 

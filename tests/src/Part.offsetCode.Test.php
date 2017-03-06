@@ -192,7 +192,7 @@ class PartOffsetCode extends \PHPUnit\Framework\TestCase
 
     private function loadFixture($fixture)
     {
-        $dir = 'tests/src/fixtures';
+        $dir = \Freesewing\Utils::getApiDir().'/tests/src/fixtures';
         $file = "$dir/Part.offset.$fixture.data";
         return file_get_contents($file);
     }
@@ -200,7 +200,7 @@ class PartOffsetCode extends \PHPUnit\Framework\TestCase
     private function saveFixture($fixture, $data)
     {
         return true;
-        $dir = 'tests/src/fixtures';
+        $dir = \Freesewing\Utils::getApiDir().'/tests/src/fixtures';
         $file = "$dir/Part.offset.$fixture.data";
         $f = fopen($file,'w');
         fwrite($f,$data);

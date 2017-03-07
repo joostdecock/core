@@ -4,7 +4,6 @@
     <text x="-40" y="10" class="text-sm">
         <tspan x="-40" dy="4" class="text-xs">freesewing.org</tspan>
         <tspan x="-40" dy="8" class="text-xl">__TITLE__ </tspan>
-        <tspan> v.__VERSION__ #__REFERENCE__</tspan>
         <tspan x="-40" dy="8" class="fill-brand">freesewing.org/draft/__REFERENCE__</tspan>
     </text>
     <text y="0" x="0" class="text-xs text-center">

@@ -1,6 +1,10 @@
 info:
     name: "My baby bib pattern"
 
+languages:
+    en: English
+    nl: Nederlands
+
 parts:
     bib: "Baby bib"
 

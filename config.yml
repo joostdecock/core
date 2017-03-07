@@ -7,9 +7,6 @@ defaults:
     infoTheme: Info
     pattern: TestPattern
     locale: en
-renderers:
-    svg: SvgRenderbot
-    js: JsRenderbot
 services:
     - info
     - draft

@@ -237,6 +237,63 @@ class DesignTutorial extends Pattern
         $p->paths['neckOpening']->setRender(false);
     }
 
+    private function example_bias($p, $model)
+    {
+        $this->example_outline($p, $model);
+    
+        $p->offsetPath('bias', 'outline', -3, true, ['class' => 'helpline']);
+    }
+
+    private function example_snap($p, $model)
+    {
+        $this->example_bias($p, $model);
+    
+        // Snap button
+        $p->newSnippet(1, 'snap-male', 'snapAnchor');
+        $p->newSnippet(2, 'snap-female', 'snap2Anchor');
+
+        // Logo
+        $p->addPoint('logoAnchor', $p->shift(1,-90,120)); 
+        $p->newSnippet('logo', 'logo', 'logoAnchor');
+    }
+    
+    private function example_title($p, $model)
+    {
+        $this->example_snap($p, $model);
+
+        $p->addPoint('titleAnchor', $p->shift(1,-90,60)); 
+        $p->addTitle('titleAnchor', 1, $this->t('Baby bib'), '1x');
+
+    }
+
+    private function example_note($p, $model)
+    {
+        $this->example_title($p, $model);
+
+        $p->newNote(1,1,$this->t('Finish with bias tape'), 12, 15, -3);
+        $p->newNote(2,'snap2Anchor',$this->t('Attach snap at the back'), 6, 25, 4);
+    }
+
+    private function example_dimensions($p, $model)
+    {
+        $this->example_note($p, $model);
+
+        // Width at the bottom
+        $p->newWidthDimension('bottomLeftCornerEnd','bottomRightCornerEnd', $p->y('bottomRightCornerStart')+15);
+
+        // Heights on the right side
+        $xBase = $p->x('bottomRightCornerEnd');
+        $p->newHeightDimension('bottomLeftCornerStart', 'bottomRightCornerEnd', $xBase + 15);
+        $p->newHeightDimension('bottomLeftCornerStart', 1, $xBase + 30);
+        $p->newHeightDimension('bottomLeftCornerStart', 2, $xBase + 45);
+        $p->newHeightDimension('bottomLeftCornerStart', 'top1', $xBase + 60);
+        $p->newHeightDimension('bottomLeftCornerStart', 'topRightCornerEnd', $xBase + 75);
+
+        // Neck opening
+        $p->newLinearDimension('left1',2);
+        $p->newCurvedDimension('M top12 C top4 top5 left1 C left3 left2 1 C 3 4 2 C top3 top2 top1', -5);
+    }
+
     public function draftFigure1($model)
     {
         $p = $this->parts['figure1'];

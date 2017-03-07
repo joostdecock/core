@@ -71,13 +71,13 @@ class BabyBib extends Pattern
         // Continue from sample
         $this->sample($model);
 
-        // Finalize our example part
-        $this->finalizeExamplePart($model);
+        // Finalize our bib
+        $this->finalizeBib($model);
 
         // Is this a paperless pattern?
         if ($this->isPaperless) {
-            // Add paperless info to our example part
-            $this->paperlessExamplePart($model);
+            // Add paperless info to our bib
+            $this->paperlessBib($model);
         }
     }
 
@@ -214,7 +214,12 @@ class BabyBib extends Pattern
                 z
             ');
 
-        
+        // Grid anchor
+        $p->newPoint('samplerAnchor', $p->x(1),$p->y(1));
+
+        // Include outline path in the sample service
+        $p->paths['outline']->setSample(true);
+
         // Draw the neck opening
         //$p->newPath('neckOpening', 'M 1 C 3 4 2 C top3 top2 top1 C top4 top5 left1 C left3 left2 1 z');
         
@@ -247,10 +252,25 @@ class BabyBib extends Pattern
      *
      * @return void
      */
-    public function finalizeExamplePart($model)
+    public function finalizeBib($model)
     {
         /** @var \Freesewing\Part $p */
-        $p = $this->parts['examplePart'];
+        $p = $this->parts['bib'];
+
+        // Bias binding line
+        $p->offsetPath('bias', 'outline', -3, true, ['class' => 'helpline']);
+
+        // Snap button
+        $p->newSnippet(1, 'snap-male', 'snapAnchor');
+        $p->newSnippet(2, 'snap-female', 'snap2Anchor');
+
+        // Title
+        $p->addPoint('titleAnchor', $p->shift(1,-90,50)); 
+        $p->addTitle('titleAnchor', 1, $this->t($p->getTitle()), '1x');
+    
+        // Logo
+        $p->addPoint('logoAnchor', $p->shift(1,-90,120)); 
+        $p->newSnippet('logo', 'logo', 'logoAnchor');
     }
 
     /*
@@ -271,9 +291,24 @@ class BabyBib extends Pattern
      *
      * @return void
      */
-    public function paperlessExamplePart($model)
+    public function paperlessBib($model)
     {
         /** @var \Freesewing\Part $p */
-        $p = $this->parts['examplePart'];
+        $p = $this->parts['bib'];
+
+        // Width at the bottom
+        $p->newWidthDimension('bottomLeftCornerEnd','bottomRightCornerEnd', $p->y('bottomRightCornerStart')+15);
+        
+        // Heights on the right side
+        $xBase = $p->x('bottomRightCornerEnd');
+        $p->newHeightDimension('bottomLeftCornerStart', 'bottomRightCornerEnd', $xBase + 15);
+        $p->newHeightDimension('bottomLeftCornerStart', 1, $xBase + 30);
+        $p->newHeightDimension('bottomLeftCornerStart', 2, $xBase + 45);
+        $p->newHeightDimension('bottomLeftCornerStart', 'top1', $xBase + 60);
+        $p->newHeightDimension('bottomLeftCornerStart', 'topRightCornerEnd', $xBase + 75);
+        
+        // Neck opening
+        $p->newLinearDimension('left1',2);
+        $p->newCurvedDimension('M top12 C top4 top5 left1 C left3 left2 1 C 3 4 2 C top3 top2 top1', -5);
     }
 }

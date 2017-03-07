@@ -36,6 +36,9 @@ class CarltonCoat extends BentBodyBlock
     /** Hem from waist factor is always 69% */
     const HEM_FROM_WAIST_FACTOR = 0.69;
 
+    /** Distance between buttons is 13% of waist */
+    const BUTTON_WAIST_RATIO = 0.13;
+
     /**
      * Sets up options and values for our draft
      *
@@ -62,6 +65,17 @@ class CarltonCoat extends BentBodyBlock
         
         // Make acrossBack measurement 106.38% of original because coat
         $model->setMeasurement('acrossBack', $model->getMeasurement('acrossBack')*1.0638);
+
+        // Waist shaping
+        $this->setValue('waistReduction', 
+            ( $model->m('chestCircumference') + $this->o('chestEase') ) - 
+            ( $model->m('naturalWaist') + $this->o('waistEase') ) 
+        );
+        // Percentage of the waistReduction that's handled in the side seams
+        $this->setValue('waistSideShapeFactor', 0.5);
+
+        // Distance between buttons
+        $this->setValue('buttonDistHor', ($model->m('naturalWaist') * self::BUTTON_WAIST_RATIO)/2);
         
         parent::initialize($model);
     }
@@ -169,11 +183,56 @@ class CarltonCoat extends BentBodyBlock
         $p->newPoint('hemMiddle', $p->x(4), $p->y(3) + $model->m('naturalWaistToFloor') * $this->o('hemFromWaistFactor'));
         $p->newPoint('hemSide', $p->x(5), $p->y('hemMiddle'));
 
+        // Waist shaping
+        $delta = $this->v('waistReduction') * $this->v('waistSideShapeFactor') / 8;
+        $p->newPoint('waistSide', $p->x(5) - $delta, $p->y(3));
+        $p->addPoint('waistSideCpTop', $p->shift('waistSide', 90, $p->deltaY(5,3)/2));
+        $p->addPoint('waistSideCpBottom', $p->flipY('waistSideCpTop', $p->y('waistSide')));
+        $p->addPoint('chestSideCp', $p->shift(5,-90,$p->deltaY(5,'waistSideCpTop')/8));
+
+        // Seat
+        $p->newPoint('seatSide', $p->x(3) + ($model->m('seatCircumference') + $this->o('seatEase'))/4, $p->y(4) + $model->m('naturalWaistToSeat') );
+        $p->addPoint('seatSideCpTop', $p->shift('seatSide', 90, $p->deltaY(4,'seatSide')/2));
+
+        // Buttonline
+        $this->setValue('buttonDistVer', $p->deltaY(4,5)/2.5);
+        $p->newPoint('button1Left', $p->x(4) - $this->v('buttonDistHor'), $p->y(4));
+        $p->addPoint('button2Left', $p->shift('button1Left',-90,$this->v('buttonDistVer')*1));
+        $p->addPoint('button3Left', $p->shift('button1Left',-90,$this->v('buttonDistVer')*2));
+        $p->addPoint('button1Right', $p->flipX('button1Left',$p->x(4)));
+        $p->addPoint('button2Right', $p->flipX('button2Left',$p->x(4)));
+        $p->addPoint('button3Right', $p->flipX('button3Left',$p->x(4)));
+
+        // Front center edge
+        $p->addPoint('frontEdge', $p->shift('button1Left',180,25));
+
+        // Hem
+        $p->newPoint('hemSide', $p->x('seatSide'), $p->y('hemMiddle')); 
+        $p->newPoint('hemFrontEdge', $p->x('frontEdge'), $p->y('hemMiddle')); 
+
+        // Collar
+        $p->newPoint('collarEdge', $p->x('frontEdge'), $p->y(9));
+        $p->addPoint('collarTip', $p->shift('collarEdge',0,$this->v('buttonDistHor')/11.5));
+        $p->newPoint('collarBendPoint', $p->x('collarEdge'), $p->y(5));
+        $p->addPoint('collarBendPointCpTop', $p->shift('collarBendPoint',90,$p->deltaY('collarEdge','collarBendPoint')*0.8));
+
+        // FIXME: Move to finalize, but buttons are visual aids for now
+        $p->newSnippet('button1Left','button','button1Left');
+        $p->newSnippet('button2Left','button','button2Left');
+        $p->newSnippet('button3Left','button','button3Left');
+        $p->newSnippet('button1Right','button','button1Right');
+        $p->newSnippet('button2Right','button','button2Right');
+        $p->newSnippet('button3Right','button','button3Right');
 
         // Paths 
-        $path = 'M 9 L 2 L 3 L 4 L hemMiddle hemSide L 6 L 5 C 13 16 14 C 15 18 10 C 17 19 12 L 8 C 20 21 9 z';
+        $path = 'M 9 L collarTip 
+            C collarTip collarBendPointCpTop collarBendPoint
+            L hemFrontEdge L hemSide L seatSide 
+            C seatSideCpTop waistSideCpBottom waistSide 
+            C waistSideCpTop chestSideCp 5 
+            C 13 16 14 C 15 18 10 C 17 19 12 L 8 C 20 21 9 z';
         $p->newPath('seamline', $path);
-        $p->newPath('hipLine', 'M 4 L 6', ['class' => 'helpline']);
+        $p->newPath('hipLine', 'M 4 L 6 L frontEdge', ['class' => 'helpline']);
     }
 
     /*

@@ -76,14 +76,14 @@ class TamikoTop extends Pattern
         $p = $this->parts['top'];
 
         // Shoulder to shoulder len
-        $s2s = $model->m('acrossBack')+50;
+        $s2s = $model->m('shoulderToShoulder')+50;
         // Armhole depth
-        $ad = $model->m('acrossBack')*0.65;
+        $ad = $model->m('shoulderToShoulder')*0.5;
         // Chest depth
         $ch = $model->m('chestCircumference')/2+2;
 
         $p->newPoint(     1, 0, 0);
-        $p->newPoint(     2, $p->x(1), sqrt(pow($s2s, 2)-100));
+        $p->newPoint(     2, $p->x(1), sqrt(pow($s2s, 2))-50);
         $p->newPoint(     3, 100, $p->y(2));
         $p->newPoint(     4, $p->x(3)+$ad, $p->y(3));
         $p->newPoint(     5, $p->x(3)+$ad/2, $p->y(3)-40);

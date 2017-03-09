@@ -15,7 +15,7 @@ languages:
     nl: Nederlands
 
 measurements:
-    acrossBack: 330
+    shoulderToShoulder: 380
     chestCircumference: 1050
     centerBackNeckToWaist: 365
     naturalWaistToHip: 260

@@ -43,6 +43,7 @@ class DraftService extends Service
      */
     public function run(\Freesewing\Context $context)
     {
+        $context->addUnits();
         $context->addPattern();
 
         if ($context->getChannel()->isValidRequest($context) === true) :
@@ -52,8 +53,6 @@ class DraftService extends Service
 
             $context->getPattern()->addOptions($context->getChannel()->standardizePatternOptions($context->getRequest(), $context->getPattern()));
 
-            $context->addUnits();
-            $context->getPattern()->setUnits($context->getUnits());
             $context->addTranslator();
             $context->getPattern()->setTranslator($context->getTranslator());
 

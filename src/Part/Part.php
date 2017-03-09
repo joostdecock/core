@@ -2277,7 +2277,6 @@ class Part
     ) {
         /** @var \Freesewing\Dimension $d */
         $d = new \Freesewing\Dimension();
-
         // Do we need a from leader?
         if($this->y($fromId) == $y || $y === false) { // Nope
             $pathFrom = $fromId;

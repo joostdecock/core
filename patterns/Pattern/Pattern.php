@@ -62,10 +62,11 @@ abstract class Pattern
      *
      * @throws ParseException if the Yaml file is not valid
      */
-    public function __construct()
+    public function __construct($units='metric')
     {
         if (is_readable($this->getConfigFile())) {
             $this->config = \Freesewing\Yamlr::loadYamlFile($this->getConfigFile());
+            $this->setUnits($units);
             $this->loadParts();
             $this->replace('__TITLE__', $this->config['info']['name']);
             $this->replace('__VERSION__', $this->config['info']['version']);
@@ -73,7 +74,7 @@ abstract class Pattern
             $this->replace('__AUTHOR__', $this->config['info']['author']);
         }
         $this->replace('__DATE__', date('l j F Y'));
-
+        
         return $this;
     }
 
@@ -117,7 +118,6 @@ abstract class Pattern
         foreach ($this->config['parts'] as $part => $title) {
             $this->newPart($part);
             $this->parts[$part]->setTitle($title);
-            $this->parts[$part]->setUnits($this->units['out']);
         }
     }
 
@@ -166,7 +166,7 @@ abstract class Pattern
      */
     public function unit($val)
     {
-        if ($this->units['out'] == 'imperial') {
+        if ($this->units == 'imperial') {
             return round($val / 25.4, 2) . '"';
         } else {
             return round($val / 10, 2) . 'cm';
@@ -347,6 +347,7 @@ abstract class Pattern
     {
         if (is_numeric($key) || is_string($key)) {
             $part = new \Freesewing\Part();
+            $part->setUnits($this->units);
             $this->parts[$key] = $part;
         }
     }

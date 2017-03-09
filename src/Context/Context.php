@@ -97,6 +97,7 @@ class Context
     {
         $this->pattern = $this->loadPattern();
         $this->pattern->setPaperless($this->theme->isPaperless());
+        $this->pattern->setUnits($this->getUnits());
     }
 
     /**
@@ -397,7 +398,7 @@ class Context
         }
         $class = '\\Freesewing\\Patterns\\'.$pattern;
         if (class_exists($class)) {
-            return new $class();
+            return new $class($this->units['out']);
         } else {
             throw new \InvalidArgumentException("Cannot load pattern $pattern, it does not exist");
         }

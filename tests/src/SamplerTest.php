@@ -152,6 +152,7 @@ class SamplerTest extends \PHPUnit\Framework\TestCase
      */
     public function testSampleParts()
     {
+        $this->markTestSkipped ( "protected method - suggest to call sampleMeasurements and/or sampleOptions and move it to the corresponding test class." );
         $object = new \Freesewing\Sampler();
 
         $pattern = new \Freesewing\Patterns\TestPattern();

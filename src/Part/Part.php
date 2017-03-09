@@ -2224,7 +2224,7 @@ class Part
         if (is_array($points)) {
             $i = 1;
             foreach ($points as $point) {
-                $this->addPoint("$prefix-$i", $point);
+                $this->addPoint($prefix.$i, $point);
                 $i++;
             }
         }

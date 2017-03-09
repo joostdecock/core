@@ -72,7 +72,7 @@ class Designer extends Theme
         } else {
             $type = 'point';
         }
-        $part->newSnippet($key, $type, $key, $attr, $title);
+        $part->newSnippet('.debugPoint__'.$key, $type, $key, $attr, $title);
         $attr = ['id' => "$partSlug-$key-tooltip", 'class' => 'tooltip', 'visibility' => 'hidden'];
         $part->newText($key, $key, $title, $attr);
     }
@@ -104,7 +104,7 @@ class Designer extends Theme
         $title = $this->debugPointDescription($key, $point);
         $partSlug = Utils::slug($part->getTitle());
         $attr = ['id' => "$partSlug-$key", 'onmouseover' => "pointHover('$partSlug-$key')"];
-        $part->newSnippet($key, 'marked-point', $key, $attr, $title);
+        $part->newSnippet('.markPoint__'.$key, 'marked-point', $key, $attr, $title);
         $attr = ['id' => "$partSlug-$key-tooltip", 'class' => 'tooltip', 'visibility' => 'hidden'];
         $part->newText($key, $key, $title, $attr);
         $part->tmp['pointsThemed'][$key] = true; // Store what points we've seen
@@ -171,7 +171,7 @@ class Designer extends Theme
                 if(!$onlyPoints || in_array($key,$onlyPoints)) {
                     $title = $this->debugPointDescription($key, $part->points[$key]);
                     $attr = ['id' => "$partSlug-$key", 'onmouseover' => "pointHover('$partSlug-$key')"];
-                    $part->newSnippet("$partSlug-$key", $type, $key, $attr, $title);
+                    $part->newSnippet(".debugPath__$partSlug-$key", $type, $key, $attr, $title);
                     $attr = ['id' => "$partSlug-$key-tooltip", 'class' => 'tooltip', 'visibility' => 'hidden'];
                     $part->newText($key, $key, $title, $attr);
                 }

@@ -44,18 +44,23 @@ class InfoService extends Service
      */
     public function run(Context $context)
     {
-        $format = $context->getRequest()->getData('format');
-        if ($context->getRequest()->getData('pattern') !== null) {
-            $context->addPattern();
-            $context->setResponse($context->getTheme()->themePatternInfo($this->getPatternInfo($context->getPattern()), $format));
-        } else {
-            $info['services'] = $context->getConfig()['services'];
-            $info['patterns'] = $this->getPatternList($context);
-            $info['channels'] = $this->getChannelList($context);
-            $info['themes'] = $this->getThemeList($context);
+        if ($context->getChannel()->isValidRequest($context) === true) :
+            $format = $context->getRequest()->getData('format');
+            if ($context->getRequest()->getData('pattern') !== null) {
+                $context->addPattern();
+                $context->setResponse($context->getTheme()->themePatternInfo($this->getPatternInfo($context->getPattern()), $format));
+            } else {
+                $info['services'] = $context->getConfig()['services'];
+                $info['patterns'] = $this->getPatternList($context);
+                $info['channels'] = $this->getChannelList($context);
+                $info['themes'] = $this->getThemeList($context);
 
-            $context->setResponse($context->getTheme()->themeInfo($info, $format));
-        }
+                $context->setResponse($context->getTheme()->themeInfo($info, $format));
+            }
+        else :
+            // channel->isValidRequest() !== true
+            $context->getChannel()->handleInvalidRequest($context);
+        endif;
 
         // Don't send response without approval from the channel
         if($context->getChannel()->isValidResponse($context)) {

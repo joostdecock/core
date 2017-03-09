@@ -33,7 +33,11 @@ class Docs extends Channel
      */
     public function isValidRequest(Context $context)
     {
-        // The only thing we check is whether the pattern you request does actually exist
+        // Info service is always ok
+        if($context->getService()->getServiceName() == 'info') return true;
+
+        // For other services, the only thing we check 
+        // is whether the pattern you request does actually exist
         $pattern = $context->getPattern();
         if(isset($pattern)) {
             $patternServed = basename($context->getPattern()->getClassChain()[0]);

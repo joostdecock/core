@@ -1839,25 +1839,28 @@ class SimonShirt extends BrianBodyBlock
         }
         else if ($backSplit > $this->v('backSleeveNotchDistance')) {
             // Closer to armhole, shift along curve before joint point 11
-            // FIXME: there is a bug lurking here where it is possible our shift brings
-            // us closer than 1.5 mm to the edge of the curve
-            // In that case, this shiftAlong() operation will run out of
-            // curve to move along and throw an exception
             $shift = $this->v('backSleeveNotchDistance') - $p->curveLen(-5,-5,20,16);
             $p->addPoint( 'backSleeveNotch', $p->shiftAlong(16,21,10,10,$shift));
-            $p->addPoint( 'backSleeveNotch1', $p->shiftAlong(16,21,10,10,$shift+1.5));
-            $p->addPoint( 'backSleeveNotch1', $p->shiftAlong(16,21,10,10,$shift-1.5));
+            $p->addPoint( 'backSleeveNotch2', $p->shiftAlong(16,21,10,10,$shift-1.5));
+            // It is possible our shift brings us closer than 1.5 mm to the edge of the curve
+            $len = $p->curveLen(16,21,10,10);
+            if($len > $shift + 1.5) {
+                $p->addPoint( 'backSleeveNotch1', $p->shiftAlong(16,21,10,10,$shift+1.5));
+            } else {
+                $p->addPoint( 'backSleeveNotch1', $p->shiftAlong(10,10,22,17,$shift + 1.5 - $len));
+            }
         }
         else {
             // Closer to shoulder, shift along curve after joint point
             $shift = $this->v('backSleeveNotchDistance') - ( $p->curveLen(-5,-5,20,16) + $p->curveLen(16,21,10,10) );
-            // FIXME: there is a bug lurking here where it is possible our shift brings
-            // us closer than 1.5 mm to the edge of the curve
-            // In that case, this shiftAlong() operation will run out of
-            // curve to move along and throw an exception
             $p->addPoint('backSleeveNotch', $p->shiftAlong(10,10,22,17,$shift));
             $p->addPoint('backSleeveNotch1', $p->shiftAlong(10,10,22,17,$shift+1.5));
-            $p->addPoint('backSleeveNotch2', $p->shiftAlong(10,10,22,17,$shift-1.5));
+            // It is possible our shift brings us closer than 1.5 mm to the edge of the curve
+            if($shift > 1.5) {
+                $p->addPoint('backSleeveNotch2', $p->shiftAlong(10,10,22,17,$shift-1.5));
+            } else {
+                $p->addPoint('backSleeveNotch2', $p->shiftAlong(16,21,10,10, 1.5 - $shift));
+            }
         }
 
         $notchHere = [411, 'sleevePlacketCutTop', 30, 'frontSleeveNotch', 'backSleeveNotch1', 'backSleeveNotch2'];

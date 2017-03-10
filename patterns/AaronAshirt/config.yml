@@ -35,7 +35,7 @@ options:
     armholeDrop:
         type: "measure"
         min: -20
-        max: 200
+        max: 120
         default: 30
     lengthBonus:
         type: "measure"

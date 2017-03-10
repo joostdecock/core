@@ -3,6 +3,7 @@
 namespace Freesewing\Channels;
 
 use Freesewing\Context;
+use Freesewing\Utils;
 
 /**
  * Channel used by the Documentation.
@@ -75,8 +76,6 @@ class Docs extends Channel
      *
      * This loads measurement names from the pattern config file
      *
-     * @todo What to do when measurments are missing?
-     *
      * @param \Freesewing\Request $request The request object
      * @param \Freesewing\Patterns\[pattern] $pattern The pattern object
      *
@@ -103,9 +102,6 @@ class Docs extends Channel
      *
      * This loads pattern options from the sampler config file
      *
-     * @todo What to do when options are missing?
-     * @todo What about imperial?
-     *
      * @param \Freesewing\Request $request The request object
      * @param \Freesewing\Patterns\[pattern] $pattern The pattern object
      *
@@ -122,21 +118,44 @@ class Docs extends Channel
                 $input = $request->getData($key);
                 switch ($val['type']) {
                     case 'measure':
-                        if(isset($input) && $input !== null) $options[$key] = $input * $factor;
-                        else $options[$key] = $val['default'];
+                        if(isset($input) && $input !== null) {
+                            $options[$key] = Utils::constraint(
+                                $input * $factor, 
+                                $val['min'],
+                                $val['max']
+                            );
+                        } else {
+                            $options[$key] = $val['default'];
+                        }
                         break;
                     case 'percent':
-                        if(isset($input) && $input !== null) $options[$key] = $input / 100;
-                        else $options[$key] = $val['default'] / 100;
+                        if(isset($input) && $input !== null) {
+                            (isset($val['min'])) ? $min = $val['min'] : $min = 0 ;
+                            (isset($val['max'])) ? $max = $val['max'] : $max = 100 ;
+                            $options[$key] = Utils::constraint(
+                                $input / 100,
+                                $min / 100,
+                                $max / 100
+                            );
+                        } else {
+                            $options[$key] = $val['default'] / 100;
+                        }
                         break;
                     case 'chooseOne':
-                        if(isset($input) && $input !== null) $options[$key] = $input;
-                        else $options[$key] = $val['default'];
+                        (
+                            isset($input) && 
+                            $input !== null && 
+                            in_array($input,array_keys($val['options']))
+                        ) 
+                        ? $options[$key] = $input
+                        : $options[$key] = $val['default'];
                         break;
                 }
 
             }
+
             return $options;
+
         } else return null;
     }
 }

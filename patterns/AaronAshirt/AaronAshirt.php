@@ -54,10 +54,6 @@ class AaronAshirt extends BrianBodyBlock
         if ($this->getOption('shoulderStrapPlacement') == 0) {
             $this->setOption('shoulderStrapPlacement', 0.001);
         }
-        // a stretchFactor below 50% is obviously wrong
-        if ($this->getOption('stretchFactor') < 0.5) {
-            $this->setOption('stretchFactor', 0.5);
-        }
 
         // Depth of the armhole
         $this->setValue('armholeDepth', 200 + ($model->m('shoulderSlope') / 2 - 27.5) + ($model->m('bicepsCircumference') / 10));

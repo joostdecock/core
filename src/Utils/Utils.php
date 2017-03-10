@@ -252,4 +252,19 @@ class Utils
     {
         return preg_replace('~[^\pL\d]+~u', '-', $string);
     }
+    
+    /**
+     * Returns value that is within min and max boundaries
+     *
+     * @param float $value The value to check
+     * @param float $min The minimum
+     * @param float $max The maximum
+     */
+    public static function constraint($value, $min, $max)
+    {
+        if($value < $min) return $min;
+        if($value > $max) return $max;
+
+        return $value;
+    }
 }

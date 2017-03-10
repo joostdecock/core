@@ -1072,17 +1072,39 @@ class SimonShirt extends BrianBodyBlock
         $base = ($model->m('neckCircumference')/2 + $this->o('collarEase')/2) * $this->v('collarStandTweakFactor');
         $extra = $this->o('buttonholePlacketWidth')/2 + $this->o('buttonPlacketWidth')/2;
 
+        $extraBtnHoleSide = $this->o('buttonholePlacketWidth')/2;
+        $extraBtnSide = $this->o('buttonPlacketWidth')/2;
+
         $p->newPoint( 1, 0,0);
         $p->newPoint( 2, $base,0);
-        $p->newPoint(21,$p->x(2)+$extra/2,$p->y(2));
+
+        $p->newPoint('21BtnSide',$p->x(2)+$extraBtnSide,$p->y(2));
+        $p->newPoint('21BtnHoleSide',$p->x(2)+$extraBtnHoleSide,$p->y(2));
+        
         $p->newPoint( 3, $p->x(2),$this->o('collarStandWidth'));
-        $p->newPoint(31,$p->x(3)+$extra/2,$p->y(3));
+        
+        $p->newPoint('31BtnSide',$p->x(3)+$extraBtnSide,$p->y(3));
+        $p->newPoint('31BtnHoleSide',$p->x(3)+$extraBtnHoleSide,$p->y(3));
+        
         $p->newPoint( 4,$p->x(1),$p->y(3));
         $p->newPoint( 5,$p->x(2),$p->y(3)/2);
-        $p->addPoint(21,$p->rotate(21,5,$this->o('collarStandCurve')));
-        $p->addPoint(21,$p->shift(21,90,$this->o('collarStandBend')/2));
-        $p->addPoint(31,$p->rotate(31,5,$this->o('collarStandCurve')));
-        $p->addPoint(31,$p->shift(31,90,$this->o('collarStandBend')/2));
+
+        $p->addPoint('21BtnSide',$p->rotate('21BtnSide',5,$this->o('collarStandCurve')));
+        $p->addPoint('21BtnSide',$p->shift('21BtnSide',90,$this->o('collarStandBend')/2));
+        $p->addPoint('21BtnHoleSide',$p->rotate('21BtnHoleSide',5,$this->o('collarStandCurve')));
+        $p->addPoint('21BtnHoleSide',$p->shift('21BtnHoleSide',90,$this->o('collarStandBend')/2));
+        
+        $p->addPoint('31BtnSide',$p->rotate('31BtnSide',5,$this->o('collarStandCurve')));
+        $p->addPoint('31BtnSide',$p->shift('31BtnSide',90,$this->o('collarStandBend')/2));
+        $p->addPoint('31BtnHoleSide',$p->rotate('31BtnHoleSide',5,$this->o('collarStandCurve')));
+        $p->addPoint('31BtnHoleSide',$p->shift('31BtnHoleSide',90,$this->o('collarStandBend')/2));
+
+        // 21 and 31 are assymetric, can't be mirrored
+        $p->addPoint(21, $p->loadPoint('21BtnHoleSide'));
+        $p->addPoint(31, $p->loadPoint('31BtnHoleSide'));
+        $p->addPoint(-21, $p->flipX('21BtnSide'));
+        $p->addPoint(-31, $p->flipX('31BtnSide'));
+
         $p->addPoint(22,$p->rotate(2,5,$this->o('collarStandCurve')));
         $p->addPoint(22,$p->shift(22,90,$this->o('collarStandBend')/2));
         $p->addPoint(32,$p->rotate(3,5,$this->o('collarStandCurve')));
@@ -1100,11 +1122,15 @@ class SimonShirt extends BrianBodyBlock
         $p->newPoint(71,$p->x(2)*0.75,$p->y(1));
         $p->newPoint(72,$p->x(2)*0.95,$p->y(1));
         $p->newPoint(13,$p->x(43),$p->y(12));
+
+        // 51 is based on assymetric 21 & 31, can't be mirrored
         $p->addPoint(51,$p->shiftTowards(21,31,$p->distance(21,31)/2));
+        $p->addPoint(-51,$p->shiftTowards(-21,-31,$p->distance(-21,-31)/2));
+        
         $p->addPoint(55,$p->shiftTowards(22,32,$p->distance(22,32)/2));
         $p->newPoint(56,0,$p->y(3)/2);
         $p->newPoint(57,$p->x(61),$p->y(56));
-        $flip = array(2,3,5,6,7,12,13,21,22,23,31,32,33,42,43,51,52,55,57,61,62,71,72);
+        $flip = array(2,3,5,6,7,12,13,22,23,32,33,42,43,52,55,57,61,62,71,72);
         foreach($flip as $pf) {
             $id = $pf*-1;
             $p->addPoint($id,$p->flipX($pf));

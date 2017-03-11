@@ -61,7 +61,10 @@ class OptionsSampler extends Sampler
     {
         $gaps = $steps - 1;
         if ($option['type'] == 'percent') {
-            return (100 / $gaps) * ($step - 1) / 100;
+            (isset($option['min'])) ? $min = $option['min'] : $min = 0 ;
+            (isset($option['max'])) ? $max = $option['max'] : $max = 100 ;
+            $delta = $max - $min;
+            return ($min + (($delta / $gaps) * ($step - 1))) / 100;
         } else {
             return $option['min'] + ((($option['max'] - $option['min']) / $gaps) * ($step - 1));
         }

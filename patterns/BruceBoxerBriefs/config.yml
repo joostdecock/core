@@ -7,6 +7,7 @@ info:
      company:      "freesewing.org"
      link:         "freesewing.org/pattern/bruce-boxer-briefs/"
 parts:
+    block:    "Block"
     front:    "Front"
     back:     "Back"
     side:     "Side"
@@ -15,20 +16,42 @@ languages:
     en: English
     nl: Nederlands
 measurements:
-    hipsCircumference: 960
-    upperLegCircumference: 600
-    crossseamLength: 670
+    hipsCircumference: 985
+    upperLegCircumference: 630
+    crossseamLength: 680
 options:
     rise:
         type: "measure"
+        min: -30
+        max: 50
+        default: 20
+
+    backRise:
+        type: "percent"
         min: 0
-        max: 80
+        max: 6
+        default: 3
+
+    elasticWidth:
+        type: "measure"
+        min: 10
+        max: 70
         default: 35
 
-    verticalStretchFactor:
-        type: "percent"
-        default: 90
+    legBonus:
+        type: "measure"
+        min: 0
+        max: 70
+        default: 35
+
+    bulge:
+        type: "angle"
+        min: 15
+        max: 35
+        default: 15
 
     horizontalStretchFactor:
         type: "percent"
-        default: 80
+        min: 75
+        max: 90
+        default: 85

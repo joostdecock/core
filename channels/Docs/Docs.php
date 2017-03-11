@@ -117,6 +117,17 @@ class Docs extends Channel
             foreach ($pattern->config['options'] as $key => $val) {
                 $input = $request->getData($key);
                 switch ($val['type']) {
+                    case 'angle':
+                        if(isset($input) && $input !== null) {
+                            $options[$key] = Utils::constraint(
+                                $input, 
+                                $val['min'],
+                                $val['max']
+                            );
+                        } else {
+                            $options[$key] = $val['default'];
+                        }
+                        break;
                     case 'measure':
                         if(isset($input) && $input !== null) {
                             $options[$key] = Utils::constraint(

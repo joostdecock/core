@@ -1,0 +1,14 @@
+default: 
+    group: realMen
+groups:
+    realMen:
+        - joost
+measurements:
+    naturalWaist:
+        joost   : 885
+        usSize34: 697
+        usSize36: 755
+        usSize38: 813
+        usSize40: 871
+        usSize42: 929
+        usSize44: 987

@@ -25,8 +25,8 @@ class OffsetTest extends Pattern
     public function draft($model)
     {
         /** @var \Freesewing\Part $p */
-        
         $start = microtime(true);
+        $segments = 0;
         for($i=1;$i<6;$i++) {
             for($j=1;$j<6;$j++) {
                 for($k=1;$k<6;$k++) {
@@ -54,6 +54,8 @@ class OffsetTest extends Pattern
                         count($p->paths["$id-offsetOut"]->breakUp()).' segments',
                         ['class' => 'text-center text-sm fill-warning', 'dy' => -6]
                     );
+                    $segments += count($p->paths["$id-offsetIn"]->breakUp());
+                    $segments += count($p->paths["$id-offsetOut"]->breakUp());
                 }
             }
         }
@@ -64,14 +66,14 @@ class OffsetTest extends Pattern
         $p->newPoint(1,0,0);
         $p->newPoint(2,$tt*40,0);
         $p->newPath(1,'M 1 L 2');
-        $p->newLinearDimension(1, 2, 10, "Time taken: $tt seconds");
-        /*
+        $p->newLinearDimension(1, 2, 10, "Time taken: $tt seconds - $segments segments in total");
         $this->newPart('th');
         $p = $this->parts['th'];
         $p->newPoint(1, 0,10);
         $p->newPoint(2, 30, 0);
         $p->newPoint(3, 70, 5);
         $p->newPoint(4, 120, 50);
+        /*       
 
         $p->newPath(1,'M 1 C 2 3 4');
         $p->NEW_offsetPath($p->newId(),1,10, ['class' => 'stroke-note']);
@@ -84,6 +86,15 @@ class OffsetTest extends Pattern
         $p->NEW_offsetPath($p->newId(),1,-40, ['class' => 'stroke-note']);
         $p->NEW_offsetPath($p->newId(),1,50, ['class' => 'stroke-note']);
         $p->NEW_offsetPath($p->newId(),1,-50, ['class' => 'stroke-note']);
-        */       
+        $this->newPart('th');
+        $p = $this->parts['th'];
+        $p->newPoint(1, 10,10);
+        $p->newPoint(2, 5, 5);
+        $p->newPoint(3, 150, 5);
+        $p->newPoint(4, 155, 10);
+
+        $p->newPath(1,'M 2 C 1 3 4');
+        $p->NEW_offsetPath($p->newId(),1,10, ['class' => 'stroke-note']);
+        */
     }
 }

@@ -1553,7 +1553,7 @@ class Part
         $offsetLen = $this->curveLen($entry['offset'][0], $entry['offset'][1], $entry['offset'][2], $entry['offset'][3]);
         
         // If a curve gets too short things go off the rails, so don't bother
-        if ($originLen < 10) {
+        if ($originLen < 20 ) {
             return ['score' => 1, 'index' => 0.5];
         }
 
@@ -2662,8 +2662,8 @@ class Part
 
         if($segments === false) return false; // Happens for paths like: M 1 L 1
         /* take care of overlapping parts */
-        //$segments = $this->fixStackIntersections($segments);
-        //$segments = $this->fillPathStackGaps($segments, $path);
+        $segments = $this->fixStackIntersections($segments);
+        $segments = $this->fillPathStackGaps($segments, $path);
         $pathString = $this->pathStackToPath($segments, $path);
         $this->newPath($newKey, $pathString, $attributes);
         if (!$render) {
@@ -2702,7 +2702,9 @@ class Part
         $cp1 = $points[3];
         $cp2 = $points[4];
         $to = $points[5];
+
         $offset = $this->NEW_getCurveOffsetPoints($from, $cp1, $cp2, $to, $distance);
+
 
         if ($subdivide == 0) {
             // First time around
@@ -2745,7 +2747,7 @@ class Part
         $tolerance = $this->offsetTolerance($segments[0], $distance);
 
         $score = $tolerance['score'];
-        if ($score > $this->maxOffsetTolerance) {
+        if ($score > $this->maxOffsetTolerance && $subdivide < 5) {
             // Not good enough, let's subdivide
             $subdivide++;
             $splitId = '.tmp_' . $key . '.splitcurve:' . $this->newId();
@@ -2797,5 +2799,4 @@ class Part
             $this->loadPoint('.offsetTo')
         ];
     }
-
 }

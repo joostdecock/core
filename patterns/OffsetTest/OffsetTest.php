@@ -38,10 +38,8 @@ class OffsetTest extends Pattern
                     $p->addPoint("$id-start", $p->shift("$id-cp1",-90 - $j*9,$k*10));
                     $p->addPoint("$id-end", $p->flipX("$id-start"));
                     $p->newPath($id, "M $id-start C $id-cp1 $id-cp2 $id-end");
-                    //$p->offsetPath("$id-offsetIn", $id, 10, 1, ['class' => 'stroke-sm stroke-note']);
-                    //$p->offsetPath("$id-offsetOut", $id, -10, 1, ['class' => 'stroke-sm stroke-warning']);
-                    $p->NEW_offsetPath("$id-offsetIn", $id, 10, ['class' => 'stroke-sm stroke-note']);
-                    $p->NEW_offsetPath("$id-offsetOut", $id, -10, ['class' => 'stroke-sm stroke-warning']);
+                    $p->offsetPath("$id-offsetIn", $id, 10, 1, ['class' => 'stroke-sm stroke-note']);
+                    $p->offsetPath("$id-offsetOut", $id, -10, 1, ['class' => 'stroke-sm stroke-warning']);
                     $p->newTextOnPath(
                         $p->newId(),
                         "M $id-start C $id-cp1 $id-cp2 $id-end", 

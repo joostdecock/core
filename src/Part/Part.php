@@ -630,12 +630,14 @@ class Part
         } else {
             throw new \InvalidArgumentException("offsetPath requires a valid path object");
         }
-        $stack = $this->pathOffsetAsStack($path, $distance, $newKey);
-        if($stack === false) return false; // Happens for paths like: M 1 L 1
+        $segments = $this->offsetPathSegments($path, $distance, $newKey);
+
+
+        if($segments === false) return false; // Happens for paths like: M 1 L 1
         /* take care of overlapping parts */
-        $stack = $this->fixStackIntersections($stack);
-        $stack = $this->fillPathStackGaps($stack, $path);
-        $pathString = $this->pathStackToPath($stack, $path);
+        $segments = $this->fixStackIntersections($segments);
+        $segments = $this->fillPathStackGaps($segments, $path);
+        $pathString = $this->pathStackToPath($segments, $path);
         $this->newPath($newKey, $pathString, $attributes);
         if (!$render) {
             $this->paths[$newKey]->setRender(false);
@@ -1378,57 +1380,47 @@ class Part
      */
     private function getCurveOffsetPoints($from, $cp1, $cp2, $to, $distance)
     {
+        $angleA = $this->angle($from, $cp1) + 90;
+        $angleB = $this->angle($to, $cp2) - 90;
+        $angleC = $this->angle($cp1, $cp2) + 90;
+
+        // Do we miss any control points? 
         if ($this->isSamePoint($from, $cp1)) {
-            $halfA = $this->getNonCubicCurveOffsetPoints('cp1', $from, $cp1, $cp2, $to, $distance);
-        } else {
-            $halfA = $this->getLineOffsetPoints($from, $cp1, $distance);
-        }
+            $this->addPoint('.shifthelper', $this->shiftAlong($from, $cp1, $cp2, $to, 1));
+            $angleA = $this->angle($from, '.shifthelper') + 90;
+        } 
         if ($this->isSamePoint($cp2, $to)) {
-            $halfB = $this->getNonCubicCurveOffsetPoints('cp2', $from, $cp1, $cp2, $to, $distance);
-        } else {
-            $halfB = $this->getLineOffsetPoints($cp2, $to, $distance);
+            $this->addPoint('.shifthelper', $this->shiftAlong($to, $cp2, $cp1, $from, 1));
+            $angleB= $this->angle('.shifthelper', $to) + 90;
         }
+        
+        // Hat-tip to Tiller and Hanson
+        $this->addPoint('.offsetFrom', $this->shift($from, $angleA, $distance));
+        $this->addPoint('.offsetCp1a', $this->shift($cp1, $angleA, $distance));
+        $this->addPoint('.offsetCp2a', $this->shift($cp2, $angleB, $distance));
+        $this->addPoint('.offsetTo', $this->shift($to, $angleB, $distance));
+        $this->addPoint('.offsetCp1b', $this->shift($cp1, $angleC, $distance));
+        $this->addPoint('.offsetCp2b', $this->shift($cp2, $angleC, $distance));
+        // Parallel lines do not cross, in which case we'll keep it simple
+        try {
+            $cp1 = $this->beamsCross('.offsetFrom','.offsetCp1a','.offsetCp1b','.offsetCp2b');
+        } catch (Exception $e) {
+            $cp1 = $this->loadPoint('.offsetCp1a');
+        }
+        try {
+            $cp2 = $this->beamsCross('.offsetTo','.offsetCp2a','.offsetCp1b','.offsetCp2b');
+        } catch (Exception $e) {
+            $cp2 = $this->loadPoint('.offsetCp2a');
+        }
+        $this->addPoint('.offsetCp1', $cp1);
+        $this->addPoint('.offsetCp2', $cp2);
 
         return [
-            $halfA[0],
-            $halfA[1],
-            $halfB[0],
-            $halfB[1],
+            $this->loadPoint('.offsetFrom'),
+            $this->loadPoint('.offsetCp1'),
+            $this->loadPoint('.offsetCp2'),
+            $this->loadPoint('.offsetTo')
         ];
-    }
-
-    /**
-     * Gets the offset points for start and end of a curve that has a control point on start or end
-     *
-     * This is like getCurveOffsetPoints but for curves where:
-     *  - Control point 1 is 'missing' (it is identical to the start point)
-     *  or
-     *  - Control point 2 is 'missing' (it is identical to the end point)
-     *  This returns the offsetted points for this
-     *
-     * @param string $missing  Either 'cp1' or 'cp2' to indicate what control point is missing
-     * @param string  $from     The start of the curve
-     * @param string  $cp1      Control point 1 of the curve
-     * @param string  $cp2      Control point 2 of the curve
-     * @param string  $to       The end of the curve
-     * @param float  $distance The distance to offset the line by
-     *
-     * @return array An array with the offsetted points
-     */
-    private function getNonCubicCurveOffsetPoints($missing, $from, $cp1, $cp2, $to, $distance)
-    {
-        if ($missing == 'cp1') {
-            $this->addPoint('-shifthelper', $this->shiftAlong($from, $cp1, $cp2, $to, 5));
-            $angle = $this->angle($from, '-shifthelper') + 90;
-            $p = $from;
-        } else {
-            $this->addPoint('-shifthelper', $this->shiftAlong($to, $cp2, $cp1, $from, 5));
-            $angle = $this->angle('-shifthelper', $to) + 90;
-            $p = $to;
-        }
-
-        $offset = $this->shift($p, $angle, $distance);
-        return [$offset, $offset];
     }
 
     /**
@@ -1471,12 +1463,13 @@ class Part
      */
     private function offsetCurve($curve, $distance, $key, $subdivide = 0)
     {
-        $chunks = [];
+        $segments = [];
         $points = Utils::asScrubbedArray($curve);
         $from = $points[1];
         $cp1 = $points[3];
         $cp2 = $points[4];
         $to = $points[5];
+
         $offset = $this->getCurveOffsetPoints($from, $cp1, $cp2, $to, $distance);
 
         if ($subdivide == 0) {
@@ -1509,15 +1502,15 @@ class Part
         $this->addPoint($cp2Id, $offset[2]);
         $this->addPoint($toId, $offset[3]);
 
-        // Add this chunk to the stack
-        $chunks[] = [
+        // Add this segment to the array
+        $segments[] = [
             'type'      => 'curve',
             'original'  => [$from, $cp1, $cp2, $to],
             'offset'    => [$fromId, $cp1Id, $cp2Id, $toId],
             'subdivide' => $subdivide
         ];
         // Find out how we're doing
-        $tolerance = $this->offsetTolerance($chunks[0], $distance);
+        $tolerance = $this->offsetTolerance($segments[0], $distance);
 
         $score = $tolerance['score'];
         if ($score > $this->maxOffsetTolerance) {
@@ -1525,18 +1518,18 @@ class Part
             $subdivide++;
             $splitId = '.tmp_' . $key . '.splitcurve:' . $this->newId();
             $this->splitCurve($from, $cp1, $cp2, $to, $tolerance['index'], $splitId . '-', true);
-            unset($chunks);
+            unset($segments);
             $subDivide = $this->offsetCurve("M $splitId-1 C $splitId-2 $splitId-3 $splitId-4", $distance, $key, $subdivide);
-            foreach ($subDivide as $chunk) {
-                $chunks[] = $chunk;
+            foreach ($subDivide as $segment) {
+                $segments[] = $segment;
             }
             $subDivide = $this->offsetCurve("M $splitId-8 C $splitId-7 $splitId-6 $splitId-5", $distance, $key, $subdivide);
-            foreach ($subDivide as $chunk) {
-                $chunks[] = $chunk;
+            foreach ($subDivide as $segment) {
+                $segments[] = $segment;
             }
 
         }
-        return $chunks;
+        return $segments;
     }
 
     /**
@@ -2626,55 +2619,20 @@ class Part
         foreach($points as $i) $this->newSnippet($this->newId('notch'), 'notch', $i); 
     }
 
-
-
-
-
-
-
-
-
-
-    /////////////////////////////////////////////////////////////////////////////////////
-    // New offset code below this line
-
-
     /**
-     * Creates a new path offset from an exsiting path
+     * Breaks up path in as many segments as needed for an acceptable offset
      *
-     * @param string    $newKey     Index in the paths array for the new path
-     * @param string    $srcKey     Index in the paths array of the source path
-     * @param float|int $distance   The distance to offset the path by
-     * @param array     $attributes Optional array of path attributes
-     * @param bool      $render     Render property of the new path
+     * When offsetting a path, we offset each segment seperately.
+     * These seperated segments are pushed onto an array.
+     * For curves, we need to break them up if the offset is not precise enough.
+     * This results in multiple segments on the array to mimic a single curve
      *
-     * @throws \Exception
+     * @param Path   $path     The path to offset
+     * @param float  $distance The distance to offset the path by
+     * @param string $key      The key of the new path
+     *
+     * @return Stack The new ID
      */
-    public function NEW_offsetPath($newKey, $srcKey, $distance = 10, $attributes = null, $render = true)
-    {
-        if(isset($this->paths[$srcKey]) && ($this->paths[$srcKey] instanceof \Freesewing\Path)) {
-            $path = $this->paths[$srcKey];
-        } else {
-            throw new \InvalidArgumentException("offsetPath requires a valid path object");
-        }
-        $segments = $this->offsetPathSegments($path, $distance, $newKey);
-
-
-        if($segments === false) return false; // Happens for paths like: M 1 L 1
-        /* take care of overlapping parts */
-        $segments = $this->fixStackIntersections($segments);
-        $segments = $this->fillPathStackGaps($segments, $path);
-        $pathString = $this->pathStackToPath($segments, $path);
-        $this->newPath($newKey, $pathString, $attributes);
-        if (!$render) {
-            $this->paths[$newKey]->setRender(false);
-        }
-        $this->purgePoints('.tmp_');
-        // Add aliases for start and end point
-        $this->clonePoint($this->paths[$newKey]->getStartPoint(),"$newKey-startPoint");
-        $this->clonePoint($this->paths[$newKey]->getEndPoint(),"$newKey-endPoint");
-    }
-
     private function offsetPathSegments(Path $path, $distance, $key)
     {
         $stack = new Stack();
@@ -2686,117 +2644,11 @@ class Part
                 }
             }
             if ($segment['type'] == 'C') {
-                $stack->push($this->NEW_offsetCurve($segment['path'], $distance, $key));
+                $stack->push($this->offsetCurve($segment['path'], $distance, $key));
             }
         }
 
         if(count($stack->items)>0) return $stack;
         else return false;
-    }
-
-    private function NEW_offsetCurve($curve, $distance, $key, $subdivide = 0)
-    {
-        $segments = [];
-        $points = Utils::asScrubbedArray($curve);
-        $from = $points[1];
-        $cp1 = $points[3];
-        $cp2 = $points[4];
-        $to = $points[5];
-
-        $offset = $this->NEW_getCurveOffsetPoints($from, $cp1, $cp2, $to, $distance);
-
-
-        if ($subdivide == 0) {
-            // First time around
-            $fromId = "$key-curve-$from" . "TO$to";
-            $toId = "$key-curve-$to" . "TO$from";
-            $this->tmp['origCurve'] = array();
-            $this->tmp['origCurve']['from'] = $from;
-            $this->tmp['origCurve']['to'] = $to;
-        } else {
-            // Recursively subdividing
-            if ($this->isSamePoint($from, $this->tmp['origCurve']['from'])) {
-                $fromId = "$key-curve-" . $this->tmp['origCurve']['from'] . 'TO' . $this->tmp['origCurve']['to'];
-            } else {
-                $fromId = $this->newId();
-            }
-            if ($this->isSamePoint($to, $this->tmp['origCurve']['to'])) {
-                $toId = "$key-curve-" . $this->tmp['origCurve']['to'] . 'TO' . $this->tmp['origCurve']['from'];
-            } else {
-                $toId = $this->newId();
-            }
-        }
-
-        // Avoid volatile IDs
-        $cp1Id = "$key-cp1--$from.$cp1.$cp2.$to";
-        $cp2Id = "$key-cp2--$from.$cp1.$cp2.$to";
-
-        $this->addPoint($fromId, $offset[0]);
-        $this->addPoint($cp1Id, $offset[1]);
-        $this->addPoint($cp2Id, $offset[2]);
-        $this->addPoint($toId, $offset[3]);
-
-        // Add this segment to the array
-        $segments[] = [
-            'type'      => 'curve',
-            'original'  => [$from, $cp1, $cp2, $to],
-            'offset'    => [$fromId, $cp1Id, $cp2Id, $toId],
-            'subdivide' => $subdivide
-        ];
-        // Find out how we're doing
-        $tolerance = $this->offsetTolerance($segments[0], $distance);
-
-        $score = $tolerance['score'];
-        if ($score > $this->maxOffsetTolerance && $subdivide < 5) {
-            // Not good enough, let's subdivide
-            $subdivide++;
-            $splitId = '.tmp_' . $key . '.splitcurve:' . $this->newId();
-            $this->splitCurve($from, $cp1, $cp2, $to, $tolerance['index'], $splitId . '-', true);
-            unset($segments);
-            $subDivide = $this->NEW_offsetCurve("M $splitId-1 C $splitId-2 $splitId-3 $splitId-4", $distance, $key, $subdivide);
-            foreach ($subDivide as $segment) {
-                $segments[] = $segment;
-            }
-            $subDivide = $this->NEW_offsetCurve("M $splitId-8 C $splitId-7 $splitId-6 $splitId-5", $distance, $key, $subdivide);
-            foreach ($subDivide as $segment) {
-                $segments[] = $segment;
-            }
-
-        }
-        return $segments;
-    }
-
-    private function NEW_getCurveOffsetPoints($from, $cp1, $cp2, $to, $distance)
-    {
-        $angleA = $this->angle($from, $cp1) + 90;
-        $angleB = $this->angle($to, $cp2) - 90;
-        $angleC = $this->angle($cp1, $cp2) + 90;
-
-        // Do we miss any control points? 
-        if ($this->isSamePoint($from, $cp1)) {
-            $this->addPoint('.shifthelper', $this->shiftAlong($from, $cp1, $cp2, $to, 1));
-            $angleA = $this->angle($from, '.shifthelper') + 90;
-        } 
-        if ($this->isSamePoint($cp2, $to)) {
-            $this->addPoint('.shifthelper', $this->shiftAlong($to, $cp2, $cp1, $from, 1));
-            $angleB= $this->angle('.shifthelper', $to) + 90;
-        }
-        
-        // Hat-tip to Tiller and Hanson
-        $this->addPoint('.offsetFrom', $this->shift($from, $angleA, $distance));
-        $this->addPoint('.offsetCp1a', $this->shift($cp1, $angleA, $distance));
-        $this->addPoint('.offsetCp2a', $this->shift($cp2, $angleB, $distance));
-        $this->addPoint('.offsetTo', $this->shift($to, $angleB, $distance));
-        $this->addPoint('.offsetCp1b', $this->shift($cp1, $angleC, $distance));
-        $this->addPoint('.offsetCp2b', $this->shift($cp2, $angleC, $distance));
-        $this->addPoint('.offsetCp1', $this->beamsCross('.offsetFrom','.offsetCp1a','.offsetCp1b','.offsetCp2b'));
-        $this->addPoint('.offsetCp2', $this->beamsCross('.offsetTo','.offsetCp2a','.offsetCp1b','.offsetCp2b'));
-
-        return [
-            $this->loadPoint('.offsetFrom'),
-            $this->loadPoint('.offsetCp1'),
-            $this->loadPoint('.offsetCp2'),
-            $this->loadPoint('.offsetTo')
-        ];
     }
 }

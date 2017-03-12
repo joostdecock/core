@@ -2,7 +2,7 @@ templates:
     js: 
         - "js/designer.js"
     css: 
-        - "css/minified-minified.css"
+        - "css/designer.css"
     defs: 
         - "defs/designer"
 settings:

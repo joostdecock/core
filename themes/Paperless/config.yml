@@ -1,6 +1,6 @@
 templates:
     css: 
-        - "css/paperless-minified.css"
+        - "css/paperless.css"
 settings:
     partMargin: 15
     gridMargin: 10

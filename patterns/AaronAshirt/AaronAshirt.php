@@ -186,7 +186,7 @@ class AaronAshirt extends BrianBodyBlock
 
         // Seamline
         $seamline = 'M 3 L 111 L 110 L 112 C 113 5 5 C 107 106 102 L 103 C 105 104 100 z';
-        $p->newPath('seamline', $seamline, ['class' => 'seamline']);
+        $p->newPath('seamline', $seamline, ['class' => 'fabric']);
 
         // Mark path for sample service
         $p->paths['seamline']->setSample(true);
@@ -231,7 +231,7 @@ class AaronAshirt extends BrianBodyBlock
 
         // Seamline
         $seamline = 'M 3 L 111 L 110 L 112 C 113 5 5 C 107 106 102 L 103 C 105 104 100 z';
-        $p->newPath('seamline', $seamline, ['class' => 'seamline']);
+        $p->newPath('seamline', $seamline, ['class' => 'fabric']);
 
         // Mark path for sample service
         $p->paths['seamline']->setSample();
@@ -266,12 +266,12 @@ class AaronAshirt extends BrianBodyBlock
 
         // Seam allowance | Point indexes from 200 upward
         $p->offsetPathString('sa1', 'M 102 L 103', 10);
-        $p->newPath('shoulderSA', 'M 102 L sa1-line-102TO103 L sa1-line-103TO102 L 103', ['class' => 'seam-allowance']);
+        $p->newPath('shoulderSA', 'M 102 L sa1-line-102TO103 L sa1-line-103TO102 L 103', ['class' => 'fabric sa']);
         $p->addPoint(200, $p->shift(111, -90, 20), 'Hem allowance @ CF');
         $p->addPoint(201, $p->shift(110, -90, 20), 'Hem allowance @ CF');
         $p->addPoint(201, $p->shift(201, 0, 10), 'Hem allowance @ side');
-        $p->offsetPathString('sideSA', 'M 110 L 112 C 113 5 5', 10, 1, ['class' => 'seam-allowance']);
-        $p->newPath('hemSA', 'M 111 L 200 L 201 L sideSA-line-110TO112 M 5 L sideSA-curve-5TO112', ['class' => 'seam-allowance']);
+        $p->offsetPathString('sideSA', 'M 110 L 112 C 113 5 5', 10, 1, ['class' => 'fabric sa']);
+        $p->newPath('hemSA', 'M 111 L 200 L 201 L sideSA-line-110TO112 M 5 L sideSA-curve-5TO112', ['class' => 'fabric sa']);
 
         // Instructions | Point indexes from 300 upward
         // Cut on fold line and grainline
@@ -283,21 +283,21 @@ class AaronAshirt extends BrianBodyBlock
         $p->newCutonfold('cofBottom', 'cofTop', $this->t('Cut on fold'));
         $p->newGrainline('grainlineBottom', 'grainlineTop', $this->t('Grainline'));
 
+        $p->notch(['cofTop']);
         // Title
         $p->newPoint('titleAnchor', $p->x(5) * 0.4, $p->x(5) + 40, 'Title anchor');
         $p->addTitle('titleAnchor', 1, $this->t($p->title), $this->t('Cut 1 on fold'));
 
         // Logo
-        $p->addPoint('logoAnchor', $p->shift('titleAnchor', -90, 50));
+        $p->addPoint('logoAnchor', $p->shift('titleAnchor', -90, 115));
         $p->newSnippet('logo', 'logo', 'logoAnchor');
-        $p->newSnippet('cc', 'cc', 'logoAnchor');
 
         // Scalebox
-        $p->addPoint('scaleboxAnchor', $p->shift('titleAnchor', -90, 90));
+        $p->addPoint('scaleboxAnchor', $p->shift('titleAnchor', -90, 190));
         $p->newSnippet('scalebox', 'scalebox', 'scaleboxAnchor');
 
         // Notes
-        $noteAttr = ['line-height' => 7, 'class' => 'text-lg'];
+        $noteAttr = ['line-height' => 7];
         $p->addPoint(306, $p->shift(101, 180, 3), 'Note 1 anchor');
         $p->newNote(1, 306, $this->t("Standard\nseam\nallowance")."\n(".$this->unit(10).')', 6, 10, -5, $noteAttr);
 
@@ -314,7 +314,7 @@ class AaronAshirt extends BrianBodyBlock
         $p->newNote(4, 309, $this->t("Standard\nseam\nallowance")."\n(".$this->unit(10).')', 9, 15, -5, $noteAttr);
 
         $p->newPoint(310, $p->x(110) - 40, $p->y(110), 'Note 5 anchor');
-        $p->newNote(5, 310, $this->t('Hem allowance')."\n(".$this->unit(20).')', 12, 15, -10, ['line-height' => 6, 'class' => 'text-lg', 'dy' => -4]);
+        $p->newNote(5, 310, $this->t('Hem allowance')."\n(".$this->unit(20).')', 12, 15, -10, ['line-height' => 6, 'dy' => -4]);
     }
 
     /**
@@ -338,16 +338,15 @@ class AaronAshirt extends BrianBodyBlock
 
         // Logo
         $p->addPoint('logoAnchor', $p->shift('titleAnchor', -90, 50));
-        $p->newSnippet('logo', 'logo', 'logoAnchor');
 
         // Seam allowance | Point indexes from 200 upward
         $p->offsetPathString('sa1', 'M 102 L 103', 10);
-        $p->newPath('shoulderSA', 'M 102 L sa1-line-102TO103 L sa1-line-103TO102 L 103', ['class' => 'seam-allowance']);
-        $p->offsetPathString('sideSA', 'M 110 L 112 C 113 5 5', 10, 1, ['class' => 'seam-allowance']);
+        $p->newPath('shoulderSA', 'M 102 L sa1-line-102TO103 L sa1-line-103TO102 L 103', ['class' => 'fabric sa']);
+        $p->offsetPathString('sideSA', 'M 110 L 112 C 113 5 5', 10, 1, ['class' => 'fabric sa']);
         $p->addPoint(200, $p->shift(111, -90, 20), 'Hem allowance @ CF');
         $p->addPoint(201, $p->shift(110, -90, 20), 'Hem allowance @ CF');
         $p->addPoint(201, $p->shift(201, 0, 10), 'Hem allowance @ side');
-        $p->newPath('hemSA', 'M 111 L 200 L 201 L sideSA-line-110TO112 M 5 L sideSA-curve-5TO112', ['class' => 'seam-allowance']);
+        $p->newPath('hemSA', 'M 111 L 200 L 201 L sideSA-line-110TO112 M 5 L sideSA-curve-5TO112', ['class' => 'fabric sa']);
 
         // Instructions | Point indexes from 300 upward
         // Cut on fold line and grainline
@@ -360,22 +359,21 @@ class AaronAshirt extends BrianBodyBlock
         $p->newGrainline('grainlineBottom', 'grainlineTop', $this->t('Grainline'));
 
         // Notes
-        $noteAttr = ['line-height' => 7, 'class' => 'text-lg'];
         $p->addPoint(306, $p->shift(101, 180, 3), 'Note 1 anchor');
-        $p->newNote(1, 306, $this->t("Standard\nseam\nallowance")."\n(".$this->unit(10).')', 6, 10, -5, $noteAttr);
+        $p->newNote(1, 306, $this->t("Standard\nseam\nallowance")."\n(".$this->unit(10).')', 6, 10, -5);
 
         $p->addPoint('.help1', $p->shift(100, 90, 20));
-        $p->newNote(2, 104, $this->t("No\nseam\nallowance"), 6, 15, 0, $noteAttr);
+        $p->newNote(2, 104, $this->t("No\nseam\nallowance"), 6, 15, 0);
 
         $p->curveCrossesY(5, 107, 106, 102, $p->y('106max') / 2, '.help-');
         $p->clonePoint('.help-1', 308);
-        $p->newNote(3, 308, $this->t("No\nseam\nallowance"), 8, 15, 0, $noteAttr);
+        $p->newNote(3, 308, $this->t("No\nseam\nallowance"), 8, 15, 0);
 
         $p->addPoint(309, $p->shift(112, -90, $p->distance(110, 112) / 2));
         $p->newNote(4, 309, $this->t("Standard\nseam\nallowance")."\n(".$this->unit(10).')', 9, 15, -5, $noteAttr);
 
         $p->newPoint(309, $p->x(110) - 40, $p->y(110), 'Note 5 anchor');
-        $p->newNote(5, 309, $this->t('Hem allowance')."\n(".$this->unit(20).')', 12, 15, -10, ['line-height' => 6, 'class' => 'text-lg', 'dy' => -4]);
+        $p->newNote(5, 309, $this->t('Hem allowance')."\n(".$this->unit(20).')', 12, 15, -10);
 
         $armholeLen = $p->curveLen(102, 106, 107, 5) + $this->parts['front']->curveLen(102, 106, 107, 5);
         $neckholeLen = $p->curveLen(103, 105, 104, 100) + $this->parts['front']->curveLen(103, 105, 104, 100);
@@ -401,7 +399,7 @@ class AaronAshirt extends BrianBodyBlock
             $this->unit($neckholeLen);
 
         $p->newPoint('msgAnchor', $p->x('grainlineTop') + 30, $p->y('logoAnchor')+50, 'Message anchor');
-        $p->newText('binding', 'msgAnchor', $msg, ['class' => 'text-lg fill-note', 'line-height' => 9]);
+        $p->newText('binding', 'msgAnchor', $msg);
     }
 
     /*

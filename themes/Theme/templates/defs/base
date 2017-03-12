@@ -1,26 +1,19 @@
 <marker orient="auto" refY="0.0" refX="0.0" id="noteArrow" style="overflow:visible;" >
-    <path stroke="#4285f4" fill="#4285f4" d="M 0,0 L 9,-3 C 8,-2 8,2  9, 3 z" />
+    <path class="stroke-note fill-note" d="M 0,0 L 9,-3 C 8,-2 8,2  9, 3 z" />
 </marker>
-<marker orient="auto" refY="0.0" refX="0.0" id="brand-color-arrowStart" style="overflow:visible;" >
-  <path class="fill-brand stroke-brand" d="M 0,0 L 12,-4 C 10,-2 10,2  12, 4 z" />
+<marker orient="auto" refY="0.0" refX="0.0" id="dimensionStart" style="overflow:visible;" >
+  <path class="stroke-note fill-note" d="M 0,0 L 12,-4 C 10,-2 10,2  12, 4 z" />
 </marker>
-<marker orient="auto" refY="0.0" refX="0.0" id="brand-color-arrowEnd" style="overflow:visible;" >
-  <path class="fill-brand stroke-brand" d="M 0,0 L -12,-4 C -10,-2 -10,2  -12, 4 z" />
+<marker orient="auto" refY="0.0" refX="0.0" id="dimensionEnd" style="overflow:visible;" >
+  <path class="stroke-note fill-note" d="M 0,0 L -12,-4 C -10,-2 -10,2  -12, 4 z" />
 </marker>
-<marker orient="auto" refY="0.0" refX="0.0" id="note-color-arrowStart" style="overflow:visible;" >
-  <path class="fill-note stroke-note" d="M 0,0 L 12,-4 C 10,-2 10,2  12, 4 z" />
+<marker orient="auto" refY="0.0" refX="0.0" id="grainlineStart" style="overflow:visible;" >
+  <path class="stroke-gray fill-gray" d="M 0,0 L 12,-4 C 10,-2 10,2  12, 4 z" />
 </marker>
-<marker orient="auto" refY="0.0" refX="0.0" id="note-color-arrowEnd" style="overflow:visible;" >
-  <path class="fill-note stroke-note" d="M 0,0 L -12,-4 C -10,-2 -10,2  -12, 4 z" />
-</marker>
-<marker orient="auto" refY="0.0" refX="0.0" id="fabric-arrowStart" style="overflow:visible;" >
-  <path class="fill-fabric stroke-fabric" d="M 0,0 L 12,-4 C 10,-2 10,2  12, 4 z" />
-</marker>
-<marker orient="auto" refY="0.0" refX="0.0" id="fabric-arrowEnd" style="overflow:visible;" >
-  <path class="fill-fabric stroke-fabric" d="M 0,0 L -12,-4 C -10,-2 -10,2  -12, 4 z" />
+<marker orient="auto" refY="0.0" refX="0.0" id="grainlineEnd" style="overflow:visible;" >
+  <path class="stroke-gray fill-gray" d="M 0,0 L -12,-4 C -10,-2 -10,2  -12, 4 z" />
 </marker>
 <g id="notch">
-    <circle cy="0" cx="0" r="1.4" class="fill-fabric stroke-sm no-fill" />
-    <circle cy="0" cx="0" r="2.8" class="stroke-fabric stroke-xl no-fill" />
+    <circle cy="0" cx="0" r="1.4" class="fill-mark" />
+    <circle cy="0" cx="0" r="2.8" class="stroke-mark stroke-xl" />
 </g>
-

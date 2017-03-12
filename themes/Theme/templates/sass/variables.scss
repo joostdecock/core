@@ -1,0 +1,53 @@
+// Colors
+$red:    #d9534f !default;
+$orange: #f0ad4e !default;
+$yellow: #ffd500 !default;
+$green:  #5cb85c !default;
+$blue:   #0275d8 !default;
+$teal:   #5bc0de !default;
+$pink:   #ff5b77 !default;
+$purple: #653f95 !default;
+$light-purple: #86739c !default;
+
+// Grayscale
+$white: #fff !default;
+$black: #000 !default;
+$gray:  #999 !default;
+
+// Semantic color scheme
+$color-fabric:      $purple !default;
+$color-lining:      $teal !default;
+$color-interfacing: $blue !default;
+$color-canvas:      $green !default;
+$color-note:        $blue !default;
+$color-mark:        $orange !default;
+$color-hint:        $light-purple !default;
+
+// Fonts
+$font-family: -apple-system, system-ui, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif !default;
+$font-xs:     3px;
+$font-sm:     4px;
+$font:        5px;
+$font-lg:     7px;
+$font-xl:     9px;
+$font-xxl:    12px;
+
+// Part titles
+$font-part-nr: 28px;
+$font-part-title: 18px;
+$font-part-subtitle: 10px;
+$font-part-nr-sm: 14px;
+$font-part-title-sm: 9px;
+$font-part-subtitle-sm: 5px;
+
+// Stoke width
+$stroke-xs:        0.1;
+$stroke-sm:        0.2;
+$stroke:           0.3;
+$stroke-lg:        0.6;
+$stroke-xl:        1;
+$stroke-xxl:       2;
+
+// Dash arrays
+$dashes: 1,1.5;
+$dots: 0.4,0.8;

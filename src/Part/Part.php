@@ -236,7 +236,7 @@ class Part
      * @param string $msg        The message of the text
      * @param array  $attributes Optional array of attributes for the snippet
      */
-    public function newText($key, $anchorKey, $msg, $attributes = null)
+    public function newText($key, $anchorKey, $msg, $attributes = ['line-height' => 7])
     {
         $text = new Text();
         $text->setAnchor($this->loadPoint($anchorKey));
@@ -261,7 +261,7 @@ class Part
      * @param string $offset     How far from the anchor does the note arrow start
      * @param array  $attributes Optional array of attributes for the snippet
      */
-    public function newNote($key, $anchorKey, $msg, $direction = 3, $length = 25, $offset = 3, $attributes = ['class' => 'note', 'line-height' => 7])
+    public function newNote($key, $anchorKey, $msg, $direction = 3, $length = 25, $offset = 3, $attributes)
     {
         $note = new Note();
 
@@ -289,6 +289,10 @@ class Part
         } else {
             $attributes['class'] .= " note note-$direction";
         }
+        if (!isset($attributes['line-height'])) {
+            $attributes['line-height'] = 6;
+        }
+
         $note->setAttributes($attributes);
 
         $this->addNote($key, $note);

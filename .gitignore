@@ -1,12 +1,4 @@
-coverage/
 vendor/
-svg/
-composer.phar
-.htaccess
 print/
 .php_cs.cache
-Gemfile
-Gemfile.lock
-docs/apigen
-metrics/
-olddocs/
+.sass_cache/

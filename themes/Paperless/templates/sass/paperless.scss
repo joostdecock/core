@@ -1,0 +1,30 @@
+@import '../../../Theme/templates/sass/variables';
+@import 'variables';
+
+rect.grid { 
+    fill: none; 
+    stroke: $grid-gray1; 
+    stroke-width: $grid-stroke;
+    fill:url(#grid); 
+}
+path.gridline { 
+    stroke: $grid-gray1; 
+    stroke-width: $grid-stroke-sm; 
+}
+
+path.gridline-lg { 
+    stroke: $grid-gray2; 
+    stroke-width: $grid-stroke-sm; 
+    stroke-dasharray: 1.5,1.5; 
+}
+
+path.gridline-sm { 
+    stroke: $grid-gray3; 
+    stroke-width: $grid-stroke-xs; 
+}
+
+path.gridline-xs { 
+    stroke: $grid-gray3; 
+    stroke-width: $grid-stroke-xs; 
+    stroke-dasharray: 0.5,0.5; 
+}

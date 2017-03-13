@@ -12,3 +12,8 @@ services:
     - draft
     - sample
     - compare
+patternNamespaces:
+    - Core
+    - Contrib
+    - Docs
+    - Tests

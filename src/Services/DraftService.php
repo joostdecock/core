@@ -131,7 +131,7 @@ class DraftService extends Service
      * @param string svg
      * @param array  replacements
      *
-     * @see \Freesewing\Patterns\Pattern::replace()
+     * @see \Freesewing\Patterns\Core\Pattern::replace()
      * @return string
      */
     private function replace($svg, $replacements)

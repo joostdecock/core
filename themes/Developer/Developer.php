@@ -3,7 +3,7 @@
 namespace Freesewing\Themes;
 
 use Freesewing\Context;
-use Freesewing\Patterns\Pattern;
+use Freesewing\Patterns\Core\Pattern;
 
 /**
  * Freesewing\Themes\Developer class.

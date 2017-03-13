@@ -78,11 +78,11 @@ class OptionsSampler extends Sampler
      * It then itterates over the parts and calls sampleParts() on them
      *
      * @param \Freesewing\Model $model
-     * @param \Freesewing\Themes\Theme $theme or similar
+     * @param \Freesewing\Themes\* $theme The theme object
      * @param string $optionKey Name of the option
      * @param int $steps Number of steps
      *
-     * @return \Freesewing\Patterns\Pattern or similar
+     * @return \Freesewing\Patterns\* A pattern object
      */
     public function sampleOptions($model, $theme, $optionKey, $steps = 11)
     {
@@ -92,7 +92,7 @@ class OptionsSampler extends Sampler
         }
         $renderBot = new \Freesewing\SvgRenderbot();
         for ($i = 1; $i <= $steps; ++$i) {
-            /** @var \Freesewing\Patterns\Pattern $p */
+            /** @var \Freesewing\Patterns\* $p */
             $p = clone $this->pattern;
             $sampleValue = $this->getSampleValue($i, $steps, $option);
             $p->setOption($optionKey, $sampleValue);

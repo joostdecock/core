@@ -35,7 +35,7 @@ class Context
     /** @var \Freesewing\OptionsSampler */
     protected $optionsSampler;
 
-    /** @var \Freesewing\Patterns\Pattern */
+    /** @var \Freesewing\Patterns\Core\Pattern */
     protected $pattern;
     
     /** @var \Freesewing\SvgRenderbot */
@@ -385,7 +385,7 @@ class Context
     /**
      * Creates a new pattern based on request data, or the default pattern
      *
-     * @return \Freesewing\Patterns\Pattern or equivalent
+     * @return \Freesewing\Patterns\Core\Pattern or equivalent
      *
      * @throws \InvalidArgumentException if the specified pattern cannot be found
      */
@@ -396,12 +396,15 @@ class Context
         } else {
             $pattern = $this->config['defaults']['pattern'];
         }
-        $class = '\\Freesewing\\Patterns\\'.$pattern;
-        if (class_exists($class)) {
-            return new $class($this->units['out']);
-        } else {
-            throw new \InvalidArgumentException("Cannot load pattern $pattern, it does not exist");
+
+        foreach($this->config['patternNamespaces'] as $ns) {
+            $class = '\\Freesewing\\Patterns\\'.$ns.'\\'.$pattern;
+            if (class_exists($class)) {
+                return new $class($this->units['out']);
+            }
         }
+        
+        throw new \InvalidArgumentException("Cannot load pattern $pattern, it does not exist");
     }
 
 
@@ -601,9 +604,9 @@ class Context
      *
      * Note: (only) The SampleService uses this to override the pattern that we added initially
      *
-     * @param \Freesewing\Patterns\Pattern
+     * @param \Freesewing\Patterns\Core\Pattern
      */
-    public function setPattern(\Freesewing\Patterns\Pattern $pattern)
+    public function setPattern($pattern)
     {
         $this->pattern = $pattern;
     }

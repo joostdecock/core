@@ -81,7 +81,7 @@ abstract class Theme
      *
      * @param Pattern $pattern The pattern object
      */
-    public function themePattern(Pattern $pattern)
+    public function themePattern($pattern)
     {
         $this->messages = $pattern->getMessages();
         $this->debug = $pattern->getDebug();
@@ -290,9 +290,9 @@ abstract class Theme
     /**
      * A way for a theme to ultimately decide what should be rendered
      *
-     * @param \Freesewing\Patterns\Pattern $pattern The pattern object
+     * @param \Freesewing\Patterns\Core\Pattern $pattern The pattern object
      */
-    public function applyRenderMask(Pattern $pattern)
+    public function applyRenderMask($pattern)
     {
         if($this->getOption('parts')) $this->applyRenderMaskOnParts($pattern);
     }
@@ -310,7 +310,7 @@ abstract class Theme
      * The difference is that *forceParts* will force all parts in the *parts* array
      * to be rendered. Even those that have their render property set to false.
      *
-     * @param \Freesewing\Patterns\Pattern $pattern The pattern object
+     * @param \Freesewing\Patterns\Core\Pattern $pattern The pattern object
      */
     private function applyRenderMaskOnParts(Pattern $pattern)
     {

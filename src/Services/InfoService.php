@@ -101,10 +101,21 @@ class InfoService extends Service
      */
     private function loadPatternConfig($pattern)
     {
-        $class = '\Freesewing\Patterns\\' . $pattern;
-        $pattern = new $class();
-
-        return $pattern->getConfig();
+        $class = '\\Freesewing\\Patterns\\Core\\'.$pattern;
+        if (class_exists($class)) {
+            $pattern = new $class();
+            return $pattern->getConfig();
+        }
+        $class = '\\Freesewing\\Patterns\\Contrib\\'.$pattern;
+        if (class_exists($class)) {
+            $pattern = new $class();
+            return $pattern->getConfig();
+        }
+        $class = '\\Freesewing\\Patterns\\Docs\\'.$pattern;
+        if (class_exists($class)) {
+            $pattern = new $class();
+            return $pattern->getConfig();
+        }
     }
 
     /**

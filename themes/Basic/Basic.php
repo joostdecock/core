@@ -3,7 +3,6 @@
 namespace Freesewing\Themes;
 
 use Freesewing\Context;
-use Freesewing\Patterns\Pattern;
 
 /**
  * Default theme for the draft service.

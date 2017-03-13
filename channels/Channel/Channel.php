@@ -124,7 +124,7 @@ abstract class Channel
      * Each channel must implement this function.
      *
      * @param \Freesewing\Request $request The request object
-     * @param \Freesewing\Patterns\[pattern] $pattern The pattern object
+     * @param \Freesewing\Patterns\* $pattern The pattern object
      *
      * @return array The model measurements
      */
@@ -136,7 +136,7 @@ abstract class Channel
      * Each channel must implement this function.
      *
      * @param \Freesewing\Request $request The request object
-     * @param \Freesewing\Patterns\[pattern] $pattern The pattern object
+     * @param \Freesewing\Patterns\* $pattern The pattern object
      *
      * @return array The pattern options
      */

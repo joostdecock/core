@@ -77,7 +77,7 @@ class Docs extends Channel
      * This loads measurement names from the pattern config file
      *
      * @param \Freesewing\Request $request The request object
-     * @param \Freesewing\Patterns\[pattern] $pattern The pattern object
+     * @param \Freesewing\Patterns\* $pattern The pattern object
      *
      * @return array|null The model measurements or null of there are none
      */
@@ -103,7 +103,7 @@ class Docs extends Channel
      * This loads pattern options from the sampler config file
      *
      * @param \Freesewing\Request $request The request object
-     * @param \Freesewing\Patterns\[pattern] $pattern The pattern object
+     * @param \Freesewing\Patterns\* $pattern The pattern object
      *
      * @return array|null The pattern options or null of there are none
      */

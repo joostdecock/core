@@ -1,0 +1,21 @@
+hidden: true
+info:
+    name: "My baby bib pattern"
+
+languages:
+    en: English
+    nl: Nederlands
+
+parts:
+    bib: "Baby bib"
+
+measurements:
+    chestCircumference: 489
+    headCircumference: 472
+
+options:
+    lengthBonus:
+        type: "measure"
+        min: -50
+        max: 150
+        default: 0

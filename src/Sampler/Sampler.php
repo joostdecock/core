@@ -32,7 +32,7 @@ class Sampler
      */
     protected $models;
 
-    /** @var  \Freesewing\Patterns\Pattern */
+    /** @var  \Freesewing\Patterns\Core\Pattern */
     protected $pattern;
 
     /**

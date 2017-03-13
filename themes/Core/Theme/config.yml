@@ -1,0 +1,26 @@
+templates:
+    css: 
+        - "css/style.css"
+    defs: 
+        - "defs/base"
+        - "defs/scalebox"
+        - "defs/logo"
+        - "defs/cc"
+        - "defs/buttons"
+        - "defs/buttonholes"
+        - "defs/snaps"
+    footer: 
+        - "comments/footer"
+    header: 
+        - "comments/header"
+    attributes: 
+        - "attributes/svg"
+
+settings:
+    partMargin: 5
+    isPaperless: false
+
+options:
+    - parts
+    - forceParts
+    - embedFluid

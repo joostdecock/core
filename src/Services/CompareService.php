@@ -38,15 +38,12 @@ class CompareService extends DraftService
      */
     public function run(Context $context)
     {
+        $context->addUnits();
         $context->addPattern();
 
         if ($context->getChannel()
                 ->isValidRequest($context) === true
         ) :
-
-            $context->addUnits();
-            $context->getPattern()
-                ->setUnits($context->getUnits());
 
             $context->addTranslator();
             $context->getPattern()

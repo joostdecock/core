@@ -1,0 +1,15 @@
+templates:
+    js: 
+        - "js/designer.js"
+    css: 
+        - "css/designer.css"
+    defs: 
+        - "defs/designer"
+settings:
+    partMargin: 10
+    isPaperless: true
+options:
+    - parts
+    - forceParts
+    - onlyPoints
+    - markPoints

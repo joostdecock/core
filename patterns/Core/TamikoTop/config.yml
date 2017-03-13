@@ -1,0 +1,28 @@
+info:
+  name:     "Tamiko Top"
+  version:  "2.0"
+  date:     "20161124"
+  author:   "Joost De Cock"
+  email:    "joost@decock.org"
+  company:  "freesewing.org"
+  link:     "freesewing.org/pattern/tamiko-top/"
+
+parts:
+  top:   "Tamiko Top"
+
+languages:
+    en: English
+    nl: Nederlands
+
+measurements:
+    shoulderToShoulder: 380
+    chestCircumference: 1050
+    centerBackNeckToWaist: 365
+    naturalWaistToHip: 260
+
+options:
+    lengthBonus:
+        type: "measure"
+        min: -150
+        max: 350
+        default: 0

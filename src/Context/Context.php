@@ -35,7 +35,7 @@ class Context
     /** @var \Freesewing\OptionsSampler */
     protected $optionsSampler;
 
-    /** @var \Freesewing\Patterns\Pattern */
+    /** @var \Freesewing\Patterns\Core\Pattern */
     protected $pattern;
     
     /** @var \Freesewing\SvgRenderbot */
@@ -97,6 +97,7 @@ class Context
     {
         $this->pattern = $this->loadPattern();
         $this->pattern->setPaperless($this->theme->isPaperless());
+        $this->pattern->setUnits($this->getUnits());
     }
 
     /**
@@ -344,12 +345,15 @@ class Context
         } else {
             $channel = $this->config['defaults']['channel'];
         }
-        $class = '\\Freesewing\\Channels\\'.$channel;
-        if (class_exists($class)) {
-            return new $class();
-        } else {
-            throw new \InvalidArgumentException("Cannot load channel $channel, it does not exist");
+        
+        foreach($this->config['channelNamespaces'] as $ns) {
+            $class = '\\Freesewing\\Channels\\'.$ns.'\\'.$channel;
+            if (class_exists($class)) {
+                return new $class();
+            }
         }
+
+        throw new \InvalidArgumentException("Cannot load channel $channel, it does not exist");
     }
 
     /**
@@ -384,7 +388,7 @@ class Context
     /**
      * Creates a new pattern based on request data, or the default pattern
      *
-     * @return \Freesewing\Patterns\Pattern or equivalent
+     * @return \Freesewing\Patterns\Core\Pattern or equivalent
      *
      * @throws \InvalidArgumentException if the specified pattern cannot be found
      */
@@ -395,12 +399,15 @@ class Context
         } else {
             $pattern = $this->config['defaults']['pattern'];
         }
-        $class = '\\Freesewing\\Patterns\\'.$pattern;
-        if (class_exists($class)) {
-            return new $class();
-        } else {
-            throw new \InvalidArgumentException("Cannot load pattern $pattern, it does not exist");
+
+        foreach($this->config['patternNamespaces'] as $ns) {
+            $class = '\\Freesewing\\Patterns\\'.$ns.'\\'.$pattern;
+            if (class_exists($class)) {
+                return new $class($this->units['out']);
+            }
         }
+        
+        throw new \InvalidArgumentException("Cannot load pattern $pattern, it does not exist");
     }
 
 
@@ -462,12 +469,15 @@ class Context
         } else {
             $theme = $this->config['defaults'][$this->service->getServiceName().'Theme'];
         }
-        $class = '\\Freesewing\\Themes\\'.$theme;
-        if (class_exists($class)) {
-            return new $class();
-        } else {
-            throw new \InvalidArgumentException("Cannot load theme $theme, it does not exist");
+        
+        foreach($this->config['themeNamespaces'] as $ns) {
+            $class = '\\Freesewing\\Themes\\'.$ns.'\\'.$theme;
+            if (class_exists($class)) {
+                return new $class();
+            }
         }
+        
+        throw new \InvalidArgumentException("Cannot load theme $theme, it does not exist");
     }
 
     /**
@@ -537,9 +547,9 @@ class Context
     /**
      * Sets the channel property
      *
-     * @param Channels\Channel $channel
+     * @param Channels\* $channel
      */
-    public function setChannel(\Freesewing\Channels\Channel $channel)
+    public function setChannel($channel)
     {
         $this->channel = $channel;
     }
@@ -600,9 +610,9 @@ class Context
      *
      * Note: (only) The SampleService uses this to override the pattern that we added initially
      *
-     * @param \Freesewing\Patterns\Pattern
+     * @param \Freesewing\Patterns\Core\Pattern
      */
-    public function setPattern(\Freesewing\Patterns\Pattern $pattern)
+    public function setPattern($pattern)
     {
         $this->pattern = $pattern;
     }

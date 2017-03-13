@@ -1,0 +1,22 @@
+@import '../../../Theme/templates/sass/variables';
+
+path.curve-control { 
+    stroke: $color-mark;
+    stroke-width: $stroke-sm;
+}
+
+path.debug { 
+    stroke: $red;
+    stroke-opacity: 0.4; 
+    stroke-width: $stroke-xxl;
+}
+
+.point { 
+    fill: none;  
+    stroke-width: $stroke-lg; 
+    stroke: $color-mark;
+}
+text.tooltip {
+    font-size: $font-xs;
+}
+

@@ -210,24 +210,14 @@ class SvgRenderbot
     {
         $svg = $this->nl();
 
-        if (@$part->includes) {
-            foreach ($part->includes as $include) {
-                $svg .= $include->get();
-            }
-        }
-        if (@$part->paths) {
+        if ($part->paths) {
             foreach ($part->paths as $path) {
                 $svg .= $this->renderPath($path, $part);
             }
         }
-        if (@$part->snippets) {
-            foreach ($part->snippets as $snippet) {
-                $svg .= $this->renderSnippet($snippet, $part);
-            }
-        }
-        if (@$part->texts) {
-            foreach ($part->texts as $text) {
-                $svg .= $this->renderText($text, $part);
+        if ($part->includes) {
+            foreach ($part->includes as $include) {
+                $svg .= $include->get();
             }
         }
         if ($part->textsOnPath) {
@@ -235,14 +225,24 @@ class SvgRenderbot
                 $svg .= $this->renderTextOnPath($textOnPath, $part);
             }
         }
-        if (@$part->notes) {
+        if ($part->notes) {
             foreach ($part->notes as $note) {
                 $svg .= $this->renderNote($note, $part);
             }
         }
-        if (@$part->dimensions) {
+        if ($part->dimensions) {
             foreach ($part->dimensions as $dimension) {
                 $svg .= $this->renderDimension($dimension, $part);
+            }
+        }
+        if ($part->texts) {
+            foreach ($part->texts as $text) {
+                $svg .= $this->renderText($text, $part);
+            }
+        }
+        if ($part->snippets) {
+            foreach ($part->snippets as $snippet) {
+                $svg .= $this->renderSnippet($snippet, $part);
             }
         }
 
@@ -274,7 +274,7 @@ class SvgRenderbot
         $this->outdent();
         $svg .= $this->nl();
         $svg .= '</use>';
-
+        
         return $svg;
     }
 

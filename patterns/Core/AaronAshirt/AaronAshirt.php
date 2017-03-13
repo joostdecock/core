@@ -65,6 +65,9 @@ class AaronAshirt extends BrianBodyBlock
         // Cut front armhole a bit deeper
         $this->setValue('frontArmholeExtra', 5);
 
+        // Avoid division by zero
+        if($this->o('necklineBend') == 0) $this->setOption('necklineBend', 0.01);
+
     }
 
     /*

@@ -3,19 +3,21 @@ info:
     version: "2.0"
     date: 20161008
     author: "Joost De Cock"
-    email: "joost@decock.org"
-    company: "freesewing.org"
-    link: "freesewing.org/pattern/aaron-ashirt/"
+    company: "freesewing"
+    link: "freesewing.org/pattern/aaron"
+
 parts:
     frontBlock: "Front block"
     backBlock: "Back block"
     front: "Front"
     back: "Back"
+
 languages:
     en: "English"
     nl: "Nederlands"
     de: "Deutsch"
     fr: "French"
+
 measurements:
     acrossBack: 450
     bicepsCircumference: 335
@@ -26,6 +28,7 @@ measurements:
     shoulderToShoulder: 470
     shoulderSlope: 40
     hipsCircumference: 950
+
 options:
     chestEase:
         type: "measure"
@@ -39,7 +42,7 @@ options:
         default: 30
     lengthBonus:
         type: "measure"
-        min: -120
+        min: -60
         max: 200
         default: 60
     necklineBend:

@@ -85,20 +85,32 @@ class Info
         $html .= "\n</ul>";
         $html .= "<h3>Patterns</h3>\n";
         $html .= '<ul class="patternlist">';
-        foreach ($list['patterns'] as $name => $title) {
-            $html .= "\n<li class=\"pattern\">$title</li>";
+        foreach ($list['patterns'] as $ns => $patterns) {
+            $html .= "\n<li class=\"pattern\">$ns\n<ul>";
+            foreach ($patterns as $name => $title) {
+                $html .= "\n<li class=\"pattern\">$title</li>";
+            }
+            $html .= "\n</ul>\n</li>";
         }
         $html .= "\n</ul>";
         $html .= "<h3>Channels</h3>\n";
         $html .= '<ul class="channellist">';
-        foreach ($list['channels'] as $name) {
-            $html .= "\n<li class=\"channel\">$name</li>";
+        foreach ($list['channels'] as $ns => $channels) {
+            $html .= "\n<li class=\"channel\">$ns\n<ul>";
+            foreach ($channels as $name) {
+                $html .= "\n<li class=\"channel\">$name</li>";
+            }
+            $html .= "\n</ul>\n</li>";
         }
         $html .= "\n</ul>";
         $html .= "<h3>Themes</h3>\n";
-        $html .= '<ul class="patternlist">';
-        foreach ($list['themes'] as $name) {
-            $html .= "\n<li class=\"theme\">$name</li>";
+        $html .= '<ul class="themelist">';
+        foreach ($list['themes'] as $ns => $themes) {
+            $html .= "\n<li class=\"theme\">$ns\n<ul>";
+            foreach ($themes as $name) {
+                $html .= "\n<li class=\"theme\">$name</li>";
+            }
+            $html .= "\n</ul>\n</li>";
         }
         $html .= "\n</ul>";
 

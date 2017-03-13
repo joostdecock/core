@@ -81,14 +81,17 @@ class InfoService extends Service
      */
     private function getPatternList($context)
     {
-        foreach (glob(Utils::getApiDir() . '/patterns/*', GLOB_ONLYDIR) as $dir) {
-            $name = basename($dir);
-            if ($name != 'Pattern') {
-                $config = $this->loadPatternConfig($name);
-                if($config['hidden'] !== true) $list[$name] = $config['info']['name'];
+        $list = [];
+        foreach($context->getConfig()['patternNamespaces'] as $ns) {
+            foreach (glob(Utils::getApiDir() . "/patterns/$ns/*", GLOB_ONLYDIR) as $dir) {
+                $name = basename($dir);
+                if ($name != 'Pattern') {
+                    $config = $this->loadPatternConfig($name, $context);
+                    if($config['hidden'] !== true) $list[$ns][$name] = $config['info']['name'];
+                }
             }
         }
-
+        
         return $list;
     }
 
@@ -99,22 +102,14 @@ class InfoService extends Service
      *
      * @return array
      */
-    private function loadPatternConfig($pattern)
+    private function loadPatternConfig($pattern, $context)
     {
-        $class = '\\Freesewing\\Patterns\\Core\\'.$pattern;
-        if (class_exists($class)) {
-            $pattern = new $class();
-            return $pattern->getConfig();
-        }
-        $class = '\\Freesewing\\Patterns\\Contrib\\'.$pattern;
-        if (class_exists($class)) {
-            $pattern = new $class();
-            return $pattern->getConfig();
-        }
-        $class = '\\Freesewing\\Patterns\\Docs\\'.$pattern;
-        if (class_exists($class)) {
-            $pattern = new $class();
-            return $pattern->getConfig();
+        foreach($context->getConfig()['patternNamespaces'] as $ns) {
+            $class = '\\Freesewing\\Patterns\\'.$ns.'\\'.$pattern;
+            if (class_exists($class)) {
+                $pattern = new $class();
+                return $pattern->getConfig();
+            }
         }
     }
 
@@ -128,10 +123,12 @@ class InfoService extends Service
     private function getChannelList($context)
     {
         $list = [];
-        foreach (glob(Utils::getApiDir() . '/channels/*', GLOB_ONLYDIR) as $dir) {
-            $name = basename($dir);
-            if ($name != 'Channel' && $name != 'Info') {
-                $list[] = $name;
+        foreach($context->getConfig()['channelNamespaces'] as $ns) {
+            foreach (glob(Utils::getApiDir() . "/channels/$ns/*", GLOB_ONLYDIR) as $dir) {
+                $name = basename($dir);
+                if ($name != 'Channel' && $name != 'Info') {
+                    $list[$ns][] = $name;
+                }
             }
         }
 
@@ -148,10 +145,12 @@ class InfoService extends Service
     private function getThemeList($context)
     {
         $list = [];
-        foreach (glob(Utils::getApiDir() . '/themes/*', GLOB_ONLYDIR) as $dir) {
-            $name = basename($dir);
-            if ($name != 'Theme' && $name != 'Info' && $name != 'Sampler') {
-                $list[] = $name;
+        foreach($context->getConfig()['themeNamespaces'] as $ns) {
+            foreach (glob(Utils::getApiDir() . "/themes/$ns/*", GLOB_ONLYDIR) as $dir) {
+                $name = basename($dir);
+                if ($name != 'Theme' && $name != 'Info' && $name != 'Sampler') {
+                    $list[$ns][] = $name;
+                }
             }
         }
 

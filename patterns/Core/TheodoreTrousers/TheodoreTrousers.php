@@ -1,6 +1,6 @@
 <?php
 /** Freesewing\Patterns\Core\TheodoreTrousers class */
-namespace Freesewing\Core\Patterns;
+namespace Freesewing\Patterns\Core;
 
 use Freesewing\Part;
 

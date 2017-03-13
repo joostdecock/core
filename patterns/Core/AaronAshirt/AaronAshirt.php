@@ -299,7 +299,7 @@ class AaronAshirt extends BrianBodyBlock
         // Notes
         $noteAttr = ['line-height' => 7];
         $p->addPoint(306, $p->shift(101, 180, 3), 'Note 1 anchor');
-        $p->newNote(1, 306, $this->t("Standard\nseam\nallowance")."\n(".$this->unit(10).')', 6, 10, -5, $noteAttr);
+        $p->newNote(1, 306, $this->t("Standard\nseam\nallowance")."\n(".$p->unit(10).')', 6, 10, -5, $noteAttr);
 
         $p->addPoint('.help1', $p->shift(100, 90, 20));
         $p->curveCrossesY(100, 104, 105, 103, $p->y('.help1'), '.help-');
@@ -311,10 +311,10 @@ class AaronAshirt extends BrianBodyBlock
         $p->newNote(3, 308, $this->t("No\nseam\nallowance"), 8, 15, 0, $noteAttr);
 
         $p->addPoint(309, $p->shift(112, -90, $p->distance(110, 112) / 2));
-        $p->newNote(4, 309, $this->t("Standard\nseam\nallowance")."\n(".$this->unit(10).')', 9, 15, -5, $noteAttr);
+        $p->newNote(4, 309, $this->t("Standard\nseam\nallowance")."\n(".$p->unit(10).')', 9, 15, -5, $noteAttr);
 
         $p->newPoint(310, $p->x(110) - 40, $p->y(110), 'Note 5 anchor');
-        $p->newNote(5, 310, $this->t('Hem allowance')."\n(".$this->unit(20).')', 12, 15, -10, ['line-height' => 6, 'dy' => -4]);
+        $p->newNote(5, 310, $this->t('Hem allowance')."\n(".$p->unit(20).')', 12, 15, -10, ['line-height' => 6, 'dy' => -4]);
     }
 
     /**
@@ -360,7 +360,7 @@ class AaronAshirt extends BrianBodyBlock
 
         // Notes
         $p->addPoint(306, $p->shift(101, 180, 3), 'Note 1 anchor');
-        $p->newNote(1, 306, $this->t("Standard\nseam\nallowance")."\n(".$this->unit(10).')', 6, 10, -5);
+        $p->newNote(1, 306, $this->t("Standard\nseam\nallowance")."\n(".$p->unit(10).')', 6, 10, -5);
 
         $p->addPoint('.help1', $p->shift(100, 90, 20));
         $p->newNote(2, 104, $this->t("No\nseam\nallowance"), 6, 15, 0);
@@ -370,10 +370,10 @@ class AaronAshirt extends BrianBodyBlock
         $p->newNote(3, 308, $this->t("No\nseam\nallowance"), 8, 15, 0);
 
         $p->addPoint(309, $p->shift(112, -90, $p->distance(110, 112) / 2));
-        $p->newNote(4, 309, $this->t("Standard\nseam\nallowance")."\n(".$this->unit(10).')', 9, 15, -5, $noteAttr);
+        $p->newNote(4, 309, $this->t("Standard\nseam\nallowance")."\n(".$p->unit(10).')', 9, 15, -5, $noteAttr);
 
         $p->newPoint(309, $p->x(110) - 40, $p->y(110), 'Note 5 anchor');
-        $p->newNote(5, 309, $this->t('Hem allowance')."\n(".$this->unit(20).')', 12, 15, -10);
+        $p->newNote(5, 309, $this->t('Hem allowance')."\n(".$p->unit(20).')', 12, 15, -10);
 
         $armholeLen = $p->curveLen(102, 106, 107, 5) + $this->parts['front']->curveLen(102, 106, 107, 5);
         $neckholeLen = $p->curveLen(103, 105, 104, 100) + $this->parts['front']->curveLen(103, 105, 104, 100);
@@ -382,21 +382,21 @@ class AaronAshirt extends BrianBodyBlock
             ":\n".
             $this->t('width').
             ': '.
-            $this->unit(60).
+            $p->unit(60).
             "\n".
             $this->t('length').
             ': '.
-            $this->unit($armholeLen).
+            $p->unit($armholeLen).
             "\n&#160;\n".
             $this->t('Cut one strip to finish the neck opening').
             ":\n".
             $this->t('width').
             ': '.
-            $this->unit(60).
+            $p->unit(60).
             "\n".
             $this->t('length').
             ': '.
-            $this->unit($neckholeLen);
+            $p->unit($neckholeLen);
 
         $p->newPoint('msgAnchor', $p->x('grainlineTop') + 30, $p->y('logoAnchor')+50, 'Message anchor');
         $p->newText('binding', 'msgAnchor', $msg);

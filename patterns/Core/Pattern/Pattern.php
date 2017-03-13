@@ -156,24 +156,6 @@ abstract class Pattern
     }
 
     /**
-     * Takes a value in mm and returns it as text in the chosen units
-     *
-     * For example, this returns 25.4 as either '2.54cm' or '1"'
-     *
-     * @param string $val The value to convert
-     *
-     * @return string $text The converted text
-     */
-    public function unit($val)
-    {
-        if ($this->units == 'imperial') {
-            return round($val / 25.4, 2) . '"';
-        } else {
-            return round($val / 10, 2) . 'cm';
-        }
-    }
-
-    /**
      * Returns the units property
      *
      * @return string imperial|metric

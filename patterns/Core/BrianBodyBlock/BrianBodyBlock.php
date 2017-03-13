@@ -35,9 +35,14 @@ class BrianBodyBlock extends Pattern
     const NECK_CUTOUT = 20;
 
     /**
-     * Fix sleevecap ease to 1.5cm
+     * Fix sleevecap ease to 0.5cm
      */
-    const SLEEVECAP_EASE = 15;
+    const SLEEVECAP_EASE = 5;
+
+    /**
+     * Fix biceps ease to 5cm
+     */
+    const BICEPS_EASE = 50;
 
     /**
      * Sets up options and values for our draft
@@ -61,6 +66,7 @@ class BrianBodyBlock extends Pattern
         $this->setOption('collarEase', self::COLLAR_EASE);
         $this->setOption('backNeckCutout', self::NECK_CUTOUT);
         $this->setOption('sleevecapEase', self::SLEEVECAP_EASE);
+        $this->setOption('bicepsEase', self::BICEPS_EASE);
 
         // Depth of the armhole
         $this->setValue('armholeDepth', $model->m('shoulderSlope') / 2 + $model->m('bicepsCircumference') * $this->o('armholeDepthFactor'));
@@ -103,8 +109,18 @@ class BrianBodyBlock extends Pattern
         $this->draftFrontBlock($model);
         $this->finalizeFrontBlock($model);
 
-        $this->draftSleeveBlock($model);
+        // Tweak the sleeve until it fits the armhole
+        do {
+            $this->draftSleeveBlock($model);
+        } while (abs($this->armholeDelta($model)) > 1);
+        $this->msg('After '.$this->v('sleeveTweakRun').' attemps, the sleeve head is '.round($this->armholeDelta($model),1).'mm off.');
         $this->finalizeSleeveBlock($model);
+
+        if ($this->isPaperless) {
+            $this->paperlessBackBlock($model);
+            $this->paperlessFrontBlock($model);
+            $this->paperlessSleeveBlock($model);
+        }
     }
 
     /**
@@ -125,7 +141,25 @@ class BrianBodyBlock extends Pattern
 
         $this->draftBackBlock($model);
         $this->draftFrontBlock($model);
-        $this->draftSleeveBlock($model);
+        
+        // Tweak the sleeve until it fits the armhole
+        do {
+            $this->draftSleeveBlock($model);
+        } while (abs($this->armholeDelta($model)) > 1);
+        $this->msg('After '.$this->v('sleeveTweakRun').' attemps, the sleeve head is '.round($this->armholeDelta($model),1).'mm off.');
+    }
+
+    /**
+     * Calculates the difference between the armhole and sleevehead length
+     *
+     * @param \Freesewing\Model $model The model to draft for
+     *
+     * @return float The difference between the armhole and sleevehead
+     */
+    private function armholeDelta($model) 
+    {
+        $this->setValue('armholeLength', $this->v('frontArmholeLength') + $this->v('backArmholeLength'));
+        return $this->v('armholeLength') - $this->v('sleeveheadLength');
     }
 
     /**
@@ -194,12 +228,16 @@ class BrianBodyBlock extends Pattern
             'Curve control point for collar');
         $p->newPoint(21, $p->x(8), $p->y(9));
 
+
         // Paths
         $path = 'M 1 L 2 L 3 L 4 L 6 L 5 C 13 16 14 C 15 18 10 C 17 19 12 L 8 C 20 1 1 z';
-        $p->newPath('seamline', $path);
+        $p->newPath('seamline', $path, ['class' => 'fabric']);
 
         // Mark path for sample service
         $p->paths['seamline']->setSample(true);
+        
+        // Store length of the armhole
+        $this->setValue('backArmholeLength', $p->curveLen(12, 19, 17, 10) + $p->curveLen(10, 18, 15, 14) + $p->curveLen(14, 16, 13, 5));
     }
 
     /**
@@ -216,10 +254,58 @@ class BrianBodyBlock extends Pattern
     public function finalizeBackBlock($model)
     {
         $p = $this->parts['backBlock'];
-        // Title anchor
+
+        // Grainline
+        $p->addPoint('cofTop', $p->shift(1,-90,10));
+        $p->addPoint('cofBottom', $p->shift(4,90,10));
+        $p->newCutonfold('cofBottom','cofTop', $this->t('Cut on fold').' - '.$this->t('Grainline'));
+
+        // Seam allowance
+        $p->offsetPathstring('sa1', 'M 4 L 6 L 5 C 13 16 14 C 15 18 10 C 17 19 12 L 8 C 20 1 1', 10, 1, ['class' => 'fabric sa']);
+        // Join ends
+        $p->newPath('sa2', 'M 1 L sa1-endPoint M 4 L sa1-startPoint', ['class' => 'fabric sa']);
+        
+        // Title
         $p->newPoint('titleAnchor', $p->x(10) / 2, $p->y(10), 'Title anchor');
-        $p->addTitle('titleAnchor', 1, $this->t($p->title));
-        $p->newSnippet('logo', 'logo', 'titleAnchor');
+        $p->addTitle('titleAnchor', 2, $this->t($p->title));
+
+        // Logo
+        $p->addPoint('logoAnchor', $p->shift('titleAnchor',-90,100));
+        $p->newSnippet('logo', 'logo-sm', 'logoAnchor');
+    }
+
+    /**
+     * Paperless instructions for the back block
+     *
+     * @param \Freesewing\Model $model The model to draft for
+     *
+     * @return void
+     */
+    public function paperlessBackBlock($model)
+    {
+        /** @var \Freesewing\Part $p */
+        $p = $this->parts['backBlock'];
+
+        // Width at the bottom
+        $p->newWidthDimension(4,6,$p->y(6)+25);
+
+        // Height at the right
+        $xBase = $p->x(5);
+        $p->newHeightDimension(6, 5, $xBase+25);
+        $p->newHeightDimension(6, 12, $xBase+40);
+        $p->newHeightDimension(6, 8, $xBase+55);
+
+        // Height at the left
+        $p->newHeightDimensionSm(1, 8, $p->x(9)-15);
+
+        // Width at the top
+        $p->newWidthDimension(1,8,$p->y(8)-20);
+
+        // Length of shoulder seam
+        $p->newLinearDimension(8,12,-20);
+
+        // Armhole length
+        $p->newCurvedDimension('M 5 C 13 16 14 C 15 18 10 C 17 19 12', 25);
     }
 
     /**
@@ -253,10 +339,13 @@ class BrianBodyBlock extends Pattern
         $p->addPoint(18, $p->shift(18, 180, $this->v('frontArmholeExtra')));
 
         $path = 'M 9 L 2 L 3 L 4 L 6 L 5 C 13 16 14 C 15 18 10 C 17 19 12 L 8 C 20 21 9 z';
-        $p->newPath('seamline', $path);
+        $p->newPath('seamline', $path, ['class' => 'fabric']);
 
         // Mark path for sample service
         $p->paths['seamline']->setSample(true);
+
+        // Store length of the armhole
+        $this->setValue('frontArmholeLength', $p->curveLen(12, 19, 17, 10) + $p->curveLen(10, 18, 15, 14) + $p->curveLen(14, 16, 13, 5));
     }
 
     /**
@@ -274,8 +363,58 @@ class BrianBodyBlock extends Pattern
     {
         /** @var \Freesewing\Part $p */
         $p = $this->parts['frontBlock'];
+        
+        // Grainline
+        $p->addPoint('cofTop', $p->shift(9,-90,10));
+        $p->addPoint('cofBottom', $p->shift(4,90,10));
+        $p->newCutonfold('cofBottom','cofTop', $this->t('Cut on fold').' - '.$this->t('Grainline'));
+        
+        // Seam allowance
+        $p->offsetPathstring('sa1', 'M 4 L 6 L 5 C 13 16 14 C 15 18 10 C 17 19 12 L 8 C 20 21 9', 10, 1, ['class' => 'fabric sa']); 
+        // Close edges
+        $p->newPath('sa2', 'M 9 L sa1-endPoint M 4 L sa1-startPoint', ['class' => 'fabric sa']);
+
+        // Title
         $p->addTitle('titleAnchor', 1, $this->t($p->title));
-        $p->newSnippet('logo', 'logo', 'titleAnchor');
+        $p->addPoint('logoAnchor', $p->shift('titleAnchor',-90,100));
+
+        // Logo
+        $p->newSnippet('logo', 'logo-sm', 'logoAnchor');
+    }
+
+    /**
+     * Paperless instructions for the front block
+     *
+     * @param \Freesewing\Model $model The model to draft for
+     *
+     * @return void
+     */
+    public function paperlessFrontBlock($model)
+    {
+        /** @var \Freesewing\Part $p */
+        $p = $this->parts['frontBlock'];
+
+        // Width at the bottom
+        $p->newWidthDimension(4,6,$p->y(6)+25);
+
+        // Height at the right
+        $xBase = $p->x(5);
+        $p->newHeightDimension(6, 5, $xBase+25);
+        $p->newHeightDimension(6, 12, $xBase+40);
+        $p->newHeightDimension(6, 8, $xBase+55);
+
+        // Height at the left
+        $p->newHeightDimension(9, 8, $p->x(9)-15);
+
+        // Width at the top
+        $p->newWidthDimension(9,8,$p->y(8)-20);
+
+        // Length of shoulder seam
+        $p->newLinearDimension(8,12,-20);
+
+        // Armhole length
+        $p->newCurvedDimension('M 5 C 13 16 14 C 15 18 10 C 17 19 12', 25);
+
     }
 
     /**
@@ -301,11 +440,25 @@ class BrianBodyBlock extends Pattern
         /** @var \Freesewing\Part $p */
         $p = $this->parts['sleeveBlock'];
 
-        $this->setValue('sleevecapSeamLength', ($this->armholeLen() + $this->o('sleevecapEase'))*$this->v('sleeveTweakFactor'));
+        // Is this the first time we're calling draftSleeveBlock() ?
+        if($this->v('sleeveTweakRun') > 0) {
+            // No, this will be a tweaked draft. So let's tweak
+            if($this->armholeDelta($model) > 0) {
+                //  Armhole is larger than sleeve head. Increase tweak factor 
+                $this->setValue('sleeveTweakFactor', $this->v('sleeveTweakFactor')*1.01);
+            } else {
+                //  Armhole is smaller than sleeve head. Decrease tweak factor 
+                $this->setValue('sleeveTweakFactor', $this->v('sleeveTweakFactor')*0.99);
+            }
+            // Include debug message
+            $this->dbg('Sleeve tweak run '.$this->v('sleeveTweakRun').'. Sleeve head is '.$this->armholeDelta($model).'mm off');
+        }
+        // Keep track of tweak runs because why not
+        $this->setValue('sleeveTweakRun', $this->v('sleeveTweakRun')+1);
 
         // Sleeve center
         $p->newPoint(1, 0, 0, 'Origin (Center sleeve @ shoulder)');
-        $p->newPoint(2, 0, $this->v('sleevecapHeight'), 'Center sleeve @ sleevecap start');
+        $p->newPoint(2, 0, $this->v('sleevecapHeight')*$this->v('sleeveTweakFactor'), 'Center sleeve @ sleevecap start');
         $p->clonePoint(2, 'gridAnchor');
         $p->newPoint(3, 0, $model->getMeasurement('sleeveLengthToWrist') + $this->o('sleeveLengthBonus'), 'Center sleeve @ wrist');
 
@@ -326,7 +479,7 @@ class BrianBodyBlock extends Pattern
         }
 
         // Back pitch point
-        $p->newPoint(10, $p->x(-7), $this->v('sleevecapSeamLength') / 6 - 15, 'Back Pitch Point');
+        $p->newPoint(10, $p->x(-7), $p->y(2)/ 3 + 5, 'Back Pitch Point');
 
         // Front pitch point gets 5mm extra room
         $p->newPoint(11, $p->x(7) + 5, $p->y(10) + 15, 'Front Pitch Point');
@@ -379,14 +532,26 @@ class BrianBodyBlock extends Pattern
         $p->addPoint(35, $p->beamsCross(5, 32, 33, 34), 'Elbow point front side');
 
         $path = 'M 31 L -5 C -5 20 16 C 21 10 10 C 10 22 17 C 23 28 30 C 29 25 18 C 24 11 11 C 11 27 19 C 26 5 5 L 32 z';
-        $p->newPath('seamline', $path);
+        $p->newPath('seamline', $path, ['class' => 'fabric']);
 
         // Mark path for sample service
         $p->paths['seamline']->setSample(true);
+        
+        // Store sleevehead length
+        $this->setValue('sleeveheadLength', 
+            $p->curveLen(-5,-5,20,16) + 
+            $p->curveLen(16,21,10,10) + 
+            $p->curveLen(10,10,22,17) + 
+            $p->curveLen(17,23,28,30) + 
+            $p->curveLen(30,29,25,18) + 
+            $p->curveLen(18,24,11,11) + 
+            $p->curveLen(11,11,27,19) + 
+            $p->curveLen(19,26,5,5)
+        );
     }
 
     /**
-     * Finalizes the front block
+     * Finalizes the sleeve block
      *
      * Only draft() calls this method, sample() does not.
      * It does things like adding a title, logo, and any
@@ -400,27 +565,62 @@ class BrianBodyBlock extends Pattern
     {
         /** @var \Freesewing\Part $p */
         $p = $this->parts['sleeveBlock'];
+
+        // Grainline
+        $p->newPoint('glTop', 0, 10);
+        $p->newPoint('glBottom', 0, $p->y(31)-10);
+        $p->newGrainline('glBottom','glTop');
+        
+        // Seam allowance
+        $p->offsetPath('sa', 'seamline', -10, 1, ['class' => 'fabric sa']); 
+
+        // Title
         $p->newPoint('titleAnchor', $p->x(2), $this->parts['frontBlock']->y('titleAnchor'));
         $p->addTitle('titleAnchor', 3, $this->t($p->title));
 
-        $p->newText('test', 33, $this->t('warning'), ['line-height' => 10, 'class' => 'text-center text-xl']);
+        // Logo
+        $p->addPoint('logoAnchor', $p->shift('titleAnchor',-90,100));
+        $p->newSnippet('logo', 'logo', 'logoAnchor');
 
-        $p->newSnippet('logo', 'logo', 'titleAnchor');
+        // Scalebox
+        $p->addPoint('scaleboxAnchor', $p->shift('logoAnchor',-90,100));
+        $p->newSnippet('scalebox', 'scalebox', 'scaleboxAnchor');
     }
 
     /**
-     * Calculates the armhole length
+     * Paperless instructions for the sleeve block
      *
-     * @return float The armhole length
+     * @param \Freesewing\Model $model The model to draft for
+     *
+     * @return void
      */
-    protected function armholeLen()
+    public function paperlessSleeveBlock($model)
     {
-        /** @var \Freesewing\Part $back */
-        $back = $this->parts['backBlock'];
-        /** @var \Freesewing\Part $front */
-        $front = $this->parts['frontBlock'];
+        /** @var \Freesewing\Part $p */
+        $p = $this->parts['sleeveBlock'];
 
-        return ($back->curveLen(12, 19, 17, 10) + $back->curveLen(10, 18, 15, 14) + $back->curveLen(14, 16, 13,
-                    5)) + ($front->curveLen(12, 19, 17, 10) + $front->curveLen(10, 18, 15, 14) + $front->curveLen(14, 16, 13, 5));
+        // Height on the right
+        $xBase = $p->x(5);
+        $p->newHeightDimension(32,5,$xBase+20);
+        $p->newHeightDimension(32,30,$xBase+35);
+
+        // Width at the bottom
+        $p->newWidthDimension(31,32,$p->y(32)+25);
+
+        // Width at the top
+        $p->newWidthDimension(-5,5,$p->y(1)-35);
+
+        // Sleevecap length
+        $p->newCurvedDimension('
+            M -5 
+            C -5 20 16
+            C 21 10 10
+            C 10 22 17
+            C 23 28 30
+            C 29 25 18
+            C 24 11 11
+            C 11 27 19
+            C 26 5 5
+        ', -20);
     }
 }

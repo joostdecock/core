@@ -345,12 +345,15 @@ class Context
         } else {
             $channel = $this->config['defaults']['channel'];
         }
-        $class = '\\Freesewing\\Channels\\'.$channel;
-        if (class_exists($class)) {
-            return new $class();
-        } else {
-            throw new \InvalidArgumentException("Cannot load channel $channel, it does not exist");
+        
+        foreach($this->config['channelNamespaces'] as $ns) {
+            $class = '\\Freesewing\\Channels\\'.$ns.'\\'.$channel;
+            if (class_exists($class)) {
+                return new $class();
+            }
         }
+
+        throw new \InvalidArgumentException("Cannot load channel $channel, it does not exist");
     }
 
     /**
@@ -544,9 +547,9 @@ class Context
     /**
      * Sets the channel property
      *
-     * @param Channels\Channel $channel
+     * @param Channels\* $channel
      */
-    public function setChannel(\Freesewing\Channels\Channel $channel)
+    public function setChannel($channel)
     {
         $this->channel = $channel;
     }

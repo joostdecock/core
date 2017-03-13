@@ -1,6 +1,6 @@
 <?php
-/** Freesewing\Channels\Channel */
-namespace Freesewing\Channels;
+/** Freesewing\Channels\Core\Channel */
+namespace Freesewing\Channels\Core;
 
 use Freesewing\Context;
 

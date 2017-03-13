@@ -1,6 +1,6 @@
 defaults:
     service: draft
-    channel: Docs
+    channel: Freesewing
     draftTheme: Basic
     sampleTheme: Sampler
     compareTheme: Compare
@@ -21,4 +21,7 @@ patternNamespaces:
     - Tests
 
 themeNamespaces:
+    - Core
+
+channelNamespaces:
     - Core

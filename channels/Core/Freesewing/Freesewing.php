@@ -1,6 +1,6 @@
 <?php
-/** Freesewing\Channels\Docs */
-namespace Freesewing\Channels;
+/** Freesewing\Channels\Core\Freesewing */
+namespace Freesewing\Channels\Core;
 
 use Freesewing\Context;
 use Freesewing\Utils;
@@ -19,7 +19,7 @@ use Freesewing\Utils;
  * @copyright 2016 Joost De Cock
  * @license http://opensource.org/licenses/GPL-3.0 GNU General Public License, Version 3
  */
-class Docs extends Channel
+class Freesewing extends Channel
 {
     /**
      * Allows the channel designer to implement access control

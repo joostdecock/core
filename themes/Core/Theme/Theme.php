@@ -1,6 +1,6 @@
 <?php
-/** Freesewing\Themes\Sampler class */
-namespace Freesewing\Themes;
+/** Freesewing\Themes\Core\Theme class */
+namespace Freesewing\Themes\Core;
 
 use Freesewing\Context;
 use Freesewing\Patterns\Pattern;
@@ -229,7 +229,7 @@ abstract class Theme
             $reflector = new \ReflectionClass($parent->name);
             $filename = $reflector->getFileName();
             $locations[] = dirname($filename);
-        } while ($parent->name != 'Freesewing\Themes\Theme');
+        } while ($parent->name != 'Freesewing\Themes\Core\Theme');
 
         return $locations;
     }

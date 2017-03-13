@@ -1,6 +1,6 @@
 <?php
-/** Freesewing\Themes\Sampler class */
-namespace Freesewing\Themes;
+/** Freesewing\Themes\Core\Sampler class */
+namespace Freesewing\Themes\Core;
 
 /**
  * A theme that aims to save trees.

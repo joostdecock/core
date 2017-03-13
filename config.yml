@@ -7,13 +7,18 @@ defaults:
     infoTheme: Info
     pattern: TestPattern
     locale: en
+
 services:
     - info
     - draft
     - sample
     - compare
+
 patternNamespaces:
     - Core
     - Contrib
     - Docs
     - Tests
+
+themeNamespaces:
+    - Core

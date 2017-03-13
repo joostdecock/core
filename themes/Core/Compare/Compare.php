@@ -1,6 +1,6 @@
 <?php
-/** Freesewing\Themes\Compare class */
-namespace Freesewing\Themes;
+/** Freesewing\Themes\Core\Compare class */
+namespace Freesewing\Themes\Core;
 
 use Freesewing\Context;
 

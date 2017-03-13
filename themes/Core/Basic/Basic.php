@@ -1,6 +1,6 @@
 <?php
-/** Freesewing\Themes\Basic class */
-namespace Freesewing\Themes;
+/** Freesewing\Themes\Core\Basic class */
+namespace Freesewing\Themes\Core;
 
 use Freesewing\Context;
 

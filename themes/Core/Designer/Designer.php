@@ -1,6 +1,6 @@
 <?php
-/** Freesewing\Themes\Designer class */
-namespace Freesewing\Themes;
+/** Freesewing\Themes\Core\Designer class */
+namespace Freesewing\Themes\Core;
 
 use \Freesewing\Utils;
 

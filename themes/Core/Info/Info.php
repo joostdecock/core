@@ -1,6 +1,6 @@
 <?php
-/** Freesewing\Themes\Info class */
-namespace Freesewing\Themes;
+/** Freesewing\Themes\Core\Info class */
+namespace Freesewing\Themes\Core;
 
 /**
  * The Info theme is used by the Info service

@@ -466,12 +466,15 @@ class Context
         } else {
             $theme = $this->config['defaults'][$this->service->getServiceName().'Theme'];
         }
-        $class = '\\Freesewing\\Themes\\'.$theme;
-        if (class_exists($class)) {
-            return new $class();
-        } else {
-            throw new \InvalidArgumentException("Cannot load theme $theme, it does not exist");
+        
+        foreach($this->config['themeNamespaces'] as $ns) {
+            $class = '\\Freesewing\\Themes\\'.$ns.'\\'.$theme;
+            if (class_exists($class)) {
+                return new $class();
+            }
         }
+        
+        throw new \InvalidArgumentException("Cannot load theme $theme, it does not exist");
     }
 
     /**

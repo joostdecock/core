@@ -1,24 +1,27 @@
 info:
      name:         "Bruce Boxer Briefs"
      version:      "2.0"
-     date:         "20161031"
+     date:         "20170313"
      author:       "Joost De Cock"
-     email:        "joost@decock.org"
-     company:      "freesewing.org"
-     link:         "freesewing.org/pattern/bruce-boxer-briefs/"
+     company:      "freesewing"
+     link:         "freesewing.org/pattern/bruce"
+
 parts:
     block:    "Block"
     front:    "Front"
     back:     "Back"
     side:     "Side"
     inset:    "Inset"
+
 languages:
     en: English
     nl: Nederlands
+
 measurements:
     hipsCircumference: 985
     upperLegCircumference: 630
     crossseamLength: 680
+
 options:
     rise:
         type: "measure"
@@ -48,7 +51,7 @@ options:
         type: "angle"
         min: 15
         max: 35
-        default: 15
+        default: 25
 
     horizontalStretchFactor:
         type: "percent"

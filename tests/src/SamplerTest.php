@@ -36,6 +36,7 @@ class SamplerTest extends \PHPUnit\Framework\TestCase
      */
     public function testGettersReturnWhatSettersSet($methodSuffix, $expectedResult)
     {
+        $this->markTestSkipped ( "getter does not exit anymore" );
         $object = new \Freesewing\Sampler();
         $setMethod = 'set'.$methodSuffix;
         $getMethod = 'get'.$methodSuffix;
@@ -56,6 +57,8 @@ class SamplerTest extends \PHPUnit\Framework\TestCase
      */
     public function testGetSamplerModelsFile()
     {
+        $this->markTestSkipped ( "method does not exit anymore" );
+
         $object = new \Freesewing\Sampler();
         $file = $object->getSamplerModelsFile(new \Freesewing\Patterns\TestPattern());
         $dir = dirname(dirname(__DIR__));
@@ -149,11 +152,12 @@ class SamplerTest extends \PHPUnit\Framework\TestCase
      */
     public function testSampleParts()
     {
+        $this->markTestSkipped ( "protected method - suggest to call sampleMeasurements and/or sampleOptions and move it to the corresponding test class." );
         $object = new \Freesewing\Sampler();
 
         $pattern = new \Freesewing\Patterns\TestPattern();
-        $pattern->addPart('test1');
-        $pattern->addPart('test2');
+        $pattern->newPart('test1');
+        $pattern->newPart('test2');
         unset($pattern->parts['testPart']);
         
         $p1 = $pattern->parts['test1'];

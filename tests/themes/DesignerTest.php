@@ -139,7 +139,7 @@ class DesignerTest extends \PHPUnit\Framework\TestCase
 
     private function loadFixture($fixture)
     {
-        $dir = 'tests/themes/fixtures';
+        $dir = \Freesewing\Utils::getApiDir().'/tests/themes/fixtures';
         $file = "$dir/Designer.$fixture.data";
         return file_get_contents($file);
     }

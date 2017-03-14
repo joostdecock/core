@@ -22,7 +22,7 @@ class PathTest extends \PHPUnit\Framework\TestCase
             ['sample'],
             ['render'],
             ['attributes'],
-            ['path'],
+            ['pathstring'],
         ];
     }
 
@@ -60,7 +60,7 @@ class PathTest extends \PHPUnit\Framework\TestCase
             ['Render', false],
             ['Render', true],
             ['Boundary', $boundary],
-            ['Path', $path],
+            ['Pathstring', $path],
             ['Attributes', $attr],
         ];
     }
@@ -79,7 +79,7 @@ class PathTest extends \PHPUnit\Framework\TestCase
             ['type' => 'L', 'path' => 'M 6 L 1'],
         ];
         
-        $path->setPath(' M  1  L   2 L 3     C 4  5 6 z  ');
+        $path->setPathstring(' M  1  L   2 L 3     C 4  5 6 z  ');
         $this->assertEquals($expected, $path->breakUp()); 
         
     }
@@ -90,10 +90,10 @@ class PathTest extends \PHPUnit\Framework\TestCase
     {
         $path = new \Freesewing\Path();
         
-        $path->setPath(' M  1  L   2 L 3     C 4  5 6 z  ');
+        $path->setPathstring(' M  1  L   2 L 3     C 4  5 6 z  ');
         $this->assertEquals(true, $path->isClosed()); 
         
-        $path->setPath(' M  1  L   2 L 3     C 4  5 6   ');
+        $path->setPathstring(' M  1  L   2 L 3     C 4  5 6   ');
         $this->assertEquals(false, $path->isClosed()); 
     }
     
@@ -103,7 +103,7 @@ class PathTest extends \PHPUnit\Framework\TestCase
     public function testGetStartPointGetEndPoint()
     {
         $path = new \Freesewing\Path();
-        $path->setPath('   M   1  L   2 L 3     C 4  5 6   ');
+        $path->setPathstring('   M   1  L   2 L 3     C 4  5 6   ');
         $this->assertEquals(1, $path->getStartPoint()); 
         $this->assertEquals(6, $path->getEndPoint()); 
 
@@ -115,8 +115,8 @@ class PathTest extends \PHPUnit\Framework\TestCase
     public function testPathstringAutoCleaneUp()
     {
         $path = new \Freesewing\Path();
-        $path->setPath('   M   1  L   2 L 3     C 4  5 6  z  ');
-        $this->assertEquals('M 1 L 2 L 3 C 4 5 6 z', $path->getPath()); 
+        $path->setPathstring('   M   1  L   2 L 3     C 4  5 6  z  ');
+        $this->assertEquals('M 1 L 2 L 3 C 4 5 6 z', $path->getPathstring());
 
     }
     
@@ -148,7 +148,7 @@ class PathTest extends \PHPUnit\Framework\TestCase
 
         $path = new \Freesewing\Path();
      
-        $path->setPath('M 1 L 3 L 4 C 4 5 6 C 1 5 3');
+        $path->setPathstring('M 1 L 3 L 4 C 4 5 6 C 1 5 3');
 
         $boundary = new \Freesewing\Boundary();
         $topLeft = new \Freesewing\Point();
@@ -181,7 +181,7 @@ class PathTest extends \PHPUnit\Framework\TestCase
         $p->newPoint(6, -540, -430);
 
         $path = new \Freesewing\Path();
-        $path->setPath('M 1 L 30 L 4 C 4 5 6 C 1 5 3');
+        $path->setPathstring('M 1 L 30 L 4 C 4 5 6 C 1 5 3');
 
         $path->findBoundary($p); 
     }

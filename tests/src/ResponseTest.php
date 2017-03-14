@@ -32,8 +32,7 @@ class ResponseTest extends \PHPUnit\Framework\TestCase
         return [
             ['body'],
             ['format'],
-            ['headers'],
-            ['cacheTime'],
+            ['headers']
         ];
     }
 

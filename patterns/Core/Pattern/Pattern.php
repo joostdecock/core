@@ -68,13 +68,13 @@ abstract class Pattern
             $this->config = \Freesewing\Yamlr::loadYamlFile($this->getConfigFile());
             $this->setUnits($units);
             $this->loadParts();
-            $this->replace('__TITLE__', $this->config['info']['name']);
-            $this->replace('__VERSION__', $this->config['info']['version']);
-            $this->replace('__COMPANY__', $this->config['info']['company']);
-            $this->replace('__AUTHOR__', $this->config['info']['author']);
+            $this->replace('__TITLE__', isset($this->config['info']['name']) ? $this->config['info']['name'] : NULL);
+            $this->replace('__VERSION__', isset($this->config['info']['version']) ? $this->config['info']['version'] : NULL);
+            $this->replace('__COMPANY__', isset($this->config['info']['company']) ? $this->config['info']['company'] : NULL);
+            $this->replace('__AUTHOR__', isset($this->config['info']['author']) ? $this->config['info']['author'] : NULL);
         }
-        $this->replace('__DATE__', date('l j F Y'));
-        
+        $this->replace('__DATE__', date('l j F Y') !=  null ? date('l j F Y') : NULL);
+
         return $this;
     }
 
@@ -465,7 +465,10 @@ abstract class Pattern
      */
     public function replace($search, $replace)
     {
-        $this->replacements[$search] = $replace;
+        if ($replace != NULL)
+        {
+            $this->replacements[$search] = $replace;
+        }
     }
 
     /**

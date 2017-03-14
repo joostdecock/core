@@ -94,14 +94,14 @@ class GrowingPackerTest extends \PHPUnit\Framework\TestCase
 
     private function loadTemplate($template)
     {
-        $dir = 'tests/src/fixtures';
+        $dir = \Freesewing\Utils::getApiDir().'/tests/src/fixtures';
         $file = "$dir/GrowingPacker.$template.layout";
         return file_get_contents($file);
     }
 
     private function saveTemplate($template, $data)
     {
-        $dir = 'tests/src/fixtures';
+        $dir = \Freesewing\Utils::getApiDir().'/tests/src/fixtures';
         $file = "$dir/GrowingPacker.$template.layout";
         $f = fopen($file,'w');
         fwrite($f,$data);

@@ -103,4 +103,28 @@ class VectorTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals($this->v2->gte($this->v1), true);
         $this->assertEquals($this->v2->lte($this->v1), false);
     }
+
+    /**
+     * @param string $methodSuffix The part of the method to call without 'get' or 'set'
+     * @param $expectedResult Result to check for
+     *
+     * @dataProvider providerGettersReturnWhatSettersSet
+     */
+    public function testGettersReturnWhatSettersSet($methodSuffix, $expectedResult)
+    {
+        $point = new \Freesewing\Vector();
+        $setMethod = 'set'.$methodSuffix;
+        $getMethod = 'get'.$methodSuffix;
+        $point->{$setMethod}($expectedResult);
+        $this->assertEquals($expectedResult, $point->{$getMethod}());
+    }
+
+    public function providerGettersReturnWhatSettersSet()
+    {
+        return [
+            ['X', 52],
+            ['Y', 69],
+        ];
+    }
+
 }

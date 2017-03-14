@@ -8,7 +8,7 @@ class UtilsTest extends \PHPUnit\Framework\TestCase
 {
     private function loadTemplate($template)
     {
-        $dir = 'tests/src/fixtures';
+        $dir = \Freesewing\Utils::getApiDir().'/tests/src/fixtures';
         return file_get_contents("$dir/Utils.$template.txt");
     }
 
@@ -56,14 +56,7 @@ class UtilsTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals(Utils::flattenAttributes($out), false);
     }
     
-    /**
-     * Tests the bezierPoint method
-     */
-    public function testBezierPoint()
-    {
-        $this->assertEquals(Utils::bezierPoint(0.7,10,20,80,90), 70.200000000000003);
-    }
-    
+
     /**
      * Tests the getClassDir method
      */

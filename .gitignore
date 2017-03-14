@@ -3,3 +3,9 @@ print/
 .php_cs.cache
 .sass_cache/
 */.sass-cache/*
+.buildpath
+.externalToolBuilders/
+.metadata/
+.project
+.settings/
+.idea/

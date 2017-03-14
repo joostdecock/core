@@ -76,7 +76,7 @@ class PaperlessTest extends \PHPUnit\Framework\TestCase
         $p->newPoint(2,100,100); 
         $p->newPath('test', 'M 1 L 2');
 
-        $context->getPattern()->addPart('part2');
+        $context->getPattern()->newPart('part2');
         $p = $context->getPattern()->parts['part2'];
         $p->newPoint(1,0,0); 
         $p->newPoint(2,100,100); 
@@ -93,14 +93,14 @@ class PaperlessTest extends \PHPUnit\Framework\TestCase
 
     private function loadFixture($fixture)
     {
-        $dir = 'tests/themes/fixtures';
+        $dir = \Freesewing\Utils::getApiDir().'/tests/themes/fixtures';
         $file = "$dir/Paperless.$fixture.data";
         return file_get_contents($file);
     }
 
     private function saveFixture($fixture, $data)
     {
-        $dir = 'tests/themes/fixtures';
+        $dir = \Freesewing\Utils::getApiDir().'/tests/themes/fixtures';
         $file = "$dir/Paperless.$fixture.data";
         $f = fopen($file,'w');
         fwrite($f,$data);

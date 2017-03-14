@@ -3,6 +3,7 @@
 namespace Freesewing\Themes\Core;
 
 use \Freesewing\Utils;
+use \Freesewing\Patterns\Pattern;
 
 /**
  * Designer theme adds extra info for pattern designers.
@@ -18,7 +19,7 @@ class Designer extends Theme
      *
      * @param \Freesewing\Pattern\* $pattern The pattern object
      */
-    public function themePattern($pattern)
+    public function themePattern(Pattern $pattern)
     {
         parent::themePattern($pattern);
 

@@ -2,6 +2,7 @@
 /** Freesewing\Themes\Core\Sampler class */
 namespace Freesewing\Themes\Core;
 
+use \Freesewing\Patterns\Pattern;
 /**
  * A theme that aims to save trees.
  *
@@ -26,7 +27,7 @@ class Paperless extends Basic
      *
      * @param \Freesewing\Patterns\* $pattern The pattern object
      */
-    public function themePattern($pattern)
+    public function themePattern(Pattern $pattern)
     {
         parent::themePattern($pattern);
 

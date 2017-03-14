@@ -93,10 +93,10 @@ class Sampler
     /**
      * Samples parts for a given model and options
      *
-     * The MeasurementsSampler itterates over models
-     * The OptionsSampler itterates over an option value
+     * The MeasurementsSampler iterates over models
+     * The OptionsSampler iterates over an option value
      * When doing so, both call this function to do the actual sampling.
-     * It does two seperate things:
+     * It does two separate things:
      *  - It renders the paths marked for sampling
      *  - It finds a bounding box for the parts
      * This info is stored in $this->partContainer and will be added to a pattern later
@@ -115,7 +115,7 @@ class Sampler
     {
         foreach ($pattern->parts as $partKey => $part) {
             if ($part->getRender() === true) {
-                if (!is_object($this->anchors[$partKey])) {
+                if (!isset($this->anchors[$partKey])) {
                     $this->anchors[$partKey] = $this->getSamplerAnchor($part);
                     $deltaX = 0;
                     $deltaY = 0;

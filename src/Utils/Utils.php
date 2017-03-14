@@ -104,6 +104,7 @@ class Utils
      */
     public static function getClassDir($class)
     {
+
         $reflector = new \ReflectionClass(get_class($class));
         $filename = $reflector->getFileName();
 
@@ -115,9 +116,9 @@ class Utils
      *
      * @return string
      */
-    public function getApiDir()
+    public static function getApiDir()
     {
-        return dirname(dirname(Utils::getClassDir($this)));
+        return dirname(realpath("."));
     }
 
     /**

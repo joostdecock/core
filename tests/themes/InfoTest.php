@@ -10,8 +10,8 @@ class InfoTest extends \PHPUnit\Framework\TestCase
      */
     public function testThemePatternInfo()
     {
-        $theme = new \Freesewing\Themes\Info();
-        $pattern = new \Freesewing\Patterns\TestPattern();
+        $theme = new \Freesewing\Themes\Core\Info();
+        $pattern = new \Freesewing\Patterns\Tests\TestPattern();
         $data = $pattern->getConfig();
         $data['models'] = $pattern->getSamplerModelConfig();
         $data['pattern'] = basename(\Freesewing\Utils::getClassDir($pattern));
@@ -30,7 +30,7 @@ class InfoTest extends \PHPUnit\Framework\TestCase
      */
     public function testThemeInfo()
     {
-        $theme = new \Freesewing\Themes\Info();
+        $theme = new \Freesewing\Themes\Core\Info();
         $data = [
             'services' => ['service 1','service 2'],
             'patterns' => ['pattern 1','pattern 2'],
@@ -54,7 +54,7 @@ class InfoTest extends \PHPUnit\Framework\TestCase
     public function testThemeName()
     {
         $this->markTestSkipped ( "method does not exit anymore" );
-        $theme = new \Freesewing\Themes\Info();
+        $theme = new \Freesewing\Themes\Core\Info();
         $this->assertEquals('Info', $theme->getThemeName());
     }
 
@@ -63,8 +63,8 @@ class InfoTest extends \PHPUnit\Framework\TestCase
      */
     public function testCleanUp()
     {
-        $theme1 = new \Freesewing\Themes\Info();
-        $theme2 = new \Freesewing\Themes\Info();
+        $theme1 = new \Freesewing\Themes\Core\Info();
+        $theme2 = new \Freesewing\Themes\Core\Info();
         $theme1->cleanUp();
         $this->assertEquals($theme1,$theme2);
     }

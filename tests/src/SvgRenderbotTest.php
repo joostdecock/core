@@ -7,7 +7,7 @@ class SvgRenderbotTest extends \PHPUnit\Framework\TestCase
 
     protected function setUp()
     {
-        $this->pattern = new \Freesewing\Patterns\TestPattern();
+        $this->pattern = new \Freesewing\Patterns\Tests\TestPattern();
     }
 
     /**

@@ -36,6 +36,9 @@ class Part
     /** @var array List of snippets */
     public $snippets = [];
 
+    /** @var array List of includes */
+    public $includes = [];
+
     /** @var array List of texts */
     public $texts = [];
 

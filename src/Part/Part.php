@@ -1209,17 +1209,13 @@ class Part
         $this->addPoint('.offsetTo', $this->shift($to, $angleB, $distance));
         $this->addPoint('.offsetCp1b', $this->shift($cp1, $angleC, $distance));
         $this->addPoint('.offsetCp2b', $this->shift($cp2, $angleC, $distance));
+        
         // Parallel lines do not cross, in which case we'll keep it simple
-        try {
-            $cp1 = $this->beamsCross('.offsetFrom','.offsetCp1a','.offsetCp1b','.offsetCp2b');
-        } catch (Exception $e) {
-            $cp1 = $this->loadPoint('.offsetCp1a');
-        }
-        try {
-            $cp2 = $this->beamsCross('.offsetTo','.offsetCp2a','.offsetCp1b','.offsetCp2b');
-        } catch (Exception $e) {
-            $cp2 = $this->loadPoint('.offsetCp2a');
-        }
+        $cp1 = $this->beamsCross('.offsetFrom','.offsetCp1a','.offsetCp1b','.offsetCp2b');
+        if(!$cp1) $cp1 = $this->loadPoint('.offsetCp1a');
+        $cp2 = $this->beamsCross('.offsetTo','.offsetCp2a','.offsetCp1b','.offsetCp2b');
+        if(!$cp2) $cp2 = $this->loadPoint('.offsetCp2a');
+        
         $this->addPoint('.offsetCp1', $cp1);
         $this->addPoint('.offsetCp2', $cp2);
 
@@ -1627,6 +1623,26 @@ class Part
     {
         $point1 = $this->loadPoint($key1);
         $point2 = $this->loadPoint($key2);
+
+        // Horizontal 
+        if($point1->getY() == $point2->getY()) {
+            if($point1->getX() > $point2->getX()) {
+                return $this->createPoint($point1->getX() - $distance, $point2->getY(), "Point $key1 shifted towards $key2 by $distance");
+            } else {
+                return $this->createPoint($point1->getX() + $distance, $point2->getY(), "Point $key1 shifted towards $key2 by $distance");
+            }
+        } 
+        
+        // Vertical 
+        if($point1->getX() == $point2->getX()) {
+            if($point1->getY() > $point2->getY()) {
+                return $this->createPoint($point2->getX(), $point1->getY() - $distance, "Point $key1 shifted towards $key2 by $distance");
+            } else {
+                return $this->createPoint($point2->getX(), $point1->getY() + $distance, "Point $key1 shifted towards $key2 by $distance");
+            }
+        } 
+
+        // And the rest
         $angle = $this->angle($key1, $key2);
 
         // cos is x axis, sin is y axis
@@ -1649,14 +1665,6 @@ class Part
             $y = $point1->getY() + $deltaY;
         }
 
-        /*
-        $deltaX = $distance * cos(deg2rad($angle)) * -1;
-        $deltaY = $distance * sin(deg2rad($angle));
-    
-        $x = $point1->getX() + $deltaX;
-        $y = $point1->getY() + $deltaY;
-         */
-    
         return $this->createPoint($x, $y, "Point $key1 shifted towards $key2 by $distance");
     }
 

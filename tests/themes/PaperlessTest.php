@@ -23,7 +23,7 @@ class PaperlessTest extends \PHPUnit\Framework\TestCase
      */
     public function testIsPaperless()
     {
-        $theme = new \Freesewing\Themes\Paperless();
+        $theme = new \Freesewing\Themes\Core\Paperless();
         $this->assertTrue($theme->isPaperless());
     }
 
@@ -32,7 +32,7 @@ class PaperlessTest extends \PHPUnit\Framework\TestCase
      */
     public function testThemeSvg()
     {
-        $theme = new \Freesewing\Themes\Paperless();
+        $theme = new \Freesewing\Themes\Core\Paperless();
         $theme->messages = "message 1\nmessage2";
         $theme->debug = "debug line 1\ndebug line 2";
         $svgDocument = new \Freesewing\SvgDocument(

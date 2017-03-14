@@ -32,9 +32,9 @@ class DesignerTest extends \PHPUnit\Framework\TestCase
             new \Freesewing\SvgDefs(),
             new \Freesewing\SvgComments()
         );
-        $theme = new \Freesewing\Themes\Designer();
+        $theme = new \Freesewing\Themes\Core\Designer();
         $this->assertFalse($svgDocument->script->load());
-        $theme->loadTemplates($svgDocument);
+        $theme->themeSvg($svgDocument);
         $this->assertContains('ecmascript',$svgDocument->script->load());
     }
     
@@ -43,7 +43,7 @@ class DesignerTest extends \PHPUnit\Framework\TestCase
      */
     public function testThemeSvg()
     {
-        $theme = new \Freesewing\Themes\Designer();
+        $theme = new \Freesewing\Themes\Core\Designer();
         $theme->messages = "message 1\nmessage2";
         $theme->debug = "debug line 1\ndebug line 2";
         $svgDocument = new \Freesewing\SvgDocument(

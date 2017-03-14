@@ -67,10 +67,10 @@ class ContextTest extends \PHPUnit\Framework\TestCase
     {
         return [
             ['Response', new \Freesewing\Response()],
-            ['Pattern', new \Freesewing\Patterns\TestPattern()],
-            ['Theme', new \Freesewing\Themes\Basic()],
+            ['Pattern', new \Freesewing\Patterns\Tests\TestPattern()],
+            ['Theme', new \Freesewing\Themes\Core\Basic()],
             ['Service', new \Freesewing\Services\DraftService()],
-            ['Channel', new \Freesewing\Channels\Docs()],
+            ['Channel', new \Freesewing\Channels\Core\Freesewing()],
             ['Locale', 'en'],
             ['Config', ['foo' => 'bar']],
             ['Model', new \Freesewing\Model()],
@@ -133,7 +133,7 @@ class ContextTest extends \PHPUnit\Framework\TestCase
         $context->setRequest(new \Freesewing\Request(['service' => 'draft']));
         $context->configure();
         $context->addPattern();
-        $this->assertEquals($context->getPattern(), new \Freesewing\Patterns\TestPattern());
+        $this->assertEquals($context->getPattern(), new \Freesewing\Patterns\Tests\TestPattern());
     }
 
     /**
@@ -234,7 +234,7 @@ class ContextTest extends \PHPUnit\Framework\TestCase
         $context->setRequest(new \Freesewing\Request(['channel' => 'Docs', 'theme' => 'Info', 'pattern' => 'TestPattern']));
         $context->configure();
         $context->addPattern();
-        $this->assertEquals($context->getPattern(), new \Freesewing\patterns\TestPattern());
+        $this->assertEquals($context->getPattern(), new \Freesewing\patterns\Tests\TestPattern());
     }
     
     /**
@@ -306,7 +306,7 @@ class ContextTest extends \PHPUnit\Framework\TestCase
     public function testCleanUp()
     {
         // Mock pattern, theme, and channel classes
-        $pattern = $this->getMockBuilder('\freesewing\patterns\TestPattern')->getMock();
+        $pattern = $this->getMockBuilder('\freesewing\patterns\Tests\TestPattern')->getMock();
         $theme = $this->getMockBuilder('\freesewing\themes\Basic')->getMock();
         $channel = $this->getMockBuilder('\freesewing\channels\Docs')->getMock();
 

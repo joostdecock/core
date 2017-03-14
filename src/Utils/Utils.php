@@ -118,7 +118,7 @@ class Utils
      */
     public static function getApiDir()
     {
-        return dirname(realpath("."));
+        return realpath(".");
     }
 
     /**

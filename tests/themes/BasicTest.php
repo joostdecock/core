@@ -10,7 +10,7 @@ class BasicTest extends \PHPUnit\Framework\TestCase
      */
     public function testIsPaperless()
     {
-        $theme = new \Freesewing\Themes\Basic();
+        $theme = new \Freesewing\Themes\Core\Basic();
 
     }
 
@@ -20,7 +20,7 @@ class BasicTest extends \PHPUnit\Framework\TestCase
     public function testGetThemeName()
     {
         $this->markTestSkipped ( "method does not exit anymore" );
-        $theme = new \Freesewing\Themes\Basic();
+        $theme = new \Freesewing\Themes\Core\Basic();
         $this->assertEquals($theme->getThemeName(), 'Basic');
     }
 
@@ -36,7 +36,7 @@ class BasicTest extends \PHPUnit\Framework\TestCase
             new \Freesewing\SvgDefs(),
             new \Freesewing\SvgComments()
         );
-        $theme = new \Freesewing\Themes\Basic();
+        $theme = new \Freesewing\Themes\Core\Basic();
         $context = new \Freesewing\Context();
         $context->setRequest(new \Freesewing\Request(['service' => 'draft', 'pattern' => 'TestPattern', 'parts' => 'testPart', 'forceParts' => true]));
         $response = $theme->themeResponse($context);
@@ -48,15 +48,15 @@ class BasicTest extends \PHPUnit\Framework\TestCase
      */
     public function testapplyRenderMaskOnParts()
     {
-        $theme = new \Freesewing\Themes\Basic();
-        $pattern = new \Freesewing\Patterns\TestPattern();
+        $theme = new \Freesewing\Themes\Core\Basic();
+        $pattern = new \Freesewing\Patterns\Tests\TestPattern();
         $pattern->newPart('part1');
         $pattern->parts['part1']->setRender(false);
         $pattern->newPart('part2');
         $pattern->newPart('part3');
         
         $theme->setOptions(new \Freesewing\Request(['parts' => 'part1,part2']));
-        $theme->applyRenderMaskOnParts($pattern);
+        $theme->applyRenderMask($pattern);
         
         $this->assertFalse($pattern->parts['part1']->getRender());
         $this->assertTrue($pattern->parts['part2']->getRender());

@@ -46,9 +46,9 @@ class SamplerTest extends \PHPUnit\Framework\TestCase
 
     public function providerGettersReturnWhatSettersSet()
     {
-        $pattern = new \Freesewing\Patterns\TestPattern();
+        $pattern = new \Freesewing\Patterns\Tests\TestPattern();
         return [
-            ['Pattern',  new \Freesewing\Patterns\TestPattern()],
+            ['Pattern',  new \Freesewing\Patterns\Tests\TestPattern()],
         ];
     }
 
@@ -60,9 +60,9 @@ class SamplerTest extends \PHPUnit\Framework\TestCase
         $this->markTestSkipped ( "method does not exit anymore" );
 
         $object = new \Freesewing\Sampler();
-        $file = $object->getSamplerModelsFile(new \Freesewing\Patterns\TestPattern());
+        $file = $object->getSamplerModelsFile(new \Freesewing\Patterns\Tests\TestPattern());
         $dir = dirname(dirname(__DIR__));
-        $expect = "$dir/patterns/TestPattern/sampler/models.yml";
+        $expect = "$dir/patterns/Tests/TestPattern/sampler/models.yml";
         $len = strlen($expect);
         $this->assertEquals(substr($file,-$len), $expect);
     }
@@ -72,6 +72,8 @@ class SamplerTest extends \PHPUnit\Framework\TestCase
      */
     public function testGetSamplerAnchorNoAnchor()
     {
+        $this->markTestSkipped ( "method is private now" );
+
         $object = new \Freesewing\Sampler();
         
         $point = new \Freesewing\Point();
@@ -89,6 +91,8 @@ class SamplerTest extends \PHPUnit\Framework\TestCase
      */
     public function testGetSamplerAnchorWithGridAnchor()
     {
+        $this->markTestSkipped ( "method is private now" );
+
         $object = new \Freesewing\Sampler();
         
         $point = new \Freesewing\Point();
@@ -106,6 +110,8 @@ class SamplerTest extends \PHPUnit\Framework\TestCase
      */
     public function testGetSamplerAnchorWithSamplerAnchor()
     {
+        $this->markTestSkipped ( "method is private now" );
+
         $object = new \Freesewing\Sampler();
         
         $point = new \Freesewing\Point();
@@ -138,7 +144,7 @@ class SamplerTest extends \PHPUnit\Framework\TestCase
 
         $out = ['option1' => 52, 'option2' => 0.8];
         // Mock the pattern
-        $pattern = $this->getMockBuilder('\freesewing\patterns\TestPattern')->getMock();
+        $pattern = $this->getMockBuilder('\freesewing\patterns\Tests\TestPattern')->getMock();
         $pattern->method('getConfig')->willReturn($in);
         
         $object = new \Freesewing\Sampler();
@@ -155,7 +161,7 @@ class SamplerTest extends \PHPUnit\Framework\TestCase
         $this->markTestSkipped ( "protected method - suggest to call sampleMeasurements and/or sampleOptions and move it to the corresponding test class." );
         $object = new \Freesewing\Sampler();
 
-        $pattern = new \Freesewing\Patterns\TestPattern();
+        $pattern = new \Freesewing\Patterns\Tests\TestPattern();
         $pattern->newPart('test1');
         $pattern->newPart('test2');
         unset($pattern->parts['testPart']);

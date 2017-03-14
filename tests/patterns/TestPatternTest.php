@@ -35,8 +35,8 @@ class TestPatternTest extends \PHPUnit\Framework\TestCase
     public function testGetTranslationsDir()
     {
         $this->markTestSkipped ( "method is private" );
-        $pattern = new \Freesewing\Patterns\TestPattern();
-        $dir = dirname(dirname(__DIR__)).'/patterns/TestPattern/translations';
+        $pattern = new \Freesewing\Patterns\Tests\TestPattern();
+        $dir = dirname(dirname(__DIR__)).'/patterns/Tests/TestPattern/translations';
         $this->assertEquals($pattern->getTranslationsDir(), $dir);
     }
 
@@ -47,8 +47,8 @@ class TestPatternTest extends \PHPUnit\Framework\TestCase
     {
         $this->markTestSkipped ( "method does not exit anymore" );
 
-        $pattern = new \Freesewing\Patterns\TestPattern();
-        $file = dirname(dirname(__DIR__)).'/patterns/TestPattern/sampler/models.yml';
+        $pattern = new \Freesewing\Patterns\Tests\TestPattern();
+        $file = dirname(dirname(__DIR__)).'/patterns/Tests/TestPattern/sampler/models.yml';
         $this->assertEquals($pattern->getSamplerModelFile(), $file);
     }
 
@@ -58,7 +58,7 @@ class TestPatternTest extends \PHPUnit\Framework\TestCase
     public function testGetSamplerModels()
     {
         $this->markTestSkipped ( "method does not exit anymore" );
-        $pattern = new \Freesewing\Patterns\TestPattern();
+        $pattern = new \Freesewing\Patterns\Tests\TestPattern();
         $data = [
             'default' => [
                 'group' => 'someGroup',
@@ -82,7 +82,9 @@ class TestPatternTest extends \PHPUnit\Framework\TestCase
      */
     public function testUnit()
     {
-        $p = new \Freesewing\Patterns\TestPattern();
+        $this->markTestSkipped ( "method no longer exists" );
+
+        $p = new \Freesewing\Patterns\Tests\TestPattern();
         $p->setUnits(['out' => 'metric']);
         $this->assertEquals($p->unit(20),'2cm');
         $this->assertEquals($p->unit(12.3456),'1.23cm');
@@ -101,7 +103,7 @@ class TestPatternTest extends \PHPUnit\Framework\TestCase
     {
         $this->markTestSkipped ( "method is private" );
 
-        $object = new \Freesewing\Patterns\TestPattern();
+        $object = new \Freesewing\Patterns\Tests\TestPattern();
         $setMethod = 'set'.$methodSuffix;
         $getMethod = 'get'.$methodSuffix;
         $object->{$setMethod}($value);
@@ -127,7 +129,7 @@ class TestPatternTest extends \PHPUnit\Framework\TestCase
      */
     public function testGettersReturnWhatSettersSetForArrays($methodSuffix, $key, $value)
     {
-        $object = new \Freesewing\Patterns\TestPattern();
+        $object = new \Freesewing\Patterns\Tests\TestPattern();
         $setMethod = 'set'.$methodSuffix;
         $getMethod = 'get'.$methodSuffix;
         $object->{$setMethod}($key,$value);
@@ -147,7 +149,7 @@ class TestPatternTest extends \PHPUnit\Framework\TestCase
      */
     public function testGetOption()
     {
-        $p = new \Freesewing\Patterns\TestPattern();
+        $p = new \Freesewing\Patterns\Tests\TestPattern();
         $p->setOption('test', 'something');
         $this->assertEquals('something', $p->getOption('test'));
         $this->assertEquals('something', $p->o('test'));
@@ -159,7 +161,7 @@ class TestPatternTest extends \PHPUnit\Framework\TestCase
      */
     public function testClonePoints()
     {
-        $pattern = new \Freesewing\Patterns\TestPattern();
+        $pattern = new \Freesewing\Patterns\Tests\TestPattern();
         $p = $pattern->parts['testPart'];
         $p->newPoint(1,2,3,'Just another point');
         $p->addPoint(2, $p->shift(1,0,10),'A shifted point');
@@ -176,7 +178,7 @@ class TestPatternTest extends \PHPUnit\Framework\TestCase
      */
     public function testMessagesAndDebug()
     {
-        $p = new \Freesewing\Patterns\TestPattern();
+        $p = new \Freesewing\Patterns\Tests\TestPattern();
         $this->assertEquals($p->getMessages(), false);
         $this->assertEquals($p->getDebug(), false);
         $p->msg('This is a test message');
@@ -194,8 +196,8 @@ class TestPatternTest extends \PHPUnit\Framework\TestCase
      */
     public function testDraftAndSample()
     {
-        $p1 = new \Freesewing\Patterns\TestPattern();
-        $p2 = new \Freesewing\Patterns\TestPattern();
+        $p1 = new \Freesewing\Patterns\Tests\TestPattern();
+        $p2 = new \Freesewing\Patterns\Tests\TestPattern();
         $model = new \Freesewing\Model();
         $p2->sample($model);
         $this->assertEquals($p1,$p2);

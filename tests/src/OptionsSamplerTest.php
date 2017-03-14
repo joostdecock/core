@@ -15,7 +15,7 @@ class OptionsSamplerTest extends \PHPUnit\Framework\TestCase
         ];
         
         $sampler = new \Freesewing\OptionsSampler();
-        $sampler->setPattern(new \Freesewing\Patterns\TestPattern());
+        $sampler->setPattern(new \Freesewing\Patterns\Tests\TestPattern());
 
         $this->assertEquals($sampler->loadModelMeasurements(), $measurements);
     }

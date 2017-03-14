@@ -13,6 +13,7 @@ class PartOffsetCode extends \PHPUnit\Framework\TestCase
         $p->newPoint(1,0,0);
         $p->newPoint(2,10,0);
         $p->offsetPathString(1,'M 1 L 2', 10);
+        $this->saveFixture('lineOffset', serialize($p->paths));
         $this->assertEquals(serialize($p->paths),$this->loadFixture('lineOffset'));
     }
 

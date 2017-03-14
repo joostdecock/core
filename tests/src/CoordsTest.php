@@ -23,27 +23,4 @@ class CoordsTest extends \PHPUnit\Framework\TestCase
         ];
     }
 
-
-    /**
-     * @param string $methodSuffix The part of the method to call without 'set'
-     *
-     * @dataProvider providerSetXAndSetYSetNonNumericValuesToZero
-     */
-    public function testSetXAndSetYSetNonNumericValuesToZero($methodSuffix)
-    {
-        $this->markTestSkipped ( "Class is abstract" );
-        $point = new \Freesewing\Coords();
-        $setMethod = 'set'.$methodSuffix;
-        $getMethod = 'get'.$methodSuffix;
-        $point->{$setMethod}('sorcha');
-        $this->assertEquals(0, $point->{$getMethod}());
-    }
-
-    public function providerSetXAndSetYSetNonNumericValuesToZero()
-    {
-        return [
-            ['X'],
-            ['Y'],
-        ];
-    }
 }

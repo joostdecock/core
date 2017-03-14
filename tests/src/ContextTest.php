@@ -91,18 +91,6 @@ class ContextTest extends \PHPUnit\Framework\TestCase
     }
     
     /**
-     * Tests the addTheme() method
-     */
-    public function testAddTheme()
-    {
-        $this->markTestSkipped ( "method does not exit anymore" );
-        $context = new Context();
-        $context->setRequest(new \Freesewing\Request(['theme' => 'Paperless']));
-        $context->addTheme();
-        $this->assertEquals($context->getTheme(), new \Freesewing\Themes\Paperless());
-    }
-
-    /**
      * Tests whether service gets loaded
      */
     public function testLoadService()

@@ -49,16 +49,6 @@ class InfoTest extends \PHPUnit\Framework\TestCase
     }
     
     /**
-     * Tests the getThemeName method
-     */
-    public function testThemeName()
-    {
-        $this->markTestSkipped ( "method does not exit anymore" );
-        $theme = new \Freesewing\Themes\Core\Info();
-        $this->assertEquals('Info', $theme->getThemeName());
-    }
-
-    /**
      * Tests the cleanUp method does noting
      */
     public function testCleanUp()

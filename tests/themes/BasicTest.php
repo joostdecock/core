@@ -15,16 +15,6 @@ class BasicTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * Tests the getThemeName method
-     */
-    public function testGetThemeName()
-    {
-        $this->markTestSkipped ( "method does not exit anymore" );
-        $theme = new \Freesewing\Themes\Core\Basic();
-        $this->assertEquals($theme->getThemeName(), 'Basic');
-    }
-
-    /**
      * Tests the themeResponse method
      */
     public function testThemeResponse() {

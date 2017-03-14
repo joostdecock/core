@@ -39,6 +39,14 @@ class CarltonCoat extends BentBodyBlock
     /** Distance between buttons is 13% of waist */
     const BUTTON_WAIST_RATIO = 0.13;
 
+    /** Tailfold width is 11.36% of waist */
+    const TAILFOLD_WAIST_FACTOR = 0.1136;
+
+    /**
+     * Cut front armhole a bit deeper
+     */
+    const FRONT_ARMHOLE_EXTRA = 10;
+
     /**
      * Sets up options and values for our draft
      *
@@ -73,11 +81,23 @@ class CarltonCoat extends BentBodyBlock
         );
         // Percentage of the waistReduction that's handled in the side seams
         $this->setValue('waistSideShapeFactor', 0.5);
+        $this->setValue('waistReductionSide', $this->v('waistReduction') * $this->v('waistSideShapeFactor') / 8);
+        $this->setValue('waistReductionBack', $this->v('waistReduction') * (1-$this->v('waistSideShapeFactor')) / 8);
 
         // Distance between buttons
         $this->setValue('buttonDistHor', ($model->m('naturalWaist') * self::BUTTON_WAIST_RATIO)/2);
+
+        // Fix the tailfoldWaistFactor to 11.36%
+        $this->setValue('tailfoldWaistFactor', self::TAILFOLD_WAIST_FACTOR);
+
+        // Width of the belt
+        $this->setValue('beltWidth', 70);
         
         parent::initialize($model);
+        
+        // Cut front armhole a bit deeper than foreseen in parent
+        $this->setValue('frontArmholeExtra', self::FRONT_ARMHOLE_EXTRA);
+        
     }
 
     /*
@@ -117,6 +137,7 @@ class CarltonCoat extends BentBodyBlock
         
         $this->draftFrontCoatBlock($model);
         $this->draftBackCoatBlock($model);
+        $this->draftCoatTail($model);
 
         // Hide the sleeveBlock, frontBlock, and backBlock
         $this->parts['sleeveBlock']->setRender(false);
@@ -154,6 +175,7 @@ class CarltonCoat extends BentBodyBlock
         
         $this->draftFrontCoatBlock($model);
         $this->draftBackCoatBlock($model);
+        $this->draftCoatTail($model);
         
         // Hide the sleeveBlock, frontBlock, and backBlock
         $this->parts['sleeveBlock']->setRender(false);
@@ -186,8 +208,7 @@ class CarltonCoat extends BentBodyBlock
         $p->newPoint('hemSide', $p->x(5), $p->y('hemMiddle'));
 
         // Waist shaping
-        $delta = $this->v('waistReduction') * $this->v('waistSideShapeFactor') / 8;
-        $p->newPoint('waistSide', $p->x(5) - $delta, $p->y(3));
+        $p->newPoint('waistSide', $p->x(5) - $this->v('waistReductionSide'), $p->y(3));
         $p->addPoint('waistSideCpTop', $p->shift('waistSide', 90, $p->deltaY(5,3)/2));
         $p->addPoint('waistSideCpBottom', $p->flipY('waistSideCpTop', $p->y('waistSide')));
         $p->addPoint('chestSideCp', $p->shift(5,-90,$p->deltaY(5,'waistSideCpTop')/8));
@@ -238,7 +259,7 @@ class CarltonCoat extends BentBodyBlock
     }
 
     /**
-     * Drafts the frontCoatBlock
+     * Drafts the backCoatBlock
      *
      * @param \Freesewing\Model $model The model to draft for
      *
@@ -246,12 +267,84 @@ class CarltonCoat extends BentBodyBlock
      */
     public function draftBackCoatBlock($model)
     {
-        $this->clonePoints('frontBlock','frontCoatBlock');
+        $this->clonePoints('backBlock','backCoatBlock');
         
         /** @var \Freesewing\Part $p */
-        $p = $this->parts['frontCoatBlock'];
+        $p = $this->parts['backCoatBlock'];
+
+        // Box pleat
+        $p->newPoint('bpTop', $p->x(1) - $model->m('chestCircumference') * 0.048, $p->y(10));
+        $p->newPoint('bpTopIn', $p->x(1), $p->y(10));
+        $p->newPoint('bpBottom', $p->x('bpTop'), $p->y(3) - $this->v('beltWidth')/2);
+         
+        // Waist shaping
+        $p->newPoint('waistSide', $p->x(5) - $this->v('waistReductionSide'), $p->y(3) - $this->v('beltWidth')/2);
+        $p->addPoint('waistSideCpTop', $p->shift('waistSide', 90, ($p->deltaY(5,3)/2) - ($this->v('beltWidth')/2)));
+        $p->addPoint('chestSideCp', $p->shift(5,-90,$p->deltaY(5,'waistSideCpTop')/8));
+
+        // Darts
+        $p->newPoint('dartCenter', $p->x('waistSide') * 0.4, $p->y('waistSide'));
+        $p->addPoint('dartRight', $p->shift('dartCenter', 0, $this->v('waistReductionBack')));
+        $p->addPoint('dartLeft', $p->shift('dartCenter', 180, $this->v('waistReductionBack')));
+        $p->newPoint('dartTip', $p->x('dartCenter'), $p->y(5));
+        $p->addPoint('dartRightCp', $p->shift('dartRight', 90, $p->deltaY(5,'dartCenter')/2));
+        $p->addPoint('dartLeftCp', $p->shift('dartLeft', 90, $p->deltaY(5,'dartCenter')/2));
+        // Paths
+        $path = 'M 1 L bpTopIn L bpTop L bpBottom L dartLeft C dartLeftCp dartTip dartTip C dartTip dartRightCp dartRight L waistSide C waistSideCpTop chestSideCp 5 C 13 16 14 C 15 18 10 C 17 19 12 L 8 C 20 1 1 z';
+        $p->newPath('seamline', $path, ['class' => 'fabric']);
+
+        $p->newPath('boxPleat', 'M bpTopIn L bpTop L bpBottom'); 
     }
 
+    /**
+     * Drafts the coatTail
+     *
+     * @param \Freesewing\Model $model The model to draft for
+     *
+     * @return void
+     */
+    public function draftCoatTail($model)
+    {
+        /** @var \Freesewing\Part $p */
+        $b = $this->parts['backCoatBlock'];
+        $waist = $b->x('waistSide') - $this->v('waistReductionBack')*2;
+
+        /** @var \Freesewing\Part $p */
+        $f = $this->parts['frontCoatBlock'];
+        $length = $f->y('hemSide') - $f->y('waistSide') - $this->v('beltWidth');
+
+        /** @var \Freesewing\Part $p */
+        $p = $this->parts['coatTail'];
+
+        $p->newPoint('cbTop', 0, 0);
+        $p->newPoint('waistTop', $waist, 0);
+        $p->newPoint('leftTop', $model->m('naturalWaist') * $this->v('tailfoldWaistFactor') * -2, 0);
+        $p->newPoint('leftPleat1', $model->m('naturalWaist') * $this->v('tailfoldWaistFactor') * -1.5, 0);
+        $p->newPoint('leftPleat2', $model->m('naturalWaist') * $this->v('tailfoldWaistFactor') * -1.0, 0);
+        $p->newPoint('leftPleat3', $model->m('naturalWaist') * $this->v('tailfoldWaistFactor') * 0.5, 0);
+
+        foreach($p->points as $id => $point) {
+            $p->addPoint("$id-1", $p->shift($id,-90,50));
+            $p->addPoint("$id-2", $p->shift($id,-90,80));
+            $p->addPoint("$id-3", $p->shift($id,-90,130));
+        }
+
+        $p->addPoint('dimTop', $p->shift('waistTop', 180, 70));
+        $p->addPoint('dimBottom', $p->shift('waistTop-3', 180, 70));
+
+        $p->newLinearDimension('dimBottom', 'dimTop', 0, $p->unit($length));
+
+        // Paths
+        $p->newPath('seamline1', 'M leftTop-1 leftTop L cbTop L waistTop L waistTop-1', ['class' => 'fabric']);
+        $p->newPath('seamline2', 'M leftTop-2 leftTop-3 L cbTop-3 L waistTop-3 L waistTop-2', ['class' => 'fabric']);
+        $p->newPath('folds', '
+            M leftPleat1 L leftPleat1-3
+            M leftPleat2 L leftPleat2-3
+            M cbTop L cbTop-3
+            M leftPleat3 L leftPleat3-3
+        ', ['class' => 'dashed']);
+        $p->newPath('dots', 'M leftTop-1 L leftTop-2 M waistTop-1 L waistTop-2', ['class' => 'help sa']);
+    }
 
     /*
        _____ _             _ _

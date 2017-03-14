@@ -172,7 +172,7 @@ class CathrinCorset extends Pattern
         $p->addPoint(   50, $p->shift( 4, 90, $this->o('backRise'), 'Corset top edge @ side'));
         $p->addPoint(   51, $p->shift(50, 0, $this->v('width') * -0.4, 'Control point for 50'));
         $p->addPoint(   52, $p->shift(5, 0, $this->v('width') * 0.2, 'Control point for 5'));
-
+        
         $helpPath = 'M 1 L 2 L 3 L 4 z M 5 L 6 M 7 L 8';
         $p->newPath('help', $helpPath, ['class' => 'helpline']);
 
@@ -526,7 +526,7 @@ class CathrinCorset extends Pattern
                 $this->newPart($part);
                 $p = $this->parts[$part];
                 $this->clonePoints('panels', $part);
-                $p->newPath($part, $this->{"path$i"}, ['class' => 'seamline']);
+                $p->newPath($part, $this->{"path$i"}, ['class' => 'fabric']);
                 $p->paths[$part]->setSample(true);
                 $p->clonePoint("gridAnchor$i", 'gridAnchor');
                 if ($i == 1) {
@@ -534,11 +534,12 @@ class CathrinCorset extends Pattern
                 } else {
                     $msg = '2x '.$this->t('from fabric');
                 }
-                $p->addTitle("titleAnchor$i", $i, $this->t('Panel')." $i", $msg, 'vertical');
-                $p->offsetPathString($part.'-sa', $this->{"path$i"}, 10, 1, ['class' => 'seam-allowance']);
+                $p->addTitle("titleAnchor$i", $i, $this->t('Panel')." $i", $msg, 'vertical-small');
+                $p->offsetPathString($part.'-sa', $this->{"path$i"}, 10, 1, ['class' => 'fabric sa']);
 
             }
         }
+        return true;
         $this->finalizePanel1($model);
         $this->finalizePanel2($model);
         $this->finalizePanel3($model);

@@ -106,6 +106,7 @@ class SvgRenderbotTest extends \PHPUnit\Framework\TestCase
         $p->newPoint(1,0,0);
         $p->newNote('note', 1, 'This is an example', 4, 40, 0);
         $svg = $bot->render($this->pattern);
+        $this->saveFixture('note', $svg);
         $this->assertEquals($svg, $this->loadFixture('note'));
     }
 
@@ -172,6 +173,7 @@ class SvgRenderbotTest extends \PHPUnit\Framework\TestCase
 
     private function saveFixture($fixture, $data)
     {
+        return true;
         $dir = \Freesewing\Utils::getApiDir().'/tests/src/fixtures';
         $file = "$dir/SvgRenderbot.$fixture.svg";
         $f = fopen($file,'w');

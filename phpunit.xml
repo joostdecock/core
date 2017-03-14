@@ -21,8 +21,4 @@
             <file>./patterns/PatternTemplate/PatternTemplate.php</file>
         </whitelist>
     </filter>
-    <logging>
-        <log type="coverage-html" target="coverage" title="Freesewing"
-            charset="UTF-8" yui="true" highlight="true"/>
-    </logging>
 </phpunit>

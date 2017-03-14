@@ -71,6 +71,6 @@ class DraftServiceTest extends \PHPUnit\Framework\TestCase
         $service = new DraftService();
         $service->run($context);
         
-        $this->assertContains('Location: /docs/', Output::$headers);
+        $this->assertContains('Location: https://docs.freesewing.org/', Output::$headers);
     }
 }

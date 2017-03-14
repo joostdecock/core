@@ -19,7 +19,7 @@ class Designer extends Theme
      *
      * @param \Freesewing\Pattern\* $pattern The pattern object
      */
-    public function themePattern(Pattern $pattern)
+    public function themePattern($pattern)
     {
         parent::themePattern($pattern);
 

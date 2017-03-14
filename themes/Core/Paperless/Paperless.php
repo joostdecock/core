@@ -27,7 +27,7 @@ class Paperless extends Basic
      *
      * @param \Freesewing\Patterns\* $pattern The pattern object
      */
-    public function themePattern(Pattern $pattern)
+    public function themePattern($pattern)
     {
         parent::themePattern($pattern);
 

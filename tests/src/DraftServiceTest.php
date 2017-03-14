@@ -49,7 +49,7 @@ class DraftServiceTest extends \PHPUnit\Framework\TestCase
     public function testRunBasicWithViewbox()
     {
         $context = new \Freesewing\Context();
-        $context->setRequest(new \Freesewing\Request(['service' => 'draft', 'pattern' => 'TestPattern', 'viewbox' => '10,10,200,200', 'theme' => 'paperless']));
+        $context->setRequest(new \Freesewing\Request(['service' => 'draft', 'pattern' => 'TestPattern', 'viewbox' => '10,10,200,200', 'theme' => 'Paperless']));
         $context->configure();
 
         $service = new DraftService();

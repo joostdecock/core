@@ -148,16 +148,6 @@ class UtilsTest extends \PHPUnit\Framework\TestCase
     }
     
     /**
-     * Tests the debug method
-     */
-    public function testDebug()
-    {
-        $this->markTestSkipped ( "Why even bother, and I picked up the bottle. Mr. bus driver please let these people on" );
-
-        $this->assertEquals(Utils::debug('test'), $this->loadTemplate('debug'));
-    }
-    
-    /**
      * Tests the slug method
      */
     public function testSlug()

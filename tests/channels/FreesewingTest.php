@@ -4,24 +4,6 @@ namespace Freesewing\Tests;
 
 class FreesewingTest extends \PHPUnit\Framework\TestCase
 {
-    /**
-     * @param string $attribute Attribute to check for
-     *
-     * @dataProvider providerTestAttributeExists
-     */
-    public function testAttributeExists($attribute)
-    {
-        $this->markTestSkipped ( "attribute does not exit anymore" );
-        $this->assertClassHasAttribute($attribute, '\Freesewing\Channels\Core\Freesewing');
-    }
-
-    public function providerTestAttributeExists()
-    {
-        return [
-            ['options'],
-        ];
-    }
-
     public function testIsValidRequest()
     {
         $context = new \Freesewing\Context();

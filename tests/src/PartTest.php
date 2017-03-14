@@ -231,17 +231,16 @@ class PartTest extends \PHPUnit\Framework\TestCase
     /** 
      * Tests the curveEdge methods
      */
-    public function testCurveEdges()
+    public function testCurveEdge()
     {
-        $this->markTestSkipped ( "method does not exit anymore" );
         $p = new \Freesewing\Part();
         $p->newPoint(1,50,50);
         $p->newPoint(2,40,0);
         $p->newPoint(3,80,100);
-        $left = $p->curveEdgeLeft(1,2,3,1);
-        $right = $p->curveEdgeRight(1,2,3,1);
-        $top = $p->curveEdgeTop(1,2,3,1);
-        $bottom = $p->curveEdgeBottom(1,2,3,1);
+        $left = $p->curveEdge(1,2,3,1,'left');
+        $right = $p->curveEdge(1,2,3,1,'right');
+        $top = $p->curveEdge(1,2,3,1,'top');
+        $bottom = $p->curveEdge(1,2,3,1,'bottom');
         
         $expect = new \Freesewing\Point();
         $expect->setX(48.353);
@@ -385,17 +384,6 @@ class PartTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals($p->boundary,$boundary);
     }
     
-    /**
-     * Tests the bezierCircle method
-     */
-    public function testBezierCircle()
-    {
-        $this->markTestSkipped ( "method does not exit anymore" );
-
-        $p = new \Freesewing\Part();
-        $this->assertEquals($p->bezierCircle(100),55.228474983079359);
-    }
-    
     /** 
      * Tests the newGrainline method
      */
@@ -453,7 +441,6 @@ class PartTest extends \PHPUnit\Framework\TestCase
             $this->assertEquals($yVals[$i], $p->points[$i+1]->getY());
         }
 
-        $this->markTestSkipped ( "this was formerly addSplitCurve - results differ from expectation - please check if that is correct" );
         $p->splitCurve(1,2,2,3,0.7,'test',true);
         $xVals = [0,70,91,97.3,100,100,100,97.3];
         $yVals = [0,0,0,34.3,100,70,49,34.3];

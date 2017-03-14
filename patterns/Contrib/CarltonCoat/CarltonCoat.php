@@ -116,6 +116,7 @@ class CarltonCoat extends BentBodyBlock
         $this->draftUndersleeveBlock($model);
         
         $this->draftFrontCoatBlock($model);
+        $this->draftBackCoatBlock($model);
 
         // Hide the sleeveBlock, frontBlock, and backBlock
         $this->parts['sleeveBlock']->setRender(false);
@@ -152,6 +153,7 @@ class CarltonCoat extends BentBodyBlock
         //$this->finalizeSleeveBlock($model);
         
         $this->draftFrontCoatBlock($model);
+        $this->draftBackCoatBlock($model);
         
         // Hide the sleeveBlock, frontBlock, and backBlock
         $this->parts['sleeveBlock']->setRender(false);
@@ -234,6 +236,22 @@ class CarltonCoat extends BentBodyBlock
         $p->newPath('seamline', $path);
         $p->newPath('hipLine', 'M 4 L 6 L frontEdge', ['class' => 'helpline']);
     }
+
+    /**
+     * Drafts the frontCoatBlock
+     *
+     * @param \Freesewing\Model $model The model to draft for
+     *
+     * @return void
+     */
+    public function draftBackCoatBlock($model)
+    {
+        $this->clonePoints('frontBlock','frontCoatBlock');
+        
+        /** @var \Freesewing\Part $p */
+        $p = $this->parts['frontCoatBlock'];
+    }
+
 
     /*
        _____ _             _ _

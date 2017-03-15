@@ -6,6 +6,12 @@ php:
 - '7.0'
 - '7.1'
 
+# Install sshpass for non-interactive ssh login
+addons:
+    apt:
+        packages:
+            - sshpass
+
 # Intalling core
 install:
 - composer install --no-interaction
@@ -19,19 +25,10 @@ env:
   - secure: Pj8glZweQX48xrkChB7jD9uno2virogA/gt/viqUROa4K9yDIs7lO8sWO/Qqv1g/ISNrFpMGQPUBng0dC/hPO+fqLdT/HGAU2UGU/XFosJ7gQ5Y/bURwPIIVtfEClbHA1tb6ts/SdiJUz0KKT2H+baGaDf/sq8Wp8Rzo5DyP6NDepgxz5d08xFGLCFoqE6RTsCjMQHviuzj02I5uLP9UKanfd7NNN6tz8SOk3Lgh+e2PwWPgTj1yAs4rcgqrNn/3Ey56KhJmETP+NwJ3MT+j98r+Xp69D6MOvj0Q727aiY0pLWh6oQHWSYoWhWtCoVT/87lzA9iy08EDa8ZjmKN5VjLFzmVXkJtO5XmDpAx34Y5AnycfWAU6KwJ5UCm8eK46tC+W3qt+2Lb0wOINdyc1SRaB7VUdfYhZEgY2j46pVg/wTd1PFmKg2ZkxjAlnh7Dfnu8b4vXatzZwldYWkjAsgqezI+p5ocNm9BRrDd5wVRs//czTr9kLGk0VEELYzYwi++dPATF9qpvHCxcxz7NQ3ohVq2hCopXmfYQa+Rp+YyoTu56W1D9zpo8Bqhw+34h2nqbxFQ1JgJvUEaaj7tNkDINV8FT9IaGoBt16soo6VPC3uQXkWJ5lsWlGNgY5KHdCR8CV/WBnBbTUi/b8I73bBtnjWjtfLB+Mp/WGv8wlFPI=
   - secure: UofJQPEf/9e5epZiCB8DIJJ6K0GfdoEvOMnS17qI3hPvgsryCqsVQJ63+cMVc7ZLVtSRnzu2AqwBb5QLydLx4ccTO7qlo+A3LAx/fzQbohYU6GUM0ed9+8mVf+dma2ZEPsELd2ZUmdQ1Xds2/ubwJh77xIa/Kc8aprvhjaYkwmtqI+1Nd9CRU+qhD1qFPYaAaKZhr2lJE9geGg+8osepgJ30hFjsI7CGA+WDDcw1sjJaFCbntVr6qhgQPl62Eb+KRRYt5N+W0mQwLvO8rOcfSTbxLCgoE4Pv+6f4uF9vG/PTVxSW89NGsYt0R2o1Ia+D7m75EgYD+CwugOjYFrC8aCJEadQtov1VsVii0Vh3TXQC2KtoNmhYBTFLmJjh/ZaRIDch9x63b/E/nmmFIgbfr7fBgXx6GoUr7FmVyWQw31CTIENjULYWFeqpptysudoW8HMpNsqW+35TOOBpKeKnH7R+xc1wNomuEXQNq6BvJOK0h8wys2mQ5fJO4ssUhdkULe2+Y5OAVYp2lD4i75+HCE1AHPJOmwpxPLYmoScvVGWaKZ0jM8fml43+2HdmFfSsUk87a3tZ9f5NXpEwV3J6XFY9Lfh3/RqjE733JZF9abnzq5H55J7qhizIVOUgmnHCHqzLKPoQY8qeChj7dCirTV/0Yx8YGcQ7DNTIDrMIpbs=
 
-# Install sshpass for non-interactive ssh login
-addons:
-    apt:
-        packages:
-            - sshpass
-
 # Deploy when pushing to master or develop
-after_success:
-    - test $TRAVIS_PULL_REQUEST == "false" && mkdir build
-    - test $TRAVIS_PULL_REQUEST == "false" && mv * build
-    - test $TRAVIS_PULL_REQUEST == "false" && tar -czf freesewing.tgz build
-    - test $TRAVIS_PULL_REQUEST == "false" && export SSHPASS=$DEPLOY_PASS
-    - test $TRAVIS_PULL_REQUEST == "false" && test $TRAVIS_BRANCH == "master" && sshpass -e scp freesewing.tgz $DEPLOY_USER@$DEPLOY_HOST:$DEPLOY_PATH/master/builds
-    - test $TRAVIS_PULL_REQUEST == "false" && test $TRAVIS_BRANCH == "master" && sshpass -e ssh $DEPLOY_USER@$DEPLOY_HOST $DEPLOY_PATH/master/scripts/deploy.sh
-    - test $TRAVIS_PULL_REQUEST == "false" && test $TRAVIS_BRANCH == "develop" && sshpass -e scp freesewing.tgz $DEPLOY_USER@$DEPLOY_HOST:$DEPLOY_PATH/develop/builds
-    - test $TRAVIS_PULL_REQUEST == "false" && test $TRAVIS_BRANCH == "develop" && sshpass -e ssh $DEPLOY_USER@$DEPLOY_HOST $DEPLOY_PATH/develop/scripts/deploy.sh
+deploy:
+  provider: script
+  script: scripts/deploy.sh
+  skip_cleanup: true
+  on:
+      all_branches: true

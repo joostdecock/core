@@ -11,7 +11,7 @@ class TestPatternTest extends \PHPUnit\Framework\TestCase
      */
     public function testAttributeExists($attribute)
     {
-        $this->assertClassHasAttribute($attribute, '\Freesewing\patterns\Pattern');
+        $this->assertClassHasAttribute($attribute, '\Freesewing\Patterns\Core\Pattern');
     }
 
     public function providerTestAttributeExists()

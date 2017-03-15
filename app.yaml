@@ -1,9 +1,0 @@
-runtime: php
-env: flex
-skip_files: 
-    - tests/*
-handlers:
-- url: /.*
-    script: index.php
-    http_headers:
-            Access-Control-Allow-Origin: *

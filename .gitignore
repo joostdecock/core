@@ -9,4 +9,5 @@ coverage
 .project
 .settings/
 .idea/
-client-secret.json
+build/
+freesewing.tgz

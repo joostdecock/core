@@ -6,15 +6,6 @@ class BasicTest extends \PHPUnit\Framework\TestCase
 {
 
     /**
-     * Tests the isPaperless method
-     */
-    public function testIsPaperless()
-    {
-        $theme = new \Freesewing\Themes\Core\Basic();
-
-    }
-
-    /**
      * Tests the themeResponse method
      */
     public function testThemeResponse() {

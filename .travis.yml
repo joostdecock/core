@@ -29,5 +29,6 @@ env:
 deploy:
   provider: script
   script: scripts/deploy.sh
+  skip_cleanup: true
   on:
       all_branches: true

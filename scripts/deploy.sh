@@ -7,6 +7,7 @@ else
     if [ "$TRAVIS_BRANCH" = "develop" ] || [ "$TRAVIS_BRANCH" = "master" ]; then
         cd $TRAVIS_BUILD_DIR
         mkdir build
+        echo $TRAVIS_PHP_VERSION
         ls
         mv channels patterns src themes patterns vendor index.php config.yml build/
         tar -czf freesewing.tgz build

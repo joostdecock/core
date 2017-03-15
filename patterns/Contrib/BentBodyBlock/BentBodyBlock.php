@@ -206,6 +206,18 @@ class BentBodyBlock extends \Freesewing\Patterns\Core\BrianBodyBlock
         $p->newPath('undersleeve', 'M undersleeveWristRight elbowRight C elbowRightCpTop undersleeveRightEdgeCpBottom undersleeveRightEdge C undersleeveRightEdgeCpTop undersleeveTip undersleeveTip C undersleeveTipCpBottom undersleeveLeftEdgeCpRight undersleeveLeftEdgeRight L undersleeveLeftEdge C undersleeveLeftEdge undersleeveElbowLeftCpTop undersleeveElbowLeft L undersleeveWristLeft z');
     }
 
+    protected function armholeLen()
+      {
+         /** @var \Freesewing\Part $back */
+          $back = $this->parts['backBlock'];
+         /** @var \Freesewing\Part $front */
+          $front = $this->parts['frontBlock'];
+  
+          return ($back->curveLen(12, 19, 17, 10) + $back->curveLen(10, 18, 15, 14) + $back->curveLen(14, 16, 13,
+                     5)) + ($front->curveLen(12, 19, 17, 10) + $front->curveLen(10, 18, 15, 14) + $front->curveLen(14, 16, 13, 5));
+     }
+
+
     /*
        _____ _             _ _
       |  ___(_)_ __   __ _| (_)_______

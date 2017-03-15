@@ -14,6 +14,8 @@ parts:
   topsleeveBlock: "Topsleeve block"
   undersleeveBlock: "Undersleeve block"
   frontCoatBlock: "Front coat block"
+  backCoatBlock: "Back coat block"
+  coatTail: "Coat tail"
 
 languages:
     en: English

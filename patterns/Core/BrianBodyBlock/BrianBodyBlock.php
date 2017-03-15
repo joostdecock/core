@@ -45,6 +45,11 @@ class BrianBodyBlock extends Pattern
     const BICEPS_EASE = 50;
 
     /**
+     * Cut front armhole a bit deeper
+     */
+    const FRONT_ARMHOLE_EXTRA = 5;
+
+    /**
      * Sets up options and values for our draft
      *
      * By branching this out of the sample/draft methods, we can
@@ -79,7 +84,7 @@ class BrianBodyBlock extends Pattern
         $this->setValue('collarDepth', ($model->getMeasurement('neckCircumference') + $this->getOption('collarEase')) / 5 - 8);
 
         // Cut front armhole a bit deeper
-        $this->setValue('frontArmholeExtra', 5);
+        $this->setValue('frontArmholeExtra', self::FRONT_ARMHOLE_EXTRA);
         
         // Tweak factors
         $this->setValue('frontCollarTweakFactor', 1); 
@@ -333,7 +338,6 @@ class BrianBodyBlock extends Pattern
         /** @var \Freesewing\Part $p */
         $p = $this->parts['frontBlock'];
 
-        $frontExtra = 5; // Cutting out armhole a bit deeper at the front
         $p->addPoint(10, $p->shift(10, 180, $this->v('frontArmholeExtra')));
         $p->addPoint(17, $p->shift(17, 180, $this->v('frontArmholeExtra')));
         $p->addPoint(18, $p->shift(18, 180, $this->v('frontArmholeExtra')));

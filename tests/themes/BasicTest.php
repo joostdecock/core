@@ -53,7 +53,7 @@ class BasicTest extends \PHPUnit\Framework\TestCase
         $this->assertFalse($pattern->parts['part3']->getRender());
         
         $theme->setOptions(new \Freesewing\Request(['parts' => 'part1,part2', 'forceParts' => true]));
-        $theme->applyRenderMaskOnParts($pattern);
+        $theme->applyRenderMask($pattern);
         
         $this->assertTrue($pattern->parts['part1']->getRender());
         $this->assertTrue($pattern->parts['part2']->getRender());

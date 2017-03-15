@@ -55,6 +55,7 @@ class DesignerTest extends \PHPUnit\Framework\TestCase
             new \Freesewing\SvgComments()
         );
         $theme->themeSvg($svgDocument);
+        $this->saveFixture('themeSvgDocument', serialize($svgDocument));
         $this->assertEquals(serialize($svgDocument), $this->loadFixture('themeSvgDocument'));
     }
 
@@ -87,13 +88,13 @@ class DesignerTest extends \PHPUnit\Framework\TestCase
         $p->newPoint(2,100,100); 
         $p->newPoint(3,0,100); 
         $p->newPath('test1', 'M 1 L 2 C 3 3 1');
-        $p->offsetPathString('test2', 'M 1 L 2 C 3 3 1', 10, 1);
 
         $context->getPattern()->setPartMargin($context->getTheme()->config['settings']['partMargin']);
         $context->getTheme()->applyRenderMask($context->getPattern());
         $context->getPattern()->layout();
         $context->getTheme()->themePattern($context->getPattern());
 
+        $this->saveFixture('themePatternBasic', serialize($context->getPattern()));
         $this->assertEquals(serialize($context->getPattern()), $this->loadFixture('themePatternBasic'));
     }
 
@@ -134,6 +135,7 @@ class DesignerTest extends \PHPUnit\Framework\TestCase
         $context->getPattern()->layout();
         $context->getTheme()->themePattern($context->getPattern());
 
+        $this->saveFixture('themePatternMarked', serialize($context->getPattern()));
         $this->assertEquals(serialize($context->getPattern()), $this->loadFixture('themePatternMarked'));
     }
 
@@ -146,6 +148,7 @@ class DesignerTest extends \PHPUnit\Framework\TestCase
 
     private function saveFixture($fixture, $data)
     {
+        return true;
         $dir = 'tests/themes/fixtures';
         $file = "$dir/Designer.$fixture.data";
         $f = fopen($file,'w');

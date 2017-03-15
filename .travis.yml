@@ -27,11 +27,9 @@ addons:
 
 # Deploy when pushing to master or develop
 after_success:
-    - test $TRAVIS_PULL_REQUEST == "false" && mkdir build
-    - test $TRAVIS_PULL_REQUEST == "false" && mv * build
-    - test $TRAVIS_PULL_REQUEST == "false" && tar -czf freesewing.tgz build
-    - test $TRAVIS_PULL_REQUEST == "false" && export SSHPASS=$DEPLOY_PASS
-    - test $TRAVIS_PULL_REQUEST == "false" && test $TRAVIS_BRANCH == "master" && sshpass -e scp freesewing.tgz $DEPLOY_USER@$DEPLOY_HOST:$DEPLOY_PATH/master/builds
-    - test $TRAVIS_PULL_REQUEST == "false" && test $TRAVIS_BRANCH == "master" && sshpass -e ssh $DEPLOY_USER@$DEPLOY_HOST $DEPLOY_PATH/master/scripts/deploy.sh
-    - test $TRAVIS_PULL_REQUEST == "false" && test $TRAVIS_BRANCH == "develop" && sshpass -e scp freesewing.tgz $DEPLOY_USER@$DEPLOY_HOST:$DEPLOY_PATH/develop/builds
-    - test $TRAVIS_PULL_REQUEST == "false" && test $TRAVIS_BRANCH == "develop" && sshpass -e ssh $DEPLOY_USER@$DEPLOY_HOST $DEPLOY_PATH/develop/scripts/deploy.sh
+    - mkdir build
+    - mv * build
+    - tar -czf freesewing.tgz build
+    - export SSHPASS=$DEPLOY_PASS
+    - sshpass -e scp freesewing.tgz $DEPLOY_USER@$DEPLOY_HOST:$DEPLOY_PATH/develop/builds
+    - sshpass -e ssh $DEPLOY_USER@$DEPLOY_HOST $DEPLOY_PATH/develop/scripts/deploy.sh

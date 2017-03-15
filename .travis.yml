@@ -10,7 +10,7 @@ php:
 addons:
     apt:
         packages:
-            - sshagent
+            - sshpass
 
 # Intalling core
 install:

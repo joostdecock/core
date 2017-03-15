@@ -44,6 +44,7 @@ class PaperlessTest extends \PHPUnit\Framework\TestCase
             new \Freesewing\SvgComments()
         );
         $theme->themeSvg($svgDocument);
+        $this->saveFixture('themeSvgDocument', serialize($svgDocument));
         $this->assertEquals(serialize($svgDocument), $this->loadFixture('themeSvgDocument'));
     }
 
@@ -88,6 +89,7 @@ class PaperlessTest extends \PHPUnit\Framework\TestCase
         $context->getPattern()->layout();
         $context->getTheme()->themePattern($context->getPattern());
 
+        $this->saveFixture('themePattern', serialize($context->getPattern()));
         $this->assertEquals(serialize($context->getPattern()), $this->loadFixture('themePattern'));
     }
 
@@ -100,6 +102,7 @@ class PaperlessTest extends \PHPUnit\Framework\TestCase
 
     private function saveFixture($fixture, $data)
     {
+        return true;
         $dir = \Freesewing\Utils::getApiDir().'/tests/themes/fixtures';
         $file = "$dir/Paperless.$fixture.data";
         $f = fopen($file,'w');

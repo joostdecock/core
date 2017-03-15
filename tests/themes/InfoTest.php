@@ -16,12 +16,15 @@ class InfoTest extends \PHPUnit\Framework\TestCase
         $data['models'] = $pattern->getSamplerModelConfig();
         $data['pattern'] = basename(\Freesewing\Utils::getClassDir($pattern));
         $response = $theme->themePatternInfo($data, 'php');
+        $this->saveFixture('patternInfoPhp', $response->getBody());
         $this->assertEquals($response->getBody(),$this->loadFixture('patternInfoPhp'));
         
         $response = $theme->themePatternInfo($data, 'html');
+        $this->saveFixture('patternInfoHtml', $response->getBody());
         $this->assertEquals($response->getBody(),$this->loadFixture('patternInfoHtml'));
         
         $response = $theme->themePatternInfo($data, 'other');
+        $this->saveFixture('patternInfoOther', serialize($response->getBody()));
         $this->assertEquals(serialize($response->getBody()),$this->loadFixture('patternInfoOther'));
     }
     
@@ -33,9 +36,9 @@ class InfoTest extends \PHPUnit\Framework\TestCase
         $theme = new \Freesewing\Themes\Core\Info();
         $data = [
             'services' => ['service 1','service 2'],
-            'patterns' => ['pattern 1','pattern 2'],
-            'channels' => ['channel 1','channel 2'],
-            'themes' => ['theme 1','theme 2'],
+            'patterns' => ['Core' => ['pattern 1','pattern 2']],
+            'channels' => ['Core' => ['channel 1','channel 2']],
+            'themes' => ['Core' => ['theme 1','theme 2']],
         ];
         $response = $theme->themeInfo($data, 'php');
         $this->assertEquals($response->getBody(),serialize($data));
@@ -44,6 +47,7 @@ class InfoTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals($response->getBody(),'something');
         
         $response = $theme->themeInfo($data, 'html');
+        $this->saveFixture('infoHtml', $response->getBody());
         $this->assertEquals($response->getBody(),$this->loadFixture('infoHtml'));
 
     }
@@ -68,6 +72,7 @@ class InfoTest extends \PHPUnit\Framework\TestCase
 
     private function saveFixture($fixture, $data)
     {
+        return true;
         $dir = \Freesewing\Utils::getApiDir().'/tests/themes/fixtures';
         $file = "$dir/Info.$fixture.data";
         $f = fopen($file,'w');

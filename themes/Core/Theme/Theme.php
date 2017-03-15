@@ -310,9 +310,9 @@ abstract class Theme
      * The difference is that *forceParts* will force all parts in the *parts* array
      * to be rendered. Even those that have their render property set to false.
      *
-     * @param \Freesewing\Patterns\Core\Pattern $pattern The pattern object
+     * @param \Freesewing\Patterns\* $pattern The pattern object
      */
-    private function applyRenderMaskOnParts(Pattern $pattern)
+    private function applyRenderMaskOnParts($pattern)
     {
         $parts = $this->getOption('parts');
         // Force into array, even if it's just 1 part

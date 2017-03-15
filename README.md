@@ -1,4 +1,5 @@
 <a href="https://docs/freesewing.org/"><img src="https://docs.freesewing.org/img/logo-black.svg" align="right" width=200 style="max-width: 20%;" /></a>
+[![Build Status](https://travis-ci.org/freesewing/core.svg?branch=master)](https://travis-ci.org/freesewing/core)
 
 # Freesewing core
 [Freesewing](https://freesewing.org/) is an online platform to draft sewing patterns based on your measurements.

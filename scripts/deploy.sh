@@ -1,6 +1,6 @@
 #!/bin/bash
 echo "Starting deploy script"
-if [ "$TRAVIS_PULL_REQUEST" ]; then
+if [ "$TRAVIS_PULL_REQUEST" -gt 1 ]; then
     echo "Pull request, not deploying.";
     exit
 else

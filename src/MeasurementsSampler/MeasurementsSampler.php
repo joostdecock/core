@@ -69,9 +69,9 @@ class MeasurementsSampler extends Sampler
      * with the model as parameter.
      * It then itterates over the parts and calls sampleParts() on them
      *
-     * @param \Freesewing\Themes\Theme or similar
+     * @param \Freesewing\Themes\* $theme The theme object
      *
-     * @return \Freesewing\Patterns\Pattern or similar
+     * @return \Freesewing\Patterns\* Pattern object
      */
     public function sampleMeasurements($theme)
     {

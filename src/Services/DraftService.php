@@ -11,7 +11,7 @@ use Freesewing\Utils;
  * @copyright 2016 Joost De Cock
  * @license   http://opensource.org/licenses/GPL-3.0 GNU General Public License, Version 3
  */
-class DraftService extends AbstractService
+class DraftService extends Service
 {
 
     /**
@@ -43,6 +43,7 @@ class DraftService extends AbstractService
      */
     public function run(\Freesewing\Context $context)
     {
+        $context->addUnits();
         $context->addPattern();
 
         if ($context->getChannel()->isValidRequest($context) === true) :
@@ -52,8 +53,6 @@ class DraftService extends AbstractService
 
             $context->getPattern()->addOptions($context->getChannel()->standardizePatternOptions($context->getRequest(), $context->getPattern()));
 
-            $context->addUnits();
-            $context->getPattern()->setUnits($context->getUnits());
             $context->addTranslator();
             $context->getPattern()->setTranslator($context->getTranslator());
 
@@ -75,12 +74,18 @@ class DraftService extends AbstractService
 
             /* Last minute replacements on the entire response body */
             $context->getResponse()->setBody($this->replace($context->getResponse()->getBody(), $context->getPattern()->getReplacements()));
+
         else :
             // channel->isValidRequest() !== true
             $context->getChannel()->handleInvalidRequest($context);
         endif;
 
-        $context->getResponse()->send();
+        // Don't send response without approval from the channel
+        if($context->getChannel()->isValidResponse($context)) {
+            $context->getResponse()->send();
+        } else {
+            $context->getChannel()->handleInvalidResponse($context);
+        }
 
         $context->cleanUp();
     }
@@ -95,8 +100,11 @@ class DraftService extends AbstractService
      */
     protected function svgRender(\Freesewing\Context $context)
     {
-        $context->getSvgDocument()->svgAttributes->add('width ="' . ($context->getPattern()->getWidth() * self::SCALE) . '"');
-        $context->getSvgDocument()->svgAttributes->add('height ="' . ($context->getPattern()->getHeight() * self::SCALE) . '"');
+        // Don't set size for themes with embedFluid options set to true, allows for responsive embedding
+        if(!$context->getTheme()->getOption('embedFluid')) {
+            $context->getSvgDocument()->svgAttributes->add('width ="' . ($context->getPattern()->getWidth() * self::SCALE) . '"');
+            $context->getSvgDocument()->svgAttributes->add('height ="' . ($context->getPattern()->getHeight() * self::SCALE) . '"');
+        }
 
         $viewbox = $context->getRequest()->getData('viewbox');
         if ($viewbox !== null) {
@@ -123,7 +131,7 @@ class DraftService extends AbstractService
      * @param string svg
      * @param array  replacements
      *
-     * @see \Freesewing\Patterns\Pattern::replace()
+     * @see \Freesewing\Patterns\Core\Pattern::replace()
      * @return string
      */
     private function replace($svg, $replacements)

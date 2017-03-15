@@ -1,0 +1,20 @@
+language: php
+
+php:
+    - '5.6'
+    - '7.0'
+    - '7.1'
+
+install:
+    - composer install --no-interaction
+    - composer dump-autoload -o
+
+before_install:
+    - openssl aes-256-cbc -K $encrypted_3ec3a2d8f946_key -iv $encrypted_3ec3a2d8f946_iv
+      -in client-secret.json.enc -out client-secret.json -d
+
+deploy:
+    provider: gae
+    keyfile: "client-secret.json"
+    project: "freesewing-master"  
+    on: master

@@ -6,24 +6,6 @@ class BasicTest extends \PHPUnit\Framework\TestCase
 {
 
     /**
-     * Tests the isPaperless method
-     */
-    public function testIsPaperless()
-    {
-        $theme = new \Freesewing\Themes\Basic();
-
-    }
-
-    /**
-     * Tests the getThemeName method
-     */
-    public function testGetThemeName()
-    {
-        $theme = new \Freesewing\Themes\Basic();
-        $this->assertEquals($theme->getThemeName(), 'Basic');
-    }
-
-    /**
      * Tests the themeResponse method
      */
     public function testThemeResponse() {
@@ -35,7 +17,7 @@ class BasicTest extends \PHPUnit\Framework\TestCase
             new \Freesewing\SvgDefs(),
             new \Freesewing\SvgComments()
         );
-        $theme = new \Freesewing\Themes\Basic();
+        $theme = new \Freesewing\Themes\Core\Basic();
         $context = new \Freesewing\Context();
         $context->setRequest(new \Freesewing\Request(['service' => 'draft', 'pattern' => 'TestPattern', 'parts' => 'testPart', 'forceParts' => true]));
         $response = $theme->themeResponse($context);
@@ -47,22 +29,22 @@ class BasicTest extends \PHPUnit\Framework\TestCase
      */
     public function testapplyRenderMaskOnParts()
     {
-        $theme = new \Freesewing\Themes\Basic();
-        $pattern = new \Freesewing\Patterns\TestPattern();
-        $pattern->addPart('part1');
+        $theme = new \Freesewing\Themes\Core\Basic();
+        $pattern = new \Freesewing\Patterns\Tests\TestPattern();
+        $pattern->newPart('part1');
         $pattern->parts['part1']->setRender(false);
-        $pattern->addPart('part2');
-        $pattern->addPart('part3');
+        $pattern->newPart('part2');
+        $pattern->newPart('part3');
         
         $theme->setOptions(new \Freesewing\Request(['parts' => 'part1,part2']));
-        $theme->applyRenderMaskOnParts($pattern);
+        $theme->applyRenderMask($pattern);
         
         $this->assertFalse($pattern->parts['part1']->getRender());
         $this->assertTrue($pattern->parts['part2']->getRender());
         $this->assertFalse($pattern->parts['part3']->getRender());
         
         $theme->setOptions(new \Freesewing\Request(['parts' => 'part1,part2', 'forceParts' => true]));
-        $theme->applyRenderMaskOnParts($pattern);
+        $theme->applyRenderMask($pattern);
         
         $this->assertTrue($pattern->parts['part1']->getRender());
         $this->assertTrue($pattern->parts['part2']->getRender());

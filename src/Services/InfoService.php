@@ -17,7 +17,7 @@ use Freesewing\Utils;
  * @copyright 2016 Joost De Cock
  * @license   http://opensource.org/licenses/GPL-3.0 GNU General Public License, Version 3
  */
-class InfoService extends AbstractService
+class InfoService extends Service
 {
 
     /**
@@ -44,20 +44,30 @@ class InfoService extends AbstractService
      */
     public function run(Context $context)
     {
-        $format = $context->getRequest()->getData('format');
-        if ($context->getRequest()->getData('pattern') !== null) {
-            $context->addPattern();
-            $context->setResponse($context->getTheme()->themePatternInfo($this->getPatternInfo($context->getPattern()), $format));
+        if ($context->getChannel()->isValidRequest($context) === true) :
+            $format = $context->getRequest()->getData('format');
+            if ($context->getRequest()->getData('pattern') !== null) {
+                $context->addPattern();
+                $context->setResponse($context->getTheme()->themePatternInfo($this->getPatternInfo($context->getPattern()), $format));
+            } else {
+                $info['services'] = $context->getConfig()['services'];
+                $info['patterns'] = $this->getPatternList($context);
+                $info['channels'] = $this->getChannelList($context);
+                $info['themes'] = $this->getThemeList($context);
+
+                $context->setResponse($context->getTheme()->themeInfo($info, $format));
+            }
+        else :
+            // channel->isValidRequest() !== true
+            $context->getChannel()->handleInvalidRequest($context);
+        endif;
+
+        // Don't send response without approval from the channel
+        if($context->getChannel()->isValidResponse($context)) {
+            $context->getResponse()->send();
         } else {
-            $info['services'] = $context->getConfig()['services'];
-            $info['patterns'] = $this->getPatternList($context);
-            $info['channels'] = $this->getChannelList($context);
-            $info['themes'] = $this->getThemeList($context);
-
-            $context->setResponse($context->getTheme()->themeInfo($info, $format));
+            $context->getChannel()->handleInvalidResponse($context);
         }
-
-        $context->getResponse()->send();
 
         $context->cleanUp();
     }
@@ -71,14 +81,17 @@ class InfoService extends AbstractService
      */
     private function getPatternList($context)
     {
-        foreach (glob($context->getApiDir() . '/patterns/*', GLOB_ONLYDIR) as $dir) {
-            $name = basename($dir);
-            if ($name != 'Pattern') {
-                $config = $this->loadPatternConfig($name);
-                $list[$name] = $config['info']['name'];
+        $list = [];
+        foreach($context->getConfig()['patternNamespaces'] as $ns) {
+            foreach (glob(Utils::getApiDir() . "/patterns/$ns/*", GLOB_ONLYDIR) as $dir) {
+                $name = basename($dir);
+                if ($name != 'Pattern') {
+                    $config = $this->loadPatternConfig($name, $context);
+                    if(!isset($config['hidden']) || $config['hidden'] !== true) $list[$ns][$name] = $config['info']['name'];
+                }
             }
         }
-
+        
         return $list;
     }
 
@@ -89,12 +102,15 @@ class InfoService extends AbstractService
      *
      * @return array
      */
-    private function loadPatternConfig($pattern)
+    private function loadPatternConfig($pattern, $context)
     {
-        $class = '\Freesewing\Patterns\\' . $pattern;
-        $pattern = new $class();
-
-        return $pattern->getConfig();
+        foreach($context->getConfig()['patternNamespaces'] as $ns) {
+            $class = '\\Freesewing\\Patterns\\'.$ns.'\\'.$pattern;
+            if (class_exists($class)) {
+                $pattern = new $class();
+                return $pattern->getConfig();
+            }
+        }
     }
 
     /**
@@ -107,10 +123,12 @@ class InfoService extends AbstractService
     private function getChannelList($context)
     {
         $list = [];
-        foreach (glob($context->getApiDir() . '/channels/*', GLOB_ONLYDIR) as $dir) {
-            $name = basename($dir);
-            if ($name != 'Channel' && $name != 'Info') {
-                $list[] = $name;
+        foreach($context->getConfig()['channelNamespaces'] as $ns) {
+            foreach (glob(Utils::getApiDir() . "/channels/$ns/*", GLOB_ONLYDIR) as $dir) {
+                $name = basename($dir);
+                if ($name != 'Channel' && $name != 'Info') {
+                    $list[$ns][] = $name;
+                }
             }
         }
 
@@ -127,10 +145,12 @@ class InfoService extends AbstractService
     private function getThemeList($context)
     {
         $list = [];
-        foreach (glob($context->getApiDir() . '/themes/*', GLOB_ONLYDIR) as $dir) {
-            $name = basename($dir);
-            if ($name != 'Theme' && $name != 'Info' && $name != 'Sampler') {
-                $list[] = $name;
+        foreach($context->getConfig()['themeNamespaces'] as $ns) {
+            foreach (glob(Utils::getApiDir() . "/themes/$ns/*", GLOB_ONLYDIR) as $dir) {
+                $name = basename($dir);
+                if ($name != 'Theme' && $name != 'Info' && $name != 'Sampler') {
+                    $list[$ns][] = $name;
+                }
             }
         }
 

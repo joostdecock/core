@@ -25,19 +25,4 @@ class SvgCommentsTest extends \PHPUnit\Framework\TestCase
         $object = new \Freesewing\SvgComments();
         $this->assertEquals(false, $object->load());
     }
-    
-    /* 
-     * Tests replacement of data of data after call add method
-     */
-    public function testReplacements()
-    {
-        $data = 'sorcha';
-        $replace = ['sorcha' => 'scorch'];
-        $expectedResult = "\n<!--\n\n    scorch\n    \n\n  -->\n";
-        $object = new \Freesewing\SvgComments();
-        $object->add($data, $replace);
-
-        $this->assertEquals($expectedResult, $object->load());
-    }
-    
 }

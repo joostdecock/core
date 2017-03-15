@@ -1,0 +1,130 @@
+info:
+    name: "Wahid Waistcoat"
+    version: "2.0"
+    date: 20161206
+    author: "Joost De Cock"
+    email: "joost@decock.org"
+    company: "freesewing.org"
+    link: "freesewing.org/pattern/wahid-waistcoat/"
+
+parts:
+    frontBlock: "Front block"
+    backBlock: "Back block"
+    waistcoatFrontBlock: "Waistcoat front block"
+    front: "Front"
+    back: "Back"
+    frontFacing: "Front facing"
+    frontLining: "Front lining"
+    pocketWelt: "Pocket welt"
+    pocketFacing: "Pocket facing"
+    pocketBag: "Pocket bag"
+    pocketInterfacing: "Pocket interfacing"
+
+languages:
+    en: "English"
+    nl: "Nederlands"
+
+measurements:
+    acrossBack: 450
+    bicepsCircumference: 335
+    centerBackNeckToWaist: 480
+    chestCircumference: 1080
+    naturalWaistToHip: 120
+    neckCircumference: 420
+    shoulderSlope: 55
+    shoulderToShoulder: 470
+    hipsCircumference: 950
+    naturalWaist: 885
+
+options:
+    chestEase:
+        type: "measure"
+        min: 0
+        max: 160
+        default: 20
+    waistEase:
+        type: "measure"
+        min: 0
+        max: 160
+        default: 80
+    hipsEase:
+        type: "measure"
+        min: 0
+        max: 160
+        default: 40
+    lengthBonus:
+        type: "measure"
+        min:  0
+        max:  50
+        default: 15
+    neckInset:
+        type: "measure"
+        min: 0
+        max: 35
+        default: 20
+    shoulderInset:
+        type: "measure"
+        min: 0
+        max: 45
+        default: 20
+    backInset:
+        type: "measure"
+        min: 15
+        max: 55
+        default: 25
+    frontInset:
+        type: "measure"
+        min: 15
+        max: 45
+        default: 30
+    frontDrop:
+        type: "measure"
+        min: -40
+        max: 200
+        default: 0
+    frontStyle:
+        type: "chooseOne"
+        options:
+            1: "Classic"
+            2: "Rounded"
+        default: 1
+    hemStyle:
+        type: "chooseOne"
+        options:
+            1: "Classic"
+            2: "Rounded"
+        default: 1
+    hemRadius:
+        type: "measure"
+        min: 0
+        max: 100
+        default: 60
+    buttons:
+        type: "chooseOne"
+        options:
+            4: 4
+            5: 5
+            6: 6
+            7: 7
+            8: 8
+            9: 9
+            10: 10
+            11: 11
+            12: 12
+        default: 6
+    backScyeDart:
+        type: "measure"
+        min: 0
+        max: 15
+        default: 5
+    frontScyeDart:
+        type: "measure"
+        min: 0
+        max: 20
+        default: 10
+    centerBackDart:
+        type: "measure"
+        min: 0
+        max: 20
+        default: 5
+

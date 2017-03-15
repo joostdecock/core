@@ -1,0 +1,15 @@
+hidden: true
+info:
+    name: "Design Tutorial"
+    author: "Joost De Cock"
+    email: "joost@decock.org"
+    company: "freesewing.org"
+
+parts:
+    part: "Part"
+
+options:
+    figure:
+        type: "chooseOne"
+        default: ""
+

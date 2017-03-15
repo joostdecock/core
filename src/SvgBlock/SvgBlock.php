@@ -37,9 +37,12 @@ abstract class SvgBlock
     /**
      * Returns the data property
      *
+     * Actually, this is used to check whether data
+     * has been added, because it returns false if not
+     *
      * @return array $data The data in the object
      */
-    public function getData()
+    protected function getData()
     {
         return $this->data;
     }
@@ -55,18 +58,14 @@ abstract class SvgBlock
      * @param string $data The data to add
      * @param array $replace Optional array of things to replace in the data
      */
-    public function add($data, $replace = null)
+    public function add($data)
     {
         $caller = debug_backtrace()[0]['file'];
-        if (!@is_array($this->data[$caller])) {
+        if (!isset($this->data[$caller])) {
             $this->data[$caller] = array();
         }
         foreach (explode("\n", $data) as $line) {
-            if (is_array($replace)) {
-                $line = str_replace(array_keys($replace), array_values($replace), $line);
-            }
             array_push($this->data[$caller], $line);
-            $this->isEmpty = true;
         }
     }
 }

@@ -11,7 +11,7 @@ class TestPatternTest extends \PHPUnit\Framework\TestCase
      */
     public function testAttributeExists($attribute)
     {
-        $this->assertClassHasAttribute($attribute, '\Freesewing\patterns\Pattern');
+        $this->assertClassHasAttribute($attribute, '\Freesewing\Patterns\Core\Pattern');
     }
 
     public function providerTestAttributeExists()
@@ -27,79 +27,6 @@ class TestPatternTest extends \PHPUnit\Framework\TestCase
             ['units'],
             ['width'],
         ];
-    }
-
-    /**
-     * Tests the getTranslationsDir method
-     */
-    public function testGetTranslationsDir()
-    {
-        $pattern = new \Freesewing\Patterns\TestPattern();
-        $dir = dirname(dirname(__DIR__)).'/patterns/TestPattern/translations';
-        $this->assertEquals($pattern->getTranslationsDir(), $dir);
-    }
-
-    /**
-     * Tests the getSamplerModelFile method
-     */
-    public function testGetSamplerModelFile()
-    {
-        $pattern = new \Freesewing\Patterns\TestPattern();
-        $file = dirname(dirname(__DIR__)).'/patterns/TestPattern/sampler/models.yml';
-        $this->assertEquals($pattern->getSamplerModelFile(), $file);
-    }
-
-    /**
-     * Tests the getSamplerModels method
-     */
-    public function testGetSamplerModels()
-    {
-        $pattern = new \Freesewing\Patterns\TestPattern();
-        $data = [
-            'default' => [
-                'group' => 'someGroup',
-            ],
-            'groups' => [
-                'someGroup' => ['someModel'],
-                'anotherGroup' => ['anotherModel'],
-            ],
-            'measurements' => [
-                'someMeasurement' => [
-                    'someModel' => 123,
-                    'anotherModel' => 321,
-                ],
-            ],
-        ];
-        $this->assertEquals($pattern->getSamplerModels(), $data);
-    }
-    
-    /** 
-     * Tests the unit method
-     */
-    public function testUnit()
-    {
-        $p = new \Freesewing\Patterns\TestPattern();
-        $p->setUnits(['out' => 'metric']);
-        $this->assertEquals($p->unit(20),'2cm');
-        $this->assertEquals($p->unit(12.3456),'1.23cm');
-        $p->setUnits(['out' => 'imperial']);
-        $this->assertEquals($p->unit(25.4),'1"');
-        $this->assertEquals($p->unit(12.3456),'0.49"');
-    }
-
-    /**
-     * @param string $methodSuffix The part of the method to call without 'get' or 'set'
-     * @param $value The value to set and test for
-     *
-     * @dataProvider providerGettersReturnWhatSettersSet
-     */
-    public function testGettersReturnWhatSettersSet($methodSuffix, $value)
-    {
-        $object = new \Freesewing\Patterns\TestPattern();
-        $setMethod = 'set'.$methodSuffix;
-        $getMethod = 'get'.$methodSuffix;
-        $object->{$setMethod}($value);
-        $this->assertEquals($value, $object->{$getMethod}());
     }
 
     public function providerGettersReturnWhatSettersSet()
@@ -121,7 +48,7 @@ class TestPatternTest extends \PHPUnit\Framework\TestCase
      */
     public function testGettersReturnWhatSettersSetForArrays($methodSuffix, $key, $value)
     {
-        $object = new \Freesewing\Patterns\TestPattern();
+        $object = new \Freesewing\Patterns\Tests\TestPattern();
         $setMethod = 'set'.$methodSuffix;
         $getMethod = 'get'.$methodSuffix;
         $object->{$setMethod}($key,$value);
@@ -141,7 +68,7 @@ class TestPatternTest extends \PHPUnit\Framework\TestCase
      */
     public function testGetOption()
     {
-        $p = new \Freesewing\Patterns\TestPattern();
+        $p = new \Freesewing\Patterns\Tests\TestPattern();
         $p->setOption('test', 'something');
         $this->assertEquals('something', $p->getOption('test'));
         $this->assertEquals('something', $p->o('test'));
@@ -149,27 +76,11 @@ class TestPatternTest extends \PHPUnit\Framework\TestCase
     }
 
     /** 
-     * Tests the clonePoints method
-     */
-    public function testClonePoints()
-    {
-        $pattern = new \Freesewing\Patterns\TestPattern();
-        $p = $pattern->parts['testPart'];
-        $p->newPoint(1,2,3,'Just another point');
-        $p->addPoint(2, $p->shift(1,0,10),'A shifted point');
-        $pattern->addPart('part2');
-        $pattern->clonePoints('testPart','part2');
-        $this->assertEquals($pattern->parts['part2']->points[2]->getX(), 12);
-        $this->assertEquals($pattern->parts['part2']->points[2]->getY(), 3);
-        $this->assertEquals($pattern->parts['part2']->points[2]->getDescription(), 'A shifted point');
-    }
-
-    /** 
      * Tests messaging and debug
      */
     public function testMessagesAndDebug()
     {
-        $p = new \Freesewing\Patterns\TestPattern();
+        $p = new \Freesewing\Patterns\Tests\TestPattern();
         $this->assertEquals($p->getMessages(), false);
         $this->assertEquals($p->getDebug(), false);
         $p->msg('This is a test message');
@@ -187,8 +98,8 @@ class TestPatternTest extends \PHPUnit\Framework\TestCase
      */
     public function testDraftAndSample()
     {
-        $p1 = new \Freesewing\Patterns\TestPattern();
-        $p2 = new \Freesewing\Patterns\TestPattern();
+        $p1 = new \Freesewing\Patterns\Tests\TestPattern();
+        $p2 = new \Freesewing\Patterns\Tests\TestPattern();
         $model = new \Freesewing\Model();
         $p2->sample($model);
         $this->assertEquals($p1,$p2);

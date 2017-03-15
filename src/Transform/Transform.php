@@ -36,7 +36,7 @@ class Transform
      *
      * @throws InvalidArgumentException If you specify an unsupported type, pass wrong parameters, or insufficient parameters.
      */
-    public function __construct($type, $x = null, $y = null, $angle = null)
+    public function __construct($type, $x, $y = null, $angle = null)
     {
         $allowedTypes = [
             'translate',
@@ -82,51 +82,11 @@ class Transform
     }
 
     /**
-     * Returns the x property
-     *
-     * @return float $x The X value of the transform
-     */
-    public function getX()
-    {
-        return $this->x;
-    }
-
-    /**
-     * Returns the x property
-     *
-     * @return float $x The X value of the transform
-     */
-    public function getY()
-    {
-        return $this->y;
-    }
-
-    /**
-     * Returns the y property
-     *
-     * @return float $y The Y value of the transform
-     */
-    public function getType()
-    {
-        return $this->type;
-    }
-
-    /**
-     * Returns the angle property
-     *
-     * @return float $angle The angle value of a rotate transform
-     */
-    public function getAngle()
-    {
-        return $this->angle;
-    }
-
-    /**
-     * Returns a transform as the valiefor an SVG transform attribute
+     * Returns a transform as the value for an SVG transform attribute
      *
      * @return string The SVG code for the transform
      */
-    public function asSvgTransform()
+    private function asSvgTransform()
     {
         switch ($this->type) {
             case 'translate':
@@ -150,7 +110,7 @@ class Transform
      *
      * @return string The SVG code for the transforms
      */
-    public function asSvgParameter($array)
+    static public function asSvgParameter($array)
     {
         $svg = '';
         foreach ($array as $transform) {

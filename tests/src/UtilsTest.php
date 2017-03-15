@@ -8,7 +8,7 @@ class UtilsTest extends \PHPUnit\Framework\TestCase
 {
     private function loadTemplate($template)
     {
-        $dir = 'tests/src/fixtures';
+        $dir = \Freesewing\Utils::getApiDir().'/tests/src/fixtures';
         return file_get_contents("$dir/Utils.$template.txt");
     }
 
@@ -56,14 +56,7 @@ class UtilsTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals(Utils::flattenAttributes($out), false);
     }
     
-    /**
-     * Tests the bezierPoint method
-     */
-    public function testBezierPoint()
-    {
-        $this->assertEquals(Utils::bezierPoint(0.7,10,20,80,90), 70.200000000000003);
-    }
-    
+
     /**
      * Tests the getClassDir method
      */
@@ -74,9 +67,9 @@ class UtilsTest extends \PHPUnit\Framework\TestCase
     }
     
     /**
-     * Tests the findLineLineIntersection method
+     * Tests the lineLineIntersection method
      */
-    public function testFindLineLineIntersection()
+    public function testlineLineIntersection()
     {
         $p1 = new \Freesewing\Point();
         $p2 = new \Freesewing\Point();
@@ -91,15 +84,15 @@ class UtilsTest extends \PHPUnit\Framework\TestCase
         $p3->setY(0);
         $p4->setX(0);
         $p4->setY(100);
-        $this->assertEquals(Utils::findLineLineIntersection($p2,$p1,$p3,$p4), [50,50]);
-        $this->assertEquals(Utils::findLineLineIntersection($p1,$p3,$p2,$p4), false);
-        $this->assertEquals(Utils::findLineLineIntersection($p1,$p4,$p2,$p3), false);
+        $this->assertEquals(Utils::lineLineIntersection($p2,$p1,$p3,$p4), [50,50]);
+        $this->assertEquals(Utils::lineLineIntersection($p1,$p3,$p2,$p4), false);
+        $this->assertEquals(Utils::lineLineIntersection($p1,$p4,$p2,$p3), false);
     }
     
     /**
-     * Tests the findLineLineIntersection method for a vertical line
+     * Tests the lineLineIntersection method for a vertical line
      */
-    public function testFindLineLineIntersectionVertical()
+    public function testlineLineIntersectionVertical()
     {
         $p1 = new \Freesewing\Point();
         $p2 = new \Freesewing\Point();
@@ -114,8 +107,8 @@ class UtilsTest extends \PHPUnit\Framework\TestCase
         $p3->setY(0);
         $p4->setX(50);
         $p4->setY(100);
-        $this->assertEquals(Utils::findLineLineIntersection($p1,$p2,$p3,$p4), [50,50]);
-        $this->assertEquals(Utils::findLineLineIntersection($p3,$p4,$p1,$p2), [50,50]);
+        $this->assertEquals(Utils::lineLineIntersection($p1,$p2,$p3,$p4), [50,50]);
+        $this->assertEquals(Utils::lineLineIntersection($p3,$p4,$p1,$p2), [50,50]);
     }
     
     /**
@@ -152,14 +145,6 @@ class UtilsTest extends \PHPUnit\Framework\TestCase
         $p2->setY(100);
         $this->assertEquals(Utils::distance($p1,$p2), 141.42135623730951);
 
-    }
-    
-    /**
-     * Tests the debug method
-     */
-    public function testDebug()
-    {
-        $this->assertEquals(Utils::debug('test'), $this->loadTemplate('debug'));
     }
     
     /**

@@ -14,6 +14,9 @@ namespace Freesewing;
  */
 class Response
 {
+    /** Cache time in seconds (if caching is used) */
+    const CACHETIME = 15552000;
+
     /** @var string $body Response body */
     public $body = null;
 
@@ -22,9 +25,6 @@ class Response
 
     /** @var array $headers Array of headers to send */
     private $headers = array();
-
-    /** @var int $cacheTime Default cache time in seconds (if caching is used) */
-    private $cacheTime = 15552000;
 
     /**
      * Adds caching headers
@@ -36,7 +36,7 @@ class Response
         if ($request->getData('cache') === NULL) {
             $this->addHeader('cache', "Cache-Control: public, no-cache");
         } else {
-            $this->addHeader('cache', "Cache-Control: public, max-age=".$this->cacheTime);
+            $this->addHeader('cache', "Cache-Control: public, max-age=".self::CACHETIME);
         }
     }
 

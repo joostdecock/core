@@ -1,0 +1,30 @@
+hidden: true
+info:
+    name: "Test Pattern"
+    version: "1.0"
+    date: 20170118
+    author: "Joost De Cock"
+    email: "joost@decock.org"
+    company: "freesewing.org"
+
+parts:
+    testPart: "Test Part"
+
+measurements:
+    someMeasurement: 200
+
+options:
+    measureOption:
+        type: "measure"
+        min: 10
+        max: 50
+        default: 30
+    percentOption:
+        type: "percent"
+        default: 50
+    chooseOneOption:
+        type: "chooseOne"
+        options:
+            1: "Option 1"
+            2: "Option 2"
+        default: 1

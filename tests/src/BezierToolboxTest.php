@@ -9,9 +9,9 @@ use \Freesewing\Boundary;
 class BezierToolboxTest extends \PHPUnit\Framework\TestCase
 {
     /**
-     * Tests the findBezierBoundary method
+     * Tests the bezierBoundary method
      */
-    public function testFindBezierBoundary()
+    public function testBezierBoundary()
     {
         $start = new Point();
         $cp1 = new Point();
@@ -39,13 +39,13 @@ class BezierToolboxTest extends \PHPUnit\Framework\TestCase
         $expected->setTopLeft($topLeft);
         $expected->setBottomRight($end);
 
-        $this->assertEquals(BezierToolbox::findBezierBoundary($start,$cp1,$cp2,$end), $expected);
+        $this->assertEquals(BezierToolbox::bezierBoundary($start,$cp1,$cp2,$end), $expected);
     }
 
     /**
-     * Tests the findBezierEdge method
+     * Tests the bezierEdge method
      */
-    public function testFindBezierEdge()
+    public function testBezierEdge()
     {
         $start = new Point();
         $cp1 = new Point();
@@ -81,13 +81,13 @@ class BezierToolboxTest extends \PHPUnit\Framework\TestCase
         $bottomEdge->setX(100);
         $bottomEdge->setY(100);
 
-        $this->assertEquals(BezierToolbox::findBezierEdge($start,$cp1,$cp2,$end,'left'), $leftEdge);
+        $this->assertEquals(BezierToolbox::bezierEdge($start,$cp1,$cp2,$end,'left'), $leftEdge);
     }
 
     /**
-     * Tests the cubicBezierLength method
+     * Tests the bezierLength method
      */
-    public function testCubicBezierLength()
+    public function testBezierLength()
     {
         $start = new Point();
         $cp1 = new Point();
@@ -106,13 +106,13 @@ class BezierToolboxTest extends \PHPUnit\Framework\TestCase
         $end->setX(100);
         $end->setY(100);
 
-        $this->assertEquals(BezierToolbox::cubicBezierLength($start,$cp1,$cp2,$end), 151.80277303164098);
+        $this->assertEquals(BezierToolbox::bezierLength($start,$cp1,$cp2,$end), 151.80277303164098);
     }
 
     /**
-     * Tests the findLineCurveIntersections method
+     * Tests the bezierLineIntersections method
      */
-    public function testFindLineCurveIntersections()
+    public function testBezierLineIntersections()
     {
         $start = new Point();
         $cp1 = new Point();
@@ -141,7 +141,7 @@ class BezierToolboxTest extends \PHPUnit\Framework\TestCase
         $i1->setY(50);
         $i2->setX(17.318999999999999);
         $i2->setY(50);
-        $this->assertEquals(BezierToolbox::findLineCurveIntersections($l1,$l2,$start,$cp1,$cp2,$end), [$i1,$i2]);
+        $this->assertEquals(BezierToolbox::bezierLineIntersections($l1,$l2,$start,$cp1,$cp2,$end), [$i1,$i2]);
         
         $l1->setX(50);
         $l1->setY(0);
@@ -150,106 +150,19 @@ class BezierToolboxTest extends \PHPUnit\Framework\TestCase
         
         $i1->setX(50);
         $i1->setY(89.204999999999998);
-        $this->assertEquals(BezierToolbox::findLineCurveIntersections($l1,$l2,$start,$cp1,$cp2,$end), [$i1]);
+        $this->assertEquals(BezierToolbox::bezierLineIntersections($l1,$l2,$start,$cp1,$cp2,$end), [$i1]);
 
         $l2->setX(50);
         $l2->setY(-100);
-        $this->assertEquals(BezierToolbox::findLineCurveIntersections($l1,$l2,$start,$cp1,$cp2,$end), false);
+        $this->assertEquals(BezierToolbox::bezierLineIntersections($l1,$l2,$start,$cp1,$cp2,$end), false);
     }
     
     /**
-     * Tests the findBezierCoeffs method
+     * Tests the bezierPoint method
      */
-    public function testFindBezierCoeffs()
+    public function testBezierPoint()
     {
-        $this->assertEquals(BezierToolbox::bezierCoeffs(10,20,30,40), [0,0,30,10]);
-    }
-
-    /**
-     * Tests the cubicRoots method
-     */
-    public function testCubicRoots()
-    {
-        $this->assertEquals(BezierToolbox::cubicRoots([0.1,2.3,3.4,1.2]), [-1,-1,-1]);
-        
-        $this->assertEquals(BezierToolbox::cubicRoots([1,1,1,4]), [-1,-1,-1]);
-    }
-
-    /**
-     * Tests the sgn method
-     */
-    public function testSngRoots()
-    {
-        $this->assertEquals(BezierToolbox::sgn(-12), -1);
-        $this->assertEquals(BezierToolbox::sgn(52), 1);
-    }
-
-    /**
-     * Tests the sortSpecial method
-     */
-    public function testSortSpecial()
-    {
-        $this->assertEquals(BezierToolbox::sortSpecial([12,2,-1,5,1]), [1,2,5,12,-1]);
-    }
-    
-    /**
-     * Tests the cubicBezierDelta method
-     */
-    public function testCubicBezierDelta()
-    {
-        $start = new Point();
-        $cp1 = new Point();
-        $cp2 = new Point();
-        $end = new Point();
-        $i1 = new Point();
-
-        $start->setX(50);
-        $start->setY(50);
-        $cp1->setX(0);
-        $cp1->setY(0);
-        $cp2->setX(0);
-        $cp2->setY(100);
-        $end->setX(100);
-        $end->setY(100);
-
-        $i1->setX(17.318999999999999);
-        $i1->setY(50);
-        $this->assertEquals(BezierToolbox::cubicBezierDelta($start,$cp1,$cp2,$end,$i1), 0.44);
-        
-    }
-    
-    /**
-     * Tests the calculateSplitCurvePoints method
-     */
-    public function testCalculateSplitCurvePoints()
-    {
-        $start = new Point();
-        $cp1 = new Point();
-        $cp2 = new Point();
-        $end = new Point();
-
-        $start->setX(50);
-        $start->setY(50);
-        $cp1->setX(0);
-        $cp1->setY(0);
-        $cp2->setX(0);
-        $cp2->setY(100);
-        $end->setX(100);
-        $end->setY(100);
-
-        $p1 = new Point();
-        $p2 = new Point();
-        $p3 = new Point();
-
-        $p1->setX(28);
-        $p1->setY(28);
-        $p2->setX(15.68);
-        $p2->setY(35.039999999999999);
-        $p3->setX(17.298999999999999);
-        $p3->setY(49.823999999999998);
-
-        $this->assertEquals(BezierToolbox::calculateSplitCurvePoints($start,$cp1,$cp2,$end,0.44),[$start,$p1,$p2,$p3]);
-        
+        $this->assertEquals(BezierToolbox::bezierPoint(0.7,10,20,80,90), 70.200000000000003);
     }
     
     /**
@@ -261,9 +174,9 @@ class BezierToolboxTest extends \PHPUnit\Framework\TestCase
     }
     
     /**
-     * Tests the findCurveCurveIntersections method
+     * Tests the bezierBezierIntersections method
      */
-    public function testFindCurveCurveIntersections()
+    public function testBezierBezierIntersections()
     {
         $start = new Point();
         $cp1 = new Point();
@@ -287,7 +200,7 @@ class BezierToolboxTest extends \PHPUnit\Framework\TestCase
         $i2->setX(51.357999999999997);
         $i2->setY(89.882999999999996);
 
-        $this->assertEquals(BezierToolbox::findCurveCurveIntersections($start,$cp1,$cp2,$end,$cp1,$start,$end,$cp2),[$i1,$i2]);
+        $this->assertEquals(BezierToolbox::bezierBezierIntersections($start,$cp1,$cp2,$end,$cp1,$start,$end,$cp2),[$i1,$i2]);
 
         $startB = new Point();
         $endB = new Point();
@@ -297,7 +210,7 @@ class BezierToolboxTest extends \PHPUnit\Framework\TestCase
         $endB->setX(-100);
         $endB->setY(100);
 
-        $this->assertEquals(BezierToolbox::findCurveCurveIntersections($startB,$cp1,$endB,$endB,$start,$cp1,$cp2,$end),false);
+        $this->assertEquals(BezierToolbox::bezierBezierIntersections($startB,$cp1,$endB,$endB,$start,$cp1,$cp2,$end),false);
         
     }
     

@@ -24,22 +24,6 @@ class TransformTest extends \PHPUnit\Framework\TestCase
         ];
     }
 
-    /**
-     * @param string $type Type of transform
-     * @param float $x X coordinate of deplacement
-     * @param float $y Y coordinate of deplacement
-     * @param float $angle Angle for rotation
-     * @param string $expectedResult The result we should get
-     *
-     * @dataProvider providerAsSvgTransformOrParameterReturnsCorrectTransform
-     */
-    public function testAsSvgTransformOrParameterReturnsCorrectTransform($type, $x, $y, $angle, $expectedResult)
-    {
-        $transform = new \Freesewing\Transform($type, $x, $y, $angle);
-        $this->assertEquals($expectedResult, $transform->asSvgTransform());
-        $this->assertEquals(' transform="'.$expectedResult.'" ', $transform->asSvgParameter([$transform]));
-    }
-
     public function providerAsSvgTransformOrParameterReturnsCorrectTransform()
     {
         return [
@@ -107,41 +91,14 @@ class TransformTest extends \PHPUnit\Framework\TestCase
     {
         $transform = new \Freesewing\Transform('rotate', 52, 69);
     }
-
-    /**
-     * @expectedException InvalidArgumentException
-     * @expectedExceptionMessage Missing parameter x
-     */
-    public function testExceptionTranslateNoParameters()
-    {
-        $transform = new \Freesewing\Transform('translate');
-    }
-
-    /**
-     * @expectedException InvalidArgumentException
-     * @expectedExceptionMessage Missing parameter x
-     */
-    public function testExceptionScaleNoParameters()
-    {
-        $transform = new \Freesewing\Transform('scale');
-    }
-
-    /**
-     * @expectedException InvalidArgumentException
-     * @expectedExceptionMessage Missing parameter x
-     */
-    public function testExceptionRotateNoParameters()
-    {
-        $transform = new \Freesewing\Transform('rotate');
-    }
-
+    
     /**
      * @expectedException InvalidArgumentException
      * @expectedExceptionMessage not a supported transform type
      */
     public function testExceptionInvalidTransformType()
     {
-        $transform = new \Freesewing\Transform('sorcha');
+        $transform = new \Freesewing\Transform('sorcha', 10);
     }
 
     /**
@@ -170,21 +127,4 @@ class TransformTest extends \PHPUnit\Framework\TestCase
     {
         $transform = new \Freesewing\Transform('rotate', 52, 69, null);
     }
-    
-    /**
-     * Tests the different get methods:
-     * - getX
-     * - getY
-     * - getType
-     * - getAngle
-     */
-    public function testGetMethods()
-    {
-        $transform = new \Freesewing\Transform('rotate', 52, 69, 42);
-        $this->assertEquals($transform->getX(), 52);
-        $this->assertEquals($transform->getY(), 69);
-        $this->assertEquals($transform->getType(), 'rotate');
-        $this->assertEquals($transform->getAngle(), 42);
-    }
-
 }

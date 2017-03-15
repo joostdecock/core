@@ -4,14 +4,26 @@
 <li class="service">service 2</li>
 </ul><h3>Patterns</h3>
 <ul class="patternlist">
+<li class="pattern">Core
+<ul>
 <li class="pattern">pattern 1</li>
 <li class="pattern">pattern 2</li>
+</ul>
+</li>
 </ul><h3>Channels</h3>
 <ul class="channellist">
+<li class="channel">Core
+<ul>
 <li class="channel">channel 1</li>
 <li class="channel">channel 2</li>
+</ul>
+</li>
 </ul><h3>Themes</h3>
-<ul class="patternlist">
+<ul class="themelist">
+<li class="theme">Core
+<ul>
 <li class="theme">theme 1</li>
 <li class="theme">theme 2</li>
+</ul>
+</li>
 </ul>

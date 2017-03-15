@@ -23,8 +23,8 @@ namespace Freesewing;
  */
 class Point extends Coords
 {
-    /** @var int $precision Precision to round point coordinates on */
-    public $precision = 3;
+    /** Precision to round point coordinates on */
+    const PRECISION = 3;
 
     /** @var string $description Point description */
     public $description = null;
@@ -37,7 +37,7 @@ class Point extends Coords
     public function setX($x)
     {
         if (is_numeric($x)) {
-            $this->x = round($x, $this->precision);
+            $this->x = round($x, self::PRECISION);
         } else {
             $x = 0;
         }
@@ -51,7 +51,7 @@ class Point extends Coords
     public function setY($y)
     {
         if (is_numeric($y)) {
-            $this->y = round($y, $this->precision);
+            $this->y = round($y, self::PRECISION);
         } else {
             $y = 0;
         }

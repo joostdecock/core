@@ -16,7 +16,7 @@ class DeveloperTest extends \PHPUnit\Framework\TestCase
             new \Freesewing\SvgDefs(),
             new \Freesewing\SvgComments()
         );
-        $theme = new \Freesewing\Themes\Developer();
+        $theme = new \Freesewing\Themes\Core\Developer();
         $context = new \Freesewing\Context();
         $context->setRequest(new \Freesewing\Request(['service' => 'draft', 'pattern' => 'TestPattern', 'parts' => 'testPart', 'forceParts' => true]));
         $response = $theme->themeResponse($context);

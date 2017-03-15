@@ -1,0 +1,74 @@
+info:
+    name:       "Hugo Hoodie"
+    version:    "2.0"
+    date:       20161110
+    author:     "Joost De Cock"
+    email:      "joost@decock.org"
+    company:    "freesewing.org"
+    link:       "freesewing.org/pattern/hugo-hoodie/"
+
+parts:
+    backBlock:      "Back block"
+    frontBlock:     "Front block"
+    sleeveBlock:    "Sleeve block"
+    front:          "Front"
+    back:           "Back"
+    sleeve:         "Sleeve"
+    pocket:         "Pocket"
+    pocketFacing:   "Pocket facing"
+    hoodSide:       "Hood side"
+    hoodCenter:     "Hood center"
+    cuff:           "Cuff"
+    waistband:      "Waistband"
+    neckBinding:    "Neck binding"
+
+languages:
+    en: English
+    nl: Nederlands
+    de: Deutsch
+    fr: French
+
+measurements:
+    acrossBack: 450
+    bicepsCircumference: 335
+    centerBackNeckToWaist: 480
+    chestCircumference: 1080
+    naturalWaistToHip: 120
+    neckCircumference: 420
+    shoulderSlope: 55
+    shoulderToShoulder: 470
+    hipsCircumference: 950
+    sleeveLengthToWrist: 700
+    wristCircumference: 190
+    headCircumference: 590
+
+options:
+    chestEase:
+        type: measure
+        min: -40
+        max: 160
+        default: 60
+    bicepsEase:
+        type: measure
+        min: 0
+        max: 80
+        default: 40
+    cuffEase:
+        type: measure
+        min: 0
+        max: 100
+        default: 35
+    lengthBonus:
+        type: measure
+        min: 0
+        max: 180
+        default: 70
+    ribbingStretchFactor:
+        type: percent
+        min: 70
+        max: 100
+        default: 90
+
+inMemoryOf:
+    name: "Hugo De Cock"
+    link: "https://www.instagram.com/p/p6CnG3rpir/"

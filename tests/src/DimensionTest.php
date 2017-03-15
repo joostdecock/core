@@ -42,7 +42,7 @@ class DimensionTest extends \PHPUnit\Framework\TestCase
     {
         $label = new \Freesewing\TextOnPath();
         $path = new \Freesewing\Path();
-        $path->setPath('M 1 L 2 L 3 z');
+        $path->setPathstring('M 1 L 2 L 3 z');
         $label->setPath($path);
         $label->setText('foo bar');
         return [
@@ -58,7 +58,7 @@ class DimensionTest extends \PHPUnit\Framework\TestCase
     {
         $label = new \Freesewing\TextOnPath();
         $path = new \Freesewing\Path();
-        $path->setPath('M 1 L 2 L 3 z');
+        $path->setPathstring('M 1 L 2 L 3 z');
         $label->setPath($path);
         $label->setText('foo bar');
         $dimension = new \Freesewing\Dimension();
@@ -72,7 +72,7 @@ class DimensionTest extends \PHPUnit\Framework\TestCase
     public function testAddLeader()
     {
         $path = new \Freesewing\Path();
-        $path->setPath('M 1 L 2 L 3 z');
+        $path->setPathstring('M 1 L 2 L 3 z');
         $dimension = new \Freesewing\Dimension();
         $dimension->addLeader($path);
         $this->assertEquals($dimension->getLeaders(), [$path]);

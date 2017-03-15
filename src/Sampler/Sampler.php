@@ -32,7 +32,7 @@ class Sampler
      */
     protected $models;
 
-    /** @var  \Freesewing\Patterns\Pattern */
+    /** @var  \Freesewing\Patterns\Core\Pattern */
     protected $pattern;
 
     /**
@@ -43,28 +43,6 @@ class Sampler
     public function setPattern($pattern)
     {
         $this->pattern = $pattern;
-    }
-
-    /**
-     * Returns the pattern property
-     *
-     * @return \Freesewing\Pattern or equivalent
-     */
-    public function getPattern()
-    {
-        return $this->pattern;
-    }
-
-    /**
-     * Returns file names of the sampler models files
-     *
-     * @param \Freesewing\Pattern or equivalent $pattern
-     *
-     * @return string the filename
-     */
-    public function getSamplerModelsFile($pattern)
-    {
-        return Utils::getClassDir($pattern) . '/sampler/models.yml';
     }
 
     /**
@@ -81,7 +59,7 @@ class Sampler
      *
      * @return \Freesewing\Point The anchor point
      */
-    public function getSamplerAnchor($part)
+    private function getSamplerAnchor($part)
     {
         if (isset($part->points['samplerAnchor'])) {
             return $part->loadPoint('samplerAnchor');
@@ -115,10 +93,10 @@ class Sampler
     /**
      * Samples parts for a given model and options
      *
-     * The MeasurementsSampler itterates over models
-     * The OptionsSampler itterates over an option value
+     * The MeasurementsSampler iterates over models
+     * The OptionsSampler iterates over an option value
      * When doing so, both call this function to do the actual sampling.
-     * It does two seperate things:
+     * It does two separate things:
      *  - It renders the paths marked for sampling
      *  - It finds a bounding box for the parts
      * This info is stored in $this->partContainer and will be added to a pattern later
@@ -133,11 +111,11 @@ class Sampler
      * @param \Freesewing\SvgRenderbot $renderBot The SVG renderbot to render the path
      * @param string                   $mode      sample or compare
      */
-    public function sampleParts($step, $steps, $pattern, $theme, $renderBot, $mode='sample')
+    protected function sampleParts($step, $steps, $pattern, $theme, $renderBot, $mode='sample')
     {
         foreach ($pattern->parts as $partKey => $part) {
             if ($part->getRender() === true) {
-                if (!@is_object($this->anchors[$partKey])) {
+                if (!isset($this->anchors[$partKey])) {
                     $this->anchors[$partKey] = $this->getSamplerAnchor($part);
                     $deltaX = 0;
                     $deltaY = 0;
@@ -151,7 +129,7 @@ class Sampler
                 foreach ($part->paths as $pathKey => $path) {
                     if ($path->getSample() === true) {
                         $path->boundary = $path->findBoundary($part);
-                        if (!@is_object($this->boundaries[$partKey]['topLeft'])) {
+                        if (!is_object($this->boundaries[$partKey]['topLeft'])) {
                             $this->boundaries[$partKey]['topLeft'] = new \Freesewing\Point();
                             $this->boundaries[$partKey]['topLeft']->setX($path->boundary->topLeft->x);
                             $this->boundaries[$partKey]['topLeft']->setY($path->boundary->topLeft->y);
@@ -191,10 +169,10 @@ class Sampler
      * That's needed because the sampled paths are stored as rendered snippets
      * and thus we can no longer determine their boundary.
      */
-    public function addSampledPartsToPattern()
+    protected function addSampledPartsToPattern()
     {
         foreach ($this->partContainer as $partKey => $part) {
-            $this->pattern->addPart("sampler-$partKey");
+            $this->pattern->newPart("sampler-$partKey");
             $p = $this->pattern->parts[$partKey];
             $p->newPoint(1, $part['topLeft']->getX(), $part['topLeft']->getY(), 'Top left');
             $p->newPoint(3, $part['bottomRight']->getX(), $part['bottomRight']->getY(), 'Bottom right');

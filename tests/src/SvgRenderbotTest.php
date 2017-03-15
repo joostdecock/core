@@ -7,7 +7,7 @@ class SvgRenderbotTest extends \PHPUnit\Framework\TestCase
 
     protected function setUp()
     {
-        $this->pattern = new \Freesewing\Patterns\TestPattern();
+        $this->pattern = new \Freesewing\Patterns\Tests\TestPattern();
     }
 
     /**
@@ -49,7 +49,7 @@ class SvgRenderbotTest extends \PHPUnit\Framework\TestCase
         $p->newPoint(1,0,0);
         $p->newPoint(2,100,100);
         $path = new \Freesewing\Path();
-        $path->setPath('M 1 L 2');
+        $path->setPathstring('M 1 L 2');
         $svg = $bot->renderPath($path,$p);
         $this->assertEquals($svg, $this->loadFixture('path'));
         $path->setRender(false);
@@ -106,6 +106,7 @@ class SvgRenderbotTest extends \PHPUnit\Framework\TestCase
         $p->newPoint(1,0,0);
         $p->newNote('note', 1, 'This is an example', 4, 40, 0);
         $svg = $bot->render($this->pattern);
+        $this->saveFixture('note', $svg);
         $this->assertEquals($svg, $this->loadFixture('note'));
     }
 
@@ -165,14 +166,15 @@ class SvgRenderbotTest extends \PHPUnit\Framework\TestCase
     
     private function loadFixture($fixture)
     {
-        $dir = 'tests/src/fixtures';
+        $dir = \Freesewing\Utils::getApiDir().'/tests/src/fixtures';
         $file = "$dir/SvgRenderbot.$fixture.svg";
         return file_get_contents($file);
     }
 
     private function saveFixture($fixture, $data)
     {
-        $dir = 'tests/src/fixtures';
+        return true;
+        $dir = \Freesewing\Utils::getApiDir().'/tests/src/fixtures';
         $file = "$dir/SvgRenderbot.$fixture.svg";
         $f = fopen($file,'w');
         fwrite($f,$data);

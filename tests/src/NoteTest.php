@@ -40,7 +40,7 @@ class NoteTest extends \PHPUnit\Framework\TestCase
     public function providerGettersReturnWhatSettersSet()
     {
         $path = new \Freesewing\Path();
-        $path->setPath('M 1 L 2 L 3 z');
+        $path->setPathstring('M 1 L 2 L 3 z');
         return [
             ['Path', $path],
         ];

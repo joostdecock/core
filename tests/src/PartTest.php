@@ -85,6 +85,7 @@ class PartTest extends \PHPUnit\Framework\TestCase
         $p = new \Freesewing\Part();
         $p->newPoint(1,0,0);
         $p->newNote('test',1,'Test note', 123, 20, 2, ['dx' => 2]);
+        $this->saveFixture('note',serialize($p->notes['test']));
         $this->assertEquals(serialize($p->notes['test']),$this->loadFixture('note'));
     }
 
@@ -97,23 +98,28 @@ class PartTest extends \PHPUnit\Framework\TestCase
         $p->newPoint(1,0,0);
 
         $p->addTitle(1,1,'Test title', 'Message', 'default');
+        $this->saveFixture('title.default',serialize($p->texts));
         $this->assertEquals(serialize($p->texts),$this->loadFixture('title.default'));
 
         unset($p->texts);
         $p->addTitle(1,1,'Test title', 'Message', 'vertical');
-        $this->assertEquals(serialize($p->texts),$this->loadFixture('title.vertical'));
+        $this->saveFixture('title.vertical',serialize($p->texts));
+        $this->assertEquals($this->loadFixture('title.vertical'),serialize($p->texts));
 
         unset($p->texts);
         $p->addTitle(1,1,'Test title', 'Message', 'vertical-small');
-        $this->assertEquals(serialize($p->texts),$this->loadFixture('title.verticalSmall'));
+        $this->saveFixture('title.verticalSmall',serialize($p->texts));
+        $this->assertEquals($this->loadFixture('title.verticalSmall'),serialize($p->texts));
 
         unset($p->texts);
         $p->addTitle(1,1,'Test title', 'Message', 'horizontal');
-        $this->assertEquals(serialize($p->texts),$this->loadFixture('title.horizontal'));
+        $this->saveFixture('title.horizontal',serialize($p->texts));
+        $this->assertEquals($this->loadFixture('title.horizontal'),serialize($p->texts));
 
         unset($p->texts);
         $p->addTitle(1,1,'Test title', 'Message', 'horizontal-small');
-        $this->assertEquals(serialize($p->texts),$this->loadFixture('title.horizontalSmall'));
+        $this->saveFixture('title.horizontalSmall',serialize($p->texts));
+        $this->assertEquals($this->loadFixture('title.horizontalSmall'),serialize($p->texts));
     }
 
     /** 
@@ -191,6 +197,7 @@ class PartTest extends \PHPUnit\Framework\TestCase
         $p->newPoint(3,0,100);
         $p->newPoint(4,100,100);
         $p->newCurvedDimension('M 1 L 2', 10);
+        $this->saveFixture('newCurvedDimension',serialize($p->dimensions));
         $this->assertEquals(serialize($p->dimensions),$this->loadFixture('newCurvedDimension'));
     }
 
@@ -208,7 +215,7 @@ class PartTest extends \PHPUnit\Framework\TestCase
         $p1 = new \Freesewing\Point();
         $p1->setX(43.75);
         $p1->setY(15.625);
-        $this->assertEquals($p->points['test-1'],$p1);
+        $this->assertEquals($p->points['test1'],$p1);
     }
     
     /** 
@@ -231,16 +238,16 @@ class PartTest extends \PHPUnit\Framework\TestCase
     /** 
      * Tests the curveEdge methods
      */
-    public function testCurveEdges()
+    public function testCurveEdge()
     {
         $p = new \Freesewing\Part();
         $p->newPoint(1,50,50);
         $p->newPoint(2,40,0);
         $p->newPoint(3,80,100);
-        $left = $p->curveEdgeLeft(1,2,3,1);
-        $right = $p->curveEdgeRight(1,2,3,1);
-        $top = $p->curveEdgeTop(1,2,3,1);
-        $bottom = $p->curveEdgeBottom(1,2,3,1);
+        $left = $p->curveEdge(1,2,3,1,'left');
+        $right = $p->curveEdge(1,2,3,1,'right');
+        $top = $p->curveEdge(1,2,3,1,'top');
+        $bottom = $p->curveEdge(1,2,3,1,'bottom');
         
         $expect = new \Freesewing\Point();
         $expect->setX(48.353);
@@ -297,6 +304,7 @@ class PartTest extends \PHPUnit\Framework\TestCase
         $p->newPoint(4,150,100);
         $p->newWidthDimension(1,2);
         $p->newWidthDimensionSm(3,4,150,'Test msg');
+        $this->saveFixture('widthDimensions',serialize($p->dimensions));
         $this->assertEquals(serialize($p->dimensions),$this->loadFixture('widthDimensions'));
     }
     
@@ -312,6 +320,7 @@ class PartTest extends \PHPUnit\Framework\TestCase
         $p->newPoint(4,150,100);
         $p->newHeightDimension(1,2);
         $p->newHeightDimensionSm(3,4,150,'Test msg');
+        $this->saveFixture('heightDimensions',serialize($p->dimensions));
         $this->assertEquals(serialize($p->dimensions),$this->loadFixture('heightDimensions'));
     }
     
@@ -327,6 +336,7 @@ class PartTest extends \PHPUnit\Framework\TestCase
         $p->newPoint(4,100,100);
         $p->newLinearDimension(1,2);
         $p->newLinearDimensionSm(3,4,25,'Test msg');
+        $this->saveFixture('linearDimensions',serialize($p->dimensions));
         $this->assertEquals(serialize($p->dimensions),$this->loadFixture('linearDimensions'));
     }
     
@@ -358,6 +368,7 @@ class PartTest extends \PHPUnit\Framework\TestCase
         $p->newPoint(3,100,50);
         $p->notch([1,2,3]);
 
+        $this->saveFixture('notch',serialize($p->snippets));
         $this->assertEquals(serialize($p->snippets),$this->loadFixture('notch'));
     }
     
@@ -384,15 +395,6 @@ class PartTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals($p->boundary,$boundary);
     }
     
-    /**
-     * Tests the bezierCircle method
-     */
-    public function testBezierCircle()
-    {
-        $p = new \Freesewing\Part();
-        $this->assertEquals($p->bezierCircle(100),55.228474983079359);
-    }
-    
     /** 
      * Tests the newGrainline method
      */
@@ -402,6 +404,7 @@ class PartTest extends \PHPUnit\Framework\TestCase
         $p->newPoint(1,0,0);
         $p->newPoint(2,50,0);
         $p->newGrainline(1,2,'Test');
+        $this->saveFixture('grainline',serialize($p->dimensions));
         $this->assertEquals(serialize($p->dimensions),$this->loadFixture('grainline'));
     }
 
@@ -414,6 +417,7 @@ class PartTest extends \PHPUnit\Framework\TestCase
         $p->newPoint(1,0,0);
         $p->newPoint(2,50,0);
         $p->newCutOnFold(1,2,'Test');
+        $this->saveFixture('cutOnFold',serialize($p->dimensions));
         $this->assertEquals(serialize($p->dimensions),$this->loadFixture('cutOnFold'));
     }
 
@@ -433,29 +437,30 @@ class PartTest extends \PHPUnit\Framework\TestCase
     /** 
      * Tests the splitCurve method
      */
-    public function testSpitCurve()
+    public function testSplitCurve()
     {
         $p = new \Freesewing\Part();
         $p->newPoint(1,0,0);
         $p->newPoint(2,100,0);
         $p->newPoint(3,100,100);
         $p->addPoint(4,$p->shiftAlong(1,2,2,3,50));
-        
-        $points = $p->splitCurve(1,2,2,3,4);
+
+        $p->splitCurve(1,2,2,3,4,'test');
         $xVals = [0,21,37.59,50.696,100,100,100,50.696];
         $yVals = [0,0,0,0.926,100,21,4.41,0.926];
         for($i=0;$i<8;$i++) {
-            $this->assertEquals($points[$i]->getX(), $xVals[$i]); 
-            $this->assertEquals($points[$i]->getY(), $yVals[$i]); 
+            $j = $i+1;
+            $this->assertEquals($xVals[$i], $p->points["test$j"]->getX());
+            $this->assertEquals($yVals[$i], $p->points["test$j"]->getY());
         }
-       
-        $p->addSplitCurve(1,2,2,3,0.7,'test',true);
+
+        $p->splitCurve(1,2,2,3,0.7,'test',true);
         $xVals = [0,70,91,97.3,100,100,100,97.3];
         $yVals = [0,0,0,34.3,100,70,49,34.3];
         for($i=0;$i<8;$i++) {
             $j = $i+1;
-            $this->assertEquals($p->points["test$j"]->getX(), $xVals[$i]); 
-            $this->assertEquals($p->points["test$j"]->getY(), $yVals[$i]); 
+            $this->assertEquals($xVals[$i], $p->points["test$j"]->getX());
+            $this->assertEquals($yVals[$i], $p->points["test$j"]->getY());
         }
     }
 
@@ -579,14 +584,15 @@ class PartTest extends \PHPUnit\Framework\TestCase
 
     private function loadFixture($fixture)
     {
-        $dir = 'tests/src/fixtures';
+        $dir = \Freesewing\Utils::getApiDir().'/tests/src/fixtures';
         $file = "$dir/Part.$fixture.data";
         return file_get_contents($file);
     }
 
     private function saveFixture($fixture, $data)
     {
-        $dir = 'tests/src/fixtures';
+        return true;
+        $dir = \Freesewing\Utils::getApiDir().'/tests/src/fixtures';
         $file = "$dir/Part.$fixture.data";
         $f = fopen($file,'w');
         fwrite($f,$data);

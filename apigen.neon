@@ -1,12 +1,13 @@
 # Dirs or files documentation is generated for.
 source:
     - src/
-    - patterns/
+    - patterns/Pattern/
+    - patterns/PatternTemplate/
     - themes/
     - channels/
 
 # Target dir for documentation.
-destination: docs/code/
+destination: /freesewing/git/freesewing-docs/apigen/
 
 # Access levels of included method and properties. (default: ["public","protected"]) (multiple values allowed)
 accessLevels:           
@@ -15,7 +16,7 @@ accessLevels:
     - protected
 
 # Base url used for sitemap (useful for public doc).
-baseUrl: http://api.freesewing.org
+baseUrl: http://api.freesewing.org/docs/
 
 # Custom google search engine id (for search box).
 #googleCseId: {put it here!}
@@ -39,7 +40,6 @@ extensions:
 # Directories and files matching this mask will not be parsed (e.g. */tests/*). (multiple values allowed)
 exclude:
     - vendor/
-    - logs/
 
 # Charset of scanned files. (multiple values allowed)
 charset:
@@ -67,7 +67,7 @@ php: false
 #templateConfig:      
 
 # Title of generated documentation.
-title: Freesewing API Docs
+title: Freesewing
 
 # Generate documentation for elements marked as @todo.
 todo: true

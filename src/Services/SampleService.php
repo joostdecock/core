@@ -38,15 +38,12 @@ class SampleService extends DraftService
      */
     public function run(Context $context)
     {
+        $context->addUnits();
         $context->addPattern();
 
         if ($context->getChannel()
                 ->isValidRequest($context) === true
         ) :
-
-            $context->addUnits();
-            $context->getPattern()
-                ->setUnits($context->getUnits());
 
             $context->addTranslator();
             $context->getPattern()->setTranslator($context->getTranslator());
@@ -102,7 +99,12 @@ class SampleService extends DraftService
                 ->handleInvalidRequest($context);
         endif;
 
-        $context->getResponse()->send();
+        // Don't send response without approval from the channel
+        if($context->getChannel()->isValidResponse($context)) {
+            $context->getResponse()->send();
+        } else {
+            $context->getChannel()->handleInvalidResponse($context);
+        }
 
         $context->cleanUp();
     }

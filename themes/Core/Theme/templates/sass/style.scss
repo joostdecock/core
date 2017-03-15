@@ -1,0 +1,238 @@
+@import 'variables';
+
+/* Reset */
+path,
+circle,
+rect {
+    fill: none;
+    stroke: none;
+}
+
+/* Paths */
+
+path { 
+    fill: none; 
+    stroke: $black;
+    stroke-opacity:1; 
+    stroke-width: $stroke;
+    stroke-linecap:round; 
+    stroke-linejoin:round; 
+}
+
+path.fabric { 
+    stroke-width: $stroke-lg;
+    stroke: $color-fabric;
+}
+
+path.lining { 
+    stroke: $color-lining;
+}
+
+path.interfacing { 
+    stroke: $color-interfacing;
+}
+
+path.canvas { 
+    stroke: $color-canvas;
+}
+
+path.sa { 
+    stroke-dasharray: $dots; 
+}
+
+path.help { 
+    stroke-width: $stroke-sm;
+    stroke: $light-purple;
+
+}
+
+path.hint { 
+    stroke-width: $stroke-sm;
+    stroke-dasharray: $dots; 
+    stroke: $pink;
+}
+
+/* Notes */
+
+path.note { 
+    stroke: $color-note;
+    stroke-width: $stroke-lg;
+    marker-start:url(#noteArrow)
+}
+
+/* Text */
+
+text {
+    font-size: $font;
+    font-family: $font-family;
+    fill: $black;
+    text-anchor: start;
+    font-weight: 200;
+}
+
+/* Titles */
+
+text.part-nr {
+    font-size: $font-part-nr; 
+    text-anchor: middle; 
+    fill: $black;
+    transform: translate(0px, $font-part-nr * -0.7); 
+    font-weight: 100;
+}
+
+text.part-nr.horizontal { 
+    text-anchor: start; 
+}
+
+text.part-title { 
+    font-size: $font-part-title;
+    text-anchor: middle; 
+    fill: $black;
+}
+
+text.part-title.horizontal { 
+    text-anchor: start; 
+}
+
+text.part-msg {
+    font-size: $font-part-subtitle;
+    text-anchor: middle; 
+    transform: translate(0px, $font-part-subtitle * 1.2); 
+}
+
+text.part-title.vertical,
+text.part-msg.vertical { 
+    text-anchor: end; 
+}
+
+text.part-msg.horizontal { 
+    text-anchor: start; 
+}
+
+text.part-msg.vertical , 
+text.part-msg.small.vertical {
+    transform: inherit;
+}
+
+text.part-nr.small {
+    font-size: $font-part-nr-sm; 
+    transform: translate(0px, $font-part-nr-sm * -0.7); 
+}
+
+text.part-title.small {
+    font-size: $font-part-title-sm; 
+}
+
+text.part-msg.small {
+    font-size: $font-part-subtitle-sm; 
+    transform: translate(0px, $font-part-subtitle-sm); 
+}
+
+/* Notes */
+text.note , 
+text.dimension-label { 
+    fill: $color-note; 
+}
+
+text.note tspan { 
+    alignment-baseline: middle;
+}
+
+text.note-5, 
+text.note-6,
+text.note-7, 
+text.note-11, 
+text.note-12, 
+text.note-0, 
+text.note-1,
+text.dimension-label { 
+    text-anchor:middle;
+}
+
+text.note-8, 
+text.note-9, 
+text.note-10 {
+    text-anchor:end;
+}
+
+text.dimension-label { 
+    font-size: $font-lg; 
+}
+  
+text.grainline { 
+    fill: $gray; 
+}
+
+path.arrow { 
+    stroke: $color-note;
+}
+
+path.grainline { 
+    stroke: $gray;
+    stroke-width: $stroke-lg;
+    marker-start: url(#grainlineStart); 
+    marker-end:url(#grainlineEnd)
+}
+ 
+path.dimension { 
+    stroke: $color-note;
+    stroke-width: $stroke-lg;
+    marker-start: url(#dimensionStart); 
+    marker-end:url(#dimensionEnd)
+}
+
+path.dimension.dimension-sm { 
+    stroke-width: $stroke;
+}
+
+path.dimension-leader { 
+    stroke: $color-note;
+    stroke-width: $stroke;
+}
+
+path.single-arrow { 
+    marker-start: url(#dimensionStart); 
+}
+
+path.double-arrow { 
+    marker-start: url(#dimensionStart); 
+    marker-end:url(#dimensionEnd)
+}
+
+/* Utility */
+
+.text-xs { font-size: $font-xs; }
+.text-sm { font-size: $font-sm; }
+.text-lg { font-size: $font-lg; }
+.text-xl { font-size: $font-xl; }
+
+.text-center { text-anchor: middle; }
+
+.stroke-xs  { stroke-width: $stroke-xs; }
+.stroke-sm  { stroke-width: $stroke-sm; }
+.stroke-lg  { stroke-width: $stroke-lg; }
+.stroke-xl  { stroke-width: $stroke-xl; }
+.stroke-xxl { stroke-width: $stroke-xxl; }
+
+.dashed { stroke-dasharray: $dashes; }
+.dotted { stroke-dasharray: $dots; }
+
+.hidden { stroke: none; file: none;}
+
+.stroke-fabric {      stroke: $color-fabric; }
+.stroke-lining {      stroke: $color-lining; }
+.stroke-interfacing { stroke: $color-interfacing; }
+.stroke-canvas {      stroke: $color-canvas; }
+.stroke-note {        stroke: $color-note; }
+.stroke-mark {        stroke: $color-mark; }
+.stroke-hint {        stroke: $color-hint; }
+.stroke-gray {        stroke: $gray; }
+
+.fill-fabric {      fill: $color-fabric; }
+.fill-lining {      fill: $color-lining; }
+.fill-interfacing { fill: $color-interfacing; }
+.fill-canvas {      fill: $color-canvas; }
+.fill-note {        fill: $color-note; }
+.fill-mark {        fill: $color-mark; }
+.fill-hint {        fill: $color-hint; }
+.fill-gray {        fill: $gray; }

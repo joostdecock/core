@@ -28,8 +28,8 @@ class Path
     /** @var array $attributes The path attributest */
     private $attributes = array();
 
-    /** @var string $path The SVG pathstring */
-    private $path = null;
+    /** @var string $pathstring The SVG pathstring */
+    private $pathstring = null;
 
     /**
      * Marks path to be sampled by the sample service
@@ -96,19 +96,19 @@ class Path
      *
      * @param string $path The pathstring
      */
-    public function setPath($path)
+    public function setPathstring($path)
     {
-        $this->path = trim(preg_replace('/ {2,}/', ' ', $path));
+        $this->pathstring = trim(preg_replace('/ {2,}/', ' ', $path));
     }
 
     /**
-     * Returns the path property, which is the pathstring
+     * Returns the pathstring property
      *
      * @return string
      */
-    public function getPath()
+    public function getPathstring()
     {
-        return $this->path;
+        return $this->pathstring;
     }
 
     /**
@@ -170,7 +170,7 @@ class Path
     public function findBoundary($part)
     {
         /* Break path into array */
-        $pathAsArray = Utils::asScrubbedArray($this->getPath());
+        $pathAsArray = Utils::asScrubbedArray($this->getPathstring());
         foreach ($pathAsArray as $index => $data) {
             /* Are we dealing with a command or point index? */
             if (Utils::isAllowedPathCommand($data)) {
@@ -184,17 +184,13 @@ class Path
 // Reference to non-existing point. Bail out
                     throw new \InvalidArgumentException('SVG path references non-existing point '.$pointIndex);
                 }
-                if (!@is_object($topLeft)) {
+                if (!isset($topLeft) || !is_object($topLeft)) {
                     /*
                      * Topleft is not set. In other words, this is the first point we look at
                      * store it as both the topLeft and bottomRight point of our path boundary
                      **/
-                    $topLeft = new \Freesewing\Point();
-                    $topLeft->setX($part->points[$pointIndex]->x);
-                    $topLeft->setY($part->points[$pointIndex]->y);
-                    $bottomRight = new \Freesewing\Point();
-                    $bottomRight->setX($part->points[$pointIndex]->x);
-                    $bottomRight->setY($part->points[$pointIndex]->y);
+                    $topLeft = clone $part->loadPoint($pointIndex);
+                    $bottomRight = clone $part->loadPoint($pointIndex);
                 } else {
                     /*
                      * Topleft has been set. Let's compare this point to the current topLeft and bottomRight
@@ -221,7 +217,7 @@ class Path
                         case 'C':
                             /*
                              * Bezier curves need a bit more work. We calculate their bounding box by stepping through them.
-                             * We need their start and finish point + control points, to pass to $this->findBezierBoundary()
+                             * We need their start and finish point + control points, to pass to $this->bezierBoundary()
                              **/
                             if ($pathAsArray[$index - 1] == 'C') {
                                 /*
@@ -238,7 +234,7 @@ class Path
                                 $curveControlPoint1 = $part->points[$pathAsArray[$index]];
                                 $curveControlPoint2 = $part->points[$pathAsArray[$index + 1]];
                                 $curveEnd = $part->points[$pathAsArray[$index + 2]];
-                                $bezierBoundary = BezierToolbox::findBezierBoundary($curveStart, $curveControlPoint1, $curveControlPoint2, $curveEnd);
+                                $bezierBoundary = BezierToolbox::bezierBoundary($curveStart, $curveControlPoint1, $curveControlPoint2, $curveEnd);
                                 if ($bezierBoundary->topLeft->getX() < $topLeft->getX()) {
                                     $topLeft->setX($bezierBoundary->topLeft->getX());
                                 }
@@ -275,7 +271,7 @@ class Path
      */
     public function isClosed()
     {
-        if (substr(trim(strtolower($this->getPath())), -2) == ' z') {
+        if (substr(trim(strtolower($this->getPathstring())), -2) == ' z') {
             return true;
         } else {
             return false;
@@ -293,7 +289,7 @@ class Path
      */
     public function breakUp()
     {
-        $array = Utils::asScrubbedArray($this->getPath());
+        $array = Utils::asScrubbedArray($this->getPathstring());
         foreach ($array as $i => $step) {
             if ($step == 'M') {
                 $ongoing = 'M '.$array[$i + 1];
@@ -330,7 +326,7 @@ class Path
      */
     public function getStartPoint()
     {
-        $points = Utils::asScrubbedArray($this->getPath());
+        $points = Utils::asScrubbedArray($this->getPathstring());
 
         return $points[1];
     }
@@ -342,7 +338,7 @@ class Path
      */
     public function getEndPoint()
     {
-        $points = Utils::asScrubbedArray($this->getPath());
+        $points = Utils::asScrubbedArray($this->getPathstring());
 
         $last = array_pop($points);
 

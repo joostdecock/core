@@ -10,18 +10,21 @@ class InfoTest extends \PHPUnit\Framework\TestCase
      */
     public function testThemePatternInfo()
     {
-        $theme = new \Freesewing\Themes\Info();
-        $pattern = new \Freesewing\Patterns\TestPattern();
+        $theme = new \Freesewing\Themes\Core\Info();
+        $pattern = new \Freesewing\Patterns\Tests\TestPattern();
         $data = $pattern->getConfig();
         $data['models'] = $pattern->getSamplerModelConfig();
         $data['pattern'] = basename(\Freesewing\Utils::getClassDir($pattern));
         $response = $theme->themePatternInfo($data, 'php');
+        $this->saveFixture('patternInfoPhp', $response->getBody());
         $this->assertEquals($response->getBody(),$this->loadFixture('patternInfoPhp'));
         
         $response = $theme->themePatternInfo($data, 'html');
+        $this->saveFixture('patternInfoHtml', $response->getBody());
         $this->assertEquals($response->getBody(),$this->loadFixture('patternInfoHtml'));
         
         $response = $theme->themePatternInfo($data, 'other');
+        $this->saveFixture('patternInfoOther', serialize($response->getBody()));
         $this->assertEquals(serialize($response->getBody()),$this->loadFixture('patternInfoOther'));
     }
     
@@ -30,12 +33,12 @@ class InfoTest extends \PHPUnit\Framework\TestCase
      */
     public function testThemeInfo()
     {
-        $theme = new \Freesewing\Themes\Info();
+        $theme = new \Freesewing\Themes\Core\Info();
         $data = [
             'services' => ['service 1','service 2'],
-            'patterns' => ['pattern 1','pattern 2'],
-            'channels' => ['channel 1','channel 2'],
-            'themes' => ['theme 1','theme 2'],
+            'patterns' => ['Core' => ['pattern 1','pattern 2']],
+            'channels' => ['Core' => ['channel 1','channel 2']],
+            'themes' => ['Core' => ['theme 1','theme 2']],
         ];
         $response = $theme->themeInfo($data, 'php');
         $this->assertEquals($response->getBody(),serialize($data));
@@ -44,40 +47,33 @@ class InfoTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals($response->getBody(),'something');
         
         $response = $theme->themeInfo($data, 'html');
+        $this->saveFixture('infoHtml', $response->getBody());
         $this->assertEquals($response->getBody(),$this->loadFixture('infoHtml'));
 
     }
     
     /**
-     * Tests the getThemeName method
-     */
-    public function testThemeName()
-    {
-        $theme = new \Freesewing\Themes\Info();
-        $this->assertEquals('Info', $theme->getThemeName());
-    }
-
-    /**
      * Tests the cleanUp method does noting
      */
     public function testCleanUp()
     {
-        $theme1 = new \Freesewing\Themes\Info();
-        $theme2 = new \Freesewing\Themes\Info();
+        $theme1 = new \Freesewing\Themes\Core\Info();
+        $theme2 = new \Freesewing\Themes\Core\Info();
         $theme1->cleanUp();
         $this->assertEquals($theme1,$theme2);
     }
 
     private function loadFixture($fixture)
     {
-        $dir = 'tests/themes/fixtures';
+        $dir = \Freesewing\Utils::getApiDir().'/tests/themes/fixtures';
         $file = "$dir/Info.$fixture.data";
         return file_get_contents($file);
     }
 
     private function saveFixture($fixture, $data)
     {
-        $dir = 'tests/themes/fixtures';
+        return true;
+        $dir = \Freesewing\Utils::getApiDir().'/tests/themes/fixtures';
         $file = "$dir/Info.$fixture.data";
         $f = fopen($file,'w');
         fwrite($f,$data);

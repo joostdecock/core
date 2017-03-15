@@ -1,17 +1,27 @@
 defaults:
     service: draft
-    channel: Docs
+    channel: Freesewing
     draftTheme: Basic
     sampleTheme: Sampler
     compareTheme: Compare
     infoTheme: Info
     pattern: TestPattern
     locale: en
-renderers:
-    svg: SvgRenderbot
-    js: JsRenderbot
+
 services:
     - info
     - draft
     - sample
     - compare
+
+patternNamespaces:
+    - Core
+    - Contrib
+    - Docs
+    - Tests
+
+themeNamespaces:
+    - Core
+
+channelNamespaces:
+    - Core

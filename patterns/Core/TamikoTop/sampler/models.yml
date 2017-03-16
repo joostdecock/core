@@ -14,4 +14,6 @@ measurements:
         sorcha: 365
     naturalWaistToHip: 
         sorcha: 260
+    shoulderToShoulder: 
+        sorcha: 380
 

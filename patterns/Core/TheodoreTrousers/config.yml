@@ -40,7 +40,7 @@ measurements:
 options:
     waistbandWidth:
         type: "measure"
-        min: -10
+        min: 20
         max: 60
         default: 40
     waistbandRise:

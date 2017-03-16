@@ -161,7 +161,7 @@ class TrentTrouserBlock extends Pattern
         $p->addPoint('frameHipsOut',$p->shift('frameWaistOut',-90,$model->m('naturalWaistToHip')),'Hips at side seam');
         $p->addPoint('frameSeatOut',$p->shift('frameWaistOut',-90,$model->m('naturalWaistToSeat')),'Seat at side seam');
         $p->addPoint('frameCrotchLineOut',$p->shift('frameWaistOut',-90,$model->m('bodyRise')),'Crotch line at side seam');
-        $p->addPoint('frameHemOut',$p->shift('frameHipsOut',-90,$model->m('outSeam')),'Hem at side seam');
+        $p->addPoint('frameHemOut',$p->shift('frameHipsOut',-90,$model->m('outseam')),'Hem at side seam');
 
         // Points at center/inseam
         $p->addPoint('frameWaistIn',$p->shift('frameWaistOut',180,$this->v('frontSeat')),'Waist center');
@@ -172,7 +172,7 @@ class TrentTrouserBlock extends Pattern
         $p->newPoint('frameHemIn',$p->x('frameCrotchEdge'),$p->y('frameHemOut'),'Hem at inseam');
 
         // Knee height
-        $p->addPoint('frameKneeOut', $p->shift('frameCrotchLineOut',-90,$model->m('inSeam')*0.42),'Knee height at outseam');
+        $p->addPoint('frameKneeOut', $p->shift('frameCrotchLineOut',-90,$model->m('inseam')*0.42),'Knee height at outseam');
         $p->newPoint('frameKneeIn', $p->x('frameCrotchEdge'), $p->y('frameKneeOut'), 'Knee height at inseam');
         
         // Paths

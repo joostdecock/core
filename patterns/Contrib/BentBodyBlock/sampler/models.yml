@@ -7,3 +7,13 @@ measurements:
         usSize40: 871
         usSize42: 929
         usSize44: 987
+    shoulderToElbow: 
+# FIXME: Put real values here
+        joost   : 410
+        usSize34: 410 
+        usSize36: 410 
+        usSize38: 410 
+        usSize40: 410 
+        usSize42: 410 
+        usSize44: 410 
+

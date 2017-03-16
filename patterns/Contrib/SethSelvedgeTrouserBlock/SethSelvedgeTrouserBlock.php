@@ -189,11 +189,19 @@ class SethSelvedgeTrouserBlock extends TrentTrouserBlock
         // Correction at crotch line
         // This adds correctionCrotchLine1
         $p->curveCrossesY('frameSeatOut','frontCpSeatDown','frontCpKneeOut','frontKneeOut',$p->y('frameCrotchLineOut'),'correctionCrotchLine');
-        // Calculate correction
-        $correction = $p->distance('correctionCrotchLine1','frameCrotchLineOut');
-        // Move points
-        foreach(['frameCrotchEdge','frontCpCrotchEdge'] as $point) {
-            $p->addPoint($point, $p->shift($point,0,$correction));
+        $p->newPath('dsfsdfs', 'M frameSeatOut C frontCpSeatDown frontCpKneeOut frontKneeOut', ['class' => 'debug']);
+
+        // FIXME Sometimes correctionCrotchLine1 does not exist because curveCrossesY() above
+        // does not find anything. Setting correction to zero in that case, but it's
+        // hackish at best.
+        if(!$p->isPoint('correctionCrotchLine1')) $correction = 0;
+        else {
+            $correction = $p->distance('correctionCrotchLine1','frameCrotchLineOut');
+            // Calculate correction
+            // Move points
+            foreach(['frameCrotchEdge','frontCpCrotchEdge'] as $point) {
+                $p->addPoint($point, $p->shift($point,0,$correction));
+            }
         }
         
         // Correction at the knee - Calculate correction
@@ -245,10 +253,17 @@ class SethSelvedgeTrouserBlock extends TrentTrouserBlock
         // Correction at crotch line
         // This adds correctionCrotchLine1
         $p->curveCrossesY('backSeatOut','backCpSeatOutDown','backCpKneeOut','backKneeOut',$p->y('backCrotchLineOut'),'correctionCrotchLine');
-        // Calculate correction
-        $correction = $p->deltaX('correctionCrotchLine1','backSeatOut');
-        // Move point
-        $p->addPoint('backCrotchEdge', $p->shift('backCrotchEdge',0,$correction));
+        
+        // FIXME Sometimes correctionCrotchLine1 does not exist because curveCrossesY() above
+        // does not find anything. Setting correction to zero in that case, but it's
+        // hackish at best.
+        if(!$p->isPoint('correctionCrotchLine1')) $correction = 0;
+        else {
+            // Calculate correction
+            $correction = $p->deltaX('correctionCrotchLine1','backSeatOut');
+            // Move point
+            $p->addPoint('backCrotchEdge', $p->shift('backCrotchEdge',0,$correction));
+        }
 
         // Correction at the knee - Calculate correction
         $correction = $p->deltaX('backKneeOut','backSeatOut');

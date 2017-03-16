@@ -291,8 +291,8 @@ class SethSelvedgeTrouserBlock extends TrentTrouserBlock
         // Paths
         $p->newPath('seamLine', 'M backHemIn L backKneeIn C backCpKneeIn backCrotchEdge backCrotchEdge C backCrotchEdge backSeamVerticalControlPoint backSeamTiltPoint L backHipsIn L backHipsOut L selvedgeHem z');
 
-        $this->msg('Inseam delta is '.$this->unit($this->inseamDelta()));
-        $this->msg('Outseam delta is '.$this->unit($this->selvedgeDelta()));
+        $this->msg('Inseam delta is '.$p->unit($this->inseamDelta()));
+        $this->msg('Outseam delta is '.$p->unit($this->selvedgeDelta()));
     }
         
     /**

@@ -124,7 +124,7 @@ class ClassDocs extends \Freesewing\Patterns\Core\Pattern
 
         $p->newPath(1,"M 1 C 2 3 4");   
         
-        $p->newTextOnPath(1,"M 1 C 2 3 4", "Length of this curve: ".$this->unit($p->curveLen(1,2,3,4)), ["dy" => -2,'class' => 'text-center']);
+        $p->newTextOnPath(1,"M 1 C 2 3 4", "Length of this curve: ".$p->unit($p->curveLen(1,2,3,4)), ["dy" => -2,'class' => 'text-center']);
 
         $this->addBox($p,100,100);
     }

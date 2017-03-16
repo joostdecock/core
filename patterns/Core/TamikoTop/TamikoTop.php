@@ -225,8 +225,8 @@ class TamikoTop extends Pattern
         // Notes
         $p->addPoint(200, $p->shift(5, -5, 30));
         $p->addPoint(201, $p->shift(8, -90, 50));
-        $p->newNote('saNote', 200, $this->t("Standard\nseam\nallowance")."\n(".$this->unit(10).')', 1, 30, -3, ['line-height' => 6, 'class' => 'text-lg', 'dy' => -15]);
+        $p->newNote('saNote', 200, $this->t("Standard\nseam\nallowance")."\n(".$p->unit(10).')', 1, 30, -3, ['line-height' => 6, 'class' => 'text-lg', 'dy' => -15]);
         $p->newNote('noSaNote', 201, $this->t("No\nseam\nallowance"), 3, 30, 0, ['line-height' => 6, 'class' => 'text-lg', 'dy' => -5]);
-        $p->newNote('0.5cm', 31, $this->unit(5).' '.$this->t("from the edge"), 2, 30, 0, ['line-height' => 6, 'class' => 'text-lg', 'dy' => 0]);
+        $p->newNote('0.5cm', 31, $p->unit(5).' '.$this->t("from the edge"), 2, 30, 0, ['line-height' => 6, 'class' => 'text-lg', 'dy' => 0]);
     }
 }

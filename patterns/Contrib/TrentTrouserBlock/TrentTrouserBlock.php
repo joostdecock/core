@@ -129,7 +129,7 @@ class TrentTrouserBlock extends Pattern
         // Is this a paperless pattern?
         if ($this->isPaperless) {
             // Add paperless info to our example part
-            $this->paperlessExamplePart($model);
+            //$this->paperlessExamplePart($model);
         }
     }
 
@@ -281,7 +281,7 @@ class TrentTrouserBlock extends Pattern
         // Add back dart of 9.5%
         $this->setValue('backDart',$p->distance('backHipsIn','backHipsOutWithoutDart')*0.095);
         $shift = sqrt(($this->v('backDart')+$p->distance('backHipsIn','backHipsOutWithoutDart'))**2 - $p->deltaY('backHeightIn','frameHipsIn')**2);
-        $p->addPoint('backHipsOut', $p->shift('.backHipsOutHelper',0,$shift),'Back hips outside with dart of '.$this->unit($this->v('backDart')));
+        $p->addPoint('backHipsOut', $p->shift('.backHipsOutHelper',0,$shift),'Back hips outside with dart of '.$p->unit($this->v('backDart')));
 
         // Lower crotch line by 30% of seat/crotch vertical delta
         $p->addPoint('backCrotchLineHeight', $p->shift('frameCrotchEdge',-90,$p->deltaY('frameSeatIn','frameCrotchEdge')*0.3), 'Back crotch height');

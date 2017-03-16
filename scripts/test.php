@@ -14,7 +14,6 @@ if(`php index.php service=info` !== 'null') {
     # Info service works, let's test it
     h1("Testing info service");
     $info = json_decode(`php index.php service=info`, 1);
-/*
     foreach($info['patterns'] as $ns => $list) {
         h2("Testing $ns patterns");
         foreach($list as $id => $title) {
@@ -26,7 +25,7 @@ if(`php index.php service=info` !== 'null') {
             }
         }
     }
- */
+
     // Do we have a draft service?
     if(in_array('draft', $info['services'])) {
         // We do, let's test it

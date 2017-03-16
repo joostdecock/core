@@ -9,3 +9,4 @@ coverage
 .project
 .settings/
 .idea/
+scripts/test.log

@@ -1,6 +1,6 @@
 <?php
 /** Freesewing\Patterns\Core\WahidWaistcoat class */
-namespace Freesewing\Core\Patterns;
+namespace Freesewing\Patterns\Core;
 
 /**
  * The Wahid Waistcoat pattern

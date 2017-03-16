@@ -2,7 +2,6 @@ vendor/
 print/
 .php_cs.cache
 .sass_cache/
-*/.sass-cache/*
 coverage
 .buildpath
 .externalToolBuilders/

@@ -1,7 +1,12 @@
-# fso
-Freesewing is a rewrite of the code that runs the MakeMyPattern.com backend.
+<a href="https://docs/freesewing.org/"><img src="https://docs.freesewing.org/img/logo-black.svg" align="right" width=200 style="max-width: 20%;" /></a>
+[![Build Status](https://travis-ci.org/freesewing/core.svg?branch=master)](https://travis-ci.org/freesewing/core)
 
-It is currently feauture-complete with that legacy code, and we're gearing up to our first public release.
+# Freesewing core
+[Freesewing](https://freesewing.org/) is an online platform to draft sewing patterns based on your measurements.
+
+> This is our core repository, which holds the platform and the sewing patterns we maintain.
+
+For all info on what freesewing does/is/provides, please check the freesewing documentation at [docs.freesewing.org](https://docs.freesewing.org).
 
 ## System Requirements
 * PHP 5.6 (we recommend PHP 7)
@@ -9,70 +14,45 @@ It is currently feauture-complete with that legacy code, and we're gearing up to
 
 ## Installation
 
-### composer
-Install composer. For instructions, see the composer installation page: https://getcomposer.org/download/
+Full install instructions are available at [docs.freesewing.org/install](https://docs.freesewing.org/install)
+but here's the gist of it:
 
-### fso
+### From packagist
+Step 1: Install the package
 ```
- git clone git@github.com:joostdecock/fso.git
- composer install
+composer create-project freesewing/core freesewing
+```
+
+Step 2: Optimize the autoloader
+```
  composer dump-autoload -o
 ```
 
-## First call
-* Enter in your browser {domain}/docs/demo/
+### From GitHub
+Step 1: Clone the repository
+```
+git clone git@github.com:freesewing/core.git freesewing
+```
 
-## Troubleshooting
+Step 2: Install dependencies with composer
+```
+composer install
+```
 
-### OSX
+Step 3: Prepare the autoloader
+```
+composer dump-autoload -o
+```
 
-For apache. If you installed nginx yourself, you probably know what to do
+## License
+Our code is licensed [GPL-3](https://www.gnu.org/licenses/gpl-3.0.en.html), 
+our patterns and documentation are licensed [CC-BY](https://creativecommons.org/licenses/by/4.0/).
 
-#### /private/etc/apache2/httpd.conf (needs sudo to edit)
-Uncomment:
-```
- LoadModule php5_module libexec/apache2/libphp5.so
- LoadModule userdir_module libexec/apache2/mod_userdir.so
- Include /private/etc/apache2/extra/httpd-userdir.conf
-```
-Add a ServerName entry as appropriate:
-```
- ServerName mymachine:80
-```
-#### /etc/apache2/extra/httpd-userdir.conf (needs sudo to exit)
-Uncomment:
-```
- Include /private/etc/apache2/users/*.conf
-```
-#### Create/edit /private/etc/apache2/users/USERNAME.conf
-Add a Directory directive. For example:
-```
- <Directory "/Users/USERNAME/Sites">
-    Options Indexes MultiViews
-    AllowOverride None
-    Order allow,deny
-    Allow from localhost
- </Directory>
-```
-'Sites' is the default, to avoid fiddling, add a symlink;
-```
- ln -s `pwd`/docs/ ~/Sites
-```
-#### Restart apache
-```
- sudo apachectl -k restart
-```
- Navigate to http://127.0.0.1/~USERNAME/index.php
- 
-### Windows 10
-#### Installing PHP
-You will have to make a change to your registry. Open Regedit and navigate to `HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\W3SVC\Parameters`. Change the `MajorVersion` value from `0x0000000a (10)` to `0x00000008 (8)`. 
-Go to  http://php.iis.net and click on the “Install PHP Now” button. Instead of installing PHP, this will install the Microsoft Web Platform Installer (WPI) 5.0. In the search box at the top right corner, type in PHP and select PHP 7.09 and PHP Manager. After the install is complete, go back to the registry editor and change the value back to 10.
-#### PHP.ini
-Comment out the following lines in `php.ini`:
+## Contribute
 
-    extension=php_mysql.dll
-    extension=php_wincache.dll
+Your pull request are welcome here. 
 
-#### Installing Composer
-Use an elevated command prompt to install Composer
+If you're interested in contributing, a good place to start is 
+[our Slack channel](https://docs.freesewing.org/slack/) 
+where you can ask questions, meet other freesewers, 
+or just hang out and share a laugh.

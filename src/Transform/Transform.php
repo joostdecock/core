@@ -82,7 +82,7 @@ class Transform
     }
 
     /**
-     * Returns a transform as the valiefor an SVG transform attribute
+     * Returns a transform as the value for an SVG transform attribute
      *
      * @return string The SVG code for the transform
      */
@@ -110,7 +110,7 @@ class Transform
      *
      * @return string The SVG code for the transforms
      */
-    public function asSvgParameter($array)
+    static public function asSvgParameter($array)
     {
         $svg = '';
         foreach ($array as $transform) {

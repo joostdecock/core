@@ -154,7 +154,7 @@ class Designer extends Theme
                 if ($command == 'C') {
                     $curveSteps = 1;
                 }
-            } elseif (is_object($part->points[$key])) {
+            } elseif (isset($key) && isset($part->points[$key]) && is_object($part->points[$key])) {
                 $part->tmp['pointsThemed'][$key] = true; // Store what points we've seen
                 if ($command == 'C') {
                     if ($curveSteps == 3) {

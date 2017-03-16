@@ -436,29 +436,32 @@ class BrianBodyBlock extends Pattern
      * the finalize[part name] method after this.
      *
      * @param \Freesewing\Model $model The model to draft for
+     * @param bool $noTweak Set this to true to not tweak the sleeve (used by child patterns)
      *
      * @return void
      */
-    public function draftSleeveBlock($model)
+    public function draftSleeveBlock($model, $noTweak=false)
     {
         /** @var \Freesewing\Part $p */
         $p = $this->parts['sleeveBlock'];
 
-        // Is this the first time we're calling draftSleeveBlock() ?
-        if($this->v('sleeveTweakRun') > 0) {
-            // No, this will be a tweaked draft. So let's tweak
-            if($this->armholeDelta($model) > 0) {
-                //  Armhole is larger than sleeve head. Increase tweak factor 
-                $this->setValue('sleeveTweakFactor', $this->v('sleeveTweakFactor')*1.01);
-            } else {
-                //  Armhole is smaller than sleeve head. Decrease tweak factor 
-                $this->setValue('sleeveTweakFactor', $this->v('sleeveTweakFactor')*0.99);
+        if($noTweak === false) {
+            // Is this the first time we're calling draftSleeveBlock() ?
+            if($this->v('sleeveTweakRun') > 0) {
+                // No, this will be a tweaked draft. So let's tweak
+                if($this->armholeDelta($model) > 0) {
+                    //  Armhole is larger than sleeve head. Increase tweak factor 
+                    $this->setValue('sleeveTweakFactor', $this->v('sleeveTweakFactor')*1.01);
+                } else {
+                    //  Armhole is smaller than sleeve head. Decrease tweak factor 
+                    $this->setValue('sleeveTweakFactor', $this->v('sleeveTweakFactor')*0.99);
+                }
+                // Include debug message
+                $this->dbg('Sleeve tweak run '.$this->v('sleeveTweakRun').'. Sleeve head is '.$this->armholeDelta($model).'mm off');
             }
-            // Include debug message
-            $this->dbg('Sleeve tweak run '.$this->v('sleeveTweakRun').'. Sleeve head is '.$this->armholeDelta($model).'mm off');
+            // Keep track of tweak runs because why not
+            $this->setValue('sleeveTweakRun', $this->v('sleeveTweakRun')+1);
         }
-        // Keep track of tweak runs because why not
-        $this->setValue('sleeveTweakRun', $this->v('sleeveTweakRun')+1);
 
         // Sleeve center
         $p->newPoint(1, 0, 0, 'Origin (Center sleeve @ shoulder)');

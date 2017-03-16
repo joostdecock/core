@@ -25,6 +25,7 @@ if(`php index.php service=info` !== 'null') {
             }
         }
     }
+
     // Do we have a draft service?
     if(in_array('draft', $info['services'])) {
         // We do, let's test it
@@ -43,11 +44,12 @@ if(`php index.php service=info` !== 'null') {
                             warn();
                             p("Error output:\n\n$errors");
                             p("Please fix these.");
+                            p("Reproduce with this command:\n    $cmd 1>/dev/null");
                             p();
                         } else {
                             ko();
                             p("Error output:\n\n$errors");
-                            p("Reproduce with this command:\n    $cmd");
+                            p("Reproduce with this command:\n    $cmd 1>/dev/null");
                             p();
                             $fail = true;
                         }

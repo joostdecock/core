@@ -899,7 +899,7 @@ class HugoHoodie extends BrianBodyBlock
 
         // Notes
         $p->newPoint('saNote', $p->x(5), $p->y(103)-40, 'sa note anchor');
-        $p->newNote('saNote', 'saNote', $this->t("Standard\nseam\nallowance")."\n(".$this->unit(10).')', 9, 10, -5);
+        $p->newNote('saNote', 'saNote', $this->t("Standard\nseam\nallowance")."\n(".$p->unit(10).')', 9, 10, -5);
     }
 
     /**
@@ -934,7 +934,7 @@ class HugoHoodie extends BrianBodyBlock
 
         // Notes
         $p->newPoint('saNote', $p->x(5), $p->y(3), 'sa note anchor');
-        $p->newNote('saNote', 'saNote', $this->t("Standard\nseam\nallowance")."\n(".$this->unit(10).')', 9, 10, -5);
+        $p->newNote('saNote', 'saNote', $this->t("Standard\nseam\nallowance")."\n(".$p->unit(10).')', 9, 10, -5);
     }
 
     /**
@@ -972,7 +972,7 @@ class HugoHoodie extends BrianBodyBlock
         // Notes
         $noteAttr = ['line-height' => 7, 'class' => 'text-lg'];
         $p->addPoint('saNote', $p->beamsCross(133, 32, 34, 35), 'sa note anchor');
-        $p->newNote('saNote', 'saNote', $this->t("Standard\nseam\nallowance")."\n(".$this->unit(10).')', 9, 10, -5, $noteAttr);
+        $p->newNote('saNote', 'saNote', $this->t("Standard\nseam\nallowance")."\n(".$p->unit(10).')', 9, 10, -5, $noteAttr);
     }
 
     /**
@@ -1050,7 +1050,7 @@ class HugoHoodie extends BrianBodyBlock
         $p->newHeightDimension(6,12,$xBase+40);
 
         // Notes
-        $p->newNote('saNote', 201, $this->t("Standard\nseam\nallowance")."\n(".$this->unit(10).')', 3, 10, -3, ['line-height' => 6, 'class' => 'text-lg', 'dy' => -10]);
+        $p->newNote('saNote', 201, $this->t("Standard\nseam\nallowance")."\n(".$p->unit(10).')', 3, 10, -3, ['line-height' => 6, 'class' => 'text-lg', 'dy' => -10]);
 
         // Split curve for notch distance from left side
         $p->splitCurve(11,7,8,6,10,'.neckCurve');
@@ -1138,6 +1138,6 @@ class HugoHoodie extends BrianBodyBlock
 
         // Notes
         $p->newPoint(200, $p->x(3), $p->y('grainlineTop') - 20);
-        $p->newNote('saNote', 200, $this->t("Standard\nseam\nallowance")."\n(".$this->unit(10).')', 9, 10, -3, ['line-height' => 6, 'class' => 'text-lg', 'dy' => -10]);
+        $p->newNote('saNote', 200, $this->t("Standard\nseam\nallowance")."\n(".$p->unit(10).')', 9, 10, -3, ['line-height' => 6, 'class' => 'text-lg', 'dy' => -10]);
     }
 }

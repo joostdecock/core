@@ -112,6 +112,9 @@ class WahidWaistcoat extends BrianBodyBlock
         $this->setValue('waistReduction', $waist_re);
         $this->setValue('hipsReduction', $hips_re);
         $this->setValue('scyeDart', (5 + $waist_re/10));
+
+        // Used by the parent pattern
+        $this->setValue('frontCollarTweakFactor', 1);
     }
 
     /*
@@ -975,7 +978,7 @@ class WahidWaistcoat extends BrianBodyBlock
         // Pocket
         $p->newLinearDimension(7001, 7005, self::POCKET_HEIGHT/2);  // Half pocket width
         $p->newLinearDimension(7007, 7002, self::POCKET_HEIGHT/2);  // Half pocket width
-        $p->newLinearDimension(7006, 7005, 15, $this->unit(self::POCKET_HEIGHT), ['class' => 'dimension dimension-sm'] );  // Pocket height
+        $p->newLinearDimension(7006, 7005, 15, $p->unit(self::POCKET_HEIGHT), ['class' => 'dimension dimension-sm'] );  // Pocket height
         $p->newHeightDimension($dartLeft, 7002, $p->x($dartLeft)+15);
         $p->newNote('pocketAngle', 7007, $this->t("Pocket is placed under angle").': '.self::POCKET_ANGLE.'&#176;', 10, 20, 0, ['line-height' => 4, 'class' => 'text']);
         $p->newNote('pocket', 7005, $this->t("Draw this half of the pocket\nafter you have closed the dart"), 12, 20, 0, ['line-height' => 5, 'class' => 'text','dy' => -2]);
@@ -996,7 +999,7 @@ class WahidWaistcoat extends BrianBodyBlock
         $p->newLinearDimension(902, 901); // Widht of dart
         $p->newPoint('907edge', $p->x(300), $p->y(907));
         $p->newWidthDimension('907edge', 907); // Dart tip
-        $p->newWidthDimension(4001,5050,$p->y(4001)+35, $this->unit(10) ,['class' => 'dimension dimension-sm']); // Button offset from edge
+        $p->newWidthDimension(4001,5050,$p->y(4001)+35, $p->unit(10) ,['class' => 'dimension dimension-sm']); // Button offset from edge
         $p->newWidthDimension(10,5); // Deph of armhole
         $p->newCurvedDimension('M 2912 L 2910 C 2914 2906 2902 C 2904 2907 5', 25); // Side curve
 

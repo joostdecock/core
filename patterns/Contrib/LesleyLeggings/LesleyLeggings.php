@@ -43,15 +43,14 @@ class LesleyLeggings extends SethSelvedgeTrouserBlock
      */
     public function initialize($model)
     {
-        // Call SethSelvedgeTrouserBlock::initialize()
-        parent::initialize($model);
-
         // Bolt down options available in parent patterns
         // hipsEase
         $this->setOption('hipsEase', 0);
-
         // seatEase
         $this->setOption('seatEase', 0);
+
+        // Call SethSelvedgeTrouserBlock::initialize()
+        parent::initialize($model);
         
         // crotchCurveFactor:
         $this->setOption('crotchCurveFactor', 0.4);
@@ -263,7 +262,7 @@ class LesleyLeggings extends SethSelvedgeTrouserBlock
             $p->addPoint('backCrotchEdge',$p->shift('backCrotchEdge',90,$seamDelta));
             $seamDelta = $this->seamDelta();
             $count++;
-        $this->msg("Run $count, Inseam delta is ".$this->unit($seamDelta));
+        $this->msg("Run $count, Inseam delta is ".$p->unit($seamDelta));
         }
         
 

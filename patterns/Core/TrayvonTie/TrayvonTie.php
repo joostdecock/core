@@ -113,7 +113,7 @@ class TrayvonTie extends Pattern
         if ($this->isPaperless) {
             foreach ($this->parts as $key => $part) {
                 $method = 'paperless'.ucfirst($key);
-                $this->$method($model, $part);
+                //$this->$method($model, $part);
             }
         }
     }
@@ -276,13 +276,15 @@ class TrayvonTie extends Pattern
 
         // Tip seam allowance
         $p->offsetPathString('tipSA', 'M 4 L 1 L 3', -10, 0);
-        $p->addPoint(10, $p->beamsCross('tipSA-line-1TO4', 'tipSA-line-4TO1', 6, 4), 'Left edge of tip SA');
-        $p->addPoint(11, $p->flipX(10), 'Right edge of tip SA');
-        $p->newPath('tipSA', 'M 4 L 10 L tipSA-line-1TO4XllXtipSA-line-1TO3 L 11 L 3', ['class' => 'seam-allowance']);
+        $p->addPoint('tipSA-line-4TO1', $p->beamsCross('tipSA-line-1TO4', 'tipSA-startPoint', 6, 4), 'Left edge of tip SA');
+        $p->clonePoint('tipSA-line-4TO1','tipSA-startPoint');
+        $p->addPoint('tipSA-line-3TO1', $p->flipX('tipSA-startPoint'), 'Right edge of tip SA');
+        $p->clonePoint('tipSA-line-3TO1','tipSA-endPoint');
+        $p->newPath('tipSA', 'M 4 L tipSA-startPoint L tipSA-line-1TO4 L tipSA-line-1TO3 L tipSA-endPoint L 3', ['class' => 'fabric sa']);
 
         // Mid-tie seam allowance
         $p->offsetPathString('midSA', 'M 5 L 6', -10, 0);
-        $p->newPath('midSA', 'M 5 L midSA-line-5TO6 L midSA-line-6TO5 L 6', ['class' => 'seam-allowance']);
+        $p->newPath('midSA', 'M 5 L midSA-startPoint L midSA-endPoint L 6', ['class' => 'fabric sa']);
 
         // Notches
         $p->newSnippet('notch1', 'notch', 'notch1');
@@ -303,14 +305,16 @@ class TrayvonTie extends Pattern
         $p->addTitle('titleAnchor', 4, $this->t($p->title), '1x '.$this->t('from fabric'));
 
         // Tail seam allowance
-        $p->offsetPathString('tailSA', 'M 4 L 1 L 3', -10, 0);
-        $p->addPoint(10, $p->beamsCross('tailSA-line-1TO4', 'tailSA-line-4TO1', 6, 4), 'Left edge of tail SA');
-        $p->addPoint(11, $p->flipX(10), 'Right edge of tail SA');
-        $p->newPath('tailSA', 'M 4 L 10 L tailSA-line-1TO4XllXtailSA-line-1TO3 L 11 L 3', ['class' => 'seam-allowance']);
-
+        $p->offsetPathString('tipSA', 'M 4 L 1 L 3', -10, 0);
+        $p->addPoint('tipSA-line-4TO1', $p->beamsCross('tipSA-line-1TO4', 'tipSA-startPoint', 6, 4), 'Left edge of tip SA');
+        $p->clonePoint('tipSA-line-4TO1','tipSA-startPoint');
+        $p->addPoint('tipSA-line-3TO1', $p->flipX('tipSA-startPoint'), 'Right edge of tip SA');
+        $p->clonePoint('tipSA-line-3TO1','tipSA-endPoint');
+        $p->newPath('tipSA', 'M 4 L tipSA-startPoint L tipSA-line-1TO4 L tipSA-line-1TO3 L tipSA-endPoint L 3', ['class' => 'fabric sa']);
+        
         // Mid-tie seam allowance
         $p->offsetPathString('midSA', 'M 5 L 6', -10, 0);
-        $p->newPath('midSA', 'M 5 L midSA-line-5TO6 L midSA-line-6TO5 L 6', ['class' => 'seam-allowance']);
+        $p->newPath('midSA', 'M 5 L midSA-startPoint L midSA-endPoint L 6', ['class' => 'fabric sa']);
 
         // Notches
         $p->newSnippet('notch1', 'notch', 'notch1');
@@ -334,7 +338,7 @@ class TrayvonTie extends Pattern
         $p->addTitle('titleAnchor', 5, $this->t($p->title), '1x '.$this->t('from lining'));
 
         // Tip seam allowance
-        $p->newPath('tipSA', 'M 4 L 10 L tipSA-line-1TO4XllXtipSA-line-1TO3 L 11 L 3', ['class' => 'seam-allowance']);
+        $p->newPath('tipSA', 'M 4 L tipSA-startPoint L tipSA-line-1TO4 L tipSA-line-1TO3 L tipSA-endPoint L 3', ['class' => 'lining sa']);
 
         // Notch
         $p->newSnippet('notch', 'notch', 1);
@@ -358,8 +362,8 @@ class TrayvonTie extends Pattern
         // Title
         $p->addTitle('titleAnchor', 6, $this->t($p->title), '1x '.$this->t('from lining'));
 
-        // Tip seam allowance
-        $p->newPath('tailSA', 'M 4 L 10 L tailSA-line-1TO4XllXtailSA-line-1TO3 L 11 L 3', ['class' => 'seam-allowance']);
+        // Tail seam allowance
+        $p->newPath('tipSA', 'M 4 L tipSA-startPoint L tipSA-line-1TO4 L tipSA-line-1TO3 L tipSA-endPoint L 3', ['class' => 'lining sa']);
 
         // Notch
         $p->newSnippet('notch', 'notch', 1);
@@ -511,7 +515,7 @@ class TrayvonTie extends Pattern
         $p->newWidthDimension(9,8, $p->y(8)+15);
 
         // Seam allowance note
-        $p->newNote(1, 'notch1', $this->t("Standard\nseam\nallowance")."(".$this->unit(10).')', 6, 20, -7);
+        $p->newNote(1, 'notch1', $this->t("Standard\nseam\nallowance")."(".$p->unit(10).')', 6, 20, -7);
     }
 
     /**
@@ -550,8 +554,8 @@ class TrayvonTie extends Pattern
 
         if (!$interfacing) {
             // Seam allowance notes
-            $p->newNote(2, 2, $this->t("Standard\nseam\nallowance")."(".$this->unit(10).')', 11, 20, -4, ['class' => 'note', 'dy' => -10, 'line-height' => 6]);
-            $p->newNote(3, 'notch2', $this->t("Standard\nseam\nallowance")."(".$this->unit(10).')', 6, 25, -6, $noteAttr);
+            $p->newNote(2, 2, $this->t("Standard\nseam\nallowance")."(".$p->unit(10).')', 11, 20, -4, ['class' => 'note', 'dy' => -10, 'line-height' => 6]);
+            $p->newNote(3, 'notch2', $this->t("Standard\nseam\nallowance")."(".$p->unit(10).')', 6, 25, -6);
         }
     }
 }

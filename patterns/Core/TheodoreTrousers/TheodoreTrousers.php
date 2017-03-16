@@ -277,11 +277,20 @@ class TheodoreTrousers extends Pattern
         //$aldrich = 'M 23 C 23 901603 901601 C 901602 901901 9019 L 9021 L 902504 L 902502 L 902503 L 9024 L 26 C 902601 2901 29 C 29 2701 27 C 27 202 201 C 203 28 28 C 2702 30 30 C 3001 23 23 z';
 
         // This is the path we use, no seam allowance
-        if($this->o('waistbandRise') > 0) $seamline = 'M 66601 L dartTopLeft L dartTip L dartTopRight L -2104 L -26 C -2601 -2901 -29 C -29 -2701 -27 C -27 202 201 C 203 -28 -28 C -2702 -30 -30 C -3001 -2301 -2301 C -2301 -901603 -901601 C -901602 -901901 -9019 z';
-        else  $seamline = 'M -2101 L -2501 L 902502 L -2502 L -2104 L -26 C -2601 -2901 -29 C -29 -2701 -27 C -27 202 201 C 203 -28 -28 C -2702 -30 -30 C -3001 -2301 -2301 C -2301 -901603 -901601 C -901602 -901901 -9019 z';
-        
+        if($this->o('waistbandRise') > 0) $noHem = 'C -2702 -30 -30 C -3001 -2301 -2301 C -2301 -901603 -901601 C -901602 -901901 -9019 L 66601 L dartTopLeft L dartTip L dartTopRight L -2104 L -26 C -2601 -2901 -29 C -29 -2701 -27 ';
+        else  $noHem = 'C -2702 -30 -30 C -3001 -2301 -2301 C -2301 -901603 -901601 C -901602 -901901 -9019 L -2101 L -2501 L 902502 L -2502 L -2104 L -26 C -2601 -2901 -29 C -29 -2701 -27';
+        $seamline = 'M -27 C -27 202 201 C 203 -28 -28 '.$noHem.' z';
+
         $p->newPath('seamline',$seamline);
-  
+        
+        // Store base path for SA, but strip out dart
+        $p->newPath('saBase','M -28 '.str_replace('L 902502','',str_replace('L dartTip','',$noHem)));
+        $p->paths['saBase']->setRender(false);
+        
+        // Store base path for hem SA
+        $p->newPath('hemBase', 'M -27 C -27 202 201 C 203 -28 -28');
+        $p->paths['hemBase']->setRender(false);
+
         // Mark path for sample service
         $p->paths['seamline']->setSample(true);
     
@@ -392,9 +401,15 @@ class TheodoreTrousers extends Pattern
         //$aldrich = 'M 9 C 9 503 501 C 502 6 6 L 1001 C 1002 11 11 C 11 801 8 C 802 1401 14 C 14 1201 12 L 13 C 1301 15 15 C 1402 9 9 z';
         
         // This is the path we use, no seam allowance
-        $seamline = 'M -100101 C -1002 -1102 -1102 C -1102 -801 -8 C -802 -1401 -14 C -14 -1201 -12 L -13 C -1301 -15 -15 C -1402 -9 -9 C -9 -503 -501 C -502 -6cp -6 z';
-        $p->newPath('seamline', $seamline);
-        
+        $noHem = ' C -1301 -15 -15 C -1402 -9 -9 C -9 -503 -501 C -502 -6cp -6 L -100101 C -1002 -1102 -1102 C -1102 -801 -8 C -802 -1401 -14 C -14 -1201 -12 ';
+        $p->newPath('seamline', 'M -12 L -13'. $noHem.' z');
+
+        // Store path as base for seam allowance
+        $p->newPath('saBase', 'M -13 '.$noHem);
+        $p->paths['saBase']->setRender(false);
+        $p->newPath('hemBase', 'M -12 L -13');
+        $p->paths['hemBase']->setRender(false);
+
         // Mark path for sample service
         $p->paths['seamline']->setSample(true);
 
@@ -812,23 +827,12 @@ class TheodoreTrousers extends Pattern
         /** @var Part $p */
         $p = $this->parts['back'];
         
-        // Seam allowance, without the dart
-        $seamline = str_replace('L dartTopLeft L dartTip L dartTopRight ','',$p->paths['seamline']->getPathstring());
-        $p->offsetPathString('sa', $seamline, -10, 1, ['class' => 'seam-allowance']);
+        // Seam and hem allowance
+        $p->offsetPath('sa','saBase', -10, 1, ['class' => 'fabric sa']);
+        $p->offsetPath('hem','hemBase', -60, 1, ['class' => 'fabric sa']);
      
-        // 5cm extra hem allowance
-        $shiftThese = [
-            'sa-curve--27TO-29XccXsa-curve--27TO201',
-            'sa-curve--28TO201XccXsa-curve--28TO-30',
-            'sa-curve--28TO201',
-            'sa-curve-201TO-27',
-            'sa-curve--27TO201',
-            'sa-cp2--201.203.-28.-28',
-            'sa-cp1--201.203.-28.-28',
-            'sa-cp2---27.-27.202.201',
-            'sa-cp1---27.-27.202.201',
-        ];
-        foreach($shiftThese as $shiftThis) $p->addPoint($shiftThis,$p->shift($shiftThis,-90,50));
+        // Join SA ends
+        $p->newPath('saJoin', 'M sa-startPoint L hem-endPoint M hem-startPoint L sa-endPoint', ['class' => 'fabric sa']);
 
         // Title
         $p->newPoint('titleAnchor', $p->x(5) + 50, $p->y(5) + 50);
@@ -865,8 +869,12 @@ class TheodoreTrousers extends Pattern
         /** @var Part $p */
         $p = $this->parts['front'];
 
-        // Seam allowance
-        $p->offsetPath('sa', 'seamline', -10, 1, ['class' => 'seam-allowance']);
+        // Seam and hem allowance
+        $p->offsetPath('sa','saBase', -10, 1, ['class' => 'fabric sa']);
+        $p->offsetPath('hem','hemBase', -60, 1, ['class' => 'fabric sa']);
+     
+        // Join SA ends
+        $p->newPath('saJoin', 'M sa-startPoint L hem-endPoint M hem-startPoint L sa-endPoint', ['class' => 'fabric sa']);
      
         // 5cm extra hem allowance
         $shiftThese = [
@@ -875,7 +883,7 @@ class TheodoreTrousers extends Pattern
             'sa-line--12TO-13',
             'sa-curve--12TO-14XclXsa-line--12TO-13',
             ];
-        foreach($shiftThese as $shiftThis) $p->addPoint($shiftThis,$p->shift($shiftThis,-90,50));
+        //FIXME foreach($shiftThese as $shiftThis) $p->addPoint($shiftThis,$p->shift($shiftThis,-90,50));
 
         // Title
         $p->newPoint('titleAnchor' , $p->x(5) + 50 , $p->y(5) + 50, 'Title anchor point');
@@ -1308,7 +1316,7 @@ class TheodoreTrousers extends Pattern
         // Hem
         $p->newWidthDimension(-28,-27, $p->y(-27)+80); // Leg width
         $p->newHeightDimensionSm(201,-28, $p->x(201)+15); // Hem curve depth
-        $p->newNote($p->newId(), -20110, $this->t("Hem\nallowance")." : ".$this->unit(60), 12, 30, 15,['dy' => -6, 'line-height' => 6]);
+        $p->newNote($p->newId(), -20110, $this->t("Hem\nallowance")." : ".$p->unit(60), 12, 30, 15,['dy' => -6, 'line-height' => 6]);
     }
     
     /**
@@ -1350,8 +1358,8 @@ class TheodoreTrousers extends Pattern
 
         // Hem
         $p->newWidthDimension(-13,-12, $p->y(-12)+80); // Leg width
-        $p->newPoint('hemNoteAnchor', $p->x(2), $p->y('sa-line--13TO-12'));
-        $p->newNote($p->newId(), 'hemNoteAnchor', $this->t("Hem\nallowance")." : ".$this->unit(60), 12, 30, 15,['dy' => -6, 'line-height' => 6]);
+        $p->addPoint('hemNoteAnchor', $p->shift('grainlineBottom',225, 35));
+        $p->newNote($p->newId(), 'hemNoteAnchor', $this->t("Hem\nallowance")." : ".$p->unit(60), 12, 40, 5,['dy' => -6, 'line-height' => 6]);
     }
     
     /**
@@ -1476,7 +1484,7 @@ class TheodoreTrousers extends Pattern
 
         // Note to trace from front
         $front = $this->parts['front'];
-        $p->newNote($p->newId(), 'grainlineBottom', $this->unit($p->distance('waistFly1',-40)).' '.$this->t("wide")."\n".$this->t("Trace shape from").' '.$this->t($front->getTitle()), 6, 40, 5);
+        $p->newNote($p->newId(), 'grainlineBottom', $p->unit($p->distance('waistFly1',-40)).' '.$this->t("wide")."\n".$this->t("Trace shape from").' '.$this->t($front->getTitle()), 6, 40, 5);
         // Fixme: Notes don't extend the bounding box (yet) 
         // so let's draw an invisible path to prevent the note from being cropped
         $p->addPoint('noteCropBust', $p->shift('grainlineBottom', -90, 60)); 
@@ -1500,7 +1508,7 @@ class TheodoreTrousers extends Pattern
 
         // Note to trace from front
         $flyPiece = $this->parts['flyPiece'];
-        $p->newNote($p->newId(), 'grainlineBottom', $this->unit($p->distance('leftTop',-40)).' '.$this->t("wide")."\n".$this->t("Trace shape from").' '.$this->t($flyPiece->getTitle()), 6, 40, 5);
+        $p->newNote($p->newId(), 'grainlineBottom', $p->unit($p->distance('leftTop',-40)).' '.$this->t("wide")."\n".$this->t("Trace shape from").' '.$this->t($flyPiece->getTitle()), 6, 40, 5);
         // Fixme: Notes don't extend the bounding box (yet) 
         // so let's draw an invisible path to prevent the note from being cropped
         $p->addPoint('noteCropBust', $p->shift('grainlineBottom', -90, 60)); 

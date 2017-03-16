@@ -189,6 +189,7 @@ class SethSelvedgeTrouserBlock extends TrentTrouserBlock
         // Correction at crotch line
         // This adds correctionCrotchLine1
         $p->curveCrossesY('frameSeatOut','frontCpSeatDown','frontCpKneeOut','frontKneeOut',$p->y('frameCrotchLineOut'),'correctionCrotchLine');
+        
         // Calculate correction
         $correction = $p->distance('correctionCrotchLine1','frameCrotchLineOut');
         // Move points
@@ -245,6 +246,7 @@ class SethSelvedgeTrouserBlock extends TrentTrouserBlock
         // Correction at crotch line
         // This adds correctionCrotchLine1
         $p->curveCrossesY('backSeatOut','backCpSeatOutDown','backCpKneeOut','backKneeOut',$p->y('backCrotchLineOut'),'correctionCrotchLine');
+
         // Calculate correction
         $correction = $p->deltaX('correctionCrotchLine1','backSeatOut');
         // Move point

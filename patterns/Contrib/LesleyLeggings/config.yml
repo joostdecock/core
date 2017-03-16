@@ -20,8 +20,8 @@ languages:
 measurements:
     hipsCircumference: 950
     seatCircumference: 1045
-    inSeam: 910
-    outSeam: 1070
+    inseam: 910
+    outseam: 1070
     naturalWaistToHip: 120
     naturalWaistToSeat: 260
     bodyRise: 320

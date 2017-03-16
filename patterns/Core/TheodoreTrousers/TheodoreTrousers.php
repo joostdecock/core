@@ -50,6 +50,7 @@ class TheodoreTrousers extends Pattern
         $this->setValue('legExtension', 0);   
         $this->setValue('frontReduction', 0);   
         $this->setValue('backReduction', 0);   
+
     }
 
     /*
@@ -156,7 +157,7 @@ class TheodoreTrousers extends Pattern
         $p = $this->parts['back'];
 
         $p->newPoint(   0, 0, 0, 'Center front @ Waistline');
-        $p->newPoint(   1, 0, $model->m('bodyRise') - $this->o('waistbandWidth') + 10, 'Center front crutch line');
+        $p->newPoint(   1, 0, 10 + $model->m('bodyRise') - $this->o('waistbandWidth'), 'Center front crutch line');
         $p->newPoint(   2, 0, $p->y(1) + $model->m('inseam') + $this->v('legExtension'), 'Center front bottom');
         $p->newPoint( 201, 0 , $p->y(2) + 10);
         $p->newPoint( 202, $this->o('trouserBottomWidth')/4, $p->y(201));

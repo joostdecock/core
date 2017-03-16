@@ -36,7 +36,6 @@ measurements:
     seatCircumference: 1045
     inseam: 910
     bodyRise: 200
-
 options:
     waistbandWidth:
         type: "measure"

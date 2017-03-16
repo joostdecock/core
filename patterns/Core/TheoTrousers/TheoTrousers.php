@@ -45,7 +45,7 @@ class TheoTrousers extends TheodoreTrousers
         // This option is fixed in the legacy code
         $this->setOption('trouserBottomWidth', 226);   
         
-        // Specific to the Theo
+        // Specific to the Theo pattern
         $this->setValue('legReduction', 30);   
         $this->setValue('legExtension', 40);   
         $this->setValue('frontReduction', 10);   

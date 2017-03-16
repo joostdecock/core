@@ -1,5 +1,5 @@
 default: 
-    group: maleStandardUsSizes
+    group: byTheBook
 groups:
     byTheBook:
         - trent
@@ -10,8 +10,8 @@ measurements:
         trent   : 960 
     inseam: 
         trent   : 810 
-    inseam: 
-        trent   : 1070 
+    outseam: 
+        trent   : 910 
     bodyRise: 
         trent   : 280 
     naturalWaistToHip: 

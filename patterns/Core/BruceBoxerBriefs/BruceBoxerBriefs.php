@@ -684,24 +684,6 @@ class BruceBoxerBriefs extends Pattern
      * Adds paperless info for the front
      *
      * @param \Freesewing\Model $model The model to draft for
-        return true;
-        // Width at the bottom
-        $p->newWidthDimension(-3,3,$p->y(3)+35);
-
-        // Width at the top
-        $p->newWidthDimension(-2,2,$p->y(2)-25);
-
-        // Notes
-        $p->addPoint(  'noteAnchor1', $p->shiftTowards(2, 3, 100));
-        $p->addPoint(  'noteAnchor2', $p->shift(3, 180, 40));
-        $p->newNote( $p->newId(), 'noteAnchor1', $this->t("Standard\nseam\nallowance")."\n(".$this->unit(10).')', 8, 10, -5);
-        $p->newNote( $p->newId(), 'noteAnchor2', $this->t("Hem\nallowance")."\n(".$this->unit(20).')', 12, 25, -13,['class' => 'note', 'dy' => -13, 'line-height' => 7]);
-    }
-
-    /**
-     * Adds paperless info for the front
-     *
-     * @param \Freesewing\Model $model The model to draft for
      *
      * @return void
      */

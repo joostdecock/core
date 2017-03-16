@@ -79,7 +79,7 @@ class SvgRenderbot
         }
         $pathstring = $path->getPathstring();
         $points = $part->points;
-        $patharray = explode(' ', $pathstring);
+        $patharray = Utils::asScrubbedArray($pathstring);
         $svg = '';
         foreach ($patharray as $p) {
             $p = rtrim($p);

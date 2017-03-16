@@ -63,6 +63,11 @@ options:
         min: 0
         max: 180
         default: 70
+    sleeveLengthBonus:
+        type: "measure"
+        min: -40
+        max: 80
+        default: 0
     ribbingStretchFactor:
         type: percent
         min: 70

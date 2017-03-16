@@ -1,0 +1,6 @@
+#!/bin/bash
+for var in "$@"
+do
+    input="${input} $var"
+done
+php index.php $input

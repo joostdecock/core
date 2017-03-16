@@ -89,7 +89,10 @@ class Response
      */
     public function send()
     {
-        $this->sendHeaders();
+        // Don't send headers when called from command line
+        if(php_sapi_name() !== 'cli') {
+            $this->sendHeaders();
+        }
         switch ($this->format) {
             case 'json':
                 $body = $this->asJson($this->body);

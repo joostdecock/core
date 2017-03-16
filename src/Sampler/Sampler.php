@@ -129,7 +129,7 @@ class Sampler
                 foreach ($part->paths as $pathKey => $path) {
                     if ($path->getSample() === true) {
                         $path->boundary = $path->findBoundary($part);
-                        if (!is_object($this->boundaries[$partKey]['topLeft'])) {
+                        if (!isset($this->boundaries[$partKey]) || !is_object($this->boundaries[$partKey]['topLeft'])) {
                             $this->boundaries[$partKey]['topLeft'] = new \Freesewing\Point();
                             $this->boundaries[$partKey]['topLeft']->setX($path->boundary->topLeft->x);
                             $this->boundaries[$partKey]['topLeft']->setY($path->boundary->topLeft->y);

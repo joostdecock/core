@@ -373,7 +373,7 @@ class AaronAshirt extends BrianBodyBlock
         $p->newNote(3, 308, $this->t("No\nseam\nallowance"), 8, 15, 0);
 
         $p->addPoint(309, $p->shift(112, -90, $p->distance(110, 112) / 2));
-        $p->newNote(4, 309, $this->t("Standard\nseam\nallowance")."\n(".$p->unit(10).')', 9, 15, -5, $noteAttr);
+        $p->newNote(4, 309, $this->t("Standard\nseam\nallowance")."\n(".$p->unit(10).')', 9, 15, -5);
 
         $p->newPoint(309, $p->x(110) - 40, $p->y(110), 'Note 5 anchor');
         $p->newNote(5, 309, $this->t('Hem allowance')."\n(".$p->unit(20).')', 12, 15, -10);

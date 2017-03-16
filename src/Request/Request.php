@@ -35,20 +35,36 @@ class Request
      */
     public function __construct($data = null)
     {
-        $this->data = $data;
-        if(isset($_SERVER['REMOTE_ADDR'])) $this->info['client'] = $_SERVER['REMOTE_ADDR'];
-        else $this->info['client'] = 'unknown';
+        if(php_sapi_name() === 'cli') { // Called through cli
+
+            // Get command line parameters
+            $input = $_SERVER['argv'];
+            if(count($input) > 1) {
+                array_shift($input);
+                foreach ($input as $pair) {
+                    list ($key, $value) = split("=", $pair);
+                    $data[$key] = $value;
+                }
+                $this->data = $data;
+            } else {
+                die("\nCommand-line use is supported, but requires arguments\n\n");
+            }
+        } else { // Called through browser
+            $this->data = $data;
+            if(isset($_SERVER['REMOTE_ADDR'])) $this->info['client'] = $_SERVER['REMOTE_ADDR'];
+            else $this->info['client'] = 'unknown';
+            
+            if(isset($_SERVER['HTTP_USER_AGENT'])) $this->info['userAgent'] = $_SERVER['HTTP_USER_AGENT'];
+            else $this->info['userAgent'] = 'unknown';
+            
+            if(isset($_SERVER['HTTP_HOST'])) $this->info['host'] = $_SERVER['HTTP_HOST'];
+            else $this->info['host'] = 'unknown';
+            
+            if(isset($_SERVER['REQUEST_URI'])) $this->info['uri'] = $_SERVER['REQUEST_URI'];
+            else $this->info['uri'] = 'unknown';
         
-        if(isset($_SERVER['HTTP_USER_AGENT'])) $this->info['userAgent'] = $_SERVER['HTTP_USER_AGENT'];
-        else $this->info['userAgent'] = 'unknown';
-        
-        if(isset($_SERVER['HTTP_HOST'])) $this->info['host'] = $_SERVER['HTTP_HOST'];
-        else $this->info['host'] = 'unknown';
-        
-        if(isset($_SERVER['REQUEST_URI'])) $this->info['uri'] = $_SERVER['REQUEST_URI'];
-        else $this->info['uri'] = 'unknown';
-        
-        $this->info['time'] = $_SERVER['REQUEST_TIME_FLOAT'];
+            $this->info['time'] = $_SERVER['REQUEST_TIME_FLOAT'];
+        }
     }
 
     /**

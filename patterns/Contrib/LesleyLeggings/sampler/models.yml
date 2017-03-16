@@ -1,9 +1,13 @@
+default: 
+    group: byTheBook
+groups:
+    byTheBook:
+        - trent
 measurements:
-    naturalWaist:
-        joost   : 885
-        usSize34: 697
-        usSize36: 755
-        usSize38: 813
-        usSize40: 871
-        usSize42: 929
-        usSize44: 987
+    ankleCircumference: 
+        trent   : 255
+    kneeCircumference: 
+        trent   : 420 
+    upperLegCircumference: 
+        trent   : 620 
+

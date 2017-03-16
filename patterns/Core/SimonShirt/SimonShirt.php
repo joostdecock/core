@@ -861,7 +861,7 @@ class SimonShirt extends BrianBodyBlock
         // Yoke dart
         if($this->o('yokeDart') > 0) {
             $p->curveCrossesY(10,18,15,14,$p->y(10)+$this->o('yokeDart'),'yokeDart'); // Adds yokeDart1 point
-            $p->newPoint('yokeDart2', $p->x(6100), $p->y(10));
+            $p->newPoint('yokeDart2', ($p->x(5)-$this->v('waistReduction')/4)*0.55 , $p->y(10)); //HERE
             $p->newPoint('yokeDart3', $p->x(10)*0.8, $p->y(10));
             $p->newPath('test', 'M yokeDart2 C yokeDart3 yokeDart1 yokeDart1');
         }
@@ -928,7 +928,8 @@ class SimonShirt extends BrianBodyBlock
         $this->setValue('sleeveTweakRun', $this->v('sleeveTweakRun')+1);
         
         // (re-)Drafting sleeveBlock from parent pattern
-        $this->draftSleeveBlock($model);
+        // The second parameter tells parent pattern not to tweak the sleeve
+        $this->draftSleeveBlock($model, true);
         
         // Cloning points from the sleeveBlock
         $this->clonePoints('sleeveBlock', 'sleeve');
@@ -1756,7 +1757,7 @@ class SimonShirt extends BrianBodyBlock
         
         // Notches
         $p->notch([10]);
-        if($this->o('splitYoke') == 0) $p->notch(-10);
+        if($this->o('splitYoke') == 0) $p->notch([-10]);
     }
 
     /**
@@ -2152,9 +2153,9 @@ class SimonShirt extends BrianBodyBlock
         $p->addPoint('saNoteAnchor', $p->shift(10,180,5));
         $p->newNote('saNote', 'saNoteAnchor', $this->t("Standard\nseam\nallowance"), 2, 40, 0);
         $p->addPoint('ffsaNoteAnchor', $p->shift(6021,180,10));
-        $p->newNote('ffsaNote', 'ffsaNoteAnchor', $this->t("Flat-felled\nseam\nallowance")."\n(".$this->unit(20).')', 2, 40, 0);
+        $p->newNote('ffsaNote', 'ffsaNoteAnchor', $this->t("Flat-felled\nseam\nallowance")."\n(".$p->unit(20).')', 2, 40, 0);
         $p->addPoint('hemNoteAnchor', $p->shift(6668,-90,15));
-        $p->newNote('hemNote', 'hemNoteAnchor', $this->t("Hem\nseam\nallowance")."\n(".$this->unit(30).')', 12, 40, 0);
+        $p->newNote('hemNote', 'hemNoteAnchor', $this->t("Hem\nseam\nallowance")."\n(".$p->unit(30).')', 12, 40, 0);
 
     }
 
@@ -2240,9 +2241,9 @@ class SimonShirt extends BrianBodyBlock
         $p->addPoint('saNoteAnchor', $p->shift(10,0,5));
         $p->newNote('saNote', 'saNoteAnchor', $this->t("Standard\nseam\nallowance"), 10, 40, 0);
         $p->addPoint('ffsaNoteAnchor', $p->shift(6021,0,10));
-        $p->newNote('ffsaNote', 'ffsaNoteAnchor', $this->t("Flat-felled\nseam\nallowance")."\n(".$this->unit(20).')', 10, 40, 0);
+        $p->newNote('ffsaNote', 'ffsaNoteAnchor', $this->t("Flat-felled\nseam\nallowance")."\n(".$p->unit(20).')', 10, 40, 0);
         $p->addPoint('hemNoteAnchor', $p->shift(6668,-90,15));
-        $p->newNote('hemNote', 'hemNoteAnchor', $this->t("Hem\nseam\nallowance")."\n(".$this->unit(30).')', 12, 40, 0);
+        $p->newNote('hemNote', 'hemNoteAnchor', $this->t("Hem\nseam\nallowance")."\n(".$p->unit(30).')', 12, 40, 0);
     }
     
     /**
@@ -2426,7 +2427,7 @@ class SimonShirt extends BrianBodyBlock
         $p->addPoint('saNoteAnchor', $p->shift(-6021,-115,10));
         $p->newNote('saNote', 'saNoteAnchor', $this->t("Standard\nseam\nallowance"), 4, 40, 0);
         $p->addPoint('hemNoteAnchor', $p->shift(6660,-155,30));
-        $p->newNote('hemNote', 'hemNoteAnchor', $this->t("Hem\nseam\nallowance")."\n(".$this->unit(30).')', 10, 60, 0);
+        $p->newNote('hemNote', 'hemNoteAnchor', $this->t("Hem\nseam\nallowance")."\n(".$p->unit(30).')', 10, 60, 0);
     }
 
     /**
@@ -2477,7 +2478,7 @@ class SimonShirt extends BrianBodyBlock
         $p->addPoint('saNoteAnchor', $p->shift(-5,-120,10));
         $p->newNote('saNote', 'saNoteAnchor', $this->t("Standard\nseam\nallowance"), 4, 40, 0);
         $p->addPoint('ffsaNoteAnchor', $p->shift(5,-30,10));
-        $p->newNote('ffsaNote', 'ffsaNoteAnchor', $this->t("Flat-felled\nseam\nallowance")."\n(".$this->unit(20).')', 8, 40, 0);
+        $p->newNote('ffsaNote', 'ffsaNoteAnchor', $this->t("Flat-felled\nseam\nallowance")."\n(".$p->unit(20).')', 8, 40, 0);
     }
 
     /**

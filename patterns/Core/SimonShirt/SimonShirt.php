@@ -928,7 +928,8 @@ class SimonShirt extends BrianBodyBlock
         $this->setValue('sleeveTweakRun', $this->v('sleeveTweakRun')+1);
         
         // (re-)Drafting sleeveBlock from parent pattern
-        $this->draftSleeveBlock($model);
+        // The second parameter tells parent pattern not to tweak the sleeve
+        $this->draftSleeveBlock($model, true);
         
         // Cloning points from the sleeveBlock
         $this->clonePoints('sleeveBlock', 'sleeve');

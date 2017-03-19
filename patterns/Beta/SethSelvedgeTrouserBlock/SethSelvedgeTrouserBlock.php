@@ -1,6 +1,6 @@
 <?php
-/** Freesewing\Patterns\Contrib\SethSelvedgeTrouserBlock class */
-namespace Freesewing\Patterns\Contrib;
+/** Freesewing\Patterns\Beta\SethSelvedgeTrouserBlock class */
+namespace Freesewing\Patterns\Beta;
 
 /**
  * A selvedge trouser block based on the Trent Trouser Block

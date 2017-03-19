@@ -42,7 +42,9 @@ class Request
             if(count($input) > 1) {
                 array_shift($input);
                 foreach ($input as $pair) {
-                    list ($key, $value) = split("=", $pair);
+                    $keyval = explode('=', $pair);
+                    $key = $keyval[0];
+                    $value = $keyval[1];
                     $data[$key] = $value;
                 }
                 $this->data = $data;

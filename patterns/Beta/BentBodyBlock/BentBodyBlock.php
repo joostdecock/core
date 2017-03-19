@@ -1,6 +1,6 @@
 <?php
-/** Freesewing\Patterns\Contrib\BentBodyBlock class */
-namespace Freesewing\Patterns\Contrib;
+/** Freesewing\Patterns\Beta\BentBodyBlock class */
+namespace Freesewing\Patterns\Beta;
 
 /**
  * A pattern template

@@ -1,6 +1,6 @@
 <?php
-/** Freesewing\Patterns\Contrib\CarltonCoat class */
-namespace Freesewing\Patterns\Contrib;
+/** Freesewing\Patterns\Beta\CarltonCoat class */
+namespace Freesewing\Patterns\Beta;
 
 /**
  * A pattern template

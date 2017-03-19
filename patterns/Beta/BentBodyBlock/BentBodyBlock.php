@@ -1,6 +1,6 @@
 <?php
-/** Freesewing\Patterns\Contrib\BentBodyBlock class */
-namespace Freesewing\Patterns\Contrib;
+/** Freesewing\Patterns\Beta\BentBodyBlock class */
+namespace Freesewing\Patterns\Beta;
 
 /**
  * A pattern template
@@ -88,7 +88,7 @@ class BentBodyBlock extends \Freesewing\Patterns\Core\BrianBodyBlock
      *
      * @return void
      */
-    public function draftSleeveBlock($model)
+    public function draftSleeveBlock($model, $noTweak = false)
     {
         /** @var \Freesewing\Part $p */
         $p = $this->parts['sleeveBlock'];

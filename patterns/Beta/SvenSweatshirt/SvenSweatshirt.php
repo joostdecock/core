@@ -1,6 +1,6 @@
 <?php
-/** Freesewing\Patterns\Contrib\ SvenSweatshirt class */
-namespace Freesewing\Patterns\Contrib;
+/** Freesewing\Patterns\Beta\ SvenSweatshirt class */
+namespace Freesewing\Patterns\Beta;
 
 /**
  * A sweatshirt pattern

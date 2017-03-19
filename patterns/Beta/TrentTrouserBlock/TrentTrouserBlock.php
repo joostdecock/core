@@ -1,6 +1,6 @@
 <?php
-/** Freesewing\Patterns\Contrib\TrentTrouserBlock class */
-namespace Freesewing\Patterns\Contrib;
+/** Freesewing\Patterns\Beta\TrentTrouserBlock class */
+namespace Freesewing\Patterns\Beta;
 
 use Freesewing\Patterns\Core\Pattern;
 

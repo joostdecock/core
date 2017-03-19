@@ -90,7 +90,8 @@ class Response
     public function send()
     {
         // Don't send headers when called from command line
-        if(php_sapi_name() !== 'cli') {
+        // then again, do send them when running unit tests
+        if(php_sapi_name() !== 'cli' || strpos($_SERVER['PHP_SELF'],'phpunit')) {
             $this->sendHeaders();
         }
         switch ($this->format) {

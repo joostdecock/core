@@ -230,7 +230,7 @@ class AaronAshirt extends BrianBodyBlock
         // backlineBend should stay between 0.5 and 0.9, so let's make sure of that.
         $backlineBend = 0.5 + $this->getOption('backlineBend') * 0.4;
         $p->addPoint(106, $p->shiftTowards(102, '106max', $p->distance(102, '106max') * $backlineBend), 'Control point for 102');
-        $p->addPoint(107, $p->shiftTowards(5, '106max', $p->distance(5, '106max') * $backlineBend * -1), 'Control point for 5');
+        $p->addPoint(107, $p->shiftTowards(5, '106max', $p->distance(5, '106max') * $backlineBend), 'Control point for 5');
 
         // Seamline
         $seamline = 'M 3 L 111 L 110 L 112 C 113 5 5 C 107 106 102 L 103 C 105 104 100 z';

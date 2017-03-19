@@ -16,9 +16,7 @@
             <directory suffix=".php">./src</directory>
             <directory suffix=".php">./channels</directory>
             <directory suffix=".php">./themes</directory>
-            <file>./patterns/Pattern/Pattern.php</file>
-            <file>./patterns/TestPattern/TestPattern.php</file>
-            <file>./patterns/PatternTemplate/PatternTemplate.php</file>
+            <file>./patterns/Core/Pattern/Pattern.php</file>
         </whitelist>
     </filter>
 </phpunit>

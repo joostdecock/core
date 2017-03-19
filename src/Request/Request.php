@@ -35,16 +35,21 @@ class Request
      */
     public function __construct($data = null)
     {
-        if(php_sapi_name() === 'cli') { // Called through cli
-
+        if(php_sapi_name() !== 'cli' || strpos($_SERVER['PHP_SELF'],'phpunit')) {
             // Get command line parameters
             $input = $_SERVER['argv'];
             if(count($input) > 1) {
                 array_shift($input);
                 foreach ($input as $pair) {
-                    list ($key, $value) = split("=", $pair);
-                    $data[$key] = $value;
+                    if(strpos($pair, '=')) {
+                        $keyval = explode('=', $pair);
+                        $key = $keyval[0];
+                        $value = $keyval[1];
+                        $data[$key] = $value;
+                    }
                 }
+                if(isset($data)) $this->data = $data;
+            } else if (strpos($input[0], 'phpunit')) { // Called as unit test
                 $this->data = $data;
             } else {
                 die("\nCommand-line use is supported, but requires arguments\n\n");
@@ -63,8 +68,9 @@ class Request
             if(isset($_SERVER['REQUEST_URI'])) $this->info['uri'] = $_SERVER['REQUEST_URI'];
             else $this->info['uri'] = 'unknown';
         
-            $this->info['time'] = $_SERVER['REQUEST_TIME_FLOAT'];
         }
+        if(isset($_SERVER['REQUEST_TIME_FLOAT'])) $this->info['time'] = $_SERVER['REQUEST_TIME_FLOAT'];
+        else $this->info['time'] = time();
     }
 
     /**

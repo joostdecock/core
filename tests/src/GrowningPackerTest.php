@@ -33,7 +33,7 @@ class GrowingPackerTest extends \PHPUnit\Framework\TestCase
         $layout = [
             $this->block1,
         ];
-        $packer = new \Freesewing\Growingpacker();
+        $packer = new \Freesewing\GrowingPacker();
         $packer->fit($layout); 
         $this->assertEquals(serialize($layout), $this->loadTemplate(1));
     }

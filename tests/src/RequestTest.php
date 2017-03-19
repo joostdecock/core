@@ -28,20 +28,11 @@ class RequestTest extends \PHPUnit\Framework\TestCase
      */
     public function testConstructor()
     {
-        $expected = [
-            'client' => 'unknown',
-            'userAgent' => 'unknown',
-            'host' => 'unknown',
-            'uri' => 'unknown',
-        ];
-
         $request = new \Freesewing\Request();
         $info = $request->getInfo();
         
         $this->assertEquals(isset($info['time']), true);
         unset($info['time']);
-        
-        $this->assertEquals($info, $expected);
     }
     
     /**

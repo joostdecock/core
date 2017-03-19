@@ -35,7 +35,7 @@ class Request
      */
     public function __construct($data = null)
     {
-        if(php_sapi_name() !== 'cli' || strpos($_SERVER['PHP_SELF'],'phpunit')) {
+        if(php_sapi_name() === 'cli') {
             // Get command line parameters
             $input = $_SERVER['argv'];
             if(count($input) > 1) {

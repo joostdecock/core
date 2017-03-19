@@ -1,13 +1,12 @@
 # Dirs or files documentation is generated for.
 source:
     - src/
-    - patterns/Pattern/
-    - patterns/PatternTemplate/
+    - patterns/Core/Pattern/
     - themes/
     - channels/
 
 # Target dir for documentation.
-destination: /freesewing/git/freesewing-docs/apigen/
+destination: ../docs/apigen/
 
 # Access levels of included method and properties. (default: ["public","protected"]) (multiple values allowed)
 accessLevels:           
@@ -16,7 +15,7 @@ accessLevels:
     - protected
 
 # Base url used for sitemap (useful for public doc).
-baseUrl: http://api.freesewing.org/docs/
+baseUrl: https://docs.freesewing.org/apigen/
 
 # Custom google search engine id (for search box).
 #googleCseId: {put it here!}

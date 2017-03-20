@@ -1,6 +1,31 @@
 #!/bin/bash
-for var in "$@"
-do
-    input="${input} $var"
-done
-php index.php $input
+
+if [ $# -eq 0 ]
+    then
+        bold=$(tput bold)
+        normal=$(tput sgr0)
+        echo "${bold}USAGE:"
+        echo "${normal}  freesewing [key=value ...]"
+        echo ""
+        echo "${bold}EXAMPLES:"
+        echo "${bold}  Show this help:"
+        echo "${normal}  freesewing"
+        echo ""
+        echo "${bold}  Contact the info service, return data in text format:"
+        echo "${normal}  freesewing service=info format=text"
+        echo ""
+        echo "${bold}  Get info on the SimonShirt pattern:"
+        echo "${normal}  freesewing service=info format=text pattern=SimonShirt"
+        echo ""
+        echo "${bold}  Draft the WahidWaistcoat pattern with default measurements and options:"
+        echo "${normal}  freesewing service=draft pattern=WahidWaistcoat"
+        echo ""
+        echo "${bold}SEE ALSO:"
+        echo "${normal}  https://docs.freesewing.org/cli"
+    else
+        for var in "$@"
+        do
+            input="${input} $var"
+        done
+        php index.php $input
+    fi

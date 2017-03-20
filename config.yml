@@ -16,7 +16,7 @@ services:
 
 patternNamespaces:
     - Core
-    - Contrib
+    - Beta
     - Docs
     - Tests
 

@@ -286,10 +286,9 @@ class AaronAshirt extends BrianBodyBlock
         $p->newCutonfold('cofBottom', 'cofTop', $this->t('Cut on fold'));
         $p->newGrainline('grainlineBottom', 'grainlineTop', $this->t('Grainline'));
 
-        $p->notch(['cofTop']);
         // Title
         $p->newPoint('titleAnchor', $p->x(5) * 0.4, $p->x(5) + 40, 'Title anchor');
-        $p->addTitle('titleAnchor', 1, $this->t($p->title), $this->t('Cut 1 on fold'));
+        $p->addTitle('titleAnchor', 1, $this->t($p->title), '1x '.$this->t('Cut on fold'));
 
         // Logo
         $p->addPoint('logoAnchor', $p->shift('titleAnchor', -90, 115));
@@ -337,10 +336,11 @@ class AaronAshirt extends BrianBodyBlock
 
         // Title
         $p->newPoint('titleAnchor', $p->x(5) * 0.4, $p->x(5) + 40, 'Title anchor');
-        $p->addTitle('titleAnchor', 2, $this->t($p->title), $this->t('Cut 1 on fold'));
+        $p->addTitle('titleAnchor', 2, $this->t($p->title), '1x '.$this->t('Cut on fold'));
 
         // Logo
         $p->addPoint('logoAnchor', $p->shift('titleAnchor', -90, 50));
+        $p->newSnippet('logo', 'logo-sm', 'logoAnchor');
 
         // Seam allowance | Point indexes from 200 upward
         $p->offsetPathString('sa1', 'M 102 L 103', 10);

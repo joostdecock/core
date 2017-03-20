@@ -47,7 +47,6 @@ class TrayvonTie extends Pattern
         $this->setValue('halfBackTip', $this->v('halfKnot') + ($this->v('halfTip') - $this->v('halfKnot')) / 2);
     }
 
-
     /*
         ____             __ _
        |  _ \ _ __ __ _ / _| |_
@@ -148,7 +147,7 @@ class TrayvonTie extends Pattern
         $p->addPoint('notch2', $p->flipX('notch1'));
 
         // Outline
-        $p->newPath('outline', 'M 1 L 3 L 5 L 6 L 4 z', ['class' => 'seamline']);
+        $p->newPath('outline', 'M 1 L 3 L 5 L 6 L 4 z', ['class' => 'fabric']);
 
         // Mark for sampler
         $p->paths['outline']->setSample(true);
@@ -180,7 +179,7 @@ class TrayvonTie extends Pattern
         $p->newPoint(89, 0, $p->y(8), 'End of the lining, center');
 
         // Outline
-        $p->newPath('outline', 'M 1 L 3 L 8 L 9 L 4 z', ['class' => 'seamline']);
+        $p->newPath('outline', 'M 1 L 3 L 8 L 9 L 4 z', ['class' => 'lining']);
 
         // Mark for sampler
         $p->paths['outline']->setSample(true);
@@ -205,7 +204,7 @@ class TrayvonTie extends Pattern
 
         // Paths
         $path = 'M 1 L 3 L 2 L 4 z';
-        $p->newPath('outline', $path, ['class' => 'seamline']);
+        $p->newPath('outline', $path, ['class' => 'fabric']);
 
         // Anchors
         $p->newPoint('titleAnchor', $p->x(2)/3, $p->y(2)/2, 'Title anchor point');
@@ -235,6 +234,9 @@ class TrayvonTie extends Pattern
     {
         // Title
         $p->addTitle('titleAnchor', 1, $this->t($p->title), '1x '.$this->t('from tie interfacing'), 'vertical');
+
+        // Override fabric class 
+        $p->paths['outline']->setAttributes(['class' => 'interfacing']);
     }
 
 
@@ -250,6 +252,9 @@ class TrayvonTie extends Pattern
     {
         // Title
         $p->addTitle('titleAnchor', 2, $this->t($p->title), '1x '.$this->t('from tie interfacing'), 'vertical');
+
+        // Override fabric class 
+        $p->paths['outline']->setAttributes(['class' => 'interfacing']);
     }
 
     /**
@@ -266,12 +271,11 @@ class TrayvonTie extends Pattern
         $p->addTitle('titleAnchor', 3, $this->t($p->title), '1x '.$this->t('from fabric'));
 
         // logo
-        $p->addPoint('logoAnchor', $p->shift('titleAnchor',-90, 50));
+        $p->addPoint('logoAnchor', $p->shift('titleAnchor',-90, 70));
         $p->newSnippet('logo', 'logo', 'logoAnchor');
-        $p->newSnippet('cc', 'cc', 'logoAnchor');
 
         // Scalebox
-        $p->addPoint('scaleboxAnchor', $p->shift('titleAnchor', -90, 90));
+        $p->addPoint('scaleboxAnchor', $p->shift('titleAnchor', -90, 100));
         $p->newSnippet('scalebox', 'scalebox', 'scaleboxAnchor');
 
         // Tip seam allowance
@@ -319,6 +323,10 @@ class TrayvonTie extends Pattern
         // Notches
         $p->newSnippet('notch1', 'notch', 'notch1');
         $p->newSnippet('notch2', 'notch', 'notch2');
+        
+        // logo
+        $p->addPoint('logoAnchor', $p->shift('titleAnchor',-90, 70));
+        $p->newSnippet('logo', 'logo-sm', 'logoAnchor');
     }
 
     /**
@@ -380,7 +388,7 @@ class TrayvonTie extends Pattern
     public function finalizeLoop($model, $p)
     {
         // Title
-        $p->addTitle('titleAnchor', 7, $this->t($p->title), '1x '.$this->t('from fabric'), 'horizontal');
+        $p->addTitle('titleAnchor', 7, $this->t($p->title), '1x '.$this->t('from fabric'), 'horizontal-small');
     }
 
 

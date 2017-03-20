@@ -28,7 +28,7 @@ class SvgCss extends SvgBlock
             return false;
         } else {
             // Need to make sure @include lines go at the top
-            return  "\n<style type=\"text/css\">\n    <![CDATA[\n".$this->sortCss()."\n    ]]>\n</style>\n";
+            return  "\n<style type=\"text/css\">\n    <![CDATA[".$this->sortCss()."]]>\n</style>\n";
         }
     }
 

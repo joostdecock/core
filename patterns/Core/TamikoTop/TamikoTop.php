@@ -109,8 +109,8 @@ class TamikoTop extends Pattern
         $arc = '3 C 3 6 5 C 7 4 4';
         $sew = "M 22 L 23 M 10 L 3 M 31 L 38 M $arc" ;
         $fabric = "M 41 L 44 $arc L 42 L 43 z";
-        $p->newPath('cutline', $fabric);
-        $p->newPath('sewline', $sew, ['class' => 'helpline']);
+        $p->newPath('cutline', $fabric, ['class' => 'fabric']);
+        $p->newPath('sewline', $sew, ['class' => 'fabric']);
 
         // Mark paths for sample service
         $p->paths['cutline']->setSample(true);
@@ -142,29 +142,26 @@ class TamikoTop extends Pattern
 
         // Title
         $p->newPoint('titleAnchor', $p->x(42)/2, $p->y(42)/2);
-        $p->addTitle('titleAnchor', 1, $this->t($p->title), '1x '.$this->t('From main fabric')."\n".$this->t('Cut on fold'));
+        $p->addTitle('titleAnchor', 1, $this->t($p->title), '1x '.$this->t('from fabric')."\n".$this->t('Cut on fold'));
 
         // Cut-on-fold (cof)
         $p->newPoint('cofStart', $p->x(1)+40, $p->y(2));
         $p->newPoint('cofEnd', $p->x(42)-40, $p->y(2));
-        $p->newCutOnFold('cofStart','cofEnd',$this->t('Cut on fold'),-95);
-
-        // Grainline
-        $p->newPoint('grainlineStart', $p->x('cofStart'), $p->y('cofStart')-120);
-        $p->newPoint('grainlineEnd', $p->x('cofEnd'), $p->y('grainlineStart'));
-        $p->newGrainline('grainlineStart','grainlineEnd',$this->t('Grainline'));
+        $p->newCutOnFold('cofStart','cofEnd',$this->t('Cut on fold').' - '.$this->t('Grainline'),-95);
 
         // Logo
         $p->addPoint('logoAnchor', $p->shift('titleAnchor',90,130));
         $p->newSnippet('logo', 'logo', 'logoAnchor');
-        $p->newSnippet('cc', 'cc', 'logoAnchor');
 
         // Scalebox
-        $p->addPoint('scaleboxAnchor', $p->shift('logoAnchor',-90,40));
+        $p->addPoint('scaleboxAnchor', $p->shift('logoAnchor',-90,30));
         $p->newSnippet('scalebox', 'scalebox', 'scaleboxAnchor');
 
         // Seam allowance
-        $p->offsetPathString('sa', 'M 3 C 3 6 5 C 7 4 4', 10, 1, ['class' => 'seam-allowance']);
+        $p->offsetPathString('sa', 'M 3 C 3 6 5 C 7 4 4', 10, 1, ['class' => 'sa fabric']);
+
+        // Notches
+        $p->notch([23,22,31,38,10]);
     }
 
 

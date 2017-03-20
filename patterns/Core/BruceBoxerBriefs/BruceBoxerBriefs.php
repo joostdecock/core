@@ -119,13 +119,11 @@ class BruceBoxerBriefs extends Pattern
     public function sample($model)
     {
         $this->initialize($model);
-
         $this->draftBlock($model);
         $this->draftBack($model);
         $this->draftSide($model);
         $this->draftFront($model);
         $this->draftInset($model);
-
         // Don't render the block
         $this->parts['block']->setRender(false);
     }
@@ -171,8 +169,9 @@ class BruceBoxerBriefs extends Pattern
         $p->splitCurve('backSplit1', 'backTopCurve7', 'backTopCurve6', 'cfTop', 'frontSplit1', 'sideTopCurve');
 
         // Crossseam
-        $p->newPoint(   'cbXseam', 0, $this->v('halfCross') * $this->getOption('verticalStretchFactor'), 'Crossseam point');
-        $p->newPoint(   'cfXseam', $p->x('cfTop'), $p->y('cbXseam'));
+        $p->newPoint('cbXseam', 0, $this->v('halfCross') * $this->getOption('verticalStretchFactor'), 'Crossseam point');
+        $p->newPoint('cfXseam', $p->x('cfTop'), $p->y('cbXseam') + $this->o('bulge')/2-10);
+        $p->newPoint('cfXseamBulged', $p->x('cfTop'), $p->y('cbXseam') + $this->o('bulge'));
 
         // Front shape
         $p->addPoint('gussetTip', $p->shift('cfXseam',180,$this->v('gussetWidth')/2));
@@ -261,7 +260,7 @@ class BruceBoxerBriefs extends Pattern
         $p->newPath('help2', 'M backSplit1 L sideLeft L sideRight L frontSplit1 M hemBackSide L backSplit1');
         $p->newPath('help3', 'M sideRight L insetBottomRight L insetCurveEnd');
         $p->newPath('topline','M cbTop C cbTopCp cfTopCp cfTop');
-
+ 
         // Paths of the different parts
         $p->newPath('back', '
             M cbTop L cbXseam
@@ -479,6 +478,10 @@ class BruceBoxerBriefs extends Pattern
         $p->newNote($p->newId(), 'noteAnchor1', $this->t("Standard\nseam\nallowance")."\n(".$p->unit(10).')', 8, 10, -5);
         $p->addPoint('noteAnchor2', $p->shiftTowards('xseamHemRot','hemBackSide', 50));
         $p->newNote($p->newId(), 'noteAnchor2', $this->t("Hem allowance")." (".$p->unit(20).')', 12, 25, -10);
+
+        // Logo
+        $p->newPoint('logoAnchor', $p->x('titleAnchor'), $p->y('cofTop')+40);
+        $p->newSnippet('logo', 'logo-sm', 'logoAnchor');
     }
 
     /**
@@ -566,6 +569,10 @@ class BruceBoxerBriefs extends Pattern
         // Notes
         $p->addPoint('noteAnchor1', $p->shift('frontInset', 90, 30));
         $p->newNote( $p->newId(), 'noteAnchor1', $this->t("Standard\nseam\nallowance")."\n(".$p->unit(10).')', 3, 10, -5);
+        
+        // Logo
+        $p->newPoint('logoAnchor', $p->x('cofTop')-50, $p->y('cofTop')+40);
+        $p->newSnippet('logo', 'logo-sm', 'logoAnchor');
     }
 
     /**
@@ -604,6 +611,10 @@ class BruceBoxerBriefs extends Pattern
         $p->newNote( $p->newId(), 'noteAnchor1', $this->t("Standard\nseam\nallowance")."\n(".$p->unit(10).')', 9, 10, -5);
         $p->addPoint('noteAnchor2', $p->shift('sideRight', 0, 80));
         $p->newNote( $p->newId(), 'noteAnchor2', $this->t("Hem allowance")."\n(".$p->unit(20).')', 12, 45, -13,['class' => 'note', 'dy' => -13, 'line-height' => 7]);
+        
+        // Logo
+        $p->newPoint('logoAnchor', $p->x('glTop')+15, $p->y('glTop')+20);
+        $p->newSnippet('logo', 'logo-sm', 'logoAnchor');
     }
 
     /*

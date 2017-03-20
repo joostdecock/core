@@ -711,6 +711,9 @@ class SimonShirt extends BrianBodyBlock
         $p->newPath('helpline', $helpline, ['class' => 'help fabric']);
         $p->newPath('foldline', $foldline, ['class' => 'foldline']);
         
+        // Mark path for sample service
+        $p->paths['outline']->setSample(true);
+
     }
 
 
@@ -744,6 +747,9 @@ class SimonShirt extends BrianBodyBlock
         $p->newPath('outline', $outline, ['class' => 'fabric']);
         $p->newPath('helpline', $helpline, ['class' => 'helpline']);
         $p->newPath('foldline', $foldline, ['class' => 'foldline']);
+        
+        // Mark path for sample service
+        $p->paths['outline']->setSample(true);
     }
 
     /**
@@ -770,6 +776,10 @@ class SimonShirt extends BrianBodyBlock
         else $outline = 'M 10 C 17 19 12 L 8 C 20 1 1 C 1 -20 -8 L -12 C -19 -17 -10 z';
 
         $p->newPath('seamline', $outline, ['class' => 'fabric']);
+        
+        // Mark path for sample service
+        $p->paths['seamline']->setSample(true);
+        $p->clonePoint(1,'gridAnchor');
         
         // Store armhole curve length
         $this->setValue('yokeArmholeLength', $p->curveLen(10,17,19,12));
@@ -895,6 +905,10 @@ class SimonShirt extends BrianBodyBlock
         }
         
         $p->newPath('outline', $outline, ['class' => 'fabric']);
+        
+        // Mark path for sample service
+        $p->paths['outline']->setSample(true);
+        $p->newPoint('gridAnchor', 0, $p->y(10));
         
         // Store armhole curve length
         if($this->o('yokeDart') > 0) $this->setValue('backArmholeLength', $p->curveLen('yokeDart1',18,15,14) + $p->curveLen(14,16,13,5));
@@ -1035,6 +1049,9 @@ class SimonShirt extends BrianBodyBlock
         $outline .= $this->v('cuffHemline');
         $outline .= ' z'; 
         $p->newPath('seamline', $outline, ['class' => 'fabric']);
+        
+        // Mark path for sample service
+        $p->paths['seamline']->setSample(true);
     
         // Store sleevehead length
         $this->setValue('sleeveheadLength', $p->curveLen(-5,-5,20,16) + $p->curveLen(16,21,10,10) + $p->curveLen(10,10,22,17) + $p->curveLen(17,23,28,30) + $p->curveLen(30,29,25,18) + $p->curveLen(18,14,11,11) + $p->curveLen(11,11,27,19) + $p->curveLen(19,26,5,5));
@@ -1144,6 +1161,9 @@ class SimonShirt extends BrianBodyBlock
         $p->newPath('outline', $outline, ['class' => 'fabric']);
         $p->newPath('helpline', 'M 22 L 32 M -22 L -32', ['class' => 'help fabric']);
 
+        // Mark path for sample service
+        $p->paths['outline']->setSample(true);
+        
         // Store collar stand length
         $this->setValue('collarStandLength', 2 * ($p->curveLen(42,43,6,61) + $p->curveLen(61,62,33,32))); 
     }
@@ -1206,6 +1226,9 @@ class SimonShirt extends BrianBodyBlock
         $p->newPath('outline', $outline, ['class' => 'fabric']);
         $p->newPath('helpine', 'M 5 L 3', ['class' => 'helpline']);
 
+        // Mark path for sample service
+        $p->paths['outline']->setSample(true);
+
         // Store collar length
         $this->setValue('collarLength', 2 * ($p->curveLen(5,6,4,4))); 
     }
@@ -1232,6 +1255,9 @@ class SimonShirt extends BrianBodyBlock
         $outline = 'M 4 L 8 C 8 9 12 L -12 C -9 -8 -8 L -4 C -4 -6 5 C 6 4 4 z';  
         $p->newPath('outline', $outline, ['class' => 'fabric']);
         $p->newPath('helpine', 'M 5 L 3', ['class' => 'helpline']);
+
+        // Mark path for sample service
+        $p->paths['outline']->setSample(true);
     }
 
     /**
@@ -1272,6 +1298,9 @@ class SimonShirt extends BrianBodyBlock
         // Paths
         $p->newPath('outline', 'M 10 L 1 L 5 L 11 z', ['class' => 'fabric']);
         $p->newPath('foldline', 'M 2 L 6 M 7 L 3 M 4 L 8', ['class' => 'hint fabric']);
+
+        // Mark path for sample service
+        $p->paths['outline']->setSample(true);
     }
 
     /**
@@ -1331,6 +1360,9 @@ class SimonShirt extends BrianBodyBlock
         // Paths
         $p->newPath('outline', 'M 24 L 1 L 13 L 14 L 17 L 15 L 16 L 25 z', ['class' => 'fabric']);
         $p->newPath('foldline', 'M 19 L 2 M 7 L 22 L 8 M 3 L 20 M 2 L 22 L 3 M 21 L 23 M 7 L 28 M 8 L 29', ['class' => 'hint fabric']);
+
+        // Mark path for sample service
+        $p->paths['outline']->setSample(true);
     }
 
     /**
@@ -1393,6 +1425,9 @@ class SimonShirt extends BrianBodyBlock
         else $outline = 'M 0 L 2 L 4 L -4 L -2 z';
 
         $p->newPath('outline', $outline, ['class' => 'fabric']);
+
+        // Mark path for sample service
+        $p->paths['outline']->setSample(true);
     }
 
     /**
@@ -1450,6 +1485,9 @@ class SimonShirt extends BrianBodyBlock
         else $outline = 'M 0 L 2 L 16 L -16 L -2 z';
 
         $p->newPath('outline', $outline, ['class' => 'fabric']);
+
+        // Mark path for sample service
+        $p->paths['outline']->setSample(true);
     }
     /*
        _____ _             _ _

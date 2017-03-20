@@ -18,6 +18,7 @@ patternNamespaces:
     - Core
     - Beta
     - Docs
+    - Templates
     - Tests
 
 themeNamespaces:

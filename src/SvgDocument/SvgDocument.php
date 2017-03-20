@@ -82,7 +82,7 @@ class SvgDocument
      */
     public function __toString()
     {
-        return '<?xml version="1.0" encoding="UTF-8" standalone="no"?'.">\n\n".
+        return '<?xml version="1.0" encoding="UTF-8" standalone="no"?'.">".
             $this->headerComments->load().
             $this->svgAttributes->load().
             $this->css->load().

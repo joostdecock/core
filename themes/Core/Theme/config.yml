@@ -5,7 +5,6 @@ templates:
         - "defs/base"
         - "defs/scalebox"
         - "defs/logo"
-        - "defs/cc"
         - "defs/buttons"
         - "defs/buttonholes"
         - "defs/snaps"

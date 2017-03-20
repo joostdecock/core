@@ -7,7 +7,7 @@ class SvgScriptTest extends \PHPUnit\Framework\TestCase
     public function testLoadAfterAdd()
     {
         $data = 'sorcha';
-        $expectedResult = "\n<script type=\"application/ecmascript\">\n    <![CDATA[\n    $data\n    \n    ]]>\n</script>\n";
+        $expectedResult = "\n<script type=\"application/ecmascript\">\n    <![CDATA[\n    $data \n    ]]>\n</script>\n";
 
         $object = new \Freesewing\SvgScript();
         $object->add($data);

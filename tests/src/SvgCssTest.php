@@ -7,7 +7,7 @@ class SvgCssTest extends \PHPUnit\Framework\TestCase
     public function testLoadAfterAdd()
     {
         $data = 'sorcha';
-        $expectedResult = "\n<style type=\"text/css\">\n    <![CDATA[\n\n    $data\n    ]]>\n</style>\n";
+        $expectedResult = "\n<style type=\"text/css\">\n    <![CDATA[\n    $data]]>\n</style>\n";
 
         $object = new \Freesewing\SvgCss();
         $object->add($data);
@@ -29,7 +29,7 @@ class SvgCssTest extends \PHPUnit\Framework\TestCase
     public function testCssSorting()
     {
         $data = "sorcha\n@line";
-        $expectedResult = "\n<style type=\"text/css\">\n    <![CDATA[\n\n    @line\n    sorcha\n    ]]>\n</style>\n";
+        $expectedResult = "\n<style type=\"text/css\">\n    <![CDATA[\n    @line\n    sorcha]]>\n</style>\n";
 
         $object = new \Freesewing\SvgCss();
         $object->add($data);

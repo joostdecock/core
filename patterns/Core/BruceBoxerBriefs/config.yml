@@ -1,7 +1,6 @@
 info:
      name:         "Bruce Boxer Briefs"
      version:      "2.0"
-     date:         "20170313"
      author:       "Joost De Cock"
      company:      "freesewing"
      link:         "freesewing.org/pattern/bruce"
@@ -49,8 +48,8 @@ options:
 
     bulge:
         type: "angle"
-        min: 15
-        max: 35
+        min: 0
+        max: 40
         default: 25
 
     horizontalStretchFactor:

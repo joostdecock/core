@@ -43,6 +43,7 @@ path.sa {
 path.help { 
     stroke-width: $stroke-sm;
     stroke: $light-purple;
+    stroke-dasharray: $stripedashes; 
 
 }
 

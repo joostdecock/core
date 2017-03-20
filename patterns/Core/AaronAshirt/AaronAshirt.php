@@ -288,7 +288,7 @@ class AaronAshirt extends BrianBodyBlock
 
         // Title
         $p->newPoint('titleAnchor', $p->x(5) * 0.4, $p->x(5) + 40, 'Title anchor');
-        $p->addTitle('titleAnchor', 1, $this->t($p->title), $this->t('Cut 1 on fold'));
+        $p->addTitle('titleAnchor', 1, $this->t($p->title), '1x '.$this->t('Cut on fold'));
 
         // Logo
         $p->addPoint('logoAnchor', $p->shift('titleAnchor', -90, 115));
@@ -336,7 +336,7 @@ class AaronAshirt extends BrianBodyBlock
 
         // Title
         $p->newPoint('titleAnchor', $p->x(5) * 0.4, $p->x(5) + 40, 'Title anchor');
-        $p->addTitle('titleAnchor', 2, $this->t($p->title), $this->t('Cut 1 on fold'));
+        $p->addTitle('titleAnchor', 2, $this->t($p->title), '1x '.$this->t('Cut on fold'));
 
         // Logo
         $p->addPoint('logoAnchor', $p->shift('titleAnchor', -90, 50));

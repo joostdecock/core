@@ -209,7 +209,7 @@ class SvgRenderbot
      */
     private function renderPart($part)
     {
-
+        $svg = '';
         if ($part->paths) {
             foreach ($part->paths as $path) {
                 $svg .= $this->renderPath($path, $part);

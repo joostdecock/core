@@ -36,6 +36,7 @@ class SvgRenderbotTest extends \PHPUnit\Framework\TestCase
     {
         $bot = new \Freesewing\SvgRenderbot();
         $svg = $bot->render($this->pattern);
+        $this->saveFixture('pattern', $svg);
         $this->assertEquals($svg, $this->loadFixture('pattern'));
     }
     
@@ -67,6 +68,7 @@ class SvgRenderbotTest extends \PHPUnit\Framework\TestCase
         $p->newPoint(2,100,100);
         $p->newPath('test', 'M 1 L 2');
         $svg = $bot->render($this->pattern);
+        $this->saveFixture('pathFromPart', $svg);
         $this->assertEquals($svg, $this->loadFixture('pathFromPart'));
     }
 
@@ -80,6 +82,7 @@ class SvgRenderbotTest extends \PHPUnit\Framework\TestCase
         $p->newPoint(1,0,0);
         $p->newSnippet('button', 'button', 1);
         $svg = $bot->render($this->pattern);
+        $this->saveFixture('snippet', $svg);
         $this->assertEquals($svg, $this->loadFixture('snippet'));
     }
 
@@ -93,6 +96,7 @@ class SvgRenderbotTest extends \PHPUnit\Framework\TestCase
         $p->newPoint(1,0,0);
         $p->newText('text', 1, 'This is an example');
         $svg = $bot->render($this->pattern);
+        $this->saveFixture('text', $svg);
         $this->assertEquals($svg, $this->loadFixture('text'));
     }
 
@@ -123,6 +127,7 @@ class SvgRenderbotTest extends \PHPUnit\Framework\TestCase
         $p->newWidthDimension(1,2,115);
         $p->newLinearDimension(1,2,15);
         $svg = $bot->render($this->pattern);
+        $this->saveFixture('dimension', $svg);
         $this->assertEquals($svg, $this->loadFixture('dimension'));
     }
 
@@ -137,6 +142,7 @@ class SvgRenderbotTest extends \PHPUnit\Framework\TestCase
         $p->newPoint(2,100,100);
         $p->newTextOnPath('test', 'M 1 L 2', 'This is an example', ['line-height' => 6]);
         $svg = $bot->render($this->pattern);
+        $this->saveFixture('textOnPath', $svg);
         $this->assertEquals($svg, $this->loadFixture('textOnPath'));
     }
 
@@ -149,6 +155,7 @@ class SvgRenderbotTest extends \PHPUnit\Framework\TestCase
         $p = $this->pattern->parts['testPart'];
         $p->newInclude('test', '<!-- This is an example -->');
         $svg = $bot->render($this->pattern);
+        $this->saveFixture('include', $svg);
         $this->assertEquals($svg, $this->loadFixture('include'));
     }
 
@@ -161,6 +168,7 @@ class SvgRenderbotTest extends \PHPUnit\Framework\TestCase
         $p = $this->pattern->parts['testPart'];
         $p->addTransform('test', new \Freesewing\Transform('translate',10,20));
         $svg = $bot->render($this->pattern);
+        $this->saveFixture('transform', $svg);
         $this->assertEquals($svg, $this->loadFixture('transform'));
     }
     

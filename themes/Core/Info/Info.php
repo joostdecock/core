@@ -33,6 +33,9 @@ class Info
         } elseif ($format == 'html') {
             $response->setBody($this->renderInfo($list));
             $response->setFormat('raw');
+        } elseif ($format == 'text') {
+            $response->setBody($this->printInfo($list));
+            $response->setFormat('raw');
         } else {
             $response->setBody($list);
             $response->setFormat('json');
@@ -57,6 +60,9 @@ class Info
             $response->setFormat('raw');
         } elseif ($format == 'html') {
             $response->setBody($this->renderPatternInfo($pattern));
+            $response->setFormat('raw');
+        } elseif ($format == 'text') {
+            $response->setBody($this->printPatternInfo($pattern));
             $response->setFormat('raw');
         } else {
             $response->setBody($pattern);
@@ -115,6 +121,46 @@ class Info
         $html .= "\n</ul>";
 
         return $html;
+    }
+
+    /**
+     * Returns text-formatted API information
+     *
+     * This is only called when the format is text
+     *
+     * @param array $list The data to theme
+     *
+     * @return string $text The themed text
+     */
+    private function printInfo($list)
+    {
+        $text = "\n    Services:";
+        foreach ($list['services'] as $name) {
+            $text .= "\n      $name";
+        }
+        $text .= "\n    Patterns:";
+        foreach ($list['patterns'] as $ns => $patterns) {
+            $text .= "\n      $ns:";
+            foreach ($patterns as $name => $title) {
+                $text .= "\n        $title";
+            }
+        }
+        $text .= "\n    Channels:";
+        foreach ($list['channels'] as $ns => $channels) {
+            $text .= "\n      $ns:";
+            foreach ($channels as $name) {
+                $text .= "\n        $name";
+            }
+        }
+        $text .= "\n    Themes:";
+        foreach ($list['themes'] as $ns => $themes) {
+            $text .= "\n      $ns:";
+            foreach ($themes as $name) {
+                $text .= "\n        $name";
+            }
+        }
+
+        return "$text\n\n";
     }
 
     /**
@@ -204,6 +250,79 @@ class Info
         $html .= "\n</div>";
 
         return $html;
+    }
+
+    /**
+     * Returns text-formatted pattern information
+     *
+     * This is only called when the format is text
+     *
+     * @param array $list The data to theme
+     *
+     * @return string $text The themed text
+     */
+    private function printPatternInfo($list)
+    {
+        $pattern = $list['pattern'];
+        $text .= "\n".$list['info']['name'];
+        $text .= "\n  Info";
+        foreach ($list['info'] as $key => $value) {
+            $text .= "\n    $key: $value";
+        }
+        $text .= "\n  Parts";
+        foreach ($list['parts'] as $key => $value) {
+            $text .= "\n    $key: $value";
+        }
+
+        $text .= "\n  Measurements";
+        foreach ($list['measurements'] as $key => $value) {
+            $text .= "\n    $key (default: $value mm)";
+        }
+
+        $text .= "\n  Options";
+        foreach ($list['options'] as $key => $value) {
+            $text .= "\n    $key: ".$value['type'];
+            switch($value['type']) {
+                case 'chooseOne':
+
+                    $text .= "\n      Default: ".$value['default'];
+                    $text .= "\n      Options:";
+                    foreach($value['options'] as $optionid => $option) {
+                        $text .= "\n        $optionid: $option";
+                    }
+                    break;
+                default:
+                    $text .= "\n      Min: ".$value['min'];
+                    $text .= "\n      Max: ".$value['max'];
+                    $text .= "\n      Default: ".$value['default'];
+                    break;
+            }
+        }
+
+        $text .= "\n  Sampler models";
+        $text .= "\n    Defaults";
+        foreach ($list['models']['default'] as $key => $value) {
+            $text .= "\n      $key: $value";
+        }
+
+        $text .= "\n    Groups";
+        foreach ($list['models']['groups'] as $key => $value) {
+            $text .= "\n      $key";
+            foreach ($value as $mkey => $mvalue) {
+                $text .= "\n        $mvalue";
+            }
+        }
+
+        $text .= "\n    Model measurements";
+        foreach ($list['models']['measurements'] as $key => $value) {
+            $text .= "\n      $key";
+            foreach ($value as $mkey => $mvalue) {
+                $text .= "\n        $mkey: $mvalue";
+            }
+        }
+
+
+        return "$text\n\n";
     }
 
     /**

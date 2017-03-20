@@ -1,11 +1,10 @@
 info:
     name: "Theodore trousers"
     version: "2.0"
-    date: 20161222
     author: "Joost De Cock"
     email: "joost@decock.org"
     company: "freesewing.org"
-    link: "freesewing.org/pattern/theodore-trousers/"
+    link: "freesewing.org/pattern/theodore"
 
 parts:
     back: "Back"

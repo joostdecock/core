@@ -1,6 +1,6 @@
 <?php
-/** Freesewing\Patterns\Beta\ SvenSweatshirt class */
-namespace Freesewing\Patterns\Beta;
+/** Freesewing\Patterns\Core\SvenSweatshirt class */
+namespace Freesewing\Patterns\Core;
 
 /**
  * A sweatshirt pattern
@@ -11,7 +11,7 @@ namespace Freesewing\Patterns\Beta;
  * @copyright 2017 Joost De Cock
  * @license http://opensource.org/licenses/GPL-3.0 GNU General Public License, Version 3
  */
-class SvenSweatshirt extends \Freesewing\Patterns\Core\BrianBodyBlock
+class SvenSweatshirt extends BrianBodyBlock
 {
     /*
         ___       _ _   _       _ _

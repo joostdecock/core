@@ -150,6 +150,14 @@ class SvenSweatshirt extends \Freesewing\Patterns\Core\BrianBodyBlock
         $this->finalizeFront($model);
         $this->finalizeBack($model);
         $this->finalizeSleeve($model);
+        
+        // Is this a paperless pattern?
+        if ($this->isPaperless) {
+            // Add paperless info to all parts
+            $this->paperlessFront($model);
+            $this->paperlessBack($model);
+            $this->paperlessSleeve($model);
+        }
     }
 
     /**
@@ -182,7 +190,12 @@ class SvenSweatshirt extends \Freesewing\Patterns\Core\BrianBodyBlock
 
         // Paths
         $path = 'M 9 L 2 L 3 L 4 L 6 C hemAtHips waistCpBottom waist C waistCpTop 5 5 C 13 16 14 C 15 18 10 C 17 19 12 L 8 C 20 21 9 z';
-        $p->newPath('seamline', $path);
+        $p->newPath('seamline', $path, ['class' => 'fabric']);
+        // Store sa base paths
+        $p->newPath('saBase', 'M 6 C hemAtHips waistCpBottom waist C waistCpTop 5 5 C 13 16 14 C 15 18 10 C 17 19 12 L 8 C 20 21 9'); 
+        $p->newPath('hemBase', 'M 4 L 6'); 
+        $p->paths['saBase']->setRender(false);
+        $p->paths['hemBase']->setRender(false);
 
         // Store armhole length
         $this->setValue('armholeFrontLength', $p->curveLen(12,19,17,10) + $p->curveLen(10,18,15,14) + $p->curveLen(14,16,13,5));
@@ -210,8 +223,13 @@ class SvenSweatshirt extends \Freesewing\Patterns\Core\BrianBodyBlock
         
         // Paths
         $path = 'M 1 L 2 L 3 L 4 L 6 C hemAtHips waistCpBottom waist C waistCpTop 5 5 C 13 16 14 C 15 18 10 C 17 19 12 L 8 C 20 1 1 z';
-        $p->newPath('seamline', $path);
-        
+        $p->newPath('seamline', $path, ['class' => 'fabric']);
+        // Store sa base paths
+        $p->newPath('saBase', 'M 6 C hemAtHips waistCpBottom waist C waistCpTop 5 5 C 13 16 14 C 15 18 10 C 17 19 12 L 8 C 20 1 1 '); 
+        $p->newPath('hemBase', 'M 4 L 6'); 
+        $p->paths['saBase']->setRender(false);
+        $p->paths['hemBase']->setRender(false);
+
         // Store armhole length
         $this->setValue('armholeBackLength', $p->curveLen(12,19,17,10) + $p->curveLen(10,18,15,14) + $p->curveLen(14,16,13,5));
     }
@@ -250,8 +268,13 @@ class SvenSweatshirt extends \Freesewing\Patterns\Core\BrianBodyBlock
         /** @var Part $p */
         $p = $this->parts['sleeve'];
         
-        $path = 'M 31 L -5 C -5 20 16 C 21 10 10 C 10 22 17 C 23 28 30 C 29 25 18 C 24 11 11 C 11 27 19 C 26 5 5 L 32 z';
-        $p->newPath('seamline', $path);
+        $path = 'M 31 L -5 C -5 20 16 C 21 10 10 C 10 22 17 C 23 28 30 C 29 25 18 C 24 11 11 C 11 27 19 C 26 5 5 L 32';
+        $p->newPath('seamline', $path.' z', ['class' => 'fabric']);
+        // Store sa base paths
+        $p->newPath('saBase', $path);
+        $p->newPath('hemBase', 'M 31 L 32');
+        $p->paths['saBase']->setRender(false);
+        $p->paths['hemBase']->setRender(false);
         
         // Store sleevehead length
         $this->setValue('sleeveheadLength', $p->curveLen(-5,-5,20,16) + $p->curveLen(16,21,10,10) + $p->curveLen(10,10,22,17) + $p->curveLen(17,23,28,30) + $p->curveLen(30,29,25,18) + $p->curveLen(18,14,11,11) + $p->curveLen(11,11,27,19) + $p->curveLen(19,26,5,5));
@@ -291,11 +314,18 @@ class SvenSweatshirt extends \Freesewing\Patterns\Core\BrianBodyBlock
         $p = $this->parts['back'];
         
         // Seam allowance 
-        $p->offsetPath('sa','seamline', 10, 1, ['class' => 'seam-allowance']);
+        $p->offsetPath('sa','saBase', 10, 1, ['class' => 'fabric sa']);
+        $p->offsetPath('hemSa','hemBase', 30, 1, ['class' => 'fabric sa']);
+        // Join ends
+        $p->newPath('saJoints', 'M sa-endPoint L 9 M sa-startPoint L hemSa-endPoint M hemSa-startPoint L 4', ['class' => 'fabric sa']);
         
         // Title
         $p->newPoint('titleAnchor', $p->x(8), $p->y(5));
         $p->addTitle('titleAnchor', 2, $this->t($p->title), '2x '.$this->t('from fabric')."\n".$this->t('Cut on fold'));
+
+        // Logo
+        $p->addPoint('logoAnchor', $p->shift('titleAnchor', -90 ,90));
+        $p->newSnippet('logo','logo-sm','logoAnchor');
 
         // Cut on fold
         $p->addPoint('cofTop', $p->shift(1,-90,20));
@@ -314,11 +344,18 @@ class SvenSweatshirt extends \Freesewing\Patterns\Core\BrianBodyBlock
         $p = $this->parts['front'];
         
         // Seam allowance
-        $p->offsetPath('sa','seamline', 10, 1, ['class' => 'seam-allowance']);
+        $p->offsetPath('sa','saBase', 10, 1, ['class' => 'fabric sa']);
+        $p->offsetPath('hemSa','hemBase', 30, 1, ['class' => 'fabric sa']);
+        // Join ends
+        $p->newPath('saJoints', 'M sa-endPoint L 9 M sa-startPoint L hemSa-endPoint M hemSa-startPoint L 4', ['class' => 'fabric sa']);
         
         // Title
         $p->newPoint('titleAnchor', $p->x(8), $p->y(5));
         $p->addTitle('titleAnchor', 1, $this->t($p->title), '2x '.$this->t('from fabric')."\n".$this->t('Cut on fold'));
+
+        // Logo
+        $p->addPoint('logoAnchor', $p->shift('titleAnchor', -90 ,90));
+        $p->newSnippet('logo','logo-sm','logoAnchor');
 
         // Cut on fold
         $p->addPoint('cofTop', $p->shift(9,-90,20));
@@ -337,13 +374,21 @@ class SvenSweatshirt extends \Freesewing\Patterns\Core\BrianBodyBlock
         $p = $this->parts['sleeve'];
 
         // Seam allowance 
-        $p->offsetPath('sa','seamline', -10, 1, ['class' => 'seam-allowance']);
+        $p->offsetPath('sa','saBase', -10, 1, ['class' => 'fabric sa']);
+        $p->offsetPath('hemSa','hemBase', 30, 1, ['class' => 'fabric sa']);
+        // Join ends
+        $p->newPath('saJoints', 'M hemSa-startPoint L sa-startPoint M hemSa-endPoint L sa-endPoint', ['class' => 'fabric sa']);
+
 
         // Scalebox
         $p->newSnippet('scalebox', 'scalebox', 'gridAnchor');
 
         // Title
         $p->addTitle(33, 3, $this->t($p->title), '2x '.$this->t('from fabric')."\n".$this->t('Good sides together'));
+
+        // Logo
+        $p->addPoint('logoAnchor', $p->shift(33, 90 ,90));
+        $p->newSnippet('logo','logo','logoAnchor');
     }
     
     /*
@@ -358,15 +403,113 @@ class SvenSweatshirt extends \Freesewing\Patterns\Core\BrianBodyBlock
     */
 
     /**
-     * Adds paperless info for the example part
+     * Paperless instructions for the front 
      *
      * @param \Freesewing\Model $model The model to draft for
      *
      * @return void
      */
-    public function paperlessExamplePart($model)
+    public function paperlessFront($model)
     {
         /** @var \Freesewing\Part $p */
-        $p = $this->parts['examplePart'];
+        $p = $this->parts['front'];
+
+        // Width at the bottom
+        $p->newWidthDimension(4,6,$p->y(6)+25);
+
+        // Height at the right
+        $xBase = $p->x(5);
+        $p->newHeightDimension(6, 5, $xBase+25);
+        $p->newHeightDimension(6, 12, $xBase+40);
+        $p->newHeightDimension(6, 8, $xBase+55);
+
+        // Height at the left
+        $p->newHeightDimension(9, 8, $p->x(9)-15);
+
+        // Width at the top
+        $p->newWidthDimension(9,8,$p->y(8)-20);
+
+        // Length of shoulder seam
+        $p->newLinearDimension(8,12,-20);
+
+        // Armhole length
+        $p->newCurvedDimension('M 5 C 13 16 14 C 15 18 10 C 17 19 12', 25);
+        
+        // Waist width
+        $p->newWidthDimension(3, 'waist');
+    }
+
+    /**
+     * Paperless instructions for the back 
+     *
+     * @param \Freesewing\Model $model The model to draft for
+     *
+     * @return void
+     */
+    public function paperlessBack($model)
+    {
+        /** @var \Freesewing\Part $p */
+        $p = $this->parts['back'];
+
+        // Width at the bottom
+        $p->newWidthDimension(4,6,$p->y(6)+25);
+
+        // Height at the right
+        $xBase = $p->x(5);
+        $p->newHeightDimension(6, 5, $xBase+25);
+        $p->newHeightDimension(6, 12, $xBase+40);
+        $p->newHeightDimension(6, 8, $xBase+55);
+
+        // Height at the left
+        $p->newHeightDimensionSm(1, 8, $p->x(9)-15);
+
+        // Width at the top
+        $p->newWidthDimension(1,8,$p->y(8)-20);
+
+        // Length of shoulder seam
+        $p->newLinearDimension(8,12,-20);
+
+        // Armhole length
+        $p->newCurvedDimension('M 5 C 13 16 14 C 15 18 10 C 17 19 12', 25);
+        
+        // Waist width
+        $p->newWidthDimension(3, 'waist');
+    }
+
+    /**
+     * Paperless instructions for the sleeve
+     *
+     * @param \Freesewing\Model $model The model to draft for
+     *
+     * @return void
+     */
+    public function paperlessSleeve($model)
+    {
+        /** @var \Freesewing\Part $p */
+        $p = $this->parts['sleeve'];
+
+        // Height on the right
+        $xBase = $p->x(5);
+        $p->newHeightDimension(32,5,$xBase+20);
+        $p->newHeightDimension(32,30,$xBase+35);
+
+        // Width at the bottom
+        $p->newWidthDimension(31,32,$p->y(32)+25);
+
+        // Width at the top
+        $p->newWidthDimension(-5,5,$p->y(1)-35);
+
+        // Sleevecap length
+        $p->newCurvedDimension('
+            M -5 
+            C -5 20 16
+            C 21 10 10
+            C 10 22 17
+            C 23 28 30
+            C 29 25 18
+            C 24 11 11
+            C 11 27 19
+            C 26 5 5
+        ', -20);
     }
 }

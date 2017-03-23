@@ -197,6 +197,9 @@ class BentBodyBlock extends \Freesewing\Patterns\Core\BrianBodyBlock
         
         // Paths
         $p->newPath('topsleeve', 'M topsleeveWristRight L elbowRight C elbowRightCpTop topsleeveRightEdgeCpBottom topsleeveRightEdge C topsleeveRightEdgeCpTop backPitchPoint backPitchPoint C backPitchPoint sleeveTopCpRight sleeveTop C sleeveTopCpLeft frontPitchPointCpTop frontPitchPoint C frontPitchPointCpBottom topsleeveLeftEdgeCpRight topsleeveLeftEdge C topsleeveLeftEdge topsleeveElbowLeftCpTop topsleeveElbowLeft L topsleeveWristLeft z', ['class' => 'fabric']);
+        
+        // Mark path for sample service
+        $p->paths['topsleeve']->setSample(true);
     }
 
     /**
@@ -215,6 +218,9 @@ class BentBodyBlock extends \Freesewing\Patterns\Core\BrianBodyBlock
         
         // Paths
         $p->newPath('undersleeve', 'M undersleeveWristRight L elbowRight C elbowRightCpTop undersleeveRightEdgeCpBottom undersleeveRightEdge C undersleeveRightEdgeCpTop undersleeveTip undersleeveTip C undersleeveTipCpBottom undersleeveLeftEdgeCpRight undersleeveLeftEdgeRight L undersleeveLeftEdge C undersleeveLeftEdge undersleeveElbowLeftCpTop undersleeveElbowLeft L undersleeveWristLeft L undersleeveWristRight z', ['class' => 'fabric']);
+        
+        // Mark path for sample service
+        $p->paths['undersleeve']->setSample(true);
     }
 
     protected function armholeLen()

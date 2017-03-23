@@ -2,10 +2,10 @@ hidden: false
 info:
     name: "Bent Body Block"
     version: "1.0"
-    date: 20170203
     author: "Joost De Cock"
     email: "joost@decock.org"
     company: "freesewing.org"
+    link: "freesewing.org/pattern/bent"
 
 parts:
   backBlock: "Back block"

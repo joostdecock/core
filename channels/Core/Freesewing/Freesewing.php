@@ -153,13 +153,14 @@ class Freesewing extends Channel
                         }
                         break;
                     case 'chooseOne':
-                        (
+                        if(
                             isset($input) && 
-                            $input !== null && 
-                            in_array($input,array_keys($val['options']))
-                        ) 
-                        ? $options[$key] = $input
-                        : $options[$key] = $val['default'];
+                            $input !== null
+                        ) {
+                            $options[$key] = $input;
+                        } else {
+                            $options[$key] = $val['default'];
+                        }
                         break;
                 }
 

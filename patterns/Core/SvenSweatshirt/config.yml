@@ -1,11 +1,11 @@
 info:
   name: "Sven Sweatshirt"
   version: "1.0"
-  date: 20170210
+  date: 20170323
   author: "Joost De Cock"
   email: "joost@decock.org"
   company: "freesewing.org"
-  link: "freesewing.org/pattern/sven-sweatshirt/"
+  link: "freesewing.org/pattern/sven"
 
 parts:
   backBlock: "Back block"

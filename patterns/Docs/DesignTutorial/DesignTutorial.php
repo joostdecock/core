@@ -21,7 +21,7 @@ class DesignTutorial extends \Freesewing\Patterns\Core\Pattern
     public function draft($model)
     {
         $method = 'example_'.$this->o('figure'); 
-        if(!method_exists($this,$method)) die();
+        if(!method_exists($this,$method)) die('Method not found');
         $this->{$method}($this->parts['part'],$model);
     }
 

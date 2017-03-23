@@ -48,10 +48,21 @@ class BentBodyBlock extends \Freesewing\Patterns\Core\BrianBodyBlock
         $this->draftSleeveBlock($model);
         $this->draftTopsleeveBlock($model);
         $this->draftUndersleeveBlock($model);
-        //$this->finalizeSleeveBlock($model);
+        
+        $this->finalizeTopsleeveBlock($model);
+        $this->finalizeUndersleeveBlock($model);
         
         // Hide the sleeveBlock
         $this->parts['sleeveBlock']->setRender(false);
+        
+        // Is this a paperless pattern?
+        if ($this->isPaperless) {
+            // Add paperless info to all parts
+            $this->paperlessFrontBlock($model);
+            $this->paperlessBackBlock($model);
+            $this->paperlessTopsleeveBlock($model);
+            $this->paperlessUndersleeveBlock($model);
+        }
     }
 
     /**
@@ -185,7 +196,10 @@ class BentBodyBlock extends \Freesewing\Patterns\Core\BrianBodyBlock
         $p = $this->parts['topsleeveBlock'];
         
         // Paths
-        $p->newPath('topsleeve', 'M topsleeveWristRight L elbowRight C elbowRightCpTop topsleeveRightEdgeCpBottom topsleeveRightEdge C topsleeveRightEdgeCpTop backPitchPoint backPitchPoint C backPitchPoint sleeveTopCpRight sleeveTop C sleeveTopCpLeft frontPitchPointCpTop frontPitchPoint C frontPitchPointCpBottom topsleeveLeftEdgeCpRight topsleeveLeftEdge C topsleeveLeftEdge topsleeveElbowLeftCpTop topsleeveElbowLeft L topsleeveWristLeft z');
+        $p->newPath('topsleeve', 'M topsleeveWristRight L elbowRight C elbowRightCpTop topsleeveRightEdgeCpBottom topsleeveRightEdge C topsleeveRightEdgeCpTop backPitchPoint backPitchPoint C backPitchPoint sleeveTopCpRight sleeveTop C sleeveTopCpLeft frontPitchPointCpTop frontPitchPoint C frontPitchPointCpBottom topsleeveLeftEdgeCpRight topsleeveLeftEdge C topsleeveLeftEdge topsleeveElbowLeftCpTop topsleeveElbowLeft L topsleeveWristLeft z', ['class' => 'fabric']);
+        
+        // Mark path for sample service
+        $p->paths['topsleeve']->setSample(true);
     }
 
     /**
@@ -203,7 +217,10 @@ class BentBodyBlock extends \Freesewing\Patterns\Core\BrianBodyBlock
         $p = $this->parts['undersleeveBlock'];
         
         // Paths
-        $p->newPath('undersleeve', 'M undersleeveWristRight elbowRight C elbowRightCpTop undersleeveRightEdgeCpBottom undersleeveRightEdge C undersleeveRightEdgeCpTop undersleeveTip undersleeveTip C undersleeveTipCpBottom undersleeveLeftEdgeCpRight undersleeveLeftEdgeRight L undersleeveLeftEdge C undersleeveLeftEdge undersleeveElbowLeftCpTop undersleeveElbowLeft L undersleeveWristLeft z');
+        $p->newPath('undersleeve', 'M undersleeveWristRight L elbowRight C elbowRightCpTop undersleeveRightEdgeCpBottom undersleeveRightEdge C undersleeveRightEdgeCpTop undersleeveTip undersleeveTip C undersleeveTipCpBottom undersleeveLeftEdgeCpRight undersleeveLeftEdgeRight L undersleeveLeftEdge C undersleeveLeftEdge undersleeveElbowLeftCpTop undersleeveElbowLeft L undersleeveWristLeft L undersleeveWristRight z', ['class' => 'fabric']);
+        
+        // Mark path for sample service
+        $p->paths['undersleeve']->setSample(true);
     }
 
     protected function armholeLen()
@@ -229,6 +246,62 @@ class BentBodyBlock extends \Freesewing\Patterns\Core\BrianBodyBlock
     */
 
 
+    /**
+     * Finalizes the topsleeve block
+     *
+     * Only draft() calls this method, sample() does not.
+     * It does things like adding a title, logo, and any
+     * text or instructions that go on the pattern.
+     *
+     * @param \Freesewing\Model $model The model to draft for
+     *
+     * @return void
+     */
+    public function finalizeTopsleeveBlock($model)
+    {
+        /** @var \Freesewing\Part $p */
+        $p = $this->parts['topsleeveBlock'];
+        
+        // Seam allowance
+        $p->offsetPath('sa', 'topsleeve', 10, 1, ['class' => 'sa fabric']);
+
+        // Title
+        $p->clonePoint('elbowCenter','titleAnchor');
+        $p->addTitle('titleAnchor',3,$this->t($p->getTitle()));
+
+        // logo
+        $p->addPoint('logoAnchor', $p->shift('titleAnchor',-90,50));
+        $p->newSnippet('logo','logo-sm','logoAnchor');
+    }
+
+    /**
+     * Finalizes the undersleeve block
+     *
+     * Only draft() calls this method, sample() does not.
+     * It does things like adding a title, logo, and any
+     * text or instructions that go on the pattern.
+     *
+     * @param \Freesewing\Model $model The model to draft for
+     *
+     * @return void
+     */
+    public function finalizeUndersleeveBlock($model)
+    {
+        /** @var \Freesewing\Part $p */
+        $p = $this->parts['undersleeveBlock'];
+        
+        // Seam allowance
+        $p->offsetPath('sa', 'undersleeve', 10, 1, ['class' => 'sa fabric']);
+
+        // Title
+        $p->clonePoint('elbowCenter','titleAnchor');
+        $p->addTitle('titleAnchor',4,$this->t($p->getTitle()),'','horizontal-small');
+
+        // logo
+        $p->addPoint('logoAnchor', $p->shift('titleAnchor',-90,50));
+        $p->newSnippet('logo','logo-sm','logoAnchor');
+    }
+
     /*
         ____                       _
        |  _ \ __ _ _ __   ___ _ __| | ___  ___ ___
@@ -239,5 +312,68 @@ class BentBodyBlock extends \Freesewing\Patterns\Core\BrianBodyBlock
 
       Instructions for paperless patterns
     */
+
+
+    /**
+     * Adds paperless info for the topsleeve block
+     *
+     * @param \Freesewing\Model $model The model to draft for
+     *
+     * @return void
+     */
+    public function paperlessTopsleeveBlock($model)
+    {
+        /** @var \Freesewing\Part $p */
+        $p = $this->parts['topsleeveBlock'];
+
+        // Add helpline
+        $p->newPath('help', 'M topsleeveLeftEdge L topsleeveRightEdge', ['class' => 'fabric help']);
+
+        // Heights on the right
+        $xBase = $p->x('topsleeveRightEdge');
+        $p->newHeightDimension('undersleeveWristRight', 'topsleeveRightEdge', $xBase+40); 
+        $p->newHeightDimension('undersleeveWristRight', 'backPitchPoint', $xBase+55); 
+        $p->newHeightDimension('undersleeveWristRight', 'sleeveTop', $xBase+70); 
+
+        // Widhts at the bottom
+        $yBase = $p->y('undersleeveWristRight');
+        $p->newWidthDimension('topsleeveWristLeft', 'undersleeveWristRight', $yBase+25);
+        $p->newWidthDimension('topsleeveLeftEdge', 'undersleeveWristRight', $yBase+40);
+
+        // Height difference wrist
+        $p->newHeightDimensionSm('undersleeveWristRight','topsleeveWristLeft', $p->x('topsleeveWristLeft')-25);
+
+        // Lengths
+        $p->newCurvedDimension('M undersleeveWristRight L elbowRight C elbowRightCpTop topsleeveRightEdgeCpBottom topsleeveRightEdge C topsleeveRightEdgeCpTop backPitchPoint backPitchPoint', 25);
+        $p->newCurvedDimension('M topsleeveWristLeft L topsleeveElbowLeft C topsleeveElbowLeftCpTop topsleeveLeftEdge topsleeveLeftEdge', -25);
+        $p->newCurvedDimension('M topsleeveLeftEdge C topsleeveLeftEdgeCpRight frontPitchPointCpBottom frontPitchPoint C frontPitchPointCpTop sleeveTopCpLeft sleeveTop C sleeveTopCpRight backPitchPoint backPitchPoint', -25);
+
+
+    }
+    
+    /**
+     * Adds paperless info for the undersleeve block
+     *
+     * @param \Freesewing\Model $model The model to draft for
+     *
+     * @return void
+     */
+    public function paperlessUndersleeveBlock($model)
+    {
+        /** @var \Freesewing\Part $p */
+        $p = $this->parts['undersleeveBlock'];
+
+        // Lengths
+        $p->newCurvedDimension('M undersleeveWristRight L elbowRight C elbowRightCpTop undersleeveRightEdgeCpBottom undersleeveRightEdge C undersleeveRightEdgeCpTop undersleeveTip undersleeveTip', 25); 
+        $p->newCurvedDimension('M undersleeveWristLeft L undersleeveElbowLeft C undersleeveElbowLeftCpTop undersleeveLeftEdge undersleeveLeftEdge', -25); 
+        $p->newCurvedDimension('M undersleeveLeftEdge L undersleeveLeftEdgeRight C undersleeveLeftEdgeCpRight undersleeveTipCpBottom undersleeveTip', -25);
+
+        // Height on the right
+        $p->newHeightDimension('undersleeveWristRight','undersleeveTip', $p->x('elbowRightCpTop')+30);
+
+        // Width
+        $p->newWidthDimension('undersleeveLeftEdge','undersleeveTip', $p->y('undersleeveTip')-25);
+        $p->newLinearDimension('undersleeveWristLeft','undersleeveWristRight', 25);
+    }
 
 }

@@ -539,7 +539,7 @@ class CathrinCorset extends Pattern
 
             }
         }
-        return true;
+        
         $this->finalizePanel1($model);
         $this->finalizePanel2($model);
         $this->finalizePanel3($model);
@@ -565,10 +565,7 @@ class CathrinCorset extends Pattern
 
         $p->addPoint('cofTop', $p->shift(10, -90, 20));
         $p->addPoint('cofBottom', $p->shift(20, 90, 20));
-        $p->addPoint('grainlineTop', $p->shift(10, -45, 25));
-        $p->addPoint('grainlineBottom', $p->shift(20, 45, 25));
-        $p->newGrainline('grainlineBottom','grainlineTop',$this->t('Grainline'));
-        $p->newCutonfold('cofBottom','cofTop',$this->t('Cut on fold'),9);
+        $p->newCutonfold('cofBottom','cofTop',$this->t('Cut on fold').' - '.$this->t('Grainline'),9);
     }
 
     /**
@@ -640,8 +637,7 @@ class CathrinCorset extends Pattern
 
         // Logo and CC
         $p->addPoint('logoAnchor', $p->shift('411-5', -90, 40));
-        $p->newSnippet('logo', 'logo', 'logoAnchor');
-        $p->newSnippet('cc', 'cc', 'logoAnchor');
+        $p->newSnippet('logo', 'logo-sm', 'logoAnchor');
     }
 
     /**

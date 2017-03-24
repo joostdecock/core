@@ -7,7 +7,7 @@ templates:
         - "defs/designer"
 settings:
     partMargin: 10
-    isPaperless: true
+    isPaperless: false
 options:
     - parts
     - forceParts

@@ -25,14 +25,17 @@ path.fabric {
 }
 
 path.lining { 
+    stroke-width: $stroke-lg;
     stroke: $color-lining;
 }
 
 path.interfacing { 
+    stroke-width: $stroke-lg;
     stroke: $color-interfacing;
 }
 
 path.canvas { 
+    stroke-width: $stroke-lg;
     stroke: $color-canvas;
 }
 
@@ -42,14 +45,13 @@ path.sa {
 
 path.help { 
     stroke-width: $stroke-sm;
-    stroke: $light-purple;
+    stroke-dasharray: $stripedashes; 
 
 }
 
 path.hint { 
     stroke-width: $stroke-sm;
     stroke-dasharray: $dots; 
-    stroke: $pink;
 }
 
 /* Notes */

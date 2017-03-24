@@ -1,4 +1,6 @@
 {
+    "name": "freesewing/core",
+    "description": "Freesewing is an open source platform for made-to-measure sewing patterns",
     "require": {
         "symfony/translation": "3.1.*",
         "symfony/yaml": "3.1.*",

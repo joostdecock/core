@@ -236,9 +236,12 @@ class TrentTrouserBlock extends Pattern
         $p->addPoint('frontCpCrotchEdge', $p->rotate('frontCpCrotchEgdeBase','frameCrotchEdge',90));
 
         // Paths
-        $p->newPath('seamLine', 'M frontHemIn L frontKneeIn C frontCpKneeIn frameCrotchEdge frameCrotchEdge C frontCpCrotchEdge frontCrotchVerticalControlPoint frameSeatIn L frontHipsIn L frontHipsOut C frontHipsOut frontCpSeatUp frameSeatOut C frontCpSeatDown frontCpKneeOut frontKneeOut L frontHemOut z');
-        // To knees only for muslin test
-        $p->newPath('seamLine', 'M frontKneeIn C frontCpKneeIn frameCrotchEdge frameCrotchEdge C frontCpCrotchEdge frontCrotchVerticalControlPoint frameSeatIn L frontHipsIn L frontHipsOut C frontHipsOut frontCpSeatUp frameSeatOut C frontCpSeatDown frontCpKneeOut frontKneeOut z');
+        $p->newPath('seamLine', 'M frontHemIn L frontKneeIn C frontCpKneeIn frameCrotchEdge frameCrotchEdge C frontCpCrotchEdge frontCrotchVerticalControlPoint frameSeatIn L frontHipsIn L frontHipsOut C frontHipsOut frontCpSeatUp frameSeatOut C frontCpSeatDown frontCpKneeOut frontKneeOut L frontHemOut z', ['class' => 'fabric']);
+        // Store sa base paths
+        $p->newPath('saBase', 'M frontHemIn L frontKneeIn C frontCpKneeIn frameCrotchEdge frameCrotchEdge C frontCpCrotchEdge frontCrotchVerticalControlPoint frameSeatIn L frontHipsIn L frontHipsOut C frontHipsOut frontCpSeatUp frameSeatOut C frontCpSeatDown frontCpKneeOut frontKneeOut L frontHemOut');
+        $p->newPath('hemBase', 'M frontHemIn L frontHemOut');
+        $p->paths['saBase']->setRender(false);
+        $p->paths['hemBase']->setRender(false);
 
         /**
          * If you are studying this block, uncomment the paths below
@@ -360,14 +363,13 @@ class TrentTrouserBlock extends Pattern
 
 
         // Paths
-        $p->newPath('seamLine', 'M backHemIn L backKneeIn C backCpKneeIn backCrotchEdge backCrotchEdge C backCrotchEdge backSeamVerticalControlPoint backSeamTiltPoint L backHipsIn L backDartLeft L backDartTip L backDartRight L backHipsOut C backHipsOut backCpSeatOutUp backSeatOut C backCpSeatOutDown backCpKneeOut backKneeOut L backHemOut z');
+        $p->newPath('seamLine', 'M backHemIn L backKneeIn C backCpKneeIn backCrotchEdge backCrotchEdge C backCrotchEdge backSeamVerticalControlPoint backSeamTiltPoint L backHipsIn L backDartLeft L backDartTip L backDartRight L backHipsOut C backHipsOut backCpSeatOutUp backSeatOut C backCpSeatOutDown backCpKneeOut backKneeOut L backHemOut z', ['class' => 'fabric']);
         
-        // To knees only for muslin test
-        $p->newPath('seamLine', 'M backKneeIn C backCpKneeIn backCrotchEdge backCrotchEdge C backCrotchEdge backSeamVerticalControlPoint backSeamTiltPoint L backHipsIn L backDartLeft L backDartTip L backDartRight L backHipsOut C backHipsOut backCpSeatOutUp backSeatOut C backCpSeatOutDown backCpKneeOut backKneeOut z');
-        
-        // Same but without darts to use as basis for seam allowance
-        $p->newPath('seamLineNoDarts', 'M backKneeIn C backCpKneeIn backCrotchEdge backCrotchEdge C backCrotchEdge backSeamVerticalControlPoint backSeamTiltPoint L backHipsIn L backDartLeft L backDartRight L backHipsOut C backHipsOut backCpSeatOutUp backSeatOut C backCpSeatOutDown backCpKneeOut backKneeOut z');
-        $p->paths['seamLineNoDarts']->setRender(false);
+        // Seam allowance base paths
+        $p->newPath('saBase', 'M backHemIn L backKneeIn C backCpKneeIn backCrotchEdge backCrotchEdge C backCrotchEdge backSeamVerticalControlPoint backSeamTiltPoint L backHipsIn L backDartLeft L backDartRight L backHipsOut C backHipsOut backCpSeatOutUp backSeatOut C backCpSeatOutDown backCpKneeOut backKneeOut L backHemOut');
+        $p->newPath('hemBase', 'M backHemIn L backHemOut');
+        $p->paths['saBase']->setRender(false);
+        $p->paths['hemBase']->setRender(false);
 
         /**
          * If you are studying this block, uncomment the paths below
@@ -457,10 +459,13 @@ class TrentTrouserBlock extends Pattern
         $p->newGrainline('grainlineBottom', 'grainlineTop', $this->t('grainline')); 
         
         // Seat helpline
-        $p->newPath('seatLine', 'M frameSeatIn L frameSeatOut', ['class' => 'helpline']);
+        $p->newPath('seatLine', 'M frameSeatIn L frameSeatOut', ['class' => 'help fabric']);
         
         // Seam allowance
-        $p->offsetPath('sa','seamLine', -10, 1, ['class' => 'seam-allowance']);
+        $p->offsetPath('sa','saBase', -10, 1, ['class' => 'sa fabric']);
+        $p->offsetPath('hemSa','hemBase', 30, 1, ['class' => 'sa fabric']);
+        // Join sa ends
+        $p->newPath('saJoints', 'M sa-startPoint L hemSa-startPoint M hemSa-endPoint L sa-endPoint', ['class' => 'sa fabric']);
     }
 
 
@@ -486,10 +491,13 @@ class TrentTrouserBlock extends Pattern
         $p->newGrainline('grainlineBottom', 'grainlineTop', $this->t('grainline')); 
         
         // Seat helpline
-        $p->newPath('seatLine', 'M backSeamTiltPoint L backSeatOut', ['class' => 'helpline']);
+        $p->newPath('seatLine', 'M backSeamTiltPoint L backSeatOut', ['class' => 'help fabric']);
         
-        // Seam allowance - we need to exclude the dart from it
-        $p->offsetPath('sa','seamLineNoDarts', -10, 1, ['class' => 'seam-allowance']);
+        // Seam allowance
+        $p->offsetPath('sa','saBase', -10, 1, ['class' => 'sa fabric']);
+        $p->offsetPath('hemSa','hemBase', 30, 1, ['class' => 'sa fabric']);
+        // Join sa ends
+        $p->newPath('saJoints', 'M sa-startPoint L hemSa-startPoint M hemSa-endPoint L sa-endPoint', ['class' => 'sa fabric']);
     }
 
     /*

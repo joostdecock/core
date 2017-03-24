@@ -7,8 +7,8 @@ class SvgDocumentTest extends \PHPUnit\Framework\TestCase
 
     protected function setUp()
     {
-        $this->svgBasic = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>\n\n\n<svg\n    \n>\n\n\n</svg>\n\n";
-        $this->svgWithBody = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>\n\n\n<svg\n    \n>\nsorcha\n\n</svg>\n\n";
+        $this->svgBasic = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>\n<svg\n    \n>\n\n\n</svg>\n\n";
+        $this->svgWithBody = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>\n<svg\n    \n>\nsorcha\n\n</svg>\n\n";
         $headerComments = new \Freesewing\SvgComments();
         $svgAttributes = new \Freesewing\SvgAttributes();
         $css = new \Freesewing\SvgCss();

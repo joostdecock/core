@@ -131,8 +131,7 @@ class LesleyLeggings extends SethSelvedgeTrouserBlock
 
         // Is this a paperless pattern?
         if ($this->isPaperless) {
-            // Add paperless info to our example part
-            //$this->paperlessExamplePart($model);
+            $this->paperlessLeggings($model);
         }
     }
 
@@ -274,7 +273,7 @@ class LesleyLeggings extends SethSelvedgeTrouserBlock
         } else {
             $seamLine = "M hemFront $seamLineFromKnees L hemBack z";
         }
-        $p->newPath('seamline', $seamLine);
+        $p->newPath('seamline', $seamLine, ['class' => 'fabric']);
 
     }
 
@@ -328,14 +327,16 @@ class LesleyLeggings extends SethSelvedgeTrouserBlock
         $p->addTitle('titleAnchor', 1, $this->t($p->title), '2x '.$this->t('from main fabric')."\n".$this->t('With good sides together'));
 
         // Logo
-        $p->newPoint('logoAnchor', $p->x('titleAnchor'), $p->y('titleAnchor')+60);
+        $p->newPoint('logoAnchor', $p->x('titleAnchor'), $p->y('titleAnchor')+90);
         $p->newSnippet('logo', 'logo', 'logoAnchor');
-        $p->newSnippet('cc', 'cc', 'logoAnchor');
         
         // Seam allowance
-        $p->offsetPath('sa','seamline',10,1,['class' => 'seam-allowance']);
-
-        $p->newWidthDimension('hemBack', 'hemFront');
+        $p->offsetPath('sa','seamline',10,1,['class' => 'sa fabric']);
+        
+        // Add grainline
+        $p->curveCrossesX('backHipsIn','backHipsInCp','frontHipsInCp','frontHipsIn',0,'helpline');
+        $p->newPoint('helpline2', 0, $p->y('hemBack'));
+        $p->newGrainline('helpline2','helpline1',$this->t('Grainline'));
     }
 
     /*
@@ -356,9 +357,34 @@ class LesleyLeggings extends SethSelvedgeTrouserBlock
      *
      * @return void
      */
-    public function paperlessExamplePart($model)
+    public function paperlessLeggings($model)
     {
         /** @var \Freesewing\Part $p */
-        $p = $this->parts['examplePart'];
+        $p = $this->parts['leggings'];
+
+
+        // Widhts at top
+        $yBase = $p->y('backHipsIn');
+        $p->newWidthDimension('backHipsIn','helpline1', $yBase-25);
+        $p->newWidthDimension('helpline1', 'frontHipsIn', $yBase-25);
+        $p->newWidthDimension('backCrotchEdge','helpline1', $yBase-40);
+        $p->newWidthDimension('helpline1', 'frameCrotchEdge', $yBase-40);
+
+        // Heights
+        $xBase = $p->x('frameCrotchEdge');
+        $p->newHeightDimension('hemFront','frameCrotchEdge', $xBase+25);
+        $p->newHeightDimension('hemFront','frontHipsIn', $xBase+40);
+        $xBase = $p->x('backCrotchEdge');
+        $p->newHeightDimension('hemBack','backCrotchEdge', $xBase-25);
+        $p->newHeightDimension('hemBack','backHipsIn', $xBase-40);
+
+        // Widths at bottom
+        $yBase = $p->y('hemBack')+25;
+        $p->newWidthDimension('hemBack', 'helpline2', $yBase);
+        $p->newWidthDimension('helpline2', 'hemFront', $yBase);
+
+        $p->newHeightdimensionSm('frontHipsIn','backHipsIn',$p->x('backHipsIn')-25);
+
+
     }
 }

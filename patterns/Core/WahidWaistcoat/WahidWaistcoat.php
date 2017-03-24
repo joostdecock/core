@@ -431,13 +431,13 @@ class WahidWaistcoat extends BrianBodyBlock
 
         // Paths
         $pocket = 'M 7001 L 7005 7006 7003 M 7004 L 7008 7007 7002';
-        $p->newPath('pocket', $pocket, ['class' => 'helpline']);
+        $p->newPath('pocket', $pocket, ['class' => 'help fabric']);
         $flb = 'M flbTop C flbCp 907 907';
-        $p->newPath('flb', $flb, ['class' => 'helpline']);
+        $p->newPath('flb', $flb, ['class' => 'help lining']);
         $seamlineA = "M 300 L 4001 ";
         $seamlineB = " L 2910 C 2914 2906 2902 C 2904 2907 5 C 13 16 14 C 15 18 10 C 17 shoulderFrontCp shoulderFront L 8 C 20 301 300 z";
         $seamline = $seamlineA.$hemWithDart.$seamlineB;
-        $p->newPath('seamline', $seamline);
+        $p->newPath('seamline', $seamline, ['class' => 'fabric']);
         $saBase = $seamlineA.$hemWithoutDart.$seamlineB;
         $p->newPath('saBase', $saBase);
 
@@ -520,7 +520,7 @@ class WahidWaistcoat extends BrianBodyBlock
         $partB = 'L 911 L 2911 L 2910 C 2914 2906 2902 C 2904 2907 5 C 13 16 14 C 15 18 10 C 17 19 shoulderBack L 8 C 20 1 1 z';
         $withDart = $partA.$dart.$partB;
         $withoutDart = $partA.$partB;
-        $p->newPath('seamline', $withDart);
+        $p->newPath('seamline', $withDart, ['class' => 'fabric']);
         $p->newPath('saBase', $withoutDart);
         $p->paths['saBase']->setRender(false);
 
@@ -550,7 +550,7 @@ class WahidWaistcoat extends BrianBodyBlock
         if($this->o('hemStyle')==1) $seamline .= " L 4002 C 4006 4007 9121 "; // Classic
         else $seamline .= ' C 4002 4003 4004 L 912 '; // Rounded
         $seamline .= " L 910 C 914 906 902 C 904 907 907 C 907 flbCp flbTop L 8 C 20 301 300 z";
-        $p->newPath('seamline', $seamline);
+        $p->newPath('seamline', $seamline, ['class' => 'fabric']);
     }
 
     /**
@@ -572,7 +572,7 @@ class WahidWaistcoat extends BrianBodyBlock
         if($this->o('hemStyle')==1) $seamline .= " C 4008 4009 9111 "; // Classic
         else $seamline .= ' L 911 '; // Rounded
         $seamline .= " L 909 C 913 905 901 C 903 907 907 C 907 flbCp flbTop z";
-        $p->newPath('seamline', $seamline);
+        $p->newPath('seamline', $seamline, ['class' => 'lining']);
     }
 
     /**
@@ -594,8 +594,8 @@ class WahidWaistcoat extends BrianBodyBlock
         $mirror = [1,2,3];
         foreach($mirror as $i) $p->addPoint($i*-1, $p->flipX($i,0));
 
-        $p->newPath('pocketLine', 'M -1 L 1', ['class' => 'helpline']);
-        $p->newPath('outline', 'M -2 L 2 L 3 L -3 z');
+        $p->newPath('pocketLine', 'M -1 L 1', ['class' => 'help fabric']);
+        $p->newPath('outline', 'M -2 L 2 L 3 L -3 z', ['class' => 'fabric']);
     }
 
     /**
@@ -621,8 +621,8 @@ class WahidWaistcoat extends BrianBodyBlock
         $mirror = [1,2,3,4,6,7];
         foreach($mirror as $i) $p->addPoint($i*-1, $p->flipX($i,0));
 
-        $p->newPath('pocketLine', 'M -1 L 1', ['class' => 'helpline']);
-        $p->newPath('outline', 'M -2 L 2 L 3 C 4 6 7 L -7 C -6 -4 -3 z');
+        $p->newPath('pocketLine', 'M -1 L 1', ['class' => 'help fabric']);
+        $p->newPath('outline', 'M -2 L 2 L 3 C 4 6 7 L -7 C -6 -4 -3 z', ['class' => 'fabric']);
     }
 
     /**
@@ -643,8 +643,8 @@ class WahidWaistcoat extends BrianBodyBlock
         $mirror = [1,2,3,4,6,7];
         foreach($mirror as $i) $p->addPoint($i*-1, $p->flipX($i,0));
 
-        $p->newPath('pocketLine', 'M -1 L 1', ['class' => 'helpline']);
-        $p->newPath('outline', 'M -2 L 2 L 3 C 4 6 7 L -7 C -6 -4 -3 z');
+        $p->newPath('pocketLine', 'M -1 L 1', ['class' => 'help lining']);
+        $p->newPath('outline', 'M -2 L 2 L 3 C 4 6 7 L -7 C -6 -4 -3 z', ['class' => 'lining']);
     }
 
     /**
@@ -665,8 +665,8 @@ class WahidWaistcoat extends BrianBodyBlock
         $mirror = [1,2,3];
         foreach($mirror as $i) $p->addPoint($i*-1, $p->flipX($i,0));
 
-        $p->newPath('pocketLine', 'M -1 L 1', ['class' => 'helpline']);
-        $p->newPath('outline', 'M -2 L 2 L 3 L -3 z');
+        $p->newPath('pocketLine', 'M -1 L 1', ['class' => 'help interfacing']);
+        $p->newPath('outline', 'M -2 L 2 L 3 L -3 z', ['class' => 'interfacing']);
     }
 
     /*
@@ -692,12 +692,15 @@ class WahidWaistcoat extends BrianBodyBlock
         $p = $this->parts['front'];
 
         // Seam allowance
-        $p->offsetPath('sa', 'saBase', 10, 1, ['class' => 'seam-allowance']);
+        $p->offsetPath('sa', 'saBase', 10, 1, ['class' => 'sa fabric']);
 
         // Title
         $p->newPoint('titleAnchor', $p->x(8), $p->y(5000));
         $p->addTitle('titleAnchor', 1, $this->t($p->title), '2x '.$this->t('from main fabric')."\n".$this->t('With good sides together'));
 
+        // Logo
+        $p->newPoint('logoAnchor', $p->x(907)+ 30, $p->y(907));
+        $p->newSnippet('logo','logo-sm','logoAnchor');
         // Grainline
         $p->addPoint('grainlineTop', $p->shift(8,-45,10));
         $p->newPoint('grainlineBottom', $p->x('grainlineTop'), $p->y(4001));
@@ -717,7 +720,7 @@ class WahidWaistcoat extends BrianBodyBlock
         $p = $this->parts['back'];
 
         // Seam allowance
-        $p->offsetPath('sa', 'saBase', 10, 1, ['class' => 'seam-allowance']);
+        $p->offsetPath('sa', 'saBase', 10, 1, ['class' => 'sa fabric']);
 
         // Title
         $p->newPoint('titleAnchor', $p->x(2)+$p->deltaX(2,907)/2, $p->y(5));
@@ -726,7 +729,6 @@ class WahidWaistcoat extends BrianBodyBlock
         // Logo
         $p->newPoint('logoAnchor', $p->x(10)/2, $p->y(10));
         $p->newSnippet('logo', 'logo', 'logoAnchor');
-        $p->newSnippet('cc', 'cc', 'logoAnchor');
 
         // Scalebox
         $p->addPoint('scaleboxAnchor', $p->shift('logoAnchor', -90, 40));
@@ -751,11 +753,15 @@ class WahidWaistcoat extends BrianBodyBlock
         $p = $this->parts['frontFacing'];
 
         // Seam allowance
-        $p->offsetPath('sa', 'seamline', 10, 1, ['class' => 'seam-allowance']);
+        $p->offsetPath('sa', 'seamline', 10, 1, ['class' => 'sa fabric']);
 
         // Title
         $p->newPoint('titleAnchor', $p->x(300)+$p->deltaX(300,'flbTop')/2, $p->y(5000));
         $p->addTitle('titleAnchor', 3, $this->t($p->title), '2x '.$this->t('from main fabric')."\n".$this->t('With good sides together'));
+
+        // Logo
+        $p->newPoint('logoAnchor', $p->x(907)- 70, $p->y(907));
+        $p->newSnippet('logo','logo-sm','logoAnchor');
 
         // Grainline
         $p->addPoint('grainlineTop', $p->shift(8,-45,10));
@@ -776,11 +782,15 @@ class WahidWaistcoat extends BrianBodyBlock
         $p = $this->parts['frontLining'];
 
         // Seam allowance
-        $p->offsetPath('sa', 'seamline', -10, 1, ['class' => 'seam-allowance']);
+        $p->offsetPath('sa', 'seamline', -10, 1, ['class' => 'sa lining']);
 
         // Title
         $p->newPoint('titleAnchor', $p->x(907)+$p->deltaX(907,5)/2, $p->y(2907));
         $p->addTitle('titleAnchor', 4, $this->t($p->title), '2x '.$this->t('from main fabric')."\n".$this->t('With good sides together'));
+
+        // Logo
+        $p->newPoint('logoAnchor', $p->x(907)+ 30, $p->y(907) -20);
+        $p->newSnippet('logo','logo-sm','logoAnchor');
 
         // Grainline
         $p->addPoint('grainlineBottom', $p->shift(909,45,10));
@@ -801,8 +811,8 @@ class WahidWaistcoat extends BrianBodyBlock
         $p = $this->parts['pocketWelt'];
 
         // Title
-        $p->newPoint('titleAnchor', 0, $p->y(3)/2);
-        $p->addTitle('titleAnchor', 5, $this->t($p->title), '2x '.$this->t('from main fabric'));
+        $p->newPoint('titleAnchor', -30, $p->y(3)/2);
+        $p->addTitle('titleAnchor', 5, $this->t($p->title), '2x '.$this->t('from main fabric'), 'horizontal-small');
 
         // Grainline
         $p->addPoint('grainlineBottom', $p->shift(3,135,5));
@@ -832,8 +842,8 @@ class WahidWaistcoat extends BrianBodyBlock
         $p = $this->parts['pocketInterfacing'];
 
         // Title
-        $p->newPoint('titleAnchor', 0, $p->y(3)/2+5);
-        $p->addTitle('titleAnchor', 6, $this->t($p->title), '2x '.$this->t('from interfacing'));
+        $p->newPoint('titleAnchor', -30, $p->y(3)/2+5);
+        $p->addTitle('titleAnchor', 6, $this->t($p->title), '2x '.$this->t('from interfacing'), 'horizontal-small');
 
         // Notches
         $p->newSnippet('notchRight', 'notch', 1);
@@ -857,8 +867,8 @@ class WahidWaistcoat extends BrianBodyBlock
         $p = $this->parts['pocketFacing'];
 
         // Title
-        $p->newPoint('titleAnchor', 0, $p->y(3)/2+5);
-        $p->addTitle('titleAnchor', 7, $this->t($p->title), '2x '.$this->t('from main fabric'));
+        $p->newPoint('titleAnchor', -30, $p->y(3)/2+5);
+        $p->addTitle('titleAnchor', 7, $this->t($p->title), '2x '.$this->t('from main fabric'), 'horizontal-small');
 
         // Grainline
         $p->addPoint('grainlineBottom', $p->shift(3,135,5));
@@ -888,8 +898,8 @@ class WahidWaistcoat extends BrianBodyBlock
         $p = $this->parts['pocketBag'];
 
         // Title
-        $p->newPoint('titleAnchor', 0, $p->y(3)/2+5);
-        $p->addTitle('titleAnchor', 8, $this->t($p->title), '2x '.$this->t('from lining'));
+        $p->newPoint('titleAnchor', -30, $p->y(3)/2+5);
+        $p->addTitle('titleAnchor', 8, $this->t($p->title), '2x '.$this->t('from lining'), 'horizontal-small');
 
         // Notches
         $p->newSnippet('notchRight', 'notch', 1);

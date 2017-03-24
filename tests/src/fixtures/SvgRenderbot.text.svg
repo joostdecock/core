@@ -1,11 +1,11 @@
 
+
 <!-- Start of group #patternScaleContainer -->
 <g id="patternScaleContainer"  transform=" scale(3.54330709 ) " >
+    
     <!-- Start of group #testPart -->
     <g id="testPart" >
-        
-        <text x="0" y="0" id="2" >
-            <tspan >This is an example</tspan></text>
+        <text x="0" y="0" id="2" ><tspan >This is an example</tspan></text>
     </g>
     <!-- End of group #testPart -->
 </g>

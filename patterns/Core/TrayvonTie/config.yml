@@ -1,11 +1,10 @@
 info:
   name:     "Trayvon Tie"
   version:  "2.0"
-  date:     "20161028"
   author:   "Joost De Cock"
   email:    "joost@decock.org"
   company:  "freesewing.org"
-  link:     "freesewing.org/pattern/trayvon-tie/"
+  link:     "freesewing.org/pattern/trayvon"
 
 parts:
   interfacingTip:   "Interfacing tip"

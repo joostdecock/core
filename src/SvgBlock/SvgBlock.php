@@ -27,7 +27,7 @@ abstract class SvgBlock
         $data = '';
         if (is_array($this->data)) {
             foreach ($this->data as $origin) {
-                $data .= implode("\n    ", $origin)."\n    ";
+                $data .= implode("\n    ", $origin)." ";
             }
         }
 
@@ -65,7 +65,7 @@ abstract class SvgBlock
             $this->data[$caller] = array();
         }
         foreach (explode("\n", $data) as $line) {
-            array_push($this->data[$caller], $line);
+            if( $line != '') array_push($this->data[$caller], $line);
         }
     }
 }

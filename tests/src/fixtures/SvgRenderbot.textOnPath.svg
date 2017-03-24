@@ -1,9 +1,10 @@
 
+
 <!-- Start of group #patternScaleContainer -->
 <g id="patternScaleContainer"  transform=" scale(3.54330709 ) " >
+    
     <!-- Start of group #testPart -->
     <g id="testPart" >
-        
         <path id="2"  d=" M  0,0  L  100,100 " />
         <text id="3" ><textPath xlink:href="#2" startOffset="50%"><tspan line-height="6" >This is an example</tspan></textPath></text>
     </g>

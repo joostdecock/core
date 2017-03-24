@@ -164,7 +164,8 @@ class SvgRenderbot
      */
     private function openGroup($id, $options = null)
     {
-        $svg = $this->nl().
+        $svg = $this->nl();
+        $svg .= $this->nl().
             "<!-- Start of group #$id -->".$this->nl().
             "<g id=\"$id\" $options>";
         $this->indent();
@@ -208,8 +209,7 @@ class SvgRenderbot
      */
     private function renderPart($part)
     {
-        $svg = $this->nl();
-
+        $svg = '';
         if ($part->paths) {
             foreach ($part->paths as $path) {
                 $svg .= $this->renderPath($path, $part);
@@ -268,11 +268,7 @@ class SvgRenderbot
         }
         $svg .= Utils::flattenAttributes($attributes);
         $svg .= '>';
-        $this->indent();
-        $svg .= $this->nl();
-        $svg .= '<title>'.$snippet->getDescription().'</title>';
-        $this->outdent();
-        $svg .= $this->nl();
+        if($snippet->getDescription() != '') $svg .= '<title>'.$snippet->getDescription().'</title>';
         $svg .= '</use>';
         
         return $svg;
@@ -311,12 +307,10 @@ class SvgRenderbot
 
         $lines = explode("\n", $text->getText());
         $attr = '';
-        $this->indent();
         foreach ($lines as $line) {
-            $svg .= $this->nl()."<tspan $attr>$line</tspan>";
+            $svg .= "<tspan $attr>$line</tspan>";
             $attr = 'x="'.$anchor->getX().'" dy="'.$lineHeight.'"';
         }
-        $this->outdent();
         $svg .= '</text>';
 
         return $svg;

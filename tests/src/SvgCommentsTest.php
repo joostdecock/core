@@ -10,11 +10,11 @@ class SvgCommentsTest extends \PHPUnit\Framework\TestCase
     public function testLoadAfterAdd()
     {
         $data = 'sorcha';
-        $expectedResult = "\n<!--\n\n    $data\n    \n\n  -->\n";
+        $expectedResult = "\n<!--\n\n    $data \n\n  -->\n";
+
         $object = new \Freesewing\SvgComments();
         $object->add($data);
-
-        $this->assertEquals($expectedResult, $object->load());
+        $this->assertEquals($object->load(), $expectedResult);
     }
     
     /* 

@@ -221,8 +221,8 @@ class BrianBodyBlock extends Pattern
         $p->addPoint('.help1', $p->shift(11, 45, 5), '45 degrees upwards');
         $p->addPoint('.help2', $p->beamsCross(11, '.help1', 5, 10), 'Intersection');
         $p->addPoint(14, $p->shiftTowards(11, '.help2', $p->distance(11, '.help2') / 2), 'Point on armhole curve');
-        $p->addPoint(15, $p->shift(14, 135, 25), 'Top curve control point for 14');
-        $p->addPoint(16, $p->Shift(14, -45, 25), 'Bottom control point for 14');
+        $p->addPoint(15, $p->shift(14, 135, $p->deltaY(14,5)), 'Top curve control point for 14');
+        $p->addPoint(16, $p->Shift(14, -45, $p->deltaY(14,5)), 'Bottom control point for 14');
         $tmp = $p->deltaY(12, 10) / 3;
         $p->addPoint(17, $p->shift(10, 90, $tmp), 'Top curve control point for 10');
         $p->addPoint(18, $p->shift(10, -90, $tmp), 'Bottom curve control point for 10');

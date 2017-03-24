@@ -1,9 +1,8 @@
 info:
     name: "Seth Selvedge Trouser Block"
-    version: "1.0"
+    version: "0.2"
     date: 20170121
     author: "Joost De Cock"
-    email: "joost@decock.org"
     company: "freesewing.org"
 
 parts:

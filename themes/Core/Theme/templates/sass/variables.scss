@@ -16,8 +16,8 @@ $gray:  #999 !default;
 
 // Semantic color scheme
 $color-fabric:      $purple !default;
-$color-lining:      $teal !default;
-$color-interfacing: $blue !default;
+$color-lining:      $blue !default;
+$color-interfacing: $red !default;
 $color-canvas:      $green !default;
 $color-note:        $blue !default;
 $color-mark:        $orange !default;
@@ -50,4 +50,5 @@ $stroke-xxl:       2;
 
 // Dash arrays
 $dashes: 1,1.5;
+$stripedashes: 15,1.5,1,1.5;
 $dots: 0.4,0.8;

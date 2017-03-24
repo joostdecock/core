@@ -1,6 +1,6 @@
 <?php
-/** Freesewing\Patterns\Beta\PatternTemplate class */
-namespace Freesewing\Patterns\Beta;
+/** Freesewing\Patterns\Templates\PatternTemplate class */
+namespace Freesewing\Patterns\Templates;
 
 use Freesewing\Utils;
 use Freesewing\BezierToolbox;

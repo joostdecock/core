@@ -49,12 +49,12 @@ measurements:
     
     naturalWaistToHip:
         joost   : 120
-        usSize34: 120
-        usSize36: 120
-        usSize38: 120
-        usSize40: 120
+        usSize34: 100
+        usSize36: 105
+        usSize38: 110
+        usSize40: 115
         usSize42: 120
-        usSize44: 120
+        usSize44: 125
     
     neckCircumference:
         joost   : 420

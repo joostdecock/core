@@ -30,10 +30,46 @@ if(test('service=info') === 0) {
             foreach($patterns as $pid => $ptitle) {
                 foreach($info['themes'] as $tns => $theme) {
                     foreach($theme as $tid => $tname) {
-                        if($tname == 'Basic' || $tname == 'Paperless') {
-                            p("$ptitle draft, $tname theme");
-                            $fail += test("service=draft pattern=$pid theme=$tname");
-                        }
+                        p("$ptitle draft, $tname theme");
+                        $fail += test("service=draft pattern=$pid theme=$tname");
+                    }
+                }
+            }
+        }
+    }
+ 
+    // Do we have a compare service?
+    if(in_array('compare', $info['services'])) {
+        // We do, let's test it
+        h1("Testing compare service");
+        foreach($info['patterns'] as $pns => $patterns) {
+            h2("Testing $pns patterns");
+            foreach($patterns as $pid => $ptitle) {
+                p("Comparing $ptitle");
+                $fail += test("service=compare pattern=$pid");
+            }
+        }
+    }
+ 
+    // Do we have a sample service?
+    if(in_array('sample', $info['services'])) {
+        // We do, let's test it
+        h1("Testing sample service");
+        foreach($info['patterns'] as $pns => $patterns) {
+            h2("Testing $pns patterns");
+            foreach($patterns as $pid => $ptitle) {
+                $pinfo = json_decode(`php index.php service=info pattern=$pid`, 1);
+                h3("Sampling $ptitle");
+                h3("  Measurements");
+                foreach($pinfo['models']['groups'] as $group => $members) {
+                    p("Sampling $group");
+                    $fail += test("service=sample pattern=$pid mode=measurements samplerGroup=$group");
+                }
+                h3("  Options");
+                foreach($pinfo['options'] as $oid => $option) {
+                    if($option['type'] != 'chooseOne') {
+                        p("Sampling $oid");
+                        $fail += test("service=sample pattern=$pid mode=options option=$oid");
                     }
                 }
             }

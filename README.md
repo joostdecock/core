@@ -18,29 +18,15 @@ Full install instructions are available at [docs.freesewing.org/install](https:/
 but here's the gist of it:
 
 ### From packagist
-Step 1: Install the package
 ```
 composer create-project freesewing/core freesewing
-```
-
-Step 2: Optimize the autoloader
-```
- composer dump-autoload -o
+composer dump-autoload -o
 ```
 
 ### From GitHub
-Step 1: Clone the repository
 ```
 git clone git@github.com:freesewing/core.git freesewing
-```
-
-Step 2: Install dependencies with composer
-```
 composer install
-```
-
-Step 3: Prepare the autoloader
-```
 composer dump-autoload -o
 ```
 

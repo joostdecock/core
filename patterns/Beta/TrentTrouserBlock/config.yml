@@ -1,10 +1,10 @@
 info:
     name: "Trent Trouser Block"
-    version: "1.0"
-    date: 20170121
+    version: "0.4"
+    date: 20170324
     author: "Joost De Cock"
-    email: "joost@decock.org"
     company: "freesewing.org"
+    link: "freesewing.org/pattern/trent"
 
 parts:
     .frame: "Frame"

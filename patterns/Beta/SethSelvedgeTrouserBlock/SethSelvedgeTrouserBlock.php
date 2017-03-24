@@ -189,7 +189,7 @@ class SethSelvedgeTrouserBlock extends TrentTrouserBlock
         // Correction at crotch line
         // This adds correctionCrotchLine1
         $p->curveCrossesY('frameSeatOut','frontCpSeatDown','frontCpKneeOut','frontKneeOut',$p->y('frameCrotchLineOut'),'correctionCrotchLine');
-        $p->newPath('dsfsdfs', 'M frameSeatOut C frontCpSeatDown frontCpKneeOut frontKneeOut', ['class' => 'debug']);
+//        $p->newPath('dsfsdfs', 'M frameSeatOut C frontCpSeatDown frontCpKneeOut frontKneeOut', ['class' => 'debug']);
 
         // FIXME Sometimes correctionCrotchLine1 does not exist because curveCrossesY() above
         // does not find anything. Setting correction to zero in that case, but it's

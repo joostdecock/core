@@ -1,6 +1,15 @@
 {
     "name": "freesewing/core",
     "description": "Freesewing is an open source platform for made-to-measure sewing patterns",
+    "license": "GPL-3.0",
+    "homepage": "https://freesewing.org/",
+    "authors": [
+        {
+            "name": "Joost De Cock",
+            "email": "joost@decock.org",
+            "homepage": "http://joost.decock.org/",
+            "role": "Developer"
+        },
     "require": {
         "symfony/translation": "3.1.*",
         "symfony/yaml": "3.1.*",

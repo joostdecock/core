@@ -3,7 +3,7 @@
 > All notable changes to freesewing core should be be documented in this file.
 > Freesewing does [Semantic Versioning](http://semver.org/).
 
-## Version 1.1.0
+## Version 1.0.1
 
 **Release date**: 2017-04-11
 
@@ -30,8 +30,8 @@ So, we've pulled it from core, and are keeping it in its own
 for reference.
 
 This is only a breaking change if you were depending on or
-extending the BabyBib pattern. While that's unlikely at this
-point, it is why we're bumping up the minor version on this release.
+extending the BabyBib pattern. Which is unlikely at this
+point.
 
 **tip:** If you need the BabyBib pattern, you can include it as a Git
 submodule.

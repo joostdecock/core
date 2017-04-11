@@ -7,12 +7,12 @@
 
 **Release date**: 2017-04-11
 
-- This release fixes is crippling typo in package.json and removes 
+This release fixes is crippling typo in package.json and removes 
 a tutorial pattern from the core repository.
 
 ### Fixes
 
-Fixes an unclosed bracket in composer.json (that was embarassing and 
+- Fixes an unclosed bracket in composer.json (that was embarassing and 
 reason for a new release)
 
 ### Breaking changes

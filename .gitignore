@@ -10,3 +10,4 @@ coverage
 .settings/
 .idea/
 scripts/test.log
+.gitmodules

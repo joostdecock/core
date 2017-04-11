@@ -3,7 +3,17 @@
 > All notable changes to freesewing core should be be documented in this file.
 > Freesewing does [Semantic Versioning](http://semver.org/).
 
-## Unreleased Version 1.1.0
+## Version 1.1.0
+
+**Release date**: 2017-04-11
+
+This release fixes is crippling typo in package.json and removes 
+a tutorial pattern from the core repository.
+
+### Fixes
+
+Fixes an unclosed bracket in composer.json (that was embarassing and 
+reason for a new release)
 
 ### Breaking changes
 
@@ -19,7 +29,7 @@ So, we've pulled it from core, and are keeping it in its own
 [BabyBib repository](https://github.com/freesewing/BabyBib)
 for reference.
 
-This is only a breaking change if your were depending on or
+This is only a breaking change if you were depending on or
 extending the BabyBib pattern. While that's unlikely at this
 point, it is why we're bumping up the minor version on this release.
 

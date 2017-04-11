@@ -5,6 +5,10 @@
 
 ## Unreleased Version 1.1.0
 
+### Fixes
+
+Fixes an unclosed bracket in composer.json (that was embarassing)
+
 ### Breaking changes
 
 #### Removed the BabyBib pattern
@@ -19,7 +23,7 @@ So, we've pulled it from core, and are keeping it in its own
 [BabyBib repository](https://github.com/freesewing/BabyBib)
 for reference.
 
-This is only a breaking change if your were depending on or
+This is only a breaking change if you were depending on or
 extending the BabyBib pattern. While that's unlikely at this
 point, it is why we're bumping up the minor version on this release.
 

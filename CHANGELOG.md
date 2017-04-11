@@ -7,7 +7,7 @@
 
 **Release date**: 2017-04-11
 
-This release fixes is crippling typo in package.json and removes 
+- This release fixes is crippling typo in package.json and removes 
 a tutorial pattern from the core repository.
 
 ### Fixes
@@ -24,7 +24,6 @@ our documention where we are re-creating it step by step.
 
 Having it in core defeats the point of the tutorial because right 
 from the start the entire pattern is there.
-
 So, we've pulled it from core, and are keeping it in its own
 [BabyBib repository](https://github.com/freesewing/BabyBib)
 for reference.
@@ -33,7 +32,7 @@ This is only a breaking change if you were depending on or
 extending the BabyBib pattern. Which is unlikely at this
 point.
 
-**tip:** If you need the BabyBib pattern, you can include it as a Git
+> **Tip:** If you need the BabyBib pattern, you can include it as a Git
 submodule.
 
 ### Changes

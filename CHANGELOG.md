@@ -3,11 +3,17 @@
 > All notable changes to freesewing core should be be documented in this file.
 > Freesewing does [Semantic Versioning](http://semver.org/).
 
-## Unreleased Version 1.1.0
+## Version 1.1.0
+
+**Release date**: 2017-04-11
+
+This release fixes is crippling typo in package.json and removes 
+a tutorial pattern from the core repository.
 
 ### Fixes
 
-Fixes an unclosed bracket in composer.json (that was embarassing)
+Fixes an unclosed bracket in composer.json (that was embarassing and 
+reason for a new release)
 
 ### Breaking changes
 

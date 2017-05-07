@@ -68,29 +68,33 @@ class BrianBodyBlock extends Pattern
      */
     public function initialize($model)
     {
-        $this->setOption('collarEase', self::COLLAR_EASE);
-        $this->setOption('backNeckCutout', self::NECK_CUTOUT);
-        $this->setOption('sleevecapEase', self::SLEEVECAP_EASE);
-        $this->setOption('bicepsEase', self::BICEPS_EASE);
+        /** 
+         * Calling setOptionIfUnset and setValueIfUnset so that child patterns can 
+         * set the options the need and call this method for the rest
+         */
+        $this->setOptionIfUnset('collarEase', self::COLLAR_EASE);
+        $this->setOptionIfUnset('backNeckCutout', self::NECK_CUTOUT);
+        $this->setOptionIfUnset('sleevecapEase', self::SLEEVECAP_EASE);
+        $this->setOptionIfUnset('bicepsEase', self::BICEPS_EASE);
 
         // Depth of the armhole
-        $this->setValue('armholeDepth', $model->m('shoulderSlope') / 2 + $model->m('bicepsCircumference') * $this->o('armholeDepthFactor'));
+        $this->setValueIfUnset('armholeDepth', $model->m('shoulderSlope') / 2 + $model->m('bicepsCircumference') * $this->o('armholeDepthFactor'));
 
         // Heigth of the sleevecap
-        $this->setValue('sleevecapHeight', $model->m('bicepsCircumference') * $this->o('sleevecapHeightFactor'));
+        $this->setValueIfUnset('sleevecapHeight', $model->m('bicepsCircumference') * $this->o('sleevecapHeightFactor'));
         
         // Collar widht and depth
-        $this->setValue('collarWidth', ($model->getMeasurement('neckCircumference') / 2.42) / 2);
-        $this->setValue('collarDepth', ($model->getMeasurement('neckCircumference') + $this->getOption('collarEase')) / 5 - 8);
+        $this->setValueIfUnset('collarWidth', ($model->getMeasurement('neckCircumference') / 2.42) / 2);
+        $this->setValueIfUnset('collarDepth', ($model->getMeasurement('neckCircumference') + $this->getOption('collarEase')) / 5 - 8);
 
         // Cut front armhole a bit deeper
-        $this->setValue('frontArmholeExtra', self::FRONT_ARMHOLE_EXTRA);
+        $this->setValueIfUnset('frontArmholeExtra', self::FRONT_ARMHOLE_EXTRA);
         
         // Tweak factors
-        $this->setValue('frontCollarTweakFactor', 1); 
-        $this->setValue('frontCollarTweakRun', 0); 
-        $this->setValue('sleeveTweakFactor', 1); 
-        $this->setValue('sleeveTweakRun', 0); 
+        $this->setValueIfUnset('frontCollarTweakFactor', 1); 
+        $this->setValueIfUnset('frontCollarTweakRun', 0); 
+        $this->setValueIfUnset('sleeveTweakFactor', 1); 
+        $this->setValueIfUnset('sleeveTweakRun', 0); 
     }
 
     /**

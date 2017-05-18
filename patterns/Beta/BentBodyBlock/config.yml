@@ -1,10 +1,15 @@
 hidden: false
 info:
     name: "Bent Body Block"
+    handle: "Bent"
     version: "0.3"
     author: "Joost De Cock"
     company: "freesewing.org"
     link: "freesewing.org/pattern/bent"
+    tags:
+        - menswear
+        - top
+        - block
 
 parts:
   backBlock: "Back block"

@@ -1,16 +1,22 @@
 info:
-     name:         "Bruce Boxer Briefs"
-     version:      "2.0"
-     author:       "Joost De Cock"
-     company:      "freesewing"
-     link:         "freesewing.org/pattern/bruce"
+    name:    "Bruce Boxer Briefs"
+    handle:  "bruce"
+    version: "2.0"
+    author:  "Joost De Cock"
+    company: "freesewing"
+    link:    "freesewing.org/pattern/bruce"
+    tags:
+        - menswear
+        - underwear
+        - boxers
+        - bottom
 
 parts:
-    block:    "Block"
-    front:    "Front"
-    back:     "Back"
-    side:     "Side"
-    inset:    "Inset"
+    block: "Block"
+    front: "Front"
+    back:  "Back"
+    side:  "Side"
+    inset: "Inset"
 
 languages:
     en: English

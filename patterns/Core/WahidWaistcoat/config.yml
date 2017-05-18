@@ -1,10 +1,15 @@
 info:
     name: "Wahid Waistcoat"
+    handle: "wahid"
     date: 20161206
     author: "Joost De Cock"
     email: "joost@decock.org"
     company: "freesewing.org"
     link: "freesewing.org/pattern/wahid"
+    tags:
+        - menswear
+        - top
+        - waistcoat
 
 parts:
     frontBlock: "Front block"

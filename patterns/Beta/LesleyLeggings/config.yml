@@ -1,10 +1,15 @@
 info:
     name: "Lesley Leggings"
+    handle: "lesley"
     version: "0.4"
     date: 20170121
     author: "Joost De Cock"
     email: "joost@decock.org"
     company: "freesewing.org"
+    tags:
+        - unisex
+        - leggings
+        - bottom
 
 parts:
     .frame: "Frame"

@@ -1,11 +1,16 @@
 info:
   name: "Sven Sweatshirt"
+  handle: "sven"
   version: "1.0"
   date: 20170323
   author: "Joost De Cock"
   email: "joost@decock.org"
   company: "freesewing.org"
   link: "freesewing.org/pattern/sven"
+  tags:
+      - menswear
+      - sweater
+      - top
 
 parts:
   backBlock: "Back block"

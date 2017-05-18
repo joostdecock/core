@@ -1,10 +1,16 @@
 info:
     name: "Seth Selvedge Trouser Block"
+    handle: "Seth"
     version: "0.2"
     date: 20170121
     author: "Joost De Cock"
     company: "freesewing.org"
-
+    tags:
+        - menswear
+        - trousers
+        - block
+        - bottom
+          
 parts:
     .frame: "Frame"
     frontBlock: "Front base"

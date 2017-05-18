@@ -6,9 +6,9 @@ info:
   email:    "joost@decock.org"
   company:  "freesewing.org"
   link:     "freesewing.org/pattern/trayvon"
-    tags:
-        - unisex
-        - accessories
+  tags:
+      - unisex
+      - accessories
 
 parts:
   interfacingTip:   "Interfacing tip"

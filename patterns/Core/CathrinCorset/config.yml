@@ -1,5 +1,6 @@
 info:
      name:     "Cathrin Corset"
+     description: "A 9 or 11 panel underbust corset"
      handle: "cathrin"
      version:  "2.0"
      author:   "Joost De Cock"
@@ -10,7 +11,6 @@ info:
          - womenswear
          - underwear
          - corset
-         - lingerie
 
 parts:
     base: "Base block"
@@ -24,47 +24,71 @@ languages:
 measurements:
     underBust: 720
     naturalWaist: 640
-    hips: 800
+    hipsCircumference: 800
     naturalWaistToUnderbust: 100
     naturalWaistToHips: 160
 
 options:
     backOpening:
+        title: "Back opening"
+        description: "Opening at the center back closure."
+        group: "style"
         type: measure
         min: 0
         max: 80
         default: 30
     waistReduction:
+        title: "Waist reduction"
+        description: "The amount by which you want the corset to pinch your waist."
+        group: "fit"
         type: measure
         min: 0
         max: 125
         default: 80
     frontRise:
+        title: "Front rise"
+        description: "Rise of the front panels at center front, between your breasts. Negative values will lower them."
+        group: "style"
         type: measure
         min: -50
         max: 50
         default: 25
     frontDrop:
+        title: "Front drop"
+        description: "How much the front panels lower from your hips towards your center front."
+        group: "style"
         type: measure
         min: -30
         max: 50
         default: 25
     backRise:
+        title: "Back rise"
+        description: "How much the back panels rise from your arms to your center back."
+        group: "style"
         type: measure
         min: -30
         max: 120
         default: 0
     backDrop:
+        title: "Back drop"
+        description: "How much the back panels lower from your hips towards your center back. Negative values will raise the back."
+        group: "style"
         type: measure
         min: -30
         max: 30
         default: 0
     hipRise:
+        title: "Hip rise"
+        description: "How much the side panels rise on your hips."
+        group: "style"
         type: measure
         min: 0
         max: 60
         default: 30
     panels:
+        title: "Number of panels"
+        description: "The number of panels to draft. More panels are better to fit a curvier model."
+        group: "style"
         type: chooseOne
         options:
             11: 11

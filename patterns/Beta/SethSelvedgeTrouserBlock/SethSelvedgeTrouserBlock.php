@@ -218,6 +218,9 @@ class SethSelvedgeTrouserBlock extends TrentTrouserBlock
         
         // Paths
         $p->newPath('seamLine', 'M frontHemIn L frontKneeIn C frontCpKneeIn frameCrotchEdge frameCrotchEdge C frontCpCrotchEdge frontCrotchVerticalControlPoint frameSeatIn L frontHipsIn L frontHipsOut L frameHemOut z');
+
+        // Set the grid anchor
+        $p->clonePoint('frontHipsOut','gridAnchor');
     }
 
     /**
@@ -308,6 +311,9 @@ class SethSelvedgeTrouserBlock extends TrentTrouserBlock
 
         $this->msg('Inseam delta is '.$p->unit($this->inseamDelta()));
         $this->msg('Outseam delta is '.$p->unit($this->selvedgeDelta()));
+
+        // Set the grid anchor
+        $p->clonePoint('backHipsOut','gridAnchor');
     }
         
     /**

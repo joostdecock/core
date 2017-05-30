@@ -1,10 +1,16 @@
 info:
     name: "Theodore trousers"
+    description: "Classic menswear trousers by the (Aldrich) book"
+    handle: "theodore"
     version: "2.0"
     author: "Joost De Cock"
     email: "joost@decock.org"
     company: "freesewing.org"
     link: "freesewing.org/pattern/theodore"
+    tags:
+        - menswear
+        - trousers
+        - bottom
 
 parts:
     back: "Back"
@@ -38,16 +44,25 @@ measurements:
 
 options:
     waistbandWidth:
+        title: "Waistband width"
+        description: "The width of the waistband."
+        group: "fit"
         type: "measure"
         min: 20
         max: 60
         default: 40
     waistbandRise:
+        title: "Back rise"
+        description: "The amount by which to raise the back."
+        group: "fit"
         type: "measure"
         min: 0
         max: 60
         default: 40
     lengthBonus:
+        title: "Length bonus"
+        description: "The amount by which to lengthen the legs. Negative values shorten them."
+        group: "fit"
         type: "measure"
         min: -60
         max: 80

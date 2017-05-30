@@ -225,6 +225,17 @@ abstract class Pattern
     }
 
     /**
+     * Sets the key $key in the options array to value $value if it's unset
+     *
+     * @param string $key   The key in the options array
+     * @param mixed  $value The option to set
+     */
+    public function setOptionIfUnset($key, $value)
+    {
+        if(!isset($this->options[$key])) $this->options[$key] = $value;
+    }
+
+    /**
      * Sets the key $key in the values array to value $value
      *
      * @param string $key   The key in the values array
@@ -233,6 +244,17 @@ abstract class Pattern
     public function setValue($key, $value)
     {
         $this->values[$key] = $value;
+    }
+
+    /**
+     * Sets the key $key in the values array to value $value if it's unset
+     *
+     * @param string $key   The key in the values array
+     * @param mixed  $value The value to set
+     */
+    public function setValueIfUnset($key, $value)
+    {
+        if(!isset($this->values[$key])) $this->values[$key] = $value;
     }
 
     /**

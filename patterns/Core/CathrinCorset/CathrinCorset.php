@@ -58,9 +58,9 @@ class CathrinCorset extends Pattern
          * but I don't think I have ever seen a woman with a
          * larger underbust measurement than hips measurement.
          */
-        $this->setValue('width', $model->m('hips')/2 - $this->o('backOpening')/2);
-        $this->setValue('bustIntake', $model->m('hips')/2 - $model->m('underBust')/2);
-        $this->setValue('waistIntake', $model->m('hips')/2 - $model->m('naturalWaist')/2 + $this->o('waistReduction')/2);
+        $this->setValue('width', $model->m('hipsCircumference')/2 - $this->o('backOpening')/2);
+        $this->setValue('bustIntake', $model->m('hipsCircumference')/2 - $model->m('underBust')/2);
+        $this->setValue('waistIntake', $model->m('hipsCircumference')/2 - $model->m('naturalWaist')/2 + $this->o('waistReduction')/2);
     }
 
     /*

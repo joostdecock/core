@@ -1,10 +1,14 @@
 info:
     name: "Aaron A-Shirt"
+    description: "A simple tank top"
+    handle: "aaron"
     version: "2.0"
     author: "Joost De Cock"
     company: "freesewing"
     link: "freesewing.org/pattern/aaron"
-
+    tags:
+        - unisex
+        - top
 parts:
     frontBlock: "Front block"
     backBlock: "Back block"
@@ -30,47 +34,77 @@ measurements:
 
 options:
     chestEase:
+        title: "Chest ease"
+        description: "The amount of ease at your chest"
+        group: "fit"
         type: "measure"
         min: -40
         max: 160
         default: 30
     armholeDrop:
+        title: "Armhole drop"
+        description: "Lower the armhole by this amount. Negative values will raise it."
+        group: "style"
         type: "measure"
         min: -20
         max: 120
         default: 30
     lengthBonus:
+        title: "Length bonus"
+        description: "Lengthen the top. Negative values will shorten it."
+        group: "style"
         type: "measure"
         min: -60
         max: 200
         default: 60
     necklineBend:
+        title: "Neckline shape"
+        description: "Determines the shape/bend of the neckline at the front."
+        group: "style"
         type: "percent"
         default: 100
     backlineBend:
+        title: "Back armhole shape"
+        description: "Determines the shape/bend of the back of the armholes."
+        group: "style"
         type: "percent"
         default: 30
     necklineDrop:
+        title: "Neckline drop"
+        description: "The amount the neck is cutout at the front."
+        group: "style"
         type: "measure"
         min: 40
         max: 200
         default: 120
     shoulderStrapWidth:
+        title: "Shoulderstrap width"
+        description: "The width of the shoulder straps."
+        group: "style"
         type: "measure"
         min: 10
         max: 80
         default: 40
     shoulderStrapPlacement:
+        title: "Shoulderstrap placement"
+        description: "Determines whether the shoulder strap is placed closer to the neck (lower numbers) or the shoulder (higher numbers)."
+        group: "style"
         type: "percent"
         min: 0
         max: 100
         default: 45
     stretchFactor:
+        title: "Stretch factor"
+        description: "Determines the horizontal negative ease. 100% means no negative ease, whereas 90% (the default) means 10% negative ease."
+        group: "fit"
         type: "percent"
         min: 70
         max: 100
         default: 90
     hipsEase:
+        title: "Hips ease"
+        description: "The amount of ease at your hips"
+        group: "fit"
         type: "measure"
         min: -40
         max: 160

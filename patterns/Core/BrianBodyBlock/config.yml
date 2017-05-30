@@ -1,10 +1,16 @@
 info:
   name: "Brian Body Block"
+  description: "This body block is the basis of many of our menswear patterns"
+  handle: "brian"
   version: "2.0"
   date: 20170303
   author: "Joost De Cock"
   company: "freesewing"
   link: "freesewing.org/pattern/brian"
+  tags:
+    - menswear
+    - top
+    - block
 
 parts:
   backBlock: "Back block"
@@ -31,31 +37,49 @@ measurements:
 
 options:
     chestEase:
+        title: "Chest ease"
+        description: "The amount of ease at your chest"
+        group: "fit"
         type: "measure"
         min: -40
         max: 160
         default: 30
     cuffEase:
+        title: "Cuff ease"
+        description: "The amount of ease at your wrist"
+        group: "fit"
         type: "measure"
         min: 0
         max: 100
         default: 45
     armholeDepthFactor:
+        title: "Armhole depth factor"
+        description: "A factor that influences the depth of the armhole"
+        group: "fit"
         type: "percent"
         min: 50
         max: 65
         default: 60
     sleevecapHeightFactor:
+        title: "Sleevecap height factor"
+        description: "A factor that influences the height of the sleevecap"
+        group: "fit"
         type: "percent"
         min: 45
         max: 65
         default: 55
     lengthBonus:
+        title: "Length bonus"
+        description: "Amount to lengthen the body. A negative value will shorten it."
+        group: "fit"
         type: "measure"
         min: -40
         max: 120
         default: 0
     sleeveLengthBonus:
+        title: "Sleeve length bonus"
+        description: "Amount to lengthen the sleeve. A negative value will shorten it."
+        group: "fit"
         type: "measure"
         min: -40
         max: 80

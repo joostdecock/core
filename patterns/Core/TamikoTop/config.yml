@@ -1,10 +1,15 @@
 info:
   name:     "Tamiko Top"
+  description: "A zero-waste top for women and fashion-forward men"
+  handle: "tamiko"
   version:  "2.0"
   author:   "Joost De Cock"
   email:    "joost@decock.org"
   company:  "freesewing.org"
   link:     "freesewing.org/pattern/tamiko"
+  tags:
+      - unisex
+      - top
 
 parts:
   top:   "Tamiko Top"
@@ -21,6 +26,9 @@ measurements:
 
 options:
     lengthBonus:
+        title: "Length bonus"
+        description: "The amount to lengthen the body. Negative values shorten it."
+        group: "fit"
         type: "measure"
         min: -150
         max: 350

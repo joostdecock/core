@@ -1,6 +1,7 @@
 info:
     name: "Trent Trouser Block"
     handle: "trent"
+    description: "A trouser block for menswear with a more modern cut than Theo(dore)"
     version: "0.4"
     date: 20170324
     author: "Joost De Cock"
@@ -30,18 +31,30 @@ measurements:
 
 options:
     hipsEase:
+        title: "Hips ease"
+        description: "The amount of ease at your hips."
+        group: "fit"
         type: "measure"
         min: 10
         max: 60
         default: 30
     seatEase:
+        title: "Seat ease"
+        description: "The amount of ease at your butt."
+        group: "fit"
         type: "measure"
         min: 60
         max: 160
         default: 100
     crotchCurveFactor:
+        title: "Crotch curve factor"
+        description: "A factor the influences the shape of the crotch curve."
+        group: "fit"
         type: "percent"
         default: 50
     backSeamCurveFactor:
+        title: "Back seam curve factor"
+        description: "A factor the influences the shape of the back seam."
+        group: "fit"
         type: "percent"
         default: 50

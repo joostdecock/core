@@ -1,6 +1,7 @@
 info:
     name: "Lesley Leggings"
     handle: "lesley"
+    description: "A unisex leggings pattern"
     version: "0.4"
     date: 20170121
     author: "Joost De Cock"
@@ -36,9 +37,15 @@ measurements:
 
 options:
     stretchFactor:
+        title: "Stretch factor"
+        description: "The amount of negative ease. 100% means no negative ease, 90% mean 10% negative ease."
+        group: "fit"
         type: "percent"
         default: 85
     lengthBonus:
+        title: "Length bonus"
+        description: "The amount by which to lengthen the legs. Negative values shorten them."
+        group: "fit"
         type: "measure"
         min: -200
         max: 100

@@ -1,5 +1,6 @@
 info:
     name:       "Hugo Hoodie"
+    description: "A hooded sweater with raglan sleeves and front pouch"
     handle:     "hugo"
     version:    "2.0"
     author:     "Joost De Cock"
@@ -49,31 +50,49 @@ measurements:
 
 options:
     chestEase:
+        title: "Chest ease"
+        description: "The amount of ease at your chest."
+        group: "fit"
         type: measure
         min: -40
         max: 160
         default: 60
     bicepsEase:
+        title: "Biceps ease"
+        description: "The amount of ease at your upper arm."
+        group: "fit"
         type: measure
         min: 0
         max: 80
         default: 40
     cuffEase:
+        title: "Cuff ease"
+        description: "The amount of ease at your wrist."
+        group: "fit"
         type: measure
         min: 0
         max: 100
         default: 35
     lengthBonus:
+        title: "Length bonus"
+        description: "Amount to lengthen the body."
+        group: "fit"
         type: measure
         min: 0
         max: 180
         default: 70
     sleeveLengthBonus:
+        title: "Sleeve length bonus"
+        description: "Amount to lengthen the sleeves."
+        group: "fit"
         type: "measure"
         min: -40
         max: 80
         default: 0
     ribbingStretchFactor:
+        title: "Ribbing stretch factor"
+        description: "The amount of negative ease for the cuffs and hem ribbing. 100% means no negative ease, 90% means 10% negative ease."
+        group: "fit"
         type: percent
         min: 70
         max: 100

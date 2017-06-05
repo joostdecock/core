@@ -47,7 +47,6 @@ class TheoTrousers extends TheodoreTrousers
         
         // Specific to the Theo pattern
         $this->setValue('legReduction', 30);   
-        $this->setValue('legExtension', 40);   
         $this->setValue('frontReduction', 10);   
         $this->setValue('backReduction', 15);   
     }

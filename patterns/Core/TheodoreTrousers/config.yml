@@ -51,7 +51,7 @@ options:
         min: 20
         max: 60
         default: 40
-    waistbandRise:
+    backRise:
         title: "Back rise"
         description: "The amount by which to raise the back."
         group: "fit"

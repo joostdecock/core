@@ -47,10 +47,8 @@ class TheodoreTrousers extends Pattern
         
         // These allows the TheoTrousers pattern to just extend this pattern with different options
         $this->setValue('legReduction', 0);   
-        $this->setValue('legExtension', 0);   
         $this->setValue('frontReduction', 0);   
         $this->setValue('backReduction', 0);   
-
     }
 
     /*
@@ -158,7 +156,7 @@ class TheodoreTrousers extends Pattern
 
         $p->newPoint(   0, 0, 0, 'Center front @ Waistline');
         $p->newPoint(   1, 0, 10 + $model->m('bodyRise') - $this->o('waistbandWidth'), 'Center front crutch line');
-        $p->newPoint(   2, 0, $p->y(1) + $model->m('inseam') + $this->v('legExtension'), 'Center front bottom');
+        $p->newPoint(   2, 0, $p->y(1) + $model->m('inseam') + $this->o('lengthBonus'), 'Center front bottom');
         $p->newPoint( 201, 0 , $p->y(2) + 10);
         $p->newPoint( 202, $this->o('trouserBottomWidth')/4, $p->y(201));
         $p->addPoint( 203, $p->flipX(202));
@@ -249,12 +247,12 @@ class TheodoreTrousers extends Pattern
         $p->addPoint(-20310, $p->shift(203,-90,60));
   
         // Raise waistband 
-        $p->addPoint(66601, $p->shiftTowards(-2101, -21, $this->o('waistbandRise')));
+        $p->addPoint(66601, $p->shiftTowards(-2101, -21, $this->o('backRise')));
         
         // Original dart without raise
         $p->addPoint(66602, $p->beamsCross(66601, -2104, 902502, -2501));
         $p->addPoint(66603, $p->beamsCross(66601, -2104, 902502, -2502));
-        $p->addPoint(66605, $p->shiftTowards(-2101, -21, $this->o('waistbandRise')+10));
+        $p->addPoint(66605, $p->shiftTowards(-2101, -21, $this->o('backRise')+10));
         $p->newPoint(66606, $p->x(66602)+$p->deltaX(66601,66605), $p->y(66602)+$p->deltaY(66601,66605));
         $p->addPoint(66607, $p->beamsCross(66606, 66605, 901601, 9021));
         
@@ -278,7 +276,7 @@ class TheodoreTrousers extends Pattern
         //$aldrich = 'M 23 C 23 901603 901601 C 901602 901901 9019 L 9021 L 902504 L 902502 L 902503 L 9024 L 26 C 902601 2901 29 C 29 2701 27 C 27 202 201 C 203 28 28 C 2702 30 30 C 3001 23 23 z';
 
         // This is the path we use, no seam allowance
-        if($this->o('waistbandRise') > 0) $noHem = 'C -2702 -30 -30 C -3001 -2301 -2301 C -2301 -901603 -901601 C -901602 -901901 -9019 L 66601 L dartTopLeft L dartTip L dartTopRight L -2104 L -26 C -2601 -2901 -29 C -29 -2701 -27 ';
+        if($this->o('backRise') > 0) $noHem = 'C -2702 -30 -30 C -3001 -2301 -2301 C -2301 -901603 -901601 C -901602 -901901 -9019 L 66601 L dartTopLeft L dartTip L dartTopRight L -2104 L -26 C -2601 -2901 -29 C -29 -2701 -27 ';
         else  $noHem = 'C -2702 -30 -30 C -3001 -2301 -2301 C -2301 -901603 -901601 C -901602 -901901 -9019 L -2101 L -2501 L 902502 L -2502 L -2104 L -26 C -2601 -2901 -29 C -29 -2701 -27';
         $seamline = 'M -27 C -27 202 201 C 203 -28 -28 '.$noHem.' z';
 
@@ -326,7 +324,7 @@ class TheodoreTrousers extends Pattern
 
         $p->newPoint(     0 , 0, 0, 'Center front waistline');
         $p->newPoint(     1 , $p->x(0), $model->m('bodyRise') - $this->o('waistbandWidth') + 10, 'Center front crutch line');
-        $p->newPoint(     2 , $p->x(0) , $p->y(1) + $model->m('inseam') + $this->v('legExtension'), 'Center front bottom');
+        $p->newPoint(     2 , $p->x(0) , $p->y(1) + $model->m('inseam') + $this->o('lengthBonus'), 'Center front bottom');
         $p->newPoint(     3 , $p->x(0) , $p->y(1) + $model->m('inseam')/2 + 50, 'Center front knee');
         $p->newPoint(     4 , $p->x(0) , $p->y(1) - $model->m('bodyRise')/4, 'Center front seat line');
         $p->newPoint(     5 , $p->x(0) - $model->m('seatCircumference')/8 + 10 , $p->y(1));

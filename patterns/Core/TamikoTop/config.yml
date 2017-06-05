@@ -28,7 +28,7 @@ options:
     lengthBonus:
         title: "Length bonus"
         description: "The amount to lengthen the body. Negative values shorten it."
-        group: "fit"
+        group: "style"
         type: "measure"
         min: -150
         max: 350

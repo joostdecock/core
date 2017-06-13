@@ -1,4 +1,4 @@
-hidden: false
+hidden: true
 info:
     name: "Bent Body Block"
     description: "This block with a two-part sleeve is the basis of our menswear coat and jacket patterns"
@@ -79,6 +79,14 @@ options:
         min: 45
         max: 60
         default: 50
+    sleeveBend:
+        title: "Sleeve bend"
+        description: "How much do you want the sleeve to be bent at the elbow"
+        group: "fit"
+        type: "angle"
+        min: 0
+        max: 20
+        default: 10
     lengthBonus:
         title: "Length bonus"
         description: "Amount to lengthen the body. A negative value will shorten it."

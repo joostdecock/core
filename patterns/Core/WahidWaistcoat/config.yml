@@ -13,9 +13,9 @@ info:
         - waistcoat
 
 parts:
-    frontBlock: "Front block"
-    backBlock: "Back block"
-    waistcoatFrontBlock: "Waistcoat front block"
+    frontBlock: ".Front block"
+    backBlock: ".Back block"
+    waistcoatFrontBlock: ".Waistcoat front block"
     front: "Front"
     back: "Back"
     frontFacing: "Front facing"

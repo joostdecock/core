@@ -10,8 +10,8 @@ info:
         - unisex
         - top
 parts:
-    frontBlock: "Front block"
-    backBlock: "Back block"
+    frontBlock: ".Front block"
+    backBlock: ".Back block"
     front: "Front"
     back: "Back"
 

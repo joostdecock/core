@@ -13,11 +13,11 @@ info:
         - shirt
 
 parts:
-    backBlock: "Back block"
-    frontBlock: "Front block"
-    sleeveBlock: "Sleeve block"
-    block: "Block"
-    frontAndBackBlock: "Front and back block"
+    backBlock: ".Back block"
+    frontBlock: ".Front block"
+    sleeveBlock: ".Sleeve block"
+    block: ".Block"
+    frontAndBackBlock: ".Front and back block"
     frontRight: "Front right"
     frontLeft: "Front left"
     buttonPlacket: "Button placket"

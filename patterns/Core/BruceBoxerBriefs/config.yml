@@ -12,7 +12,7 @@ info:
         - bottom
 
 parts:
-    block: "Block"
+    block: ".Block"
     front: "Front"
     back:  "Back"
     side:  "Side"

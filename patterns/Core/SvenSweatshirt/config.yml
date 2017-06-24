@@ -14,9 +14,9 @@ info:
       - top
 
 parts:
-  backBlock: "Back block"
-  frontBlock: "Front block"
-  sleeveBlock: "Sleeve block"
+  backBlock: ".Back block"
+  frontBlock: ".Front block"
+  sleeveBlock: ".Sleeve block"
   back: "Back"
   front: "Front"
   sleeve: "Sleeve"

@@ -13,7 +13,7 @@ info:
          - corset
 
 parts:
-    base: "Base block"
+    base: ".Base block"
     panels: "Corset"
 
 languages:

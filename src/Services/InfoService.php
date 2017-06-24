@@ -170,6 +170,11 @@ class InfoService extends Service
         $info['models'] = $pattern->getSamplerModelConfig();
         $info['pattern'] = basename(Utils::getClassDir($pattern));
 
+        // Hide parts when their title starts with a dot
+        foreach($info['parts'] as $name => $title) {
+            if(substr($title,0,1) == '.') unset($info['parts'][$name]);
+        }
+
         return $info;
     }
 }

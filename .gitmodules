@@ -1,0 +1,3 @@
+[submodule "patterns/Beta/CarltonCoat"]
+	path = patterns/Beta/CarltonCoat
+	url = git@github.com:joostdecock/CarltonCoat.git

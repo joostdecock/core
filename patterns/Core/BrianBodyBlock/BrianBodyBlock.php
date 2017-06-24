@@ -70,7 +70,7 @@ class BrianBodyBlock extends Pattern
     {
         /** 
          * Calling setOptionIfUnset and setValueIfUnset so that child patterns can 
-         * set the options the need and call this method for the rest
+         * set the options they need and call this method for the rest
          */
         $this->setOptionIfUnset('collarEase', self::COLLAR_EASE);
         $this->setOptionIfUnset('backNeckCutout', self::NECK_CUTOUT);

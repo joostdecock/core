@@ -68,6 +68,8 @@ class AaronAshirt extends BrianBodyBlock
         // Avoid division by zero
         if($this->o('necklineBend') == 0) $this->setOption('necklineBend', 0.01);
 
+        /* Set stretch factor */
+        $this->setOption('stretchFactor', $this->stretchToScale($this->o('stretchFactor')));   
     }
 
     /*

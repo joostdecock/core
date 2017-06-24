@@ -684,4 +684,19 @@ abstract class Pattern
     {
         $this->isPaperless = $bool;
     }
+
+    /**
+     * Calculates scale factor based on stretch factor
+     *
+     * The way people measure stretch intuitively is different from the way we handle stretch in code
+     * When people say '25% stretch' they mean that 10cm fabric should get stretched to 12.5cm fabric.
+     * In our code, that means we need to scale things by 80%.
+     *
+     * This method does that calculation.
+     */
+    protected function stretchToScale($stretch)
+    {
+        return ( 1 / ( 1 + $stretch ) );
+    }
+
 }

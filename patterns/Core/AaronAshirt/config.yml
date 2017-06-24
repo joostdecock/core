@@ -94,13 +94,13 @@ options:
         max: 100
         default: 45
     stretchFactor:
-        title: "Stretch factor"
-        description: "Determines the horizontal negative ease. 100% means no negative ease, whereas 90% (the default) means 10% negative ease."
+        title: "Stretch"
+        description: "Determines the horizontal negative ease."
         group: "fit"
         type: "percent"
-        min: 70
-        max: 100
-        default: 90
+        min: 0
+        max: 30
+        default: 10
     hipsEase:
         title: "Hips ease"
         description: "The amount of ease at your hips"

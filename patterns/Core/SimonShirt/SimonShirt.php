@@ -1869,7 +1869,7 @@ class SimonShirt extends BrianBodyBlock
 
         // Title
         $p->clonePoint(2,'titleAnchor');
-        $p->addTitle('titleAnchor', '3', $this->t($p->title), '2x '.$this->t('from main fabric'));
+        $p->addTitle('titleAnchor', '5', $this->t($p->title), '2x '.$this->t('from main fabric'));
         
         // Grainline
         $p->newPoint('grainlineTop', $p->x(14), $p->y(14));

@@ -74,10 +74,10 @@ options:
         default: 25
 
     horizontalStretchFactor:
-        title: "Stretch factor"
-        description: "The amount of negative ease. 100% means no negative ease, 90% means 10% negative ease."
+        title: "Stretch"
+        description: "The amount of negative ease."
         group: "fit"
         type: "percent"
-        min: 75
-        max: 90
-        default: 85
+        min: 5
+        max: 25
+        default: 15

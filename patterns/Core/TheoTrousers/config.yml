@@ -1,6 +1,6 @@
 info:
     name: "Theo trousers"
-    description: "Theo is the slim fit version of Theodore"
+    description: "Theo is the slimline variation of Theodore"
     handle: "theo"
     version: "2.0"
     author: "Joost De Cock"
@@ -50,7 +50,7 @@ options:
         min: -10
         max: 60
         default: 40
-    waistbandRise:
+    backRise:
         title: "Back rise"
         description: "The amount by which to raise the back."
         group: "fit"
@@ -65,4 +65,4 @@ options:
         type: "measure"
         min: -60
         max: 80
-        default: 0
+        default: 40

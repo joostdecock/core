@@ -44,7 +44,10 @@ class BruceBoxerBriefs extends Pattern
         $this->setValue('legRatioSide', 1 - ( $this->v('legRatioInset') + $this->v('legRatioBack') ));
         
         /* Set vertical stretch factor to 90% */
-        $this->setOption('verticalStretchFactor', 0.9);   
+        $this->setOption('verticalStretchFactor', 0.95);   
+        
+        /* Set horizontal stretch factor */
+        $this->setOption('horizontalStretchFactor', 1-$this->o('horizontalStretchFactor'));   
         
         /* Gusset width is 9% of the hips circumference */
         $this->setValue('gussetWidth', $model->m('hipsCircumference') * 0.09 * $this->getOption('horizontalStretchFactor'));

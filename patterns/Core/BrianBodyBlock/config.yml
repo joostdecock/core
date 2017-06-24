@@ -1,6 +1,6 @@
 info:
   name: "Brian Body Block"
-  description: "This body block is the basis of many of our menswear patterns"
+  description: "This body block is the basis of many of our mens tops"
   handle: "brian"
   version: "2.0"
   date: 20170303
@@ -65,8 +65,8 @@ options:
         description: "A factor that influences the height of the sleevecap"
         group: "fit"
         type: "percent"
-        min: 45
-        max: 65
+        min: 35
+        max: 75
         default: 55
     lengthBonus:
         title: "Length bonus"

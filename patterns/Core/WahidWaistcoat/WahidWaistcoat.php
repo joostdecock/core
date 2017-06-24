@@ -696,7 +696,7 @@ class WahidWaistcoat extends BrianBodyBlock
 
         // Title
         $p->newPoint('titleAnchor', $p->x(8), $p->y(5000));
-        $p->addTitle('titleAnchor', 1, $this->t($p->title), '2x '.$this->t('from main fabric')."\n".$this->t('With good sides together'));
+        $p->addTitle('titleAnchor', 1, $this->t($p->title), '2x '.$this->t('from main fabric')."\n".$this->t('With good sides together')."\n".'2x '.$this->t('from interfacing')."\n".$this->t('With good sides together'));
 
         // Logo
         $p->newPoint('logoAnchor', $p->x(907)+ 30, $p->y(907));

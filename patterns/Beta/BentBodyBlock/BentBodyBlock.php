@@ -119,7 +119,7 @@ class BentBodyBlock extends \Freesewing\Patterns\Core\BrianBodyBlock
         $p->newPoint('elbowCenter', 0, $model->m('shoulderToElbow'),'Height of the elbow line');
         $p->newPoint('elbowRight', $p->x('sleeveRightTop'), $p->y('elbowCenter'),'Height of the elbow line, right');
         $p->newPoint('elbowLeft', $p->x('sleeveLeftTop'), $p->y('elbowCenter'),'Height of the elbow line, left');
-
+        
         // Using sleeve width to adapt other values
         $factor = $p->x('sleeveRightTop');
         $p->newPoint('backPitchPoint', $factor, $p->y('underarmCenter')/3, 'Back picth point');
@@ -131,24 +131,31 @@ class BentBodyBlock extends \Freesewing\Patterns\Core\BrianBodyBlock
         $p->newPoint('frontPitchPoint', $p->x('sleeveLeftTop'), $p->y('underarmCenter')*0.6, 'Front picth point');
         $p->addPoint('topsleeveElbowLeft', $p->shift('elbowLeft',180,$factor/9), 'Topsleeve elbow left');
         $p->addPoint('undersleeveElbowLeft', $p->shift('elbowLeft',0,$factor/2.4), 'Undersleeve elbow left');
-        $p->addPoint('sleeveWristLeft', $p->shift('sleeveLeftBottom',90,$factor/5), 'Wrist left');
-        $p->addPoint('topsleeveWristLeft', $p->shift('sleeveWristLeft',180,$factor/4.5), 'Topsleeve wrist left');
-        $p->addPoint('undersleeveWristLeft', $p->shift('sleeveWristLeft',0,$factor/4.5), 'Undersleeve wrist left');
         
+        // Different approach to sleeve bend, wrist right first
+        $p->addPoint('.angleHelper', $p->rotate('sleeveRightBottom', 'elbowRight', $this->o('sleeveBend')*-1));
+        $p->addpoint('topsleeveWristRight', $p->beamsCross('elbowRight','.angleHelper','sleeveLeftBottom','sleeveRightBottom'));
+        $p->clonePoint('topsleeveWristRight', 'undersleeveWristRight');
+
+        // Shift wrist left to the exact wrist width
         $wristWidth = $model->getMeasurement('wristCircumference') + $this->getOption('cuffEase');
         $topWrist = $wristWidth/2 + $factor/5;
         $underWrist = $wristWidth/2 - $factor/5;
-        $p->newPoint('topsleeveWristRight', $p->x('topsleeveWristLeft')+ sqrt(pow($topWrist,2)-pow($p->deltaY('sleeveLeftBottom','sleeveWristLeft'),2)), $p->y('sleeveLeftBottom'));
-        $p->newPoint('undersleeveWristRight', $p->x('undersleeveWristLeft')+ sqrt(pow($underWrist,2)-pow($p->deltaY('sleeveLeftBottom','sleeveWristLeft'),2)), $p->y('sleeveLeftBottom'));
-        // Force right edge of top and undersleeve to fall on the same point
-        $delta = $p->deltaX('topsleeveWristRight','undersleeveWristRight');
-        $p->addPoint('topsleeveWristRight', $p->shift('topsleeveWristRight',0,$delta/2));
-        $p->addPoint('undersleeveWristRight', $p->shift('undersleeveWristRight',180,$delta/2));
         
+        $p->newPoint('topsleeveWristLeftHelperBottom', $p->x('topsleeveWristRight')-$topWrist/2, $p->y('topsleeveWristRight'));
+        $p->newPoint('undersleeveWristLeftHelperBottom', $p->x('undersleeveWristRight')-$underWrist/2, $p->y('undersleeveWristRight'));
+        $p->addPoint('topsleeveWristLeftHelperTop', $p->shift('topsleeveElbowLeft', 'elbowRight', $p->distance('topsleeveElbowLeft', 'elbowRight')/2));
+        $p->addPoint('undersleeveWristLeftHelperTop', $p->shift('undersleeveElbowLeft', 'elbowRight', $p->distance('undersleeveElbowLeft', 'elbowRight')/2));
+        $topsleeveWristAngle = $p->angle('topsleeveWristLeftHelperBottom','topsleeveWristLeftHelperTop');
+        $undersleeveWristAngle = $p->angle('undersleeveWristLeftHelperBottom','undersleeveWristLeftHelperTop');
+        
+        $p->addPoint('topsleeveWristLeft', $p->shift('topsleeveWristRight',$topsleeveWristAngle+90, $topWrist*-1)); 
+        $p->addPoint('undersleeveWristLeft', $p->shift('undersleeveWristRight',$undersleeveWristAngle+90, $underWrist*-1)); 
+         
         // Control points topsleeve
         $p->addPoint('topsleeveRightEdgeCpTop', $p->shift('topsleeveRightEdge',90,$p->deltaY('backPitchPoint','topsleeveRightEdge')/2));
         $p->addPoint('topsleeveRightEdgeCpBottom', $p->flipY('topsleeveRightEdgeCpTop',$p->y('topsleeveRightEdge')));
-        $p->addPoint('elbowRightCpTop', $p->beamsCross('topsleeveWristRight','elbowRight','topsleeveRightEdgeCpTop','topsleeveRightEdge'));
+        $p->addPoint('elbowRightCpTop', $p->shiftTowards('topsleeveWristRight','elbowRight',$p->distance('topsleeveWristRight','elbowRight')*1.25));
         $p->addPoint('sleeveTopCpRight', $p->shift('sleeveTop',0,$factor/1.6));
         $p->addPoint('sleeveTopCpLeft', $p->flipX('sleeveTopCpRight',0));
         $p->addPoint('topsleeveLeftEdgeCpRight', $p->shift('topsleeveLeftEdge',0,$p->distance('topsleeveLeftEdge','underarmLeft')/2));
@@ -172,9 +179,9 @@ class BentBodyBlock extends \Freesewing\Patterns\Core\BrianBodyBlock
         $p->addPoint('undersleeveElbowLeftCpTop', $p->shiftTowards('undersleeveWristLeft', 'undersleeveElbowLeft', $p->distance('undersleeveWristLeft', 'undersleeveElbowLeft')*1.2));
 
         // Paths
-        //$p->newPath('topsleeve', 'M topsleeveWristRight L elbowRight C elbowRightCpTop topsleeveRightEdgeCpBottom topsleeveRightEdge C topsleeveRightEdgeCpTop backPitchPoint backPitchPoint C backPitchPoint sleeveTopCpRight sleeveTop C sleeveTopCpLeft frontPitchPointCpTop frontPitchPoint C frontPitchPointCpBottom topsleeveLeftEdgeCpRight topsleeveLeftEdge C topsleeveLeftEdge topsleeveElbowLeftCpTop topsleeveElbowLeft L topsleeveWristLeft z');
+        $p->newPath('topsleeve', 'M topsleeveWristRight L elbowRight C elbowRightCpTop topsleeveRightEdgeCpBottom topsleeveRightEdge C topsleeveRightEdgeCpTop backPitchPoint backPitchPoint C backPitchPoint sleeveTopCpRight sleeveTop C sleeveTopCpLeft frontPitchPointCpTop frontPitchPoint C frontPitchPointCpBottom topsleeveLeftEdgeCpRight topsleeveLeftEdge C topsleeveLeftEdge topsleeveElbowLeftCpTop topsleeveElbowLeft L topsleeveWristLeft z');
 
-        //$p->newPath('undersleeve', 'M undersleeveWristRight elbowRight C elbowRightCpTop undersleeveRightEdgeCpBottom undersleeveRightEdge C undersleeveRightEdgeCpTop undersleeveTip undersleeveTip C undersleeveTipCpBottom undersleeveLeftEdgeCpRight undersleeveLeftEdgeRight L undersleeveLeftEdge C undersleeveLeftEdge undersleeveElbowLeftCpTop undersleeveElbowLeft L undersleeveWristLeft z');
+        $p->newPath('undersleeve', 'M undersleeveWristRight elbowRight C elbowRightCpTop undersleeveRightEdgeCpBottom undersleeveRightEdge C undersleeveRightEdgeCpTop undersleeveTip undersleeveTip C undersleeveTipCpBottom undersleeveLeftEdgeCpRight undersleeveLeftEdgeRight L undersleeveLeftEdge C undersleeveLeftEdge undersleeveElbowLeftCpTop undersleeveElbowLeft L undersleeveWristLeft z');
         
         
         

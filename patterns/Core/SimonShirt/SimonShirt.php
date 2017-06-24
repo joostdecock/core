@@ -97,6 +97,9 @@ class SimonShirt extends BrianBodyBlock
         // Collar tweaking
         $this->setValue('collarTweakFactor', 1); 
         $this->setValue('collarTweakRun', 0); 
+    
+        // Calling parent pattern initialize
+        parent::initialize($model);
     }
 
     /*

@@ -144,6 +144,8 @@ options:
         min: 40
         max: 120
         default: 80
+        dependsOn: 'hemStyle'
+        onlyOn: [2,3]
     hipFlare:
         title: "Hip flare"
         description: "The amount to widen the shirt below the waist"
@@ -170,6 +172,8 @@ options:
             1: "Classic style"
             2: "French style (seamless)"
         default: 1
+        dependsOn: 'buttonPlacketType'
+        onlyOn: 1
     buttonholePlacketType:
         title: "Buttonhole placket type"
         description: "Type of the buttonhole placket"
@@ -188,6 +192,8 @@ options:
             1: "Classic style"
             2: "French style (seamless)"
         default: 2
+        dependsOn: 'buttonholePlacketType'
+        onlyOn: 1
     buttonPlacketWidth:
         title: "Button placket width"
         description: "Width of the button placket"
@@ -212,6 +218,8 @@ options:
         min: 3
         max: 10
         default: 6.35
+        dependsOn: 'buttonholePlacketStyle'
+        onlyOn: 1
     buttons:
         title: "Number of buttons"
         description: "The number of buttons on the front closure"
@@ -303,7 +311,7 @@ options:
         max: 30
         default: 10
     collarAngle:
-        title: "Collar flare"
+        title: "Collar angle"
         description: "The angle of the collar tips"
         group: "collar"
         type: "measure"
@@ -341,22 +349,26 @@ options:
         default: 65
     cuffButtonRows:
         title: "Cuff button rows"
-        description: "Whether to draft a single or double row of cuff buttons"
+        description: "Whether to draft a single or double row of cuff buttons. This option is only relevant for barrel cuffs"
         group: "cuffs"
         type: "chooseOne"
         options:
             1: "Single cuff button row"
             2: "Double cuff button row"
         default: 1
+        dependsOn: 'cuffStyle'
+        onlyOn: [1, 2, 3]
     barrelcuffNarrowButton:
         title: "Cuff narrow button"
-        description: "Whether to include a button to tie the cuffs more narrow"
+        description: "Whether to include a button to tie the cuffs more narrow. This option is only relevant for barrel cuffs"
         group: "cuffs"
         type: "chooseOne"
         options:
             0: "No narrow button"
             1: "Include narrow button"
         default: 1
+        dependsOn: 'cuffStyle'
+        onlyOn: [1, 2, 3]
     cuffDrape:
         title: "Cuff drape"
         description: "The amount by which the sleeve is wider than the cuff where the are joined"

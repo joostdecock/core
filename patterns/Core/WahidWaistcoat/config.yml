@@ -140,6 +140,8 @@ options:
         min: 0
         max: 100
         default: 60
+        dependsOn: "hemStyle"
+        onlyOn: 2
     buttons:
         title: "Buttons"
         description: "The number of buttons on the front."

@@ -33,6 +33,8 @@ measurements:
     hipsCircumference: 950
 
 options:
+
+# fit group
     chestEase:
         title: "Chest ease"
         description: "The amount of ease at your chest"
@@ -40,6 +42,44 @@ options:
         type: "measure"
         min: -40
         max: 160
+        default: 30
+    hipsEase:
+        title: "Hips ease"
+        description: "The amount of ease at your hips"
+        group: "fit"
+        type: "measure"
+        min: -40
+        max: 160
+        default: 60
+    stretchFactor:
+        title: "Stretch"
+        description: "Determines the horizontal negative ease."
+        group: "fit"
+        type: "percent"
+        min: 0
+        max: 30
+        default: 0
+
+# style group
+    necklineBend:
+        title: "Neckline shape"
+        description: "Determines the shape/bend of the neckline at the front."
+        group: "style"
+        type: "percent"
+        default: 100
+    necklineDrop:
+        title: "Neckline drop"
+        description: "The amount the neck is cutout at the front."
+        group: "style"
+        type: "measure"
+        min: 40
+        max: 200
+        default: 120
+    backlineBend:
+        title: "Back armhole shape"
+        description: "Determines the shape/bend of the back of the armholes."
+        group: "style"
+        type: "percent"
         default: 30
     armholeDrop:
         title: "Armhole drop"
@@ -49,34 +89,6 @@ options:
         min: -20
         max: 120
         default: 30
-    lengthBonus:
-        title: "Length bonus"
-        description: "Lengthen the top. Negative values will shorten it."
-        group: "style"
-        type: "measure"
-        min: -60
-        max: 200
-        default: 60
-    necklineBend:
-        title: "Neckline shape"
-        description: "Determines the shape/bend of the neckline at the front."
-        group: "style"
-        type: "percent"
-        default: 100
-    backlineBend:
-        title: "Back armhole shape"
-        description: "Determines the shape/bend of the back of the armholes."
-        group: "style"
-        type: "percent"
-        default: 30
-    necklineDrop:
-        title: "Neckline drop"
-        description: "The amount the neck is cutout at the front."
-        group: "style"
-        type: "measure"
-        min: 40
-        max: 200
-        default: 120
     shoulderStrapWidth:
         title: "Shoulderstrap width"
         description: "The width of the shoulder straps."
@@ -93,21 +105,13 @@ options:
         min: 0
         max: 100
         default: 45
-    stretchFactor:
-        title: "Stretch"
-        description: "Determines the horizontal negative ease."
-        group: "fit"
-        type: "percent"
-        min: 0
-        max: 30
-        default: 10
-    hipsEase:
-        title: "Hips ease"
-        description: "The amount of ease at your hips"
-        group: "fit"
+    lengthBonus:
+        title: "Length bonus"
+        description: "Lengthen the top. Negative values will shorten it."
+        group: "style"
         type: "measure"
-        min: -40
-        max: 160
+        min: -60
+        max: 200
         default: 60
 inMemoryOf:
     name: "Aaron Swartz"

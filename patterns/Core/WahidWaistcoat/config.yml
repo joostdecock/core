@@ -42,10 +42,12 @@ measurements:
     naturalWaist: 885
 
 options:
+# ease group
+
     chestEase:
         title: "Chest ease"
         description: "Amount of ease at the chest."
-        group: "fit"
+        group: "ease"
         type: "measure"
         min: 0
         max: 160
@@ -53,7 +55,7 @@ options:
     waistEase:
         title: "Waist ease"
         description: "Amount of ease at the waist."
-        group: "fit"
+        group: "ease"
         type: "measure"
         min: 0
         max: 160
@@ -61,51 +63,47 @@ options:
     hipsEase:
         title: "Hips ease"
         description: "Amount of ease at the hips."
-        group: "fit"
+        group: "ease"
         type: "measure"
         min: 0
         max: 160
         default: 40
+
+ # fit group
     lengthBonus:
         title: "Lenght bonus"
         description: "Amount by which to lengthen the waistcoat."
-        group: "style"
+        group: "fit"
         type: "measure"
         min:  0
         max:  50
         default: 15
-    neckInset:
-        title: "Neck inset"
-        description: "Distance from the neck to the waistcoat neckline at the shoulder seam."
-        group: "style"
+    backScyeDart:
+        title: "Back scye dart"
+        description: "The amount to take out in a dart at the back of the armhole."
+        group: "fit"
         type: "measure"
         min: 0
-        max: 35
-        default: 20
-    shoulderInset:
-        title: "Shoulder inset"
-        description: "Distance from the shoulder point to the waistcoat armhole at the shoulder seam."
-        group: "style"
+        max: 15
+        default: 5
+    frontScyeDart:
+        title: "Front scye dart"
+        description: "The amount to take out in a dart at the front of the armhole."
+        group: "fit"
         type: "measure"
         min: 0
-        max: 45
-        default: 20
-    backInset:
-        title: "Back inset"
-        description: "Amount the back armhole is cut deeper into the back panel."
-        group: "style"
+        max: 20
+        default: 10
+    centerBackDart:
+        title: "Center back dart"
+        description: "The amount to take out in a dart at the top of the center back."
+        group: "fit"
         type: "measure"
-        min: 15
-        max: 55
-        default: 25
-    frontInset:
-        title: "Front inset"
-        description: "Amount the front armhole is cut deeper into the front panel."
-        group: "style"
-        type: "measure"
-        min: 15
-        max: 45
-        default: 30
+        min: 0
+        max: 20
+        default: 5
+
+ # style group
     frontDrop:
         title: "Neckline drop"
         description: "The amount the front neckline is lowered. Negative values raise the neckline."
@@ -158,28 +156,37 @@ options:
             11: 11
             12: 12
         default: 6
-    backScyeDart:
-        title: "Back scye dart"
-        description: "The amount to take out in a dart at the back of the armhole."
-        group: "fit"
+ 
+# insets group
+    neckInset:
+        title: "Neck inset"
+        description: "Distance from the neck to the waistcoat neckline at the shoulder seam."
+        group: "insets"
         type: "measure"
         min: 0
-        max: 15
-        default: 5
-    frontScyeDart:
-        title: "Front scye dart"
-        description: "The amount to take out in a dart at the front of the armhole."
-        group: "fit"
+        max: 35
+        default: 20
+    shoulderInset:
+        title: "Shoulder inset"
+        description: "Distance from the shoulder point to the waistcoat armhole at the shoulder seam."
+        group: "insets"
         type: "measure"
         min: 0
-        max: 20
-        default: 10
-    centerBackDart:
-        title: "Center back dart"
-        description: "The amount to take out in a dart at the top of the center back."
-        group: "fit"
+        max: 45
+        default: 20
+    backInset:
+        title: "Back inset"
+        description: "Amount the back armhole is cut deeper into the back panel."
+        group: "insets"
         type: "measure"
-        min: 0
-        max: 20
-        default: 5
-
+        min: 15
+        max: 55
+        default: 25
+    frontInset:
+        title: "Front inset"
+        description: "Amount the front armhole is cut deeper into the front panel."
+        group: "insets"
+        type: "measure"
+        min: 15
+        max: 45
+        default: 30

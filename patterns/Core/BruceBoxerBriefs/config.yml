@@ -28,6 +28,31 @@ measurements:
     crossseamLength: 680
 
 options:
+#fit group
+    horizontalStretchFactor:
+        title: "Stretch"
+        description: "The amount of negative ease."
+        group: "fit"
+        type: "percent"
+        min: 5
+        max: 25
+        default: 15
+    bulge:
+        title: "Bulge"
+        description: "Increase angle to create more room in the front pouch."
+        group: "fit"
+        type: "angle"
+        min: 0
+        max: 40
+        default: 25
+    legBonus:
+        title: "Leg length bonus"
+        description: "Extra length to add to the legs."
+        group: "fit"
+        type: "measure"
+        min: 0
+        max: 70
+        default: 35
     rise:
         title: "Rise"
         description: "Amount to raise the waist. A negative value will lower it."
@@ -55,29 +80,3 @@ options:
         max: 70
         default: 35
 
-    legBonus:
-        title: "Leg length bonus"
-        description: "Extra length to add to the legs."
-        group: "fit"
-        type: "measure"
-        min: 0
-        max: 70
-        default: 35
-
-    bulge:
-        title: "Bulge"
-        description: "Increase angle to create more room in the front pouch."
-        group: "fit"
-        type: "angle"
-        min: 0
-        max: 40
-        default: 25
-
-    horizontalStretchFactor:
-        title: "Stretch"
-        description: "The amount of negative ease."
-        group: "fit"
-        type: "percent"
-        min: 5
-        max: 25
-        default: 15

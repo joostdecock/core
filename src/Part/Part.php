@@ -363,39 +363,20 @@ class Part
      */
     public function addTitle($anchorKey, $nr, $title, $msg = '', $mode = 'default')
     {
-        switch ($mode) {
-            case 'vertical':
-            case 'vertical-small':
-                if($mode == 'vertical-small') $class = 'vertical small';
-                else $class = 'vertical';
-                if ($title != '') {
-                    $msg = "\n$msg";
-                }
-                $anchor = $this->loadPoint($anchorKey);
-                $x = $anchor->getX();
-                $y = $anchor->getY();
-                $this->newText('partNumber', $anchorKey, $nr, ['class' => "part-nr $class"]);
-                $this->newText(
-                    'partTitle', $anchorKey, $title,
-                    ['class' => "part-title $class", 'transform' => "rotate(-90 $x $y)"]
-                );
-                $this->newText('partMsg', $anchorKey, $msg, ['class' => "part-msg $class", 'transform' => "rotate(-90 $x $y)"]);
-                break;
-            case 'horizontal':
-            case 'horizontal-small':
-                if($mode == 'horizontal-small') $class = 'horizontal small';
-                else $class = 'horizontal';
-                $this->newText('partNumber', $anchorKey, $nr, ['class' => "part-nr $class"]);
-                $this->newText('partTitle', $anchorKey, $title, ['class' => "part-title $class"]);
-                $this->newText('partMsg', $anchorKey, $msg, ['class' => "part-msg $class"]);
-                break;
-            case 'small':
-            default:
-                if($mode == 'small') $class = 'small';
-                else $class = '';
-                $this->newText('partNumber', $anchorKey, $nr, ['class' => "part-nr $class"]);
-                $this->newText('partTitle', $anchorKey, $title, ['class' => "part-title $class"]);
-                $this->newText('partMsg', $anchorKey, $msg, ['class' => "part-msg $class"]);
+        $class = str_replace('-',' ',$mode);
+        if($mode == 'vertical' || $mode == 'vertical-small') {
+            $this->newText('partNumber', $anchorKey, $nr, ['class' => "part-nr $class"]);
+            $this->newText(
+                'partTitle', $anchorKey, $title,
+                ['class' => "part-title $class", 'transform' => "translate(5, 10)", 'writing-mode' => 'tb-rl']
+            );
+            $this->newText('partMsg', $anchorKey, $msg, ['class' => "part-msg $class", 'transform' => "translate(-5, 10)", 'writing-mode' => 'tb-rl']);
+        } else {
+            if(strpos($class, 'small')) $shift = 1;
+            else $shift = 2;
+            $this->newText('partNumber', $anchorKey, $nr, ['class' => "part-nr $class", 'transform' => 'translate(0, '.(-10*$shift).')']);
+            $this->newText('partTitle', $anchorKey, $title, ['class' => "part-title $class"]);
+            $this->newText('partMsg', $anchorKey, $msg, ['class' => "part-msg $class", 'transform' => 'translate(0, '.(7.5*$shift).')']);
         }
     }
 

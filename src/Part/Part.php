@@ -12,6 +12,7 @@ use Freesewing\SvgSnippet;
 use Freesewing\Text;
 use Freesewing\TextOnPath;
 use Freesewing\Transform;
+use Freesewing\Utils;
 
 /**
  * Parts are what patterns are made of.
@@ -2011,6 +2012,34 @@ class Part
             $this->loadPoint($curve2StartKey), $this->loadPoint($curve2Control1Key), $this->loadPoint($curve2Control2Key),
             $this->loadPoint($curve2EndKey)
         );
+        if (is_array($points)) {
+            $i = 1;
+            foreach ($points as $point) {
+                $this->addPoint($prefix.$i, $point);
+                $i++;
+            }
+        }
+    }
+
+    /**
+     * Returns intersections of two circles
+     *
+     * @param string  $c1  The id of the center of the first circle
+     * @param float   $r1  The radius of the first circle
+     * @param string  $c2  The id of the center of the second circle
+     * @param float   $r2  The radius of the second circle
+     * @param string  $prefix The prefix for points this will create
+     * @param string  $sort The axis to sort results by, either x (default) or y
+     *
+     */
+    public function circlesCross($c1, $r1, $c2, $r2, $prefix='false', $sort='x')
+    {
+        $points = Utils::circleCircleIntersections(
+            $this->loadPoint($c1), $r1,
+            $this->loadPoint($c2), $r2,
+            $sort
+        );
+
         if (is_array($points)) {
             $i = 1;
             foreach ($points as $point) {

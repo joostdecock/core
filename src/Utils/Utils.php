@@ -268,4 +268,55 @@ class Utils
 
         return $value;
     }
+    
+    /** 
+     * Finds intersection points of two circles 
+     *
+     * @see http://paulbourke.net/geometry/circlesphere/
+     *
+     * @param point $c1 Center of first circle
+     * @param float $r1 Radius of first circle
+     * @param point $c2 Center of second circle
+     * @param float $r2 Radius of second circle
+     *
+     * @return array An array of points objects of the intersections
+     * */
+    function circleCircleIntersections($c1, $r1, $c2, $r2, $sort='x')
+    {
+        // First circle
+        $x1 = $c1->getX();
+        $y1 = $c1->getY();
+        
+        // Second circle
+        $x2 = $c2->getX();
+        $y2 = $c2->getY();
+
+        // Distance between centers
+        $dx = $x2 - $x1;
+        $dy = $y2 - $y1;
+        $d = \Freesewing\Utils::distance($c1, $c2);
+
+        // Check for edge cases
+        if ($d > ($r1 + $r2)) return false; // Circles do not intersect
+        if ($d < ($r2 - $r1)) return false; // One circle is contained in the other
+        if ($d == 0 && $r1 == $r2) return false; // Two circles are identical
+
+        $chorddistance = ( pow($r1,2) - pow($r2,2) + pow($d,2) ) / (2 * $d);
+        $halfchordlength = sqrt(pow($r1,2) - pow($chorddistance,2));
+        $chordmidpointx = $x1 + ($chorddistance*$dx)/$d;
+        $chordmidpointy = $y1 + ($chorddistance*$dy)/$d;
+        $i1 = new \Freesewing\Point();
+        $i2 = new \Freesewing\Point();
+        $i1->setX($chordmidpointx + ($halfchordlength*$dy)/$d);
+        $i1->setY($chordmidpointy - ($halfchordlength*$dx)/$d);
+        $i2->setX($chordmidpointx - ($halfchordlength*$dy)/$d);
+        $i2->setY($chordmidpointy + ($halfchordlength*$dx)/$d);
+
+
+        if( ($sort == 'x' && $i1->getX() <= $i2->getX()) || ($sort == 'y' && $i1->getY() <= $i2->getY() )) {
+            return [$i1, $i2];
+        } else {
+            return [$i2, $i1];
+        }
+    }
 }

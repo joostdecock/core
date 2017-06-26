@@ -10,6 +10,10 @@
  * @see https://github.com/joostdecock/freesewing Code repository on GitHub
  */
 
+// Sensible error settings
+ini_set("display_errors", 0);
+ini_set("log_errors", 1);
+
 require __DIR__.'/vendor/autoload.php';
 
 $context = new \Freesewing\Context();

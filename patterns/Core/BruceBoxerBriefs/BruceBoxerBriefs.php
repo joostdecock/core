@@ -20,6 +20,33 @@ class BruceBoxerBriefs extends Pattern
 
       Things we need to do before we can draft a pattern
     */
+    
+    /** 
+     * Ratio of different parts at the hips 
+     * 
+     * Take care to keep this sum of this = 1 (side counts double)
+     */
+    const HIP_RATIO_FRONT = 0.245;
+    const HIP_RATIO_SIDE = 0.22;
+    const HIP_RATIO_BACK = 0.315;
+
+    /** Ratio of different parts at the legs 
+     * 
+     * Take care to keep this sum of this = 1 
+     */
+    const LEG_RATIO_INSET = 0.3;
+    const LEG_RATIO_SIDE = 0.38;
+    const LEG_RATIO_BACK = 0.32;
+
+    /** Gusset widht in relation to waist = 6.66% */
+    const GUSSET_RATIO = 0.0666;
+
+    /** Part of crotch seam length that is attached to the inset (rest goes in the tusks) */
+    const GUSSET_INSET_RATIO = 0.6;
+
+    /** Height distribution between inset and front */
+    const HEIGHT_RATIO_INSET = 0.65;
+    const HEIGHT_RATIO_FRONT = 0.35;
 
     /**
      * Sets up options and values for our draft
@@ -34,38 +61,42 @@ class BruceBoxerBriefs extends Pattern
      */
     public function initialize($model)
     {
-        /* Ratio of waist between parts */
-        $this->setValue('waistRatioFront', 0.28);
-        $this->setValue('waistRatioBack', 0.34);
+        /* Set vertical scale to 1 (no stretch) */
+        $this->setValueIfUnset('yScale', 1);   
         
-        /* Ration of leg between parts */
-        $this->setValue('legRatioInset', 0.26);
-        $this->setValue('legRatioBack', 0.38);
-        $this->setValue('legRatioSide', 1 - ( $this->v('legRatioInset') + $this->v('legRatioBack') ));
+        /* Set horizontal scale based on stretch */
+        $this->setValueIfUnset('xScale', $this->stretchToScale($this->o('stretch')));   
+        $this->setValueIfUnset('xScaleLegs', $this->stretchToScale($this->o('legStretch')));   
         
-        /* Set vertical stretch factor to 90% */
-        $this->setOption('verticalStretchFactor', 0.90);   
-        
-        /* Set horizontal stretch factor */
-        $this->setOption('horizontalStretchFactor', $this->stretchToScale($this->o('horizontalStretchFactor')));   
-        
-        /* Gusset width is 9% of the hips circumference */
-        $this->setValue('gussetWidth', $model->m('hipsCircumference') * 0.09 * $this->getOption('horizontalStretchFactor'));
+        /* Ratio of parts at the hips*/
+        $this->setValueIfUnset('hips', $model->m('hipsCircumference') * $this->v('xScale'));
+        $this->setValueIfUnset('hipsFront', $this->v('hips') * self::HIP_RATIO_FRONT); 
+        $this->setValueIfUnset('hipsSide', $this->v('hips') * self::HIP_RATIO_SIDE);
+        $this->setValueIfUnset('hipsBack', $this->v('hips') * self::HIP_RATIO_BACK);
 
-        /* Side length is 70% of half of the cross seam length */
-        $this->setValue('sideLength', (($model->m('crossseamLength')/2) * 0.7 + $this->o('legBonus')) * $this->getOption('verticalStretchFactor'));
-        
-        
-        
-        $this->setValue('waistRatioSide', (1 - ($this->v('waistRatioFront') + $this->v('waistRatioBack'))) / 2);
+        /* Ratio of parts at the legs*/
+        $this->setValueIfUnset('leg', $model->m('upperLegCircumference') * $this->v('xScaleLegs'));
+        $this->setValueIfUnset('legInset',$this->v('leg') * self::LEG_RATIO_INSET); 
+        $this->setValueIfUnset('legSide', $this->v('leg') * self::LEG_RATIO_SIDE);
+        $this->setValueIfUnset('legBack', $this->v('leg') * self::LEG_RATIO_BACK);
 
+        /* Gusset */
+        $this->setValueIfUnset('gusset', $model->m('hipsCircumference') * self::GUSSET_RATIO);
+        $this->setValueIfUnset('gussetInsetRatio', self::GUSSET_INSET_RATIO);
 
-        /* Helpers */
-        $this->setValue('halfCross', $model->getMeasurement('crossseamLength') /2 * $this->getOption('verticalStretchFactor'));
-        $this->setValue('sideWaist', $model->getMeasurement('hipsCircumference') * $this->v('waistRatioSide') * $this->getOption('horizontalStretchFactor'));
-        $this->setValue('sideLeg', $model->getMeasurement('upperLegCircumference') * $this->v('legRatioSide') * $this->getOption('horizontalStretchFactor'));
+        /* Length helper */
+        $this->setValueIfUnset('length', $model->m('hipsToUpperLeg') * $this->v('yScale'));
+        $this->setValueIfUnset('riseLength', ($model->m('hipsToUpperLeg') + $this->o('rise')) * $this->v('yScale'));
+        $this->setValueIfUnset('fullLength', ($model->m('hipsToUpperLeg') + $this->o('rise') + $this->o('legBonus')) * $this->v('yScale'));
         
+        /* Height ration front/inset */
+        $this->setValueIfUnset('heightInset', $this->v('fullLength') * self::HEIGHT_RATIO_INSET);
+        $this->setValueIfUnset('heightFront', $this->v('fullLength') * self::HEIGHT_RATIO_FRONT);
 
+        /* Absolute amount to raise the back */
+        $this->setValueIfUnset('backRise', $model->m('hipsCircumference') * $this->o('backRise'));
+        $this->setValueIfUnset('sideRise', $this->v('backRise') * 0.75);;
+        $this->setValueIfUnset('frontRise', $this->v('backRise') * 0.25);;
     }
 
     /*
@@ -94,12 +125,12 @@ class BruceBoxerBriefs extends Pattern
     {
         $this->sample($model);
 
-        $this->finalizeBack($model);
-        $this->finalizeSide($model);
-        $this->finalizeFront($model);
-        $this->finalizeInset($model);
+        //$this->finalizeBack($model);
+        //$this->finalizeSide($model);
+        //$this->finalizeFront($model);
+        //$this->finalizeInset($model);
 
-        if ($this->isPaperless) {
+        if (false && $this->isPaperless) {
             $this->paperlessBack($model);
             $this->paperlessSide($model);
             $this->paperlessFront($model);
@@ -122,182 +153,13 @@ class BruceBoxerBriefs extends Pattern
     public function sample($model)
     {
         $this->initialize($model);
-        $this->draftBlock($model);
+        //$this->draftBlock($model);
         $this->draftBack($model);
         $this->draftSide($model);
-        $this->draftFront($model);
         $this->draftInset($model);
+        $this->draftFront($model);
         // Don't render the block
-        $this->parts['block']->setRender(false);
-    }
-
-    /**
-     * Drafts the base block
-     *
-     * @param \Freesewing\Model $model The model to draft for
-     *
-     * @return void
-     */
-    public function draftBlock($model)
-    {
-        /** @var \Freesewing\Part $p */
-        $p = $this->parts['block'];
-
-        // Center back
-        $p->newPoint('cbHips', 0, 0, 'Hipline @ center back');
-        $p->addPoint('cbRise',$p->shift('cbHips',90,$this->o('rise')*$this->o('verticalStretchFactor')));
-        $p->addPoint('cbBackRise',$p->shift('cbRise',90,($this->o('backRise')*$model->m('hipsCircumference'))*$this->o('verticalStretchFactor')));
-
-        // Center front
-        $p->newPoint('cfHips', $model->m('hipsCircumference')*$this->o('horizontalStretchFactor')/2, $p->y('cbHips'));
-        $p->newPoint('cfRise', $p->x('cfHips'), $p->y('cbRise'));
-
-        // Sloped hipline
-        $p->newPoint('cfCpHipline', $p->x('cfRise')*0.8, $p->y('cfRise'));
-        $p->newPoint('cbCpHipline', $p->x('cfRise')*0.3, $p->y('cbBackRise'));
-
-        // Move elasticWidth down
-        $shift = $this->o('elasticWidth')*$this->o('verticalStretchFactor');
-        $p->addPoint('cbTop', $p->shift('cbBackRise',-90,$shift));
-        $p->addPoint('cbTopCp', $p->shift('cbCpHipline',-90,$shift));
-        $p->addPoint('cfTop', $p->shift('cfRise',-90,$shift));
-        $p->addPoint('cfTopCp', $p->shift('cfCpHipline',-90,$shift));
-
-        // Divide into back/side/front
-        $p->curveCrossesX('cbTop','cbTopCp', 'cfTopCp', 'cfTop', $p->x('cfTop') * $this->v('waistRatioBack'), 'backSplit');
-        $p->curveCrossesX('cbTop','cbTopCp', 'cfTopCp', 'cfTop', $p->x('cfTop') * (1 - $this->v('waistRatioFront')), 'frontSplit');
-
-        // Split top curve
-        $p->splitCurve('cbTop','cbTopCp', 'cfTopCp', 'cfTop', 'backSplit1', 'backTopCurve');
-        $p->splitCurve('backSplit1', 'backTopCurve7', 'backTopCurve6', 'cfTop', 'frontSplit1', 'sideTopCurve');
-
-        // Crossseam
-        $p->newPoint('cbXseam', 0, $this->v('halfCross') * $this->getOption('verticalStretchFactor'), 'Crossseam point');
-        $p->newPoint('cfXseam', $p->x('cfTop'), $p->y('cbXseam') + $this->o('bulge')/2-10);
-        $p->newPoint('cfXseamBulged', $p->x('cfTop'), $p->y('cbXseam') + $this->o('bulge'));
-
-        // Front shape
-        $p->addPoint('gussetTip', $p->shift('cfXseam',180,$this->v('gussetWidth')/2));
-        $p->addPoint('gussetTip', $p->rotate('gussetTip','cfXseam',$this->o('bulge')/-3));
-
-        $p->newPoint('frontInset', $p->x('frontSplit1'), $p->y('cfXseam')/2.5 - $this->o('bulge'));
-        $p->addPoint('frontInsetCp', $p->shift('frontInset',0,$p->deltaX('frontInset','gussetTip')*0.5 + $this->o('bulge')*1));
-        $p->addPoint('gussetTipCp', $p->shift('gussetTip',$p->angle('cfXseam','gussetTip')+90,$p->deltaY('frontInset','gussetTip')*0.5));
-
-        // Back shape
-        $p->newPoint('xseamLeg', $this->v('gussetWidth')/2, $p->y('cbXseam') + $this->v('gussetWidth')/2);
-        $p->addPoint('xseamLegCp', $p->shift('xseamLeg', 90, $this->v('gussetWidth')/4));
-        $p->addPoint('cbXseamCp', $p->shift('cbXseam', 0, $this->v('gussetWidth')/4));
-        $p->addPoint('xseamHem', $p->shift('xseamLeg', -90, $this->o('legBonus')));
-
-        // Side shape
-        $p->newPoint('sideLength', $p->x('cfTop')/2, $this->v('sideLength')); 
-        $p->newPoint('sideLeft', $p->x('backSplit1'), $p->y('sideLength')); 
-        $p->newPoint('sideRight', $p->x('frontSplit1'), $p->y('sideLength')); 
-
-        // Leg width back+side
-        $target = $model->m('upperLegCircumference') * ($this->v('legRatioBack')+$this->v('legRatioSide')) * $this->o('horizontalStretchFactor');
-        // First run for hem slope
-        $p->newPoint('sideRealRight', $p->x('xseamLeg') + sqrt(pow($target,2) - pow($p->deltaY('sideLength','xseamHem'),2)), $p->y('sideLength'));
-        // Rotate leg inseam according to hem slope
-        $angle = $p->angle('xseamHem','sideRealRight');
-        $p->addpoint('xseamLegCpRot', $p->rotate('xseamLegCp','xseamLeg',$angle+180));
-        $p->addpoint('xseamHemRot', $p->rotate('xseamHem','xseamLeg',$angle+180));
-        // Second run for edge of side
-        $p->newPoint('sideRealRight', $p->x('xseamHemRot') + sqrt(pow($target,2) - pow($p->deltaY('sideLength','xseamHemRot'),2)), $p->y('sideLength'));
-        $p->newLinearDimension('xseamHemRot','sideRealRight');
-        
-        // Split back/side on leg hem
-        $p->addPoint('hemBackSide', $p->shiftTowards('xseamHemRot','sideRealRight', $model->m('upperLegCircumference') * $this->v('legRatioBack') * $this->o('horizontalStretchFactor')));
-        $p->newLinearDimension('hemBackSide','sideRealRight');
-        $p->newLinearDimension('sideLeft','sideRight');
-
-        // Side bottom width
-        // First, rotate right corner a bit to make side more symmetric
-        $p->addPoint('sideRightRot', $p->rotate('sideRight','frontSplit1', 5));
-        $p->addPoint('sideRealLeft', $p->shift('sideRightRot',180,$model->m('upperLegCircumference') * $this->v('legRatioBack') * $this->o('horizontalStretchFactor')));
-        $seamLength = $p->distance('backSplit1', 'hemBackSide');
-        while($p->distance('sideRealLeft','backSplit1') < $seamLength) {
-            $p->addPoint('sideRealLeft', $p->rotate('sideRealLeft', 'sideRightRot', 0.5));
-        }
-        // Curve side seam
-        $p->addPoint('sideRealLeftCp', $p->shiftTowards('sideRealLeft','sideRightRot',$this->v('gussetWidth')));
-        $p->addPoint('sideRealLeftCp', $p->rotate('sideRealLeftCp','sideRealLeft',90));
-        // Adjust length
-        $p->addPoint('sideLeftCorner', $p->shiftAlong('backSplit1','backSplit1','sideRealLeftCp','sideRealLeft',$seamLength));
-
-        // Curve hem
-        $p->addPoint('sideRightCp', $p->shiftTowards('sideRightRot','frontSplit1',$this->v('gussetWidth')/-1.2));
-        $p->addPoint('sideRightCp', $p->rotate('sideRightCp','sideRightRot', 90));
-
-        // Open up front to create some space
-        $p->newPoint('insetRotCenter', $p->x('cfTop'), $p->y('frontInset'));
-        $rotateThese = ['gussetTipCp','gussetTip','cfXseam'];
-        foreach($rotateThese as $id) {
-            $p->addPoint($id, $p->rotate($id, 'insetRotCenter', $this->o('bulge')*-1));
-        }
-        $p->newPoint('cfDartTop', $p->x('cfTop'), $p->y('frontInset')+$this->v('gussetWidth')/2);
-        $p->addPoint('cfDartTopCp', $p->shiftTowards('cfTop','cfDartTop', $p->distance('cfTop','cfDartTop')*1.3+$this->o('bulge')*2));
-
-
-        // Inset
-        $p->newPoint('insetBottomRight', $p->x('sideRight') + $model->m('upperLegCircumference') * $this->v('legRatioInset') * $this->o('horizontalStretchFactor'), $p->y('sideRight'));
-        $shortSeam = ($p->curveLen('cbXseam','cbXseamCp','xseamLegCpRot','xseamLeg') + $p->distance('xseamLeg','xseamHemRot')) -  $this->v('gussetWidth')/2;
-        $curveSeam = $p->curveLen('frontInset','frontInsetCp','gussetTipCp','gussetTip'); 
-        $p->addPoint('insetCurveEnd', $p->shift('insetBottomRight', 80+$this->o('bulge')/5, $shortSeam));
-        $p->addPoint('insetCpTop', $p->shift('frontInset',0,10));
-        $p->addPoint('insetCpBottom', $p->shift('insetCurveEnd',$p->angle('insetCurveEnd','insetBottomRight',10)+90, 10));
-        $target = $p->curveLen('frontInset','frontInsetCp','gussetTipCp','gussetTip');
-        while ($p->curveLen('frontInset','insetCpTop','insetCpBottom','insetCurveEnd') < $target) {
-            $p->addPoint('insetCpTop', $p->shiftTowards('frontInset','insetCpTop', $p->distance('frontInset','insetCpTop')+1));
-            $p->addPoint('insetCpBottom', $p->shiftTowards('insetCurveEnd','insetCpBottom', $p->distance('insetCurveEnd','insetCpBottom')+1));
-        }
-
-        // Measuring
-        $p->newCurvedDimension('M frontInset C  frontInsetCp gussetTipCp gussetTip');
-        $p->newCurvedDimension('M frontInset C  insetCpTop insetCpBottom insetCurveEnd');
-
-        // Some help paths
-        $p->newPath('elasticline','M cbBackRise C cbCpHipline cfCpHipline cfRise', ['class' => 'helpline']);
-        $p->newPath('help1', 'M xseamHemRot L xseamLeg C xseamLegCpRot cbXseamCp cbXseam L cbTop M cfTop L cfDartTop L cfXseam L gussetTip C gussetTipCp frontInsetCp frontInset L frontSplit1');
-        $p->newPath('help2', 'M backSplit1 L sideLeft L sideRight L frontSplit1 M hemBackSide L backSplit1');
-        $p->newPath('help3', 'M sideRight L insetBottomRight L insetCurveEnd');
-        $p->newPath('topline','M cbTop C cbTopCp cfTopCp cfTop');
- 
-        // Paths of the different parts
-        $p->newPath('back', '
-            M cbTop L cbXseam
-            C cbXseamCp xseamLegCpRot xseamLeg 
-            L xseamHemRot
-            L hemBackSide
-            L backSplit1
-            C backTopCurve3 backTopCurve2 cbTop 
-            z
-            ', ['class' => 'debug']);
-        $p->newPath('side', '
-            M backSplit1 
-            C backSplit1 sideRealLeftCp sideLeftCorner
-            C sideLeftCorner sideRightCp sideRightRot
-            L frontSplit1
-            C sideTopCurve3 sideTopCurve2 backSplit1
-            ', ['class' => 'debug']);
-        $p->newPath('inset', '
-            M frontInset
-            C insetCpTop insetCpBottom insetCurveEnd
-            L insetBottomRight
-            L sideRight
-            z
-            ', ['class' => 'debug']);
-        $p->newPath('front', '
-            M frontSplit1
-            L frontInset
-            C frontInsetCp gussetTipCp gussetTip
-            L cfXseam
-            C cfXseam cfDartTopCp cfDartTop 
-            L cfTop
-            C sideTopCurve6 sideTopCurve7 frontSplit1
-            z
-            ', ['class' => 'debug']);
+        //$this->parts['block']->setRender(false);
     }
 
     /**
@@ -309,27 +171,62 @@ class BruceBoxerBriefs extends Pattern
      */
     public function draftBack($model)
     {
-        $this->clonePoints('block','back');
-        
         /** @var \Freesewing\Part $p */
         $p = $this->parts['back'];
 
-        // Outline
-        $p->newPath('seamline', '
-            M cbTop L cbXseam
-            C cbXseamCp xseamLegCpRot xseamLeg 
-            L xseamHemRot
-            L hemBackSide
-            L backSplit1
-            C backTopCurve3 backTopCurve2 cbTop 
-            z
-        ', ['class' => 'fabric']);
+        // Center back 
+        $p->newPoint('defaultCenter', 0, 0);
+        $p->newPoint('elasticCenter', 0, $this->o('rise')*-1*$this->v('yScale'));
+        $p->newPoint('center', 0, $p->y('elasticCenter') + $this->o('elasticWidth'));
 
-        // Grid anchor
-        $p->clonePoint('cbTop','gridAnchor');
+        // Sides top
+        $p->newPoint('sideRight', $this->v('hipsBack')/2, $p->y('center'));
+        $p->addPoint('sideLeft', $p->flipX('sideRight'));
+
+        // Gusset
+        $p->newPoint('gussetTop', 0, $this->v('riseLength'));
+        $p->newPoint('gussetBottom', 0, $p->y('gussetTop') + $this->v('gusset'));
+        $p->newPoint('gussetRight', $this->v('gusset')/2 , $p->y('gussetBottom'));
+        $p->addPoint('gussetLeft', $p->flipX('gussetRight'));
+        $p->newPoint('gussetCpRight', $p->x('gussetRight'), $p->y('gussetTop'));
+        $p->newPoint('gussetCpLeft', $p->x('gussetLeft'), $p->y('gussetTop'));
+
+        // Find leg edge
+        $p->circlesCross('gussetRight', $this->v('legBack'), 'sideRight', $this->v('fullLength'), 'isect');
+        $p->clonePoint('isect2', 'legRight');
+        $p->addPoint('legLeft', $p->flipX('legRight'));
+
+        // Store back seam length and (half of the) crotch seam length
+        $this->setValue('backSeamLength', $p->distance('sideRight','legRight'));
+        $this->setValue('crotchSeamLength', $p->curveLen('gussetTop','gussetCpRight', 'gussetRight', 'gussetRight'));
+
+        // Handle back rise
+        $p->addPoint('center', $p->shift('center',90, $this->v('backRise')));
+        $p->addPoint('sideRight', $p->shift('sideRight',90, $this->v('sideRise')));
+        $p->addPoint('sideLeft', $p->shift('sideLeft',90, $this->v('sideRise')));
+        $p->newPoint('centerCpRight', $p->x('sideRight')/2, $p->y('center'));
+        $p->addPoint('centerCpLeft', $p->flipX('centerCpRight'));
+        $this->dbg('back rise is '.$this->v('backRise'));
+        $this->dbg('ratio is '.$this->v('hipRatioFront'));
+
+        $p->newPath('outline', '
+            M gussetLeft 
+            C gussetLeft gussetCpLeft gussetTop 
+            C gussetCpRight gussetRight gussetRight
+            L legRight 
+            L sideRight
+            C sideRight centerCpRight center
+            C centerCpLeft sideLeft sideLeft
+            L legLeft
+            L gussetLeft
+            z');
 
         // Mark path for sample service
-        $p->paths['seamline']->setSample(true);
+        $p->paths['outline']->setSample(true);
+
+        $p->newPoint('scaleboxAnchor', 0,$p->y('center') + 20);
+        $p->newSnippet('scalebox', 'scalebox', 'scaleboxAnchor');
+        $p->newSnippet('logo', 'logo', 'isect1');
     }
 
     /**
@@ -343,57 +240,40 @@ class BruceBoxerBriefs extends Pattern
     {
         /** @var \Freesewing\Part $p */
         $p = $this->parts['side'];
+        
+        // Top left 
+        $p->newPoint('defaultTopLeft', 0, 0);
+        $p->newPoint('elasticTopLeft', 0, $this->o('rise')*-1*$this->v('yScale'));
+        $p->newPoint('topLeft', 0, $p->y('elasticTopLeft') + $this->o('elasticWidth'));
 
-        $this->clonePoints('block','side');
+        // Top right
+        $p->newPoint('topRight', $this->v('hipsSide'), $p->y('topLeft'));
 
-        // Outline
-        $p->newPath('seamline', '
-            M backSplit1 
-            C backSplit1 sideRealLeftCp sideLeftCorner
-            C sideLeftCorner sideRightCp sideRightRot
-            L frontSplit1
-            C sideTopCurve3 sideTopCurve2 backSplit1
+        // Bottom right
+        $p->newPoint('bottomRight', $p->x('topRight'), $p->y('topRight') + $this->v('fullLength'));
+
+        // Find bottom left
+        $p->circlesCross('bottomRight', $this->v('legSide'), 'topLeft', $this->v('backSeamLength'), 'isect');
+        $p->clonePoint('isect1', 'bottomLeft');
+
+        // Store side seam length
+        $this->setValue('sideSeamLength', $p->distance('topRight','bottomRight'));
+        
+        // Handle back rise
+        $p->addPoint('topLeft', $p->shift('topLeft',90, $this->v('sideRise')));
+        $p->addPoint('topRight', $p->shift('topRight',90, $this->v('frontRise')));
+
+
+        $p->newPath('outline', '
+            M topLeft 
+            L topRight
+            L bottomRight
+            L bottomLeft
             z
-        ', ['class' => 'fabric']);
-
-        // Grid anchor
-        $p->clonePoint('backSplit1','gridAnchor');
+        ');
 
         // Mark path for sample service
-        $p->paths['seamline']->setSample(true);
-    }
-
-    /**
-     * Drafts the front
-     *
-     * @param \Freesewing\Model $model The model to draft for
-     *
-     * @return void
-     */
-    public function draftFront($model)
-    {
-        $this->clonePoints('block','front');
-        
-        /** @var \Freesewing\Part $p */
-        $p = $this->parts['front'];
-
-        // Outline
-        $p->newPath('seamline', '
-            M frontSplit1
-            L frontInset
-            C frontInsetCp gussetTipCp gussetTip
-            L cfXseam
-            C cfXseam cfDartTopCp cfDartTop 
-            L cfTop
-            C sideTopCurve6 sideTopCurve7 frontSplit1
-            z
-        ', ['class' => 'fabric']);
-        
-        // Grid anchor
-        $p->clonePoint('cfTop','gridAnchor');
-
-        // Mark path for sample service
-        $p->paths['seamline']->setSample(true);
+        $p->paths['outline']->setSample(true);
     }
 
     /**
@@ -405,26 +285,165 @@ class BruceBoxerBriefs extends Pattern
      */
     public function draftInset($model)
     {
-        $this->clonePoints('block','inset');
-
         /** @var \Freesewing\Part $p */
         $p = $this->parts['inset'];
 
-        // Outline
-        $p->newPath('seamline', '
-            M frontInset
-            C insetCpTop insetCpBottom insetCurveEnd
-            L insetBottomRight
-            L sideRight
-            z
-        ', ['class' => 'fabric']);
+        // height is 73.5%
+        $p->newPoint('topLeft', 0,0);
+        $p->newPoint('bottomLeft', 0, $this->v('heightInset'));
+        $p->newPoint('bottomRight', $this->v('legInset'), $p->y('bottomLeft'));
+        $p->newPoint('tip', $p->x('bottomRight') * 1.111, $p->y('bottomRight') - $this->v('gusset'));
+        $p->addPoint('tip', $p->shiftTowards('bottomRight', 'tip', $this->v('crotchSeamLength') - $this->v('gusset') * (1-$this->v('gussetInsetRatio'))));
+        $p->newPoint('tipCpTop', $this->v('gusset')*1.2, 0);
+        $p->addPoint('tipCpBottom', $p->shift('tip', $p->angle('bottomRight', 'tip')-90, $this->v('gusset')*1.5));
 
-        // Grid anchor
-        $p->clonePoint('sideRight','gridAnchor');
+        // Store cuve length
+        $this->setValue('curve', $p->curveLen('tip', 'tipCpBottom', 'tipCpTop', 'topLeft'));
 
+        $p->newPath('outline', '
+            M topLeft 
+            L bottomLeft
+            L bottomRight
+            L tip
+            C tipCpBottom tipCpTop topLeft z
+        ');
+    
         // Mark path for sample service
-        $p->paths['seamline']->setSample(true);
+        $p->paths['outline']->setSample(true);
     }
+
+
+    /**
+     * Drafts the front
+     *
+     * @param \Freesewing\Model $model The model to draft for
+     *
+     * @return void
+     */
+    public function draftFront($model)
+    {
+        /** @var \Freesewing\Part $p */
+        $p = $this->parts['front'];
+
+        $p->newPoint('topRight', $this->v('hipsFront')/2, 0);
+        $p->addPoint('topLeft', $p->flipX('topRight'));
+        $p->newPoint('midMid', 0,$this->v('heightFront'));
+        $p->newPoint('midRight', $p->x('topRight') + $this->v('heightFront')*0.05, $p->y('midMid'));
+        $p->addPoint('midLeft', $p->flipX('midRight'));
+
+
+        $p->newPoint('bottomMid', 0, $this->v('riseLength'));
+        $p->newPoint('rightTuskRight', $this->v('gusset') * (1-$this->v('gussetInsetRatio')),  $p->y('bottomMid'));
+        $p->clonePoint('bottomMid', 'rightTuskLeft');
+        $p->newPoint('curveRightCpTop', $p->x('midRight') - $this->v('gusset')*1.3, $p->y('midRight'));
+        $p->newPoint('curveRightCpBottom', $p->x('rightTuskRight'), $p->y('rightTuskRight') - $this->v('gusset')*1.3);
+
+        // Adjust tusk length to fit inset curve
+        $delta = $this->tuskDelta();
+        $count = 0;
+        while (abs($delta) > 1) { // Below 1mm is good enough
+            $this->tweakTusk($delta);
+            $delta = $this->tuskDelta();
+            $count++;
+            if($count>150) die("We got stuck trying to calculate an optimal tusk length. Please report this.");
+            $this->dbg("Tusk tweak $count, delta is $delta");
+        }
+        $this->msg("After $count iterations, tusk curve length is ".round($delta,2)."mm off.");
+
+        // Adjust midMid to new length
+        $p->newPoint('bottomMid', 0, $p->y('rightTuskLeft'));
+
+        // Front dart only if bulge > 0
+        if($this->o('bulge') > 0) {
+            
+            // Rotate tusk according to bulge option
+            foreach(['curveRightCpTop', 'curveRightCpBottom', 'rightTuskRight', 'rightTuskLeft'] as $pid) {
+                $p->addPoint($pid, $p->rotate($pid, 'midRight', $this->o('bulge')));
+            }
+
+            // Dart join point
+            $p->newPoint('dartJoin', 0, $p->y('midMid') + 0.65 * $p->distance('midMid', 'bottomMid'));
+
+            // Dart control point
+            $p->newPoint('dartCpRight', 0, $p->y('dartJoin') + ($p->distance('dartJoin', 'bottomMid') * ($this->o('bulge')/30)));
+            $p->addPoint('dartCpRight', $p->rotate('dartCpRight', 'dartJoin', $this->o('bulge')/1));
+
+            // Flip control point to left side
+            $p->addPoint('dartCpLeft', $p->flipx('dartCpRight'));
+        }
+
+        // Flip points to left side
+        $p->addPoint('leftTuskRight', $p->flipx('rightTuskLeft'));
+        $p->addPoint('leftTuskLeft', $p->flipx('rightTuskRight'));
+        $p->addPoint('curveLeftCpBottom', $p->flipx('curveRightCpBottom'));
+        $p->addPoint('curveLeftCpTop', $p->flipx('curveRightCpTop'));
+
+        // Handle back rise
+        $p->newPoint('topMid', 0, $p->y('topLeft'));
+        $p->addPoint('topLeft', $p->shift('topLeft',90, $this->v('frontRise')));
+        $p->addPoint('topRight', $p->shift('topRight',90, $this->v('frontRise')));
+        $p->newPoint('topMidCpRight', $p->x('topRight')/2, $p->y('topMid'));
+        $p->addPoint('topMidCpLeft', $p->flipX('topMidCpRight'));
+
+        if($this->o('bulge') > 0) { 
+            $p->newPath('outline', '
+                M midLeft
+                L topLeft 
+                C topLeft topMidCpLeft topMid
+                C topMidCpRight topRight topRight
+                L midRight
+                C curveRightCpTop curveRightCpBottom rightTuskRight 
+                L rightTuskLeft
+                C rightTuskLeft dartCpRight dartJoin
+                C dartCpLeft leftTuskRight leftTuskRight
+                L leftTuskLeft
+                C curveLeftCpBottom curveLeftCpTop midLeft
+                z
+            ');
+        } else {
+            $p->newPath('outline', '
+                M midLeft
+                L topLeft 
+                L topRight
+                L midRight
+                C curveRightCpTop curveRightCpBottom rightTuskRight 
+                L leftTuskLeft
+                C curveLeftCpBottom curveLeftCpTop midLeft
+                z
+            ');
+        }
+        
+        // Mark path for sample service
+        $p->paths['outline']->setSample(true);
+   }
+
+    protected function tweakTusk($delta)
+    {
+        /** @var \Freesewing\Part $p */
+        $p = $this->parts['front'];
+
+        if (abs($delta)>2) $factor = 3;
+        else $factor = 5;
+
+        $p->addPoint('rightTuskRight', $p->shift('rightTuskRight', 90, $delta/$factor));
+        $p->addPoint('rightTuskLeft', $p->shift('rightTuskLeft', 90, $delta/$factor));
+        $p->addPoint('curveRightCpBottom', $p->shift('curveRightCpBottom', 90, $delta/$factor));
+    }
+
+    protected function tuskDelta()
+    {
+        /** @var \Freesewing\Part $p */
+        $p = $this->parts['front'];
+        $len = $p->curveLen('midRight','curveRightCpTop','curveRightCpBottom','rightTuskRight');
+
+        return $len - $this->v('curve');
+    }
+
+
+
+
+
+
 
     /*
        _____ _             _ _

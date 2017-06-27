@@ -25,52 +25,10 @@ languages:
 measurements:
     hipsCircumference: 985
     upperLegCircumference: 630
-    crossseamLength: 680
+    hipsToUpperLeg: 220
 
 options:
-#fit group
-    horizontalStretchFactor:
-        title: "Stretch"
-        description: "The amount of negative ease."
-        group: "fit"
-        type: "percent"
-        min: 5
-        max: 25
-        default: 15
-    bulge:
-        title: "Bulge"
-        description: "Increase angle to create more room in the front pouch."
-        group: "fit"
-        type: "angle"
-        min: 0
-        max: 40
-        default: 25
-    legBonus:
-        title: "Leg length bonus"
-        description: "Extra length to add to the legs."
-        group: "fit"
-        type: "measure"
-        min: 0
-        max: 70
-        default: 35
-    rise:
-        title: "Rise"
-        description: "Amount to raise the waist. A negative value will lower it."
-        group: "fit"
-        type: "measure"
-        min: -30
-        max: 50
-        default: 20
-
-    backRise:
-        title: "Back rise"
-        description: "Percentage to raise the waist extra at the back."
-        group: "fit"
-        type: "percent"
-        min: 0
-        max: 6
-        default: 3
-
+# fit group
     elasticWidth:
         title: "Elastic width"
         description: "Width of the elastic band you intend to use."
@@ -79,4 +37,53 @@ options:
         min: 10
         max: 70
         default: 35
+    bulge:
+        title: "Bulge"
+        description: "Increase angle to create more room in the front pouch". 
+        group: "fit"
+        type: "angle"
+        min: 0
+        max: 40
+        default: 20
+    legBonus:
+        title: "Leg length bonus"
+        description: "Extra length to add to the legs."
+        group: "fit"
+        type: "measure"
+        min: 0
+        max: 70
+        default: 10
+    rise:
+        title: "Rise"
+        description: "Amount to raise the waist. A negative value will lower it."
+        group: "fit"
+        type: "measure"
+        min: -30
+        max: 50
+        default: 10
 
+# advanced group
+    stretch:
+        title: "Stretch"
+        description: "The amount of negative ease."
+        group: "advanced"
+        type: "percent"
+        min: 4
+        max: 24
+        default: 14
+    legStretch:
+        title: "Leg stretch"
+        description: "For best results, you want to fit your legs a but more snugly -  say no to gaping"
+        group: "advanced"
+        type: "percent"
+        min: 25
+        max: 32
+        default: 40
+    backRise:
+        title: "Back rise"
+        description: "Percentage by which the waist will be raised at the back."
+        group: "advanced"
+        type: "percent"
+        min: 0
+        max: 5
+        default: 2.5

@@ -26,19 +26,21 @@ composer dump-autoload -o
 ### From GitHub
 ```
 git clone git@github.com:freesewing/core.git freesewing
+cd freesewing
 composer install
 composer dump-autoload -o
 ```
 
 ## License
 Our code is licensed [GPL-3](https://www.gnu.org/licenses/gpl-3.0.en.html), 
-our patterns and documentation are licensed [CC-BY](https://creativecommons.org/licenses/by/4.0/).
+our patterns, documentation, and other content are licensed [CC-BY](https://creativecommons.org/licenses/by/4.0/).
 
 ## Contribute
 
 Your pull request are welcome here. 
 
-If you're interested in contributing, a good place to start is 
-[our Slack channel](https://docs.freesewing.org/slack/) 
-where you can ask questions, meet other freesewers, 
-or just hang out and share a laugh.
+If you're interested in contributing, we'd love your help.
+That's exactly why we made this thing open source in the first place.
+
+Read [freesewing.org/contribute](https://freesewing.org/contribute) to get started.
+If you have any questions, the best place to ask is [the freesewing community on Gitter](https://gitter.im/freesewing/freesewing).

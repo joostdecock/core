@@ -204,8 +204,6 @@ class BruceBoxerBriefs extends Pattern
         $p->addPoint('sideLeft', $p->shift('sideLeft',90, $this->v('sideRise')));
         $p->newPoint('centerCpRight', $p->x('sideRight')/2, $p->y('center'));
         $p->addPoint('centerCpLeft', $p->flipX('centerCpRight'));
-        $this->dbg('back rise is '.$this->v('backRise'));
-        $this->dbg('ratio is '.$this->v('hipRatioFront'));
 
         $p->newPath('outline', '
             M gussetTop

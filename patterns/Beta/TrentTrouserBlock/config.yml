@@ -1,4 +1,4 @@
-hidden: true
+hidden: false
 info:
     name: "Trent Trouser Block"
     handle: "trent"
@@ -14,7 +14,7 @@ info:
         - bottom
 
 parts:
-    .frame: "Frame"
+    frame: ".Frame"
     frontBlock: "Front"
     backBlock: "Back"
 
@@ -25,10 +25,9 @@ measurements:
     hipsCircumference: 950
     seatCircumference: 1045
     inseam: 910
-    outseam: 1070
     naturalWaistToHip: 120
     naturalWaistToSeat: 260
-    bodyRise: 320
+    seatDepth: 240
 
 options:
     hipsEase:
@@ -52,10 +51,12 @@ options:
         description: "A factor the influences the shape of the crotch curve."
         group: "fit"
         type: "percent"
-        default: 50
-    backSeamCurveFactor:
+        min: 65
+        max: 100
+        default: 85
+    backCurveFactor:
         title: "Back seam curve factor"
         description: "A factor the influences the shape of the back seam."
         group: "fit"
         type: "percent"
-        default: 50
+        default: 75

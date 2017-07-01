@@ -12,7 +12,7 @@ measurements:
         trent   : 810 
     outseam: 
         trent   : 910 
-    bodyRise: 
+    seatDepth: 
         trent   : 280 
     naturalWaistToHip: 
         trent   : 157.5

@@ -31,7 +31,7 @@ measurements:
     outseam: 1070
     naturalWaistToHip: 120
     naturalWaistToSeat: 260
-    bodyRise: 320
+    seatDepth: 320
     ankleCircumference: 255
     kneeCircumference: 420
     upperLegCircumference: 620

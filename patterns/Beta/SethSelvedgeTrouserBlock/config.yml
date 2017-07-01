@@ -30,7 +30,7 @@ measurements:
     outseam: 1070
     naturalWaistToHip: 120
     naturalWaistToSeat: 260
-    bodyRise: 320
+    seatDepth: 320
 
 options:
     hipsEase:

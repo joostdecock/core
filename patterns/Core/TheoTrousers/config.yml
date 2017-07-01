@@ -40,7 +40,7 @@ measurements:
     hipsCircumference: 950
     seatCircumference: 1045
     inseam: 910
-    bodyRise: 200
+    seatDepth: 200
 options:
     waistbandWidth:
         title: "Waistband width"

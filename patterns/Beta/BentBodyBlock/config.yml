@@ -79,6 +79,14 @@ options:
         min: 45
         max: 60
         default: 50
+    sleevecapEase:
+        title: "Sleevecap ease"
+        description: "The ease on the sleevecap"
+        group: "fit"
+        type: "measure"
+        min: 0
+        max: 35
+        default: 5
     sleeveBend:
         title: "Sleeve bend"
         description: "How much do you want the sleeve to be bent at the elbow"

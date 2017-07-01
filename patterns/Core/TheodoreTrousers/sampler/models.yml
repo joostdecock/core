@@ -35,7 +35,7 @@ measurements:
         usSize40: 910 
         usSize42: 910 
         usSize44: 910 
-    bodyRise: 
+    seatDepth: 
         joost   : 200 
         usSize34: 200 
         usSize36: 200 

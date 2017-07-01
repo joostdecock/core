@@ -39,7 +39,7 @@ options:
         default: 35
     bulge:
         title: "Bulge"
-        description: "Increase angle to create more room in the front pouch". 
+        description: "Increase angle to create more room in the front pouch."
         group: "fit"
         type: "angle"
         min: 0
@@ -77,7 +77,7 @@ options:
         group: "advanced"
         type: "percent"
         min: 25
-        max: 32
+        max: 45
         default: 40
     backRise:
         title: "Back rise"

@@ -281,7 +281,7 @@ class Utils
      *
      * @return array An array of points objects of the intersections
      * */
-    function circleCircleIntersections($c1, $r1, $c2, $r2, $sort='x')
+    public static function circleCircleIntersections($c1, $r1, $c2, $r2, $sort='x')
     {
         // First circle
         $x1 = $c1->getX();
@@ -332,7 +332,7 @@ class Utils
      *
      * @return array An array of points objects of the intersections
      * */
-    function circleLineIntersections($c, $r, $p1, $p2, $sort='x')
+    public static function circleLineIntersections($c, $r, $p1, $p2, $sort='x')
     {
         $dx = $p2->getX() - $p1->getX();
         $dy = $p2->getY() - $p1->getY();

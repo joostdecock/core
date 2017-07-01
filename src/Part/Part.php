@@ -2050,6 +2050,36 @@ class Part
     }
 
     /**
+     * Returns intersections of a circle and a line segment
+     *
+     * @param string  $c   The id of the center of the circle
+     * @param float   $r   The radius of the first circle
+     * @param string  $p1  The id of the start point of the line
+     * @param float   $p2  The id of the end point of the line
+     * @param string  $prefix The prefix for points this will create
+     * @param string  $sort The axis to sort results by, either x (default) or y
+     *
+     */
+    public function circleCrossesLine($c,$r,$p1,$p2,$prefix='false', $sort='x')
+    {
+        $points = Utils::circleLineIntersections(
+            $this->loadPoint($c), 
+            $r,
+            $this->loadPoint($p1),
+            $this->loadPoint($p2),
+            $sort
+        );
+
+        if (is_array($points)) {
+            $i = 1;
+            foreach ($points as $point) {
+                $this->addPoint($prefix.$i, $point);
+                $i++;
+            }
+        }
+    }
+
+    /**
      * Adds a (small) width dimension to the pattern
      *
      * @param string $fromId ID of the point that the dimension starts from

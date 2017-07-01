@@ -312,11 +312,58 @@ class Utils
         $i2->setX($chordmidpointx - ($halfchordlength*$dy)/$d);
         $i2->setY($chordmidpointy + ($halfchordlength*$dx)/$d);
 
-
         if( ($sort == 'x' && $i1->getX() <= $i2->getX()) || ($sort == 'y' && $i1->getY() <= $i2->getY() )) {
             return [$i1, $i2];
         } else {
             return [$i2, $i1];
+        }
+    }
+    
+    /** 
+     * Finds intersection points of a circle and line segment 
+     *
+     * @see http://csharphelper.com/blog/2014/09/determine-where-a-line-intersects-a-circle-in-c/
+     *
+     * @param point  $c   The center of the circle
+     * @param float  $r   The radius of the first circle
+     * @param point  $p1  The start point of the line
+     * @param point  $p2  The end point of the line
+     * @param string  $sort The axis to sort results by, either x (default) or y
+     *
+     * @return array An array of points objects of the intersections
+     * */
+    function circleLineIntersections($c, $r, $p1, $p2, $sort='x')
+    {
+        $dx = $p2->getX() - $p1->getX();
+        $dy = $p2->getY() - $p1->getY();
+
+        $A = pow($dx,2) + pow($dy,2);
+        $B = 2 * ($dx * ($p1->getX() - $c->getX()) + $dy * ($p1->getY() - $c->getY()));
+        $C = pow(($p1->getX() - $c->getX()),2) + pow(($p1->getY() - $c->getY()),2) - pow($r,2);
+    
+        $det = pow($B,2) - 4 * $A * $C;
+    
+        if (($A <= 0.0000001) || ($det < 0)) return false; // No real solutions
+        else if ($det == 0) { // One solution
+            $t = (-1 * $B) / (2 * $A);
+            $i1 = new \Freesewing\Point();
+            $i1->setX($p1->getX() + $t * $dx);
+            $i1->setY($p1->getY() + $t * $dy);
+            return [$i1];
+        } else { // Two solutions
+            $i1 = new \Freesewing\Point();
+            $i2 = new \Freesewing\Point();
+            $t = (((-1 * $B) + sqrt($det)) / (2 * $A));
+            $i1->setX($p1->getX() + $t * $dx);
+            $i1->setY($p1->getY() + $t * $dy);
+            $t = (((-1 * $B) - sqrt($det)) / (2 * $A));
+            $i2->setX($p1->getX() + $t * $dx);
+            $i2->setY($p1->getY() + $t * $dy);
+            if( ($sort == 'x' && $i1->getX() <= $i2->getX()) || ($sort == 'y' && $i1->getY() <= $i2->getY() )) {
+                return [$i1, $i2];
+            } else {
+                return [$i2, $i1];
+            }
         }
     }
 }

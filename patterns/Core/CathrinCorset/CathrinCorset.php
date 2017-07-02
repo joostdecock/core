@@ -141,7 +141,7 @@ class CathrinCorset extends Pattern
 
         // Basic rectangle | Point index 1->
         $p->newPoint(   1, 0, 0, 'Underbust @ CF' );
-        $p->newPoint(   2, 0, $model->m('naturalWaistToUnderbust') + $model->m('naturalWaistToHips'), 'Hips @ CF' );
+        $p->newPoint(   2, 0, $model->m('naturalWaistToUnderbust') + $model->m('naturalWaistToHip'), 'Hips @ CF' );
         $p->newPoint(   3, $this->v('width'), $p->y(2), 'Hips @ side' );
         $p->newPoint(   4, $p->x(3), 0, 'Underbust @ side' );
         $p->newPoint(   5, $p->x(3)/2, 0, 'Quarter top' );

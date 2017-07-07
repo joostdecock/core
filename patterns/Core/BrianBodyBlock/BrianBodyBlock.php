@@ -471,7 +471,7 @@ class BrianBodyBlock extends Pattern
         $p->newPoint(1, 0, 0, 'Origin (Center sleeve @ shoulder)');
         $p->newPoint(2, 0, $this->v('sleevecapHeight')*$this->v('sleeveTweakFactor'), 'Center sleeve @ sleevecap start');
         $p->clonePoint(2, 'gridAnchor');
-        $p->newPoint(3, 0, $model->getMeasurement('shoulderToWritst') + $this->o('sleeveLengthBonus'), 'Center sleeve @ wrist');
+        $p->newPoint(3, 0, $model->getMeasurement('shoulderToWrist') + $this->o('sleeveLengthBonus'), 'Center sleeve @ wrist');
 
         // Sleeve half width
         $p->newPoint(4, ($model->getMeasurement('bicepsCircumference') / 2 + $this->getOption('bicepsEase') / 2) * $this->v('sleeveTweakFactor'), 0,

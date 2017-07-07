@@ -35,7 +35,7 @@ measurements:
     shoulderSlope: 55
     shoulderToShoulder: 470
     hipsCircumference: 950
-    shoulderToWritst: 700
+    shoulderToWrist: 700
     wristCircumference: 190
 
 options:

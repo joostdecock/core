@@ -52,7 +52,7 @@ options:
         type: "measure"
         min: 0
         max: 70
-        default: 10
+        default: 0
     rise:
         title: "Rise"
         description: "Amount to raise the waist. A negative value will lower it."
@@ -60,7 +60,7 @@ options:
         type: "measure"
         min: -30
         max: 50
-        default: 10
+        default: 35
 
 # advanced group
     stretch:

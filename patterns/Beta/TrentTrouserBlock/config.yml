@@ -59,4 +59,6 @@ options:
         description: "A factor the influences the shape of the back seam."
         group: "fit"
         type: "percent"
+        min: 50
+        max: 100
         default: 75

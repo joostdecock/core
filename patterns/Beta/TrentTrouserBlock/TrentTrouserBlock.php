@@ -284,17 +284,19 @@ class TrentTrouserBlock extends Pattern
 
         if($this->v('frontDart')) $dart = ' L frontDartLeft L frontDartTip L frontDartRight ';
         else $dart = '';
-        $p->newPath('frame', "
+        $p->newPath('outline', "
             M hipSide 
             C hipSide seatSideCpTop seatSide
             C crotchSide kneeSideCpTop kneeSide
+            L hemSide
+            L hemCenter
             L kneeCenter
             C kneeCenterCpTop crotchCenter crotchCenter
             C crotchCenter crotchCurveCp seatCenter
             L hipCenter
             $dart
             z
-            M frontPleatTop L kneePleat
+            M frontPleatTop L frontPleatBottom
         ");
            
         // Store location of pleat line
@@ -313,8 +315,12 @@ class TrentTrouserBlock extends Pattern
             $p->curveLen('seatSide', 'crotchSide','kneeSideCpTop','kneeSide') +
             $p->distance('kneeSide', 'hemSide')
         ); 
-        $this->dbg('Outseam lenght is '.$this->v('outseamFront'));
-        $this->dbg('Inseam lenght is '.$this->v('inseamFront'));
+        
+        // Mark path for sample service
+        $p->paths['outline']->setSample(true);
+        
+        // Add grid anchor
+        $p->clonePoint('hipCenter', 'gridAnchor');
     }
 
     /**
@@ -419,13 +425,20 @@ class TrentTrouserBlock extends Pattern
             L hipSide
             C hipSide seatSideCpTop seatSide
             C seatSideCpBottom kneeSideCpTop kneeSide
+            L hemSide
+            L hemCenter
             L kneeCenter
             C kneeCenterCpTop backFork backFork
             C backFork seatCenterCp seatCenter
             z
-            M pleatLineTop L kneeMid
+            M pleatLineTop L pleatLineBottom
             ");
          
+        // Mark path for sample service
+        $p->paths['outline']->setSample(true);
+
+        // Add grid anchor
+        $p->clonePoint('hipCenter', 'gridAnchor');
     }
 
 

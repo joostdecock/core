@@ -110,7 +110,7 @@ class BentBodyBlock extends \Freesewing\Patterns\Core\BrianBodyBlock
         $p->newPoint('sleeveTop', 0, 0, 'Top of the sleeve');
         $p->newPoint('sleeveRightTop', $this->v('sleevecapSeamLength')/6 + 10, 0, 'Right top of the sleeve frame');
         $p->addPoint('sleeveLeftTop', $p->flipX('sleeveRightTop'), 'Left top of the sleeve frame');
-        $p->newPoint('sleeveBottom', 0, $model->m('sleeveLengthToWrist'), 'Center-cuff of the sleeve');
+        $p->newPoint('sleeveBottom', 0, $model->m('shoulderToWritst'), 'Center-cuff of the sleeve');
         $p->newPoint('sleeveRightBottom', $p->x('sleeveRightTop'), $p->y('sleeveBottom'), 'Right bottom of the sleeve frame');
         $p->addPoint('sleeveLeftBottom', $p->flipX('sleeveRightBottom'), 'Left bottom of the sleeve frame');
         $p->newPoint('underarmCenter', 0, $this->v('sleevecapHeight'),'Height of the underarm line');

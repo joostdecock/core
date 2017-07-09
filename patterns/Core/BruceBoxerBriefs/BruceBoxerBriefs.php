@@ -550,24 +550,37 @@ class BruceBoxerBriefs extends Pattern
         $p = $this->parts['front'];
 
         // Seam allowance
-        $p->offsetPathString('sa1','
-            M topMid
-            C topMidCpRight topRight topRight
-            L midRight
-            C curveRightCpTop curveRightCpBottom rightTuskRight
-            L rightTuskLeft
-            C rightTuskLeft dartCpRight dartJoin
-            C dartCpLeft leftTuskRight leftTuskRight
-            L leftTuskLeft
-            C curveLeftCpBottom curveLeftCpTop midLeft 
-            L topLeft
-            C topLeft topMidCpLeft topMid
-            z
-        ', -10, 1, ['class' => 'fabric sa']);
+        if($this->o('bulge') > 0) {
+            $p->offsetPathString('sa1','
+                M topMid
+                C topMidCpRight topRight topRight
+                L midRight
+                C curveRightCpTop curveRightCpBottom rightTuskRight
+                L rightTuskLeft
+                C rightTuskLeft dartCpRight dartJoin
+                C dartCpLeft leftTuskRight leftTuskRight
+                L leftTuskLeft
+                C curveLeftCpBottom curveLeftCpTop midLeft 
+                L topLeft
+                C topLeft topMidCpLeft topMid
+                z
+            ', -10, 1, ['class' => 'fabric sa']);
+        } else {
+            $p->offsetPathString('sa1','
+                M midLeft
+                L topLeft 
+                L topRight
+                L midRight
+                C curveRightCpTop curveRightCpBottom rightTuskRight 
+                L leftTuskLeft
+                C curveLeftCpBottom curveLeftCpTop midLeft
+                z
+            ', -10, 1, ['class' => 'fabric sa']);
+        }
 
         // Grainline
         $p->addPoint('glTop',    $p->shift('topMid',-90,5));
-        $p->addPoint('glBottom', $p->shift('dartJoin',90,5));
+        $p->addPoint('glBottom', $p->shift('midMid',-90,80));
         $p->newGrainline('glBottom', 'glTop', $this->t('Grainline'));
 
         // Title
@@ -709,10 +722,11 @@ class BruceBoxerBriefs extends Pattern
         // Heights at the left
         $xBase = $p->x('midLeft');
         $p->newHeightDimension('midLeft', 'topLeft',$xBase-20);
-        $p->newHeightDimension('dartJoin', 'topLeft',$xBase-35);
-        $p->newHeightDimension('leftTuskLeft', 'topLeft',$xBase-50);
-        $p->newHeightDimension('leftTuskRight', 'topLeft',$xBase-65);
-        
+        if($this->o('bulge') > 0) {
+            $p->newHeightDimension('dartJoin', 'topLeft',$xBase-35);
+            $p->newHeightDimension('leftTuskLeft', 'topLeft',$xBase-50);
+            $p->newHeightDimension('leftTuskRight', 'topLeft',$xBase-65);
+        } 
         // Width at narrowest point
         $p->addPoint('curveRight', $p->curveEdge('midRight', 'curveRightCpTop', 'curveRightCpBottom', 'rightTuskRight', 'left'));
         $p->addPoint('curveLeft', $p->flipX('curveRight'));

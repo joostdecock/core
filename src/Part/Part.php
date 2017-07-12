@@ -1649,6 +1649,22 @@ class Part
 
         return $this->createPoint($x, $y, "Point $key1 shifted towards $key2 by $distance");
     }
+    
+    /**
+     * Shifts a point along a straight line, starting at the endpoint
+     *
+     * This is a special case of shiftTowards where we add the line segment length to $distance.
+     *
+     * @param string $key1     The id of the first point on the line
+     * @param string $key2     The id of the second point on the line, and start point of the shift
+     * @param float  $distance The distance to shift the point
+     *
+     * @return Point The shifted point
+     */
+    public function shiftOutwards($key1, $key2, $distance)
+    {
+        return $this->shiftTowards($key1, $key2, $this->distance($key1,$key2) + $distance);
+    }
 
     /**
      * Shifts a point along a curve

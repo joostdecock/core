@@ -36,7 +36,7 @@ class PolynomialTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals($p->getRoots(), []);
         
         $p = new \Freesewing\Polynomial([1,2]);
-        $this->assertEquals($p->getRoots(), [-1]);
+        $this->assertEquals($p->getRoots(), [-2]);
         
         $p = new \Freesewing\Polynomial([1,2,-3]);
         $this->assertEquals($p->getRoots(), [1,-3]);

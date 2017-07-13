@@ -1651,6 +1651,20 @@ class Part
     }
     
     /**
+     * Shifts a point along a straight line, by a fraction of the line segment's length
+     *
+     * @param string $key1     The id of the first point on the line
+     * @param string $key2     The id of the second point on the line
+     * @param float  $fraction Fraction of the line length to shift the point by
+     *
+     * @return Point The shifted point
+     */
+    public function shiftFractionTowards($key1, $key2, $fraction)
+    {
+        return $this->shiftTowards($key1, $key2, $this->distance($key1,$key2) * $fraction);
+    }
+
+    /**
      * Shifts a point along a straight line, starting at the endpoint
      *
      * This is a special case of shiftTowards where we add the line segment length to $distance.

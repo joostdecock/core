@@ -452,7 +452,7 @@ class Polynomial
     {
         $results = [];
         $a = $this->coefs[1];
-        if ($a != 0) $results[] = -1 * $this->coefs[1] / $a;
+        if ($a != 0) $results[] = -1 * $this->coefs[0] / $a;
         return $results;
     }
 }

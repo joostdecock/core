@@ -1050,7 +1050,7 @@ class Part
             } else {
                 $next = $array[$count];
             }
-            if ($chunk['type'] != 'removed') { // removed entries are no longer arrays
+            if ($chunk['type'] != 'removed' && $next['type'] != 'removed') { // removed entries are no longer arrays
                 if ($chunk['type'] == 'line') {
                     $new[] = $chunk;
                     $new[] = ['type' => 'line', 'offset' => [$chunk['offset'][1], $next['offset'][0]]];

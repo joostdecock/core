@@ -12,12 +12,13 @@ install:
 - composer dump-autoload -o
 env:
   global:
-    - DEPLOY_HOST=lin.freesewing.org
-    - DEPLOY_USER=travis
-    - DEPLOY_PATH=/fs/deploy/core/
+  - DEPLOY_HOST=lin.freesewing.org
+  - DEPLOY_USER=travis
+  - DEPLOY_PATH=/fs/deploy/core/
+  - secure: iXJjf3hixPU+AmWdYqRF8iT1/jQf4PP0smyibRhLjG3PoiN9hyHMoH2T9FyXX8Gd49HcEW275TERwb+MEKA0omPJtnSE4SikfwW1hR8s4Ulki1WSkvH+yGlFggZhUlTht9pSxu4qASUJx9J+IBF4A2AgeZPHD8YWkHf4OHn3+DhlzBTsI49g3ZT+h8jXJAqBSMwNDbELFI4UMllVub9QrdnCCofBJlZ1XkFWyF59z0RNKO9D9NRu39nMFzpLqKQGYCf/StNBJgut8Myapy3zupn6WXDgOLyPZ7EJMuHwRJmeMWg95oADhOWWWhWyH/chxoeHZ954AIxHyiNOQo9Pyy7QgcLPdOicZgNvvrAnLo/RAiLMcndTNUVFPPmLUR4BquzNFyJE7FLQEkcoUMDxLk5112Nreunh6Hi1GQWtkM0PoMOJjhAb4x8s7BsZFRC2dv52vqum6EcoqeEUPETxY6JCw1ZMW4NyOp3wk8KvXdpNKOisT2l9E5b8khexycxWPk2ErwiW/LqAIfhlRi0/G9yKMv+S+b4OTyCDbwsEx2dG+mZcfe4oj9gpuYKmWhMDqRUR0jdHIzIH5PF6aAzNjDY2afbqVCUfFM7IIpjbr8573c5yQ9JIBYB1rCGudYjIIVOJN6oMB9Tt+ancGt0Vz9AiFgH+v79YMLUiE5du+hc=
 script:
-    - phpunit
-    - ./scripts/test.sh
+- phpunit
+- "./scripts/test.sh"
 deploy:
   provider: script
   script: scripts/deploy.sh

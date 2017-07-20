@@ -49,6 +49,7 @@ class AaronAshirt extends BrianBodyBlock
 
         // Values needed for BrianBodyBlock (but irrelevant here)
         $this->setValue('frontCollarTweakFactor', 1); 
+        $this->setValue('shoulderSlope', $model->m('shoulderSlope')); 
         
         // shifTowards can't deal with 0, so shoulderStrapPlacement should be at least 0.001
         if ($this->getOption('shoulderStrapPlacement') == 0) {

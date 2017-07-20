@@ -77,8 +77,15 @@ class BrianBodyBlock extends Pattern
         $this->setOptionIfUnset('sleevecapEase', self::SLEEVECAP_EASE);
         $this->setOptionIfUnset('bicepsEase', self::BICEPS_EASE);
 
+        // Make shoulderslope configurable (for shoulder pads in jackets and so on)
+        $this->setOptionIfUnset('shoulderSlopeReduction', 0); // Make sure option is set
+        $this->setValueIfUnset('shoulderSlope', $model->m('shoulderSlope') - $this->o('shoulderSlopeReduction'));
+        $this->msg('shoulder slope model is '.$model->m('shoulderSlope'));
+        $this->msg('shoulder slope reduction is '.$this->o('shoulderSlopeReduction'));
+        $this->msg('shoulder slope final is '.$this->v('shoulderSlope'));
+        
         // Depth of the armhole
-        $this->setValueIfUnset('armholeDepth', $model->m('shoulderSlope') / 2 + $model->m('bicepsCircumference') * $this->o('armholeDepthFactor'));
+        $this->setValueIfUnset('armholeDepth', $this->v('shoulderSlope') / 2 + $model->m('bicepsCircumference') * $this->o('armholeDepthFactor'));
 
         // Heigth of the sleevecap
         $this->setValueIfUnset('sleevecapHeight', $model->m('bicepsCircumference') * $this->o('sleevecapHeightFactor'));
@@ -89,7 +96,7 @@ class BrianBodyBlock extends Pattern
 
         // Cut front armhole a bit deeper
         $this->setValueIfUnset('frontArmholeExtra', self::FRONT_ARMHOLE_EXTRA);
-        
+
         // Tweak factors
         $this->setValueIfUnset('frontCollarTweakFactor', 1); 
         $this->setValueIfUnset('frontCollarTweakRun', 0); 
@@ -219,7 +226,7 @@ class BrianBodyBlock extends Pattern
         // Armhole
         $p->newPoint(10, $model->getMeasurement('acrossBack') / 2, $p->y(1) + $p->deltaY(1, 2) / 2, 'Armhole pitch point');
         $p->newPoint(11, $p->x(10), $p->y(2), 'Armhole pitch width @ armhole depth');
-        $p->newPoint(12, $model->m('shoulderToShoulder')/2, $model->m('shoulderSlope') / 2, 'Shoulder tip');
+        $p->newPoint(12, $model->m('shoulderToShoulder')/2, $this->v('shoulderSlope') / 2, 'Shoulder tip');
 
         $p->addPoint(13, $p->Shift(5, 180, $p->distance(11, 5) / 4), 'Left curve control point for 5');
         $p->addPoint('.help1', $p->shift(11, 45, 5), '45 degrees upwards');

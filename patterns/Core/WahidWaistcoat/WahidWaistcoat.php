@@ -73,11 +73,12 @@ class WahidWaistcoat extends BrianBodyBlock
      */
     public function initialize($model)
     {
-        // Options that are fixed
+        // Options that are fixed yet needed for Brian
         $this->setOption('collarEase', self::COLLAR_EASE);
         $this->setOption('sleevecapEase', self::SLEEVECAP_EASE);
         $this->setOption('backNeckCutout', self::BACK_NECK_CUTOUT);
         $this->setOption('armholeDepthFactor', self::ARMHOLE_DEPTH_FACTOR);
+        $this->setValue('shoulderSlope', $model->m('shoulderSlope')); 
 
         // Depth of the armhole
         $this->setValue('armholeDepth', 290 - self::BACK_NECK_CUTOUT + ($model->m('shoulderSlope') / 2 - 27.5) + ($model->m('bicepsCircumference') / 10));

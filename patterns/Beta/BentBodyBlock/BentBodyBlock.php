@@ -110,7 +110,7 @@ class BentBodyBlock extends \Freesewing\Patterns\Core\BrianBodyBlock
         $p->newPoint('sleeveTop', 0, 0, 'Top of the sleeve');
         $p->newPoint('sleeveRightTop', $this->v('sleevecapSeamLength')/6 + 10, 0, 'Right top of the sleeve frame');
         $p->addPoint('sleeveLeftTop', $p->flipX('sleeveRightTop'), 'Left top of the sleeve frame');
-        $p->newPoint('sleeveBottom', 0, $model->m('shoulderToWrist'), 'Center-cuff of the sleeve');
+        $p->newPoint('sleeveBottom', 0, $model->m('shoulderToWrist') + $this->o('sleeveLengthBonus'), 'Center-cuff of the sleeve');
         $p->newPoint('sleeveRightBottom', $p->x('sleeveRightTop'), $p->y('sleeveBottom'), 'Right bottom of the sleeve frame');
         $p->addPoint('sleeveLeftBottom', $p->flipX('sleeveRightBottom'), 'Left bottom of the sleeve frame');
         $p->newPoint('underarmCenter', 0, $this->v('sleevecapHeight'),'Height of the underarm line');
@@ -201,7 +201,7 @@ class BentBodyBlock extends \Freesewing\Patterns\Core\BrianBodyBlock
 
         /** @var \Freesewing\Part $p */
         $p = $this->parts['topsleeveBlock'];
-        
+
         // Paths
         $p->newPath('topsleeve', 'M topsleeveWristRight L elbowRight C elbowRightCpTop topsleeveRightEdgeCpBottom topsleeveRightEdge C topsleeveRightEdgeCpTop backPitchPoint backPitchPoint C backPitchPoint sleeveTopCpRight sleeveTop C sleeveTopCpLeft frontPitchPointCpTop frontPitchPoint C frontPitchPointCpBottom topsleeveLeftEdgeCpRight topsleeveLeftEdge C topsleeveLeftEdge topsleeveElbowLeftCpTop topsleeveElbowLeft L topsleeveWristLeft z', ['class' => 'fabric']);
         

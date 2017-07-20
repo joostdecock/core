@@ -103,4 +103,11 @@ options:
         min: -40
         max: 120
         default: 0
-
+    sleeveLengthBonus:
+        title: "Sleeve length bonus"
+        description: "Amount to lengthen the sleeve. A negative value will shorten it."
+        group: "fit"
+        type: "measure"
+        min: -40
+        max: 80
+        default: 0

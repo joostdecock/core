@@ -393,7 +393,7 @@ class WahidWaistcoat extends BrianBodyBlock
         $pw = self::POCKET_WIDTH;
         $ph = self::POCKET_HEIGHT;
         $pa = self::POCKET_ANGLE;
-        $p->newPoint(7000, $p->x(900),$p->y(900)+$p->deltaY(900,4001)*0.6-$ph/2); // Center dart, top
+        $p->newPoint(7000, $p->x(900),$p->y(900)+$p->deltaY(900,302)*0.2-$ph/2); // Center dart, top
         $p->curveCrossesY(901,905,913,909,$p->y(7000), 700); // Creates point 7001, Right dart side, top
         $p->addPoint(7002, $p->flipX(7001,$p->x(7000))); // Left dart side, top
         $p->curveCrossesY(901,905,913,909,$p->y(7000)+$ph, '.help'); // Approx. right dart side, bottom

@@ -339,7 +339,7 @@ options:
         title: "Collar angle"
         description: "The angle of the collar tips"
         group: "collar"
-        type: "measure"
+        type: "angle"
         min: 60
         max: 130
         default: 85

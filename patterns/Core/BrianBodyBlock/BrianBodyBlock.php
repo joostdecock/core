@@ -80,9 +80,6 @@ class BrianBodyBlock extends Pattern
         // Make shoulderslope configurable (for shoulder pads in jackets and so on)
         $this->setOptionIfUnset('shoulderSlopeReduction', 0); // Make sure option is set
         $this->setValueIfUnset('shoulderSlope', $model->m('shoulderSlope') - $this->o('shoulderSlopeReduction'));
-        $this->msg('shoulder slope model is '.$model->m('shoulderSlope'));
-        $this->msg('shoulder slope reduction is '.$this->o('shoulderSlopeReduction'));
-        $this->msg('shoulder slope final is '.$this->v('shoulderSlope'));
         
         // Depth of the armhole
         $this->setValueIfUnset('armholeDepth', $this->v('shoulderSlope') / 2 + $model->m('bicepsCircumference') * $this->o('armholeDepthFactor'));

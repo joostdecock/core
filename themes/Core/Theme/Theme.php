@@ -94,7 +94,7 @@ abstract class Theme
          * available here and I'm tired so I'll leave this like this until
          * I fix this properly
          */
-        $pattern->replace('__REFERENCE__', $_REQUEST['reference']);
+        if(isset($_REQUEST['reference'])) $pattern->replace('__REFERENCE__', $_REQUEST['reference']);
     }
 
     /**

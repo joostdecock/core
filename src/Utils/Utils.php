@@ -134,6 +134,7 @@ class Utils
     public static function lineLineIntersection(Point $point1, Point $point2, Point $point3, Point $point4)
     {
         /* weed out parallel lines */
+        // FIXME: This does not seem to make sense. Parallel slope check at the end of this method might be enough.
         if ($point1->getX() == $point2->getX() && $point3->getX() == $point4->getX()) {
             return false;
         }
@@ -170,6 +171,10 @@ class Utils
             /* Find y intercept */
             $i1 = $point1->getY() - ($slope1 * $point1->getX());
             $i2 = $point3->getY() - ($slope2 * $point3->getX());
+            
+            // We're not parallel are we?
+            if($slope1 == $slope2) return false;
+            
             /* Find intersection */
             $x = ($i2 - $i1) / ($slope1 - $slope2);
             $y = $slope1 * $x + $i1;

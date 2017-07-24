@@ -98,9 +98,9 @@ options:
         description: "The amount of negative ease for the cuffs and hem ribbing. 100% means no negative ease, 90% means 10% negative ease."
         group: "fit"
         type: percent
-        min: 70
-        max: 100
-        default: 90
+        min: 0
+        max: 40
+        default: 20
 
 inMemoryOf:
     name: "Hugo De Cock"

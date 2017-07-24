@@ -985,7 +985,7 @@ class SimonShirt extends BrianBodyBlock
         $p->addPoint(433, $p->shift(431, 180 , $waveLen)); 
         
         $drape = $this->o('cuffDrape');
-        if($drape <= 20) { // Single pleat
+        if($this->v('cuffPleats') == 1) { // Single pleat
             // Create room for single
             $shiftLeft = ['cuffLeft', 413, 411, 412];
             foreach($shiftLeft as $pid) $p->addPoint($pid, $p->shift($pid, 180, $drape));
@@ -1931,7 +1931,7 @@ class SimonShirt extends BrianBodyBlock
         if($this->v('cuffPleats') == 1) $notchAlso = ['pleatLeft', 'pleatCenter', 'pleatRight'];
         else $notchAlso = ['pleatOneLeft', 'pleatOneCenter', 'pleatOneRight','pleatTwoLeft', 'pleatTwoCenter', 'pleatTwoRight'];
         $notchHere = array_merge($notchHere, $notchAlso);
-        //$p->notch($notchHere);
+        $p->notch($notchHere);
     }
 
     /**
@@ -2488,6 +2488,7 @@ class SimonShirt extends BrianBodyBlock
         // Cuff
         $p->newWidthDimension('cuffLeft', 411, $p->y('cuffLeft')+25); // To placket cut
         $p->newHeightDimension('cuffLeft', 'sleevePlacketCutTop', $p->x('cuffLeft')-35); // To placket cut
+        
         if($this->v('cuffPleats') == 1) {
             $p->newWidthDimensionSm('pleatLeftTop', 'pleatRightTop', $p->y('pleatRightTop')-10); // Pleat width
             $p->newWidthDimension('cuffLeft', 'pleatLeft', $p->y('cuffLeft')+40); // To pleat

@@ -58,11 +58,11 @@ class SvenSweatshirt extends BrianBodyBlock
     public function initialize($model)
     {
         // Needed for Brian
-        $this->setOption('collarEase', self::COLLAR_EASE);
-        $this->setOption('backNeckCutout', self::NECK_CUTOUT);
-        $this->setOption('sleevecapEase', self::SLEEVECAP_EASE);
-        $this->setOption('armholeDepthFactor', self::ARMHOLE_DEPTH_FACTOR);
-        $this->setOption('sleevecapHeightFactor', self::SLEEVECAP_HEIGHT_FACTOR);
+        $this->setOptionIfUnset('collarEase', self::COLLAR_EASE);
+        $this->setOptionIfUnset('backNeckCutout', self::NECK_CUTOUT);
+        $this->setOptionIfUnset('sleevecapEase', self::SLEEVECAP_EASE);
+        $this->setOptionIfUnset('armholeDepthFactor', self::ARMHOLE_DEPTH_FACTOR);
+        $this->setOptionIfUnset('sleevecapHeightFactor', self::SLEEVECAP_HEIGHT_FACTOR);
         $this->setValue('shoulderSlope', $model->m('shoulderSlope')); 
 
         // Depth of the armhole

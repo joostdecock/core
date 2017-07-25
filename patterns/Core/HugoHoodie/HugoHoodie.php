@@ -46,11 +46,11 @@ class HugoHoodie extends BrianBodyBlock
      */
     public function initialize($model)
     {
-        $this->setOption('armholeDepthFactor', self::ARMHOLE_DEPTH_FACTOR);
-        $this->setOption('sleevecapHeightFactor', self::SLEEVECAP_HEIGHT_FACTOR);
+        $this->setOptionIfUnset('armholeDepthFactor', self::ARMHOLE_DEPTH_FACTOR);
+        $this->setOptionIfUnset('sleevecapHeightFactor', self::SLEEVECAP_HEIGHT_FACTOR);
 
         /* Set ribbing stretch factor */
-        $this->setOption('ribbingStretchFactor', $this->stretchToScale($this->o('ribbingStretchFactor')));
+        $this->setOptionIfUnset('ribbingStretchFactor', $this->stretchToScale($this->o('ribbingStretchFactor')));
         
         parent::initialize($model);
     }

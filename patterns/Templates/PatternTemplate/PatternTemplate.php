@@ -53,7 +53,7 @@ class PatternTemplate extends \Freesewing\Patterns\Core\Pattern
     {
         // You could fix options here. For example, when you extend a
         // pattern that has options that you don't want to offer to users
-        $this->setOption('percentOption', self::EXAMPLE_CONSTANT);
+        $this->setOptionIfUnset('percentOption', self::EXAMPLE_CONSTANT);
 
         // Set values for use later
         $this->setValue('exampleValue', time());

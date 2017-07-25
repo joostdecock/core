@@ -43,9 +43,9 @@ class AaronAshirt extends BrianBodyBlock
     public function initialize($model)
     {
         // Options needed for BrianBodyBlock (but irrelevant here)
-        $this->setOption('collarEase', self::COLLAR_EASE);
-        $this->setOption('backNeckCutout', self::NECK_CUTOUT);
-        $this->setOption('sleevecapEase', self::SLEEVECAP_EASE);
+        $this->setOptionIfUnset('collarEase', self::COLLAR_EASE);
+        $this->setOptionIfUnset('backNeckCutout', self::NECK_CUTOUT);
+        $this->setOptionIfUnset('sleevecapEase', self::SLEEVECAP_EASE);
 
         // Values needed for BrianBodyBlock (but irrelevant here)
         $this->setValue('frontCollarTweakFactor', 1); 
@@ -53,7 +53,7 @@ class AaronAshirt extends BrianBodyBlock
         
         // shifTowards can't deal with 0, so shoulderStrapPlacement should be at least 0.001
         if ($this->getOption('shoulderStrapPlacement') == 0) {
-            $this->setOption('shoulderStrapPlacement', 0.001);
+            $this->setOptionIfUnset('shoulderStrapPlacement', 0.001);
         }
 
         // Depth of the armhole
@@ -67,10 +67,10 @@ class AaronAshirt extends BrianBodyBlock
         $this->setValue('frontArmholeExtra', 5);
 
         // Avoid division by zero
-        if($this->o('necklineBend') == 0) $this->setOption('necklineBend', 0.01);
+        if($this->o('necklineBend') == 0) $this->setOptionIfUnset('necklineBend', 0.01);
 
         /* Set stretch factor */
-        $this->setOption('stretchFactor', $this->stretchToScale($this->o('stretchFactor')));   
+        $this->setOptionIfUnset('stretchFactor', $this->stretchToScale($this->o('stretchFactor')));   
     }
 
     /*

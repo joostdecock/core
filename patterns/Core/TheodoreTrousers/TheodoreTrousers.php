@@ -43,7 +43,7 @@ class TheodoreTrousers extends Pattern
     public function initialize($model)
     {
         // This option is fixed in the legacy code
-        $this->setOption('trouserBottomWidth', 226);   
+        $this->setOptionIfUnset('trouserBottomWidth', 226);   
         
         // These allows the TheoTrousers pattern to just extend this pattern with different options
         $this->setValue('legReduction', 0);   

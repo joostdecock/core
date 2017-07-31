@@ -314,11 +314,12 @@ class Part
      * @param string $msg        The message of the note
      * @param array  $attributes Optional array of attributes for the TextOnPath
      */
-    public function newTextOnPath($key, $pathString, $msg, $attributes = null)
+    public function newTextOnPath($key, $pathString, $msg, $attributes = null, $renderPath=true)
     {
         $textOnPath = new TextOnPath();
         $path = new Path();
         $path->setPathstring($pathString);
+        if(!$renderPath) $path->setAttributes(['class' => 'hidden']);
         $textOnPath->setPath($path);
         $textOnPath->setText($msg);
         $textOnPath->setAttributes($attributes);
@@ -1678,6 +1679,22 @@ class Part
     public function shiftOutwards($key1, $key2, $distance)
     {
         return $this->shiftTowards($key1, $key2, $this->distance($key1,$key2) + $distance);
+    }
+
+    /**
+     * Shifts a point along a curve, by a fraction of the curve's length
+     *
+     * @param string $keyStart    The id of the start of the curve
+     * @param string $keyControl1 The id of the first control point
+     * @param string $keyControl2 The id of the second control point
+     * @param string $keyEnd      The id of the end of the curve
+     * @param float  $fraction Fraction of the line length to shift the point by
+     *
+     * @return Point The shifted point
+     */
+    public function shiftFractionAlong($keyStart, $keyControl1, $keyControl2, $keyEnd, $fraction)
+    {
+        return $this->shiftAlong($keyStart, $keyControl1, $keyControl2, $keyEnd, $this->curveLen($keyStart, $keyControl1, $keyControl2, $keyEnd) * $fraction);
     }
 
     /**

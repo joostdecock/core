@@ -39,6 +39,11 @@ path.canvas {
     stroke: $color-canvas;
 }
 
+path.various { 
+    stroke-width: $stroke-lg;
+    stroke: $color-various;
+}
+
 path.sa { 
     stroke-dasharray: $dots; 
 }

@@ -274,10 +274,12 @@ class BrianBodyBlock extends Pattern
         $p->newCutonfold('cofBottom','cofTop', $this->t('Cut on fold').' - '.$this->t('Grainline'));
 
         // Seam allowance
-        $p->offsetPathstring('sa1', 'M 4 L 6 L 5 C 13 16 14 C 15 18 10 C 17 19 12 L 8 C 20 1 1', 10, 1, ['class' => 'fabric sa']);
-        // Join ends
-        $p->newPath('sa2', 'M 1 L sa1-endPoint M 4 L sa1-startPoint', ['class' => 'fabric sa']);
-        
+        if($this->o('sa')) {
+            $p->offsetPathstring('sa1', 'M 4 L 6 L 5 C 13 16 14 C 15 18 10 C 17 19 12 L 8 C 20 1 1', $this->o('sa'), 1, ['class' => 'fabric sa']);
+            // Join ends
+            $p->newPath('sa2', 'M 1 L sa1-endPoint M 4 L sa1-startPoint', ['class' => 'fabric sa']);
+        } 
+
         // Title
         $p->newPoint('titleAnchor', $p->x(10) / 2, $p->y(10), 'Title anchor');
         $p->addTitle('titleAnchor', 2, $this->t($p->title));
@@ -382,9 +384,11 @@ class BrianBodyBlock extends Pattern
         $p->newCutonfold('cofBottom','cofTop', $this->t('Cut on fold').' - '.$this->t('Grainline'));
         
         // Seam allowance
-        $p->offsetPathstring('sa1', 'M 4 L 6 L 5 C 13 16 14 C 15 18 10 C 17 19 12 L 8 C 20 21 9', 10, 1, ['class' => 'fabric sa']); 
-        // Close edges
-        $p->newPath('sa2', 'M 9 L sa1-endPoint M 4 L sa1-startPoint', ['class' => 'fabric sa']);
+        if($this->o('sa')) {
+            $p->offsetPathstring('sa1', 'M 4 L 6 L 5 C 13 16 14 C 15 18 10 C 17 19 12 L 8 C 20 21 9', $this->o('sa'), 1, ['class' => 'fabric sa']); 
+            // Close edges
+            $p->newPath('sa2', 'M 9 L sa1-endPoint M 4 L sa1-startPoint', ['class' => 'fabric sa']);
+        }
 
         // Title
         $p->addTitle('titleAnchor', 1, $this->t($p->title));
@@ -587,7 +591,7 @@ class BrianBodyBlock extends Pattern
         $p->newGrainline('glBottom','glTop');
         
         // Seam allowance
-        $p->offsetPath('sa', 'seamline', -10, 1, ['class' => 'fabric sa']); 
+        if($this->o('sa')) $p->offsetPath('sa', 'seamline', $this->o('sa')*-1, 1, ['class' => 'fabric sa']); 
 
         // Title
         $p->newPoint('titleAnchor', $p->x(2), $this->parts['frontBlock']->y('titleAnchor'));

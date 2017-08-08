@@ -279,16 +279,18 @@ class TrayvonTie extends Pattern
         $p->newSnippet('scalebox', 'scalebox', 'scaleboxAnchor');
 
         // Tip seam allowance
-        $p->offsetPathString('tipSA', 'M 4 L 1 L 3', -10, 0);
-        $p->addPoint('tipSA-line-4TO1', $p->beamsCross('tipSA-line-1TO4', 'tipSA-startPoint', 6, 4), 'Left edge of tip SA');
-        $p->clonePoint('tipSA-line-4TO1','tipSA-startPoint');
-        $p->addPoint('tipSA-line-3TO1', $p->flipX('tipSA-startPoint'), 'Right edge of tip SA');
-        $p->clonePoint('tipSA-line-3TO1','tipSA-endPoint');
-        $p->newPath('tipSA', 'M 4 L tipSA-startPoint L tipSA-line-1TO4 L tipSA-line-1TO3 L tipSA-endPoint L 3', ['class' => 'fabric sa']);
+        if($this->o('sa')) {
+            $p->offsetPathString('tipSA', 'M 4 L 1 L 3', $this->o('sa')*-1, 0);
+            $p->addPoint('tipSA-line-4TO1', $p->beamsCross('tipSA-line-1TO4', 'tipSA-startPoint', 6, 4), 'Left edge of tip SA');
+            $p->clonePoint('tipSA-line-4TO1','tipSA-startPoint');
+            $p->addPoint('tipSA-line-3TO1', $p->flipX('tipSA-startPoint'), 'Right edge of tip SA');
+            $p->clonePoint('tipSA-line-3TO1','tipSA-endPoint');
+            $p->newPath('tipSA', 'M 4 L tipSA-startPoint L tipSA-line-1TO4 L tipSA-line-1TO3 L tipSA-endPoint L 3', ['class' => 'fabric sa']);
 
-        // Mid-tie seam allowance
-        $p->offsetPathString('midSA', 'M 5 L 6', -10, 0);
-        $p->newPath('midSA', 'M 5 L midSA-startPoint L midSA-endPoint L 6', ['class' => 'fabric sa']);
+            // Mid-tie seam allowance
+            $p->offsetPathString('midSA', 'M 5 L 6', $this->o('sa')*-1, 0);
+            $p->newPath('midSA', 'M 5 L midSA-startPoint L midSA-endPoint L 6', ['class' => 'fabric sa']);
+        }
 
         // Notches
         $p->newSnippet('notch1', 'notch', 'notch1');
@@ -309,16 +311,18 @@ class TrayvonTie extends Pattern
         $p->addTitle('titleAnchor', 4, $this->t($p->title), '1x '.$this->t('from fabric'));
 
         // Tail seam allowance
-        $p->offsetPathString('tipSA', 'M 4 L 1 L 3', -10, 0);
-        $p->addPoint('tipSA-line-4TO1', $p->beamsCross('tipSA-line-1TO4', 'tipSA-startPoint', 6, 4), 'Left edge of tip SA');
-        $p->clonePoint('tipSA-line-4TO1','tipSA-startPoint');
-        $p->addPoint('tipSA-line-3TO1', $p->flipX('tipSA-startPoint'), 'Right edge of tip SA');
-        $p->clonePoint('tipSA-line-3TO1','tipSA-endPoint');
-        $p->newPath('tipSA', 'M 4 L tipSA-startPoint L tipSA-line-1TO4 L tipSA-line-1TO3 L tipSA-endPoint L 3', ['class' => 'fabric sa']);
-        
-        // Mid-tie seam allowance
-        $p->offsetPathString('midSA', 'M 5 L 6', -10, 0);
-        $p->newPath('midSA', 'M 5 L midSA-startPoint L midSA-endPoint L 6', ['class' => 'fabric sa']);
+        if($this->o('sa')) {
+            $p->offsetPathString('tipSA', 'M 4 L 1 L 3', $this->o('sa')*-1, 0);
+            $p->addPoint('tipSA-line-4TO1', $p->beamsCross('tipSA-line-1TO4', 'tipSA-startPoint', 6, 4), 'Left edge of tip SA');
+            $p->clonePoint('tipSA-line-4TO1','tipSA-startPoint');
+            $p->addPoint('tipSA-line-3TO1', $p->flipX('tipSA-startPoint'), 'Right edge of tip SA');
+            $p->clonePoint('tipSA-line-3TO1','tipSA-endPoint');
+            $p->newPath('tipSA', 'M 4 L tipSA-startPoint L tipSA-line-1TO4 L tipSA-line-1TO3 L tipSA-endPoint L 3', ['class' => 'fabric sa']);
+            
+            // Mid-tie seam allowance
+            $p->offsetPathString('midSA', 'M 5 L 6', $this->o('sa')*-1, 0);
+            $p->newPath('midSA', 'M 5 L midSA-startPoint L midSA-endPoint L 6', ['class' => 'fabric sa']);
+        }
 
         // Notches
         $p->newSnippet('notch1', 'notch', 'notch1');
@@ -346,7 +350,7 @@ class TrayvonTie extends Pattern
         $p->addTitle('titleAnchor', 5, $this->t($p->title), '1x '.$this->t('from lining'));
 
         // Tip seam allowance
-        $p->newPath('tipSA', 'M 4 L tipSA-startPoint L tipSA-line-1TO4 L tipSA-line-1TO3 L tipSA-endPoint L 3', ['class' => 'lining sa']);
+        if($this->o('sa')) $p->newPath('tipSA', 'M 4 L tipSA-startPoint L tipSA-line-1TO4 L tipSA-line-1TO3 L tipSA-endPoint L 3', ['class' => 'lining sa']);
 
         // Notch
         $p->newSnippet('notch', 'notch', 1);
@@ -371,7 +375,7 @@ class TrayvonTie extends Pattern
         $p->addTitle('titleAnchor', 6, $this->t($p->title), '1x '.$this->t('from lining'));
 
         // Tail seam allowance
-        $p->newPath('tipSA', 'M 4 L tipSA-startPoint L tipSA-line-1TO4 L tipSA-line-1TO3 L tipSA-endPoint L 3', ['class' => 'lining sa']);
+        if($this->o('sa')) $p->newPath('tipSA', 'M 4 L tipSA-startPoint L tipSA-line-1TO4 L tipSA-line-1TO3 L tipSA-endPoint L 3', ['class' => 'lining sa']);
 
         // Notch
         $p->newSnippet('notch', 'notch', 1);

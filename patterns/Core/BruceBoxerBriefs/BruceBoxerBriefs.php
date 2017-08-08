@@ -453,21 +453,18 @@ class BruceBoxerBriefs extends Pattern
         $p = $this->parts['back'];
 
         // Seam allowance
-        $p->offsetPathString('sa1','M gussetTop C gussetCpRight gussetRight gussetRight', 10, 1, ['class' => 'fabric sa']);
-        $p->offsetPathString('sa2','M gussetRight L legRight', 20, 1, ['class' => 'fabric sa']);
-        $p->offsetPathString('sa3','M legRight L sideRight C sideRight centerCpRight center', 10, 1, ['class' => 'fabric sa']);
-        
-        // Join sa parts
-        $p->newPath('sa-join', 'M gussetTop L sa1-startPoint M sa1-endPoint L sa2-startPoint M sa2-endPoint L sa3-startPoint M sa3-endPoint L center', ['class' => 'fabric sa']);
+        if($this->o('sa')) {
+            $p->offsetPathString('sa1','M gussetTop C gussetCpRight gussetRight gussetRight', $this->o('sa'), 1, ['class' => 'fabric sa']);
+            $p->offsetPathString('sa2','M gussetRight L legRight', $this->o('sa')*2, 1, ['class' => 'fabric sa']);
+            $p->offsetPathString('sa3','M legRight L sideRight C sideRight centerCpRight center', $this->o('sa'), 1, ['class' => 'fabric sa']);
+            // Join sa parts
+            $p->newPath('sa-join', 'M gussetTop L sa1-startPoint M sa1-endPoint L sa2-startPoint M sa2-endPoint L sa3-startPoint M sa3-endPoint L center', ['class' => 'fabric sa']);
+        }
         
         // Cut on fold
         $p->addPoint('cofTop', $p->shift('center', -90, 20));
         $p->addPoint('cofBottom', $p->shift('gussetTop', 90, 20));
         $p->newCutonfold('cofBottom','cofTop',$this->t('Cut on fold').'  -  '.$this->t('Grainline'));
-
-        // Scale box
-        //$p->newPoint('sbAnchor', 80, 80);
-        //$p->newSnippet('scalebox','scalebox','sbAnchor');
 
         // Title
         $p->newPoint('titleAnchor', $p->x('centerCpRight'), $p->y('gussetTop') - 80);
@@ -475,10 +472,12 @@ class BruceBoxerBriefs extends Pattern
 
 
         // Notes
-        $p->addPoint('noteAnchor1', $p->shiftTowards('legRight','sideRight', $p->distance('legRight','sideRight')/2));
-        $p->newNote($p->newId(), 'noteAnchor1', $this->t("Standard\nseam\nallowance")."\n(".$p->unit(10).')', 8, 10, -5);
-        $p->addPoint('noteAnchor2', $p->shiftTowards('legRight','gussetRight', $p->distance('legRight','gussetRight')/2));
-        $p->newNote($p->newId(), 'noteAnchor2', $this->t("Hem allowance")." (".$p->unit(20).')', 12, 25, -10);
+        if($this->o('sa')) {
+            $p->addPoint('noteAnchor1', $p->shiftTowards('legRight','sideRight', $p->distance('legRight','sideRight')/2));
+            $p->newNote($p->newId(), 'noteAnchor1', $this->t("Standard\nseam\nallowance")."\n(".$p->unit($this->o('sa')).')', 8, 10, -5);
+            $p->addPoint('noteAnchor2', $p->shiftTowards('legRight','gussetRight', $p->distance('legRight','gussetRight')/2));
+            $p->newNote($p->newId(), 'noteAnchor2', $this->t("Hem allowance")." (".$p->unit($this->o('sa')*2).')', 12, 25, -10);
+        }
 
         // Logo
         $p->newPoint('logoAnchor', $p->x('titleAnchor'), $p->y('cofTop')+40);
@@ -498,11 +497,12 @@ class BruceBoxerBriefs extends Pattern
         $p = $this->parts['side'];
 
         // Seam allowance
-        $p->offsetPathString('sa1', 'M bottomRight L topRight L topLeft L bottomLeft', 10, 1, ['class' => 'fabric sa']);
-        $p->offsetPathString('sa2', 'M bottomLeft L bottomRight', 20, 1, ['class' => 'fabric sa']);
-        
-        // Join sa parts
-        $p->newPath('sa-join', 'M sa1-endPoint L sa2-startPoint M sa2-endPoint L sa1-startPoint', ['class' => 'fabric sa']); 
+        if($this->o('sa')) {
+            $p->offsetPathString('sa1', 'M bottomRight L topRight L topLeft L bottomLeft', $this->o('sa'), 1, ['class' => 'fabric sa']);
+            $p->offsetPathString('sa2', 'M bottomLeft L bottomRight', $this->o('sa')*2, 1, ['class' => 'fabric sa']);
+            // Join sa parts
+            $p->newPath('sa-join', 'M sa1-endPoint L sa2-startPoint M sa2-endPoint L sa1-startPoint', ['class' => 'fabric sa']); 
+        }
         
         // Title
         $p->newPoint('titleAnchor', $p->x('topRight')/2, $p->y('topRight')+120);
@@ -518,10 +518,12 @@ class BruceBoxerBriefs extends Pattern
         $p->newGrainline('glBottom','glTop', $this->t('Grainline'));
 
         // Notes
-        $p->addPoint('noteAnchor1', $p->shiftTowards('bottomRight', 'topRight', $p->distance('bottomRight', 'topRight')/3));
-        $p->newNote( $p->newId(), 'noteAnchor1', $this->t("Standard\nseam\nallowance")."\n(".$p->unit(10).')', 8, 10, -5);
-        $p->addPoint('noteAnchor2', $p->shiftTowards('bottomRight', 'bottomLeft', $p->distance('bottomRight', 'bottomLeft')/2));
-        $p->newNote( $p->newId(), 'noteAnchor2', $this->t("Hem allowance")."\n(".$p->unit(20).')', 12, 25, -3,['class' => 'note', 'dy' => -13, 'line-height' => 7]);
+        if($this->o('sa')) {
+            $p->addPoint('noteAnchor1', $p->shiftTowards('bottomRight', 'topRight', $p->distance('bottomRight', 'topRight')/3));
+            $p->newNote( $p->newId(), 'noteAnchor1', $this->t("Standard\nseam\nallowance")."\n(".$p->unit($this->o('sa')).')', 8, 10, -5);
+            $p->addPoint('noteAnchor2', $p->shiftTowards('bottomRight', 'bottomLeft', $p->distance('bottomRight', 'bottomLeft')/2));
+            $p->newNote( $p->newId(), 'noteAnchor2', $this->t("Hem allowance")."\n(".$p->unit(20).')', 12, 25, -3,['class' => 'note', 'dy' => -13, 'line-height' => 7]);
+        }
         $p->addPoint('noteAnchor3', $p->shiftTowards('bottomRight', 'topRight', $p->distance('bottomRight', 'topRight')*0.6));
         $p->newNote( $p->newId(), 'noteAnchor3', $this->t("Front side"), 9, 25, 5);
         $p->addPoint('.helper', $p->shift('noteAnchor3', 180, 20));
@@ -550,34 +552,36 @@ class BruceBoxerBriefs extends Pattern
         $p = $this->parts['front'];
 
         // Seam allowance
-        if($this->o('bulge') > 0) {
-            $p->offsetPathString('sa1','
-                M topMid
-                C topMidCpRight topRight topRight
-                L midRight
-                C curveRightCpTop curveRightCpBottom rightTuskRight
-                L rightTuskLeft
-                C rightTuskLeft dartCpRight dartJoin
-                C dartCpLeft leftTuskRight leftTuskRight
-                L leftTuskLeft
-                C curveLeftCpBottom curveLeftCpTop midLeft 
-                L topLeft
-                C topLeft topMidCpLeft topMid
-                z
-            ', -10, 1, ['class' => 'fabric sa']);
-        } else {
-            $p->offsetPathString('sa1','
-                M midLeft
-                L topLeft 
-                L topRight
-                L midRight
-                C curveRightCpTop curveRightCpBottom rightTuskRight 
-                L leftTuskLeft
-                C curveLeftCpBottom curveLeftCpTop midLeft
-                z
-            ', -10, 1, ['class' => 'fabric sa']);
+        if($this->o('sa')) {
+            if($this->o('bulge') > 0) {
+                $p->offsetPathString('sa1','
+                    M topMid
+                    C topMidCpRight topRight topRight
+                    L midRight
+                    C curveRightCpTop curveRightCpBottom rightTuskRight
+                    L rightTuskLeft
+                    C rightTuskLeft dartCpRight dartJoin
+                    C dartCpLeft leftTuskRight leftTuskRight
+                    L leftTuskLeft
+                    C curveLeftCpBottom curveLeftCpTop midLeft 
+                    L topLeft
+                    C topLeft topMidCpLeft topMid
+                    z
+                ', $this->o('sa')*-1, 1, ['class' => 'fabric sa']);
+            } else {
+                $p->offsetPathString('sa1','
+                    M midLeft
+                    L topLeft 
+                    L topRight
+                    L midRight
+                    C curveRightCpTop curveRightCpBottom rightTuskRight 
+                    L leftTuskLeft
+                    C curveLeftCpBottom curveLeftCpTop midLeft
+                    z
+                ', $this->o('sa')*-1, 1, ['class' => 'fabric sa']);
+            }
         }
-
+        
         // Grainline
         $p->addPoint('glTop',    $p->shift('topMid',-90,5));
         $p->addPoint('glBottom', $p->shift('midMid',-90,80));
@@ -591,9 +595,11 @@ class BruceBoxerBriefs extends Pattern
         $p->notch(['midRight', 'midLeft']);
         
         // Notes
-        $p->addPoint('noteAnchor1', $p->shift('midLeft', 90, 20));
-        $p->newNote( $p->newId(), 'noteAnchor1', $this->t("Standard\nseam\nallowance")."\n(".$p->unit(10).')', 3, 10, -5);
-        
+        if($this->o('sa')) {
+            $p->addPoint('noteAnchor1', $p->shift('midLeft', 90, 20));
+            $p->newNote( $p->newId(), 'noteAnchor1', $this->t("Standard\nseam\nallowance")."\n(".$p->unit($this->o('sa')).')', 3, 10, -5);
+        }
+
         // Logo
         $p->addPoint('logoAnchor', $p->shift('titleAnchor',-90,50));
         $p->newSnippet('logo', 'logo-sm', 'logoAnchor');
@@ -612,11 +618,12 @@ class BruceBoxerBriefs extends Pattern
         $p = $this->parts['inset'];
         
         // Seam allowance
-        $p->offsetPathString('sa1', ' M bottomLeft L topLeft C tipCpTop tipCpBottom tip L bottomRight ', -10, 1, ['class' => 'fabric sa']);
-        $p->offsetPathString('sa2', 'M bottomRight L bottomLeft', -20, 1, ['class' => 'fabric sa']);
-
-        // Joint SA parts
-        $p->newPath('sa3', 'M sa1-startPoint L sa2-endPoint M sa1-endPoint L sa2-startPoint', ['class' => 'fabric sa']);
+        if($this->o('sa')) {
+            $p->offsetPathString('sa1', ' M bottomLeft L topLeft C tipCpTop tipCpBottom tip L bottomRight ', $this->o('sa')*-1, 1, ['class' => 'fabric sa']);
+            $p->offsetPathString('sa2', 'M bottomRight L bottomLeft', $this->o('sa')*-2, 1, ['class' => 'fabric sa']);
+            // Joint SA parts
+            $p->newPath('sa3', 'M sa1-startPoint L sa2-endPoint M sa1-endPoint L sa2-startPoint', ['class' => 'fabric sa']);
+        }
 
         // Grainline
         $p->addPoint('glTop', $p->shift('topLeft', -45, 15));
@@ -628,11 +635,13 @@ class BruceBoxerBriefs extends Pattern
         $p->addTitle('titleAnchor', 4, $this->t($p->title), '2x '.$this->t('from fabric')."\n".$this->t('Good sides together'), 'horizontal-small');
 
         // Notes
-        $p->addPoint('noteAnchor1', $p->shiftTowards('bottomRight', 'tip', $p->distance('bottomRight', 'tip')/2));
-        $p->newNote( $p->newId(), 'noteAnchor1', $this->t("Standard\nseam\nallowance")."\n(".$p->unit(10).')', 9, 10, -5);
-        $p->addPoint('noteAnchor2', $p->shiftTowards('bottomRight', 'bottomLeft', $p->distance('bottomRight', 'bottomLeft')/2));
-        $p->newNote( $p->newId(), 'noteAnchor2', $this->t("Hem allowance")."\n(".$p->unit(20).')', 12, 45, -13,['class' => 'note', 'dy' => -13, 'line-height' => 7]);
-        
+        if($this->o('sa')) {
+            $p->addPoint('noteAnchor1', $p->shiftTowards('bottomRight', 'tip', $p->distance('bottomRight', 'tip')/2));
+            $p->newNote( $p->newId(), 'noteAnchor1', $this->t("Standard\nseam\nallowance")."\n(".$p->unit($this->o('sa')).')', 9, 10, -5);
+            $p->addPoint('noteAnchor2', $p->shiftTowards('bottomRight', 'bottomLeft', $p->distance('bottomRight', 'bottomLeft')/2));
+            $p->newNote( $p->newId(), 'noteAnchor2', $this->t("Hem allowance")."\n(".$p->unit($this->o('sa')*2).')', 12, 45, -13,['class' => 'note', 'dy' => -13, 'line-height' => 7]);
+        }
+
         // Logo
         $p->newPoint('logoAnchor', $p->x('topLeft')+25, $p->y('topLeft')+40);
         $p->newSnippet('logo', 'logo-sm', 'logoAnchor');

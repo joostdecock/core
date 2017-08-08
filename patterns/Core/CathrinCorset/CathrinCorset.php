@@ -535,7 +535,7 @@ class CathrinCorset extends Pattern
                     $msg = '2x '.$this->t('from fabric');
                 }
                 $p->addTitle("titleAnchor$i", $i, $this->t('Panel')." $i", $msg, 'vertical-small');
-                $p->offsetPathString($part.'-sa', $this->{"path$i"}, 10, 1, ['class' => 'fabric sa']);
+                if($this->o('sa')) $p->offsetPathString($part.'-sa', $this->{"path$i"}, $this->o('sa'), 1, ['class' => 'fabric sa']);
 
             }
         }

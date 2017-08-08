@@ -158,7 +158,7 @@ class TamikoTop extends Pattern
         $p->newSnippet('scalebox', 'scalebox', 'scaleboxAnchor');
 
         // Seam allowance
-        $p->offsetPathString('sa', 'M 3 C 3 6 5 C 7 4 4', 10, 1, ['class' => 'sa fabric']);
+        if($this->o('sa')) $p->offsetPathString('sa', 'M 3 C 3 6 5 C 7 4 4', $this->o('sa'), 1, ['class' => 'sa fabric']);
 
         // Notches
         $p->notch([23,22,31,38,10]);

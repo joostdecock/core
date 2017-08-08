@@ -604,11 +604,12 @@ class HugoHoodie extends BrianBodyBlock
         $p->addTitle('titleAnchor', 1, $this->t($p->title), '1x '.$this->t('from fabric')."\n".$this->t('Cut on fold'));
 
         // Seam allowance
-        $sa = 'M 4 L 6 L 5 C 13 16 14 C 15 100 100 C 57 56 9';
-        $p->offsetPathString('sa', $sa, 10, true, ['class' => 'sa fabric']);
-
-        // Close path at the fold
-        $p->paths['sa']->setPathstring('M 4 L sa-line-4TO6 M 9 L sa-curve-9TO100 '.$p->paths['sa']->getPathstring());
+        if($this->o('sa')) {
+            $sa = 'M 4 L 6 L 5 C 13 16 14 C 15 100 100 C 57 56 9';
+            $p->offsetPathString('sa', $sa, $this->o('sa'), true, ['class' => 'sa fabric']);
+            // Close path at the fold
+            $p->paths['sa']->setPathstring('M 4 L sa-line-4TO6 M 9 L sa-curve-9TO100 '.$p->paths['sa']->getPathstring());
+        }
 
         // Logo
         $p->addPoint('logoAnchor', $p->shift('titleAnchor', -90, 90));
@@ -648,10 +649,12 @@ class HugoHoodie extends BrianBodyBlock
         $p->newSnippet('logo', 'logo', 'logoAnchor');
 
         // Seam allowance
-        $sa = 'M 4 L 6 L 5 C 13 16 14 C 15 100 100 C 57 56 1';
-        $p->offsetPathString('sa', $sa, 10, true, ['class' => 'sa fabric']);
-        // Close path at the fold
-        $p->paths['sa']->setPathstring('M 4 L sa-line-4TO6 M 1 L sa-curve-1TO100 '.$p->paths['sa']->getPathstring());
+        if($this->o('sa')) {
+            $sa = 'M 4 L 6 L 5 C 13 16 14 C 15 100 100 C 57 56 1';
+            $p->offsetPathString('sa', $sa, $this->o('sa'), true, ['class' => 'sa fabric']);
+            // Close path at the fold
+            $p->paths['sa']->setPathstring('M 4 L sa-line-4TO6 M 1 L sa-curve-1TO100 '.$p->paths['sa']->getPathstring());
+        }
 
         // Sleeve notch
         $this->backNotchLen = $p->curveLen(100, 100, 15, 14)/2;
@@ -682,7 +685,7 @@ class HugoHoodie extends BrianBodyBlock
         $p->addTitle('titleAnchor', 3, $this->t($p->title), '2x '.$this->t('from fabric')."\n".$this->t('Good sides together'));
 
         // Seam allowance
-        $p->offsetPath('sa', 'seamline', -10, true, ['class' => 'sa fabric']);
+        if($this->o('sa')) $p->offsetPath('sa', 'seamline', $this->o('sa')*-1, true, ['class' => 'sa fabric']);
 
         // Sleeve notches
         $p->addPoint('frontSleeveNotch', $p->shiftAlong(200, 134, 132, 133, $this->frontNotchLen), 'Front sleeve notch');
@@ -722,9 +725,11 @@ class HugoHoodie extends BrianBodyBlock
         $p->addTitle('titleAnchor', 4, $this->t($p->title), '1x '.$this->t('from fabric')."\n".$this->t('Cut on fold'));
 
         // Seam allowance
-        $sa = 'M 105 L 103 C 104 102 102 L 101 L 4';
-        $p->offsetPathString('sa', $sa, -10, true, ['class' => 'sa fabric']);
-        $p->paths['sa']->setPathstring('M 4 L sa-line-4TO101 M 105 L sa-line-105TO103 '.$p->paths['sa']->getPathstring());
+        if($this->o('sa')) {
+            $sa = 'M 105 L 103 C 104 102 102 L 101 L 4';
+            $p->offsetPathString('sa', $sa, $this->o('sa')*-1, true, ['class' => 'sa fabric']);
+            $p->paths['sa']->setPathstring('M 4 L sa-line-4TO101 M 105 L sa-line-105TO103 '.$p->paths['sa']->getPathstring());
+        }
 
         // Logo
         $p->addPoint('logoAnchor', $p->shift('titleAnchor', -90, 50));
@@ -752,7 +757,7 @@ class HugoHoodie extends BrianBodyBlock
         $p->addTitle('titleAnchor', 5, $this->t($p->title), '2x '.$this->t('from fabric')."\n".$this->t('Good sides together'), 'vertical');
 
         // Seam allowance
-        $p->offsetPath('sa', 'seamline', 10, true, ['class' => 'sa fabric']);
+        if($this->o('sa')) $p->offsetPath('sa', 'seamline', $this->o('sa'), true, ['class' => 'sa fabric']);
     }
 
     /**
@@ -775,7 +780,7 @@ class HugoHoodie extends BrianBodyBlock
         $p->addTitle('titleAnchor', 6, $this->t($p->title), '4x '.$this->t('from fabric')." (2x2)\n".$this->t('Good sides together'));
 
         // Seam allowance
-        $p->offsetPath('sa', 'seamline', -10, true, ['class' => 'sa fabric']);
+        if($this->o('sa')) $p->offsetPath('sa', 'seamline', $this->o('sa')*-1, true, ['class' => 'sa fabric']);
 
         // Notch
         $p->newSnippet('sleeveNotch', 'notch', 10);
@@ -871,7 +876,7 @@ class HugoHoodie extends BrianBodyBlock
         $p->addTitle('titleAnchor', $nr, $this->t($p->title), $cut, $titleOption);
 
         // Seam allowance
-        $p->offsetPath('sa', 'seamline', -10, true, ['class' => 'sa fabric']);
+        if($this->o('sa')) $p->offsetPath('sa', 'seamline', $this->o('sa')*-1, true, ['class' => 'sa fabric']);
     }
 
 

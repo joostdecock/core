@@ -646,14 +646,14 @@ class TheodoreTrousers extends Pattern
         $p->addPoint(813 , $p->shiftTowards(-100101,-6, 70));
         $p->addPoint(814 , $p->shift(813,0,40));
         $p->newPoint(815 , $p->x(0), $p->y(814));
-        $p->addPoint(816 , $p->shift(-1001,0,30));
+        $p->newPoint(816 , $p->x(-40)-$this->o('sa'), $p->y(-40)-$this->o('sa'));
         $p->addPoint(817 , $p->shift(813,0,30));
-        $p->addPoint(818 , $p->shift(817,$p->angle(-100101,813),-10));
+        $p->newPoint(818 , $p->x(814)-$this->o('sa'),$p->y(814)+$this->o('sa'));
 
         // Paths
         $p->newPath('outline', 'M -100101 C -1002 -1102 -1102 C -1102 -801 -8 C -802 811 810 C 812 815 814 L 813 z', ['class' => 'lining']); 
         $p->newPath('flyEdge', 'M -40 L 814', ['class' => 'lining']);
-        $p->newPath('flyEdgeSa', 'M 816 L 818', ['class' => 'sa lining']);
+        if($this->o('sa')) $p->newPath('flyEdgeSa', 'M 816 L 818', ['class' => 'sa lining']);
         $p->newPath('pocket', 'M 60 L 61', ['class' => 'help lining']);
     }
 
@@ -827,11 +827,12 @@ class TheodoreTrousers extends Pattern
         $p = $this->parts['back'];
         
         // Seam and hem allowance
-        $p->offsetPath('sa','saBase', -10, 1, ['class' => 'fabric sa']);
-        $p->offsetPath('hem','hemBase', -60, 1, ['class' => 'fabric sa']);
-     
-        // Join SA ends
-        $p->newPath('saJoin', 'M sa-startPoint L hem-endPoint M hem-startPoint L sa-endPoint', ['class' => 'fabric sa']);
+        if($this->o('sa')) {
+            $p->offsetPath('sa','saBase', $this->o('sa')*-1, 1, ['class' => 'fabric sa']);
+            $p->offsetPath('hem','hemBase', $this->o('sa')*-6, 1, ['class' => 'fabric sa']);
+            // Join SA ends
+            $p->newPath('saJoin', 'M sa-startPoint L hem-endPoint M hem-startPoint L sa-endPoint', ['class' => 'fabric sa']);
+        }
 
         // Title
         $p->newPoint('titleAnchor', $p->x(5) + 50, $p->y(5) + 50);
@@ -872,20 +873,12 @@ class TheodoreTrousers extends Pattern
         $p = $this->parts['front'];
 
         // Seam and hem allowance
-        $p->offsetPath('sa','saBase', -10, 1, ['class' => 'fabric sa']);
-        $p->offsetPath('hem','hemBase', -60, 1, ['class' => 'fabric sa']);
-     
-        // Join SA ends
-        $p->newPath('saJoin', 'M sa-startPoint L hem-endPoint M hem-startPoint L sa-endPoint', ['class' => 'fabric sa']);
-     
-        // 5cm extra hem allowance
-        $shiftThese = [
-            'sa-line--13TO-12XlcXsa-curve--13TO-15',
-            'sa-line--13TO-12',
-            'sa-line--12TO-13',
-            'sa-curve--12TO-14XclXsa-line--12TO-13',
-            ];
-        //FIXME foreach($shiftThese as $shiftThis) $p->addPoint($shiftThis,$p->shift($shiftThis,-90,50));
+        if($this->o('sa')) {
+            $p->offsetPath('sa','saBase', $this->o('sa')*-1, 1, ['class' => 'fabric sa']);
+            $p->offsetPath('hem','hemBase', $this->o('sa')*-6, 1, ['class' => 'fabric sa']);
+            // Join SA ends
+            $p->newPath('saJoin', 'M sa-startPoint L hem-endPoint M hem-startPoint L sa-endPoint', ['class' => 'fabric sa']);
+        }
 
         // Title
         $p->newPoint('titleAnchor' , $p->x(5) + 50 , $p->y(5) + 50, 'Title anchor point');
@@ -970,7 +963,7 @@ class TheodoreTrousers extends Pattern
         $p->newGrainline('grainlineLeft', 'grainlineRight', $this->t('Grainline'));
 
         // Seam allowance
-        $p->offsetPath('sa', 'outline', -10, true, ['class' => 'fabric sa']);
+        if($this->o('sa')) $p->offsetPath('sa', 'outline', $this->o('sa')*-1, true, ['class' => 'fabric sa']);
     }
 
     /**
@@ -995,7 +988,7 @@ class TheodoreTrousers extends Pattern
         $p->newGrainline('grainlineLeft', 'grainlineRight', $this->t('Grainline'));
 
         // Seam allowance
-        $p->offsetPath('sa', 'outline', -10, true, ['class' => 'fabric sa']);
+        if($this->o('sa')) $p->offsetPath('sa', 'outline', $this->o('sa')*-1, true, ['class' => 'fabric sa']);
     }
 
 
@@ -1021,7 +1014,7 @@ class TheodoreTrousers extends Pattern
         $p->newGrainline('grainlineLeft', 'grainlineRight', $this->t('Grainline'));
 
         // Seam allowance
-        $p->offsetPath('sa', 'outline', -10, true, ['class' => 'lining sa']);
+        if($this->o('sa')) $p->offsetPath('sa', 'outline', $this->o('sa')*-1, true, ['class' => 'lining sa']);
     }
 
     /**
@@ -1046,7 +1039,7 @@ class TheodoreTrousers extends Pattern
         $p->newGrainline('grainlineLeft', 'grainlineRight', $this->t('Grainline'));
 
         // Seam allowance
-        $p->offsetPath('sa', 'outline', -10, true, ['class' => 'lining sa']);
+        if($this->o('sa')) $p->offsetPath('sa', 'outline', $this->o('sa')*-1, true, ['class' => 'lining sa']);
     }
 
     /**
@@ -1071,8 +1064,7 @@ class TheodoreTrousers extends Pattern
         $p->newGrainline('grainlineBottom', 'grainlineTop', $this->t('Grainline'));
 
         // Seam allowance
-        $p->offsetPath('sa', 'outline', 10, true, ['class' => 'fabric sa']);
-
+        if($this->o('sa')) $p->offsetPath('sa', 'outline', $this->o('sa'), true, ['class' => 'fabric sa']);
     }
 
     /**
@@ -1097,7 +1089,7 @@ class TheodoreTrousers extends Pattern
         $p->newGrainline('grainlineBottom', 'grainlineTop', $this->t('Grainline'));
 
         // Seam allowance
-        $p->offsetPath('sa', 'outline', 10, true, ['class' => 'lining sa']);
+        if($this->o('sa')) $p->offsetPath('sa', 'outline', $this->o('sa'), true, ['class' => 'lining sa']);
     }
 
     /**
@@ -1122,7 +1114,7 @@ class TheodoreTrousers extends Pattern
         $p->newGrainline('grainlineBottom', 'grainlineTop', $this->t('Grainline'));
 
         // Seam allowance
-        $p->offsetPath('sa', 'outline', 10, true, ['class' => 'fabric sa']);
+        if($this->o('sa')) $p->offsetPath('sa', 'outline', $this->o('sa'), true, ['class' => 'fabric sa']);
     }
 
     /**
@@ -1151,7 +1143,7 @@ class TheodoreTrousers extends Pattern
         $p->newGrainline('grainlineBottom', 'grainlineTop', $this->t('Grainline'));
 
         // Seam allowance
-        $p->offsetPath('sa', 'outline', -10, true, ['class' => 'lining sa']);
+        if($this->o('sa')) $p->offsetPath('sa', 'outline', $this->o('sa')*-1, true, ['class' => 'lining sa']);
     }
 
     /**
@@ -1180,7 +1172,7 @@ class TheodoreTrousers extends Pattern
         $p->newGrainline('grainlineBottom', 'grainlineTop', $this->t('Grainline'));
         
         // Seam allowance
-        $p->offsetPath('sa', 'outline', 10, true,['class' => 'lining sa']);
+        if($this->o('sa')) $p->offsetPath('sa', 'outline', $this->o('sa'), true,['class' => 'lining sa']);
 
         // Notches
         $p->notch([5,6]);
@@ -1212,7 +1204,7 @@ class TheodoreTrousers extends Pattern
         $p->newGrainline('grainlineBottom', 'grainlineTop', $this->t('Grainline'));
         
         // Seam allowance
-        $p->offsetPath('sa', 'outline', 10, true,['class' => 'lining sa']);
+        if($this->o('sa')) $p->offsetPath('sa', 'outline', $this->o('sa'), true,['class' => 'lining sa']);
 
         // Notches
         $p->notch([5,6]);

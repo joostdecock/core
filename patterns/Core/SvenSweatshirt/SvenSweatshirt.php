@@ -316,10 +316,12 @@ class SvenSweatshirt extends BrianBodyBlock
         $p = $this->parts['back'];
         
         // Seam allowance 
-        $p->offsetPath('sa','saBase', 10, 1, ['class' => 'fabric sa']);
-        $p->offsetPath('hemSa','hemBase', 30, 1, ['class' => 'fabric sa']);
-        // Join ends
-        $p->newPath('saJoints', 'M sa-endPoint L 9 M sa-startPoint L hemSa-endPoint M hemSa-startPoint L 4', ['class' => 'fabric sa']);
+        if($this->o('sa')) {
+            $p->offsetPath('sa','saBase', $this->o('sa'), 1, ['class' => 'fabric sa']);
+            $p->offsetPath('hemSa','hemBase', $this->o('sa')*3, 1, ['class' => 'fabric sa']);
+            // Join ends
+            $p->newPath('saJoints', 'M sa-endPoint L 9 M sa-startPoint L hemSa-endPoint M hemSa-startPoint L 4', ['class' => 'fabric sa']);
+        }
         
         // Title
         $p->newPoint('titleAnchor', $p->x(8), $p->y(5));
@@ -346,10 +348,12 @@ class SvenSweatshirt extends BrianBodyBlock
         $p = $this->parts['front'];
         
         // Seam allowance
-        $p->offsetPath('sa','saBase', 10, 1, ['class' => 'fabric sa']);
-        $p->offsetPath('hemSa','hemBase', 30, 1, ['class' => 'fabric sa']);
-        // Join ends
-        $p->newPath('saJoints', 'M sa-endPoint L 9 M sa-startPoint L hemSa-endPoint M hemSa-startPoint L 4', ['class' => 'fabric sa']);
+        if($this->o('sa')) {
+            $p->offsetPath('sa','saBase', $this->o('sa'), 1, ['class' => 'fabric sa']);
+            $p->offsetPath('hemSa','hemBase', $this->o('sa')*3, 1, ['class' => 'fabric sa']);
+            // Join ends
+            $p->newPath('saJoints', 'M sa-endPoint L 9 M sa-startPoint L hemSa-endPoint M hemSa-startPoint L 4', ['class' => 'fabric sa']);
+        }
         
         // Title
         $p->newPoint('titleAnchor', $p->x(8), $p->y(5));
@@ -376,10 +380,12 @@ class SvenSweatshirt extends BrianBodyBlock
         $p = $this->parts['sleeve'];
 
         // Seam allowance 
-        $p->offsetPath('sa','saBase', -10, 1, ['class' => 'fabric sa']);
-        $p->offsetPath('hemSa','hemBase', 30, 1, ['class' => 'fabric sa']);
-        // Join ends
-        $p->newPath('saJoints', 'M hemSa-startPoint L sa-startPoint M hemSa-endPoint L sa-endPoint', ['class' => 'fabric sa']);
+        if($this->o('sa')) {
+            $p->offsetPath('sa','saBase', $this->o('sa')*-1, 1, ['class' => 'fabric sa']);
+            $p->offsetPath('hemSa','hemBase', $this->o('sa')*3, 1, ['class' => 'fabric sa']);
+            // Join ends
+            $p->newPath('saJoints', 'M hemSa-startPoint L sa-startPoint M hemSa-endPoint L sa-endPoint', ['class' => 'fabric sa']);
+        }
 
 
         // Scalebox

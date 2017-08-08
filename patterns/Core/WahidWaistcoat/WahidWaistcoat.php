@@ -693,7 +693,7 @@ class WahidWaistcoat extends BrianBodyBlock
         $p = $this->parts['front'];
 
         // Seam allowance
-        $p->offsetPath('sa', 'saBase', 10, 1, ['class' => 'sa fabric']);
+        if($this->o('sa')) $p->offsetPath('sa', 'saBase', $this->o('sa'), 1, ['class' => 'sa fabric']);
 
         // Title
         $p->newPoint('titleAnchor', $p->x(8), $p->y(5000));
@@ -721,7 +721,7 @@ class WahidWaistcoat extends BrianBodyBlock
         $p = $this->parts['back'];
 
         // Seam allowance
-        $p->offsetPath('sa', 'saBase', 10, 1, ['class' => 'sa fabric']);
+        if($this->o('sa')) $p->offsetPath('sa', 'saBase', $this->o('sa'), 1, ['class' => 'sa fabric']);
 
         // Title
         $p->newPoint('titleAnchor', $p->x(2)+$p->deltaX(2,907)/2, $p->y(5));
@@ -754,7 +754,7 @@ class WahidWaistcoat extends BrianBodyBlock
         $p = $this->parts['frontFacing'];
 
         // Seam allowance
-        $p->offsetPath('sa', 'seamline', 10, 1, ['class' => 'sa fabric']);
+        if($this->o('sa')) $p->offsetPath('sa', 'seamline', $this->o('sa'), 1, ['class' => 'sa fabric']);
 
         // Title
         $p->newPoint('titleAnchor', $p->x(300)+$p->deltaX(300,'flbTop')/2, $p->y(5000));
@@ -783,7 +783,7 @@ class WahidWaistcoat extends BrianBodyBlock
         $p = $this->parts['frontLining'];
 
         // Seam allowance
-        $p->offsetPath('sa', 'seamline', -10, 1, ['class' => 'sa lining']);
+        if($this->o('sa')) $p->offsetPath('sa', 'seamline', $this->o('sa')*-1, 1, ['class' => 'sa lining']);
 
         // Title
         $p->newPoint('titleAnchor', $p->x(907)+$p->deltaX(907,5)/2, $p->y(2907));

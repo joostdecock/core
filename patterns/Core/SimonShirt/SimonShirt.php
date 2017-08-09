@@ -805,7 +805,8 @@ class SimonShirt extends BrianBodyBlock
 
         /** @var Part $p */
         $p = $this->parts['back'];
-    
+
+        $p->newPoint('centerTop', 0, $p->y(10));
         $p->addPoint(8000, $p->shift(4,90,$this->o('lengthBonus')), 'Hips height');        
         $p->newPoint(8001, $p->x(6), $p->y(8000), 'Hips height');        
         $hin = ($this->v('hipsReduction'))/4;
@@ -876,35 +877,28 @@ class SimonShirt extends BrianBodyBlock
             $p->curveCrossesY(10,18,15,14,$p->y(10)+$this->o('yokeDart'),'yokeDart'); // Adds yokeDart1 point
             $p->newPoint('yokeDart2', ($p->x(5)-$this->v('waistReduction')/4)*0.55 , $p->y(10)); //HERE
             $p->newPoint('yokeDart3', $p->x(10)*0.8, $p->y(10));
-            $p->newPath('test', 'M yokeDart2 C yokeDart3 yokeDart1 yokeDart1');
-        }
-
-        // Mirror all points (that aren't on the mirror line)
-        foreach($p->points as $pid => $point) {
-            if($p->x($pid) != 0) $p->addPoint("-$pid", $p->flipX($pid,0)); 
         }
 
         // Paths
-        if($this->o('hemStyle') == 1) $outline = 'M 6666 L 6663 ';
-        else $outline = 'M 6663 ';
-        $outline .= 'C 6662 6661 8001 C 8002 6031 6021 C 6011 6001 5 C 13 16 14 C 15 18 ';
-        if($this->o('yokeDart') > 0) $outline .= ' yokeDart1 C yokeDart1 yokeDart3 yokeDart2 L -yokeDart2 C -yokeDart3 -yokeDart1 -yokeDart1 ';
-        else $outline .= ' 10 L -10 ';
-        $outline .= ' C -18 -15 -14 C -16 -13 -5 C -6001 -6011 -6021 C -6031 -8002 -8001 C -6661 -6662 -6663 ';
+        $outline = 'M centerTop ';
+        if($this->o('yokeDart') > 0) $outline .= ' L yokeDart2 C yokeDart3 yokeDart1 yokeDart1 ';
+        else $outline .= 'L 10 ';
+        $outline .= 'C 18 15 14 C 16 13 5 C 6001 6011 6021 C 6031 8002 8001 ';
         if($this->o('hemStyle') == 1) {
-            $outline .= 'L -6666 ';
-            $this->setValue('backHemBase', 'M -6666 C -6667 -6668 -6669 L 6660 L 6669 C 6668 6667 6666 ');
+            $outline .= 'C 6661 6662 6664 L 6665 ';
             $this->setValue('backSaBase', $outline);
+            $outline .= 'L 6660 ';
+            $this->setValue('backHemBase', 'M 6660 L 6667');
         } else {
+            $outline .= 'C 6661 6662 6663 ';
             $this->setValue('backSaBase', $outline);
-            $outline .= 'C -6664 -6665 -6666 ';
-            $this->setValue('backHemBase', 'M -6663 C -6664 -6665 -6666 C -6667 -6668 -6669 L 6660 L 6669 C 6668 6667 6666 C 6665 6664 6663');
+            $outline .= 'C 6664 6665 6666 L 6660 ';
+            $this->setValue('backHemBase', 'M 6660 L 6666 C 6665 6664 6663');
         }
-        $outline .= 'C -6667 -6668 -6669 L 6660 L 6669 C 6668 6667 6666 C 6665 6664 6663 z';
+        $outline .= 'L centerTop z';
 
         if ($this->v('waistReduction') > 100) { 
             $darts = 'M 6300 C 6300 6114 6122 C 6112 6110 6110 C 6110 6111 6121 C 6113 6300 6300 z ';
-            $darts .= 'M -6300 C -6300 -6114 -6122 C -6112 -6110 -6110 C -6110 -6111 -6121 C -6113 -6300 -6300 z ';
             $p->newPath('darts', $darts, ['class' => 'fabric']);
         }
         
@@ -1561,7 +1555,7 @@ class SimonShirt extends BrianBodyBlock
 
         // Title
         $p->newPoint('titleAnchor', $p->x(5)/2, $p->y(2)+50);
-        $p->addTitle('titleAnchor', 1, $this->t($p->title), '1x '.$this->t('from main fabric'));
+        $p->addTitle('titleAnchor', 1, $this->t($p->title), '1x '.$this->t('from fabric'));
 
         // Logo
         $p->addPoint('logoAnchor', $p->shift('titleAnchor',-90, 70));
@@ -1643,7 +1637,7 @@ class SimonShirt extends BrianBodyBlock
 
         // Title
         $p->newPoint('titleAnchor', $p->x(5)/2, $p->y(2)+50);
-        $p->addTitle('titleAnchor', 2, $this->t($p->title), '1x '.$this->t('from main fabric'));
+        $p->addTitle('titleAnchor', 2, $this->t($p->title), '1x '.$this->t('from fabric'));
         
         // Grainline
         $p->addPoint('grainlineTop', $p->shift(9,0,50));
@@ -1704,7 +1698,7 @@ class SimonShirt extends BrianBodyBlock
 
         // Title
         $p->newPoint('titleAnchor', $p->x(2042), $p->y(2)+50);
-        $p->addTitle('titleAnchor', '1b', $this->t($p->title), '1x '.$this->t('from main fabric'), 'vertical-small');
+        $p->addTitle('titleAnchor', '1b', $this->t($p->title), '1x '.$this->t('from fabric'), 'vertical-small');
 
         // Grainline
         $p->addPoint('grainlineTop', $p->shift(2042,-45,10));
@@ -1758,7 +1752,7 @@ class SimonShirt extends BrianBodyBlock
             // Title
             if($this->o('buttonholePlacketStyle') == 2) $p->newPoint('titleAnchor', $p->x(41086), $p->y(2)+50);
             else $p->newPoint('titleAnchor', $p->x(4100), $p->y(2)+50);
-            $p->addTitle('titleAnchor', '2b', $this->t($p->title), '1x '.$this->t('from main fabric'), 'vertical-small');
+            $p->addTitle('titleAnchor', '2b', $this->t($p->title), '1x '.$this->t('from fabric'), 'vertical-small');
             
             // Extra hem allowance
             if($this->o('buttonholePlacketStyle') == 1) $shiftThese = ['sa-endPoint', 'sa-line-4007TO4008', 'sa-line-4008TO4007', 'sa-line-4008TO4108XllXsa-line-4008TO4007'];
@@ -1794,10 +1788,10 @@ class SimonShirt extends BrianBodyBlock
         // Title
         if($this->o('splitYoke') == 1) {
             $p->newPoint('titleAnchor', $p->x(12)/2, $p->y(10)/2); 
-            $p->addTitle('titleAnchor', '4', $this->t($p->title), '4x '.$this->t('from main fabric'));
+            $p->addTitle('titleAnchor', '4', $this->t($p->title), '4x '.$this->t('from fabric'));
         } else {
             $p->newPoint('titleAnchor', $p->x(1), $p->y(1)+60); 
-            $p->addTitle('titleAnchor', '4', $this->t($p->title), '2x '.$this->t('from main fabric'));
+            $p->addTitle('titleAnchor', '4', $this->t($p->title), '2x '.$this->t('from fabric'));
         }
 
         // Grainline
@@ -1824,33 +1818,31 @@ class SimonShirt extends BrianBodyBlock
         
         // Seam allowance
         if($this->o('sa')) {
-            $p->offsetPathString('sa', $this->v('backSaBase'), $this->o('sa'), 1, ['class' => 'sa fabric']);
+            $p->offsetPathString('sa', $this->v('backSaBase'), $this->o('sa')*-1, 1, ['class' => 'sa fabric']);
             // Hem allowance
             $p->offsetPathString('hemSa', $this->v('backHemBase'), $this->o('sa')*3, 1, ['class' => 'sa fabric']);
             // Join SA
-            $p->newPoint('joinHemLeft', $p->x('sa-endPoint'), $p->y('hemSa-startPoint'));
-            $p->addPoint('joinHemRight', $p->flipX('joinHemLeft', 0));
-            $p->newPath('saJoin', 'M sa-endPoint L joinHemLeft L hemSa-startPoint M hemSa-endPoint L joinHemRight L sa-startPoint', ['class' => 'sa fabric']);
+            $p->newPath('saJoin', 'M sa-endPoint L hemSa-endPoint M hemSa-startPoint L 6660 M centerTop L sa-startPoint', ['class' => 'sa fabric']);
         }
 
         // Helplines
-        $p->newPath('chestLine', 'M -5 L 5', ['class' => 'help fabric']);
-        $p->newPath('waistLine', 'M -6021 L 6021', ['class' => 'help fabric']);
-        $p->newPath('hipsLine', 'M 8001 L -8001', ['class' => 'help fabric']);
+        $p->newPath('chestLine', 'M 2 L 5', ['class' => 'help fabric']);
+        $p->newPath('waistLine', 'M 3 L 6021', ['class' => 'help fabric']);
+        $p->newPath('hipsLine', 'M 8000 L 8001', ['class' => 'help fabric']);
 
         // Title
-        $p->addPoint('titleAnchor', $p->shift(2,-90, 80)); 
-        $p->addTitle('titleAnchor', '3', $this->t($p->title), '1x '.$this->t('from main fabric'));
+        $p->addPoint('titleAnchor', $p->shift(11,160, 80)); 
+        $p->addTitle('titleAnchor', '3', $this->t($p->title), '1x '.$this->t('from fabric')."\n".$this->t('Cut on fold'));
         
         // Grainline
         $p->newPoint('grainlineTop', $p->x(2), $p->y(10)+10);
         $p->newPoint('grainlineBottom', $p->x('grainlineTop'), $p->y(4)-10);
-        $p->newGrainline('grainlineBottom', 'grainlineTop', $this->t('Grainline'));
+        $p->newCutOnFold('grainlineBottom', 'grainlineTop', $this->t('Cut on fold').' - '.$this->t('Grainline'), 20);
         
         // Notches
-        $p->notch([6021, -6021, 8001, -8001]);
-        if($this->o('yokeDart') > 0) $p->notch(['yokeDart1', '-yokeDart1']);
-        else $p->notch([10, -10]);
+        $p->notch([6021, 8001]);
+        if($this->o('yokeDart') > 0) $p->notch(['yokeDart1']);
+        else $p->notch([10]);
         
         // Store back sleeveNotch distance
         if($this->o('yokeDart') > 0) $this->setValue('backSleeveNotchDistance', $p->curveLen(5,13,16,14) + $p->curveLen(14,15,18,'yokeDart1'));
@@ -1882,7 +1874,7 @@ class SimonShirt extends BrianBodyBlock
 
         // Title
         $p->clonePoint(2,'titleAnchor');
-        $p->addTitle('titleAnchor', '5', $this->t($p->title), '2x '.$this->t('from main fabric'));
+        $p->addTitle('titleAnchor', '5', $this->t($p->title), '2x '.$this->t('from fabric'));
         
         // Grainline
         $p->newPoint('grainlineTop', $p->x(14), $p->y(14));
@@ -1971,7 +1963,7 @@ class SimonShirt extends BrianBodyBlock
         
         // Title
         $p->addPoint('titleAnchor', $p->shift(56,0,30));
-        $p->addTitle('titleAnchor', 6, $this->t($p->title), '2x '.$this->t('from main fabric')." + ".'2x '.$this->t('from interfacing'), 'horizontal-small');
+        $p->addTitle('titleAnchor', 6, $this->t($p->title), '2x '.$this->t('from fabric')." + ".'2x '.$this->t('from interfacing'), 'horizontal-small');
 
         // Notches
         $p->addPoint('collarStandNotch1', $p->shiftAlong(42,43,6,61,$this->v('yokeCollarOpeningLength')/2));
@@ -1999,7 +1991,7 @@ class SimonShirt extends BrianBodyBlock
         
         // Title
         $p->addPoint('titleAnchor', $p->shift(10,0,40));
-        $p->addTitle('titleAnchor', 7, $this->t($p->title), '1x '.$this->t('from main fabric'),'small');
+        $p->addTitle('titleAnchor', 7, $this->t($p->title), '1x '.$this->t('from fabric'),'small');
     }
 
     /**
@@ -2022,7 +2014,7 @@ class SimonShirt extends BrianBodyBlock
         
         // Title
         $p->addPoint('titleAnchor', $p->shift(10,0,40));
-        $p->addTitle('titleAnchor', 8, $this->t($p->title), '1x '.$this->t('from main fabric'),'small');
+        $p->addTitle('titleAnchor', 8, $this->t($p->title), '1x '.$this->t('from fabric'),'small');
     }
 
     /**
@@ -2045,7 +2037,7 @@ class SimonShirt extends BrianBodyBlock
 
         // Title
         $p->addPoint('titleAnchor', $p->shift(8,0,25));
-        $p->addTitle('titleAnchor', 10, $this->t($p->title), '2x '.$this->t('from main fabric'),'horizontal-small');
+        $p->addTitle('titleAnchor', 10, $this->t($p->title), '2x '.$this->t('from fabric'),'horizontal-small');
     }
 
     /**
@@ -2067,7 +2059,7 @@ class SimonShirt extends BrianBodyBlock
         
         // Title
         $p->addPoint('titleAnchor', $p->shift(20,-35,30));
-        $p->addTitle('titleAnchor', 11, $this->t($p->title), '2x '.$this->t('from main fabric'),'horizontal-small');
+        $p->addTitle('titleAnchor', 11, $this->t($p->title), '2x '.$this->t('from fabric'),'horizontal-small');
     }
 
 
@@ -2088,7 +2080,7 @@ class SimonShirt extends BrianBodyBlock
 
         // Title
         $p->newPoint('titleAnchor', 0, $p->y(-8));
-        $p->addTitle('titleAnchor', 11, $this->t($p->title), '4x '.$this->t('from main fabric').' + 4x '.$this->t('from interfacing'), 'small');
+        $p->addTitle('titleAnchor', 11, $this->t($p->title), '4x '.$this->t('from fabric').' + 4x '.$this->t('from interfacing'), 'small');
     }
 
     /**
@@ -2111,7 +2103,7 @@ class SimonShirt extends BrianBodyBlock
 
         // Title
         $p->newPoint('titleAnchor', 0, $p->y(-3));
-        $p->addTitle('titleAnchor', 11, $this->t($p->title), '4x '.$this->t('from main fabric').' + 4x '.$this->t('from interfacing'));
+        $p->addTitle('titleAnchor', 11, $this->t($p->title), '4x '.$this->t('from fabric').' + 4x '.$this->t('from interfacing'));
     }
 
     /*
@@ -2437,12 +2429,13 @@ class SimonShirt extends BrianBodyBlock
         $p = $this->parts['back'];
 
         // Widths  
-        $p->newWidthDimension(-8001, 8001, $p->y(8001)+15);  // Hips width
-        $p->newWidthDimension(-6663, 6663, $p->y(4)+45);  // Total width
-        $p->newWidthDimension(-6021, 6021, $p->y(6021)-15);  // Waist width
-        if($this->o('yokeDart') > 0) $p->newWidthDimension('-yokeDart1', 'yokeDart1', $p->y(10)-25);  // Across back width
-        else $p->newWidthDimension(-10,10, $p->y(10)-25);  // Across back width
-        $p->newWidthDimension(-5, 5, $p->y(10)-40);  // Underarm width
+        $p->newWidthDimension(8000, 8001, $p->y(8001)+15);  // Hips width
+        $p->newPoint('6663Center', 0, $p->y(6663));
+        $p->newWidthDimension('6663Center', 6663, $p->y(4)+$this->o('sa')*3+15);  // Total width
+        $p->newWidthDimension(3, 6021, $p->y(6021)-15);  // Waist width
+        if($this->o('yokeDart') > 0) $p->newWidthDimension('centerTop', 'yokeDart1', $p->y(10)-25);  // Across back width
+        else $p->newWidthDimension('centerTop',10, $p->y(10)-25);  // Across back width
+        $p->newWidthDimension(2, 5, $p->y(10)-40);  // Underarm width
 
         // Heights
         if($this->o('hemStyle') == 3) $xBase = $p->x(6663) +45;
@@ -2469,8 +2462,7 @@ class SimonShirt extends BrianBodyBlock
 
         // Darts
         if($p->isPoint(6100)) { // Do we have darts?
-            $p->newWidthDimension(-6300, 6300, $p->y(6300)+15);  // Distance between darts
-            $p->newLinearDimensionSm(-6121, -6122);  // Left dart width
+            $p->newWidthDimension(8000, 6300, $p->y(6300)+15);  // Distance between darts
             $p->newLinearDimensionSm(6122, 6121);  // Right dart width
             $p->newHeightDimension(6300, 6121, $p->x(6121)+15);  // Dart bottom half height
             $p->newHeightDimension(6121, 6110, $p->x(6121)+15);  // Dart bottom half height
@@ -2481,8 +2473,8 @@ class SimonShirt extends BrianBodyBlock
 
         // Notes
         if($this->o('sa')) {
-            $p->addPoint('saNoteAnchor', $p->shift(-6021,-115,10));
-            $p->newNote('saNote', 'saNoteAnchor', $this->t("Standard\nseam\nallowance"), 4, 40, 0);
+            $p->addPoint('saNoteAnchor', $p->shift(6021,-65,10));
+            $p->newNote('saNote', 'saNoteAnchor', $this->t("Standard\nseam\nallowance"), 8, 40, 0);
             $p->addPoint('hemNoteAnchor', $p->shift(6660,-155,30));
             $p->newNote('hemNote', 'hemNoteAnchor', $this->t("Hem\nseam\nallowance")."\n(".$p->unit(30).')', 10, 60, 0);
         }

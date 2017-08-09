@@ -3,6 +3,7 @@
 namespace Freesewing\Patterns\Core;
 
 use Freesewing\Part;
+use Freesewing\Utils;
 
 /**
  * The Simon Shirt  pattern
@@ -1284,8 +1285,13 @@ class SimonShirt extends BrianBodyBlock
             $width = $this->o('sleevePlacketWidth')/2;
             $fold = $width-1.5;
         }
+        
+        // Handle possible lack of seam allowance value
+        if($this->o('sa')) $sa = $this->o('sa');
+        else $sa = 0;
+        
         $p->newPoint(0,0,0);
-        $p->newPoint(1,$this->o('sleevePlacketLength')+10+$this->o('sleevePlacketWidth')*0.25,0);
+        $p->newPoint(1,$this->o('sleevePlacketLength')+$sa+$this->o('sleevePlacketWidth')*0.25,0);
         $p->addPoint(2,$p->shift(1,-90,$fold));
         $p->addPoint(3,$p->shift(2,-90,$width));
         $p->addPoint(4,$p->shift(3,-90,$width));
@@ -1294,8 +1300,8 @@ class SimonShirt extends BrianBodyBlock
         $p->addPoint(7,$p->shift(6,-90,$width));
         $p->addPoint(8,$p->shift(7,-90,$width));
         $p->addPoint(9,$p->shift(8,-90,$fold));
-        $p->addPoint(10,$p->shift(0,0,10));
-        $p->addPoint(11,$p->shift(9,0,10));
+        $p->addPoint(10,$p->shift(0,0,$sa));
+        $p->addPoint(11,$p->shift(9,0,$sa));
         $p->newPoint(12,$p->x(1)/2,$p->y(3)+$btndist);
         
         // Paths
@@ -1327,9 +1333,14 @@ class SimonShirt extends BrianBodyBlock
             $width = $this->o('sleevePlacketWidth')/2;
             $fold = $width-1.5;
         }
+        
+        // Handle possible lack of seam allowance value
+        if($this->o('sa')) $sa = $this->o('sa');
+        else $sa = 0;
+        
         $p->newPoint(0 , 0, 0);
         // 1.5 for fixed part, 0.7 for fold = 2.2 times 
-        $p->newPoint(1,$this->o('sleevePlacketLength')+10+$this->o('sleevePlacketWidth')*2.2,0);
+        $p->newPoint(1,$this->o('sleevePlacketLength')+$sa+$this->o('sleevePlacketWidth')*2.2,0);
         $p->addPoint(2,$p->shift(1,-90,$fold));
         $p->addPoint(3,$p->shift(2,-90,$this->o('sleevePlacketWidth')));
         $p->addPoint(4,$p->shift(3,-90,$this->o('sleevePlacketWidth')+2));
@@ -1352,8 +1363,8 @@ class SimonShirt extends BrianBodyBlock
         $p->newPoint(21,$p->y(0),$p->y(4));
         $p->addPoint(22,$p->beamsCross(2,8,3,7));
         $p->newPoint(23,$p->x(15),$p->y(4));
-        $p->newPoint(24,$p->x(0)+10,$p->y(0));
-        $p->newPoint(25,$p->x(0)+10,$p->y(5));
+        $p->newPoint(24,$p->x(0)+$sa,$p->y(0));
+        $p->newPoint(25,$p->x(0)+$sa,$p->y(5));
         $p->addPoint(26,$p->flipY(22,$p->y(2)));
         $p->addPoint(27,$p->flipY(22,$p->y(3)));
         $p->addPoint(28,$p->beamsCross(6,1,7,26));
@@ -1537,7 +1548,8 @@ class SimonShirt extends BrianBodyBlock
         if($this->o('sa')) {
             $p->offsetPathString('sa', $this->v('frontRightSaBase'), $this->o('sa')*-1, 1, ['class' => 'sa fabric']);
             // Flat felled seam allowance
-            $p->offsetPathString('ffsa', $this->v('frontRightSideBase'), $this->o('sa')*2, 1, ['class' => 'sa fabric']);
+            $p->offsetPathString('ffsa', $this->v('frontRightSideBase'), Utils::constraint($this->o('sa')*2,12,25), 1, ['class' => 'sa fabric']);
+            $p->offsetPathString('ffsaHint', $this->v('frontRightSideBase'), Utils::constraint($this->o('sa')*2,12,25)/2, 1, ['class' => 'hint fabric']);
             // Hem seam allowance
             $p->offsetPathString('hemSa', $this->v('frontRightHemBase'), $this->o('sa')*3, 1, ['class' => 'sa fabric']);
             // Join different offsets
@@ -1611,7 +1623,8 @@ class SimonShirt extends BrianBodyBlock
         if($this->o('sa')) {
             $p->offsetPathString('sa', $this->v('frontLeftSaBase'), $this->o('sa'), 1, ['class' => 'sa fabric']);
             // Flat felled seam allowance
-            $p->offsetPathString('ffsa', $this->v('frontLeftSideBase'), $this->o('sa')*-2, 1, ['class' => 'sa fabric']);
+            $p->offsetPathString('ffsa', $this->v('frontLeftSideBase'), Utils::constraint($this->o('sa')*2,12,25)*-1, 1, ['class' => 'sa fabric']);
+            $p->offsetPathString('ffsaHint', $this->v('frontLeftSideBase'), Utils::constraint($this->o('sa')*2,12,25)*-0.5, 1, ['class' => 'sa hint']);
             // Hem seam allowance
             $p->offsetPathString('hemSa', $this->v('frontLeftHemBase'), $this->o('sa')*-3, 1, ['class' => 'sa fabric']);
             // Join different offsets
@@ -1859,8 +1872,9 @@ class SimonShirt extends BrianBodyBlock
         // Seam allowance
         if($this->o('sa')) {
             $p->offsetPathString('sa', $this->v('sleeveSaBase'), $this->o('sa')*-1, 1, ['class' => 'sa fabric']);
-            // Hem allowance
-            $p->offsetPathString('ffsa', $this->v('sleeveFfsaBase'), $this->o('sa')*-2, 1, ['class' => 'sa fabric']);
+            // Flat felled seam allowance
+            $p->offsetPathString('ffsa', $this->v('sleeveFfsaBase'), Utils::constraint($this->o('sa')*2,12,25)*-1, 1, ['class' => 'sa fabric']);
+            $p->offsetPathString('ffsaHint', $this->v('sleeveFfsaBase'), Utils::constraint($this->o('sa')*2,12,25)*-0.5, 1, ['class' => 'sa hint']);
             // Join SA
             $p->newPoint('joinHemRight', $p->x('ffsa-endPoint'), $p->y('sa-startPoint'));
             $p->newPath('saJoin', 'M sa-endPoint L ffsa-startPoint M ffsa-endPoint L joinHemRight L sa-startPoint', ['class' => 'sa fabric']);
@@ -2030,7 +2044,7 @@ class SimonShirt extends BrianBodyBlock
         $p->newPath('sa', 'M 10 L 0 L 9 L 11', ['class' => 'sa fabric']); 
 
         // Title
-        $p->addPoint('titleAnchor', $p->shift(8,0,15));
+        $p->addPoint('titleAnchor', $p->shift(8,0,25));
         $p->addTitle('titleAnchor', 10, $this->t($p->title), '2x '.$this->t('from main fabric'),'horizontal-small');
     }
 
@@ -2189,13 +2203,14 @@ class SimonShirt extends BrianBodyBlock
         else $p->newCurvedDimension('M 8 C 2051 2052 2153', -25);
 
         // Notes
-        $p->addPoint('saNoteAnchor', $p->shift(10,180,5));
-        $p->newNote('saNote', 'saNoteAnchor', $this->t("Standard\nseam\nallowance"), 2, 40, 0);
-        $p->addPoint('ffsaNoteAnchor', $p->shift(6021,180,10));
-        $p->newNote('ffsaNote', 'ffsaNoteAnchor', $this->t("Flat-felled\nseam\nallowance")."\n(".$p->unit(20).')', 2, 40, 0);
-        $p->addPoint('hemNoteAnchor', $p->shift(6668,-90,15));
-        $p->newNote('hemNote', 'hemNoteAnchor', $this->t("Hem\nseam\nallowance")."\n(".$p->unit(30).')', 12, 40, 0);
-
+        if($this->o('sa')) {
+            $p->addPoint('saNoteAnchor', $p->shift(10,180,5));
+            $p->newNote('saNote', 'saNoteAnchor', $this->t("Standard\nseam\nallowance"), 2, 40, 0);
+            $p->addPoint('ffsaNoteAnchor', $p->shift(6021,180,10));
+            $p->newNote('ffsaNote', 'ffsaNoteAnchor', $this->t("Flat-felled\nseam\nallowance")."\n(".$p->unit(Utils::constraint($this->o('sa')*2,12,25)).')', 2, 40, 0);
+            $p->addPoint('hemNoteAnchor', $p->shift(6668,-90,15));
+            $p->newNote('hemNote', 'hemNoteAnchor', $this->t("Hem\nseam\nallowance")."\n(".$p->unit(30).')', 12, 40, 0);
+        }
     }
 
     /**
@@ -2277,12 +2292,14 @@ class SimonShirt extends BrianBodyBlock
         else $p->newCurvedDimension('M 4108 C 41092 41091 8', -25);
 
         // Notes
-        $p->addPoint('saNoteAnchor', $p->shift(10,0,5));
-        $p->newNote('saNote', 'saNoteAnchor', $this->t("Standard\nseam\nallowance"), 10, 40, 0);
-        $p->addPoint('ffsaNoteAnchor', $p->shift(6021,0,10));
-        $p->newNote('ffsaNote', 'ffsaNoteAnchor', $this->t("Flat-felled\nseam\nallowance")."\n(".$p->unit(20).')', 10, 40, 0);
-        $p->addPoint('hemNoteAnchor', $p->shift(6668,-90,15));
-        $p->newNote('hemNote', 'hemNoteAnchor', $this->t("Hem\nseam\nallowance")."\n(".$p->unit(30).')', 12, 40, 0);
+        if($this->o('sa')) {
+            $p->addPoint('saNoteAnchor', $p->shift(10,0,5));
+            $p->newNote('saNote', 'saNoteAnchor', $this->t("Standard\nseam\nallowance"), 10, 40, 0);
+            $p->addPoint('ffsaNoteAnchor', $p->shift(6021,0,10));
+            $p->newNote('ffsaNote', 'ffsaNoteAnchor', $this->t("Flat-felled\nseam\nallowance")."\n(".$p->unit(Utils::constraint($this->o('sa')*2,12,25)).')', 10, 40, 0);
+            $p->addPoint('hemNoteAnchor', $p->shift(6668,-90,15));
+            $p->newNote('hemNote', 'hemNoteAnchor', $this->t("Hem\nseam\nallowance")."\n(".$p->unit(30).')', 12, 40, 0);
+        }
     }
     
     /**
@@ -2463,10 +2480,12 @@ class SimonShirt extends BrianBodyBlock
         $p->newCurvedDimension("M 5 C 13 16 14 C 15 18 $curveEnd", 25);  // Dart bottom half height
 
         // Notes
-        $p->addPoint('saNoteAnchor', $p->shift(-6021,-115,10));
-        $p->newNote('saNote', 'saNoteAnchor', $this->t("Standard\nseam\nallowance"), 4, 40, 0);
-        $p->addPoint('hemNoteAnchor', $p->shift(6660,-155,30));
-        $p->newNote('hemNote', 'hemNoteAnchor', $this->t("Hem\nseam\nallowance")."\n(".$p->unit(30).')', 10, 60, 0);
+        if($this->o('sa')) {
+            $p->addPoint('saNoteAnchor', $p->shift(-6021,-115,10));
+            $p->newNote('saNote', 'saNoteAnchor', $this->t("Standard\nseam\nallowance"), 4, 40, 0);
+            $p->addPoint('hemNoteAnchor', $p->shift(6660,-155,30));
+            $p->newNote('hemNote', 'hemNoteAnchor', $this->t("Hem\nseam\nallowance")."\n(".$p->unit(30).')', 10, 60, 0);
+        }
     }
 
     /**
@@ -2515,10 +2534,12 @@ class SimonShirt extends BrianBodyBlock
         $p->newCurvedDimension('M 1 C 29 25 18 C 24 11 11 C 11 27 19 C 26 5 5', -35);
         
         // Notes
-        $p->addPoint('saNoteAnchor', $p->shift(-5,-120,10));
-        $p->newNote('saNote', 'saNoteAnchor', $this->t("Standard\nseam\nallowance"), 4, 40, 0);
-        $p->addPoint('ffsaNoteAnchor', $p->shift(5,-30,10));
-        $p->newNote('ffsaNote', 'ffsaNoteAnchor', $this->t("Flat-felled\nseam\nallowance")."\n(".$p->unit(20).')', 8, 40, 0);
+        if($this->o('sa')) {
+            $p->addPoint('saNoteAnchor', $p->shift(-5,-120,10));
+            $p->newNote('saNote', 'saNoteAnchor', $this->t("Standard\nseam\nallowance")."\n(".$p->unit($this->o('sa')).')', 4, 40, 0);
+            $p->addPoint('ffsaNoteAnchor', $p->shift(5,-30,10));
+            $p->newNote('ffsaNote', 'ffsaNoteAnchor', $this->t("Flat-felled\nseam\nallowance")."\n(".$p->unit(Utils::constraint($this->o('sa')*2,12,25)).')', 8, 40, 0);
+        }
     }
 
     /**

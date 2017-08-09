@@ -1,15 +1,16 @@
 # Change Log
 
 > All notable changes to freesewing core should be be documented in this file.
-> Freesewing does [Semantic Versioning](http://semver.org/).
+> Freesewing uses [Semantic Versioning](http://semver.org/).
 
 ## Version 1.1.0 - UNRELEASED
 
 **Release date**: UNRELEASED
 
-This is a minor update in anticipation of our frontend release.
+This is a non-trivial yet minor update in anticipation of the frontend release.
 
-The major place is a complete redesign of (and drop-in replacement for) Bruce
+The major change is a complete redesign of (and drop-in replacement for) Bruce,
+and a bunch of frontend related improvements
 
 ### New
 
@@ -36,7 +37,8 @@ The major place is a complete redesign of (and drop-in replacement for) Bruce
  - Added the `freesewing` class to SVG output to avoid style collisions
  - Simplified the logo
  - Updated the apigen config for the auto-generated class documentation
- - The `Part::newTextOnPath` method takes an extra `$renderPath` paramter
+ - The `Part::newTextOnPath` method takes an extra `$renderPath` parameter
+ - Simon's back is cut on the fold now, reducing the pattern's print size
 
 #### Brian
 

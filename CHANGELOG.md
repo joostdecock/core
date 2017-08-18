@@ -19,6 +19,7 @@ and a bunch of frontend related improvements
  - The `Pattern::stretchToScale` method makes stretch options more intuitive
  - The `Part::circlesCross` and `Part::circleCrossesLine` methods find intersections of circles and lines
  - The `Part::shiftOutwards`, `Part::shiftFractionTowards`, and `Part::shiftFractionAlong` methods are additional shift helper methods
+ - The `Utils::constraint` method is new. It deals with input validation for options
  - Pattern config files have new data used by the frontend, including `handle`, `tags` and a `title`, `description`, and `group` for options. Only impacts the frontend
  - Pattern config files also have conditional options, using `dependsOn` and `onlyOn` in the options config. Only impacts the frontend
  - The info service will hide all pattern parts that have a title starting with a `.` character

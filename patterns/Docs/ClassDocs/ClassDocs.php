@@ -575,6 +575,28 @@ class ClassDocs extends \Freesewing\Patterns\Core\Pattern
     }
     
     /**
+     * Part::shiftFractionTowards example
+     */
+    private function example_Part_shiftFractionTowards($p, $model)
+    {
+        /** @var \Freesewing\Part $p */
+        $p->newPoint('origin', 90, 30);
+        $p->newPoint('direction', 60, 70);
+
+        $p->addPoint(1, $p->shiftFractionTowards('origin','direction',0.5));
+        $p->addPoint(2, $p->shiftFractionTowards('origin','direction',1.2));
+
+        $p->newPath('line', 'M origin L direction', ['class' => 'hint']);
+        $p->newNote(1,'origin','origin',3);
+        $p->newNote(2,'direction','direction',3);
+
+        $p->newNote(3,1,'Point shifted from origin 50% towards direction');
+        $p->newNote(4,2,'Point shifted from origin 120% towards direction');
+        
+        $this->addBox($p,90);
+    }
+    
+    /**
      * Part::shiftAlong example
      */
     private function example_Part_shiftAlong($p, $model)
@@ -588,6 +610,44 @@ class ClassDocs extends \Freesewing\Patterns\Core\Pattern
  
         $p->newPath(1,"M 1 C 2 3 4");
         
+        $this->addBox($p,90);
+    }
+    
+    /**
+     * Part::shiftOutwards example
+     */
+    private function example_Part_shiftOutwards($p, $model)
+    {
+        /** @var \Freesewing\Part $p */
+        $p->newPoint('origin', 90, 0);
+        $p->newPoint('direction', 40, 50);
+        $p->newPath('line', 'M origin L direction', ['class' => 'hint']);
+
+        $p->addPoint(1, $p->shiftOutwards('origin','direction',30));
+
+        $p->newNote(1,'origin','origin',3);
+        $p->newNote(2,'direction','direction',3);
+        $p->newNote(3,1,'Point shifted outwards by 3cm');
+        $p->newLinearDimensionSm(1,'direction');
+        
+        $this->addBox($p,90);
+    }
+    
+    /**
+     * Part::shiftFractionAlong example
+     */
+    private function example_Part_shiftFractionAlong($p, $model)
+    {
+        /** @var \Freesewing\Part $p */
+        $p->newPoint(1, 0, 100);
+        $p->newPoint(2, 30, 0);
+        $p->newPoint(3, 100, 100);
+        $p->newPoint(4, 100, 50);
+        $p->addPoint(5, $p->shiftFractionAlong(1,2,3,4, 0.5));
+ 
+        $p->newPath(1,"M 1 C 2 3 4");
+        
+        $p->newNote(1,5,'Point shifted 50% along the curve',2);
         $this->addBox($p,90);
     }
     
@@ -762,6 +822,43 @@ class ClassDocs extends \Freesewing\Patterns\Core\Pattern
         $p->newPath(2,"M s1 C s2 s3 s4", ['class' => 'seam-allowance stroke-note']);
         $p->newPath(3,"M s5 C s6 s7 s8", ['class' => 'seam-allowance']);
         $this->addBox($p,100,100);
+    }
+
+    /**
+     * Part::circlesCross example
+     */
+    private function example_Part_circlesCross($p, $model)
+    {
+        /** @var \Freesewing\Part $p */
+        $p->newPoint(1, 75, 40);
+        $p->newPoint(2, 125, 60);
+
+        $p->newInclude('circle1', '<circle xmlns="http://www.w3.org/2000/svg" cx="75" cy="40" r="40" style="stroke: #ccc; stroke-width: 0.3; stroke-dasharray: 1 1;"/>'); 
+        $p->newInclude('circle2', '<circle xmlns="http://www.w3.org/2000/svg" cx="125" cy="60" r="30" style="stroke: #ccc; stroke-width: 0.3; stroke-dasharray: 1 1;"/>'); 
+
+        $p->circlesCross(1,40,2,30,'isect');
+        $p->notch(['isect1','isect2']);
+
+        $this->addBox($p,90);
+    }
+
+    /**
+     * Part::circlesCrossesLine example
+     */
+    private function example_Part_circlesCrossesLine($p, $model)
+    {
+        /** @var \Freesewing\Part $p */
+        $p->newPoint(1, 75, 40);
+        $p->newPoint(2, 25, 80);
+        $p->newPoint(3, 145, 20);
+
+        $p->newPath('line', 'M 2 L 3', ['style' =>'stroke: #ccc; stroke-width: 0.3; stroke-dasharray: 1 1;']);
+        $p->newInclude('circle', '<circle xmlns="http://www.w3.org/2000/svg" cx="75" cy="40" r="40" style="stroke: #ccc; stroke-width: 0.3; stroke-dasharray: 1 1;"/>'); 
+
+        $p->circleCrossesLine('1',40,2,3,'isect');
+        $p->notch(['isect1','isect2']);
+
+        $this->addBox($p,90);
     }
 
     /**

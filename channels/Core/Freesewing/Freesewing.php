@@ -169,7 +169,10 @@ class Freesewing extends Channel
             // Seam allowance option (sa) 
             // This is different because it's not listed in the pattern config file
             if($request->getData('sa') == 0) $options['sa'] = false;
-            else $options['sa'] = Utils::constraint($request->getData('sa')*10,5,25.4);
+            else {
+                if($request->getData('userUnits') == 'imperial') $options['sa'] = Utils::constraint($request->getData('sa')*25.4,5,25.4);
+                else $options['sa'] = Utils::constraint($request->getData('sa')*10,5,25.4);
+            }
 
             return $options;
 

@@ -3,14 +3,14 @@
 > All notable changes to freesewing core should be be documented in this file.
 > Freesewing uses [Semantic Versioning](http://semver.org/).
 
-## Version 1.1.0 - UNRELEASED
+## Version 1.1.0
 
-**Release date**: UNRELEASED
+**Release date**: 2017-08-24
 
 This is a non-trivial yet minor update in anticipation of the frontend release.
 
-The major change is a complete redesign of (and drop-in replacement for) Bruce,
-and a bunch of frontend related improvements
+The major changes are a complete redesign of (and drop-in replacement for) Bruce,
+and a bunch of frontend related improvements.
 
 ### New
 
@@ -27,6 +27,7 @@ and a bunch of frontend related improvements
  - Added the frontend draft handle to the Core theme so that the frontend reference is printed on the pattern
  - The standard theme has a new `various` path CSS class
  - Added support for custom seam allowance to the Freesewing channel and to all patterns
+ - The NotationLegend pattern in the Docs namespace is new. It's used in the documentation.
 
 ### Changes
 

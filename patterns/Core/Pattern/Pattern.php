@@ -225,6 +225,17 @@ abstract class Pattern
     }
 
     /**
+     * Sets the key $key in the options array to value $value if it's unset
+     *
+     * @param string $key   The key in the options array
+     * @param mixed  $value The option to set
+     */
+    public function setOptionIfUnset($key, $value)
+    {
+        if(!isset($this->options[$key])) $this->options[$key] = $value;
+    }
+
+    /**
      * Sets the key $key in the values array to value $value
      *
      * @param string $key   The key in the values array
@@ -233,6 +244,17 @@ abstract class Pattern
     public function setValue($key, $value)
     {
         $this->values[$key] = $value;
+    }
+
+    /**
+     * Sets the key $key in the values array to value $value if it's unset
+     *
+     * @param string $key   The key in the values array
+     * @param mixed  $value The value to set
+     */
+    public function setValueIfUnset($key, $value)
+    {
+        if(!isset($this->values[$key])) $this->values[$key] = $value;
     }
 
     /**
@@ -662,4 +684,19 @@ abstract class Pattern
     {
         $this->isPaperless = $bool;
     }
+
+    /**
+     * Calculates scale factor based on stretch factor
+     *
+     * The way people measure stretch intuitively is different from the way we handle stretch in code
+     * When people say '25% stretch' they mean that 10cm fabric should get stretched to 12.5cm fabric.
+     * In our code, that means we need to scale things by 80%.
+     *
+     * This method does that calculation.
+     */
+    protected function stretchToScale($stretch)
+    {
+        return ( 1 / ( 1 + $stretch ) );
+    }
+
 }

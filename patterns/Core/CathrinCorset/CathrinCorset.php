@@ -58,9 +58,9 @@ class CathrinCorset extends Pattern
          * but I don't think I have ever seen a woman with a
          * larger underbust measurement than hips measurement.
          */
-        $this->setValue('width', $model->m('hips')/2 - $this->o('backOpening')/2);
-        $this->setValue('bustIntake', $model->m('hips')/2 - $model->m('underBust')/2);
-        $this->setValue('waistIntake', $model->m('hips')/2 - $model->m('naturalWaist')/2 + $this->o('waistReduction')/2);
+        $this->setValue('width', $model->m('hipsCircumference')/2 - $this->o('backOpening')/2);
+        $this->setValue('bustIntake', $model->m('hipsCircumference')/2 - $model->m('underBust')/2);
+        $this->setValue('waistIntake', $model->m('hipsCircumference')/2 - $model->m('naturalWaist')/2 + $this->o('waistReduction')/2);
     }
 
     /*
@@ -141,7 +141,7 @@ class CathrinCorset extends Pattern
 
         // Basic rectangle | Point index 1->
         $p->newPoint(   1, 0, 0, 'Underbust @ CF' );
-        $p->newPoint(   2, 0, $model->m('naturalWaistToUnderbust') + $model->m('naturalWaistToHips'), 'Hips @ CF' );
+        $p->newPoint(   2, 0, $model->m('naturalWaistToUnderbust') + $model->m('naturalWaistToHip'), 'Hips @ CF' );
         $p->newPoint(   3, $this->v('width'), $p->y(2), 'Hips @ side' );
         $p->newPoint(   4, $p->x(3), 0, 'Underbust @ side' );
         $p->newPoint(   5, $p->x(3)/2, 0, 'Quarter top' );
@@ -535,7 +535,7 @@ class CathrinCorset extends Pattern
                     $msg = '2x '.$this->t('from fabric');
                 }
                 $p->addTitle("titleAnchor$i", $i, $this->t('Panel')." $i", $msg, 'vertical-small');
-                $p->offsetPathString($part.'-sa', $this->{"path$i"}, 10, 1, ['class' => 'fabric sa']);
+                if($this->o('sa')) $p->offsetPathString($part.'-sa', $this->{"path$i"}, $this->o('sa'), 1, ['class' => 'fabric sa']);
 
             }
         }

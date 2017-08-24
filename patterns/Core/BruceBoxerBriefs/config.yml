@@ -1,16 +1,22 @@
 info:
-     name:         "Bruce Boxer Briefs"
-     version:      "2.0"
-     author:       "Joost De Cock"
-     company:      "freesewing"
-     link:         "freesewing.org/pattern/bruce"
+    name:    "Bruce Boxer Briefs"
+    description: "Comfortable yet stylish boxer briefs for men"
+    handle:  "bruce"
+    version: "2.0"
+    author:  "Joost De Cock"
+    company: "freesewing"
+    link:    "freesewing.org/pattern/bruce"
+    tags:
+        - menswear
+        - underwear
+        - bottom
 
 parts:
-    block:    "Block"
-    front:    "Front"
-    back:     "Back"
-    side:     "Side"
-    inset:    "Inset"
+    block: ".Block"
+    front: "Front"
+    back:  "Back"
+    side:  "Side"
+    inset: "Inset"
 
 languages:
     en: English
@@ -19,41 +25,65 @@ languages:
 measurements:
     hipsCircumference: 985
     upperLegCircumference: 630
-    crossseamLength: 680
+    hipsToUpperLeg: 220
 
 options:
-    rise:
-        type: "measure"
-        min: -30
-        max: 50
-        default: 20
-
-    backRise:
-        type: "percent"
-        min: 0
-        max: 6
-        default: 3
-
+# fit group
     elasticWidth:
+        title: "Elastic width"
+        description: "Width of the elastic band you intend to use."
+        group: "fit"
         type: "measure"
         min: 10
         max: 70
         default: 35
-
-    legBonus:
-        type: "measure"
-        min: 0
-        max: 70
-        default: 35
-
     bulge:
+        title: "Bulge"
+        description: "Increase angle to create more room in the front pouch."
+        group: "fit"
         type: "angle"
         min: 0
         max: 40
-        default: 25
+        default: 20
+    legBonus:
+        title: "Leg length bonus"
+        description: "Extra length to add to the legs."
+        group: "fit"
+        type: "measure"
+        min: 0
+        max: 70
+        default: 0
+    rise:
+        title: "Rise"
+        description: "Amount to raise the waist. A negative value will lower it."
+        group: "fit"
+        type: "measure"
+        min: -30
+        max: 50
+        default: 35
 
-    horizontalStretchFactor:
+# advanced group
+    stretch:
+        title: "Stretch"
+        description: "The amount of negative ease."
+        group: "advanced"
         type: "percent"
-        min: 75
-        max: 90
-        default: 85
+        min: 4
+        max: 24
+        default: 14
+    legStretch:
+        title: "Leg stretch"
+        description: "For best results, you want to fit your legs a but more snugly -  say no to gaping"
+        group: "advanced"
+        type: "percent"
+        min: 25
+        max: 45
+        default: 40
+    backRise:
+        title: "Back rise"
+        description: "Percentage by which the waist will be raised at the back."
+        group: "advanced"
+        type: "percent"
+        min: 0
+        max: 5
+        default: 2.5

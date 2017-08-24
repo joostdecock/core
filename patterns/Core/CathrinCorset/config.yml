@@ -1,13 +1,19 @@
 info:
      name:     "Cathrin Corset"
+     description: "This underbust corset is the waist trainer of your dreams/nightmares"
+     handle: "cathrin"
      version:  "2.0"
      author:   "Joost De Cock"
      email:    "joost@decock.org"
      company:  "freesewing.org"
      link:     "freesewing.org/pattern/cathrin-corset/"
+     tags:
+         - womenswear
+         - underwear
+         - corset
 
 parts:
-    base: "Base block"
+    base: ".Base block"
     panels: "Corset"
 
 languages:
@@ -18,49 +24,77 @@ languages:
 measurements:
     underBust: 720
     naturalWaist: 640
-    hips: 800
+    hipsCircumference: 800
     naturalWaistToUnderbust: 100
-    naturalWaistToHips: 160
+    naturalWaistToHip: 160
 
 options:
-    backOpening:
-        type: measure
-        min: 0
-        max: 80
-        default: 30
+
+# fit group
     waistReduction:
+        title: "Waist reduction"
+        description: "The amount by which you want the corset to pinch your waist."
+        group: "fit"
         type: measure
         min: 0
         max: 125
         default: 80
-    frontRise:
-        type: measure
-        min: -50
-        max: 50
-        default: 25
-    frontDrop:
-        type: measure
-        min: -30
-        max: 50
-        default: 25
-    backRise:
-        type: measure
-        min: -30
-        max: 120
-        default: 0
-    backDrop:
-        type: measure
-        min: -30
-        max: 30
-        default: 0
-    hipRise:
-        type: measure
-        min: 0
-        max: 60
-        default: 30
     panels:
+        title: "Number of panels"
+        description: "The number of panels to draft. More panels are better to fit a curvier model."
+        group: "fit"
         type: chooseOne
         options:
             11: 11
             13: 13
         default: 13
+
+# style group
+    backOpening:
+        title: "Back opening"
+        description: "Opening at the center back closure."
+        group: "style"
+        type: measure
+        min: 0
+        max: 80
+        default: 30
+    backRise:
+        title: "Back rise"
+        description: "How much the back panels rise from your arms to your center back."
+        group: "style"
+        type: measure
+        min: -30
+        max: 120
+        default: 0
+    backDrop:
+        title: "Back drop"
+        description: "How much the back panels lower from your hips towards your center back. Negative values will raise the back."
+        group: "style"
+        type: measure
+        min: -30
+        max: 30
+        default: 0
+    frontRise:
+        title: "Front rise"
+        description: "Rise of the front panels at center front, between your breasts. Negative values will lower them."
+        group: "style"
+        type: measure
+        min: -50
+        max: 50
+        default: 25
+    frontDrop:
+        title: "Front drop"
+        description: "How much the front panels lower from your hips towards your center front."
+        group: "style"
+        type: measure
+        min: -30
+        max: 50
+        default: 25
+    hipRise:
+        title: "Hip rise"
+        description: "How much the side panels rise on your hips."
+        group: "style"
+        type: measure
+        min: 0
+        max: 60
+        default: 30

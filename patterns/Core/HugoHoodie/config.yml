@@ -1,15 +1,22 @@
 info:
     name:       "Hugo Hoodie"
+    description: "This is a casual hooded jumper with raglan sleeves, and a front pouch"
+    handle:     "hugo"
     version:    "2.0"
     author:     "Joost De Cock"
     email:      "joost@decock.org"
     company:    "freesewing.org"
-    link:       "freesewing.org/pattern/hugo-hoodie/"
+    link:       "freesewing.org/pattern/hugo"
+    tags:
+        - menswear
+        - sweater
+        - hoodie
+        - top
 
 parts:
-    backBlock:      "Back block"
-    frontBlock:     "Front block"
-    sleeveBlock:    "Sleeve block"
+    backBlock:      ".Back block"
+    frontBlock:     ".Front block"
+    sleeveBlock:    ".Sleeve block"
     front:          "Front"
     back:           "Back"
     sleeve:         "Sleeve"
@@ -37,41 +44,63 @@ measurements:
     shoulderSlope: 55
     shoulderToShoulder: 470
     hipsCircumference: 950
-    sleeveLengthToWrist: 700
+    shoulderToWrist: 700
     wristCircumference: 190
     headCircumference: 590
 
 options:
+
+# ease group
     chestEase:
+        title: "Chest ease"
+        description: "The amount of ease at your chest."
+        group: "ease"
         type: measure
         min: -40
         max: 160
         default: 60
     bicepsEase:
+        title: "Biceps ease"
+        description: "The amount of ease at your upper arm."
+        group: "ease"
         type: measure
         min: 0
         max: 80
         default: 40
     cuffEase:
+        title: "Cuff ease"
+        description: "The amount of ease at your wrist."
+        group: "ease"
         type: measure
         min: 0
         max: 100
         default: 35
+
+# fit group
     lengthBonus:
+        title: "Length bonus"
+        description: "Amount to lengthen the body."
+        group: "fit"
         type: measure
         min: 0
         max: 180
         default: 70
     sleeveLengthBonus:
+        title: "Sleeve length bonus"
+        description: "Amount to lengthen the sleeves."
+        group: "fit"
         type: "measure"
         min: -40
         max: 80
         default: 0
     ribbingStretchFactor:
+        title: "Ribbing stretch factor"
+        description: "The amount of negative ease for the cuffs and hem ribbing. 100% means no negative ease, 90% means 10% negative ease."
+        group: "fit"
         type: percent
-        min: 70
-        max: 100
-        default: 90
+        min: 0
+        max: 40
+        default: 20
 
 inMemoryOf:
     name: "Hugo De Cock"

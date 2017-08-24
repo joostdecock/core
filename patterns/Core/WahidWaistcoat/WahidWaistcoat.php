@@ -73,11 +73,12 @@ class WahidWaistcoat extends BrianBodyBlock
      */
     public function initialize($model)
     {
-        // Options that are fixed
-        $this->setOption('collarEase', self::COLLAR_EASE);
-        $this->setOption('sleevecapEase', self::SLEEVECAP_EASE);
-        $this->setOption('backNeckCutout', self::BACK_NECK_CUTOUT);
-        $this->setOption('armholeDepthFactor', self::ARMHOLE_DEPTH_FACTOR);
+        // Options that are fixed yet needed for Brian
+        $this->setOptionIfUnset('collarEase', self::COLLAR_EASE);
+        $this->setOptionIfUnset('sleevecapEase', self::SLEEVECAP_EASE);
+        $this->setOptionIfUnset('backNeckCutout', self::BACK_NECK_CUTOUT);
+        $this->setOptionIfUnset('armholeDepthFactor', self::ARMHOLE_DEPTH_FACTOR);
+        $this->setValue('shoulderSlope', $model->m('shoulderSlope')); 
 
         // Depth of the armhole
         $this->setValue('armholeDepth', 290 - self::BACK_NECK_CUTOUT + ($model->m('shoulderSlope') / 2 - 27.5) + ($model->m('bicepsCircumference') / 10));
@@ -392,7 +393,7 @@ class WahidWaistcoat extends BrianBodyBlock
         $pw = self::POCKET_WIDTH;
         $ph = self::POCKET_HEIGHT;
         $pa = self::POCKET_ANGLE;
-        $p->newPoint(7000, $p->x(900),$p->y(900)+$p->deltaY(900,4001)*0.6-$ph/2); // Center dart, top
+        $p->newPoint(7000, $p->x(900),$p->y(900)+$p->deltaY(900,302)*0.2-$ph/2); // Center dart, top
         $p->curveCrossesY(901,905,913,909,$p->y(7000), 700); // Creates point 7001, Right dart side, top
         $p->addPoint(7002, $p->flipX(7001,$p->x(7000))); // Left dart side, top
         $p->curveCrossesY(901,905,913,909,$p->y(7000)+$ph, '.help'); // Approx. right dart side, bottom
@@ -692,11 +693,11 @@ class WahidWaistcoat extends BrianBodyBlock
         $p = $this->parts['front'];
 
         // Seam allowance
-        $p->offsetPath('sa', 'saBase', 10, 1, ['class' => 'sa fabric']);
+        if($this->o('sa')) $p->offsetPath('sa', 'saBase', $this->o('sa'), 1, ['class' => 'sa fabric']);
 
         // Title
         $p->newPoint('titleAnchor', $p->x(8), $p->y(5000));
-        $p->addTitle('titleAnchor', 1, $this->t($p->title), '2x '.$this->t('from main fabric')."\n".$this->t('With good sides together'));
+        $p->addTitle('titleAnchor', 1, $this->t($p->title), '2x '.$this->t('from main fabric')."\n".$this->t('With good sides together')."\n".'2x '.$this->t('from interfacing')."\n".$this->t('With good sides together'));
 
         // Logo
         $p->newPoint('logoAnchor', $p->x(907)+ 30, $p->y(907));
@@ -720,7 +721,7 @@ class WahidWaistcoat extends BrianBodyBlock
         $p = $this->parts['back'];
 
         // Seam allowance
-        $p->offsetPath('sa', 'saBase', 10, 1, ['class' => 'sa fabric']);
+        if($this->o('sa')) $p->offsetPath('sa', 'saBase', $this->o('sa'), 1, ['class' => 'sa fabric']);
 
         // Title
         $p->newPoint('titleAnchor', $p->x(2)+$p->deltaX(2,907)/2, $p->y(5));
@@ -753,7 +754,7 @@ class WahidWaistcoat extends BrianBodyBlock
         $p = $this->parts['frontFacing'];
 
         // Seam allowance
-        $p->offsetPath('sa', 'seamline', 10, 1, ['class' => 'sa fabric']);
+        if($this->o('sa')) $p->offsetPath('sa', 'seamline', $this->o('sa'), 1, ['class' => 'sa fabric']);
 
         // Title
         $p->newPoint('titleAnchor', $p->x(300)+$p->deltaX(300,'flbTop')/2, $p->y(5000));
@@ -782,7 +783,7 @@ class WahidWaistcoat extends BrianBodyBlock
         $p = $this->parts['frontLining'];
 
         // Seam allowance
-        $p->offsetPath('sa', 'seamline', -10, 1, ['class' => 'sa lining']);
+        if($this->o('sa')) $p->offsetPath('sa', 'seamline', $this->o('sa')*-1, 1, ['class' => 'sa lining']);
 
         // Title
         $p->newPoint('titleAnchor', $p->x(907)+$p->deltaX(907,5)/2, $p->y(2907));

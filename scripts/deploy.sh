@@ -5,7 +5,7 @@ if [ -z "$TRAVIS_PULL_REQUEST" ]; then
     exit
 else
     if [ "$TRAVIS_BRANCH" = "develop" ] || [ "$TRAVIS_BRANCH" = "master" ]; then
-        if [ "$TRAVIS_PHP_VERSION" = "7.1" ]; then
+        if [ "$TRAVIS_PHP_VERSION" = "7.0" ]; then
             echo "Deploying PHP version $TRAVIS_PHP_VERSION build.";
             cd $TRAVIS_BUILD_DIR
             mkdir build

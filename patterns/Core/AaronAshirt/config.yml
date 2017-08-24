@@ -1,13 +1,17 @@
 info:
     name: "Aaron A-Shirt"
+    description: "This no-frills athletic shirt is a wardrobe staple that nobody should be without"
+    handle: "aaron"
     version: "2.0"
     author: "Joost De Cock"
     company: "freesewing"
     link: "freesewing.org/pattern/aaron"
-
+    tags:
+        - unisex
+        - top
 parts:
-    frontBlock: "Front block"
-    backBlock: "Back block"
+    frontBlock: ".Front block"
+    backBlock: ".Back block"
     front: "Front"
     back: "Back"
 
@@ -29,51 +33,85 @@ measurements:
     hipsCircumference: 950
 
 options:
+
+# fit group
     chestEase:
+        title: "Chest ease"
+        description: "The amount of ease at your chest"
+        group: "fit"
         type: "measure"
         min: -40
         max: 160
         default: 30
-    armholeDrop:
+    hipsEase:
+        title: "Hips ease"
+        description: "The amount of ease at your hips"
+        group: "fit"
         type: "measure"
-        min: -20
-        max: 120
-        default: 30
-    lengthBonus:
-        type: "measure"
-        min: -60
-        max: 200
+        min: -40
+        max: 160
         default: 60
+    stretchFactor:
+        title: "Stretch"
+        description: "Determines the horizontal negative ease."
+        group: "fit"
+        type: "percent"
+        min: 0
+        max: 30
+        default: 0
+
+# style group
     necklineBend:
+        title: "Neckline shape"
+        description: "Determines the shape/bend of the neckline at the front."
+        group: "style"
         type: "percent"
         default: 100
-    backlineBend:
-        type: "percent"
-        default: 30
     necklineDrop:
+        title: "Neckline drop"
+        description: "The amount the neck is cutout at the front."
+        group: "style"
         type: "measure"
         min: 40
         max: 200
         default: 120
+    backlineBend:
+        title: "Back armhole shape"
+        description: "Determines the shape/bend of the back of the armholes."
+        group: "style"
+        type: "percent"
+        default: 30
+    armholeDrop:
+        title: "Armhole drop"
+        description: "Lower the armhole by this amount. Negative values will raise it."
+        group: "style"
+        type: "measure"
+        min: -20
+        max: 120
+        default: 30
     shoulderStrapWidth:
+        title: "Shoulderstrap width"
+        description: "The width of the shoulder straps."
+        group: "style"
         type: "measure"
         min: 10
         max: 80
         default: 40
     shoulderStrapPlacement:
+        title: "Shoulderstrap placement"
+        description: "Determines whether the shoulder strap is placed closer to the neck (lower numbers) or the shoulder (higher numbers)."
+        group: "style"
         type: "percent"
         min: 0
         max: 100
         default: 45
-    stretchFactor:
-        type: "percent"
-        min: 70
-        max: 100
-        default: 90
-    hipsEase:
+    lengthBonus:
+        title: "Length bonus"
+        description: "Lengthen the top. Negative values will shorten it."
+        group: "style"
         type: "measure"
-        min: -40
-        max: 160
+        min: -60
+        max: 200
         default: 60
 inMemoryOf:
     name: "Aaron Swartz"

@@ -1,16 +1,22 @@
 info:
   name: "Sven Sweatshirt"
+  description: "A simple sweater and an essential wardrobe ingredient"
+  handle: "sven"
   version: "1.0"
   date: 20170323
   author: "Joost De Cock"
   email: "joost@decock.org"
   company: "freesewing.org"
   link: "freesewing.org/pattern/sven"
+  tags:
+      - menswear
+      - sweater
+      - top
 
 parts:
-  backBlock: "Back block"
-  frontBlock: "Front block"
-  sleeveBlock: "Sleeve block"
+  backBlock: ".Back block"
+  frontBlock: ".Front block"
+  sleeveBlock: ".Sleeve block"
   back: "Back"
   front: "Front"
   sleeve: "Sleeve"
@@ -29,31 +35,46 @@ measurements:
     shoulderSlope: 55
     shoulderToShoulder: 470
     hipsCircumference: 950
-    sleeveLengthToWrist: 700
+    shoulderToWrist: 700
     wristCircumference: 190
 
 options:
     chestEase:
+        title: "Chest ease"
+        description: "The amount of ease at your chest."
+        group: "fit"
         type: "measure"
         min: -40
         max: 160
         default: 30
     bicepsEase:
+        title: "Biceps ease"
+        description: "The amount of ease at your upper arm."
+        group: "fit"
         type: "measure"
         min: 40
         max: 120
         default: 80
     cuffEase:
+        title: "Cuff ease"
+        description: "The amount of ease at your wrist."
+        group: "fit"
         type: "measure"
         min: 0
         max: 100
         default: 60
     lengthBonus:
+        title: "Length bonus"
+        description: "The amount to lengthen the body."
+        group: "fit"
         type: "measure"
         min: 0
         max: 220
         default: 120
     sleeveLengthBonus:
+        title: "Sleeve length bonus"
+        description: "The amount to lengthen the sleeves. Negative values shorten them."
+        group: "fit"
         type: "measure"
         min: -40
         max: 80

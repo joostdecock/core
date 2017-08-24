@@ -12,6 +12,7 @@ use Freesewing\SvgSnippet;
 use Freesewing\Text;
 use Freesewing\TextOnPath;
 use Freesewing\Transform;
+use Freesewing\Utils;
 
 /**
  * Parts are what patterns are made of.
@@ -313,11 +314,12 @@ class Part
      * @param string $msg        The message of the note
      * @param array  $attributes Optional array of attributes for the TextOnPath
      */
-    public function newTextOnPath($key, $pathString, $msg, $attributes = null)
+    public function newTextOnPath($key, $pathString, $msg, $attributes = null, $renderPath=true)
     {
         $textOnPath = new TextOnPath();
         $path = new Path();
         $path->setPathstring($pathString);
+        if(!$renderPath) $path->setAttributes(['class' => 'hidden']);
         $textOnPath->setPath($path);
         $textOnPath->setText($msg);
         $textOnPath->setAttributes($attributes);
@@ -363,39 +365,20 @@ class Part
      */
     public function addTitle($anchorKey, $nr, $title, $msg = '', $mode = 'default')
     {
-        switch ($mode) {
-            case 'vertical':
-            case 'vertical-small':
-                if($mode == 'vertical-small') $class = 'vertical small';
-                else $class = 'vertical';
-                if ($title != '') {
-                    $msg = "\n$msg";
-                }
-                $anchor = $this->loadPoint($anchorKey);
-                $x = $anchor->getX();
-                $y = $anchor->getY();
-                $this->newText('partNumber', $anchorKey, $nr, ['class' => "part-nr $class"]);
-                $this->newText(
-                    'partTitle', $anchorKey, $title,
-                    ['class' => "part-title $class", 'transform' => "rotate(-90 $x $y)"]
-                );
-                $this->newText('partMsg', $anchorKey, $msg, ['class' => "part-msg $class", 'transform' => "rotate(-90 $x $y)"]);
-                break;
-            case 'horizontal':
-            case 'horizontal-small':
-                if($mode == 'horizontal-small') $class = 'horizontal small';
-                else $class = 'horizontal';
-                $this->newText('partNumber', $anchorKey, $nr, ['class' => "part-nr $class"]);
-                $this->newText('partTitle', $anchorKey, $title, ['class' => "part-title $class"]);
-                $this->newText('partMsg', $anchorKey, $msg, ['class' => "part-msg $class"]);
-                break;
-            case 'small':
-            default:
-                if($mode == 'small') $class = 'small';
-                else $class = '';
-                $this->newText('partNumber', $anchorKey, $nr, ['class' => "part-nr $class"]);
-                $this->newText('partTitle', $anchorKey, $title, ['class' => "part-title $class"]);
-                $this->newText('partMsg', $anchorKey, $msg, ['class' => "part-msg $class"]);
+        $class = str_replace('-',' ',$mode);
+        if($mode == 'vertical' || $mode == 'vertical-small') {
+            $this->newText('partNumber', $anchorKey, $nr, ['class' => "part-nr $class"]);
+            $this->newText(
+                'partTitle', $anchorKey, $title,
+                ['class' => "part-title $class", 'transform' => "translate(5, 10)", 'writing-mode' => 'tb-rl']
+            );
+            $this->newText('partMsg', $anchorKey, $msg, ['class' => "part-msg $class", 'transform' => "translate(-5, 10)", 'writing-mode' => 'tb-rl']);
+        } else {
+            if(strpos($class, 'small')) $shift = 1;
+            else $shift = 2;
+            $this->newText('partNumber', $anchorKey, $nr, ['class' => "part-nr $class", 'transform' => 'translate(0, '.(-10*$shift).')']);
+            $this->newText('partTitle', $anchorKey, $title, ['class' => "part-title $class"]);
+            $this->newText('partMsg', $anchorKey, $msg, ['class' => "part-msg $class", 'transform' => 'translate(0, '.(7.5*$shift).')']);
         }
     }
 
@@ -1068,7 +1051,7 @@ class Part
             } else {
                 $next = $array[$count];
             }
-            if ($chunk['type'] != 'removed') { // removed entries are no longer arrays
+            if ($chunk['type'] != 'removed' && $next['type'] != 'removed') { // removed entries are no longer arrays
                 if ($chunk['type'] == 'line') {
                     $new[] = $chunk;
                     $new[] = ['type' => 'line', 'offset' => [$chunk['offset'][1], $next['offset'][0]]];
@@ -1667,6 +1650,52 @@ class Part
 
         return $this->createPoint($x, $y, "Point $key1 shifted towards $key2 by $distance");
     }
+    
+    /**
+     * Shifts a point along a straight line, by a fraction of the line segment's length
+     *
+     * @param string $key1     The id of the first point on the line
+     * @param string $key2     The id of the second point on the line
+     * @param float  $fraction Fraction of the line length to shift the point by
+     *
+     * @return Point The shifted point
+     */
+    public function shiftFractionTowards($key1, $key2, $fraction)
+    {
+        return $this->shiftTowards($key1, $key2, $this->distance($key1,$key2) * $fraction);
+    }
+
+    /**
+     * Shifts a point along a straight line, starting at the endpoint
+     *
+     * This is a special case of shiftTowards where we add the line segment length to $distance.
+     *
+     * @param string $key1     The id of the first point on the line
+     * @param string $key2     The id of the second point on the line, and start point of the shift
+     * @param float  $distance The distance to shift the point
+     *
+     * @return Point The shifted point
+     */
+    public function shiftOutwards($key1, $key2, $distance)
+    {
+        return $this->shiftTowards($key1, $key2, $this->distance($key1,$key2) + $distance);
+    }
+
+    /**
+     * Shifts a point along a curve, by a fraction of the curve's length
+     *
+     * @param string $keyStart    The id of the start of the curve
+     * @param string $keyControl1 The id of the first control point
+     * @param string $keyControl2 The id of the second control point
+     * @param string $keyEnd      The id of the end of the curve
+     * @param float  $fraction Fraction of the line length to shift the point by
+     *
+     * @return Point The shifted point
+     */
+    public function shiftFractionAlong($keyStart, $keyControl1, $keyControl2, $keyEnd, $fraction)
+    {
+        return $this->shiftAlong($keyStart, $keyControl1, $keyControl2, $keyEnd, $this->curveLen($keyStart, $keyControl1, $keyControl2, $keyEnd) * $fraction);
+    }
 
     /**
      * Shifts a point along a curve
@@ -2030,6 +2059,64 @@ class Part
             $this->loadPoint($curve2StartKey), $this->loadPoint($curve2Control1Key), $this->loadPoint($curve2Control2Key),
             $this->loadPoint($curve2EndKey)
         );
+        if (is_array($points)) {
+            $i = 1;
+            foreach ($points as $point) {
+                $this->addPoint($prefix.$i, $point);
+                $i++;
+            }
+        }
+    }
+
+    /**
+     * Returns intersections of two circles
+     *
+     * @param string  $c1  The id of the center of the first circle
+     * @param float   $r1  The radius of the first circle
+     * @param string  $c2  The id of the center of the second circle
+     * @param float   $r2  The radius of the second circle
+     * @param string  $prefix The prefix for points this will create
+     * @param string  $sort The axis to sort results by, either x (default) or y
+     *
+     */
+    public function circlesCross($c1, $r1, $c2, $r2, $prefix='false', $sort='x')
+    {
+        $points = Utils::circleCircleIntersections(
+            $this->loadPoint($c1), $r1,
+            $this->loadPoint($c2), $r2,
+            $sort
+        );
+
+        if (is_array($points)) {
+            $i = 1;
+            foreach ($points as $point) {
+                $this->addPoint($prefix.$i, $point);
+                $i++;
+            }
+        }
+    }
+
+    /**
+     * Returns intersections of a circle and a line segment
+     *
+     * @param string  $c   The id of the center of the circle
+     * @param float   $r   The radius of the first circle
+     * @param string  $p1  The id of the start point of the line
+     * @param float   $p2  The id of the end point of the line
+     * @param string  $prefix The prefix for points this will create
+     * @param string  $sort The axis to sort results by, either x (default) or y
+     *
+     */
+    public function circleCrossesLine($c,$r,$p1,$p2,$prefix='false', $sort='x')
+    {
+        $points = Utils::circleLineIntersections(
+            $this->loadPoint($c), 
+            $r,
+            $this->loadPoint($p1),
+            $this->loadPoint($p2),
+            $sort
+        );
+
         if (is_array($points)) {
             $i = 1;
             foreach ($points as $point) {

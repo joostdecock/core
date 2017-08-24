@@ -1,17 +1,23 @@
 info:
     name: "Simon Shirt"
+    description: "This is my bid to create the last shirt pattern you'll even need"
+    handle: "simon"
     version: "2.0"
     author: "Joost De Cock"
     email: "joost@decock.org"
     company: "freesewing.org"
     link: "freesewing.org/pattern/simon"
+    tags:
+        - menswear
+        - top
+        - shirt
 
 parts:
-    backBlock: "Back block"
-    frontBlock: "Front block"
-    sleeveBlock: "Sleeve block"
-    block: "Block"
-    frontAndBackBlock: "Front and back block"
+    backBlock: ".Back block"
+    frontBlock: ".Front block"
+    sleeveBlock: ".Sleeve block"
+    block: ".Block"
+    frontAndBackBlock: ".Front and back block"
     frontRight: "Front right"
     frontLeft: "Front left"
     buttonPlacket: "Button placket"
@@ -43,57 +49,108 @@ measurements:
     shoulderSlope: 55
     hipsCircumference: 950
     naturalWaist: 885
-    sleeveLengthToWrist: 700
+    shoulderToWrist: 700
     wristCircumference: 190
     shoulderToElbow: 410 
 
 options:
-    sleevecapEase:
-        type: "measure"
-        min: 0
-        max: 20
-        default: 5
+# ease group
     chestEase:
+        title: "Chest ease"
+        description: "The amount of ease at the chest"
+        group: "ease"
         type: "measure"
-        min: 0
+        min: 60
         max: 240
-        default: 80
+        default: 120
     waistEase:
+        title: "Waist ease"
+        description: "The amount of ease at the natural waist"
+        group: "ease"
         type: "measure"
-        min: 0
+        min: 80
         max: 280
-        default: 100
+        default: 160
     hipsEase:
+        title: "Hips ease"
+        description: "The amount of ease at the hips"
+        group: "ease"
         type: "measure"
-        min: 0
+        min: 8
         max: 240
-        default: 80
+        default: 120
     bicepsEase:
+        title: "Biceps ease"
+        description: "The amount of ease at your upper arm"
+        group: "ease"
         type: "measure"
         min: 0
         max: 120
         default: 30
     collarEase:
+        title: "Collar ease"
+        description: "The amount of ease around your neck with a closed collar"
+        group: "ease"
         type: "measure"
         min: 0
         max: 40
         default: 15
     cuffEase:
+        title: "Cuff ease"
+        description: "The amount of ease around your wrist"
+        group: "ease"
         type: "measure"
         min: 20
         max: 80
         default: 35
+
+# fit group
     lengthBonus:
+        title: "Extra length"
+        description: "The amount to lengthen or shorten the shirt"
+        group: "fit"
         type: "measure"
         min: -50
         max: 250
         default: 150
     sleeveLengthBonus:
+        title: "Extra sleeve length"
+        description: "The amount to lengthen the sleeves"
+        group: "fit"
         type: "measure"
         min: 0
         max: 50
         default: 30
+    yokeDart:
+        title: "Yoke dart"
+        description: "Whether to include a dart at the sides of the yoke to fit a rounder back"
+        group: "fit"
+        type: "measure"
+        min: 0
+        max: 10
+        default: 5
+    hipFlare:
+        title: "Hip flare"
+        description: "The amount to widen the shirt below the waist"
+        group: "fit"
+        type: "measure"
+        min: 0
+        max: 50
+        default: 20
+    buttonfreeLength:
+        title: "Button free length"
+        description: "How much of the bottom of the front closure to keep button-free"
+        group: "fit"
+        type: "measure"
+        min: -50
+        max: 30
+        default: 10
+
+# style group
     hemStyle:
+        title: "Hem style"
+        description: "The style of the shirt hem"
+        group: "style"
         type: "chooseOne"
         options:
             1: "Straight hem"
@@ -101,60 +158,19 @@ options:
             3: "Slashed hem"
         default: 1
     hemCurve:
+        title: "Hem curve"
+        description: "The height of the curve on a curved hem"
+        group: "style"
         type: "measure"
         min: 40
         max: 120
         default: 80
-    hipFlare:
-        type: "measure"
-        min: 0
-        max: 50
-        default: 20
-    backNeckCutout:
-        type: "measure"
-        min: 5
-        max: 40
-        default: 20
-    buttonPlacketType:
-        type: "chooseOne"
-        options:
-            1: "Cut-on"
-            2: "Separate"
-        default: 1
-    buttonPlacketStyle:
-        type: "chooseOne"
-        options:
-            1: "Classic style"
-            2: "French style (seamless)"
-        default: 1
-    buttonholePlacketType:
-        type: "chooseOne"
-        options:
-            1: "Cut-on"
-            2: "Separate"
-        default: 1
-    buttonholePlacketStyle:
-        type: "chooseOne"
-        options:
-            1: "Classic style"
-            2: "French style (seamless)"
-        default: 2
-    buttonPlacketWidth:
-        type: "measure"
-        min: 10
-        max: 30
-        default: 20
-    buttonholePlacketWidth:
-        type: "measure"
-        min: 20
-        max: 45
-        default: 35
-    buttonholePlacketFoldWidth:
-        type: "measure"
-        min: 3
-        max: 10
-        default: 6.35
+        dependsOn: 'hemStyle'
+        onlyOn: [2,3]
     buttons:
+        title: "Number of buttons"
+        description: "The number of buttons on the front closure"
+        group: "style"
         type: "chooseOne"
         options:
             4: 4
@@ -168,63 +184,179 @@ options:
             12: 12
         default: 7
     extraTopButton:
+        title: "Extra top button"
+        description: "Whether or not to include an extra top button on the front closure"
+        group: "style"
         type: "chooseOne"
         options:
             0: "No extra top button"
             1: "Extra top button"
         default: 1
-    buttonfreeLength:
-        type: "measure"
-        min: -50
-        max: 30
-        default: 10
     splitYoke:
+        title: "Split yoke"
+        description: "Whether to draft a split or regular yoke"
+        group: "style"
         type: "chooseOne"
         options:
             0: "Regular yoke"
             1: "Split yoke"
         default: 0
+
+# packets group
+    buttonPlacketType:
+        title: "Button placket type"
+        description: "Type of the button placket"
+        group: "plackets"
+        type: "chooseOne"
+        options:
+            1: "Cut-on"
+            2: "Separate"
+        default: 1
+    buttonPlacketStyle:
+        title: "Button placket style"
+        description: "Style of the button placket"
+        group: "plackets"
+        type: "chooseOne"
+        options:
+            1: "Classic style"
+            2: "French style (seamless)"
+        default: 1
+        dependsOn: 'buttonPlacketType'
+        onlyOn: 1
+    buttonPlacketWidth:
+        title: "Button placket width"
+        description: "Width of the button placket"
+        group: "plackets"
+        type: "measure"
+        min: 10
+        max: 30
+        default: 20
+    buttonholePlacketType:
+        title: "Buttonhole placket type"
+        description: "Type of the buttonhole placket"
+        group: "plackets"
+        type: "chooseOne"
+        options:
+            1: "Cut-on"
+            2: "Separate"
+        default: 1
+    buttonholePlacketStyle:
+        title: "Buttonhole placket style"
+        description: "Style of the buttonhole placket"
+        group: "plackets"
+        type: "chooseOne"
+        options:
+            1: "Classic style"
+            2: "French style (seamless)"
+        default: 2
+        dependsOn: 'buttonholePlacketType'
+        onlyOn: 1
+    buttonholePlacketWidth:
+        title: "Buttonhole placket width"
+        description: "Width of the butonhole placket"
+        group: "plackets"
+        type: "measure"
+        min: 20
+        max: 45
+        default: 35
+    buttonholePlacketFoldWidth:
+        title: "Buttonhole placket fold width"
+        description: "Width of the buttonhole placket fold"
+        group: "plackets"
+        type: "measure"
+        min: 3
+        max: 10
+        default: 6.35
+        dependsOn: 'buttonholePlacketStyle'
+        onlyOn: 1
+    sleevePlacketWidth:
+        title: "Sleeve placket width"
+        description: "The width of the sleeve placket"
+        group: "plackets"
+        type: "measure"
+        min: 15
+        max: 35
+        default: 25
+    sleevePlacketLength:
+        title: "Sleeve placket length"
+        description: "The length of the sleeve placket"
+        group: "plackets"
+        type: "measure"
+        min: 130
+        max: 230
+        default: 180
+
+# collar group
     collarStandWidth:
+        title: "Collar stand width"
+        description: "Widht of the collar stand"
+        group: "collar"
         type: "measure"
         min: 15
         max: 70
         default: 35
     collarStandBend:
+        title: "Collar stand bend"
+        description: "The bend of the collar stand"
+        group: "collar"
         type: "measure"
         min: 0
         max: 15
         default: 5
     collarStandCurve:
+        title: "Collar stand curve"
+        description: "The curve of the collar stand"
+        group: "collar"
         type: "measure"
         min: 0
         max: 15
         default: 5
     collarGap:
+        title: "Collar gap"
+        description: "The gap between the the two collar ends"
+        group: "collar"
         type: "measure"
         min: 5
         max: 30
         default: 25
     collarBend:
+        title: "Collar bend"
+        description: "The bend of the collar"
+        group: "collar"
         type: "measure"
         min: 5
         max: 30
         default: 15
     collarFlare:
+        title: "Collar flare"
+        description: "The flare of the collar tips"
+        group: "collar"
         type: "measure"
         min: 0
         max: 30
         default: 10
     collarAngle:
-        type: "measure"
+        title: "Collar angle"
+        description: "The angle of the collar tips"
+        group: "collar"
+        type: "angle"
         min: 60
         max: 130
         default: 85
     collarRoll:
+        title: "Collar roll"
+        description: "The amount by which the top collar is larger than the undercollar"
+        group: "collar"
         type: "measure"
         min: 0
         max: 15
         default: 7
+
+# cuffs group 
     cuffStyle:
+        title: "Cuff style"
+        description: "The style of the cuffs"
+        group: "cuffs"
         type: "chooseOne"
         options:
             1: "Rounded barrel cuff"
@@ -235,50 +367,67 @@ options:
             6: "Straight French cuff"
         default: 2
     cuffLength:
+        title: "Cuff length"
+        description: "The length of the cuffs"
+        group: "cuffs"
         type: "measure"
         min: 30
         max: 120
         default: 65
     cuffButtonRows:
+        title: "Cuff button rows"
+        description: "Whether to draft a single or double row of cuff buttons. This option is only relevant for barrel cuffs"
+        group: "cuffs"
         type: "chooseOne"
         options:
             1: "Single cuff button row"
             2: "Double cuff button row"
         default: 1
+        dependsOn: 'cuffStyle'
+        onlyOn: [1, 2, 3]
     barrelcuffNarrowButton:
+        title: "Cuff narrow button"
+        description: "Whether to include a button to tie the cuffs more narrow. This option is only relevant for barrel cuffs"
+        group: "cuffs"
         type: "chooseOne"
         options:
             0: "No narrow button"
             1: "Include narrow button"
         default: 1
+        dependsOn: 'cuffStyle'
+        onlyOn: [1, 2, 3]
     cuffDrape:
+        title: "Cuff drape"
+        description: "The amount by which the sleeve is wider than the cuff where the are joined"
+        group: "cuffs"
         type: "measure"
         min: 0
         max: 80
         default: 40
-    sleevePlacketWidth:
-        type: "measure"
-        min: 15
-        max: 35
-        default: 25
-    sleevePlacketLength:
-        type: "measure"
-        min: 130
-        max: 230
-        default: 180
-    yokeDart:
-        type: "measure"
-        min: 0
-        max: 10
-        default: 5
+
+# advanced group
     armholeDepthFactor:
+        title: "Armhole depth"
+        description: "A factor that controls the depth of the armhole"
+        group: "advanced"
         type: "percent"
         min: 50
         max: 65
         default: 60
     sleevecapHeightFactor:
+        title: "Sleevecap height"
+        description: "A factor that controls the height of the sleevecap"
+        group: "advanced"
         type: "percent"
         min: 45
         max: 60
         default: 50
+    sleevecapEase:
+        title: "Sleevecap ease"
+        description: "The amount by which the sleevecap seam is longer than the armhole seam"
+        group: "advanced"
+        type: "measure"
+        min: 0
+        max: 20
+        default: 5
 

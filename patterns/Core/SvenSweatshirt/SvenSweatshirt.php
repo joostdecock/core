@@ -57,11 +57,13 @@ class SvenSweatshirt extends BrianBodyBlock
      */
     public function initialize($model)
     {
-        $this->setOption('collarEase', self::COLLAR_EASE);
-        $this->setOption('backNeckCutout', self::NECK_CUTOUT);
-        $this->setOption('sleevecapEase', self::SLEEVECAP_EASE);
-        $this->setOption('armholeDepthFactor', self::ARMHOLE_DEPTH_FACTOR);
-        $this->setOption('sleevecapHeightFactor', self::SLEEVECAP_HEIGHT_FACTOR);
+        // Needed for Brian
+        $this->setOptionIfUnset('collarEase', self::COLLAR_EASE);
+        $this->setOptionIfUnset('backNeckCutout', self::NECK_CUTOUT);
+        $this->setOptionIfUnset('sleevecapEase', self::SLEEVECAP_EASE);
+        $this->setOptionIfUnset('armholeDepthFactor', self::ARMHOLE_DEPTH_FACTOR);
+        $this->setOptionIfUnset('sleevecapHeightFactor', self::SLEEVECAP_HEIGHT_FACTOR);
+        $this->setValue('shoulderSlope', $model->m('shoulderSlope')); 
 
         // Depth of the armhole
         $this->setValue('armholeDepth', $model->m('shoulderSlope') / 2 + $model->m('bicepsCircumference') * $this->o('armholeDepthFactor'));
@@ -314,10 +316,12 @@ class SvenSweatshirt extends BrianBodyBlock
         $p = $this->parts['back'];
         
         // Seam allowance 
-        $p->offsetPath('sa','saBase', 10, 1, ['class' => 'fabric sa']);
-        $p->offsetPath('hemSa','hemBase', 30, 1, ['class' => 'fabric sa']);
-        // Join ends
-        $p->newPath('saJoints', 'M sa-endPoint L 9 M sa-startPoint L hemSa-endPoint M hemSa-startPoint L 4', ['class' => 'fabric sa']);
+        if($this->o('sa')) {
+            $p->offsetPath('sa','saBase', $this->o('sa'), 1, ['class' => 'fabric sa']);
+            $p->offsetPath('hemSa','hemBase', $this->o('sa')*3, 1, ['class' => 'fabric sa']);
+            // Join ends
+            $p->newPath('saJoints', 'M sa-endPoint L 9 M sa-startPoint L hemSa-endPoint M hemSa-startPoint L 4', ['class' => 'fabric sa']);
+        }
         
         // Title
         $p->newPoint('titleAnchor', $p->x(8), $p->y(5));
@@ -344,10 +348,12 @@ class SvenSweatshirt extends BrianBodyBlock
         $p = $this->parts['front'];
         
         // Seam allowance
-        $p->offsetPath('sa','saBase', 10, 1, ['class' => 'fabric sa']);
-        $p->offsetPath('hemSa','hemBase', 30, 1, ['class' => 'fabric sa']);
-        // Join ends
-        $p->newPath('saJoints', 'M sa-endPoint L 9 M sa-startPoint L hemSa-endPoint M hemSa-startPoint L 4', ['class' => 'fabric sa']);
+        if($this->o('sa')) {
+            $p->offsetPath('sa','saBase', $this->o('sa'), 1, ['class' => 'fabric sa']);
+            $p->offsetPath('hemSa','hemBase', $this->o('sa')*3, 1, ['class' => 'fabric sa']);
+            // Join ends
+            $p->newPath('saJoints', 'M sa-endPoint L 9 M sa-startPoint L hemSa-endPoint M hemSa-startPoint L 4', ['class' => 'fabric sa']);
+        }
         
         // Title
         $p->newPoint('titleAnchor', $p->x(8), $p->y(5));
@@ -374,10 +380,12 @@ class SvenSweatshirt extends BrianBodyBlock
         $p = $this->parts['sleeve'];
 
         // Seam allowance 
-        $p->offsetPath('sa','saBase', -10, 1, ['class' => 'fabric sa']);
-        $p->offsetPath('hemSa','hemBase', 30, 1, ['class' => 'fabric sa']);
-        // Join ends
-        $p->newPath('saJoints', 'M hemSa-startPoint L sa-startPoint M hemSa-endPoint L sa-endPoint', ['class' => 'fabric sa']);
+        if($this->o('sa')) {
+            $p->offsetPath('sa','saBase', $this->o('sa')*-1, 1, ['class' => 'fabric sa']);
+            $p->offsetPath('hemSa','hemBase', $this->o('sa')*3, 1, ['class' => 'fabric sa']);
+            // Join ends
+            $p->newPath('saJoints', 'M hemSa-startPoint L sa-startPoint M hemSa-endPoint L sa-endPoint', ['class' => 'fabric sa']);
+        }
 
 
         // Scalebox

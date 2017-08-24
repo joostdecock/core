@@ -134,6 +134,7 @@ class Utils
     public static function lineLineIntersection(Point $point1, Point $point2, Point $point3, Point $point4)
     {
         /* weed out parallel lines */
+        // FIXME: This does not seem to make sense. Parallel slope check at the end of this method might be enough.
         if ($point1->getX() == $point2->getX() && $point3->getX() == $point4->getX()) {
             return false;
         }
@@ -170,6 +171,10 @@ class Utils
             /* Find y intercept */
             $i1 = $point1->getY() - ($slope1 * $point1->getX());
             $i2 = $point3->getY() - ($slope2 * $point3->getX());
+            
+            // We're not parallel are we?
+            if($slope1 == $slope2) return false;
+            
             /* Find intersection */
             $x = ($i2 - $i1) / ($slope1 - $slope2);
             $y = $slope1 * $x + $i1;
@@ -267,5 +272,103 @@ class Utils
         if($value > $max) return $max;
 
         return $value;
+    }
+    
+    /** 
+     * Finds intersection points of two circles 
+     *
+     * @see http://paulbourke.net/geometry/circlesphere/
+     *
+     * @param point $c1 Center of first circle
+     * @param float $r1 Radius of first circle
+     * @param point $c2 Center of second circle
+     * @param float $r2 Radius of second circle
+     *
+     * @return array An array of points objects of the intersections
+     * */
+    public static function circleCircleIntersections($c1, $r1, $c2, $r2, $sort='x')
+    {
+        // First circle
+        $x1 = $c1->getX();
+        $y1 = $c1->getY();
+        
+        // Second circle
+        $x2 = $c2->getX();
+        $y2 = $c2->getY();
+
+        // Distance between centers
+        $dx = $x2 - $x1;
+        $dy = $y2 - $y1;
+        $d = \Freesewing\Utils::distance($c1, $c2);
+
+        // Check for edge cases
+        if ($d > ($r1 + $r2)) return false; // Circles do not intersect
+        if ($d < ($r2 - $r1)) return false; // One circle is contained in the other
+        if ($d == 0 && $r1 == $r2) return false; // Two circles are identical
+
+        $chorddistance = ( pow($r1,2) - pow($r2,2) + pow($d,2) ) / (2 * $d);
+        $halfchordlength = sqrt(pow($r1,2) - pow($chorddistance,2));
+        $chordmidpointx = $x1 + ($chorddistance*$dx)/$d;
+        $chordmidpointy = $y1 + ($chorddistance*$dy)/$d;
+        $i1 = new \Freesewing\Point();
+        $i2 = new \Freesewing\Point();
+        $i1->setX($chordmidpointx + ($halfchordlength*$dy)/$d);
+        $i1->setY($chordmidpointy - ($halfchordlength*$dx)/$d);
+        $i2->setX($chordmidpointx - ($halfchordlength*$dy)/$d);
+        $i2->setY($chordmidpointy + ($halfchordlength*$dx)/$d);
+
+        if( ($sort == 'x' && $i1->getX() <= $i2->getX()) || ($sort == 'y' && $i1->getY() <= $i2->getY() )) {
+            return [$i1, $i2];
+        } else {
+            return [$i2, $i1];
+        }
+    }
+    
+    /** 
+     * Finds intersection points of a circle and line segment 
+     *
+     * @see http://csharphelper.com/blog/2014/09/determine-where-a-line-intersects-a-circle-in-c/
+     *
+     * @param point  $c   The center of the circle
+     * @param float  $r   The radius of the first circle
+     * @param point  $p1  The start point of the line
+     * @param point  $p2  The end point of the line
+     * @param string  $sort The axis to sort results by, either x (default) or y
+     *
+     * @return array An array of points objects of the intersections
+     * */
+    public static function circleLineIntersections($c, $r, $p1, $p2, $sort='x')
+    {
+        $dx = $p2->getX() - $p1->getX();
+        $dy = $p2->getY() - $p1->getY();
+
+        $A = pow($dx,2) + pow($dy,2);
+        $B = 2 * ($dx * ($p1->getX() - $c->getX()) + $dy * ($p1->getY() - $c->getY()));
+        $C = pow(($p1->getX() - $c->getX()),2) + pow(($p1->getY() - $c->getY()),2) - pow($r,2);
+    
+        $det = pow($B,2) - 4 * $A * $C;
+    
+        if (($A <= 0.0000001) || ($det < 0)) return false; // No real solutions
+        else if ($det == 0) { // One solution
+            $t = (-1 * $B) / (2 * $A);
+            $i1 = new \Freesewing\Point();
+            $i1->setX($p1->getX() + $t * $dx);
+            $i1->setY($p1->getY() + $t * $dy);
+            return [$i1];
+        } else { // Two solutions
+            $i1 = new \Freesewing\Point();
+            $i2 = new \Freesewing\Point();
+            $t = (((-1 * $B) + sqrt($det)) / (2 * $A));
+            $i1->setX($p1->getX() + $t * $dx);
+            $i1->setY($p1->getY() + $t * $dy);
+            $t = (((-1 * $B) - sqrt($det)) / (2 * $A));
+            $i2->setX($p1->getX() + $t * $dx);
+            $i2->setY($p1->getY() + $t * $dy);
+            if( ($sort == 'x' && $i1->getX() <= $i2->getX()) || ($sort == 'y' && $i1->getY() <= $i2->getY() )) {
+                return [$i1, $i2];
+            } else {
+                return [$i2, $i1];
+            }
+        }
     }
 }

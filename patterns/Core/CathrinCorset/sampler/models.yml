@@ -11,12 +11,12 @@ measurements:
     naturalWaist:
         cathrin: 640
         sorcha : 840
-    hips:
+    hipsCircumference:
         cathrin:  800
         sorcha : 1000
     naturalWaistToUnderbust:
         cathrin: 100
         sorcha :  90
-    naturalWaistToHips:
+    naturalWaistToHip:
         cathrin: 160
         sorcha : 200

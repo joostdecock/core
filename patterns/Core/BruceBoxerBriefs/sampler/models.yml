@@ -27,11 +27,11 @@ measurements:
         usSize40: 580
         usSize42: 600
         usSize44: 620
-    crossseamLength:
-        joost   : 670
-        usSize34: 590
-        usSize36: 610
-        usSize38: 630
-        usSize40: 650
-        usSize42: 670
-        usSize44: 690
+    hipsToUpperLeg:
+        joost   : 220
+        usSize34: 180
+        usSize36: 190
+        usSize38: 200
+        usSize40: 210
+        usSize42: 220
+        usSize44: 230

@@ -68,29 +68,37 @@ class BrianBodyBlock extends Pattern
      */
     public function initialize($model)
     {
-        $this->setOption('collarEase', self::COLLAR_EASE);
-        $this->setOption('backNeckCutout', self::NECK_CUTOUT);
-        $this->setOption('sleevecapEase', self::SLEEVECAP_EASE);
-        $this->setOption('bicepsEase', self::BICEPS_EASE);
+        /** 
+         * Calling setOptionIfUnset and setValueIfUnset so that child patterns can 
+         * set the options they need and call this method for the rest
+         */
+        $this->setOptionIfUnset('collarEase', self::COLLAR_EASE);
+        $this->setOptionIfUnset('backNeckCutout', self::NECK_CUTOUT);
+        $this->setOptionIfUnset('sleevecapEase', self::SLEEVECAP_EASE);
+        $this->setOptionIfUnset('bicepsEase', self::BICEPS_EASE);
 
+        // Make shoulderslope configurable (for shoulder pads in jackets and so on)
+        $this->setOptionIfUnset('shoulderSlopeReduction', 0); // Make sure option is set
+        $this->setValueIfUnset('shoulderSlope', $model->m('shoulderSlope') - $this->o('shoulderSlopeReduction'));
+        
         // Depth of the armhole
-        $this->setValue('armholeDepth', $model->m('shoulderSlope') / 2 + $model->m('bicepsCircumference') * $this->o('armholeDepthFactor'));
+        $this->setValueIfUnset('armholeDepth', $this->v('shoulderSlope') / 2 + $model->m('bicepsCircumference') * $this->o('armholeDepthFactor'));
 
         // Heigth of the sleevecap
-        $this->setValue('sleevecapHeight', $model->m('bicepsCircumference') * $this->o('sleevecapHeightFactor'));
+        $this->setValueIfUnset('sleevecapHeight', $model->m('bicepsCircumference') * $this->o('sleevecapHeightFactor'));
         
         // Collar widht and depth
-        $this->setValue('collarWidth', ($model->getMeasurement('neckCircumference') / 2.42) / 2);
-        $this->setValue('collarDepth', ($model->getMeasurement('neckCircumference') + $this->getOption('collarEase')) / 5 - 8);
+        $this->setValueIfUnset('collarWidth', ($model->getMeasurement('neckCircumference') / 2.42) / 2);
+        $this->setValueIfUnset('collarDepth', ($model->getMeasurement('neckCircumference') + $this->getOption('collarEase')) / 5 - 8);
 
         // Cut front armhole a bit deeper
-        $this->setValue('frontArmholeExtra', self::FRONT_ARMHOLE_EXTRA);
-        
+        $this->setValueIfUnset('frontArmholeExtra', self::FRONT_ARMHOLE_EXTRA);
+
         // Tweak factors
-        $this->setValue('frontCollarTweakFactor', 1); 
-        $this->setValue('frontCollarTweakRun', 0); 
-        $this->setValue('sleeveTweakFactor', 1); 
-        $this->setValue('sleeveTweakRun', 0); 
+        $this->setValueIfUnset('frontCollarTweakFactor', 1); 
+        $this->setValueIfUnset('frontCollarTweakRun', 0); 
+        $this->setValueIfUnset('sleeveTweakFactor', 1); 
+        $this->setValueIfUnset('sleeveTweakRun', 0); 
     }
 
     /**
@@ -215,7 +223,7 @@ class BrianBodyBlock extends Pattern
         // Armhole
         $p->newPoint(10, $model->getMeasurement('acrossBack') / 2, $p->y(1) + $p->deltaY(1, 2) / 2, 'Armhole pitch point');
         $p->newPoint(11, $p->x(10), $p->y(2), 'Armhole pitch width @ armhole depth');
-        $p->newPoint(12, $model->m('shoulderToShoulder')/2, $model->m('shoulderSlope') / 2, 'Shoulder tip');
+        $p->newPoint(12, $model->m('shoulderToShoulder')/2, $this->v('shoulderSlope') / 2, 'Shoulder tip');
 
         $p->addPoint(13, $p->Shift(5, 180, $p->distance(11, 5) / 4), 'Left curve control point for 5');
         $p->addPoint('.help1', $p->shift(11, 45, 5), '45 degrees upwards');
@@ -266,10 +274,12 @@ class BrianBodyBlock extends Pattern
         $p->newCutonfold('cofBottom','cofTop', $this->t('Cut on fold').' - '.$this->t('Grainline'));
 
         // Seam allowance
-        $p->offsetPathstring('sa1', 'M 4 L 6 L 5 C 13 16 14 C 15 18 10 C 17 19 12 L 8 C 20 1 1', 10, 1, ['class' => 'fabric sa']);
-        // Join ends
-        $p->newPath('sa2', 'M 1 L sa1-endPoint M 4 L sa1-startPoint', ['class' => 'fabric sa']);
-        
+        if($this->o('sa')) {
+            $p->offsetPathstring('sa1', 'M 4 L 6 L 5 C 13 16 14 C 15 18 10 C 17 19 12 L 8 C 20 1 1', $this->o('sa'), 1, ['class' => 'fabric sa']);
+            // Join ends
+            $p->newPath('sa2', 'M 1 L sa1-endPoint M 4 L sa1-startPoint', ['class' => 'fabric sa']);
+        } 
+
         // Title
         $p->newPoint('titleAnchor', $p->x(10) / 2, $p->y(10), 'Title anchor');
         $p->addTitle('titleAnchor', 2, $this->t($p->title));
@@ -374,9 +384,11 @@ class BrianBodyBlock extends Pattern
         $p->newCutonfold('cofBottom','cofTop', $this->t('Cut on fold').' - '.$this->t('Grainline'));
         
         // Seam allowance
-        $p->offsetPathstring('sa1', 'M 4 L 6 L 5 C 13 16 14 C 15 18 10 C 17 19 12 L 8 C 20 21 9', 10, 1, ['class' => 'fabric sa']); 
-        // Close edges
-        $p->newPath('sa2', 'M 9 L sa1-endPoint M 4 L sa1-startPoint', ['class' => 'fabric sa']);
+        if($this->o('sa')) {
+            $p->offsetPathstring('sa1', 'M 4 L 6 L 5 C 13 16 14 C 15 18 10 C 17 19 12 L 8 C 20 21 9', $this->o('sa'), 1, ['class' => 'fabric sa']); 
+            // Close edges
+            $p->newPath('sa2', 'M 9 L sa1-endPoint M 4 L sa1-startPoint', ['class' => 'fabric sa']);
+        }
 
         // Title
         $p->addTitle('titleAnchor', 1, $this->t($p->title));
@@ -467,7 +479,7 @@ class BrianBodyBlock extends Pattern
         $p->newPoint(1, 0, 0, 'Origin (Center sleeve @ shoulder)');
         $p->newPoint(2, 0, $this->v('sleevecapHeight')*$this->v('sleeveTweakFactor'), 'Center sleeve @ sleevecap start');
         $p->clonePoint(2, 'gridAnchor');
-        $p->newPoint(3, 0, $model->getMeasurement('sleeveLengthToWrist') + $this->o('sleeveLengthBonus'), 'Center sleeve @ wrist');
+        $p->newPoint(3, 0, $model->getMeasurement('shoulderToWrist') + $this->o('sleeveLengthBonus'), 'Center sleeve @ wrist');
 
         // Sleeve half width
         $p->newPoint(4, ($model->getMeasurement('bicepsCircumference') / 2 + $this->getOption('bicepsEase') / 2) * $this->v('sleeveTweakFactor'), 0,
@@ -579,7 +591,7 @@ class BrianBodyBlock extends Pattern
         $p->newGrainline('glBottom','glTop');
         
         // Seam allowance
-        $p->offsetPath('sa', 'seamline', -10, 1, ['class' => 'fabric sa']); 
+        if($this->o('sa')) $p->offsetPath('sa', 'seamline', $this->o('sa')*-1, 1, ['class' => 'fabric sa']); 
 
         // Title
         $p->newPoint('titleAnchor', $p->x(2), $this->parts['frontBlock']->y('titleAnchor'));

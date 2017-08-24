@@ -39,6 +39,11 @@ path.canvas {
     stroke: $color-canvas;
 }
 
+path.various { 
+    stroke-width: $stroke-lg;
+    stroke: $color-various;
+}
+
 path.sa { 
     stroke-dasharray: $dots; 
 }
@@ -78,7 +83,6 @@ text.part-nr {
     font-size: $font-part-nr; 
     text-anchor: middle; 
     fill: $black;
-    transform: translate(0px, $font-part-nr * -0.7); 
     font-weight: 100;
 }
 
@@ -99,26 +103,16 @@ text.part-title.horizontal {
 text.part-msg {
     font-size: $font-part-subtitle;
     text-anchor: middle; 
-    transform: translate(0px, $font-part-subtitle * 1.2); 
 }
 
+text.part-msg.horizontal,
 text.part-title.vertical,
 text.part-msg.vertical { 
-    text-anchor: end; 
-}
-
-text.part-msg.horizontal { 
     text-anchor: start; 
-}
-
-text.part-msg.vertical , 
-text.part-msg.small.vertical {
-    transform: inherit;
 }
 
 text.part-nr.small {
     font-size: $font-part-nr-sm; 
-    transform: translate(0px, $font-part-nr-sm * -0.7); 
 }
 
 text.part-title.small {
@@ -127,7 +121,6 @@ text.part-title.small {
 
 text.part-msg.small {
     font-size: $font-part-subtitle-sm; 
-    transform: translate(0px, $font-part-subtitle-sm); 
 }
 
 /* Notes */

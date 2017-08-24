@@ -88,6 +88,13 @@ abstract class Theme
 
         $pattern->replace('__SCALEBOX_METRIC__', $pattern->t('__SCALEBOX_METRIC__'));
         $pattern->replace('__SCALEBOX_IMPERIAL__', $pattern->t('__SCALEBOX_IMPERIAL__'));
+        /* FIXME
+         * accesing the _REQUEST superglobal like this is not cool
+         * this should come from the request object, but that's not
+         * available here and I'm tired so I'll leave this like this until
+         * I fix this properly
+         */
+        if(isset($_REQUEST['reference'])) $pattern->replace('__REFERENCE__', $_REQUEST['reference']);
     }
 
     /**

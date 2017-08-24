@@ -6,7 +6,7 @@ source:
     - channels/
 
 # Target dir for documentation.
-destination: ../docs/apigen/
+destination: ../site/apigen/core
 
 # Access levels of included method and properties. (default: ["public","protected"]) (multiple values allowed)
 accessLevels:           
@@ -15,13 +15,7 @@ accessLevels:
     - protected
 
 # Base url used for sitemap (useful for public doc).
-baseUrl: https://docs.freesewing.org/apigen/
-
-# Custom google search engine id (for search box).
-#googleCseId: {put it here!}
-
-# Google Analytics tracking code.
-#googleAnalytics: {put it here}
+baseUrl: https://freesewing.org/apigen/core/
 
 # Turn on debug mode.
 debug: false
@@ -53,20 +47,8 @@ internal: true
 # Generate documentation for PHP internal classes.
 php: false             
 
-# Files matching this mask will be included in class tree, but will not create a link to their documentation. (multiple values allowed)
-#skipDocPath:        
-
-# Do not generate highlighted source code for elements.
-#noSourceCode:       
-
-# ApiGen template config
-#templateConfig: /usr/share/php/data/ApiGen/templates/fso/config.neon
-
-# Your own template config, has higher priority templateTheme.
-#templateConfig:      
-
 # Title of generated documentation.
-title: Freesewing
+title: Freesewing core
 
 # Generate documentation for elements marked as @todo.
 todo: true

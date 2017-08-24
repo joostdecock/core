@@ -1,10 +1,15 @@
 info:
   name:     "Trayvon Tie"
+  description: "This tie pattern cuts no corners for a professional result"
+  handle:   "trayvon"
   version:  "2.0"
   author:   "Joost De Cock"
   email:    "joost@decock.org"
   company:  "freesewing.org"
   link:     "freesewing.org/pattern/trayvon"
+  tags:
+      - unisex
+      - accessories
 
 parts:
   interfacingTip:   "Interfacing tip"
@@ -26,11 +31,17 @@ measurements:
 
 options:
     tipWidth:
+        title: "Tip width"
+        description: "The width of the tie at the tip."
+        group: "style"
         type: measure
         min: 20
         max: 120
         default: 60
     knotWidth:
+        title: "Knot width"
+        description: "The width of the tie at the knot/middle."
+        group: "style"
         type: measure
         min: 20
         max: 70

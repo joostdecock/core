@@ -72,6 +72,7 @@ and a bunch of frontend related improvements.
 ### Fixes
 
  - Bug fix in the `Utils::lineLineIntersection` method when dealing with parallel lines
+ - Fixed incorrect release date for v1.0.0 in this changelog
 
 #### Simon
 
@@ -124,7 +125,7 @@ reason for a new release)
 
 ## Version 1.0.0
 
-**Release date**: 2017-01-26
+**Release date**: 2017-03-24
 
 This is the first public release of freesewing.
 This changelog is relative to this baseline.

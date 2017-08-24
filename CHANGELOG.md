@@ -124,7 +124,7 @@ reason for a new release)
 
 ## Version 1.0.0
 
-**Release date**: 2017-01-26
+**Release date**: 2017-03-24
 
 This is the first public release of freesewing.
 This changelog is relative to this baseline.

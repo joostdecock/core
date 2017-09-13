@@ -890,9 +890,11 @@ class SimonShirt extends BrianBodyBlock
         $outline = 'M centerTop ';
         if($this->o('yokeDart') > 0) $outline .= ' L yokeDart2 C yokeDart3 yokeDart1 yokeDart1 ';
         else $outline .= 'L 10 ';
+
         $outline .= 'C 18 15 14 C 16 13 5 C 6001 6011 6021 C 6031 8002 8001 ';
         if($this->o('hemStyle') == 1) {
-            $outline .= 'C 6661 6662 6664 L 6665 ';
+            if($p->y(6664) > $p->y(8001)) $outline .= 'C 6661 6662 6664 L 6665 ';
+            else $outline .= 'L 6665 ';
             $this->setValue('backSaBase', $outline);
             $outline .= 'L 6660 ';
             $this->setValue('backHemBase', 'M 6660 L 6667');

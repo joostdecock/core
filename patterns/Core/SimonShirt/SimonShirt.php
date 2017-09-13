@@ -743,7 +743,8 @@ class SimonShirt extends BrianBodyBlock
             $helpline = 'M 4105 L 4005 M 4106 L 4006 M 4103 L 4003 M 4102 L 4002 M 4100 L 4000';
         } else {
             $outline = 'M 4108 C 41082 41081 4100 L 41086 C 41084 41085 41083 C 41088 41087 41089 L 4107 L 4007 L 4008 z'; // Seamless/French style
-            $this->setValue('buttonholePlacketSaBase', 'M 4107 L 41089 C 41087 41088 41083 C 41085 41084 41086 L 4100 C 41082 41081 4108 L 4008 L 4007');
+            // SA offset will go cray on these tiny curves, so stick to straight lines for SA base path
+            $this->setValue('buttonholePlacketSaBase', 'M 4107 L 41089 L 41083 L 41086 L 4100 L 4108 L 4008 L 4007');
             $foldline = 'M 41083 L 4002 M 4101 L 4001';
             $helpline = 'M 4100 L 4000';
         }
@@ -1744,8 +1745,8 @@ class SimonShirt extends BrianBodyBlock
 
         // Seam allowance
         if($this->o('sa')) {
-            $p->newPath('tezdsfsd', $this->v('buttonholePlacketSaBase'), ['class' => 'debug']);
-            $p->offsetPathString('sa', $this->v('buttonholePlacketSaBase'), $this->o('sa')*-1, 1, ['class' => 'sa fabric']);
+//            $p->newPath('tezdsfsd', $this->v('buttonholePlacketSaBase'), ['class' => 'debug']);
+            $p->offsetPathString('sa', $this->v('buttonholePlacketSaBase'), $this->o('sa')*-1, 1, ['class' => 'sa lining']);
 
             // Join seam allowance ends
             $p->newPath('joinSa', 'M 4107 L sa-startPoint M 4007 L sa-endPoint', ['class' => 'sa fabric']); 

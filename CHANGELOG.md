@@ -3,6 +3,24 @@
 > All notable changes to freesewing core should be be documented in this file.
 > Freesewing uses [Semantic Versioning](http://semver.org/).
 
+## Version 1.1.1
+
+**Release date**: 2017-09-13
+
+This is a bugfix release.
+
+### Fixes
+
+#### Simon
+
+ - The seam allowance at the hem was incorrect when the lenthBonus was very low.
+ - The cut in the sleeve for the placket was too short
+ - There was a problem with the seam allowance at the buttonhole placket
+
+#### CLI
+
+ - The link to the documentation site has been updated
+
 ## Version 1.1.0
 
 **Release date**: 2017-08-24

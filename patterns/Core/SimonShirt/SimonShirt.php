@@ -1033,7 +1033,7 @@ class SimonShirt extends BrianBodyBlock
         }
 
         // Sleeve placket cut
-        $p->addPoint('sleevePlacketCutTop', $p->shift(411,90,$this->o('sleevePlacketLength')-50));
+        $p->addPoint('sleevePlacketCutTop', $p->shift(411,90,$this->o('sleevePlacketLength')+$this->o('sleevePlacketWidth')*0.35));
         $this->setValue('sleevePacketCut', 'M 411 L sleevePlacketCutTop');
 
         // Paths
@@ -1285,7 +1285,7 @@ class SimonShirt extends BrianBodyBlock
         else $sa = 0;
         
         $p->newPoint(0,0,0);
-        $p->newPoint(1,$this->o('sleevePlacketLength')+$sa+$this->o('sleevePlacketWidth')*0.25,0);
+        $p->newPoint(1,$this->o('sleevePlacketLength')+$sa+$this->o('sleevePlacketWidth')*0.35,0);
         $p->addPoint(2,$p->shift(1,-90,$fold));
         $p->addPoint(3,$p->shift(2,-90,$width));
         $p->addPoint(4,$p->shift(3,-90,$width));
@@ -2497,7 +2497,7 @@ class SimonShirt extends BrianBodyBlock
         $p->newPath('sleeveHead2', 'M 1 L 2', ['class' => 'help fabric']);
         // Cuff
         $p->newWidthDimension('cuffLeft', 411, $p->y('cuffLeft')+25); // To placket cut
-        $p->newHeightDimension('cuffLeft', 'sleevePlacketCutTop', $p->x('cuffLeft')-35); // To placket cut
+        $p->newHeightDimension(411, 'sleevePlacketCutTop', $p->x('cuffLeft')-35); // To placket cut
         
         if($this->v('cuffPleats') == 1) {
             $p->newWidthDimensionSm('pleatLeftTop', 'pleatRightTop', $p->y('pleatRightTop')-10); // Pleat width

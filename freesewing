@@ -21,7 +21,7 @@ if [ $# -eq 0 ]
         echo "${normal}  freesewing service=draft pattern=WahidWaistcoat"
         echo ""
         echo "${bold}SEE ALSO:"
-        echo "${normal}  https://docs.freesewing.org/cli"
+        echo "${normal}  https://freesewing.org/docs/core/cli"
     else
         for var in "$@"
         do

@@ -411,7 +411,7 @@ class SimonShirt extends BrianBodyBlock
             $in = $this->v('waistReduction')/4;
             $hin = ($this->v('hipsReduction'))/4;
         } else { 
-            // Also add cack darts if we're reducing 10cm or more
+            // Also add back darts if we're reducing 10cm or more
             $in = ($this->v('waistReduction')*0.6)/4;
             $hin = ($this->v('hipsReduction')*0.6)/4;
         }
@@ -426,7 +426,7 @@ class SimonShirt extends BrianBodyBlock
         // Hem shape
         if($p->isPoint(2044)) $p->clonePoint(2044,6660);
         else $p->clonePoint(4,6660);
-        $p->newPoint( 6663 , $p->x(8001)-$this->o('hipFlare')/4,$p->y(8001)+$this->o('lengthBonus')-$this->o('hemCurve'));
+        $p->newPoint( 6663 , $p->x(8001)-$this->o('hipFlare')/4,$p->y(8001)+$this->o('lengthBonus')-$this->o('hemCurve')); // HERE
         $p->addPoint( 6662 , $p->shift(6663,90,$p->deltaY(8000,6663)*0.3));
         $p->addPoint( 6661 , $p->shift(8001,-90,$p->deltaY(8000,6663)*0.3));
         
@@ -496,7 +496,8 @@ class SimonShirt extends BrianBodyBlock
             }
         }
         $this->setValue('frontRightHemBase', $hemLine.$hemStart);
-        $seamline .= 'L 6669 C 6668 6667 6666 C 6665 6664 6663 C 6662 6661 8001 C 8002 6031 6021 C 6011 5001 5 ';
+        if($p->y(6664) > $p->y(8001)) $seamline .= 'L 6669 C 6668 6667 6666 C 6665 6664 6663 C 6662 6661 8001 C 8002 6031 6021 C 6011 5001 5 ';
+        else $seamline .= 'L 6669 C 6668 6667 6666 L 8001 C 8002 6031 6021 C 6011 5001 5 ';
 
         // Add paths to part
         
@@ -520,8 +521,10 @@ class SimonShirt extends BrianBodyBlock
         $this->setValue('frontCollarOpeningLength', $p->curveLen(8,20,21,9)*2);
         
         // Store flat felled seam path
-        if($this->o('hemStyle') == 1) $this->setValue('frontRightSideBase', 'M 8001 M 5 C 5001 6011 6021 C 6031 8002 8001 C 6661 6662 6663 L 6667');
-        else $this->setValue('frontRightSideBase','M 8001 M 5 C 5001 6011 6021 C 6031 8002 8001 C 6661 6662 6663');
+        if($this->o('hemStyle') == 1) {
+            if($p->Y(6663) > $p->y(8001)) $this->setValue('frontRightSideBase', 'M 5 C 5001 6011 6021 C 6031 8002 8001 C 6661 6662 6663 L 6667');
+            else $this->setValue('frontRightSideBase', 'M 5 C 5001 6011 6021 C 6031 8002 8001 L 6667');
+        } else $this->setValue('frontRightSideBase','M 8001 M 5 C 5001 6011 6021 C 6031 8002 8001 C 6661 6662 6663');
     }
 
     /**
@@ -653,7 +656,8 @@ class SimonShirt extends BrianBodyBlock
             $p->newPath('placketHelpLines', $placketHelpLines, ['class' => 'help fabric']);
             $p->newPath('placketFoldLines', $placketFoldLines, ['class' => 'hint fabric']);
         }
-        $seamline .= ' C 6665 6664 6663 C 6662 6661 8001 C 8002 6031 6021 C 6011 5001 5';
+        if($p->y(6663) > $p->y(8001)) $seamline .= ' C 6665 6664 6663 C 6662 6661 8001 C 8002 6031 6021 C 6011 5001 5';
+        else $seamline .= ' L 8001 C 8002 6031 6021 C 6011 5001 5';
 
         // Add paths to part
         
@@ -670,8 +674,10 @@ class SimonShirt extends BrianBodyBlock
         $p->paths['seamline']->setSample(true);
         
         // Store flat felled seam path
-        if($this->o('hemStyle') == 1) $this->setValue('frontLeftSideBase', 'M 5 C 5001 6011 6021 C 6031 8002 8001 C 6661 6662 6663 L 6667');
-        else $this->setValue('frontLeftSideBase', 'M 5 C 5001 6011 6021 C 6031 8002 8001 C 6661 6662 6663');
+        if($this->o('hemStyle') == 1) {
+            if($p->y(6663) > $p->y(8001)) $this->setValue('frontLeftSideBase', 'M 5 C 5001 6011 6021 C 6031 8002 8001 C 6661 6662 6663 L 6667');
+            else $this->setValue('frontLeftSideBase', 'M 5 C 5001 6011 6021 C 6031 8002 8001 L 6667');
+        } else $this->setValue('frontLeftSideBase', 'M 5 C 5001 6011 6021 C 6031 8002 8001 C 6661 6662 6663');
         
         // Store hem path
         if($this->o('hemStyle') == 1) {
@@ -743,7 +749,8 @@ class SimonShirt extends BrianBodyBlock
             $helpline = 'M 4105 L 4005 M 4106 L 4006 M 4103 L 4003 M 4102 L 4002 M 4100 L 4000';
         } else {
             $outline = 'M 4108 C 41082 41081 4100 L 41086 C 41084 41085 41083 C 41088 41087 41089 L 4107 L 4007 L 4008 z'; // Seamless/French style
-            $this->setValue('buttonholePlacketSaBase', 'M 4107 L 41089 C 41087 41088 41083 C 41085 41084 41086 L 4100 C 41082 41081 4108 L 4008 L 4007');
+            // SA offset will go cray on these tiny curves, so stick to straight lines for SA base path
+            $this->setValue('buttonholePlacketSaBase', 'M 4107 L 41089 L 41083 L 41086 L 4100 L 4108 L 4008 L 4007');
             $foldline = 'M 41083 L 4002 M 4101 L 4001';
             $helpline = 'M 4100 L 4000';
         }
@@ -1033,7 +1040,7 @@ class SimonShirt extends BrianBodyBlock
         }
 
         // Sleeve placket cut
-        $p->addPoint('sleevePlacketCutTop', $p->shift(411,90,$this->o('sleevePlacketLength')-50));
+        $p->addPoint('sleevePlacketCutTop', $p->shift(411,90,$this->o('sleevePlacketLength')+$this->o('sleevePlacketWidth')*0.35));
         $this->setValue('sleevePacketCut', 'M 411 L sleevePlacketCutTop');
 
         // Paths
@@ -1285,7 +1292,7 @@ class SimonShirt extends BrianBodyBlock
         else $sa = 0;
         
         $p->newPoint(0,0,0);
-        $p->newPoint(1,$this->o('sleevePlacketLength')+$sa+$this->o('sleevePlacketWidth')*0.25,0);
+        $p->newPoint(1,$this->o('sleevePlacketLength')+$sa+$this->o('sleevePlacketWidth')*0.35,0);
         $p->addPoint(2,$p->shift(1,-90,$fold));
         $p->addPoint(3,$p->shift(2,-90,$width));
         $p->addPoint(4,$p->shift(3,-90,$width));
@@ -1542,7 +1549,7 @@ class SimonShirt extends BrianBodyBlock
         if($this->o('sa')) {
             $p->offsetPathString('sa', $this->v('frontRightSaBase'), $this->o('sa')*-1, 1, ['class' => 'sa fabric']);
             // Flat felled seam allowance
-            $p->offsetPathString('ffsa', $this->v('frontRightSideBase'), Utils::constraint($this->o('sa')*2,12,25), 1, ['class' => 'sa fabric']);
+            $p->offsetPathString('ffsa', $this->v('frontRightSideBase'), Utils::constraint($this->o('sa')*2,12,25), 1, ['class' => 'sa canvas']);
             $p->offsetPathString('ffsaHint', $this->v('frontRightSideBase'), Utils::constraint($this->o('sa')*2,12,25)/2, 1, ['class' => 'hint fabric']);
             // Hem seam allowance
             $p->offsetPathString('hemSa', $this->v('frontRightHemBase'), $this->o('sa')*3, 1, ['class' => 'sa fabric']);
@@ -1744,7 +1751,6 @@ class SimonShirt extends BrianBodyBlock
 
         // Seam allowance
         if($this->o('sa')) {
-            $p->newPath('tezdsfsd', $this->v('buttonholePlacketSaBase'), ['class' => 'debug']);
             $p->offsetPathString('sa', $this->v('buttonholePlacketSaBase'), $this->o('sa')*-1, 1, ['class' => 'sa fabric']);
 
             // Join seam allowance ends
@@ -2497,7 +2503,7 @@ class SimonShirt extends BrianBodyBlock
         $p->newPath('sleeveHead2', 'M 1 L 2', ['class' => 'help fabric']);
         // Cuff
         $p->newWidthDimension('cuffLeft', 411, $p->y('cuffLeft')+25); // To placket cut
-        $p->newHeightDimension('cuffLeft', 'sleevePlacketCutTop', $p->x('cuffLeft')-35); // To placket cut
+        $p->newHeightDimension(411, 'sleevePlacketCutTop', $p->x('cuffLeft')-35); // To placket cut
         
         if($this->v('cuffPleats') == 1) {
             $p->newWidthDimensionSm('pleatLeftTop', 'pleatRightTop', $p->y('pleatRightTop')-10); // Pleat width

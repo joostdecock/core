@@ -81,7 +81,7 @@ options:
         default: 120
     bicepsEase:
         title: "Biceps ease"
-        description: "The amount of ease at your upper arm"
+        description: "The amount of ease at your upper arm. Note while we try to respect this, fitting the sleeve to the armhole takes precedence over respecting the exact amount of ease."
         group: "ease"
         type: "measure"
         min: 0
@@ -416,11 +416,11 @@ options:
         default: 60
     sleevecapHeightFactor:
         title: "Sleevecap height"
-        description: "A factor that controls the height of the sleevecap"
+        description: "A factor that controls the height of the sleevecap. Note: make it too high and it will narrow the sleeve width to the point where it might not fit your arm."
         group: "advanced"
         type: "percent"
         min: 45
-        max: 70
+        max: 60
         default: 50
     sleevecapEase:
         title: "Sleevecap ease"

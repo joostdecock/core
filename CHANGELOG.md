@@ -3,6 +3,25 @@
 > All notable changes to freesewing core should be be documented in this file.
 > Freesewing uses [Semantic Versioning](http://semver.org/).
 
+## Version 1.1.2
+
+**Release date**: 2017-09-17
+
+This is, apart from some tweaks to Simon's defaults, a bugfix release.
+
+### Changes
+
+#### Simon
+
+ - Changed the defaults for some options to make them more sensible
+
+### Fixes
+
+#### Simon
+
+ - The lenth bonus was counted double, once in Brian, then once again in Simon
+ - Fixed a seam allowance that was assigned a `canvas` rather than `fabric` class
+
 ## Version 1.1.1
 
 **Release date**: 2017-09-13

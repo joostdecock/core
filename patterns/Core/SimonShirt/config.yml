@@ -41,9 +41,9 @@ languages:
 measurements:
     acrossBack: 450
     bicepsCircumference: 335
-    centerBackNeckToWaist: 480
+    centerBackNeckToWaist: 520
     chestCircumference: 1080
-    naturalWaistToHip: 120
+    naturalWaistToHip: 145
     neckCircumference: 420
     shoulderToShoulder: 470
     shoulderSlope: 55
@@ -60,33 +60,33 @@ options:
         description: "The amount of ease at the chest"
         group: "ease"
         type: "measure"
-        min: 60
-        max: 240
-        default: 120
+        min: 80
+        max: 200
+        default: 160
     waistEase:
         title: "Waist ease"
         description: "The amount of ease at the natural waist"
         group: "ease"
         type: "measure"
         min: 80
-        max: 280
+        max: 240
         default: 160
     hipsEase:
         title: "Hips ease"
         description: "The amount of ease at the hips"
         group: "ease"
         type: "measure"
-        min: 8
-        max: 240
-        default: 120
+        min: 80
+        max: 200
+        default: 160
     bicepsEase:
         title: "Biceps ease"
-        description: "The amount of ease at your upper arm"
+        description: "The amount of ease at your upper arm. Note while we try to respect this, fitting the sleeve to the armhole takes precedence over respecting the exact amount of ease."
         group: "ease"
         type: "measure"
-        min: 0
+        min: 40
         max: 120
-        default: 30
+        default: 40
     collarEase:
         title: "Collar ease"
         description: "The amount of ease around your neck with a closed collar"
@@ -107,20 +107,20 @@ options:
 # fit group
     lengthBonus:
         title: "Extra length"
-        description: "The amount to lengthen or shorten the shirt"
+        description: "The amount to lengthen the shirt beyond your hip line"
         group: "fit"
         type: "measure"
-        min: -50
+        min: 0
         max: 250
         default: 150
     sleeveLengthBonus:
         title: "Extra sleeve length"
-        description: "The amount to lengthen the sleeves"
+        description: "The amount to lengthen the sleeve beyond your wrist"
         group: "fit"
         type: "measure"
         min: 0
         max: 50
-        default: 30
+        default: 0
     yokeDart:
         title: "Yoke dart"
         description: "Whether to include a dart at the sides of the yoke to fit a rounder back"
@@ -134,9 +134,9 @@ options:
         description: "The amount to widen the shirt below the waist"
         group: "fit"
         type: "measure"
-        min: 0
+        min: 10
         max: 50
-        default: 20
+        default: 10
     buttonfreeLength:
         title: "Button free length"
         description: "How much of the bottom of the front closure to keep button-free"
@@ -416,11 +416,11 @@ options:
         default: 60
     sleevecapHeightFactor:
         title: "Sleevecap height"
-        description: "A factor that controls the height of the sleevecap"
+        description: "A factor that controls the height of the sleevecap. Note: make it too high and it will narrow the sleeve width to the point where it might not fit your arm."
         group: "advanced"
         type: "percent"
         min: 45
-        max: 70
+        max: 60
         default: 50
     sleevecapEase:
         title: "Sleevecap ease"

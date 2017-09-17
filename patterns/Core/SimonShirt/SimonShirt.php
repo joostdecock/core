@@ -957,18 +957,15 @@ class SimonShirt extends BrianBodyBlock
         /** @var Part $p */
         $p = $this->parts['sleeve'];
         
-        // Lengthen sleeve by sleeveLengthBonus at wrist
-        $moveMe = [3, 9, -9, 6, -6, 31, 32];
-        foreach($moveMe as $move) $p->addPoint($move, $p->shift($move,-90,$this->o('sleeveLengthBonus')));
-        
-        // Move elbow point by by halfsleeveLengthBonus
-        $moveMe = [33, 34, 35];
-        foreach($moveMe as $move) $p->addPoint($move, $p->shift($move,-90,0.5*$this->o('sleeveLengthBonus')));
-        
         // What is the usable cuff width?
         if($this->o('cuffStyle') < 4) $cuffwidth = $model->m('wristCircumference')+$this->o('cuffEase') + 20;
         else if($this->o('cuffStyle') == 6) $cuffwidth = $model->m('wristCircumference')+$this->o('cuffEase') + 30;
         else $cuffwidth = $model->m('wristCircumference')+$this->o('cuffEase') + 30 - $this->o('cuffLength')/2;
+        
+        // Shorten sleeve to take cuff into account
+        $moveMe = [3, 9, -9, 6, -6, 31, 32];
+        foreach($moveMe as $move) $p->addPoint($move, $p->shift($move,90,$this->o('cuffLength')));
+        
         
         // Sleeve width 
         $width = $cuffwidth;
@@ -1551,7 +1548,7 @@ class SimonShirt extends BrianBodyBlock
         if($this->o('sa')) {
             $p->offsetPathString('sa', $this->v('frontRightSaBase'), $this->o('sa')*-1, 1, ['class' => 'sa fabric']);
             // Flat felled seam allowance
-            $p->offsetPathString('ffsa', $this->v('frontRightSideBase'), Utils::constraint($this->o('sa')*2,12,25), 1, ['class' => 'sa canvas']);
+            $p->offsetPathString('ffsa', $this->v('frontRightSideBase'), Utils::constraint($this->o('sa')*2,12,25), 1, ['class' => 'sa fabric']);
             $p->offsetPathString('ffsaHint', $this->v('frontRightSideBase'), Utils::constraint($this->o('sa')*2,12,25)/2, 1, ['class' => 'hint fabric']);
             // Hem seam allowance
             $p->offsetPathString('hemSa', $this->v('frontRightHemBase'), $this->o('sa')*3, 1, ['class' => 'sa fabric']);

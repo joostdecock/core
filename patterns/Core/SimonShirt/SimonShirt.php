@@ -84,7 +84,6 @@ class SimonShirt extends BrianBodyBlock
         else $this->setValue('waistReduction', $waistReduction);
         if($hipsReduction < 0) $this->setValue('hipsReduction', 0);
         else $this->setValue('hipsReduction', $hipsReduction);
-
         // Tweak factors
         // Front tweaking
         $this->setValue('frontCollarTweakFactor', 1); 
@@ -251,7 +250,7 @@ class SimonShirt extends BrianBodyBlock
      *
      * @return float The difference between the armhole and sleevehead
      */
-    private function armholeDelta($model) 
+    protected function armholeDelta() 
     {
         $this->setValue('armholeLength', $this->v('frontArmholeLength') + $this->v('yokeArmholeLength') + $this->v('backArmholeLength'));
         return ($this->v('armholeLength') + $this->o('sleevecapEase')) - $this->v('sleeveheadLength');
@@ -337,8 +336,13 @@ class SimonShirt extends BrianBodyBlock
             // Yes it is, this will be the initial draft
             // Cloning points from the frontBlock
             $this->clonePoints('frontBlock', 'frontRight');
+            
+            // We first need to move point 6, as there's no hip reduction in the base block
+            $p->newPoint(6, $p->x(6) - $this->v('hipsReduction')/4, $p->y(6));
+            
             // Front block is drafted as the left half, so every point needs to be mirrored
             foreach($p->points as $i => $point) $p->addPoint($i, $p->flipX($i,0));
+            
         } else {
             // No, this will be a tweaked draft. So let's tweak
             if($this->collarOpeningDelta($model) > 0) {
@@ -404,17 +408,13 @@ class SimonShirt extends BrianBodyBlock
           $p->addPoint($extrapid, $p->shift($pid,90,$buttonSpacing/2), 'Extra button');
         }
         // Shaping of side seam
+        /* Only shape side seams if we're reducing less than 10cm 
+         * Also add back darts if we're reducing 10cm or more */
+        if ($this->v('waistReduction') <= 100) $in = $this->v('waistReduction')/4;
+        else  $in = ($this->v('waistReduction')*0.6)/4;
+        
         $p->addPoint(8000, $p->shift(4,90,$this->o('lengthBonus')), 'Hips height');        
         $p->newPoint(8001, $p->x(6), $p->y(8000), 'Hips height');        
-        if ($this->v('waistReduction') <= 100) { 
-            // Only shape side seams if we're reducing less than 10cm
-            $in = $this->v('waistReduction')/4;
-            $hin = ($this->v('hipsReduction'))/4;
-        } else { 
-            // Also add back darts if we're reducing 10cm or more
-            $in = ($this->v('waistReduction')*0.6)/4;
-            $hin = ($this->v('hipsReduction')*0.6)/4;
-        }
         $p->addPoint( 6001, $p->shift(5,-90,$p->deltaY(5,3)*0.2));
         $p->newPoint( 6011, $p->x(5)+$in,$p->y(3)-$p->deltaY(5,3)/2);
         $p->newPoint( 6021, $p->x(5)+$in,$p->y(3));
@@ -813,10 +813,12 @@ class SimonShirt extends BrianBodyBlock
         /** @var Part $p */
         $p = $this->parts['back'];
 
+        // We first need to move point 6, as there's no hip reduction in the base block
+        $p->newPoint(6, $p->x(6) - $this->v('hipsReduction')/4, $p->y(6));
+        
         $p->newPoint('centerTop', 0, $p->y(10));
         $p->addPoint(8000, $p->shift(4,90,$this->o('lengthBonus')), 'Hips height');        
         $p->newPoint(8001, $p->x(6), $p->y(8000), 'Hips height');        
-        $hin = ($this->v('hipsReduction'))/4;
         if ($this->v('waistReduction') <= 100) { // Only shape side seams
           $in = $this->v('waistReduction')/4;
         } else { // Back darts too

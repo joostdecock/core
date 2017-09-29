@@ -3,6 +3,18 @@
 > All notable changes to freesewing core should be be documented in this file.
 > Freesewing uses [Semantic Versioning](http://semver.org/).
 
+## Version 1.1.3
+
+**Release date**: 2017-09-29
+
+This is a bugfix release.
+
+### Fixes
+
+#### Simon
+
+ - The hip measurement and ease were not taken into account, hip was identical to chest circumference and ease
+
 ## Version 1.1.2
 
 **Release date**: 2017-09-17

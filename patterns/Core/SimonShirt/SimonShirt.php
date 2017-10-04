@@ -43,6 +43,9 @@ class SimonShirt extends BrianBodyBlock
      */
     public function initialize($model)
     {
+        // Prevent missing sa from causing warnings
+        $this->setOptionIfUnset('sa', 0);
+
         // Depth of the armhole
         $this->setValue('armholeDepth', $model->m('shoulderSlope') / 2 + $model->m('bicepsCircumference') * $this->o('armholeDepthFactor'));
 

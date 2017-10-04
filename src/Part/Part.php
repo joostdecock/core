@@ -1544,30 +1544,12 @@ class Part
      */
     public function angle($key1, $key2)
     {
-        $distance = $this->distance($key1, $key2);
-        $deltaX = $this->deltaX($key1, $key2);
-        $deltaY = $this->deltaY($key1, $key2);
-        $angle = 0;
+        if(Utils::isSamePoint($this->loadPoint($key1), $this->loadPoint($key2))) return 0;
 
-        if ($deltaX == 0 && $deltaY == 0) {
-            $angle = 0;
-        } elseif ($deltaX == 0 && $deltaY > 0) {
-            $angle = 90;
-        } elseif ($deltaX == 0 && $deltaY < 0) {
-            $angle = 270;
-        } elseif ($deltaY == 0 && $deltaX > 0) {
-            $angle = 180;
-        } elseif ($deltaY == 0 && $deltaX < 0) {
-            $angle = 0;
-        } else {
-            if ($deltaY > 0) {
-                $angle = 180 - rad2deg(acos($deltaX / $distance));
-            } elseif ($deltaY < 0) {
-                $angle = 180 + rad2deg(acos($deltaX / $distance));
-            }
-        }
-
-        return $angle;
+        $angle = -1 * rad2deg(acos($this->deltaX($key1, $key2) / $this->distance($key1, $key2))) + 180;
+        
+        if ($this->deltaY($key1, $key2) < 0) return $angle * -1;
+        else return $angle;
     }
 
     /**

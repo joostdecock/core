@@ -1558,29 +1558,16 @@ class Part
     public function angle($key1, $key2)
     {
         $distance = $this->distance($key1, $key2);
-        $deltaX = $this->deltaX($key1, $key2);
-        $deltaY = $this->deltaY($key1, $key2);
-        $angle = 0;
-
-        if ($deltaX == 0 && $deltaY == 0) {
-            $angle = 0;
-        } elseif ($deltaX == 0 && $deltaY > 0) {
-            $angle = 90;
-        } elseif ($deltaX == 0 && $deltaY < 0) {
-            $angle = 270;
-        } elseif ($deltaY == 0 && $deltaX > 0) {
-            $angle = 180;
-        } elseif ($deltaY == 0 && $deltaX < 0) {
-            $angle = 0;
-        } else {
-            if ($deltaY > 0) {
-                $angle = 180 - rad2deg(acos($deltaX / $distance));
-            } elseif ($deltaY < 0) {
-                $angle = 180 + rad2deg(acos($deltaX / $distance));
-            }
-        }
-
-        return $angle;
+		$deltaX = $this->deltaX($key1, $key2);
+		if ($distance == 0) {
+		$angle=0;
+		}else {
+			$angle=  -rad2deg(acos($deltaX / $distance)) +180;
+			if ($this->deltaY($key1, $key2)<0){
+				$angle= -$angle;
+			}
+		}
+		return $angle;
     }
 
     /**
@@ -1617,50 +1604,13 @@ class Part
      */
     public function shiftTowards($key1, $key2, $distance)
     {
-        $point1 = $this->loadPoint($key1);
-        $point2 = $this->loadPoint($key2);
-
-        // Horizontal 
-        if($point1->getY() == $point2->getY()) {
-            if($point1->getX() > $point2->getX()) {
-                return $this->createPoint($point1->getX() - $distance, $point2->getY(), "Point $key1 shifted towards $key2 by $distance");
-            } else {
-                return $this->createPoint($point1->getX() + $distance, $point2->getY(), "Point $key1 shifted towards $key2 by $distance");
-            }
-        } 
+        $point1 = $this->loadPoint($key1);		
+        $absdist = abs($distance);		
+		$angle = $this->angle($key1, $key2);
         
-        // Vertical 
-        if($point1->getX() == $point2->getX()) {
-            if($point1->getY() > $point2->getY()) {
-                return $this->createPoint($point2->getX(), $point1->getY() - $distance, "Point $key1 shifted towards $key2 by $distance");
-            } else {
-                return $this->createPoint($point2->getX(), $point1->getY() + $distance, "Point $key1 shifted towards $key2 by $distance");
-            }
-        } 
-
-        // And the rest
-        $angle = $this->angle($key1, $key2);
-
-        // cos is x axis, sin is y axis
-        $deltaX = $distance * abs(cos(deg2rad($angle)));
-        $deltaY = $distance * abs(sin(deg2rad($angle)));
-        if ($point1->getX() < $point2->getX() && $point1->getY() > $point2->getY()) {
-            $x = $point1->getX() + abs($deltaX);
-            $y = $point1->getY() - abs($deltaY);
-        } elseif ($point1->getX() < $point2->getX() && $point1->getY() < $point2->getY()) {
-            $x = $point1->getX() + abs($deltaX);
-            $y = $point1->getY() + abs($deltaY);
-        } elseif ($point1->getX() > $point2->getX() && $point1->getY() > $point2->getY()) {
-            $x = $point1->getX() - abs($deltaX);
-            $y = $point1->getY() - abs($deltaY);
-        } elseif ($point1->getX() > $point2->getX() && $point1->getY() < $point2->getY()) {
-            $x = $point1->getX() - abs($deltaX);
-            $y = $point1->getY() + abs($deltaY);
-        } else {
-            $x = $point1->getX() + $deltaX;
-            $y = $point1->getY() + $deltaY;
-        }
-
+		$x = $point1->getX() - $absdist*cos(deg2rad($angle));
+		$y = $point1->getY() + $absdist*sin(deg2rad($angle));
+        
         return $this->createPoint($x, $y, "Point $key1 shifted towards $key2 by $distance");
     }
     

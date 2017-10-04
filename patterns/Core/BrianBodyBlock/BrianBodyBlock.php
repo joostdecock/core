@@ -122,11 +122,17 @@ class BrianBodyBlock extends Pattern
         $this->draftFrontBlock($model);
         $this->finalizeFrontBlock($model);
 
-        // Tweak the sleeve until it fits the armhole
-        do {
-            $this->draftSleeveBlock($model);
-        } while (abs($this->armholeDelta($model)) > 1);
-        $this->msg('After '.$this->v('sleeveTweakRun').' attemps, the sleeve head is '.round($this->armholeDelta($model),1).'mm off.');
+        // Do not tweak if the requested pattern is not us but a (grand)child class
+        if($this->requested() === __CLASS__) {
+            // Tweak the sleeve until it fits the armhole
+            do {
+                $this->draftSleeveBlock($model);
+            } while (abs($this->armholeDelta($model)) > 1);
+            $this->msg('After '.$this->v('sleeveTweakRun').' attemps, the sleeve head is '.round($this->armholeDelta($model),1).'mm off.');
+        } else {
+                $this->draftSleeveBlock($model, true); // Don't tweak
+        }
+
         $this->finalizeSleeveBlock($model);
 
         if ($this->isPaperless) {
@@ -155,21 +161,24 @@ class BrianBodyBlock extends Pattern
         $this->draftBackBlock($model);
         $this->draftFrontBlock($model);
         
-        // Tweak the sleeve until it fits the armhole
-        do {
-            $this->draftSleeveBlock($model);
-        } while (abs($this->armholeDelta($model)) > 1);
-        $this->msg('After '.$this->v('sleeveTweakRun').' attemps, the sleeve head is '.round($this->armholeDelta($model),1).'mm off.');
+        // Do not tweak if the requested pattern is not us but a (grand)child class
+        if($this->requested() === __CLASS__) {
+            // Tweak the sleeve until it fits the armhole
+            do {
+                $this->draftSleeveBlock($model);
+            } while (abs($this->armholeDelta($model)) > 1);
+            $this->msg('After '.$this->v('sleeveTweakRun').' attemps, the sleeve head is '.round($this->armholeDelta($model),1).'mm off.');
+        } else {
+                $this->draftSleeveBlock($model);
+        }
     }
 
     /**
      * Calculates the difference between the armhole and sleevehead length
      *
-     * @param \Freesewing\Model $model The model to draft for
-     *
      * @return float The difference between the armhole and sleevehead
      */
-    private function armholeDelta($model) 
+    protected function armholeDelta() 
     {
         $this->setValue('armholeLength', $this->v('frontArmholeLength') + $this->v('backArmholeLength'));
         return $this->v('armholeLength') - $this->v('sleeveheadLength');
@@ -463,7 +472,7 @@ class BrianBodyBlock extends Pattern
                 // No, this will be a tweaked draft. So let's tweak
                 if($this->armholeDelta($model) > 0) {
                     //  Armhole is larger than sleeve head. Increase tweak factor 
-                    $this->setValue('sleeveTweakFactor', $this->v('sleeveTweakFactor')*1.01);
+                    $this->setValue('sleeveTweakFactor', $this->v('sleeveTweakFactor')*1.03);
                 } else {
                     //  Armhole is smaller than sleeve head. Decrease tweak factor 
                     $this->setValue('sleeveTweakFactor', $this->v('sleeveTweakFactor')*0.99);

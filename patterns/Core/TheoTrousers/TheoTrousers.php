@@ -42,6 +42,9 @@ class TheoTrousers extends TheodoreTrousers
      */
     public function initialize($model)
     {
+        // Prevent missing sa from causing warnings
+        $this->setOptionIfUnset('sa', 0);
+        
         // This option is fixed in the legacy code
         $this->setOptionIfUnset('trouserBottomWidth', 226);   
         

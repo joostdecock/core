@@ -586,6 +586,33 @@ abstract class Pattern
     }
 
     /**
+     * Returns the classname of the current pattern
+     *
+     * If your pattern extends another pattern (and another, and ...) this
+     * will give you the class if the pattern that was actually called, regardless
+     * of in what class you check it.
+     *
+     * You can compare this to PHP's magic __CLASS__ variable
+     *
+     * @return string $class The full namespace name of the class
+     */
+    public function getClass()
+    {
+        $reflector = new \ReflectionClass(get_class($this));
+        
+        return $reflector->name;
+    }
+
+    /** Alias of getClass() 
+     * 
+     * @return string $class The full namespace name of the class
+     */
+    public function requested()
+    {
+        return $this->getClass();
+    }
+
+    /**
      * Returns an array of classes between this and the abstract pattern class
      *
      * If your pattern extends another pattern (and another, and ...) this

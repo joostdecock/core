@@ -400,15 +400,15 @@ class WahidWaistcoat extends BrianBodyBlock
         $p->addPoint(7003, $p->shiftTowards(7001,'.help1',$ph)); // Exact right dart side, bottom. Taking dart angle into account
         $p->addPoint(7004, $p->flipX(7003,$p->x(7000))); // Left dart side, bottom
 
-        $p->addPoint(7005, $p->shift(7001, $p->angle(7001,7003)-90+self::POCKET_ANGLE, $pw/2));
-        $p->addPoint(7006, $p->shift(7005, $p->angle(7001,7003)-180+self::POCKET_ANGLE, $ph));
+        $p->addPoint(7005, $p->shift(7001, $p->angle(7001,7003)+90+self::POCKET_ANGLE, $pw/2));
+        $p->addPoint(7006, $p->shift(7005, $p->angle(7001,7003)+self::POCKET_ANGLE, $ph));
 
-        $p->addPoint(7007, $p->shift(7002, $p->angle(7002,7004)-90+self::POCKET_ANGLE, $pw/-2));
-        $p->addPoint(7008, $p->shift(7007, $p->angle(7002,7004)-180+self::POCKET_ANGLE, $ph));
+        $p->addPoint(7007, $p->shift(7002, $p->angle(7002,7004)+90+self::POCKET_ANGLE, $pw/-2));
+        $p->addPoint(7008, $p->shift(7007, $p->angle(7002,7004)+self::POCKET_ANGLE, $ph));
 
         // Make Front shoulder 1cm more sloped
         $p->addPoint('shoulderFront', $p->shiftAlong(12,19,17,10,10));
-        $p->addPoint('shoulderFrontCp', $p->shift('shoulderFront',$p->angle(8,'shoulderFront')+90,10));
+        $p->addPoint('shoulderFrontCp', $p->shift('shoulderFront',$p->angle(8,'shoulderFront')-90,10));
 
         // Front scye dart
         $p->newPoint(2000, $p->x(5), $p->y(10));
@@ -423,7 +423,7 @@ class WahidWaistcoat extends BrianBodyBlock
             $torotate[] = 9111;
         }
         // Rotate front scye dart into front dart
-        foreach($torotate as $rp) $p->addPoint($rp, $p->rotate($rp,907,-$angle));
+        foreach($torotate as $rp) $p->addPoint($rp, $p->rotate($rp,907,$angle));
 
         // Facing/Lining boundary (flb)
         $p->addPoint('flbTop', $p->shiftTowards(8,'shoulderFront', $p->distance(8,'shoulderFront')/2));
@@ -489,7 +489,7 @@ class WahidWaistcoat extends BrianBodyBlock
         foreach($points as $i) $p->newPoint($i, $wfb->x($i), $wfb->y($i));
 
         // Make back shoulder 1cm more sloped
-        $p->addPoint( 'shoulderBack', $p->shift(12,$p->angle(8,12)+90,10));
+        $p->addPoint( 'shoulderBack', $p->shift(12,$p->angle(8,12)-90,10));
 
         // Shoulder inset
         $p->addPoint( 'shoulderBack', $p->shiftTowards('shoulderBack',8,$this->o('shoulderInset')));
@@ -504,7 +504,7 @@ class WahidWaistcoat extends BrianBodyBlock
         $p->addPoint( 19, $p->rotate(19,'shoulderBack',90));
 
         // Back scye dart
-        $p->addPoint('.help1', $p->shift(10, $p->angle(907,10)-90, $this->o('backScyeDart')/2)); // Half of the dart
+        $p->addPoint('.help1', $p->shift(10, $p->angle(907,10)+90, $this->o('backScyeDart')/2)); // Half of the dart
         $angle = 2*($p->angle(907,'.help1') - $p->angle(907,10)); // This is the dart angle
         $toRotate = [18,10,19,17,'shoulderBack',8,20,1]; // Points involved in dart rotation
         foreach($toRotate as $i) $p->addPoint($i, $p->rotate($i, 907, -1*$angle));
@@ -693,7 +693,7 @@ class WahidWaistcoat extends BrianBodyBlock
         $p = $this->parts['front'];
 
         // Seam allowance
-        if($this->o('sa')) $p->offsetPath('sa', 'saBase', $this->o('sa'), 1, ['class' => 'sa fabric']);
+        if($this->o('sa')) $p->offsetPath('sa', 'saBase', $this->o('sa')*-1, 1, ['class' => 'sa fabric']);
 
         // Title
         $p->newPoint('titleAnchor', $p->x(8), $p->y(5000));
@@ -721,7 +721,7 @@ class WahidWaistcoat extends BrianBodyBlock
         $p = $this->parts['back'];
 
         // Seam allowance
-        if($this->o('sa')) $p->offsetPath('sa', 'saBase', $this->o('sa'), 1, ['class' => 'sa fabric']);
+        if($this->o('sa')) $p->offsetPath('sa', 'saBase', $this->o('sa')*-1, 1, ['class' => 'sa fabric']);
 
         // Title
         $p->newPoint('titleAnchor', $p->x(2)+$p->deltaX(2,907)/2, $p->y(5));
@@ -754,7 +754,7 @@ class WahidWaistcoat extends BrianBodyBlock
         $p = $this->parts['frontFacing'];
 
         // Seam allowance
-        if($this->o('sa')) $p->offsetPath('sa', 'seamline', $this->o('sa'), 1, ['class' => 'sa fabric']);
+        if($this->o('sa')) $p->offsetPath('sa', 'seamline', $this->o('sa')*-1, 1, ['class' => 'sa fabric']);
 
         // Title
         $p->newPoint('titleAnchor', $p->x(300)+$p->deltaX(300,'flbTop')/2, $p->y(5000));
@@ -783,7 +783,7 @@ class WahidWaistcoat extends BrianBodyBlock
         $p = $this->parts['frontLining'];
 
         // Seam allowance
-        if($this->o('sa')) $p->offsetPath('sa', 'seamline', $this->o('sa')*-1, 1, ['class' => 'sa lining']);
+        if($this->o('sa')) $p->offsetPath('sa', 'seamline', $this->o('sa'), 1, ['class' => 'sa lining']);
 
         // Title
         $p->newPoint('titleAnchor', $p->x(907)+$p->deltaX(907,5)/2, $p->y(2907));
@@ -1012,7 +1012,7 @@ class WahidWaistcoat extends BrianBodyBlock
         $p->newWidthDimension('907edge', 907); // Dart tip
         $p->newWidthDimension(4001,5050,$p->y(4001)+35, $p->unit(10) ,['class' => 'dimension dimension-sm']); // Button offset from edge
         $p->newWidthDimension(10,5); // Deph of armhole
-        $p->newCurvedDimension('M 2912 L 2910 C 2914 2906 2902 C 2904 2907 5', 25); // Side curve
+        $p->newCurvedDimension('M 2912 L 2910 C 2914 2906 2902 C 2904 2907 5', -25); // Side curve
 
     }
 
@@ -1049,7 +1049,7 @@ class WahidWaistcoat extends BrianBodyBlock
 
         // Vertical dimensions on the left
         $xBase = $p->x(5);
-        $p->newCurvedDimension('M 2911 L 2910 C 2914 2906 2902 C 2904 2907 5', 25); // Side curve
+        $p->newCurvedDimension('M 2911 L 2910 C 2914 2906 2902 C 2904 2907 5', -25); // Side curve
         $p->newHeightDimension(2911,5,$xBase+40); // Height to armhole
         $p->newHeightDimension(2911,'shoulderBack',$xBase+55); // Height to shoulder point
 

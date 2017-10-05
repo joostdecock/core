@@ -166,7 +166,7 @@ class AaronAshirt extends BrianBodyBlock
         $p->addPoint('.help2', $p->shift(100, 180, 20), 'Helper point to intersect with bottom of neckline');
         $p->addPoint(104, $p->beamsCross(103, '.help1', 100, '.help2'), 'Control point for 100');
         $p->addPoint(105, $p->shiftTowards(103, 104, $p->distance(103, 104) * $this->getOption('necklineBend')), 'Control point for 103');
-        $p->addPoint(106, $p->shift(102, $p->angle(102, 103) - 90, $p->deltaY(102, 5) / 2), 'Control point for 102');
+        $p->addPoint(106, $p->shift(102, $p->angle(102, 103) + 90, $p->deltaY(102, 5) / 2), 'Control point for 102');
         $p->addPoint(107, $p->shift(5, 0, $p->deltaX(5, 102)), 'Control point for 5');
 
         // Hips
@@ -269,12 +269,12 @@ class AaronAshirt extends BrianBodyBlock
 
         if($this->o('sa')) {
             // Seam allowance | Point indexes from 200 upward
-            $p->offsetPathString('sa1', 'M 102 L 103', $this->o('sa'));
+            $p->offsetPathString('sa1', 'M 102 L 103', $this->o('sa')*-1);
             $p->newPath('shoulderSA', 'M 102 L sa1-line-102TO103 L sa1-line-103TO102 L 103', ['class' => 'fabric sa']);
             $p->addPoint(200, $p->shift(111, -90, $this->o('sa')*2), 'Hem allowance @ CF');
             $p->addPoint(201, $p->shift(110, -90, $this->o('sa')*2), 'Hem allowance @ CF');
             $p->addPoint(201, $p->shift(201, 0, $this->o('sa')), 'Hem allowance @ side');
-            $p->offsetPathString('sideSA', 'M 110 L 112 C 113 5 5', $this->o('sa'), 1, ['class' => 'fabric sa']);
+            $p->offsetPathString('sideSA', 'M 110 L 112 C 113 5 5', $this->o('sa')*-1, 1, ['class' => 'fabric sa']);
             $p->newPath('hemSA', 'M 111 L 200 L 201 L sideSA-line-110TO112 M 5 L sideSA-curve-5TO112', ['class' => 'fabric sa']);
         }
 
@@ -348,9 +348,9 @@ class AaronAshirt extends BrianBodyBlock
 
         if($this->o('sa')) {
             // Seam allowance | Point indexes from 200 upward
-            $p->offsetPathString('sa1', 'M 102 L 103', $this->o('sa'));
+            $p->offsetPathString('sa1', 'M 102 L 103', $this->o('sa')*-1);
             $p->newPath('shoulderSA', 'M 102 L sa1-line-102TO103 L sa1-line-103TO102 L 103', ['class' => 'fabric sa']);
-            $p->offsetPathString('sideSA', 'M 110 L 112 C 113 5 5', $this->o('sa'), 1, ['class' => 'fabric sa']);
+            $p->offsetPathString('sideSA', 'M 110 L 112 C 113 5 5', $this->o('sa')*-1, 1, ['class' => 'fabric sa']);
             $p->addPoint(200, $p->shift(111, -90, $this->o('sa')*2), 'Hem allowance @ CF');
             $p->addPoint(201, $p->shift(110, -90, $this->o('sa')*2), 'Hem allowance @ CF');
             $p->addPoint(201, $p->shift(201, 0, $this->o('sa')), 'Hem allowance @ side');
@@ -447,7 +447,7 @@ class AaronAshirt extends BrianBodyBlock
 
         // Heights right side
         $xBase = $p->x(5);
-        $p->newCurvedDimension('M 110 L 112 C 113 5 5', 20);
+        $p->newCurvedDimension('M 110 L 112 C 113 5 5', -20);
         $p->newHeightDimension(110,5, $xBase+35);
         $p->newHeightDimension(110,102, $xBase+50);
 
@@ -482,7 +482,7 @@ class AaronAshirt extends BrianBodyBlock
 
         // Heights right side
         $xBase = $p->x(5);
-        $p->newCurvedDimension('M 110 L 112 C 113 5 5', 20);
+        $p->newCurvedDimension('M 110 L 112 C 113 5 5', -20);
         $p->newHeightDimension(110,5, $xBase+35);
         $p->newHeightDimension(110,102, $xBase+50);
 

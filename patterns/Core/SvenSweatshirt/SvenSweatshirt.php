@@ -220,7 +220,7 @@ class SvenSweatshirt extends BrianBodyBlock
 
         // Set grid anchor
         $p->clonePoint(4, 'gridAnchor');
-
+        
         // Mark paths for sample service
         $p->paths['seamline']->setSample(true);
     
@@ -341,8 +341,8 @@ class SvenSweatshirt extends BrianBodyBlock
         
         // Seam allowance 
         if($this->o('sa')) {
-            $p->offsetPath('sa','saBase', $this->o('sa'), 1, ['class' => 'fabric sa']);
-            $p->offsetPath('hemSa','hemBase', $this->o('sa')*3, 1, ['class' => 'fabric sa']);
+            $p->offsetPath('sa','saBase', $this->o('sa')*-1, 1, ['class' => 'fabric sa']);
+            $p->offsetPath('hemSa','hemBase', $this->o('sa')*-3, 1, ['class' => 'fabric sa']);
             // Join ends
             $p->newPath('saJoints', 'M sa-endPoint L 9 M sa-startPoint L hemSa-endPoint M hemSa-startPoint L 4', ['class' => 'fabric sa']);
         }
@@ -373,8 +373,8 @@ class SvenSweatshirt extends BrianBodyBlock
         
         // Seam allowance
         if($this->o('sa')) {
-            $p->offsetPath('sa','saBase', $this->o('sa'), 1, ['class' => 'fabric sa']);
-            $p->offsetPath('hemSa','hemBase', $this->o('sa')*3, 1, ['class' => 'fabric sa']);
+            $p->offsetPath('sa','saBase', $this->o('sa')*-1, 1, ['class' => 'fabric sa']);
+            $p->offsetPath('hemSa','hemBase', $this->o('sa')*-3, 1, ['class' => 'fabric sa']);
             // Join ends
             $p->newPath('saJoints', 'M sa-endPoint L 9 M sa-startPoint L hemSa-endPoint M hemSa-startPoint L 4', ['class' => 'fabric sa']);
         }
@@ -405,14 +405,15 @@ class SvenSweatshirt extends BrianBodyBlock
 
         // Seam allowance 
         if($this->o('sa')) {
-            $p->offsetPath('sa','saBase', $this->o('sa')*-1, 1, ['class' => 'fabric sa']);
-            $p->offsetPath('hemSa','hemBase', $this->o('sa')*3, 1, ['class' => 'fabric sa']);
+            $p->offsetPath('sa','saBase', $this->o('sa'), 1, ['class' => 'fabric sa']);
+            $p->offsetPath('hemSa','hemBase', $this->o('sa')*-3, 1, ['class' => 'fabric sa']);
             // Join ends
             $p->newPath('saJoints', 'M hemSa-startPoint L sa-startPoint M hemSa-endPoint L sa-endPoint', ['class' => 'fabric sa']);
         }
 
 
         // Scalebox
+        $p->clonePoint(2,'gridAnchor');
         $p->newSnippet('scalebox', 'scalebox', 'gridAnchor');
 
         // Title
@@ -465,7 +466,7 @@ class SvenSweatshirt extends BrianBodyBlock
         $p->newLinearDimension(8,12,-20);
 
         // Armhole length
-        $p->newCurvedDimension('M 5 C 13 16 14 C 15 18 10 C 17 19 12', 25);
+        $p->newCurvedDimension('M 5 C 13 16 14 C 15 18 10 C 17 19 12', -25);
         
         // Waist width
         $p->newWidthDimension(3, 'waist');
@@ -502,7 +503,7 @@ class SvenSweatshirt extends BrianBodyBlock
         $p->newLinearDimension(8,12,-20);
 
         // Armhole length
-        $p->newCurvedDimension('M 5 C 13 16 14 C 15 18 10 C 17 19 12', 25);
+        $p->newCurvedDimension('M 5 C 13 16 14 C 15 18 10 C 17 19 12', -25);
         
         // Waist width
         $p->newWidthDimension(3, 'waist');
@@ -542,6 +543,6 @@ class SvenSweatshirt extends BrianBodyBlock
             C 24 11 11
             C 11 27 19
             C 26 5 5
-        ', -20);
+        ', 20);
     }
 }

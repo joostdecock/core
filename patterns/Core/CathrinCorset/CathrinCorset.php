@@ -535,7 +535,7 @@ class CathrinCorset extends Pattern
                     $msg = '2x '.$this->t('from fabric');
                 }
                 $p->addTitle("titleAnchor$i", $i, $this->t('Panel')." $i", $msg, 'vertical-small');
-                if($this->o('sa')) $p->offsetPathString($part.'-sa', $this->{"path$i"}, $this->o('sa'), 1, ['class' => 'fabric sa']);
+                if($this->o('sa')) $p->offsetPathString($part.'-sa', $this->{"path$i"}, $this->o('sa')*-1, 1, ['class' => 'fabric sa']);
 
             }
         }
@@ -738,7 +738,7 @@ class CathrinCorset extends Pattern
         $p->newPath('.helpWaist', 'M 141 L .waist2', ['class' => 'helpline']);
 
         // Seam length right
-        $p->newCurvedDimension('M 291-1 C 180 145 141 C 143 103 101', 25);
+        $p->newCurvedDimension('M 291-1 C 180 145 141 C 143 103 101', -25);
 
         // Seam length left
         $p->newLinearDimension('191-1','50-1', -25);
@@ -780,10 +780,10 @@ class CathrinCorset extends Pattern
         $p->newWidthDimension(102,201,$p->y(201)-25);
 
         // Seam length right
-        $p->newCurvedDimension('M 292-1 C 292-1 245 241 C 243 203 201', 45);
+        $p->newCurvedDimension('M 292-1 C 292-1 245 241 C 243 203 201', -45);
 
         // Seam length left
-        $p->newCurvedDimension('M 291-1 C 291-1 146 142 C 144 104 102', -40);
+        $p->newCurvedDimension('M 291-1 C 291-1 146 142 C 144 104 102', 40);
 
         // Heights at the left
         $p->newHeightDimension('291-1',142,$p->x('291-1')-15);
@@ -814,10 +814,10 @@ class CathrinCorset extends Pattern
         $p->newWidthDimension(202,301,$p->y(301)-25);
 
         // Seam length right
-        $p->newCurvedDimension('M 392-1 C 392-1 345 341 C 343 303 301', 45);
+        $p->newCurvedDimension('M 392-1 C 392-1 345 341 C 343 303 301', -45);
 
         // Seam length left
-        $p->newCurvedDimension('M 391-1 C 391-1 246 242 C 244 204 202', -40);
+        $p->newCurvedDimension('M 391-1 C 391-1 246 242 C 244 204 202', 40);
 
         // Heights at the left
         $p->newHeightDimension('391-1',242,$p->x('391-1')-15);
@@ -848,10 +848,10 @@ class CathrinCorset extends Pattern
         $p->newWidthDimension(302,401,$p->y(401)-25);
 
         // Seam length right
-        $p->newCurvedDimension('M 492-1 C 492-1 445 441 C 443 403 401', 45);
+        $p->newCurvedDimension('M 492-1 C 492-1 445 441 C 443 403 401', -45);
 
         // Seam length left
-        $p->newCurvedDimension('M 393-1 C 393-1 346 342 C 344 304 302', -40);
+        $p->newCurvedDimension('M 393-1 C 393-1 346 342 C 344 304 302', 40);
 
         // Heights at the left
         $p->newHeightDimension('393-1',342,$p->x('393-1')-15);
@@ -882,10 +882,10 @@ class CathrinCorset extends Pattern
         $p->newWidthDimension(402,501,$p->y(501)-25);
 
         // Seam length right
-        $p->newCurvedDimension('M 592-1 C 592-1 545 541 C 543 503 501', 45);
+        $p->newCurvedDimension('M 592-1 C 592-1 545 541 C 543 503 501', -45);
 
         // Seam length left
-        $p->newCurvedDimension('M 493-1 C 493-1 446 442 C 444 404 402', -40);
+        $p->newCurvedDimension('M 493-1 C 493-1 446 442 C 444 404 402', 40);
 
         // Heights at the left
         $p->newHeightDimension('493-1',442,$p->x('493-1')-15);
@@ -916,7 +916,7 @@ class CathrinCorset extends Pattern
         $p->newWidthDimension(502,50,$p->y(50)-25);
 
         // Seam length left
-        $p->newCurvedDimension('M 593-1 C 593-1 546 542 C 544 504 502', -40);
+        $p->newCurvedDimension('M 593-1 C 593-1 546 542 C 544 504 502', 40);
 
         // Heights at the left
         $p->newHeightDimension('593-1',542,$p->x('593-1')-15);

@@ -92,9 +92,9 @@ class TamikoTop extends Pattern
         $p->newPoint(     8, $p->x(1), $p->y(1)+50);
         $p->addPoint(     9, $p->shiftTowards(3, 1, 50));
         $angle = $p->angle(8, 3);
-        $p->addPoint(    10, $p->rotate(9, 3, $angle-90));
+        $p->addPoint(    10, $p->rotate(9, 3, $angle+90));
         $p->newPoint(    20, $p->x(4), $p->y(4)-$ch);
-        $p->addPoint(    21, $p->rotate(20, 4, $angle-90));
+        $p->addPoint(    21, $p->rotate(20, 4, $angle+90));
         $p->addPoint(    22, $p->shiftTowards(1, 21, $ad));
         $p->addPoint(    23, $p->shiftTowards(1, 21, $model->m('centerBackNeckToWaist')+$model->m('naturalWaistToHip')));
         $p->addPoint(    24, $p->shiftTowards(1, 21, $model->m('centerBackNeckToWaist')+$model->m('naturalWaistToHip')+40));
@@ -158,7 +158,7 @@ class TamikoTop extends Pattern
         $p->newSnippet('scalebox', 'scalebox', 'scaleboxAnchor');
 
         // Seam allowance
-        if($this->o('sa')) $p->offsetPathString('sa', 'M 3 C 3 6 5 C 7 4 4', $this->o('sa'), 1, ['class' => 'sa fabric']);
+        if($this->o('sa')) $p->offsetPathString('sa', 'M 3 C 3 6 5 C 7 4 4', $this->o('sa')*-1, 1, ['class' => 'sa fabric']);
 
         // Notches
         $p->notch([23,22,31,38,10]);

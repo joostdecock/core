@@ -30,9 +30,20 @@ class NotationLegend extends \Freesewing\Patterns\Core\Pattern
      */
     public function draft($model)
     {
-        $item = 'example_'.$this->o('item'); 
-        if(!method_exists($this,$item)) die();
-        $this->{$item}($this->parts['part'],$model);
+        if($this->o('item') === 'none') {
+            // Show all figures
+            foreach(get_class_methods(__CLASS__) as $method) {
+                if(substr($method,0,8) == 'example_') {
+                    $this->newPart($method);
+                    $this->{$method}($this->parts[$method],$model); 
+                }
+            }
+        } else {
+            // Show specific figure
+            $method = 'example_'.$this->o('item'); 
+            if(!method_exists($this,$method)) die('Method not found');
+            $this->{$method}($this->parts['part'],$model);
+        }
     }
 
     /**
@@ -112,7 +123,7 @@ class NotationLegend extends \Freesewing\Patterns\Core\Pattern
         $types = ['fabric','lining','interfacing','canvas','various'];
         foreach($types as $type) {
             $p->newPath($type,"M $type-1 L $type-2 L $type-3 L $type-4 C $type-5 $type-6 $type-7 L $type-8 C $type-9 $type-10 $type-1 z", ['class' => $type]);   
-            $p->offsetPath("$type-sa", $type, 4, 1, ['class' => "$type sa"]);
+            $p->offsetPath("$type-sa", $type, -4, 1, ['class' => "$type sa"]);
             $p->newTextOnPath($type, "M $type-2 L $type-3", $type, ['dy' => -5, 'class' => "text-lg"], false);
 
         }

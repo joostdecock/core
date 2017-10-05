@@ -19,7 +19,7 @@ measurements:
 options:
     class:
         type: "chooseOne"
-        default: "BezierToolbox"
+        default: "none"
     method:
         type: "chooseOne"
-        default: "findBezierBoundary"
+        default: "none"

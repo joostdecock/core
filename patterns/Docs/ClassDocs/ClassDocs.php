@@ -30,9 +30,20 @@ class ClassDocs extends \Freesewing\Patterns\Core\Pattern
      */
     public function draft($model)
     {
-        $method = 'example_'.$this->o('class').'_'.$this->o('method'); 
-        if(!method_exists($this,$method)) die();
-        $this->{$method}($this->parts['part'],$model);
+        if($this->o('class') === 'none' && $this->o('method') === 'none') {
+            // Show all
+            foreach(get_class_methods(__CLASS__) as $method) {
+                if(substr($method,0,8) == 'example_') {
+                    $this->newPart($method);
+                    $this->{$method}($this->parts[$method],$model); 
+                }
+            }
+        } else {
+            // Show specific example
+            $method = 'example_'.$this->o('class').'_'.$this->o('method'); 
+            if(!method_exists($this,$method)) die('No such method');
+            $this->{$method}($this->parts['part'],$model);
+        }
     }
 
     /**

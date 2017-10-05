@@ -361,24 +361,37 @@ class Part
      * @param string $nr        Number of the part to print on the pattern
      * @param string $title     Title of the part to print on the pattern
      * @param string $msg       Message to print on the pattern
-     * @param string $mode      Possible modes: default, vertical, horizontal
+     * @param string $mode      Possible modes: default, small, horizontal, vertical, vertical-small 
      */
     public function addTitle($anchorKey, $nr, $title, $msg = '', $mode = 'default')
     {
         $class = str_replace('-',' ',$mode);
+        $title = str_replace("\n", " ", $title);  /* Remove any newline characters from the Title */
+        $lineHeight = ((strpos($mode, 'small') !== false) ? 6 : 11); /* setting the line-height attribute, depending on thesize of the Title */
+
         if($mode == 'vertical' || $mode == 'vertical-small') {
+            /* Moving the Title slightly on the horizontal pane. 
+               If there is no msg under the Title, center it on the anchor point. 
+               Otherwise align the center between the Title and the msg with the anchor point */
+            $shift = ( $msg == '' ? 2 : ($mode == 'vertical-small' ? 5 : 10)); 
             $this->newText('partNumber', $anchorKey, $nr, ['class' => "part-nr $class"]);
             $this->newText(
                 'partTitle', $anchorKey, $title,
-                ['class' => "part-title $class", 'transform' => "translate(5, 10)", 'writing-mode' => 'tb-rl']
+                ['class' => "part-title $class", 'transform' => "translate(".$shift.", 10)", 'writing-mode' => 'tb-rl']
             );
-            $this->newText('partMsg', $anchorKey, $msg, ['class' => "part-msg $class", 'transform' => "translate(-5, 10)", 'writing-mode' => 'tb-rl']);
+            $this->newText(
+                'partMsg', $anchorKey, $msg, 
+                ['class' => "part-msg $class", 'transform' => "translate(-5, 10)", 'writing-mode' => 'tb-rl', 'line-height' => $lineHeight]
+            );
         } else {
             if(strpos($class, 'small')) $shift = 1;
             else $shift = 2;
             $this->newText('partNumber', $anchorKey, $nr, ['class' => "part-nr $class", 'transform' => 'translate(0, '.(-10*$shift).')']);
             $this->newText('partTitle', $anchorKey, $title, ['class' => "part-title $class"]);
-            $this->newText('partMsg', $anchorKey, $msg, ['class' => "part-msg $class", 'transform' => 'translate(0, '.(7.5*$shift).')']);
+            $this->newText(
+                'partMsg', $anchorKey, $msg, 
+                ['class' => "part-msg $class", 'transform' => 'translate(0, '.(7.5*$shift).')', 'line-height' => $lineHeight]
+            );
         }
     }
 

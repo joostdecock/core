@@ -103,7 +103,7 @@ class PartOffsetCode extends \PHPUnit\Framework\TestCase
         $p->newPoint(1,0,0);
         $p->newPoint(2,100,0);
         $p->newPoint(3,0,100);
-        $p->offsetPathString(1,'M 1 L 2 L 3 z', 10);
+        $p->offsetPathString(1,'M 1 L 2 L 3 z', -10);
         $this->saveFixture('lineOffsetClosedPath', serialize($p->paths));
         $this->assertEquals(serialize($p->paths),$this->loadFixture('lineOffsetClosedPath'));
     }
@@ -132,9 +132,9 @@ class PartOffsetCode extends \PHPUnit\Framework\TestCase
         $p->newPoint(2,100,0);
         $p->newPoint(3,100,100);
         $p->newPoint(4,0,100);
-        $p->offsetPathString(1,'M 1 L 2 C 3 4 4', 10); // Inside offset, no gap
-        $p->offsetPathString(2,'M 1 L 2 C 3 4 4', -10); // Outside offset, gap, cp2 = end
-        $p->offsetPathString(3,'M 1 L 2 C 2 3 4', -10); // Outside offset, gap, start = cp1
+        $p->offsetPathString(1,'M 1 L 2 C 3 4 4', -10); // Inside offset, no gap
+        $p->offsetPathString(2,'M 1 L 2 C 3 4 4', 10); // Outside offset, gap, cp2 = end
+        $p->offsetPathString(3,'M 1 L 2 C 2 3 4', 10); // Outside offset, gap, start = cp1
         $this->saveFixture('offsetLineCurve', serialize($p->paths));
         $this->assertEquals(serialize($p->paths),$this->loadFixture('offsetLineCurve'));
     }
@@ -149,10 +149,10 @@ class PartOffsetCode extends \PHPUnit\Framework\TestCase
         $p->newPoint(2,100,0);
         $p->newPoint(3,100,100);
         $p->newPoint(4,0,100);
-        $p->offsetPathString(1,'M 4 C 4 3 2 L 1', -10); // Inside offset, no gap
+        $p->offsetPathString(1,'M 4 C 4 3 2 L 1', 10); // Inside offset, no gap
         $p->newPoint(1,0,100);
-        $p->offsetPathString(2,'M 4 C 4 3 2 L 1', 10); // Outside offset, gap, cp2 = end
-        $p->offsetPathString(3,'M 4 C 3 2 2 L 1', 10); // Outside offset, gap, start = cp1
+        $p->offsetPathString(2,'M 4 C 4 3 2 L 1', -10); // Outside offset, gap, cp2 = end
+        $p->offsetPathString(3,'M 4 C 3 2 2 L 1', -10); // Outside offset, gap, start = cp1
         $this->saveFixture('offsetCurveLine', serialize($p->paths));
         $this->assertEquals(serialize($p->paths),$this->loadFixture('offsetCurveLine'));
     }
@@ -168,7 +168,7 @@ class PartOffsetCode extends \PHPUnit\Framework\TestCase
         $p->newPoint(3,100,100);
         $p->newPoint(4,200,100);
         $p->newPoint(5,200,200);
-        $p->offsetPathString(1,'M 1 C 2 3 3 C 3 4 5', 10); 
+        $p->offsetPathString(1,'M 1 C 2 3 3 C 3 4 5', -10); 
         $this->saveFixture('offsetCurveCurve', serialize($p->paths));
         $this->assertEquals(serialize($p->paths),$this->loadFixture('offsetCurveCurve'));
     }

@@ -11,5 +11,5 @@ parts:
 options:
     figure:
         type: "chooseOne"
-        default: ""
+        default: "none"
 

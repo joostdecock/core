@@ -1,11 +1,16 @@
 hidden: true
 info:
     name: "Pattern Template"
+    description: "This is an example pattern that you can copy as a starting point for your own patterns"
+    handle: "example"
     version: "1.0"
-    date: 20170118
     author: "Joost De Cock"
     email: "joost@decock.org"
     company: "freesewing.org"
+    link: "freesewing.org/pattern/example"
+    tags:
+        - menswear
+        - example
 
 parts:
     examplePart: "Example Part"
@@ -17,17 +22,43 @@ measurements:
     exampleMeasurement: 520
 
 options:
+# example group
     measureOption:
+        title: "Measure option example"
+        description: "An example of an option that takes a measure as input"
+        group: "example"
         type: "measure"
-        min: 1
-        max: 5
-        default: 3
+        min: 80
+        max: 200
+        default: 160
     percentOption:
+        title: "Percent option example"
+        description: "An example of an option that takes a percentage as input"
+        group: "example"
         type: "percent"
-        default: 50
+        min: 50
+        max: 65
+        default: 60
     chooseOneOption:
+        title: "Choose one option example"
+        description: "An example where you pick an option from a list"
+        group: "example"
         type: "chooseOne"
         options:
-            1: "Option 1"
-            2: "Option 2"
+            1: "Colours"
+            2: "Colors"
+            3: "Shapes"
         default: 1
+    conditionalOption:
+        title: "Conditional option example"
+        description: "An example of an option of which the display is controlled by another option"
+        group: "example"
+        type: "chooseOne"
+        options:
+            1: "Red"
+            2: "Green"
+            3: "Blue"
+        default: 3
+        dependsOn: 'chooseOnOption'
+        onlyOn: [1,2]
+

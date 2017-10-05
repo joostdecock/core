@@ -3,6 +3,87 @@
 > All notable changes to freesewing core should be be documented in this file.
 > Freesewing uses [Semantic Versioning](http://semver.org/).
 
+## Version 1.2.0
+
+**Release date**: 2017-10-05
+
+This release fixes an issue with the `Part::angle()` method, and deals with the ripple effects of that change.
+
+It also includes some small improvements to various patterns.
+
+### Changes
+
+#### Part::angle()
+The `Part::angle()` method returned results that were 180 degrees off. That's fixed now
+
+> This is kind of a big deal, because angle() is used in a lot of places,
+> so there are a bunch of updates to fix them all.
+> While this bug should have never been there, I suspect it was introduced
+> when trying to work out what quadrant of a circle an angle sits in.
+>
+> While doing that, it's likely that I got confused thinking that a positive
+> delta on the Y-axis puts the angle in the top quadrant (as common sense
+> would dictate) but that I lost track for a moment of the fact that in SVG
+> the coordinate system works differently, and the Y-axis increments downwards.
+
+All patterns that ship with freesewing core have been updated to handle these changes.
+If you have your own patterns, they will need updating too. You should look out for:
+
+ - Any place you use the `Part::angle()` method
+ - All path offset methods. The offset is shifted 180 degrees, so multiply your offset by -1
+
+The changes in `Part::angle()` also triggered some changes in other `Part` methods that depend on it.
+
+This is also the change that caused the bump in the minor version.
+
+#### Part::shiftTowards
+
+This method was rewritten to be more concise.
+
+#### Pattern::requested
+The new `Pattern::requested()` method contains the full class name of the pattern that was 
+requested by the user. 
+
+This is handy for comparison to PHP's magic `__CLASS__` variable to figure out whether your
+pattern is the pattern requested by the user, or merely a stepping stone to get there (because
+the requested pattern is a (grand)child).
+
+### Fixes
+
+#### Aaron
+
+ - Removed a division by zero check after updating the config file to no longer allow zero.
+
+#### Brian
+
+ - Only true seams if Brian is the requested pattern
+
+#### Simon
+
+ - Prevent a missing `sa` parameter from throwing a warning.
+
+#### Sven
+
+ - Fix issue where the hip measurements wasn't used, but only the chest measurement
+
+#### Theo
+
+ - Prevent a missing `sa` parameter from throwing a warning.
+ - Used small titles for smaller pattern parts
+
+#### Theodore
+
+ - Prevent a missing `sa` parameter from throwing a warning.
+ - Used small titles for smaller pattern parts
+
+#### Part::addTitle
+
+ - Fixed rendering issue in vertical titles
+
+
+
+Prevent a missing `sa` parameter from throwing a warning.
+
 ## Version 1.1.3
 
 **Release date**: 2017-09-29

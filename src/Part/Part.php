@@ -1528,8 +1528,8 @@ class Part
         $radius = $this->distance($key1, $key2);
         $angle = $this->angle($key1, $key2);
 
-        $x = $point2->getX() + $radius * cos(deg2rad($angle + $rotation));
-        $y = $point2->getY() + $radius * sin(deg2rad($angle + $rotation)) * -1;
+        $x = $point2->getX() + $radius * cos(deg2rad($angle + $rotation)) * -1;
+        $y = $point2->getY() + $radius * sin(deg2rad($angle + $rotation));
 
         return $this->createPoint($x, $y);
     }
@@ -1544,12 +1544,13 @@ class Part
      */
     public function angle($key1, $key2)
     {
-        if(Utils::isSamePoint($this->loadPoint($key1), $this->loadPoint($key2))) return 0;
+        $deltaX = $this->deltaX($key1, $key2);
+        $deltaY = $this->deltaY($key1, $key2);
 
-        $angle = -1 * rad2deg(acos($this->deltaX($key1, $key2) / $this->distance($key1, $key2))) + 180;
-        
-        if ($this->deltaY($key1, $key2) < 0) return $angle * -1;
-        else return $angle;
+        $rad = atan2($deltaY*-1,$deltaX);
+        while ($rad<0) $rad += 2*pi();
+
+        return rad2deg($rad);
     }
 
     /**
@@ -1586,51 +1587,7 @@ class Part
      */
     public function shiftTowards($key1, $key2, $distance)
     {
-        $point1 = $this->loadPoint($key1);
-        $point2 = $this->loadPoint($key2);
-
-        // Horizontal 
-        if($point1->getY() == $point2->getY()) {
-            if($point1->getX() > $point2->getX()) {
-                return $this->createPoint($point1->getX() - $distance, $point2->getY(), "Point $key1 shifted towards $key2 by $distance");
-            } else {
-                return $this->createPoint($point1->getX() + $distance, $point2->getY(), "Point $key1 shifted towards $key2 by $distance");
-            }
-        } 
-        
-        // Vertical 
-        if($point1->getX() == $point2->getX()) {
-            if($point1->getY() > $point2->getY()) {
-                return $this->createPoint($point2->getX(), $point1->getY() - $distance, "Point $key1 shifted towards $key2 by $distance");
-            } else {
-                return $this->createPoint($point2->getX(), $point1->getY() + $distance, "Point $key1 shifted towards $key2 by $distance");
-            }
-        } 
-
-        // And the rest
-        $angle = $this->angle($key1, $key2);
-
-        // cos is x axis, sin is y axis
-        $deltaX = $distance * abs(cos(deg2rad($angle)));
-        $deltaY = $distance * abs(sin(deg2rad($angle)));
-        if ($point1->getX() < $point2->getX() && $point1->getY() > $point2->getY()) {
-            $x = $point1->getX() + abs($deltaX);
-            $y = $point1->getY() - abs($deltaY);
-        } elseif ($point1->getX() < $point2->getX() && $point1->getY() < $point2->getY()) {
-            $x = $point1->getX() + abs($deltaX);
-            $y = $point1->getY() + abs($deltaY);
-        } elseif ($point1->getX() > $point2->getX() && $point1->getY() > $point2->getY()) {
-            $x = $point1->getX() - abs($deltaX);
-            $y = $point1->getY() - abs($deltaY);
-        } elseif ($point1->getX() > $point2->getX() && $point1->getY() < $point2->getY()) {
-            $x = $point1->getX() - abs($deltaX);
-            $y = $point1->getY() + abs($deltaY);
-        } else {
-            $x = $point1->getX() + $deltaX;
-            $y = $point1->getY() + $deltaY;
-        }
-
-        return $this->createPoint($x, $y, "Point $key1 shifted towards $key2 by $distance");
+        return $this->shift($key1, $this->angle($key1,$key2), $distance);
     }
     
     /**
@@ -2343,7 +2300,7 @@ class Part
         $d = new \Freesewing\Dimension();
 
         if($offset != 0) { // We need leaders
-            $angle = $this->angle($fromId,$toId)+90;
+            $angle = $this->angle($fromId,$toId)-90;
             foreach(['pathFrom' => $fromId, 'pathTo' => $toId] as $i => $point) {
                 ${$i} = $this->newId('.dw-');
                 $this->addPoint(${$i}, $this->shift($point, $angle, $offset));
@@ -2466,7 +2423,7 @@ class Part
     public function newCutOnFold($fromId, $toId, $text, $offset=20)
     {
         // Add via points
-        $angle = $this->angle($fromId, $toId)+90;
+        $angle = $this->angle($fromId, $toId)-90;
 
         $viaFrom = $this->newId('.cof');
         $this->addPoint($viaFrom, $this->shift($fromId,$angle,$offset));

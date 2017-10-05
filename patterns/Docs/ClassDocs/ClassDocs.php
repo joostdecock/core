@@ -30,9 +30,20 @@ class ClassDocs extends \Freesewing\Patterns\Core\Pattern
      */
     public function draft($model)
     {
-        $method = 'example_'.$this->o('class').'_'.$this->o('method'); 
-        if(!method_exists($this,$method)) die();
-        $this->{$method}($this->parts['part'],$model);
+        if($this->o('class') === 'none' && $this->o('method') === 'none') {
+            // Show all
+            foreach(get_class_methods(__CLASS__) as $method) {
+                if(substr($method,0,8) == 'example_') {
+                    $this->newPart($method);
+                    $this->{$method}($this->parts[$method],$model); 
+                }
+            }
+        } else {
+            // Show specific example
+            $method = 'example_'.$this->o('class').'_'.$this->o('method'); 
+            if(!method_exists($this,$method)) die('No such method');
+            $this->{$method}($this->parts['part'],$model);
+        }
     }
 
     /**
@@ -494,8 +505,8 @@ class ClassDocs extends \Freesewing\Patterns\Core\Pattern
         $p->newPath(1, 'M 1 L 2');
         $p->newPath(2, 'M 3 L 4 L 5 C 6 7 3 z');
 
-        $p->offsetPath(4,1,10,1, ['class' => 'seam-allowance']);
-        $p->offsetPath(5,2,-10,1, ['class' => 'seam-allowance']);
+        $p->offsetPath(4,1,-10,1, ['class' => 'seam-allowance']);
+        $p->offsetPath(5,2,10,1, ['class' => 'seam-allowance']);
     }
     
     /**
@@ -512,8 +523,8 @@ class ClassDocs extends \Freesewing\Patterns\Core\Pattern
         
         $p->newPath(1, 'M 1 L 2 L 3 C 4 5 1 z');
 
-        $p->offsetPathString(2,'M 3 C 4 5 1',-5,1, ['class' => 'stroke-warning']);
-        $p->offsetPathString(3,'M 1 L 2 L 3',-10,1, ['class' => 'stroke-note']);
+        $p->offsetPathString(2,'M 3 C 4 5 1',5,1, ['class' => 'stroke-warning']);
+        $p->offsetPathString(3,'M 1 L 2 L 3',10,1, ['class' => 'stroke-note']);
     }
     
     /**
@@ -527,6 +538,14 @@ class ClassDocs extends \Freesewing\Patterns\Core\Pattern
 
         for ($i=0;$i<360;$i+=10) {
             $p->addPoint($i,$p->rotate('moon','earth',$i));
+            $deltaX = $p->deltaX('earth', $i);
+            $deltaY = $p->deltaY('earth', $i);
+            $rad = atan2($deltaY*-1,$deltaX);
+            //$this->dbg("deltaX of point $i is $deltaX");
+            //$this->dbg("deltaY of point $i is $deltaY");
+            //$this->dbg("Radials of point $i is $rad");
+            $this->dbg("Angle of point $i is ".round($p->angle('earth', $i)));
+            //$this->dbg(" ");
         }    
         $p->newNote(60,60,60,7,15);
         $p->newNote(120,120,120,5,15);
@@ -562,13 +581,12 @@ class ClassDocs extends \Freesewing\Patterns\Core\Pattern
         /** @var \Freesewing\Part $p */
         $p->newPoint('origin', 90, 0);
         $p->newPoint('direction', 10, 90);
-
         $p->addPoint(1, $p->shiftTowards('origin','direction',30));
 
         $p->newNote(1,'origin','origin',3);
         $p->newNote(2,'direction','direction',3);
 
-        $p->newNote(3,1,$p->loadPoint(1)->getDescription(),5);
+        $p->newNote(3,1,'Point origin shifted towards direction by 30mm',5);
         $p->newLinearDimensionSm(1,'origin');
         
         $this->addBox($p,90);

@@ -20,9 +20,20 @@ class DesignTutorial extends \Freesewing\Patterns\Core\Pattern
 
     public function draft($model)
     {
-        $method = 'example_'.$this->o('figure'); 
-        if(!method_exists($this,$method)) die('Method not found');
-        $this->{$method}($this->parts['part'],$model);
+        if($this->o('figure') === 'none') {
+            // Show all figures
+            foreach(get_class_methods(__CLASS__) as $method) {
+                if(substr($method,0,8) == 'example_') {
+                    $this->newPart($method);
+                    $this->{$method}($this->parts[$method],$model); 
+                }
+            }
+        } else {
+            // Show specific figure
+            $method = 'example_'.$this->o('figure'); 
+            if(!method_exists($this,$method)) die('Method not found');
+            $this->{$method}($this->parts['part'],$model);
+        }
     }
 
     private function example_quarterNeck($p, $model)

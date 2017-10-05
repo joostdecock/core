@@ -534,12 +534,12 @@ class PartTest extends \PHPUnit\Framework\TestCase
         $p->newPoint(7,-10,-10);
 
         $this->assertEquals($p->angle(1,1),0);
-        $this->assertEquals($p->angle(2,1),0);
-        $this->assertEquals($p->angle(1,3),90);
-        $this->assertEquals($p->angle(1,4),0);
-        $this->assertEquals($p->angle(1,5),270);
-        $this->assertEquals($p->angle(1,6),135);
-        $this->assertEquals($p->angle(1,7),315);
+        $this->assertEquals($p->angle(2,1),180);
+        $this->assertEquals($p->angle(1,3),270);
+        $this->assertEquals($p->angle(1,4),180);
+        $this->assertEquals($p->angle(1,5),90);
+        $this->assertEquals($p->angle(1,6),315);
+        $this->assertEquals($p->angle(1,7),135);
     }
 
     /** 

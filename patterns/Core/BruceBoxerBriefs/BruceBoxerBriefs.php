@@ -284,7 +284,7 @@ class BruceBoxerBriefs extends Pattern
         $p->newPoint('tip', $p->x('bottomRight') * 1.111, $p->y('bottomRight') - $this->v('gusset'));
         $p->addPoint('tip', $p->shiftTowards('bottomRight', 'tip', $this->v('crotchSeamLength') - $this->v('gusset') * (1-$this->v('gussetInsetRatio'))));
         $p->newPoint('tipCpTop', $this->v('gusset')*1.2, 0);
-        $p->addPoint('tipCpBottom', $p->shift('tip', $p->angle('bottomRight', 'tip')-90, $this->v('gusset')*1.5));
+        $p->addPoint('tipCpBottom', $p->shift('tip', $p->angle('bottomRight', 'tip')+90, $this->v('gusset')*1.5));
 
         // Store cuve length
         $this->setValue('curve', $p->curveLen('tip', 'tipCpBottom', 'tipCpTop', 'topLeft'));
@@ -454,9 +454,9 @@ class BruceBoxerBriefs extends Pattern
 
         // Seam allowance
         if($this->o('sa')) {
-            $p->offsetPathString('sa1','M gussetTop C gussetCpRight gussetRight gussetRight', $this->o('sa'), 1, ['class' => 'fabric sa']);
-            $p->offsetPathString('sa2','M gussetRight L legRight', $this->o('sa')*2, 1, ['class' => 'fabric sa']);
-            $p->offsetPathString('sa3','M legRight L sideRight C sideRight centerCpRight center', $this->o('sa'), 1, ['class' => 'fabric sa']);
+            $p->offsetPathString('sa1','M gussetTop C gussetCpRight gussetRight gussetRight', $this->o('sa')*-1, 1, ['class' => 'fabric sa']);
+            $p->offsetPathString('sa2','M gussetRight L legRight', $this->o('sa')*-2, 1, ['class' => 'fabric sa']);
+            $p->offsetPathString('sa3','M legRight L sideRight C sideRight centerCpRight center', $this->o('sa')*-1, 1, ['class' => 'fabric sa']);
             // Join sa parts
             $p->newPath('sa-join', 'M gussetTop L sa1-startPoint M sa1-endPoint L sa2-startPoint M sa2-endPoint L sa3-startPoint M sa3-endPoint L center', ['class' => 'fabric sa']);
         }
@@ -498,8 +498,8 @@ class BruceBoxerBriefs extends Pattern
 
         // Seam allowance
         if($this->o('sa')) {
-            $p->offsetPathString('sa1', 'M bottomRight L topRight L topLeft L bottomLeft', $this->o('sa'), 1, ['class' => 'fabric sa']);
-            $p->offsetPathString('sa2', 'M bottomLeft L bottomRight', $this->o('sa')*2, 1, ['class' => 'fabric sa']);
+            $p->offsetPathString('sa1', 'M bottomRight L topRight L topLeft L bottomLeft', $this->o('sa')*-1, 1, ['class' => 'fabric sa']);
+            $p->offsetPathString('sa2', 'M bottomLeft L bottomRight', $this->o('sa')*-2, 1, ['class' => 'fabric sa']);
             // Join sa parts
             $p->newPath('sa-join', 'M sa1-endPoint L sa2-startPoint M sa2-endPoint L sa1-startPoint', ['class' => 'fabric sa']); 
         }
@@ -567,7 +567,7 @@ class BruceBoxerBriefs extends Pattern
                     L topLeft
                     C topLeft topMidCpLeft topMid
                     z
-                ', $this->o('sa')*-1, 1, ['class' => 'fabric sa']);
+                ', $this->o('sa'), 1, ['class' => 'fabric sa']);
             } else {
                 $p->offsetPathString('sa1','
                     M midLeft
@@ -578,7 +578,7 @@ class BruceBoxerBriefs extends Pattern
                     L leftTuskLeft
                     C curveLeftCpBottom curveLeftCpTop midLeft
                     z
-                ', $this->o('sa')*-1, 1, ['class' => 'fabric sa']);
+                ', $this->o('sa'), 1, ['class' => 'fabric sa']);
             }
         }
         
@@ -619,8 +619,8 @@ class BruceBoxerBriefs extends Pattern
         
         // Seam allowance
         if($this->o('sa')) {
-            $p->offsetPathString('sa1', ' M bottomLeft L topLeft C tipCpTop tipCpBottom tip L bottomRight ', $this->o('sa')*-1, 1, ['class' => 'fabric sa']);
-            $p->offsetPathString('sa2', 'M bottomRight L bottomLeft', $this->o('sa')*-2, 1, ['class' => 'fabric sa']);
+            $p->offsetPathString('sa1', ' M bottomLeft L topLeft C tipCpTop tipCpBottom tip L bottomRight ', $this->o('sa'), 1, ['class' => 'fabric sa']);
+            $p->offsetPathString('sa2', 'M bottomRight L bottomLeft', $this->o('sa')*2, 1, ['class' => 'fabric sa']);
             // Joint SA parts
             $p->newPath('sa3', 'M sa1-startPoint L sa2-endPoint M sa1-endPoint L sa2-startPoint', ['class' => 'fabric sa']);
         }

@@ -19,4 +19,4 @@ measurements:
 options:
     item:
         type: "chooseOne"
-        default: "seamline"
+        default: "none"

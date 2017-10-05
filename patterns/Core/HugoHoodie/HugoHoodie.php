@@ -156,8 +156,8 @@ class HugoHoodie extends BrianBodyBlock
         $p->addPoint(  9, $p->shift( 9, -90, 10), 'Center front collar depth');
         $p->addPoint( 21, $p->shift(21, -90, 10), 'Control point for 9');
         $angle = $p->angle(8, 12);
-        $p->addPoint(  8, $p->shift( 8, $angle, -20, 'Collar width @ top of garment'));
-        $p->addPoint( 20, $p->shift(20, $angle, -20, 'Collar width @ top of garment'));
+        $p->addPoint(  8, $p->shift( 8, $angle, 20, 'Collar width @ top of garment'));
+        $p->addPoint( 20, $p->shift(20, $angle, 20, 'Collar width @ top of garment'));
         // Making garment longer
         $p->addPoint(  4, $p->shift( 4, -90, 60), 'Center back at front bottom');
         $p->addPoint(  6, $p->shift( 6, -90, 60), 'Quarter chest at front bottom');
@@ -181,9 +181,11 @@ class HugoHoodie extends BrianBodyBlock
          * Uncomment paths below if you want to hack this pattern
          * they will help you understand things
          */
-        // $frontBlock = 'M 9 L 2 L 3 L 4 L 6 L 5 C 13 16 14 C 15 18 10 C 17 19 12 L 8 C 20 21 9 z';
-        // $backBlock = 'M 1 L 2 L 3 L 4 L 6 L 5 C 13 16 14 C 15 18 10 C 17 19 12 L 8 C 20 21 1 z';
-        // $p->newPath('frontBlock', $frontBlock,['class' => 'helpline']);
+         /*
+         $frontBlock = 'M 9 L 2 L 3 L 4 L 6 L 5 C 13 16 14 C 15 18 10 C 17 19 12 L 8 C 20 21 9 z';
+         $backBlock = 'M 1 L 2 L 3 L 4 L 6 L 5 C 13 16 14 C 15 18 10 C 17 19 12 L 8 C 20 21 1 z';
+         $p->newPath('frontBlock', $frontBlock,['class' => 'helpline']);
+         */
 
         // Mark path for sample service
         $p->paths['seamline']->setSample(true);
@@ -209,8 +211,8 @@ class HugoHoodie extends BrianBodyBlock
         // Making neck opening wider and deeper
         $p->addPoint(  1, $p->shift( 1, -90, 10), 'Center front collar depth');
         $angle = $p->angle(8, 12);
-        $p->addPoint(  8, $p->shift( 8, $angle, -20, 'Collar width @ top of garment'));
-        $p->addPoint( 20, $p->shift(20, $angle, -20, 'Collar width @ top of garment'));
+        $p->addPoint(  8, $p->shift( 8, $angle, 20, 'Collar width @ top of garment'));
+        $p->addPoint( 20, $p->shift(20, $angle, 20, 'Collar width @ top of garment'));
         // Making garment longer
         $p->addPoint(  4, $p->shift( 4, -90, 60), 'Center back at front bottom');
         $p->addPoint(  6, $p->shift( 6, -90, 60), 'Quarter chest at front bottom');
@@ -254,17 +256,17 @@ class HugoHoodie extends BrianBodyBlock
         // Importing cut off shoulder part from front
         $front = $this->parts['front'];
         $load = [12,8,52,53,20,100,15,14,18,10,17,19];
-        foreach ($load as $i) {
-            $p->addPoint( 100+$i, $front->loadPoint($i), $front->points[$i]->getDescription());
-        }
+        foreach ($load as $i) $p->addPoint( 100+$i, $front->loadPoint($i), $front->points[$i]->getDescription());
+        
         // Shift in place
-        $angle = $p->angle(1, 112);
+        $angle = $p->angle(112,1);
         $distance = $p->distance(1, 112);
         foreach ($load as $i) {
             $p->addPoint( 100+$i, $p->shift(100+$i, $angle, $distance));
         }
+        
         // Rotate in place
-        $angle = 90-$p->angle(108, 1);
+        $angle = -1 * ($p->angle(1, 108) - 90);
         foreach ($load as $i) {
             $p->addPoint( 100+$i, $p->rotate(100+$i, 1, $angle));
         }
@@ -279,14 +281,15 @@ class HugoHoodie extends BrianBodyBlock
         foreach ($load as $i) {
             $p->addPoint( 200+$i, $back->loadPoint($i), $back->points[$i]->getDescription());
         }
+        
         // Shift in place
-        $angle = $p->angle(1, 212);
+        $angle = $p->angle(212,1);
         $distance = $p->distance(1, 212);
         foreach ($load as $i) {
-            $p->addPoint( 200+$i, $p->shift(200+$i, $angle, $distance));
+            $p->addPoint( 200+$i, $p->shift(200+$i, $angle, $distance*1));
         }
         // Rotate in place
-        $angle = 90-$p->angle(208, 1);
+        $angle = -1 * ($p->angle(1, 208) - 90);
         foreach ($load as $i) {
             $p->addPoint( 200+$i, $p->rotate(200+$i, 1, $angle));
         }
@@ -302,6 +305,7 @@ class HugoHoodie extends BrianBodyBlock
         $p->addPoint( 132, $p->shiftTowards(200, 131, $this->v('frontRaglan')));
         $p->addPoint( 133, $p->shift(132, 0, $this->v('frontRaglan')*0.1));
         $p->addPoint( 134, $p->shiftTowards(200, 114, $this->v('frontRaglan')*0.5));
+        
         $delta = $p->curveLen(200, 134, 132, 133) - $this->v('frontRaglan');
         $i=1;
         while (abs($delta) > 1) {
@@ -316,7 +320,7 @@ class HugoHoodie extends BrianBodyBlock
             $delta = $p->curveLen(200, 134, 132, 133) - $this->v('frontRaglan');
             $this->dbg("Iteration $i, front sleevecap delta is $delta");
             $i++;
-            if ($i>40) {
+            if ($i>2) {
                 break; // Not good!
             }
         }
@@ -336,10 +340,10 @@ class HugoHoodie extends BrianBodyBlock
         $p->addPoint( 32, $p->shift(32, 0, 30)); //Make sleeve wider
         $p->addPoint( 31, $p->shift(31, -90, $delta+50));
         $p->addPoint( 31, $p->shift(31, 180, 30)); //Make sleeve wider
-
         // Paths
         $path = 'M 31 L 233 C 232 234 300 C 253 252 208 C 152 153 200 C 134 132 133 L 32 z';
         $p->newPath('seamline', $path, ['class' => 'fabric']);
+        //$p->newPath('seamline', 'M 31 L 31', ['class' => 'fabric']);
 
         /**
          * Uncomment paths below if you want to hack this pattern
@@ -349,12 +353,12 @@ class HugoHoodie extends BrianBodyBlock
         $sleeveBlockPath = 'M 31 L -5 C -5 20 16 C 21 10 10 C 10 22 17 C 23 28 30 C 29 25 18 C 24 11 11 C 11 27 19 C 26 5 5 L 32 z';
         $p->newPath('sleeveBlockPath', $sleeveBlockPath, ['class' => 'helpline']);
         $frontShoulder = 'M 112 L 108 C 152 153 200 C 200 115 114 C 115 118 110 C 117 119 112 z';
-        $p->newPath('frontShoulder', $frontShoulder, ['class' => 'helpline']);
+        //$p->newPath('frontShoulder', $frontShoulder, ['class' => 'helpline']);
         $backShoulder = 'M 212 L 208 C 252 253 300 C 300 215 214 C 215 218 210 C 217 219 212 z';
-        $p->newPath('backShoulder', $backShoulder, ['class' => 'helpline']);
+        //$p->newPath('backShoulder', $backShoulder, ['class' => 'helpline']);
         $help = 'M 200 L 130 L 230 M 200 C 134 132 133 M 300 C 234 232 233';
-        $p->newPath('help', $help, ['class' => 'helpline']);
-         */
+        //$p->newPath('help', $help, ['class' => 'helpline']);
+        */
 
         // Mark path for sample service
         $p->paths['seamline']->setSample(true);
@@ -606,7 +610,7 @@ class HugoHoodie extends BrianBodyBlock
         // Seam allowance
         if($this->o('sa')) {
             $sa = 'M 4 L 6 L 5 C 13 16 14 C 15 100 100 C 57 56 9';
-            $p->offsetPathString('sa', $sa, $this->o('sa'), true, ['class' => 'sa fabric']);
+            $p->offsetPathString('sa', $sa, $this->o('sa')*-1, true, ['class' => 'sa fabric']);
             // Close path at the fold
             $p->paths['sa']->setPathstring('M 4 L sa-line-4TO6 M 9 L sa-curve-9TO100 '.$p->paths['sa']->getPathstring());
         }
@@ -651,7 +655,7 @@ class HugoHoodie extends BrianBodyBlock
         // Seam allowance
         if($this->o('sa')) {
             $sa = 'M 4 L 6 L 5 C 13 16 14 C 15 100 100 C 57 56 1';
-            $p->offsetPathString('sa', $sa, $this->o('sa'), true, ['class' => 'sa fabric']);
+            $p->offsetPathString('sa', $sa, $this->o('sa')*-1, true, ['class' => 'sa fabric']);
             // Close path at the fold
             $p->paths['sa']->setPathstring('M 4 L sa-line-4TO6 M 1 L sa-curve-1TO100 '.$p->paths['sa']->getPathstring());
         }
@@ -685,7 +689,7 @@ class HugoHoodie extends BrianBodyBlock
         $p->addTitle('titleAnchor', 3, $this->t($p->title), '2x '.$this->t('from fabric')."\n".$this->t('Good sides together'));
 
         // Seam allowance
-        if($this->o('sa')) $p->offsetPath('sa', 'seamline', $this->o('sa')*-1, true, ['class' => 'sa fabric']);
+        if($this->o('sa')) $p->offsetPath('sa', 'seamline', $this->o('sa'), true, ['class' => 'sa fabric']);
 
         // Sleeve notches
         $p->addPoint('frontSleeveNotch', $p->shiftAlong(200, 134, 132, 133, $this->frontNotchLen), 'Front sleeve notch');
@@ -727,7 +731,7 @@ class HugoHoodie extends BrianBodyBlock
         // Seam allowance
         if($this->o('sa')) {
             $sa = 'M 105 L 103 C 104 102 102 L 101 L 4';
-            $p->offsetPathString('sa', $sa, $this->o('sa')*-1, true, ['class' => 'sa fabric']);
+            $p->offsetPathString('sa', $sa, $this->o('sa'), true, ['class' => 'sa fabric']);
             $p->paths['sa']->setPathstring('M 4 L sa-line-4TO101 M 105 L sa-line-105TO103 '.$p->paths['sa']->getPathstring());
         }
 
@@ -754,10 +758,10 @@ class HugoHoodie extends BrianBodyBlock
 
         // Title
         $p->newPoint('titleAnchor', $p->x(111) + $p->deltaX(111, 103)/2, $p->y(111)+35);
-        $p->addTitle('titleAnchor', 5, $this->t($p->title), '2x '.$this->t('from fabric')."\n".$this->t('Good sides together'), 'vertical');
+        $p->addTitle('titleAnchor', 5, $this->t($p->title), '2x '.$this->t('from fabric')."\n".$this->t('Good sides together'), 'vertical-small');
 
         // Seam allowance
-        if($this->o('sa')) $p->offsetPath('sa', 'seamline', $this->o('sa'), true, ['class' => 'sa fabric']);
+        if($this->o('sa')) $p->offsetPath('sa', 'seamline', $this->o('sa')*-1, true, ['class' => 'sa fabric']);
     }
 
     /**
@@ -780,7 +784,7 @@ class HugoHoodie extends BrianBodyBlock
         $p->addTitle('titleAnchor', 6, $this->t($p->title), '4x '.$this->t('from fabric')." (2x2)\n".$this->t('Good sides together'));
 
         // Seam allowance
-        if($this->o('sa')) $p->offsetPath('sa', 'seamline', $this->o('sa')*-1, true, ['class' => 'sa fabric']);
+        if($this->o('sa')) $p->offsetPath('sa', 'seamline', $this->o('sa'), true, ['class' => 'sa fabric']);
 
         // Notch
         $p->newSnippet('sleeveNotch', 'notch', 10);
@@ -876,7 +880,7 @@ class HugoHoodie extends BrianBodyBlock
         $p->addTitle('titleAnchor', $nr, $this->t($p->title), $cut, $titleOption);
 
         // Seam allowance
-        if($this->o('sa')) $p->offsetPath('sa', 'seamline', $this->o('sa')*-1, true, ['class' => 'sa fabric']);
+        if($this->o('sa')) $p->offsetPath('sa', 'seamline', $this->o('sa'), true, ['class' => 'sa fabric']);
     }
 
 
@@ -1085,11 +1089,11 @@ class HugoHoodie extends BrianBodyBlock
 
         // Split curve for notch distance from left side
         $p->splitCurve(11,7,8,6,10,'.neckCurve');
-        $p->newCurvedDimension('M 11 C .neckCurve2 .neckCurve3 10', 25);
-        $p->newCurvedDimension('M 10 C .neckCurve7 .neckCurve6 6', 25);
+        $p->newCurvedDimension('M 11 C .neckCurve2 .neckCurve3 10', -25);
+        $p->newCurvedDimension('M 10 C .neckCurve7 .neckCurve6 6', -25);
 
         // Hood len
-        $p->newCurvedDimension('M 11 C 11 15 12 C 14 13 13', -25);
+        $p->newCurvedDimension('M 11 C 11 15 12 C 14 13 13', 25);
     }
 
     /**

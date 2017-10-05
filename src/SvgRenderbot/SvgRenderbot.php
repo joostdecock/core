@@ -302,6 +302,11 @@ class SvgRenderbot
         } else {
             $lineHeight = 12;
         }
+        if( isset($text->attributes['writing-mode'])) {
+            $vertical = ($text->attributes['writing-mode'] == 'tb-rl');
+        } else {
+            $vertical = 0;
+        }
         $svg .= Utils::flattenAttributes($text->getAttributes(), ['line-height']);
         $svg .= '>';
 
@@ -309,7 +314,10 @@ class SvgRenderbot
         $attr = '';
         foreach ($lines as $line) {
             $svg .= "<tspan $attr>$line</tspan>";
-            $attr = 'x="'.$anchor->getX().'" dy="'.$lineHeight.'"';
+            if( $vertical )
+                $attr = 'dx="-'.$lineHeight.'" y="'.$anchor->getY().'"';
+            else
+                $attr = 'x="'.$anchor->getX().'" dy="'.$lineHeight.'"';
         }
         $svg .= '</text>';
 

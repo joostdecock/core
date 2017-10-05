@@ -112,7 +112,7 @@ class TrayvonTie extends Pattern
         if ($this->isPaperless) {
             foreach ($this->parts as $key => $part) {
                 $method = 'paperless'.ucfirst($key);
-                //$this->$method($model, $part);
+                $this->$method($model, $part);
             }
         }
     }
@@ -280,7 +280,7 @@ class TrayvonTie extends Pattern
 
         // Tip seam allowance
         if($this->o('sa')) {
-            $p->offsetPathString('tipSA', 'M 4 L 1 L 3', $this->o('sa')*-1, 0);
+            $p->offsetPathString('tipSA', 'M 4 L 1 L 3', $this->o('sa'), 0);
             $p->addPoint('tipSA-line-4TO1', $p->beamsCross('tipSA-line-1TO4', 'tipSA-startPoint', 6, 4), 'Left edge of tip SA');
             $p->clonePoint('tipSA-line-4TO1','tipSA-startPoint');
             $p->addPoint('tipSA-line-3TO1', $p->flipX('tipSA-startPoint'), 'Right edge of tip SA');
@@ -288,7 +288,7 @@ class TrayvonTie extends Pattern
             $p->newPath('tipSA', 'M 4 L tipSA-startPoint L tipSA-line-1TO4 L tipSA-line-1TO3 L tipSA-endPoint L 3', ['class' => 'fabric sa']);
 
             // Mid-tie seam allowance
-            $p->offsetPathString('midSA', 'M 5 L 6', $this->o('sa')*-1, 0);
+            $p->offsetPathString('midSA', 'M 5 L 6', $this->o('sa'), 0);
             $p->newPath('midSA', 'M 5 L midSA-startPoint L midSA-endPoint L 6', ['class' => 'fabric sa']);
         }
 
@@ -312,7 +312,7 @@ class TrayvonTie extends Pattern
 
         // Tail seam allowance
         if($this->o('sa')) {
-            $p->offsetPathString('tipSA', 'M 4 L 1 L 3', $this->o('sa')*-1, 0);
+            $p->offsetPathString('tipSA', 'M 4 L 1 L 3', $this->o('sa'), 0);
             $p->addPoint('tipSA-line-4TO1', $p->beamsCross('tipSA-line-1TO4', 'tipSA-startPoint', 6, 4), 'Left edge of tip SA');
             $p->clonePoint('tipSA-line-4TO1','tipSA-startPoint');
             $p->addPoint('tipSA-line-3TO1', $p->flipX('tipSA-startPoint'), 'Right edge of tip SA');
@@ -320,7 +320,7 @@ class TrayvonTie extends Pattern
             $p->newPath('tipSA', 'M 4 L tipSA-startPoint L tipSA-line-1TO4 L tipSA-line-1TO3 L tipSA-endPoint L 3', ['class' => 'fabric sa']);
             
             // Mid-tie seam allowance
-            $p->offsetPathString('midSA', 'M 5 L 6', $this->o('sa')*-1, 0);
+            $p->offsetPathString('midSA', 'M 5 L 6', $this->o('sa'), 0);
             $p->newPath('midSA', 'M 5 L midSA-startPoint L midSA-endPoint L 6', ['class' => 'fabric sa']);
         }
 

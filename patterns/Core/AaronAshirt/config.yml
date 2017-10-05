@@ -66,6 +66,8 @@ options:
         description: "Determines the shape/bend of the neckline at the front."
         group: "style"
         type: "percent"
+        min: 5
+        max: 95
         default: 100
     necklineDrop:
         title: "Neckline drop"

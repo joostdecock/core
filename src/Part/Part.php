@@ -361,24 +361,37 @@ class Part
      * @param string $nr        Number of the part to print on the pattern
      * @param string $title     Title of the part to print on the pattern
      * @param string $msg       Message to print on the pattern
-     * @param string $mode      Possible modes: default, vertical, horizontal
+     * @param string $mode      Possible modes: default, small, horizontal, vertical, vertical-small 
      */
     public function addTitle($anchorKey, $nr, $title, $msg = '', $mode = 'default')
     {
         $class = str_replace('-',' ',$mode);
+        $title = str_replace("\n", " ", $title);  /* Remove any newline characters from the Title */
+        $lineHeight = ((strpos($mode, 'small') !== false) ? 6 : 11); /* setting the line-height attribute, depending on thesize of the Title */
+
         if($mode == 'vertical' || $mode == 'vertical-small') {
+            /* Moving the Title slightly on the horizontal pane. 
+               If there is no msg under the Title, center it on the anchor point. 
+               Otherwise align the center between the Title and the msg with the anchor point */
+            $shift = ( $msg == '' ? 2 : ($mode == 'vertical-small' ? 5 : 10)); 
             $this->newText('partNumber', $anchorKey, $nr, ['class' => "part-nr $class"]);
             $this->newText(
                 'partTitle', $anchorKey, $title,
-                ['class' => "part-title $class", 'transform' => "translate(5, 10)", 'writing-mode' => 'tb-rl']
+                ['class' => "part-title $class", 'transform' => "translate(".$shift.", 10)", 'writing-mode' => 'tb-rl']
             );
-            $this->newText('partMsg', $anchorKey, $msg, ['class' => "part-msg $class", 'transform' => "translate(-5, 10)", 'writing-mode' => 'tb-rl']);
+            $this->newText(
+                'partMsg', $anchorKey, $msg, 
+                ['class' => "part-msg $class", 'transform' => "translate(-5, 10)", 'writing-mode' => 'tb-rl', 'line-height' => $lineHeight]
+            );
         } else {
             if(strpos($class, 'small')) $shift = 1;
             else $shift = 2;
             $this->newText('partNumber', $anchorKey, $nr, ['class' => "part-nr $class", 'transform' => 'translate(0, '.(-10*$shift).')']);
             $this->newText('partTitle', $anchorKey, $title, ['class' => "part-title $class"]);
-            $this->newText('partMsg', $anchorKey, $msg, ['class' => "part-msg $class", 'transform' => 'translate(0, '.(7.5*$shift).')']);
+            $this->newText(
+                'partMsg', $anchorKey, $msg, 
+                ['class' => "part-msg $class", 'transform' => 'translate(0, '.(7.5*$shift).')', 'line-height' => $lineHeight]
+            );
         }
     }
 
@@ -1528,8 +1541,8 @@ class Part
         $radius = $this->distance($key1, $key2);
         $angle = $this->angle($key1, $key2);
 
-        $x = $point2->getX() + $radius * cos(deg2rad($angle + $rotation));
-        $y = $point2->getY() + $radius * sin(deg2rad($angle + $rotation)) * -1;
+        $x = $point2->getX() + $radius * cos(deg2rad($angle + $rotation)) * -1;
+        $y = $point2->getY() + $radius * sin(deg2rad($angle + $rotation));
 
         return $this->createPoint($x, $y);
     }
@@ -1544,30 +1557,13 @@ class Part
      */
     public function angle($key1, $key2)
     {
-        $distance = $this->distance($key1, $key2);
         $deltaX = $this->deltaX($key1, $key2);
         $deltaY = $this->deltaY($key1, $key2);
-        $angle = 0;
 
-        if ($deltaX == 0 && $deltaY == 0) {
-            $angle = 0;
-        } elseif ($deltaX == 0 && $deltaY > 0) {
-            $angle = 90;
-        } elseif ($deltaX == 0 && $deltaY < 0) {
-            $angle = 270;
-        } elseif ($deltaY == 0 && $deltaX > 0) {
-            $angle = 180;
-        } elseif ($deltaY == 0 && $deltaX < 0) {
-            $angle = 0;
-        } else {
-            if ($deltaY > 0) {
-                $angle = 180 - rad2deg(acos($deltaX / $distance));
-            } elseif ($deltaY < 0) {
-                $angle = 180 + rad2deg(acos($deltaX / $distance));
-            }
-        }
+        $rad = atan2($deltaY*-1,$deltaX);
+        while ($rad<0) $rad += 2*pi();
 
-        return $angle;
+        return rad2deg($rad);
     }
 
     /**
@@ -1604,51 +1600,7 @@ class Part
      */
     public function shiftTowards($key1, $key2, $distance)
     {
-        $point1 = $this->loadPoint($key1);
-        $point2 = $this->loadPoint($key2);
-
-        // Horizontal 
-        if($point1->getY() == $point2->getY()) {
-            if($point1->getX() > $point2->getX()) {
-                return $this->createPoint($point1->getX() - $distance, $point2->getY(), "Point $key1 shifted towards $key2 by $distance");
-            } else {
-                return $this->createPoint($point1->getX() + $distance, $point2->getY(), "Point $key1 shifted towards $key2 by $distance");
-            }
-        } 
-        
-        // Vertical 
-        if($point1->getX() == $point2->getX()) {
-            if($point1->getY() > $point2->getY()) {
-                return $this->createPoint($point2->getX(), $point1->getY() - $distance, "Point $key1 shifted towards $key2 by $distance");
-            } else {
-                return $this->createPoint($point2->getX(), $point1->getY() + $distance, "Point $key1 shifted towards $key2 by $distance");
-            }
-        } 
-
-        // And the rest
-        $angle = $this->angle($key1, $key2);
-
-        // cos is x axis, sin is y axis
-        $deltaX = $distance * abs(cos(deg2rad($angle)));
-        $deltaY = $distance * abs(sin(deg2rad($angle)));
-        if ($point1->getX() < $point2->getX() && $point1->getY() > $point2->getY()) {
-            $x = $point1->getX() + abs($deltaX);
-            $y = $point1->getY() - abs($deltaY);
-        } elseif ($point1->getX() < $point2->getX() && $point1->getY() < $point2->getY()) {
-            $x = $point1->getX() + abs($deltaX);
-            $y = $point1->getY() + abs($deltaY);
-        } elseif ($point1->getX() > $point2->getX() && $point1->getY() > $point2->getY()) {
-            $x = $point1->getX() - abs($deltaX);
-            $y = $point1->getY() - abs($deltaY);
-        } elseif ($point1->getX() > $point2->getX() && $point1->getY() < $point2->getY()) {
-            $x = $point1->getX() - abs($deltaX);
-            $y = $point1->getY() + abs($deltaY);
-        } else {
-            $x = $point1->getX() + $deltaX;
-            $y = $point1->getY() + $deltaY;
-        }
-
-        return $this->createPoint($x, $y, "Point $key1 shifted towards $key2 by $distance");
+        return $this->shift($key1, $this->angle($key1,$key2), $distance);
     }
     
     /**
@@ -2361,7 +2313,7 @@ class Part
         $d = new \Freesewing\Dimension();
 
         if($offset != 0) { // We need leaders
-            $angle = $this->angle($fromId,$toId)+90;
+            $angle = $this->angle($fromId,$toId)-90;
             foreach(['pathFrom' => $fromId, 'pathTo' => $toId] as $i => $point) {
                 ${$i} = $this->newId('.dw-');
                 $this->addPoint(${$i}, $this->shift($point, $angle, $offset));
@@ -2484,7 +2436,7 @@ class Part
     public function newCutOnFold($fromId, $toId, $text, $offset=20)
     {
         // Add via points
-        $angle = $this->angle($fromId, $toId)+90;
+        $angle = $this->angle($fromId, $toId)-90;
 
         $viaFrom = $this->newId('.cof');
         $this->addPoint($viaFrom, $this->shift($fromId,$angle,$offset));

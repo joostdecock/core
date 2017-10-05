@@ -117,12 +117,24 @@ class SvenSweatshirt extends BrianBodyBlock
 
         $this->draftFront($model);
         $this->draftBack($model);
-        
-        // Tweak the sleeve until it fits in our armhole
-        do {
+       
+        // Do not tweak if the requested pattern is not us but a (grand)child class
+        if($this->requested() === __CLASS__) {
+            // Tweak the sleeve until it fits in our armhole
+            $break = 0;
+            do {
+                $this->draftSleeve($model);
+                if($this->v('sleeveTweakRun')>100) $break = 1;
+            } while (abs($this->armholeDelta($model)) > 1 && $break == 0);
+            $this->msg('After '.$this->v('sleeveTweakRun').' attemps, the sleeve head is '.round($this->armholeDelta($model),1).'mm off.');
+        } else {
             $this->draftSleeve($model);
-        } while (abs($this->armholeDelta($model)) > 1);
-        $this->msg('After '.$this->v('sleeveTweakRun').' attemps, the sleeve head is '.round($this->armholeDelta($model),1).'mm off.');
+        }
+        
+        // Hide parent blocks
+        $this->parts['frontBlock']->setRender(false);
+        $this->parts['backBlock']->setRender(false);
+        $this->parts['sleeveBlock']->setRender(false);
     }
 
     /**
@@ -177,9 +189,7 @@ class SvenSweatshirt extends BrianBodyBlock
         // Make armhole less cut-out
         $shift = [10,18,17]; // Points to shift
         $deltaX = $p->deltaX(10,12)/2; // How far?
-        foreach($shift as $id) {
-            $p->addPoint($id, $p->shift($id,0,$deltaX));
-        }
+        foreach($shift as $id) $p->addPoint($id, $p->shift($id,0,$deltaX));
 
         // Waist with 15cm ease
         $maxReduce = $p->x(5) - ($model->m('naturalWaist')+150)/4;
@@ -187,8 +197,14 @@ class SvenSweatshirt extends BrianBodyBlock
         $p->newPoint('waist', $p->x(5)-$maxReduce, $p->y(3), 'waist');
         $p->addPoint('waistCpTop', $p->shift('waist', 90, $p->deltaY(5,'waist')/2));
         $p->addPoint('waistCpBottom', $p->shift('waist', -90, ($p->deltaY('waist',6)-$this->o('lengthBonus'))/2));
-        $p->addPoint('hemAtHips', $p->shift(6,90,$this->o('lengthBonus')));
         $this->setValue('waistMaxReduce', $maxReduce);
+        
+        // Hips with 15cm ease
+        $maxReduce = $p->x(6) - ($model->m('hipsCircumference')+150)/4;
+        if($maxReduce > 40) $maxReduce = 40;
+        $p->newPoint(6, $p->x(6)-$maxReduce, $p->y(6), 'hips');
+        $p->addPoint('hemAtHips', $p->shift(6,90,$this->o('lengthBonus')));
+        $this->setValue('hipsMaxReduce', $maxReduce);
 
         // Paths
         $path = 'M 9 L 2 L 3 L 4 L 6 C hemAtHips waistCpBottom waist C waistCpTop 5 5 C 13 16 14 C 15 18 10 C 17 19 12 L 8 C 20 21 9 z';
@@ -201,6 +217,13 @@ class SvenSweatshirt extends BrianBodyBlock
 
         // Store armhole length
         $this->setValue('armholeFrontLength', $p->curveLen(12,19,17,10) + $p->curveLen(10,18,15,14) + $p->curveLen(14,16,13,5));
+
+        // Set grid anchor
+        $p->clonePoint(4, 'gridAnchor');
+        
+        // Mark paths for sample service
+        $p->paths['seamline']->setSample(true);
+    
     }
 
     /**
@@ -223,6 +246,11 @@ class SvenSweatshirt extends BrianBodyBlock
         $p->addPoint('hemAtHips', $p->shift(6,90,$this->o('lengthBonus')));
         $this->setValue('waistMaxReduce', $maxReduce);
         
+        // Hips with 15cm ease
+        $maxReduce = $this->v('hipsMaxReduce');
+        $p->newPoint(6, $p->x(6)-$maxReduce, $p->y(6), 'hips');
+        $p->addPoint('hemAtHips', $p->shift(6,90,$this->o('lengthBonus')));
+        
         // Paths
         $path = 'M 1 L 2 L 3 L 4 L 6 C hemAtHips waistCpBottom waist C waistCpTop 5 5 C 13 16 14 C 15 18 10 C 17 19 12 L 8 C 20 1 1 z';
         $p->newPath('seamline', $path, ['class' => 'fabric']);
@@ -234,6 +262,12 @@ class SvenSweatshirt extends BrianBodyBlock
 
         // Store armhole length
         $this->setValue('armholeBackLength', $p->curveLen(12,19,17,10) + $p->curveLen(10,18,15,14) + $p->curveLen(14,16,13,5));
+        
+        // Set grid anchor
+        $p->clonePoint(4, 'gridAnchor');
+
+        // Mark paths for sample service
+        $p->paths['seamline']->setSample(true);
     }
     
     /**
@@ -245,22 +279,6 @@ class SvenSweatshirt extends BrianBodyBlock
      */
     public function draftSleeve($model)
     {
-        // Is this the first time we're calling draftSleeve() ?
-        if($this->v('sleeveTweakRun') > 0) {
-            // No, this will be a tweaked draft. So let's tweak
-            if($this->armholeDelta($model) > 0) {
-                //  Armhole is larger than sleeve head. Increase tweak factor 
-                $this->setValue('sleeveTweakFactor', $this->v('sleeveTweakFactor')*1.01);
-            } else {
-                //  Armhole is smaller than sleeve head. Decrease tweak factor 
-                $this->setValue('sleeveTweakFactor', $this->v('sleeveTweakFactor')*0.99);
-            }
-            // Include debug message
-            $this->dbg('Sleeve tweak run '.$this->v('sleeveTweakRun').'. Sleeve head is '.$this->armholeDelta($model).'mm off');
-        }
-        // Keep track of tweak runs because why not
-        $this->setValue('sleeveTweakRun', $this->v('sleeveTweakRun')+1);
-        
         // (re-)Drafting sleeveBlock from parent pattern
         $this->draftSleeveBlock($model);
         
@@ -280,6 +298,12 @@ class SvenSweatshirt extends BrianBodyBlock
         
         // Store sleevehead length
         $this->setValue('sleeveheadLength', $p->curveLen(-5,-5,20,16) + $p->curveLen(16,21,10,10) + $p->curveLen(10,10,22,17) + $p->curveLen(17,23,28,30) + $p->curveLen(30,29,25,18) + $p->curveLen(18,14,11,11) + $p->curveLen(11,11,27,19) + $p->curveLen(19,26,5,5));
+        
+        // Set grid anchor
+        $p->clonePoint(3, 'gridAnchor');
+
+        // Mark paths for sample service
+        $p->paths['seamline']->setSample(true);
     }
 
     /**
@@ -289,7 +313,7 @@ class SvenSweatshirt extends BrianBodyBlock
      *
      * @return float The difference between the armhole and sleevehead
      */
-    private function armholeDelta($model) 
+    protected function armholeDelta() 
     {
         $target = $this->v('armholeFrontLength') + $this->v('armholeBackLength') + $this->o('sleevecapEase');
         return ($target - $this->v('sleeveheadLength'));
@@ -317,8 +341,8 @@ class SvenSweatshirt extends BrianBodyBlock
         
         // Seam allowance 
         if($this->o('sa')) {
-            $p->offsetPath('sa','saBase', $this->o('sa'), 1, ['class' => 'fabric sa']);
-            $p->offsetPath('hemSa','hemBase', $this->o('sa')*3, 1, ['class' => 'fabric sa']);
+            $p->offsetPath('sa','saBase', $this->o('sa')*-1, 1, ['class' => 'fabric sa']);
+            $p->offsetPath('hemSa','hemBase', $this->o('sa')*-3, 1, ['class' => 'fabric sa']);
             // Join ends
             $p->newPath('saJoints', 'M sa-endPoint L 9 M sa-startPoint L hemSa-endPoint M hemSa-startPoint L 4', ['class' => 'fabric sa']);
         }
@@ -349,8 +373,8 @@ class SvenSweatshirt extends BrianBodyBlock
         
         // Seam allowance
         if($this->o('sa')) {
-            $p->offsetPath('sa','saBase', $this->o('sa'), 1, ['class' => 'fabric sa']);
-            $p->offsetPath('hemSa','hemBase', $this->o('sa')*3, 1, ['class' => 'fabric sa']);
+            $p->offsetPath('sa','saBase', $this->o('sa')*-1, 1, ['class' => 'fabric sa']);
+            $p->offsetPath('hemSa','hemBase', $this->o('sa')*-3, 1, ['class' => 'fabric sa']);
             // Join ends
             $p->newPath('saJoints', 'M sa-endPoint L 9 M sa-startPoint L hemSa-endPoint M hemSa-startPoint L 4', ['class' => 'fabric sa']);
         }
@@ -381,14 +405,15 @@ class SvenSweatshirt extends BrianBodyBlock
 
         // Seam allowance 
         if($this->o('sa')) {
-            $p->offsetPath('sa','saBase', $this->o('sa')*-1, 1, ['class' => 'fabric sa']);
-            $p->offsetPath('hemSa','hemBase', $this->o('sa')*3, 1, ['class' => 'fabric sa']);
+            $p->offsetPath('sa','saBase', $this->o('sa'), 1, ['class' => 'fabric sa']);
+            $p->offsetPath('hemSa','hemBase', $this->o('sa')*-3, 1, ['class' => 'fabric sa']);
             // Join ends
             $p->newPath('saJoints', 'M hemSa-startPoint L sa-startPoint M hemSa-endPoint L sa-endPoint', ['class' => 'fabric sa']);
         }
 
 
         // Scalebox
+        $p->clonePoint(2,'gridAnchor');
         $p->newSnippet('scalebox', 'scalebox', 'gridAnchor');
 
         // Title
@@ -441,7 +466,7 @@ class SvenSweatshirt extends BrianBodyBlock
         $p->newLinearDimension(8,12,-20);
 
         // Armhole length
-        $p->newCurvedDimension('M 5 C 13 16 14 C 15 18 10 C 17 19 12', 25);
+        $p->newCurvedDimension('M 5 C 13 16 14 C 15 18 10 C 17 19 12', -25);
         
         // Waist width
         $p->newWidthDimension(3, 'waist');
@@ -478,7 +503,7 @@ class SvenSweatshirt extends BrianBodyBlock
         $p->newLinearDimension(8,12,-20);
 
         // Armhole length
-        $p->newCurvedDimension('M 5 C 13 16 14 C 15 18 10 C 17 19 12', 25);
+        $p->newCurvedDimension('M 5 C 13 16 14 C 15 18 10 C 17 19 12', -25);
         
         // Waist width
         $p->newWidthDimension(3, 'waist');
@@ -518,6 +543,6 @@ class SvenSweatshirt extends BrianBodyBlock
             C 24 11 11
             C 11 27 19
             C 26 5 5
-        ', -20);
+        ', 20);
     }
 }

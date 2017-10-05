@@ -122,11 +122,17 @@ class BrianBodyBlock extends Pattern
         $this->draftFrontBlock($model);
         $this->finalizeFrontBlock($model);
 
-        // Tweak the sleeve until it fits the armhole
-        do {
-            $this->draftSleeveBlock($model);
-        } while (abs($this->armholeDelta($model)) > 1);
-        $this->msg('After '.$this->v('sleeveTweakRun').' attemps, the sleeve head is '.round($this->armholeDelta($model),1).'mm off.');
+        // Do not tweak if the requested pattern is not us but a (grand)child class
+        if($this->requested() === __CLASS__) {
+            // Tweak the sleeve until it fits the armhole
+            do {
+                $this->draftSleeveBlock($model);
+            } while (abs($this->armholeDelta($model)) > 1);
+            $this->msg('After '.$this->v('sleeveTweakRun').' attemps, the sleeve head is '.round($this->armholeDelta($model),1).'mm off.');
+        } else {
+                $this->draftSleeveBlock($model, true); // Don't tweak
+        }
+
         $this->finalizeSleeveBlock($model);
 
         if ($this->isPaperless) {
@@ -155,21 +161,24 @@ class BrianBodyBlock extends Pattern
         $this->draftBackBlock($model);
         $this->draftFrontBlock($model);
         
-        // Tweak the sleeve until it fits the armhole
-        do {
-            $this->draftSleeveBlock($model);
-        } while (abs($this->armholeDelta($model)) > 1);
-        $this->msg('After '.$this->v('sleeveTweakRun').' attemps, the sleeve head is '.round($this->armholeDelta($model),1).'mm off.');
+        // Do not tweak if the requested pattern is not us but a (grand)child class
+        if($this->requested() === __CLASS__) {
+            // Tweak the sleeve until it fits the armhole
+            do {
+                $this->draftSleeveBlock($model);
+            } while (abs($this->armholeDelta($model)) > 1);
+            $this->msg('After '.$this->v('sleeveTweakRun').' attemps, the sleeve head is '.round($this->armholeDelta($model),1).'mm off.');
+        } else {
+                $this->draftSleeveBlock($model);
+        }
     }
 
     /**
      * Calculates the difference between the armhole and sleevehead length
      *
-     * @param \Freesewing\Model $model The model to draft for
-     *
      * @return float The difference between the armhole and sleevehead
      */
-    private function armholeDelta($model) 
+    protected function armholeDelta() 
     {
         $this->setValue('armholeLength', $this->v('frontArmholeLength') + $this->v('backArmholeLength'));
         return $this->v('armholeLength') - $this->v('sleeveheadLength');
@@ -234,10 +243,10 @@ class BrianBodyBlock extends Pattern
         $tmp = $p->deltaY(12, 10) / 3;
         $p->addPoint(17, $p->shift(10, 90, $tmp), 'Top curve control point for 10');
         $p->addPoint(18, $p->shift(10, -90, $tmp), 'Bottom curve control point for 10');
-        $p->addPoint(19, $p->shift(12, $p->angle(8, 12) + 90, 10), 'Bottom control point for 12');
+        $p->addPoint(19, $p->shift(12, $p->angle(8, 12) - 90, 10), 'Bottom control point for 12');
 
         // Control points for collar
-        $p->addPoint(20, $p->shift(8, $p->angle(8, 12) + 90, $this->getOption('backNeckCutout')),
+        $p->addPoint(20, $p->shift(8, $p->angle(8, 12) - 90, $this->getOption('backNeckCutout')),
             'Curve control point for collar');
         $p->newPoint(21, $p->x(8), $p->y(9));
 
@@ -275,7 +284,7 @@ class BrianBodyBlock extends Pattern
 
         // Seam allowance
         if($this->o('sa')) {
-            $p->offsetPathstring('sa1', 'M 4 L 6 L 5 C 13 16 14 C 15 18 10 C 17 19 12 L 8 C 20 1 1', $this->o('sa'), 1, ['class' => 'fabric sa']);
+            $p->offsetPathstring('sa1', 'M 4 L 6 L 5 C 13 16 14 C 15 18 10 C 17 19 12 L 8 C 20 1 1', $this->o('sa')*-1, 1, ['class' => 'fabric sa']);
             // Join ends
             $p->newPath('sa2', 'M 1 L sa1-endPoint M 4 L sa1-startPoint', ['class' => 'fabric sa']);
         } 
@@ -320,7 +329,7 @@ class BrianBodyBlock extends Pattern
         $p->newLinearDimension(8,12,-20);
 
         // Armhole length
-        $p->newCurvedDimension('M 5 C 13 16 14 C 15 18 10 C 17 19 12', 25);
+        $p->newCurvedDimension('M 5 C 13 16 14 C 15 18 10 C 17 19 12', -25);
     }
 
     /**
@@ -385,7 +394,7 @@ class BrianBodyBlock extends Pattern
         
         // Seam allowance
         if($this->o('sa')) {
-            $p->offsetPathstring('sa1', 'M 4 L 6 L 5 C 13 16 14 C 15 18 10 C 17 19 12 L 8 C 20 21 9', $this->o('sa'), 1, ['class' => 'fabric sa']); 
+            $p->offsetPathstring('sa1', 'M 4 L 6 L 5 C 13 16 14 C 15 18 10 C 17 19 12 L 8 C 20 21 9', $this->o('sa') *-1, 1, ['class' => 'fabric sa']); 
             // Close edges
             $p->newPath('sa2', 'M 9 L sa1-endPoint M 4 L sa1-startPoint', ['class' => 'fabric sa']);
         }
@@ -429,7 +438,7 @@ class BrianBodyBlock extends Pattern
         $p->newLinearDimension(8,12,-20);
 
         // Armhole length
-        $p->newCurvedDimension('M 5 C 13 16 14 C 15 18 10 C 17 19 12', 25);
+        $p->newCurvedDimension('M 5 C 13 16 14 C 15 18 10 C 17 19 12', -25);
 
     }
 
@@ -463,7 +472,7 @@ class BrianBodyBlock extends Pattern
                 // No, this will be a tweaked draft. So let's tweak
                 if($this->armholeDelta($model) > 0) {
                     //  Armhole is larger than sleeve head. Increase tweak factor 
-                    $this->setValue('sleeveTweakFactor', $this->v('sleeveTweakFactor')*1.01);
+                    $this->setValue('sleeveTweakFactor', $this->v('sleeveTweakFactor')*1.03);
                 } else {
                     //  Armhole is smaller than sleeve head. Decrease tweak factor 
                     $this->setValue('sleeveTweakFactor', $this->v('sleeveTweakFactor')*0.99);
@@ -516,22 +525,22 @@ class BrianBodyBlock extends Pattern
         $p->addPoint(15, $p->shiftTowards(11, 5, $p->distance(11, 5) / 2), 'Front low quarter');
 
         // Bulge out or in at quarter marks
-        $p->addPoint(16, $p->shift(12, $angleBackLow + 90, 5), 'Back low valley');
-        $p->addPoint(17, $p->shift(13, $angleBackHigh - 90, 15), 'Back high peak');
-        $p->addPoint(18, $p->shift(14, $angleFrontHigh + 90, 23), 'Front high peak');
-        $p->addPoint(19, $p->shift(15, $angleFrontLow - 90, 15), 'Front low valley');
+        $p->addPoint(16, $p->shift(12, $angleBackLow - 90, 5), 'Back low valley');
+        $p->addPoint(17, $p->shift(13, $angleBackHigh + 90, 15), 'Back high peak');
+        $p->addPoint(18, $p->shift(14, $angleFrontHigh - 90, 23), 'Front high peak');
+        $p->addPoint(19, $p->shift(15, $angleFrontLow + 90, 15), 'Front low valley');
 
         // Control points for bulges
         // Make control point offset relative to sleeve width
         $cpOffset = $p->x(7) * 0.27;
-        $p->addPoint(20, $p->shift(16, $angleBackLow, $cpOffset), 'Bottom control point for 16');
-        $p->addPoint(21, $p->shift(16, $angleBackLow, -1 * $cpOffset), 'Top control point for 16');
-        $p->addPoint(22, $p->shift(17, $angleBackHigh, $cpOffset), 'Bottom control point for 17');
-        $p->addPoint(23, $p->shift(17, $angleBackHigh, -1 * $cpOffset), 'Top control point for 17');
-        $p->addPoint(24, $p->shift(18, $angleFrontHigh, $cpOffset), 'Bottom control point for 18');
-        $p->addPoint(25, $p->shift(18, $angleFrontHigh, -1 * $cpOffset), 'Top control point for 18');
-        $p->addPoint(26, $p->shift(19, $angleFrontLow, $cpOffset), 'Bottom control point for 19');
-        $p->addPoint(27, $p->shift(19, $angleFrontLow, -1 * $cpOffset), 'Top control point for 19');
+        $p->addPoint(20, $p->shift(16, $angleBackLow, -1 * $cpOffset), 'Bottom control point for 16');
+        $p->addPoint(21, $p->shift(16, $angleBackLow, $cpOffset), 'Top control point for 16');
+        $p->addPoint(22, $p->shift(17, $angleBackHigh, -1 * $cpOffset), 'Bottom control point for 17');
+        $p->addPoint(23, $p->shift(17, $angleBackHigh, $cpOffset), 'Top control point for 17');
+        $p->addPoint(24, $p->shift(18, $angleFrontHigh, -1 * $cpOffset), 'Bottom control point for 18');
+        $p->addPoint(25, $p->shift(18, $angleFrontHigh, $cpOffset), 'Top control point for 18');
+        $p->addPoint(26, $p->shift(19, $angleFrontLow, -1 * $cpOffset), 'Bottom control point for 19');
+        $p->addPoint(27, $p->shift(19, $angleFrontLow, $cpOffset), 'Top control point for 19');
 
         // Sleeve crown
         $p->addPoint(28, $p->shift(1, 180, $cpOffset), 'Back control point for crown point');
@@ -591,7 +600,7 @@ class BrianBodyBlock extends Pattern
         $p->newGrainline('glBottom','glTop');
         
         // Seam allowance
-        if($this->o('sa')) $p->offsetPath('sa', 'seamline', $this->o('sa')*-1, 1, ['class' => 'fabric sa']); 
+        if($this->o('sa')) $p->offsetPath('sa', 'seamline', $this->o('sa'), 1, ['class' => 'fabric sa']); 
 
         // Title
         $p->newPoint('titleAnchor', $p->x(2), $this->parts['frontBlock']->y('titleAnchor'));
@@ -640,6 +649,6 @@ class BrianBodyBlock extends Pattern
             C 24 11 11
             C 11 27 19
             C 26 5 5
-        ', -20);
+        ', 20);
     }
 }

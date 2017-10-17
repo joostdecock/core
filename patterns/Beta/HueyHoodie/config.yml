@@ -1,0 +1,120 @@
+hidden: false
+info:
+    name: "Huey Hoodie"
+    description: "A zip-up hoodie"
+    handle: "huey"
+    author: "Joost De Cock"
+    company: "freesewing.org"
+    link: "freesewing.org/pattern/huey"
+    tags:
+        - menswear
+        - top
+        - hoodie
+
+parts:
+    backBlock: ".Back block"
+    frontBlock: ".Front block"
+    sleeveBlock: ".Sleeve block"
+    front: "Front"
+    back: "Back"
+    sleeve: "Sleeve"
+    hood: "Hood"
+    pouch: "Pouch"
+
+languages:
+    en: "English"
+
+measurements:
+    acrossBack: 450
+    bicepsCircumference: 335
+    centerBackNeckToWaist: 520
+    chestCircumference: 1080
+    naturalWaistToHip: 145
+    neckCircumference: 420
+    shoulderSlope: 55
+    shoulderToShoulder: 470
+    hipsCircumference: 950
+    shoulderToWrist: 680
+    wristCircumference: 190
+    headCircumference: 590
+
+options:
+# style group
+    pouch:
+        title: "Front pouch"
+        description: "Would you like a pouch/pocket on your hoodie?"
+        group: "style"
+        type: "chooseOne"
+        options:
+            0: "Do not include pouch"
+            1: "Include pouch"
+        default: 1
+    ribbingWidth:
+        title: "Ribbing width"
+        description: "The width of the ribbing you want to use"
+        group: "style"
+        type: "measure"
+        min: 30
+        max: 90
+        default: 60
+    lengthBonus:
+        title: "Length bonus"
+        description: "Amount to lengthen the body. A negative value will shorten it."
+        group: "style"
+        type: "measure"
+        min: -40
+        max: 120
+        default: 70
+    sleeveLengthBonus:
+        title: "Sleeve length bonus"
+        description: "Amount to lengthen the sleeve beyond the basic sleeve block."
+        group: "style"
+        type: "measure"
+        min: 40
+        max: 120
+        default: 70
+
+# fit group
+    chestEase:
+        title: "Chest ease"
+        description: "The amount of ease at your chest"
+        group: "fit"
+        type: "measure"
+        min: 40
+        max: 200
+        default: 140
+    hipsEase:
+        title: "Hips ease"
+        description: "The amount of ease at your hips"
+        group: "fit"
+        type: "measure"
+        min: 40
+        max: 200
+        default: 140
+    cuffEase:
+        title: "Cuff ease"
+        description: "The amount of ease at your wrist"
+        group: "fit"
+        type: "measure"
+        min: 0
+        max: 100
+        default: 45
+    cuffDrape:
+        title: "Cuff drape"
+        description: "The amount by which the sleeve end is wider than the ribbing"
+        group: "fit"
+        type: "measure"
+        min: 0
+        max: 50
+        default: 35
+
+# advanced group
+    armholeDepthFactor:
+        title: "Armhole depth factor"
+        description: "A factor that influences the depth of the armhole"
+        group: "advanced"
+        type: "percent"
+        min: 60
+        max: 75
+        default: 70
+

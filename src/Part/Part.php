@@ -383,6 +383,13 @@ class Part
                 'partMsg', $anchorKey, $msg, 
                 ['class' => "part-msg $class", 'transform' => "translate(-5, 10)", 'writing-mode' => 'tb-rl', 'line-height' => $lineHeight]
             );
+        } elseif($mode == 'extrasmall' ) {
+            $this->newText('partNumber', $anchorKey, $nr, ['class' => "part-nr horizontal small", 'transform' => "translate(0, 5)"]);
+            $this->newText('partTitle', $anchorKey, $title, ['class' => "part-title horizontal small", 'transform' => "translate(".(6+6*strlen($nr)).", 0)"]);
+            $this->newText(
+                'partMsg', $anchorKey, $msg, 
+                ['class' => "part-msg horizontal small", 'transform' => 'translate('.(6+6*strlen($nr)).', '.($lineHeight).')', 'line-height' => $lineHeight]
+            );
         } else {
             if(strpos($class, 'small')) $shift = 1;
             else $shift = 2;

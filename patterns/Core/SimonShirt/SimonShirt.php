@@ -395,21 +395,6 @@ class SimonShirt extends BrianBodyBlock
         $p->addPoint( -2055,  $p->flipX(-2052,$p->x(-2053)));
         $p->addPoint( -2056,  $p->flipX(-2017,$p->x(-2053)));
 
-        // Button placement
-        $buttoningLength = $this->v('garmentLength') - $this->o('lengthBonus') - $this->o('buttonfreeLength') - $p->y(9) + ($this->o('collarStandWidth')/2 + $this->o('backNeckCutout'));
-        $buttonSpacing = $buttoningLength / ($this->o('buttons'));
-        // First button
-        $p->newPoint(3000 , $p->x(4), $buttoningLength+$p->y(9) - ($this->o('collarStandWidth')/2), 'button start');
-        // Next buttons
-        for($i=1;$i<$this->o('buttons');$i++) {
-          $pid = 3000+$i;
-          $p->addPoint($pid, $p->shift(3000, 90, $buttonSpacing * $i), 'Button');
-        }
-        // Extra top button
-        if($this->o('extraTopButton')) {
-          $extrapid = $pid +1;
-          $p->addPoint($extrapid, $p->shift($pid,90,$buttonSpacing/2), 'Extra button');
-        }
         // Shaping of side seam
         /* Only shape side seams if we're reducing less than 10cm 
          * Also add back darts if we're reducing 10cm or more */
@@ -425,6 +410,27 @@ class SimonShirt extends BrianBodyBlock
         $p->addPoint(8002, $p->shift(8001,90,$p->deltaY(6031,8000)/4));
         $p->newPoint(8003, $p->x(4),$p->y(8000));
         $p->addPoint(5001, $p->shift(5,-90,$p->deltaY(5,6011)/4));
+        
+        // Button placement
+        $buttoningSpace = $p->deltaY(21,8000);
+        $firstButtonSpacing = 0.5 * ($buttoningSpace / ($this->o('buttons')));
+        $buttoningLength = $buttoningSpace - $this->o('buttonfreeLength') - $firstButtonSpacing;
+        $buttonSpacing = $buttoningLength / ($this->o('buttons')-1);
+        // First button
+        $p->newPoint(3000 , $p->x(4), $p->y(8000) - $this->o('buttonfreeLength'));
+        // Next buttons
+        for($i=1;$i<($this->o('buttons')-1);$i++) {
+          $pid = 3000+$i;
+          $p->addPoint($pid, $p->shift(3000, 90, $buttonSpacing * $i), 'Button');
+        }
+        // Last button
+        $lastpid = $pid +1;
+        $p->newPoint($lastpid, $p->x($pid), $p->y(21)+$firstButtonSpacing);
+        // Extra top button
+        if($this->o('extraTopButton')) {
+          $extrapid = $lastpid +1;
+          $p->addPoint($extrapid, $p->shiftFractionTowards($pid, $lastpid, 0.5));
+        }
         
         // Hem shape
         if($p->isPoint(2044)) $p->clonePoint(2044,6660);

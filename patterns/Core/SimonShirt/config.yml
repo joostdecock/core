@@ -191,7 +191,7 @@ options:
         options:
             0: "No extra top button"
             1: "Extra top button"
-        default: 0
+        default: 1
     splitYoke:
         title: "Split yoke"
         description: "Whether to draft a split or regular yoke"

@@ -386,17 +386,27 @@ class Part
         $lineHeight = ((strpos($mode, 'small') !== false) ? 6 : 11); /* setting the line-height attribute, depending on thesize of the Title */
         if($noPatternPrefix === false) $patternTitle = ucfirst($this->patternConfig['info']['handle']);
 
-        if($mode == 'vertical' || $mode == 'vertical-small') {
+        if($mode == 'vertical' || $mode == 'vertical-small' || $mode == 'vertical-extrasmall') {
             /* Moving the Title slightly on the horizontal pane. 
                If there is no msg under the Title, center it on the anchor point. 
                Otherwise align the center between the Title and the msg with the anchor point */
             $shift = ( $msg == '' ? 2 : ($mode == 'vertical-small' ? 5 : 10)); 
+            if($mode == 'vertical-extrasmall') $shift = 1;
             $this->newText('partNumber', $anchorKey, $nr, ['class' => "part-nr $class"]);
             if($noPatternPrefix === false) {
-                $len = strlen($patternTitle)*6;
+                if($mode == 'vertical-small') {
+                    $move = -4;
+                    $len = strlen($patternTitle)*2.6;
+                } elseif ($mode == 'vertical-extrasmall') {
+                    $move = -1.4;
+                    $len = strlen($patternTitle)*1.6;
+                } else {
+                    $move = -9;
+                    $len = strlen($patternTitle)*5.2;
+                }
                 $this->newText(
                     'patternTitle', $anchorKey, $patternTitle,
-                    ['class' => "pattern-title $class", 'transform' => "translate(".$shift.", ".-1*$len."), translate(-9,0)", 'writing-mode' => 'tb-rl']
+                    ['class' => "pattern-title $class", 'transform' => "translate(".$shift.", ".-1*$len."), translate($move,0)", 'writing-mode' => 'tb-rl']
                 );
             }
             $this->newText(
@@ -407,16 +417,10 @@ class Part
                 'partMsg', $anchorKey, $msg, 
                 ['class' => "part-msg $class", 'transform' => "translate(-5, 10)", 'writing-mode' => 'tb-rl', 'line-height' => $lineHeight]
             );
-        } elseif($mode == 'extrasmall' ) {
-            $this->newText('partNumber', $anchorKey, $nr, ['class' => "part-nr horizontal small", 'transform' => "translate(0, 5)"]);
-            $this->newText('partTitle', $anchorKey, $title, ['class' => "part-title horizontal small", 'transform' => "translate(".(6+6*strlen($nr)).", 0)"]);
-            $this->newText(
-                'partMsg', $anchorKey, $msg, 
-                ['class' => "part-msg horizontal small", 'transform' => 'translate('.(6+6*strlen($nr)).', '.($lineHeight).')', 'line-height' => $lineHeight]
-            );
         } else {
-            if(strpos($class, 'small')) $shift = 1;
-            else $shift = 2;
+            if(strpos($class, 'xtrasmall')) $shift = 0.6;
+            elseif(strpos($class, 'mall')) $shift = 1;
+            else $shift = 1.9;
             $this->newText('partNumber', $anchorKey, $nr, ['class' => "part-nr $class", 'transform' => 'translate(0, '.(-10*$shift).')']);
             if($noPatternPrefix === false) $this->newText('patternTitle', $anchorKey, $patternTitle, ['transform' => 'translate(0,'.(-22*$shift).')', 'class' => "pattern-title $class"]);
             $this->newText('partTitle', $anchorKey, $title, ['class' => "part-title $class"]);

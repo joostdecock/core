@@ -138,6 +138,22 @@ text.part-msg.small {
     font-size: $font-part-subtitle-sm; 
 }
 
+text.part-nr.extrasmall {
+    font-size: $font-part-nr-xs; 
+}
+
+text.part-title.extrasmall {
+    font-size: $font-part-title-xs; 
+}
+
+text.pattern-title.extrasmall {
+    font-size: $font-pattern-title-xs; 
+}
+
+text.part-msg.extrasmall {
+    font-size: $font-part-subtitle-xs; 
+}
+
 /* Notes */
 text.note , 
 text.dimension-label { 

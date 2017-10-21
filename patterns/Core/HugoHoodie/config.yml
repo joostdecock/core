@@ -1,6 +1,6 @@
 info:
     name:       "Hugo Hoodie"
-    description: "This is a casual hooded jumper with raglan sleeves, and a front pouch"
+    description: "Hugo is a hooded jumper with raglan sleeves"
     handle:     "hugo"
     version:    "2.0"
     author:     "Joost De Cock"
@@ -12,6 +12,9 @@ info:
         - sweater
         - hoodie
         - top
+    inMemoryOf:
+        name: "Hugo De Cock"
+        link: "https://www.instagram.com/p/p6CnG3rpir/"
 
 parts:
     backBlock:      ".Back block"
@@ -102,6 +105,3 @@ options:
         max: 40
         default: 20
 
-inMemoryOf:
-    name: "Hugo De Cock"
-    link: "https://www.instagram.com/p/p6CnG3rpir/"

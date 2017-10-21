@@ -94,7 +94,7 @@ class PartTest extends \PHPUnit\Framework\TestCase
      */
     public function testAddTitle()
     {
-        $p = new \Freesewing\Part();
+        $p = new \Freesewing\Part(['info' => ['handle' => 'test']]);
         $p->newPoint(1,0,0);
 
         $p->addTitle(1,1,'Test title', 'Message', 'default');
@@ -120,6 +120,11 @@ class PartTest extends \PHPUnit\Framework\TestCase
         $p->addTitle(1,1,'Test title', 'Message', 'horizontal-small');
         $this->saveFixture('title.horizontalSmall',serialize($p->texts));
         $this->assertEquals($this->loadFixture('title.horizontalSmall'),serialize($p->texts));
+        
+        unset($p->texts);
+        $p->addTitle(1,1,'Test title', 'Message', 'extrasmall');
+        $this->saveFixture('title.extraSmall',serialize($p->texts));
+        $this->assertEquals($this->loadFixture('title.extraSmall'),serialize($p->texts));
     }
 
     /** 

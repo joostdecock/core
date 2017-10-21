@@ -395,21 +395,6 @@ class SimonShirt extends BrianBodyBlock
         $p->addPoint( -2055,  $p->flipX(-2052,$p->x(-2053)));
         $p->addPoint( -2056,  $p->flipX(-2017,$p->x(-2053)));
 
-        // Button placement
-        $buttoningLength = $this->v('garmentLength') - $this->o('lengthBonus') - $this->o('buttonfreeLength') - $p->y(9);
-        $buttonSpacing = $buttoningLength / ($this->o('buttons'));
-        // First button
-        $p->newPoint(3000 , $p->x(4), $buttoningLength+$p->y(9), 'button start');
-        // Next buttons
-        for($i=1;$i<$this->o('buttons');$i++) {
-          $pid = 3000+$i;
-          $p->addPoint($pid, $p->shift(3000, 90, $buttonSpacing * $i), 'Button');
-        }
-        // Extra top button
-        if($this->o('extraTopButton')) {
-          $extrapid = $pid +1;
-          $p->addPoint($extrapid, $p->shift($pid,90,$buttonSpacing/2), 'Extra button');
-        }
         // Shaping of side seam
         /* Only shape side seams if we're reducing less than 10cm 
          * Also add back darts if we're reducing 10cm or more */
@@ -418,20 +403,41 @@ class SimonShirt extends BrianBodyBlock
         
         $p->addPoint(8000, $p->shift(4,90,$this->o('lengthBonus')), 'Hips height');        
         $p->newPoint(8001, $p->x(6), $p->y(8000), 'Hips height');        
-        $p->addPoint( 6001, $p->shift(5,-90,$p->deltaY(5,3)*0.2));
-        $p->newPoint( 6011, $p->x(5)+$in,$p->y(3)-$p->deltaY(5,3)/2);
-        $p->newPoint( 6021, $p->x(5)+$in,$p->y(3));
-        $p->newPoint( 6031, $p->x(5)+$in,$p->y(3)+$p->deltaY(3,8000)/2);
-        $p->addPoint( 8002 , $p->shift(8001,90,$p->deltaY(6031,8000)/4));
-        $p->newPoint( 8003 , $p->x(4),$p->y(8000));
-        $p->addPoint( 5001 , $p->shift(5,-90,$p->deltaY(5,6011)/4));
+        $p->addPoint(6001, $p->shift(5,-90,$p->deltaY(5,3)*0.2));
+        $p->newPoint(6011, $p->x(5)+$in,$p->y(3)-$p->deltaY(5,3)/2);
+        $p->newPoint(6021, $p->x(5)+$in,$p->y(3));
+        $p->newPoint(6031, $p->x(5)+$in,$p->y(3)+$p->deltaY(3,8000)/2);
+        $p->addPoint(8002, $p->shift(8001,90,$p->deltaY(6031,8000)/4));
+        $p->newPoint(8003, $p->x(4),$p->y(8000));
+        $p->addPoint(5001, $p->shift(5,-90,$p->deltaY(5,6011)/4));
+        
+        // Button placement
+        $buttoningSpace = $p->deltaY(21,8000);
+        $firstButtonSpacing = 0.5 * ($buttoningSpace / ($this->o('buttons')));
+        $buttoningLength = $buttoningSpace - $this->o('buttonfreeLength') - $firstButtonSpacing;
+        $buttonSpacing = $buttoningLength / ($this->o('buttons')-1);
+        // First button
+        $p->newPoint(3000 , $p->x(4), $p->y(8000) - $this->o('buttonfreeLength'));
+        // Next buttons
+        for($i=1;$i<($this->o('buttons')-1);$i++) {
+          $pid = 3000+$i;
+          $p->addPoint($pid, $p->shift(3000, 90, $buttonSpacing * $i), 'Button');
+        }
+        // Last button
+        $lastpid = $pid +1;
+        $p->newPoint($lastpid, $p->x($pid), $p->y(21)+$firstButtonSpacing);
+        // Extra top button
+        if($this->o('extraTopButton')) {
+          $extrapid = $lastpid +1;
+          $p->addPoint($extrapid, $p->shiftFractionTowards($pid, $lastpid, 0.5));
+        }
         
         // Hem shape
         if($p->isPoint(2044)) $p->clonePoint(2044,6660);
         else $p->clonePoint(4,6660);
-        $p->newPoint( 6663 , $p->x(8001)-$this->o('hipFlare')/4,$p->y(8001)+$this->o('lengthBonus')-$this->o('hemCurve')); // HERE
-        $p->addPoint( 6662 , $p->shift(6663,90,$p->deltaY(8000,6663)*0.3));
-        $p->addPoint( 6661 , $p->shift(8001,90,$p->deltaY(8000,6663)*0.3));
+        $p->newPoint(6663, $p->x(8001)-$this->o('hipFlare')/4,$p->y(8001)+$this->o('lengthBonus')-$this->o('hemCurve')); // HERE
+        $p->addPoint(6662, $p->shift(6663,90,$p->deltaY(8000,6663)*0.3));
+        $p->addPoint(6661, $p->shift(8001,90,$p->deltaY(8000,6663)*0.3));
         
         switch($this->o('hemStyle')) {
             case 1: // Straight hem

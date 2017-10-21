@@ -60,6 +60,6 @@ class CompareServiceTest extends \PHPUnit\Framework\TestCase
 
         $service = new CompareService();
         $service->run($context);
-        $this->assertContains('Location: https://docs.freesewing.org/', Output::$headers);
+        $this->assertContains('Location: https://freesewing.org/', Output::$headers);
     }
 }

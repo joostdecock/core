@@ -454,6 +454,9 @@ class ClassDocs extends \Freesewing\Patterns\Core\Pattern
             'small',
             'vertical-small',
             'horizontal-small',
+            'extrasmall',
+            'vertical-extrasmall',
+            'horizontal-extrasmall'
         ];
         
         foreach($modes as $mode) {
@@ -461,15 +464,15 @@ class ClassDocs extends \Freesewing\Patterns\Core\Pattern
             $this->newPart($mode);
             /** @var \Freesewing\Part $p */
             $p = $this->parts[$mode];
-            $p->newPoint(1, 20, 35);
+            $p->newPoint(1, 30, 80);
             $p->addTitle(1, 3, 'Title', $mode, $mode);
 
             if(strpos($mode,'mall')) {
-                if(strpos($mode,'tical')) $this->addBox($p,65,40);
-                else $this->addBox($p,45,30);
+                if(strpos($mode,'tical')) $this->addBox($p,135,50);
+                else $this->addBox($p,125,60);
             } else {
-                if(strpos($mode,'tical')) $this->addBox($p,70,40);
-                else $this->addBox($p,50,60);
+                if(strpos($mode,'tical')) $this->addBox($p,130,50);
+                else $this->addBox($p,110,70);
             }
         }
         

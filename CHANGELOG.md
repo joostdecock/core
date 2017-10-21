@@ -3,6 +3,54 @@
 > All notable changes to freesewing core should be be documented in this file.
 > Freesewing uses [Semantic Versioning](http://semver.org/).
 
+## Version 1.2.1
+
+**Release date**: 2017-10-21
+
+This release includes the HueyHoodie pattern. It's stil in the beta namespace for now.
+[This blog post](https://freesewing.org/blog/huey-hoodie-beta/) has more info on what 
+it means for a pattern to be in beta.
+
+### New
+
+ - Huey is a new pattern, a zip-up hoodie for men. It's currently in the Beta namespace
+
+### Changes
+
+#### More modes for addTitle
+
+The `Part::addTite` method now accepts three new modes:
+
+ - extrasmall
+ - horizontal-extrasmall
+ - vertical-extrasmall
+
+Thanks to @Woutervdub for suggesting this and his pull request.
+
+#### Config file layout changes
+
+The config files had a few minor tweaks related to the frontend integration.
+
+ - Descriptions have been updated
+ - inMemoryOf is moved to the info section
+
+### Fixes
+
+#### Wahid
+
+ - Fixed a few typos
+ - Fixed pocket bag and pocket facing which had their lengths mixed up.
+
+Thanks to @PD75 for reporting these issues in Wahid.
+
+#### Simon
+
+ - Fixed the buttonfree lenght that was off
+ - Changed the button layout so that the top button is closer to the collar
+
+Thanks to @Woutervdub for contributing code for this.  
+Thanks to @Stefan1960 for reporting these issues in Simon.
+
 ## Version 1.2.0
 
 **Release date**: 2017-10-05

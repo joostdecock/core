@@ -350,7 +350,8 @@ abstract class Pattern
     public function newPart($key)
     {
         if (is_numeric($key) || is_string($key)) {
-            $part = new \Freesewing\Part();
+            // We are passing the pattern config to the part constructor
+            $part = new \Freesewing\Part($this->config);
             $part->setUnits($this->units);
             $this->parts[$key] = $part;
         }

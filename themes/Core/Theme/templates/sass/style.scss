@@ -100,6 +100,17 @@ text.part-title.horizontal {
     text-anchor: start; 
 }
 
+text.pattern-title { 
+    font-size: $font-pattern-title;
+    font-weight: bold;
+    text-anchor: middle; 
+    fill: $black;
+}
+
+text.pattern-title.horizontal { 
+    text-anchor: start; 
+}
+
 text.part-msg {
     font-size: $font-part-subtitle;
     text-anchor: middle; 
@@ -117,6 +128,10 @@ text.part-nr.small {
 
 text.part-title.small {
     font-size: $font-part-title-sm; 
+}
+
+text.pattern-title.small {
+    font-size: $font-pattern-title-sm; 
 }
 
 text.part-msg.small {

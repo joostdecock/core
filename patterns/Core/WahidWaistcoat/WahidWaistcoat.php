@@ -613,7 +613,7 @@ class WahidWaistcoat extends BrianBodyBlock
         $p = $this->parts['pocketFacing'];
 
         $cplen = \Freesewing\BezierToolbox::bezierCircle(20);
-        $p->addPoint( 3, $p->shift(3,-90,10));
+        $p->addPoint( 3, $p->shift(3,-90,+10+self::POCKET_HEIGHT*2));
         $p->addPoint( 4, $p->shift(3,-90,$cplen));
         $p->addPoint( 5, $p->shift(3,-90,20));
         $p->addPoint( 6, $p->shift(5,180,$cplen));
@@ -639,7 +639,7 @@ class WahidWaistcoat extends BrianBodyBlock
         /** @var \Freesewing\Part $p */
         $p = $this->parts['pocketBag'];
 
-        $p->addPoint( 2, $p->shift(2,90,self::POCKET_HEIGHT*2));
+        $p->addPoint( 2, $p->shift(2,-90,self::POCKET_HEIGHT*2));
 
         $mirror = [1,2,3,4,6,7];
         foreach($mirror as $i) $p->addPoint($i*-1, $p->flipX($i,0));
@@ -787,7 +787,7 @@ class WahidWaistcoat extends BrianBodyBlock
 
         // Title
         $p->newPoint('titleAnchor', $p->x(907)+$p->deltaX(907,5)/2, $p->y(2907));
-        $p->addTitle('titleAnchor', 4, $this->t($p->title), '2x '.$this->t('from main fabric')."\n".$this->t('With good sides together'));
+        $p->addTitle('titleAnchor', 4, $this->t($p->title), '2x '.$this->t('from lining')."\n".$this->t('With good sides together'));
 
         // Logo
         $p->newPoint('logoAnchor', $p->x(907)+ 30, $p->y(907) -20);

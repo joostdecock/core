@@ -1,7 +1,7 @@
 hidden: false
 info:
     name: "Huey Hoodie"
-    description: "A zip-up hoodie"
+    description: "Huey is a zip-up hoodie with optinal front pockets"
     handle: "huey"
     author: "Joost De Cock"
     company: "freesewing.org"
@@ -99,14 +99,6 @@ options:
         min: 0
         max: 100
         default: 45
-    cuffDrape:
-        title: "Cuff drape"
-        description: "The amount by which the sleeve end is wider than the ribbing"
-        group: "fit"
-        type: "measure"
-        min: 0
-        max: 50
-        default: 35
 
 # advanced group
     armholeDepthFactor:

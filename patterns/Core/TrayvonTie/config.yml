@@ -1,6 +1,6 @@
 info:
   name:     "Trayvon Tie"
-  description: "This tie pattern cuts no corners for a professional result"
+  description: "Trayvon is a tie that cuts no corners for a professional result"
   handle:   "trayvon"
   version:  "2.0"
   author:   "Joost De Cock"
@@ -10,6 +10,9 @@ info:
   tags:
       - unisex
       - accessories
+  inMemoryOf:
+    name: "Trayvon Martin"
+    link: "https://en.wikipedia.org/wiki/Trayvon_Martin"
 
 parts:
   interfacingTip:   "Interfacing tip"
@@ -47,6 +50,3 @@ options:
         max: 70
         default: 35
 
-inMemoryOf:
-    name: "Trayvon Martin"
-    link: "https://en.wikipedia.org/wiki/Trayvon_Martin"

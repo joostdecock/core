@@ -246,7 +246,7 @@ class HueyHoodie extends \Freesewing\Patterns\Core\BrianBodyBlock
         $p = $this->parts['sleeve'];
 
         // Adapt sleeve length
-        $p->newPoint('new32', $model->m('wristCircumference')/2 + $this->o('cuffEase')/2 + $this->o('cuffDrape')/2, $model->m('shoulderToWrist') + $this->o('sleeveLengthBonus') - $this->o('ribbingWidth'));
+        $p->newPoint('new32', $model->m('wristCircumference')/2 + $this->o('cuffEase')/2, $model->m('shoulderToWrist') + $this->o('sleeveLengthBonus') - $this->o('ribbingWidth'));
         $p->addPoint('new31', $p->flipX('new32',0));
         
 

@@ -1,6 +1,6 @@
 info:
   name: "Sven Sweatshirt"
-  description: "A simple sweater and an essential wardrobe ingredient"
+  description: "Sven is a straightforward sweater"
   handle: "sven"
   version: "1.0"
   date: 20170323
@@ -44,9 +44,9 @@ options:
         description: "The amount of ease at your chest."
         group: "fit"
         type: "measure"
-        min: -40
+        min: 30
         max: 160
-        default: 30
+        default: 80
     bicepsEase:
         title: "Biceps ease"
         description: "The amount of ease at your upper arm."

@@ -369,7 +369,7 @@ class HueyHoodie extends \Freesewing\Patterns\Core\BrianBodyBlock
         $p->newSnippet('scalebox', 'scalebox', 'scaleboxAnchor');
 
         // Note
-        $len = $p->distance(9,'new4') + $this->o('ribbingWidth') + $this->v('hoodZipperLength');
+        $len = $p->distance(9,'new4') + $this->o('ribbingWidth') + $this->v('hoodZipLength');
         $p->newNote(1,3,$this->t('Maximum zipper length is ').$p->unit($len), 3, 50);
 
         // Facing

@@ -104,10 +104,9 @@ class Sampler
      * made to look different. (giving us that rainbow effect in the standard theme).
      *
      * @param int                      $step      The step out of total steps this is
-     * @param int                      $step      The total amount of steps
+     * @param int                      $steps     The total amount of steps
      * @param \Freesewing\Pattern      $pattern   The pattern to sample
      * @param \Freesewing\Theme        $theme     The theme
-     * @param \Freesewing\SvgRenderbot $mode      sample or compare
      * @param \Freesewing\SvgRenderbot $renderBot The SVG renderbot to render the path
      * @param string                   $mode      sample or compare
      */

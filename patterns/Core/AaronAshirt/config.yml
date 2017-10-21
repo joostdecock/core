@@ -1,14 +1,19 @@
 info:
     name: "Aaron A-Shirt"
-    description: "This no-frills athletic shirt is a wardrobe staple that nobody should be without"
+    description: "Aaron is an athletic shirt or tank top"
     handle: "aaron"
     version: "2.0"
     author: "Joost De Cock"
     company: "freesewing"
     link: "freesewing.org/pattern/aaron"
     tags:
-        - unisex
         - top
+        - underwear
+        - unisex
+    inMemoryOf:
+        name: "Aaron Swartz"
+        link: "https://en.wikipedia.org/wiki/Aaron_Swartz"
+
 parts:
     frontBlock: ".Front block"
     backBlock: ".Back block"
@@ -115,6 +120,3 @@ options:
         min: -60
         max: 200
         default: 60
-inMemoryOf:
-    name: "Aaron Swartz"
-    link: "https://en.wikipedia.org/wiki/Aaron_Swartz"

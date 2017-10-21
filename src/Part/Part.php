@@ -79,6 +79,22 @@ class Part
     /** @var string The units, either 'metric' or 'imperial' */
     private $units = 'metric';
 
+    /** @var array The pattern config, passed into the constructor. See Pattern::newPart */ 
+    private $patternConfig = array();
+
+    /**
+     * Constructor gets the pattern config
+     *
+     * This was added so that part::addTitle can auto-prefix the part title
+     * with the pattern title
+     *
+     * @param array $config The pattern config as read from config.yml
+     */
+    public function __construct($config = null)
+    {
+        if($config !== null) $this->patternConfig = $config;
+    }
+    
     /**
      * Sets the render property.
      *
@@ -363,11 +379,12 @@ class Part
      * @param string $msg       Message to print on the pattern
      * @param string $mode      Possible modes: default, small, horizontal, vertical, vertical-small 
      */
-    public function addTitle($anchorKey, $nr, $title, $msg = '', $mode = 'default')
+    public function addTitle($anchorKey, $nr, $title, $msg = '', $mode = 'default', $noPatternPrefix = false)
     {
         $class = str_replace('-',' ',$mode);
         $title = str_replace("\n", " ", $title);  /* Remove any newline characters from the Title */
         $lineHeight = ((strpos($mode, 'small') !== false) ? 6 : 11); /* setting the line-height attribute, depending on thesize of the Title */
+        if($noPatternPrefix === false) $patternTitle = ucfirst($this->patternConfig['info']['handle']);
 
         if($mode == 'vertical' || $mode == 'vertical-small') {
             /* Moving the Title slightly on the horizontal pane. 
@@ -375,6 +392,13 @@ class Part
                Otherwise align the center between the Title and the msg with the anchor point */
             $shift = ( $msg == '' ? 2 : ($mode == 'vertical-small' ? 5 : 10)); 
             $this->newText('partNumber', $anchorKey, $nr, ['class' => "part-nr $class"]);
+            if($noPatternPrefix === false) {
+                $len = strlen($patternTitle)*6;
+                $this->newText(
+                    'patternTitle', $anchorKey, $patternTitle,
+                    ['class' => "pattern-title $class", 'transform' => "translate(".$shift.", ".-1*$len."), translate(-9,0)", 'writing-mode' => 'tb-rl']
+                );
+            }
             $this->newText(
                 'partTitle', $anchorKey, $title,
                 ['class' => "part-title $class", 'transform' => "translate(".$shift.", 10)", 'writing-mode' => 'tb-rl']
@@ -383,10 +407,18 @@ class Part
                 'partMsg', $anchorKey, $msg, 
                 ['class' => "part-msg $class", 'transform' => "translate(-5, 10)", 'writing-mode' => 'tb-rl', 'line-height' => $lineHeight]
             );
+        } elseif($mode == 'extrasmall' ) {
+            $this->newText('partNumber', $anchorKey, $nr, ['class' => "part-nr horizontal small", 'transform' => "translate(0, 5)"]);
+            $this->newText('partTitle', $anchorKey, $title, ['class' => "part-title horizontal small", 'transform' => "translate(".(6+6*strlen($nr)).", 0)"]);
+            $this->newText(
+                'partMsg', $anchorKey, $msg, 
+                ['class' => "part-msg horizontal small", 'transform' => 'translate('.(6+6*strlen($nr)).', '.($lineHeight).')', 'line-height' => $lineHeight]
+            );
         } else {
             if(strpos($class, 'small')) $shift = 1;
             else $shift = 2;
             $this->newText('partNumber', $anchorKey, $nr, ['class' => "part-nr $class", 'transform' => 'translate(0, '.(-10*$shift).')']);
+            if($noPatternPrefix === false) $this->newText('patternTitle', $anchorKey, $patternTitle, ['transform' => 'translate(0,'.(-22*$shift).')', 'class' => "pattern-title $class"]);
             $this->newText('partTitle', $anchorKey, $title, ['class' => "part-title $class"]);
             $this->newText(
                 'partMsg', $anchorKey, $msg, 

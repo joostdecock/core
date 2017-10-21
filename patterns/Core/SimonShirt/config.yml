@@ -1,6 +1,6 @@
 info:
     name: "Simon Shirt"
-    description: "This is my bid to create the last shirt pattern you'll even need"
+    description: "Simon is a highly adaptable shirt pattern for men"
     handle: "simon"
     version: "2.0"
     author: "Joost De Cock"
@@ -118,9 +118,9 @@ options:
         description: "The amount to lengthen the sleeve beyond your wrist"
         group: "fit"
         type: "measure"
-        min: 0
-        max: 50
-        default: 0
+        min: 20
+        max: 70
+        default: 40
     yokeDart:
         title: "Yoke dart"
         description: "Whether to include a dart at the sides of the yoke to fit a rounder back"
@@ -191,7 +191,7 @@ options:
         options:
             0: "No extra top button"
             1: "Extra top button"
-        default: 1
+        default: 0
     splitYoke:
         title: "Split yoke"
         description: "Whether to draft a split or regular yoke"

@@ -3,6 +3,21 @@
 > All notable changes to freesewing core should be be documented in this file.
 > Freesewing uses [Semantic Versioning](http://semver.org/).
 
+## Version 1.2.2
+
+**Release date**: 2017-10-23
+
+This release fixes the offset in the DesignTutorial pattern which was incorrect.
+
+Path offset changed direction in core v1.2.0. At that time, all patterns were updated to
+reflect these changes, but the DesignTutorial pattern was overlooked.
+
+### Fixes
+
+#### DesignTutorial
+
+ - Switch pathOffset from -3 to 3
+
 ## Version 1.2.1
 
 **Release date**: 2017-10-21

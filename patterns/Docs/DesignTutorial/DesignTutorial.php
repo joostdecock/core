@@ -252,7 +252,7 @@ class DesignTutorial extends \Freesewing\Patterns\Core\Pattern
     {
         $this->example_outline($p, $model);
     
-        $p->offsetPath('bias', 'outline', -3, true, ['class' => 'helpline']);
+        $p->offsetPath('bias', 'outline', 3, true, ['class' => 'helpline']);
     }
 
     private function example_snap($p, $model)

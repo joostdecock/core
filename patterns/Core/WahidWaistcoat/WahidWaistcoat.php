@@ -639,7 +639,7 @@ class WahidWaistcoat extends BrianBodyBlock
         /** @var \Freesewing\Part $p */
         $p = $this->parts['pocketBag'];
 
-        $p->addPoint( 2, $p->shift(2,-90,self::POCKET_HEIGHT*2));
+        $p->addPoint( 2, $p->shift(2,90,self::POCKET_HEIGHT*2));
 
         $mirror = [1,2,3,4,6,7];
         foreach($mirror as $i) $p->addPoint($i*-1, $p->flipX($i,0));

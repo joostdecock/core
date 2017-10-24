@@ -3,6 +3,21 @@
 > All notable changes to freesewing core should be be documented in this file.
 > Freesewing uses [Semantic Versioning](http://semver.org/).
 
+## Version 1.2.3
+
+**Release date**: 2017-10-24
+
+This release fixes an option in Aaron and the pocket back of Wahid.
+
+It also adds some community things such as code of conduct and other GitHub community files.
+
+### Fixes
+
+#### Aaron
+
+ - The `shoulderStrapPlacement` options caused issues when it was zero. It's boundaries have been set to avoid that.
+ - The pocket bag in Wahid had a leftover welt line and notches outside the part.
+
 ## Version 1.2.2
 
 **Release date**: 2017-10-23

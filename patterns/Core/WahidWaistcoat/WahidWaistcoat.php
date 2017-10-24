@@ -644,7 +644,6 @@ class WahidWaistcoat extends BrianBodyBlock
         $mirror = [1,2,3,4,6,7];
         foreach($mirror as $i) $p->addPoint($i*-1, $p->flipX($i,0));
 
-        $p->newPath('pocketLine', 'M -1 L 1', ['class' => 'help lining']);
         $p->newPath('outline', 'M -2 L 2 L 3 C 4 6 7 L -7 C -6 -4 -3 z', ['class' => 'lining']);
     }
 
@@ -902,12 +901,8 @@ class WahidWaistcoat extends BrianBodyBlock
         $p->newPoint('titleAnchor', -30, $p->y(3)/2+5);
         $p->addTitle('titleAnchor', 8, $this->t($p->title), '2x '.$this->t('from lining'), 'horizontal-small');
 
-        // Notches
-        $p->newSnippet('notchRight', 'notch', 1);
-        $p->newSnippet('notchLeft', 'notch', -1);
-
         // No seam allowance note
-        $p->newPoint('noSaAnchor', $p->x(-3),$p->y(-1)+10);
+        $p->newPoint('noSaAnchor', $p->x(-3),$p->y(-1)+60);
         $p->newNote(1, 'noSaAnchor', $this->t("No\nseam\nallowance"), 4, 10, 0, ['line-height' => 4, 'class' => 'text']);
     }
 
@@ -1178,12 +1173,10 @@ class WahidWaistcoat extends BrianBodyBlock
         /** @var \Freesewing\Part $p */
         $p = $this->parts['pocketBag'];
 
-        $p->newWidthDimension(-1,1, -10); // Welt line width
         $p->newWidthDimension(-2,2, $p->y(-2)-10); // Total width
 
         $xBase = $p->x(-2);
-        $p->newHeightDimension(-7,-1, $xBase-10); // Height to welt line
-        $p->newHeightDimension(-7,-2, $xBase-25); // Total height
+        $p->newHeightDimension(-7,-2, $xBase-10); // Total height
 
         $p->addPoint('radiusAnchor', $p->shiftAlong(-3,-4,-6,-7,11));
         $p->newNote(2, 'radiusAnchor', $this->t("Radius").': '.$p->unit($p->deltaX(-3,-7)), 2, 20, 0, ['line-height' => 4, 'class' => 'text']);

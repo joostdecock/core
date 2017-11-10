@@ -42,6 +42,37 @@ class Utils
     }
 
     /**
+     * Like asScrubbedArray but weeds out path operations
+     *
+     * This takes a string and explodes is by spaces.
+     * It then weeds out empty elements in the array, as well as
+     * allowed path command (C, M, L, z) and strips spaces from the start
+     * and end of the non-empty elements.
+     *
+     * It is essentially used to turn a pathstring into an array of
+     * points used in that pathstring
+     *
+     * @param string $data      The input data
+     *
+     * @return array The scrubbed array
+     */
+    public static function asPointArray($data)
+    {
+        $array = explode(' ', $data);
+        foreach ($array as $value) {
+            $chunk = rtrim($value);
+            if (Utils::isAllowedPathCommand($chunk) === false && $chunk != '') {
+                $return[$value] = rtrim($value);
+            }
+        }
+        if (isset($return)) {
+            return (array_keys($return));
+        } else {
+            return false;
+        }
+    }
+
+    /**
      * Verifies that a path command is one of the supported path commands
      *
      * @param string $command The path command to verify

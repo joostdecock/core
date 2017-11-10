@@ -1,5 +1,5 @@
 <?php
-/** BonnyBowTie class */
+/** BenjaminBowTie class */
 namespace Freesewing\Patterns\Beta;
 
 use Freesewing\Utils;
@@ -20,12 +20,12 @@ define( "OFFSET", 15 );
 
 
 /**
- * The Bow Tie pattern
+ * The Benjamin Bow Tie pattern
  *
  * @author Wouter van Wageningen
  * @license http://opensource.org/licenses/GPL-3.0 GNU General Public License, Version 3
  */
-class BonnyBowTie extends \Freesewing\Patterns\Core\Pattern
+class BenjaminBowTie extends \Freesewing\Patterns\Core\Pattern
 {
     /*
         ___       _ _   _       _ _
@@ -226,9 +226,13 @@ class BonnyBowTie extends \Freesewing\Patterns\Core\Pattern
 
         // Mark for sampler
         $p->paths['outline']->setSample(true);
-
     }
 
+    /**
+     * Drafts a rectangle to be placed between the bow tie shapes
+     *
+     * @return void
+     */
     public function draftCollarBand($model)
     {
         $p = $this->parts['collarBand'];
@@ -247,7 +251,6 @@ class BonnyBowTie extends \Freesewing\Patterns\Core\Pattern
 
         // Mark for sampler
         $p->paths['outline']->setSample(true);
-
     }
 
 
@@ -262,7 +265,7 @@ class BonnyBowTie extends \Freesewing\Patterns\Core\Pattern
     */
 
     /**
-     * Finalizes the Fabric Tip
+     * Finalizes the basic bow tie shape for all options
      *
      * @param \Freesewing\Model $model The model to finalize the part for
      * @param \Freesewing\Part $p The part object
@@ -273,11 +276,10 @@ class BonnyBowTie extends \Freesewing\Patterns\Core\Pattern
     {
         $p = $this->parts[$part];
 
-        $partNr = substr($part, -1);
-        if( $partNr == 1 ) {
+        if( $part == 'bowTie1' ) {
             $copies = ( $this->o('adjustmentTape') ? 1 : 4 );
         } else {
-            $copies = ( $partNr == '2' ? 1 : 2 );
+            $copies = ( $part == 'bowTie2' ? 1 : 2 );
         }
 
         $p->newPoint('grainlineLeft', $p->x('Origin') +30, $p->y('Origin') );
@@ -290,17 +292,18 @@ class BonnyBowTie extends \Freesewing\Patterns\Core\Pattern
         }
 
         // Title
-        $p->newPoint('titleAnchor', $p->x(5), $p->y('Origin'), 'Title point');
-        $p->addTitle('titleAnchor', $partNr, $this->t($p->title), $copies.'x '.$this->t('from fabric').', '.$copies.'x '.$this->t('from interfacing'), 'extrasmall');
+        $p->newPoint('titleAnchor', $p->x(5), $p->y('Origin') +6, 'Title point');
+        $p->addTitle('titleAnchor', substr($part, -1), $this->t($p->title), $copies.'x '.$this->t('from fabric').', '.$copies.'x '.$this->t('from interfacing'), 'extrasmall');
 
-        if( $partNr == 1 ) {
+        if( $part == 'bowTie1' ) {
             // Scalebox
             $p->newPoint('scaleboxAnchor', $p->x('Origin') +50, $p->y('r7') +30);
             $p->newSnippet('scalebox', 'scalebox', 'scaleboxAnchor');
 
             // logo
-            //$p->addPoint('logoAnchor', $p->shift('scaleboxAnchor', -90, 100));
-            //$p->newSnippet('logo', 'logo', 'logoAnchor');
+            $p->addPoint('logoAnchorHelper', $p->shift(8, 180, 25));
+            $p->addPoint('logoAnchor', $p->shift('logoAnchorHelper', 270, 6));
+            $p->newSnippet('logo', 'logo-sm', 'logoAnchor');
 
             // Dummy line
             $p->addPoint('h1', $p->shift('scaleboxAnchor', -90, 50 ));
@@ -326,11 +329,10 @@ class BonnyBowTie extends \Freesewing\Patterns\Core\Pattern
             $p->offsetPath('seamAllowance', 'outline', $this->o('sa'), true, ['class' => 'fabric sa'] );
         }
 
-        $p->addPoint('titleAnchor', $p->shift('Origin', 0, 50) );
+        $p->newPoint('titleAnchor', $p->x('Origin') +50, $p->y('Origin') +5, 'Title point');
 
         // Title
         $p->addTitle('titleAnchor', ($this->o('adjustmentTape') ? 4 : 2), $this->t($p->title), '2x '.$this->t('from fabric').', 2x '.$this->t('from interfacing'), 'extrasmall');
-
     }
 
 

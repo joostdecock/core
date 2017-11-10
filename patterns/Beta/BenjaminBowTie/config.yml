@@ -1,11 +1,17 @@
 info:
-    name: "Bonny Bow Tie"
+    name: "Benjamin Bow Tie"
     version: "1.0"
     date: 20170929
-    author: "Wouter"
+    description: "Benjamin is a bow tie pattern with four different shape options. The shape of the ends and size of the bow can be changed."
+    handle: "Benjamin"
+    author: "WouterVdub"
     email: ""
     company: "freesewing.org"
-
+    tags:
+        - menswear
+        - womenswear
+        - accessory
+        
 parts:
     bowTie1: "Bow Tie knot"
     bowTie2: "Bow Tie knot"
@@ -34,6 +40,8 @@ options:
         min: 24
         max: 80
         default: 65
+        dependsOn: bowStyle
+        onlyOn: [1,2,4]
     knotWidth:
         title: "Knot width"
         description: "The width of the bow tie at the knot/middle."
@@ -61,7 +69,7 @@ options:
             2: "Diamond"
             3: "Square"
             4: "Wide Square"
-        default: 3
+        default: 2
     endStyle:
         title: "End style"
         description: "The style of the end of the tie"
@@ -71,7 +79,7 @@ options:
             0: "Straight end"
             1: "Pointed end"
             2: "Rounded end"
-        default: 1
+        default: 0
         
     adjustmentTape:
         title: "Adjustment Tape"

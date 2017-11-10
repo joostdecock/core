@@ -241,6 +241,7 @@ path.double-arrow {
 .stroke-xxl { stroke-width: $stroke-xxl; }
 
 .dashed { stroke-dasharray: $dashes; }
+.lashed { stroke-dasharray: $lashes; }
 .dotted { stroke-dasharray: $dots; }
 
 .hidden { stroke: none; file: none;}

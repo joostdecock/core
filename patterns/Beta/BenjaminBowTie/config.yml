@@ -81,9 +81,9 @@ options:
             2: "Rounded end"
         default: 0
         
-    adjustmentTape:
-        title: "Adjustment Tape"
-        description: "Tape to make the tie adjustable"
+    adjustmentRibbon:
+        title: "Adjustment Ribbon"
+        description: "Add a ribbon to make the tie adjustable"
         group: "sewing"
         type: "chooseOne"
         options:

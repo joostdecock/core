@@ -97,7 +97,7 @@ class BenjaminBowTie extends \Freesewing\Patterns\Core\Pattern
         $this->initialize($model);
 
         $this->draftBowTie($model, 'bowTie1', 0);
-        if( $this->o('adjustmentTape') ) {
+        if( $this->o('adjustmentRibbon') ) {
             //$this->draftBowTie($model, 'bowTie2', 315 );
             $this->draftBowTie($model, 'bowTie2', 290 );
             $this->draftBowTie($model, 'bowTie3',  90 );
@@ -122,7 +122,7 @@ class BenjaminBowTie extends \Freesewing\Patterns\Core\Pattern
         $this->sample( $model );
 
         $this->finalizeBowTie( $model, 'bowTie1' );
-        if( $this->o('adjustmentTape') ) {
+        if( $this->o('adjustmentRibbon') ) {
             $this->finalizeBowTie( $model, 'bowTie2' );
             $this->finalizeBowTie( $model, 'bowTie3' );
         } else {
@@ -132,7 +132,7 @@ class BenjaminBowTie extends \Freesewing\Patterns\Core\Pattern
         // Is this a paperless pattern?
         if ($this->isPaperless) {
             $this->paperlessBowTie( $model, 'bowTie1' );
-            if( $this->o('adjustmentTape') ) {
+            if( $this->o('adjustmentRibbon') ) {
                 $this->paperlessBowTie( $model, 'bowTie2' );
                 $this->paperlessBowTie( $model, 'bowTie3' );
             } else {
@@ -277,7 +277,7 @@ class BenjaminBowTie extends \Freesewing\Patterns\Core\Pattern
         $p = $this->parts[$part];
 
         if( $part == 'bowTie1' ) {
-            $copies = ( $this->o('adjustmentTape') ? 1 : 4 );
+            $copies = ( $this->o('adjustmentRibbon') ? 1 : 4 );
         } else {
             $copies = ( $part == 'bowTie2' ? 1 : 2 );
         }
@@ -332,7 +332,7 @@ class BenjaminBowTie extends \Freesewing\Patterns\Core\Pattern
         $p->newPoint('titleAnchor', $p->x('Origin') +50, $p->y('Origin') +5, 'Title point');
 
         // Title
-        $p->addTitle('titleAnchor', ($this->o('adjustmentTape') ? 4 : 2), $this->t($p->title), '2x '.$this->t('from fabric').', 2x '.$this->t('from interfacing'), 'extrasmall');
+        $p->addTitle('titleAnchor', ($this->o('adjustmentRibbon') ? 4 : 2), $this->t($p->title), '2x '.$this->t('from fabric').', 2x '.$this->t('from interfacing'), 'extrasmall');
     }
 
 

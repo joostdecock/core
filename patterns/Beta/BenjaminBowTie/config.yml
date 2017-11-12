@@ -1,6 +1,6 @@
 info:
     name: "Benjamin Bow Tie"
-    description: "Benjamin is a bow tie pattern with four different shape options. The shape of the ends and size of the bow can be changed."
+    description: "Benjamin is a bow tie pattern with four different shape options."
     handle: "benjamin"
     author: "WouterVdub"
     tags:

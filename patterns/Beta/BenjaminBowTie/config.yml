@@ -92,11 +92,11 @@ options:
 #            2: "13½\" - 20\""
         default: 0
 
-    sa:
-        title: "Seam Allowance"
-        description: "sa"
-        group: "sewing"
-        type: "measure"
-        min: 0
-        max: 25
-        default: 6
+#    sa:
+#        title: "Seam Allowance"
+#        description: "sa"
+#        group: "sewing"
+#        type: "measure"
+#        min: 0
+#        max: 25
+#        default: 6

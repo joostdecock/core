@@ -1,12 +1,8 @@
 info:
     name: "Benjamin Bow Tie"
-    version: "1.0"
-    date: 20170929
     description: "Benjamin is a bow tie pattern with four different shape options. The shape of the ends and size of the bow can be changed."
     handle: "benjamin"
     author: "WouterVdub"
-    email: ""
-    company: "freesewing.org"
     tags:
         - menswear
         - womenswear
@@ -17,7 +13,6 @@ parts:
     bowTie2: "Bow Tie knot"
     bowTie3: "Bow Tie knot"
     collarBand: "Collar band"
-    
 
 measurements:
         neckCircumference: 394

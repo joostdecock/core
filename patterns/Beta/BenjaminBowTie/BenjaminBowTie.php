@@ -5,20 +5,6 @@ namespace Freesewing\Patterns\Beta;
 use Freesewing\Utils;
 use Freesewing\BezierToolbox;
 
-/* Constants for the tie shape */
-define( "BUTTERFLY", 1 );
-define( "DIAMOND", 2 );
-define( "SQUARE", 3 );
-define( "WIDESQUARE", 4 );
-
-/* Constants for the tip */
-define( "POINTED", 1 );
-define( "ROUNDED", 2 );
-
-/* Constant for the offset of the paperless dinemsions */
-define( "OFFSET", 15 );
-
-
 /**
  * The Benjamin Bow Tie pattern
  *
@@ -27,6 +13,20 @@ define( "OFFSET", 15 );
  */
 class BenjaminBowTie extends \Freesewing\Patterns\Core\Pattern
 {
+
+   /** Constants for the tie shape */
+    const BUTTERFLY = 1;
+    const DIAMOND = 2;
+    const SQUARE = 3;
+    const WIDESQUARE = 4;
+
+    /** Constants for the tip */
+    const POINTED = 1;
+    const ROUNDED = 2;
+
+    /** Constant for the offset of the paperless dinemsions */
+    const OFFSET = 15;
+
     /*
         ___       _ _   _       _ _
        |_ _|_ __ (_) |_(_) __ _| (_)___  ___

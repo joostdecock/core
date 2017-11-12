@@ -381,6 +381,10 @@ class HueyHoodie extends \Freesewing\Patterns\Core\BrianBodyBlock
         $p->newPath('facing', 'M facingTop L facingBottom', ['class' => 'fabric help']);
         $p->newPoint('facingNoteAnchor', $p->x('facingTop'), $p->y(10));
         $p->newNote(3,'facingNoteAnchor',$this->t('Facing edge')."\n".'Cut everything left from this line'."\n".'2x '.$this->t('from fabric'), 9);
+
+        // Notches
+        $p->notch(['10']);
+        $this->setValue('frontArmholeNotchDistance', $p->curveLen(12,19,17,10));
     }
 
 
@@ -418,6 +422,11 @@ class HueyHoodie extends \Freesewing\Patterns\Core\BrianBodyBlock
         // Logo
         $p->addPoint('logoAnchor', $p->shift('titleAnchor', -90, 70));
         $p->newSnippet('logo', 'logo', 'logoAnchor');
+        
+        // Notches
+        $p->addPoint('backNotch', $p->shiftAlong(10,18,15,14,5));
+        $p->notch([10,'backNotch']);
+        $this->setValue('backArmholeNotchDistance', $p->curveLen(12,19,17,10));
     }
 
     
@@ -451,6 +460,25 @@ class HueyHoodie extends \Freesewing\Patterns\Core\BrianBodyBlock
         $p->addPoint('logoAnchor', $p->shift('titleAnchor', -90, 70));
         $p->newSnippet('logo', 'logo', 2);
 
+        // Front sleeve notch
+        $frontCurve1 = $p->curveLen(30,29,25,18);
+        $frontCurve2 = $p->curveLen(18,24,11,11);
+        if($frontCurve1 >= $this->v('frontArmholeNotchDistance')) $p->addPoint('frontNotch', $p->shiftAlong(30,29,25,18, $this->v('frontArmholeNotchDistance')));
+        else if(($frontCurve1+$frontCurve2) >= $this->v('frontArmholeNotchDistance')) $p->addPoint('frontNotch', $p->shiftAlong(18,24,11,11,$this->v('frontArmholeNotchDistance') - $frontCurve1));
+        else $p->addPoint('frontNotch', $p->shiftAlong(11,11,27,19,$this->v('frontArmholeNotchDistance') - ($frontCurve1 + $frontCurve2)));
+        // First back sleeve notch
+        $backCurve1 = $p->curveLen(30,28,23,17);
+        $backCurve2 = $p->curveLen(17,22,10,10);
+        if($backCurve1 >= $this->v('backArmholeNotchDistance')) $p->addPoint('backNotch1', $p->shiftAlong(30,28,23,17, $this->v('backArmholeNotchDistance')));
+        else if(($backCurve1+$backCurve2) >= $this->v('backArmholeNotchDistance')) $p->addPoint('backNotch1', $p->shiftAlong(17,22,10,10,$this->v('backArmholeNotchDistance') - $backCurve1));
+        else $p->addPoint('backNotch1', $p->shiftAlong(10,10,21,16,$this->v('backArmholeNotchDistance') - ($backCurve1 + $backCurve2)));
+        // Second back sleeve notch
+        $this->setValue('backArmholeNotchDistance', 5+$this->v('backArmholeNotchDistance'));
+        if($backCurve1 >= $this->v('backArmholeNotchDistance')) $p->addPoint('backNotch2', $p->shiftAlong(30,28,23,17, $this->v('backArmholeNotchDistance')));
+        else if(($backCurve1+$backCurve2) >= $this->v('backArmholeNotchDistance')) $p->addPoint('backNotch2', $p->shiftAlong(17,22,10,10,$this->v('backArmholeNotchDistance') - $backCurve1));
+        else $p->addPoint('backNotch2', $p->shiftAlong(10,10,21,16,$this->v('backArmholeNotchDistance') - ($backCurve1 + $backCurve2)));
+        
+        $p->notch([30, 'frontNotch','backNotch1', 'backNotch2']);
     }
 
 

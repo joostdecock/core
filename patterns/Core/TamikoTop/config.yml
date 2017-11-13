@@ -2,13 +2,9 @@ info:
   name:     "Tamiko Top"
   description: "Tamiko is a zero-waste top"
   handle: "tamiko"
-  version:  "2.0"
-  author:   "Joost De Cock"
-  email:    "joost@decock.org"
-  company:  "freesewing.org"
-  link:     "freesewing.org/pattern/tamiko"
   tags:
-      - unisex
+      - womenswear
+      - menswear
       - top
 
 parts:

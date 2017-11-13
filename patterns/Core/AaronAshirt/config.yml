@@ -2,14 +2,11 @@ info:
     name: "Aaron A-Shirt"
     description: "Aaron is an athletic shirt or tank top"
     handle: "aaron"
-    version: "2.0"
-    author: "Joost De Cock"
-    company: "freesewing"
-    link: "freesewing.org/pattern/aaron"
     tags:
         - top
         - underwear
-        - unisex
+        - menswear
+        - womenswear
     inMemoryOf:
         name: "Aaron Swartz"
         link: "https://en.wikipedia.org/wiki/Aaron_Swartz"

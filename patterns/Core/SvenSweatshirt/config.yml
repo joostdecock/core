@@ -2,16 +2,10 @@ info:
   name: "Sven Sweatshirt"
   description: "Sven is a straightforward sweater"
   handle: "sven"
-  version: "1.0"
-  date: 20170323
-  author: "Joost De Cock"
-  email: "joost@decock.org"
-  company: "freesewing.org"
-  link: "freesewing.org/pattern/sven"
   tags:
       - menswear
-      - sweater
       - top
+      - sweater
 
 parts:
   backBlock: ".Back block"

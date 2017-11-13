@@ -3,9 +3,6 @@ info:
     name: "Huey Hoodie"
     description: "Huey is a zip-up hoodie with optinal front pockets"
     handle: "huey"
-    author: "Joost De Cock"
-    company: "freesewing.org"
-    link: "freesewing.org/pattern/huey"
     tags:
         - menswear
         - top

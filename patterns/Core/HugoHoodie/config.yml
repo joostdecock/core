@@ -2,15 +2,10 @@ info:
     name:       "Hugo Hoodie"
     description: "Hugo is a hooded jumper with raglan sleeves"
     handle:     "hugo"
-    version:    "2.0"
-    author:     "Joost De Cock"
-    email:      "joost@decock.org"
-    company:    "freesewing.org"
-    link:       "freesewing.org/pattern/hugo"
     tags:
         - menswear
-        - sweater
         - hoodie
+        - sweater
         - top
     inMemoryOf:
         name: "Hugo De Cock"

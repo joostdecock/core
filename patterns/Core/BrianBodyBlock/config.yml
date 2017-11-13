@@ -2,11 +2,6 @@ info:
   name: "Brian Body Block"
   description: "Brian is a basic body block for men"
   handle: "brian"
-  version: "2.0"
-  date: 20170303
-  author: "Joost De Cock"
-  company: "freesewing"
-  link: "freesewing.org/pattern/brian"
   tags:
     - menswear
     - top

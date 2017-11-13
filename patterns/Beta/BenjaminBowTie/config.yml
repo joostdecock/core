@@ -2,12 +2,18 @@ info:
     name: "Benjamin Bow Tie"
     description: "Benjamin is a bow tie pattern with four different shape options."
     handle: "benjamin"
-    author: "WouterVdub"
     tags:
         - menswear
         - womenswear
         - accessory
         
+seamAllowance:
+    metric: 0.6
+    imperial: 0.25 
+
+languages:
+    en: "English"
+
 parts:
     bowTie1: "Bow Tie knot"
     bowTie2: "Bow Tie knot"
@@ -18,15 +24,7 @@ measurements:
         neckCircumference: 394
         
 options:
-    collarEase:
-        title: "Collar ease"
-        description: "The amount of ease in the collar of your shirts"
-        group: "ease"
-        type: "measure"
-        min: 0
-        max: 40
-        default: 15
-
+    # Style group
     tipWidth:
         title: "Tip width"
         description: "The width of the wings of the bow tie at the tip."
@@ -53,29 +51,37 @@ options:
         min: 100
         max: 140
         default: 120
-    
     bowStyle:
         title: "Bow style"
         description: "The style of the bow"
         group: "style"
         type: "chooseOne"
         options:
-            1: "Butterfly"
-            2: "Diamond"
-            3: "Square"
-            4: "Wide Square"
-        default: 2
+            butterfly: "Butterfly"
+            diamond: "Diamond"
+            squar3: "Square"
+            widesquare: "Wide Square"
+        default: "diamond"
     endStyle:
         title: "End style"
         description: "The style of the end of the tie"
         group: "style"
         type: "chooseOne"
         options:
-            0: "Straight end"
-            1: "Pointed end"
-            2: "Rounded end"
-        default: 0
+            straight: "Straight end"
+            pointed: "Pointed end"
+            rounded: "Rounded end"
+        default: "straight"
         
+    # Fit group
+    collarEase:
+        title: "Collar ease"
+        description: "The amount of ease in the collar of your shirts"
+        group: "ease"
+        type: "measure"
+        min: 0
+        max: 40
+        default: 15
     adjustmentRibbon:
         title: "Adjustment Ribbon"
         description: "Add a ribbon to make the tie adjustable"
@@ -84,14 +90,4 @@ options:
         options:
             0: "None"
             1: "13½\" - 18\""
-#            2: "13½\" - 20\""
         default: 0
-
-    sa:
-        title: "Seam Allowance"
-        description: "sa"
-        group: "sewing"
-        type: "measure"
-        min: 0
-        max: 25
-        default: 6

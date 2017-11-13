@@ -56,14 +56,10 @@ class BenjaminBowTie extends \Freesewing\Patterns\Core\Pattern
      */
     public function initialize($model)
     {
+        if( $this->o('bowStyle') == 'square' ) $this->setOption( 'tipWidth', $this->o('knotWidth') );
+        
         // Some helper vars
         $this->setValue('backWidth', 24);
-
-        if( $this->o('bowStyle') == BUTTERFLY ) {
-            //$this->setOption( 'knotWidth', $this->v('backWidth') ) ;
-        } else if( $this->o('bowStyle') == SQUARE ) {
-            $this->setOption( 'tipWidth', $this->o('knotWidth') );
-        }
         $this->setValue('halfBackWidth', $this->v('backWidth') / 2);
         $this->setValue('halfTipWidth',  $this->o('tipWidth')  / 2);
         $this->setValue('halfBowLength', $this->o('bowLength') / 2);
@@ -154,19 +150,19 @@ class BenjaminBowTie extends \Freesewing\Patterns\Core\Pattern
         $p = $this->parts[$part];
 
         $bowStyle = $this->o('bowStyle');
-        $butterfly = ($bowStyle == BUTTERFLY || $bowStyle == DIAMOND);
+        $butterfly = ($bowStyle == 'butterfly' || $bowStyle == 'diamond');
 
         if( $part == 'bowTie1' ) {
-            if( $this->o('endStyle') == POINTED ) {
+            if( $this->o('endStyle') == 'pointed' ) {
                 $tipAdjustment = $this->v('halfTipWidth')/1.3;
-            } elseif( $this->o('endStyle') == ROUNDED ) {
+            } elseif( $this->o('endStyle') == 'rounded' ) {
                 $tipAdjustment = $this->v('halfTipWidth');
             } else {
                 $tipAdjustment = 0;
             }
 
             $hhbl /*halfHalfBowLength */ = ($this->v('halfBowLength')/2);
-            $bcAdjust = ($bowStyle == DIAMOND ? 10 : $hhbl -5 );
+            $bcAdjust = ($bowStyle == 'diamond' ? 10 : $hhbl -5 );
 
             $p->newPoint('Origin', 0, 0, 'Origin');
 
@@ -213,7 +209,7 @@ class BenjaminBowTie extends \Freesewing\Patterns\Core\Pattern
             }
         }
 
-        if( $this->o('endStyle') == ROUNDED ) {
+        if( $this->o('endStyle') == 'rounded' ) {
             $tipPath = 'C 7b 8a 8 C r8a r7b';
         } else {
             $tipPath = 'L 8 L';
@@ -361,28 +357,28 @@ class BenjaminBowTie extends \Freesewing\Patterns\Core\Pattern
         $p = $this->parts[$part];
 
         $bowStyle = $this->o('bowStyle');
-        $butterfly = ($bowStyle == BUTTERFLY || $bowStyle == DIAMOND);
+        $butterfly = ($bowStyle == 'butterfly' || $bowStyle == 'diamond');
 
-        $p->newWidthDimension('r2','r3',$p->y('r7')+OFFSET);
-        $p->newWidthDimension('r3','r4',$p->y('r7')+OFFSET);
-        $p->newHeightDimension(2,'r2',$p->x(2)-OFFSET);
+        $p->newWidthDimension('r2','r3',$p->y('r7')+self::OFFSET);
+        $p->newWidthDimension('r3','r4',$p->y('r7')+self::OFFSET);
+        $p->newHeightDimension(2,'r2',$p->x(2)-self::OFFSET);
 
         if( $butterfly ) {
-            $p->newWidthDimension('r4','r5',$p->y('r7')+OFFSET);
-            $p->newWidthDimension('r5','r6',$p->y('r7')+OFFSET);
-            $p->newWidthDimension('r6','r7',$p->y('r7')+OFFSET);
+            $p->newWidthDimension('r4','r5',$p->y('r7')+self::OFFSET);
+            $p->newWidthDimension('r5','r6',$p->y('r7')+self::OFFSET);
+            $p->newWidthDimension('r6','r7',$p->y('r7')+self::OFFSET);
             $p->newHeightDimension(5,'r5',$p->x(5));
             $p->newHeightDimension(6,'r6',$p->x(6));
-            $p->newHeightDimension(7,'r7',$p->x(8)+OFFSET);
+            $p->newHeightDimension(7,'r7',$p->x(8)+self::OFFSET);
         } else {
-            $p->newWidthDimension('r4','r7',$p->y('r7')+OFFSET);
-            $p->newHeightDimension(7,'r7',$p->x(8)+OFFSET);
-            if( $bowStyle == WIDESQUARE ) {
+            $p->newWidthDimension('r4','r7',$p->y('r7')+self::OFFSET);
+            $p->newHeightDimension(7,'r7',$p->x(8)+self::OFFSET);
+            if( $bowStyle == 'widesquare' ) {
                 $p->newHeightDimension(4,'r4',$p->x(4));
             }
         }
         if( $this->o('endStyle') ) {
-            $p->newWidthDimension('r7','8',$p->y('r7')+OFFSET);
+            $p->newWidthDimension('r7','8',$p->y('r7')+self::OFFSET);
         }
         
     }
@@ -392,8 +388,8 @@ class BenjaminBowTie extends \Freesewing\Patterns\Core\Pattern
     {
         $p = $this->parts['collarBand'];
 
-        $p->newWidthDimension('r2','r3',$p->y('r2')+OFFSET);
-        $p->newHeightDimension(3,'r3',$p->x(3)+OFFSET);
+        $p->newWidthDimension('r2','r3',$p->y('r2')+self::OFFSET);
+        $p->newHeightDimension(3,'r3',$p->x(3)+self::OFFSET);
     }
 
 }

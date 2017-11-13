@@ -14,16 +14,6 @@ use Freesewing\BezierToolbox;
 class BenjaminBowTie extends \Freesewing\Patterns\Core\Pattern
 {
 
-   /** Constants for the tie shape */
-    const BUTTERFLY = 1;
-    const DIAMOND = 2;
-    const SQUARE = 3;
-    const WIDESQUARE = 4;
-
-    /** Constants for the tip */
-    const POINTED = 1;
-    const ROUNDED = 2;
-
     /** Constant for the offset of the paperless dinemsions */
     const OFFSET = 15;
 

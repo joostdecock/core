@@ -1,40 +1,97 @@
+# This is the pattern configuration file
+# It should always be names config.yml and reside in the
+# directory holding your pattern
+
+# Setting the hidden option below to true will hide this pattern
+# from the info service (and thus from the front end)
+# To reveal a pattern, you can simply remove it as it defaults to false
+# hidden: false
+
+# In this case, we want to hide this pattern
 hidden: true
+
+# The info block of options is mandatory, it contains info about your pattern
 info:
+    # This name will be shown in the front-end
     name: "Pattern Template"
+    # This description will be shown in the front-end
     description: "This is an example pattern that you can copy as a starting point for your own patterns"
+    # This handle is required for the front-end, it's used in the URLs and file paths
     handle: "example"
-    version: "1.0"
-    author: "Joost De Cock"
-    email: "joost@decock.org"
-    company: "freesewing.org"
-    link: "freesewing.org/pattern/example"
+    # Tags are used by the frontend to allow users to filter the pattern list
     tags:
         - menswear
         - example
+    # inMemoryOf is optional. It takes a name and link
+    inMemoryOf:
+        name: "Aaron Swartz"
+        link: "https://en.wikipedia.org/wiki/Aaron_Swartz"
 
-parts:
-    examplePart: "Example Part"
+# seamAllowance is optional. If it is missing, it will default to:
+# metric: 1
+# imperial: 0.625
+# If you do set it, you MUST include both the metric and imperial
+# default for the seam allowance.
+# Metric values are in cm
+# Imperial values are in inch
+seamAllowance:
+    metric: 0.6
+    imperial: 0.25 
 
+# A list of languages the pattern is translated into
 languages:
     en: "English"
 
+# A list of parts available in the pattern    
+# Parts whose title starts with a leading dot will be hidden from the 
+# info service and front end
+parts:
+    examplePart: "Example Part"
+    otherPart: ".Not visible in the frontend"
+
+# The list of required measurements
 measurements:
     exampleMeasurement: 520
 
+# Options hold all the options in a pattern. This info is used
+# to construct the form to draft the pattern in the frontend
 options:
+# Options are grouped together by specifying a group
+# A group name cannot contain any spaces
 # example group
+    # a measureOption is an option that takes a measure as value.
+    # In other words, something you can express in mm.
+    # The title of the option (measureOption in this case) 
+    # is what to use in your pattern 
     measureOption:
-        title: "Measure option example"
-        description: "An example of an option that takes a measure as input"
+        # the group the option belongs to
         group: "example"
+        # the title is shown by the front-end
+        title: "Measure option example"
+        # The description is shown by the front-end
+        description: "An example of an option that takes a measure as input"
+        # The type of the option.
         type: "measure"
+        # the mimimum value
         min: 80
+        # The maximum value
         max: 200
+        # The default
         default: 160
     percentOption:
         title: "Percent option example"
         description: "An example of an option that takes a percentage as input"
         group: "example"
+        # Much like a measureOption, but takes a percentage as value
+        type: "percent"
+        min: 50
+        max: 65
+        default: 60
+    angleOption:
+        title: "Angle option example"
+        description: "An example of an option that takes an angle as input"
+        group: "example"
+        # Much like a measureOption, but takes an angle as value
         type: "percent"
         min: 50
         max: 65
@@ -43,11 +100,15 @@ options:
         title: "Choose one option example"
         description: "An example where you pick an option from a list"
         group: "example"
+        # The chooseOne option presents a list of radio buttons to choose one from
         type: "chooseOne"
+        # These are the options in key => value format
+        # The key is what is passed to core, the value is the title in the front-end
+        # Note that keys do not have to be numeric, but they can't contain spaces
         options:
             1: "Colours"
             2: "Colors"
-            3: "Shapes"
+            three: "Shapes"
         default: 1
     conditionalOption:
         title: "Conditional option example"
@@ -59,6 +120,9 @@ options:
             2: "Green"
             3: "Blue"
         default: 3
+        # Any option can be made conditional by letting it 'depend on' a chooseOne option
         dependsOn: 'chooseOnOption'
+        # only on means that this option will only be shown if one of these values are chosen
+        # in the option this depends on
         onlyOn: [1,2]
 

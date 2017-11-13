@@ -1998,16 +1998,16 @@ class SimonShirt extends BrianBodyBlock
     {
         /** @var Part $p */
         $p = $this->parts['collar'];
-       
+
         // Seam allowance
         if($this->o('sa')) $p->offsetPath('sa', 'outline', $this->o('sa')*-1, 1, ['class' => 'sa fabric']);
 
         // Grainline
         $p->newGrainline(-11, 11, $this->t('Grainline'));
-        
+
         // Title
         $p->addPoint('titleAnchor', $p->shift(10,0,40));
-        $p->addTitle('titleAnchor', 7, $this->t($p->title), '1x '.$this->t('from fabric'),'small');
+        $p->addTitle('titleAnchor', 7, $this->t($p->title), '1x '.$this->t('from fabric').' + 1x '.$this->t('from interfacing'),'small');
     }
 
     /**
@@ -2030,7 +2030,7 @@ class SimonShirt extends BrianBodyBlock
         
         // Title
         $p->addPoint('titleAnchor', $p->shift(10,0,40));
-        $p->addTitle('titleAnchor', 8, $this->t($p->title), '1x '.$this->t('from fabric'),'small');
+        $p->addTitle('titleAnchor', 8, $this->t($p->title), '1x '.$this->t('from fabric').' + 1x '.$this->t('from interfacing'),'small');
     }
 
     /**
@@ -2096,7 +2096,7 @@ class SimonShirt extends BrianBodyBlock
 
         // Title
         $p->newPoint('titleAnchor', 0, $p->y(-8));
-        $p->addTitle('titleAnchor', 11, $this->t($p->title), '4x '.$this->t('from fabric').' + 4x '.$this->t('from interfacing'), 'small');
+        $p->addTitle('titleAnchor', 11, $this->t($p->title), '4x '.$this->t('from fabric').' + 2x '.$this->t('from interfacing'), 'small');
     }
 
     /**

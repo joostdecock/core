@@ -57,7 +57,7 @@ options:
         options:
             butterfly: "Butterfly"
             diamond: "Diamond"
-            squar3: "Square"
+            square: "Square"
             widesquare: "Wide Square"
         default: "diamond"
     endStyle:

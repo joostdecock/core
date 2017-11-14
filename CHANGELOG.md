@@ -3,6 +3,36 @@
 > All notable changes to freesewing core should be be documented in this file.
 > Freesewing uses [Semantic Versioning](http://semver.org/).
 
+## Version 1.2.4
+
+**Release date**: 2017-11-14
+
+This release includes the Benjamin Bow Tie pattern by @woutervdub. 
+It's our first ever community pattern, and still in beta for now.
+More details in 
+[the announcement blog post](https://freesewing.org/blog/benjamin-bow-tie-beta/).
+
+### New
+
+ - Benjamin is a new pattern, a bow tie. It's currently (still) in the Beta namespace.
+ - The path.lashed CSS class is new in the default theme. It draws a line with long dashes (lashes).
+ - The `Utils::asPointArray` methods is new, it returns an array of all points used in a path string
+ - Pattern configuration files now can include `seamAllowance` section to set default seam allowance
+
+### Changes
+
+  - Streamlined pattern configuration changes, removing non-relevant info
+
+#### Huey
+ 
+  - Added sleeve notches to Huey
+
+### Fixes
+
+#### Simon
+
+  - Fixed the instructions for cutting out interfacing in Simon
+
 ## Version 1.2.3
 
 **Release date**: 2017-10-24

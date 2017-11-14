@@ -3,6 +3,17 @@
 > All notable changes to freesewing core should be be documented in this file.
 > Freesewing uses [Semantic Versioning](http://semver.org/).
 
+## Unreleased
+
+**Release date**: Unreleased
+
+##Added
+##Changed
+##Deprecated
+##Removed
+##Fixed
+##Security
+
 ## Version 1.2.4
 
 **Release date**: 2017-11-14
@@ -12,14 +23,14 @@ It's our first ever community pattern, and still in beta for now.
 More details in 
 [the announcement blog post](https://freesewing.org/blog/benjamin-bow-tie-beta/).
 
-### New
+### Added
 
  - Benjamin is a new pattern, a bow tie. It's currently (still) in the Beta namespace.
  - The `path.lashed` CSS class is new in the default theme. It draws a line with long dashes (lashes).
  - The `Utils::asPointArray` methods is new, it returns an array of all points used in a path string
  - Pattern configuration files now can include `seamAllowance` section to set default seam allowance
 
-### Changes
+### Changed
 
   - Streamlined pattern configuration changes, removing non-relevant info
 
@@ -27,7 +38,7 @@ More details in
  
   - Added sleeve notches to Huey
 
-### Fixes
+### Fixed
 
 #### Simon
 
@@ -41,7 +52,7 @@ This release fixes an option in Aaron and the pocket back of Wahid.
 
 It also adds some community things such as code of conduct and other GitHub community files.
 
-### Fixes
+### Fixed
 
 #### Aaron
 
@@ -57,7 +68,7 @@ This release fixes the offset in the DesignTutorial pattern which was incorrect.
 Path offset changed direction in core v1.2.0. At that time, all patterns were updated to
 reflect these changes, but the DesignTutorial pattern was overlooked.
 
-### Fixes
+### Fixed
 
 #### DesignTutorial
 
@@ -71,11 +82,11 @@ This release includes the HueyHoodie pattern. It's stil in the beta namespace fo
 [This blog post](https://freesewing.org/blog/huey-hoodie-beta/) has more info on what 
 it means for a pattern to be in beta.
 
-### New
+### Added
 
  - Huey is a new pattern, a zip-up hoodie for men. It's currently in the Beta namespace
 
-### Changes
+### Changed
 
 #### More modes for addTitle
 
@@ -94,7 +105,7 @@ The config files had a few minor tweaks related to the frontend integration.
  - Descriptions have been updated
  - inMemoryOf is moved to the info section
 
-### Fixes
+### Fixed
 
 #### Wahid
 
@@ -119,7 +130,7 @@ This release fixes an issue with the `Part::angle()` method, and deals with the 
 
 It also includes some small improvements to various patterns.
 
-### Changes
+### Changed
 
 #### Part::angle()
 The `Part::angle()` method returned results that were 180 degrees off. That's fixed now
@@ -156,7 +167,7 @@ This is handy for comparison to PHP's magic `__CLASS__` variable to figure out w
 pattern is the pattern requested by the user, or merely a stepping stone to get there (because
 the requested pattern is a (grand)child).
 
-### Fixes
+### Fixed
 
 #### Aaron
 
@@ -198,7 +209,7 @@ Prevent a missing `sa` parameter from throwing a warning.
 
 This is a bugfix release.
 
-### Fixes
+### Fixed
 
 #### Simon
 
@@ -210,13 +221,13 @@ This is a bugfix release.
 
 This is, apart from some tweaks to Simon's defaults, a bugfix release.
 
-### Changes
+### Changed
 
 #### Simon
 
  - Changed the defaults for some options to make them more sensible
 
-### Fixes
+### Fixed
 
 #### Simon
 
@@ -229,7 +240,7 @@ This is, apart from some tweaks to Simon's defaults, a bugfix release.
 
 This is a bugfix release.
 
-### Fixes
+### Fixed
 
 #### Simon
 
@@ -250,7 +261,7 @@ This is a non-trivial yet minor update in anticipation of the frontend release.
 The major changes are a complete redesign of (and drop-in replacement for) Bruce,
 and a bunch of frontend related improvements.
 
-### New
+### Added
 
  - New and not new: Bruce is completely redesigned from scratch
  - The `Pattern::setOptionIfUnset` and `Pattern::setValueIfUnset` methods allow child patterns to override options and values
@@ -267,7 +278,7 @@ and a bunch of frontend related improvements.
  - Added support for custom seam allowance to the Freesewing channel and to all patterns
  - The NotationLegend pattern in the Docs namespace is new. It's used in the documentation.
 
-### Changes
+### Changed
 
  - Removed all beta patterns from the core repository
  - Changes to the deploy script and Travis configuration
@@ -307,7 +318,7 @@ and a bunch of frontend related improvements.
 
  - Updated the (faulty) cutting instructions for the front
 
-### Fixes
+### Fixed
 
  - Bug fix in the `Utils::lineLineIntersection` method when dealing with parallel lines
  - Fixed incorrect release date for v1.0.0 in this changelog
@@ -349,14 +360,14 @@ point.
 > **Tip:** If you need the BabyBib pattern, you can include it as a Git
 submodule.
 
-### Changes
+### Changed
 
 #### Added Packagist info to package.json
 
 The `package.json` file was missing some info that is used 
 by Packagist (the PHP package manager). This has been added.
 
-### Fixes
+### Fixed
 
 - Fixes an unclosed bracket in composer.json (that was embarassing and 
 reason for a new release)

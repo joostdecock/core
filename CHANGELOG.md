@@ -15,7 +15,7 @@ More details in
 ### New
 
  - Benjamin is a new pattern, a bow tie. It's currently (still) in the Beta namespace.
- - The path.lashed CSS class is new in the default theme. It draws a line with long dashes (lashes).
+ - The `path.lashed` CSS class is new in the default theme. It draws a line with long dashes (lashes).
  - The `Utils::asPointArray` methods is new, it returns an array of all points used in a path string
  - Pattern configuration files now can include `seamAllowance` section to set default seam allowance
 
@@ -31,7 +31,7 @@ More details in
 
 #### Simon
 
-  - Fixed the instructions for cutting out interfacing in Simon
+  - Fixed the instructions for cutting out interfacing in Simon. Shout-out to @nyergler for this fix.
 
 ## Version 1.2.3
 

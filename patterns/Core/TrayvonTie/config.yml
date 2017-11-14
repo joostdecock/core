@@ -2,14 +2,9 @@ info:
   name:     "Trayvon Tie"
   description: "Trayvon is a tie that cuts no corners for a professional result"
   handle:   "trayvon"
-  version:  "2.0"
-  author:   "Joost De Cock"
-  email:    "joost@decock.org"
-  company:  "freesewing.org"
-  link:     "freesewing.org/pattern/trayvon"
   tags:
-      - unisex
       - accessories
+
   inMemoryOf:
     name: "Trayvon Martin"
     link: "https://en.wikipedia.org/wiki/Trayvon_Martin"

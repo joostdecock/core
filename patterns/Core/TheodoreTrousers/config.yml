@@ -2,11 +2,6 @@ info:
     name: "Theodore trousers"
     description: "Thedore are classic trousers by the (Aldrich) book"
     handle: "theodore"
-    version: "2.0"
-    author: "Joost De Cock"
-    email: "joost@decock.org"
-    company: "freesewing.org"
-    link: "freesewing.org/pattern/theodore"
     tags:
         - menswear
         - trousers

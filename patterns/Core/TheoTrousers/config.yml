@@ -2,11 +2,6 @@ info:
     name: "Theo trousers"
     description: "Theo is Theodore with a more slim cut"
     handle: "theo"
-    version: "2.0"
-    author: "Joost De Cock"
-    email: "joost@decock.org"
-    company: "freesewing.org"
-    link: "freesewing.org/pattern/theo"
     tags:
         - menswear
         - trousers

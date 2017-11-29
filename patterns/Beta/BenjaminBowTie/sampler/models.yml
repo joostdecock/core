@@ -1,0 +1,20 @@
+default: 
+    group: maleStandardUsSizes
+
+groups:
+    maleStandardUsSizes:
+        - usSize34
+        - usSize36
+        - usSize38
+        - usSize40
+        - usSize42
+        - usSize44
+
+measurements:
+    neckCircumference: 
+        usSize34: 366
+        usSize36: 378
+        usSize38: 391
+        usSize40: 404
+        usSize42: 416
+        usSize44: 429

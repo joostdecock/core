@@ -2,14 +2,11 @@ info:
     name: "Aaron A-Shirt"
     description: "Aaron is an athletic shirt or tank top"
     handle: "aaron"
-    version: "2.0"
-    author: "Joost De Cock"
-    company: "freesewing"
-    link: "freesewing.org/pattern/aaron"
     tags:
         - top
         - underwear
-        - unisex
+        - menswear
+        - womenswear
     inMemoryOf:
         name: "Aaron Swartz"
         link: "https://en.wikipedia.org/wiki/Aaron_Swartz"
@@ -73,7 +70,7 @@ options:
         type: "percent"
         min: 5
         max: 95
-        default: 100
+        default: 95
     necklineDrop:
         title: "Neckline drop"
         description: "The amount the neck is cutout at the front."

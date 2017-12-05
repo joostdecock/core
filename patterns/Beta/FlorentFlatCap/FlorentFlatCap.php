@@ -74,7 +74,8 @@ class FlorentFlatCap extends \Freesewing\Patterns\Core\Pattern
             else $this->setValue('coef', $this->v('coef')*0.99);
         
             $tries++;
-        } while ($tries < 70 and abs($this->headCircDelta($model)) > 0.8);
+            $delta = $this->headCircDelta($model);
+        } while ($tries < 70 and abs($delta) > 0.8);
         $this->msg("After $tries attempts, head circumference is ".round($delta,2).'mm off.');
         
         $this->draftBrimBottom($model);
@@ -338,7 +339,7 @@ class FlorentFlatCap extends \Freesewing\Patterns\Core\Pattern
         $p->newGrainline('grainlineTop', 'grainlineBottom', $this->t('Grainline'));
 
         // Title
-        $p->newPoint('titleAnchor', $p->x(6),  0.5*($p->y(grainlineTop) +$p->y(6)) , 'Title anchor');
+        $p->newPoint('titleAnchor', $p->x(6),  0.5*($p->y('grainlineTop') +$p->y(6)) , 'Title anchor');
         $p->addTitle('titleAnchor', 1, $this->t($p->title), '2x main, 2x lining','small');
 
         // Logo
@@ -374,7 +375,7 @@ class FlorentFlatCap extends \Freesewing\Patterns\Core\Pattern
         $p->newGrainline('grainlineTop', 'grainlineBottom', $this->t('Grainline'));
 
         // Title
-        $p->newPoint('titleAnchor', $p->x(11),  0.5*($p->y(grainlineTop) +$p->y(11)) , 'Title anchor');
+        $p->newPoint('titleAnchor', $p->x(11),  0.5*($p->y('grainlineTop') +$p->y(11)) , 'Title anchor');
         $p->addTitle('titleAnchor', 2, $this->t($p->title), '1x  main, 1x lining '.$this->t('Cut on fold'),'small');
 
         // Logo
@@ -403,7 +404,7 @@ class FlorentFlatCap extends \Freesewing\Patterns\Core\Pattern
 		
        // Grainline
         $p->newPoint('grainlineTop', $p->x(4), 0.05*$p->y(10)+ 0.95*$p->y(4));
-        $p->newPoint('grainlineBottom',  $p->x(grainlineTop), 0.95*$p->y(10)+ 0.05*$p->y(4));
+        $p->newPoint('grainlineBottom',  $p->x('grainlineTop'), 0.95*$p->y(10)+ 0.05*$p->y(4));
         $p->newGrainline('grainlineTop', 'grainlineBottom', $this->t('Grainline'));
 
         // Title
@@ -430,7 +431,7 @@ class FlorentFlatCap extends \Freesewing\Patterns\Core\Pattern
 		
 		// Grainline
         $p->newPoint('grainlineTop', $p->x(4), 0.05*$p->y(10)+ 0.95*$p->y(4));
-        $p->newPoint('grainlineBottom',  $p->x(grainlineTop), 0.95*$p->y(10)+ 0.05*$p->y(4));
+        $p->newPoint('grainlineBottom',  $p->x('grainlineTop'), 0.95*$p->y(10)+ 0.05*$p->y(4));
         $p->newGrainline('grainlineTop', 'grainlineBottom', $this->t('Grainline'));
 
         // Title

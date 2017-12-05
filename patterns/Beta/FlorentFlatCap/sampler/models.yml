@@ -1,0 +1,29 @@
+default: 
+    group: standardSizes
+groups:
+    realMen:
+        - quentin
+    standardSizes:
+        - small
+        - medium
+        - large
+        - xlarge
+        - xxlarge
+
+measurements:
+    headCircumference: 
+        quentin: 605
+        small: 545
+        medium: 563
+        large: 582
+        xlarge: 600
+        xxlarge: 625
+
+options:
+    brimLength:
+        quentin: 0
+        small: 0
+        medium: 0
+        large: 0
+        xlarge: 0
+        xxlarge: 0

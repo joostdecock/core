@@ -255,6 +255,8 @@ class FlorentFlatCap extends \Freesewing\Patterns\Core\Pattern
 		$path = 'M 1 C 2 3 4 C 5 6 7 C 11 12 10 C 9 8 1  z';
 		$p->newPath('seamline', $path, ['class' => 'fabric']);
 		$p->paths['seamline']->setSample(true);
+        
+        $this->setValue('halfBrimInnerLength', $p->curveLen(1,2,3,4));
     }
 
 	public function draftBrimTop($model)
@@ -390,8 +392,13 @@ class FlorentFlatCap extends \Freesewing\Patterns\Core\Pattern
         $this->msg('Side seam to first notch is '.$this->v('sideSeamToFirstNotch'));
         $p->addPoint('notch1', $p->shiftAlong(8,9,12,11,$this->v('sideSeamToFirstNotch') - $p->distance(6,8)));
         $p->addPoint('notch2', $p->shiftAlong(11,13,16,15,$this->v('sideSeamToSecondNotch') - $p->distance(6,8) - $p->curveLen(8,9,12,11)));
-        $p->notch(['notch1','notch2']);
 
+        if($this->v('halfBrimInnerLength')>$p->curveLen(2,4,21,19))
+            $p->addPoint('notch3', $p->shiftAlong(19,20,7,6, $this->v('halfBrimInnerLength')-$p->curveLen(2,4,21,19)));
+        else $p->addPoint('notch3', $p->shiftAlong(2,4,21,19, $this->v('halfBrimInnerLength')));
+        $this->msg('half Brim Inner Length is '.$this->v('halfBrimInnerLength'));
+        $this->msg('curveLen(2,4,21,19) is '.$p->curveLen(2,4,21,19));
+        $p->notch(['notch1','notch2','notch3']);
     }
 	
 	   public function finalizeBrimBottom($model)
@@ -400,9 +407,18 @@ class FlorentFlatCap extends \Freesewing\Patterns\Core\Pattern
         $p = $this->parts['brimBottom'];
 		
 		// Seam allowances
-		if($this->o('sa')) $p->offsetPath('path51', 'seamline', $this->o('sa'), 1,['class' => 'fabric sa'] );
-		
-       // Grainline
+        if($this->o('sa')){
+            $p->offsetPathString('sa1','M 1 C 2 3 4 C 5 6 7',$this->o('sa'),1, ['class' => 'fabric sa']);
+            $p->offsetPathString('sa2','M 7 C 11 12 10 C 9 8 1',$this->o('sa'),1, ['class' => 'fabric sa']);
+            $p->addPoint('sa3', $p->shift ('sa2-endPoint', $p->angle(1, 'sa2-endPoint')-90, $this->o('sa')));
+            $p->addPoint('sa4', $p->shift ('sa1-startPoint', $p->angle(1, 'sa1-startPoint')+90, $this->o('sa')));
+            $p->addPoint('sa5',$p->flipX('sa3',$p->x(4)));
+            $p->addPoint('sa6',$p->flipX('sa4',$p->x(4)));
+            $p->newPath('sa7', "M sa2-endPoint L sa3 L sa4 L sa1-startPoint", ['class' => 'fabric sa']);
+            $p->newPath('sa8', "M sa1-endPoint L sa6 L sa5 L sa2-startPoint", ['class' => 'fabric sa']);
+        }
+
+        // Grainline
         $p->newPoint('grainlineTop', $p->x(4), 0.05*$p->y(10)+ 0.95*$p->y(4));
         $p->newPoint('grainlineBottom',  $p->x('grainlineTop'), 0.95*$p->y(10)+ 0.05*$p->y(4));
         $p->newGrainline('grainlineTop', 'grainlineBottom', $this->t('Grainline'));
@@ -417,6 +433,7 @@ class FlorentFlatCap extends \Freesewing\Patterns\Core\Pattern
         
         // Notches
         $p->notch([4,10]);
+        if($this->o('sa'))$p->notch(['sa1-startPoint', 'sa1-endPoint', 'sa2-startPoint', 'sa2-endPoint']);
     }
 	
 	   public function finalizeBrimTop($model)
@@ -425,8 +442,15 @@ class FlorentFlatCap extends \Freesewing\Patterns\Core\Pattern
         $p = $this->parts['brimTop'];
 		
 		// Seam allowances
-		if($this->o('sa')) {		
-		$p->offsetPath('path51', 'seamline10', $this->o('sa'), 1,['class' => 'fabric sa'] );
+        if($this->o('sa')) {	
+            $p->offsetPath('sa1','seamline45',$this->o('sa'),1, ['class' => 'fabric sa']);
+            $p->offsetPathString('sa2','M 1 C 2 3 4 C 5 6 7',$this->o('sa'),1, ['class' => 'fabric sa']);
+            $p->addPoint('sa3', $p->shift ('sa1-endPoint', $p->angle(1, 'sa1-endPoint')-90, $this->o('sa')));
+            $p->addPoint('sa4', $p->shift ('sa2-startPoint', $p->angle(1, 'sa2-startPoint')+90, $this->o('sa')));
+            $p->addPoint('sa5',$p->flipX('sa3',$p->x(4)));
+            $p->addPoint('sa6',$p->flipX('sa4',$p->x(4)));
+            $p->newPath('sa7', "M sa2-endPoint L sa6 L sa5 L sa1-startPoint", ['class' => 'fabric sa']);
+            $p->newPath('sa8', "M sa1-endPoint L sa3 L sa4 L sa2-startPoint", ['class' => 'fabric sa']);
 		}
 		
 		// Grainline
@@ -443,7 +467,9 @@ class FlorentFlatCap extends \Freesewing\Patterns\Core\Pattern
         $p->newSnippet('logo', 'logo-sm', 'logoAnchor');
         
         // Notches
-        $p->notch([4,10]);
+        $p->notch([4,'seamline45-curve-10TO1']);
+        if($this->o('sa')) $p->notch(['sa1-startPoint', 'sa1-endPoint', 'sa2-startPoint', 'sa2-endPoint']);
+        
     }
 	
 		   public function finalizeBrimPlastic($model)
@@ -565,6 +591,7 @@ class FlorentFlatCap extends \Freesewing\Patterns\Core\Pattern
     {
         /** @var \Freesewing\Part $p */
         $p = $this->parts['brimTop'];
+		$p->paths['seamline2']->setRender(true);
 
         // Notes
         $p->newNote(1, 4, $this->t("Inner curve is the same as the brim bottom"), 12, 20, 3);

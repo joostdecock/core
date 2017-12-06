@@ -21,7 +21,7 @@
 This release includes the Florent Flat Cap pattern by @QuentinFelix, 
 currently in Beta
 
-##Added
+## Added
 
  - Florent is a new pattern, a flat cap. Currently in the Beta namespace
 
@@ -34,11 +34,11 @@ default option was not the first in the list (which is somewhat counter-intuitiv
 
 Apart from that, the only change is a typo in the Huey config file. 
 
-##Changed
+## Changed
 
 - Changed order in Benjamin `bowStyle` option so that the default option is the first option
 
-##Fixed
+## Fixed
 
 - Fixed a typo in the Huey config file
 

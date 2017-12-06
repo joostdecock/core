@@ -14,6 +14,17 @@
 ##Fixed
 ##Security
 
+## 1.2.6
+
+**Release date**: 2017-12-06
+
+This release includes the Florent Flat Cap pattern by @QuentinFelix, 
+currently in Beta
+
+##Added
+
+ - Florent is a new pattern, a flat cap. Currently in the Beta namespace
+
 ## 1.2.5
 
 **Release date**: 2017-12-03

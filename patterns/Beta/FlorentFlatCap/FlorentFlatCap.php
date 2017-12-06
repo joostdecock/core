@@ -342,7 +342,7 @@ class FlorentFlatCap extends \Freesewing\Patterns\Core\Pattern
 
         // Title
         $p->newPoint('titleAnchor', $p->x(6),  0.5*($p->y('grainlineTop') +$p->y(6)) , 'Title anchor');
-        $p->addTitle('titleAnchor', 1, $this->t($p->title), '2x '.$this->t('from fabric').', 2x '.$this->t('from lining'),'small');
+        $p->addTitle('titleAnchor', 1, $this->t($p->title), '2x '.$this->t('from fabric').', 2x '.$this->t('from lining').' '.$this->t('or').' 1x '.$this->t('each, folded at the top'),'small');
 
         // Logo
         $p->addPoint('logoAnchor', $p->shift('titleAnchor',0, 50));

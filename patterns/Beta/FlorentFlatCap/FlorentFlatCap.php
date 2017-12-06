@@ -470,6 +470,7 @@ class FlorentFlatCap extends \Freesewing\Patterns\Core\Pattern
         $p->notch([4,'seamline45-curve-10TO1']);
         if($this->o('sa')) $p->notch(['sa1-startPoint', 'sa1-endPoint', 'sa2-startPoint', 'sa2-endPoint']);
         
+        $p->newNote(3, 1, $this->t("The dashed line is the shape of the brim bottom"), 3, 20, 0);
     }
 	
 		   public function finalizeBrimPlastic($model)

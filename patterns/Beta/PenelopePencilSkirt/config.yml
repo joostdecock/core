@@ -27,9 +27,19 @@ options:
         group: "style"
         type: "chooseOne"
         options:
-            yes: "Yes"
-            no: "No"
+            1: "Yes"
+            0: "No"
         default: "yes"
+    ventSize:
+        title: "Vertical size of the vent"
+        description: "Vertical size of the vent"
+        group: "style"
+        type: "measure"
+        min: 50
+        max: 900
+        default: 200
+        dependsOn: vent
+        onlyOn: [1]
     waistBand:
         title: "Waist band"
         description: "Waist Band"
@@ -49,7 +59,7 @@ options:
             back: "Back seam"
         default: "side"
         dependsOn: vent
-        onlyOn: [no]
+        onlyOn: [0]
         
     # Fit group
     hipEase:

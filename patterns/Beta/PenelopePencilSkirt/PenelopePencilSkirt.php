@@ -66,6 +66,10 @@ class PenelopePencilSkirt extends \Freesewing\Patterns\Core\Pattern
         $this->setValue('backDartSize', (20 + ($hipWaistDiff -100 -(($hipWaistDiff -100)/5))/4)/$this->v('nrOfDarts'));
         $this->setValue('frontDartSize',(12 + ((max(min($hipWaistDiff, 300), 180) -180) /4))/$this->v('nrOfDarts'));
 
+        if( $this->o('vent') ) {
+            $this->setOption('zipper', 'back');
+        }
+        
         $this->msg("hipWaistDiff"); 
         $this->msg($hipWaistDiff); 
 
@@ -266,7 +270,20 @@ class PenelopePencilSkirt extends \Freesewing\Patterns\Core\Pattern
             $pathString .= 'Dart1_5 C Dart1_6 Dart1_7 pTopRight ';
         }
         
-        $pathString .= 'C pA2c pC2c pC2 L pB2 L pB1 L pC1 Z';
+        if( $part == 'back' && $this->o('vent') ) {
+            /* I don't care what you're trying to create, the vent will not go higher than your hips. */
+            $ventSize = min( $model->m('naturalWaistToKnee') -$model->m('naturalWaistToHip'), $this->o('ventSize'));
+
+            $p->addPoint('pV1', $p->shift('pB1', 180, 50));
+            $p->addPoint('pV2', $p->shift('pV1',  90, $ventSize));
+            $p->addPoint('pVtemp', $p->shift('pV2',   0, 50));
+            $p->addPoint('pV3', $p->shift('pVtemp',  90, 50));
+            
+            $pathString .= 'C pA2c pC2c pC2 L pB2 L pB1 L pV1 L pV2 L pV3 L pC1 Z';
+        }
+        else {
+            $pathString .= 'C pA2c pC2c pC2 L pB2 L pB1 L pC1 Z';
+        }
         
         $p->newPath('outline', $pathString, ['class' => 'fabric']);
 		

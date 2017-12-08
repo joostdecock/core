@@ -14,6 +14,34 @@
 ##Fixed
 ##Security
 
+## 1.2.6
+
+**Release date**: 2017-12-06
+
+This release includes the Florent Flat Cap pattern by @QuentinFelix, 
+currently in Beta
+
+## Added
+
+ - Florent is a new pattern, a flat cap. Currently in the Beta namespace
+
+## 1.2.5
+
+**Release date**: 2017-12-03
+
+This is a bugfix release that fixes the order of one of the Benjamin options where the 
+default option was not the first in the list (which is somewhat counter-intuitive).
+
+Apart from that, the only change is a typo in the Huey config file. 
+
+## Changed
+
+- Changed order in Benjamin `bowStyle` option so that the default option is the first option
+
+## Fixed
+
+- Fixed a typo in the Huey config file
+
 ## Version 1.2.4
 
 **Release date**: 2017-11-14

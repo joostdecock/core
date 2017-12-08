@@ -55,8 +55,8 @@ options:
         group: "style"
         type: "chooseOne"
         options:
-            butterfly: "Butterfly"
             diamond: "Diamond"
+            butterfly: "Butterfly"
             square: "Square"
             widesquare: "Wide Square"
         default: "diamond"

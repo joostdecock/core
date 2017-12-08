@@ -1,0 +1,32 @@
+info:
+    name: "Florent Flat Cap"
+    description: "Florent is a flat cap, a rounded cap with a small stiff brim in front"
+    handle: "florent"
+    tags:
+        - menswear
+        - womenswear
+        - hats
+        - accessories
+
+parts:
+    top: "Cap Top"
+    side: "Cap Side"
+    brimBottom: "Cap Brim Bottom"
+    brimTop: "Cap Brim Top"
+    brimPlastic: "Cap Brim Interfacing"
+
+languages:
+    en: "English"
+
+measurements:
+    headCircumference: 600
+
+options:
+    headEase:
+        group: "fit"
+        title: "Head ease"
+        description: "The amount of ease to fit the cap on your head"
+        type: "measure"
+        min: 0
+        max: 25
+        default: 10

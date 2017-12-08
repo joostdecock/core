@@ -1,0 +1,87 @@
+info:
+    name: "Penelope Pencil Skirt"
+    description: "Penelope is a simple pencil skirt pattern"
+    handle: "penelope"
+    tags:
+        - womens wear
+        
+languages:
+    en: "English"
+
+parts:
+    front: "Front part"
+    back: "Back part"
+    waistBand: "Waist band"
+
+measurements:
+    hipsCircumference: 1054
+    naturalWaist: 902
+    naturalWaistToHip: 229
+    naturalWaistToKnee: 622    
+    
+options:
+    # Style group
+    vent:
+        title: "Vent"
+        description: "Vent at the back seam"
+        group: "style"
+        type: "chooseOne"
+        options:
+            yes: "Yes"
+            no: "No"
+        default: "yes"
+    waistBand:
+        title: "Waist band"
+        description: "Waist Band"
+        group: "style"
+        type: "chooseOne"
+        options:
+            no: "No"
+            yes: "Yes"
+        default: "no"
+    zipper:
+        title: "Zipper placement"
+        description: "Zipper placement"
+        group: "style"
+        type: "chooseOne"
+        options:
+            side: "Side seam"
+            back: "Back seam"
+        default: "side"
+        dependsOn: vent
+        onlyOn: [no]
+        
+    # Fit group
+    hipEase:
+        title: "Hip ease"
+        description: "The amount of ease at the hip"
+        group: "ease"
+        type: "measure"
+        min: 0
+        max: 60
+        default: 30
+    waistEase:
+        title: "Waist ease"
+        description: "The amount of ease at the waist"
+        group: "ease"
+        type: "measure"
+        min: 0
+        max: 60
+        default: 0
+    backDartDepthFactor:
+        title: "Back Dart Depth Factor"
+        description: "The Depth of the back dart as a percentage of the Waist to Hip measurement"
+        group: "fit"
+        type: "percent"
+        min: 45
+        max: 70
+        default: 60
+    frontDartDepthFactor:
+        title: "Front Dart Depth Factor"
+        description: "The Depth of the front dart as a percentage of the Waist to Hip measurement"
+        group: "fit"
+        type: "percent"
+        min: 40
+        max: 65
+        default: 55
+

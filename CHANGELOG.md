@@ -20,11 +20,11 @@
 
 This release includes the updated freesewing logo and small bugfixes to Benjaming and FLorent.
 
-##Changed
+## Changed
 
  - The logo has been updated in `Theme` 
 
-##Fixed
+## Fixed
 
 ### Florent
 

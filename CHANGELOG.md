@@ -14,6 +14,27 @@
 ##Fixed
 ##Security
 
+## 1.2.7
+
+**Release date**: 2017-12-10
+
+This release includes the updated freesewing logo and small bugfixes to Benjaming and FLorent.
+
+## Changed
+
+ - The logo has been updated in `Theme` 
+
+## Fixed
+
+### Florent
+
+ - Clarified that the `Cap top` part can also be cut on the fold
+ - A missing space has been added
+
+### Benjamin
+
+ - Fix for an incorrect `dependsOn` value in the config file (only impacts the frontend)
+
 ## 1.2.6
 
 **Release date**: 2017-12-06

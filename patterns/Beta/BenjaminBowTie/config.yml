@@ -32,7 +32,7 @@ options:
         max: 80
         default: 65
         dependsOn: bowStyle
-        onlyOn: [1,2,4]
+        onlyOn: [diamond,buterfly,widesquare]
     knotWidth:
         title: "Knot width"
         description: "The width of the bow tie at the knot/middle."

@@ -25,7 +25,7 @@ This is a bugfix release with two small fixes
  - Fix for [Issue #197: Timezone warning in core](https://github.com/freesewing/core/issues/197)
  - Fix for [Issue #198:
         Pathstring depends on commands being seperated by spaces, 
-        does not support other whitespace characters #198
+        does not support other whitespace characters
     ](https://github.com/freesewing/core/issues/198)
 
 ## 1.2.7

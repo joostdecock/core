@@ -14,7 +14,7 @@
 ##Fixed
 ##Security
 
-## 1.28
+## 1.2.8
 
 **Release date**: 2017-12-14
 

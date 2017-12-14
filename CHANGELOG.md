@@ -14,6 +14,20 @@
 ##Fixed
 ##Security
 
+## 1.2.8
+
+**Release date**: 2017-12-14
+
+This is a bugfix release with two small fixes
+
+## Fixed
+
+ - Fix for [Issue #197: Timezone warning in core](https://github.com/freesewing/core/issues/197)
+ - Fix for [Issue #198:
+        Pathstring depends on commands being seperated by spaces, 
+        does not support other whitespace characters
+    ](https://github.com/freesewing/core/issues/198)
+
 ## 1.2.7
 
 **Release date**: 2017-12-10

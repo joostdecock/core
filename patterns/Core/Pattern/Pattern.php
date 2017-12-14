@@ -69,11 +69,7 @@ abstract class Pattern
             $this->setUnits($units);
             $this->loadParts();
             $this->replace('__TITLE__', isset($this->config['info']['name']) ? $this->config['info']['name'] : NULL);
-            $this->replace('__VERSION__', isset($this->config['info']['version']) ? $this->config['info']['version'] : NULL);
-            $this->replace('__COMPANY__', isset($this->config['info']['company']) ? $this->config['info']['company'] : NULL);
-            $this->replace('__AUTHOR__', isset($this->config['info']['author']) ? $this->config['info']['author'] : NULL);
         }
-        $this->replace('__DATE__', date('l j F Y') !=  null ? date('l j F Y') : NULL);
 
         return $this;
     }

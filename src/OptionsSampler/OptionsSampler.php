@@ -97,10 +97,9 @@ class OptionsSampler extends Sampler
             $sampleValue = $this->getSampleValue($i, $steps, $option);
             $p->setOption($optionKey, $sampleValue);
             $p->loadParts();
-            $m = clone $model;
-
             // clone model so that if the pattern changes it, 
             // we start with a clean slate on the next iteration 
+            $m = clone $model;
             $p->sample($m);
             foreach ($p->parts as $partKey => $part) {
                 $this->sampleParts($i, $steps, $p, $theme, $renderBot);

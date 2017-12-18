@@ -1,0 +1,12 @@
+default: 
+    group: maleStandardUsSizes
+groups:
+    realMen:
+        - joost
+    maleStandardUsSizes:
+        - usSize34
+        - usSize36
+        - usSize38
+        - usSize40
+        - usSize42
+        - usSize44

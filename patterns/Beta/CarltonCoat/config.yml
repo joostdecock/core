@@ -1,0 +1,126 @@
+hidden: false
+info:
+    name: "Carlton Coat"
+    description: "If it's good enough for Sherlock Holmes..."
+    handle: "carlton"
+    version: "1.0"
+    date: 20170203
+    author: "Joost De Cock"
+    email: "joost@decock.org"
+    company: "freesewing.org"
+    tags:
+        - menswear
+        - coat
+
+parts:
+  backBlock: ".Back block"
+  frontBlock: ".Front block"
+  sleeveBlock: ".Sleeve block"
+  topsleeveBlock: ".Topsleeve block"
+  undersleeveBlock: ".Undersleeve block"
+  front: "Front"
+  back: "Back"
+  tail: "Tail"
+  topsleeve: "Topsleeve"
+  undersleeve: "Undersleeve"
+  belt: "Belt"
+  collarStand: "Collar stand"
+  collar: "Collar"
+  cuffFacing: "Cuff facing"
+  pocket: "Pocket"
+  pocketFlap: "Pocket flap"
+  chestPocketWelt: "Chest pocket welt"
+
+languages:
+    en: English
+
+measurements:
+    acrossBack: 420
+    bicepsCircumference: 350
+    centerBackNeckToWaist: 560
+    chestCircumference: 1060
+    naturalWaistToHip: 150
+    neckCircumference: 390
+    seatCircumference: 1130
+    shoulderToShoulder: 470
+    shoulderSlope: 55
+    shoulderToWrist: 650
+    wristCircumference: 180
+    shoulderToElbow: 380 
+    naturalWaistToFloor: 1310 
+    naturalWaistToSeat: 280
+    naturalWaist: 930
+
+options:
+    chestEase:
+        title: "Chest ease"
+        description: "The amount of ease at your chest."
+        group: "fit"
+        type: measure
+        min: 180
+        max: 320
+        default: 240
+    waistEase:
+        title: "Waist ease"
+        description: "The amount of ease at your waist."
+        group: "fit"
+        type: measure
+        min: 80
+        max: 220
+        default: 100
+    seatEase:
+        title: "Seat ease"
+        description: "The amount of ease at your butt."
+        group: "fit"
+        type: measure
+        min: 180
+        max: 320
+        default: 240
+    cuffEase:
+        title: "Cuff ease"
+        description: "The amount of ease at your wrist."
+        group: "fit"
+        type: measure
+        min: 0
+        max: 180
+        default: 140
+    sleeveBend:
+        title: "Sleeve bend"
+        description: "How much do you want the sleeve to be bent at the elbow"
+        group: "fit"
+        type: "angle"
+        min: 0
+        max: 20
+        default: 10
+    sleeveLengthBonus:
+        title: "Sleeve length bonus"
+        description: "Amount to lengthen the sleeve. A negative value will shorten it."
+        group: "fit"
+        type: "measure"
+        min: 0
+        max: 120
+        default: 70
+    armholeDepthFactor:
+        title: "Armhole depth factor"
+        description: "Controls the depth of the armhole. Higher values make a deeper armhole."
+        group: "advanced"
+        type: "percent"
+        min: 65
+        max: 75
+        default: 67
+    sleevecapEase:
+        title: "Sleevecap ease"
+        description: "The amount by which your sleevhead is longer than the armhole."
+        group: "advanced"
+        type: measure
+        min: 0
+        max: 35
+        default: 17.5
+    sleevecapHeightFactor:
+        title: "Sleevecap height factor"
+        description: "Controls the height of the sleevecap. Higher values make a higher narrower sleevecap."
+        group: "advanced"
+        type: "percent"
+        min: 45
+        max: 55
+        default: 50

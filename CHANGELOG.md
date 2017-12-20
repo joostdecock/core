@@ -31,7 +31,7 @@ The Carlton Coat pattern has been added. The iconic coat worn by benedict cumber
 
 ## Changed
 
- - The model name is now added to the draft
+ - The model name and draft reference is now added to the part titles
 
 ## Fixed
 

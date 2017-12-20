@@ -19,14 +19,15 @@ but here's the gist of it:
 
 ### From packagist
 ```
-composer create-project freesewing/core freesewing
+composer create-project freesewing/core
+cd core
 composer dump-autoload -o
 ```
 
 ### From GitHub
 ```
-git clone git@github.com:freesewing/core.git freesewing
-cd freesewing
+git clone git@github.com:freesewing/core.git
+cd core
 composer install
 composer dump-autoload -o
 ```

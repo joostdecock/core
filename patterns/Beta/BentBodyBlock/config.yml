@@ -1,6 +1,6 @@
 info:
     name: "Bent Body Block"
-    description: "This block with a two-part sleeve is the basis of our menswear coat and jacket patterns"
+    description: "This two-part sleeve block is the basis of our coat and jacket patterns"
     handle: "bent"
     version: "0.3"
     author: "Joost De Cock"
@@ -38,14 +38,7 @@ measurements:
     shoulderToElbow: 410 
 
 options:
-    chestEase:
-        title: "Chest ease"
-        description: "The amount of ease at your chest"
-        group: "fit"
-        type: measure
-        min: -40
-        max: 160
-        default: 30
+# Fit group
     bicepsEase:
         title: "Biceps ease"
         description: "The amount of ease at your upper arm"
@@ -54,6 +47,14 @@ options:
         min: 0
         max: 80
         default: 30
+    chestEase:
+        title: "Chest ease"
+        description: "The amount of ease at your chest"
+        group: "fit"
+        type: measure
+        min: 40
+        max: 160
+        default: 80
     cuffEase:
         title: "Cuff ease"
         description: "The amount of ease at your wrist"
@@ -61,39 +62,7 @@ options:
         type: measure
         min: 0
         max: 100
-        default: 45
-    armholeDepthFactor:
-        title: "Armhole depth factor"
-        description: "A factor that influences the depth of the armhole"
-        group: "fit"
-        type: "percent"
-        min: 50
-        max: 65
-        default: 60
-    sleevecapHeightFactor:
-        title: "Sleevecap height factor"
-        description: "A factor that influences the height of the sleevecap"
-        group: "fit"
-        type: "percent"
-        min: 45
-        max: 60
         default: 50
-    sleevecapEase:
-        title: "Sleevecap ease"
-        description: "The ease on the sleevecap"
-        group: "fit"
-        type: "measure"
-        min: 0
-        max: 35
-        default: 20
-    sleeveBend:
-        title: "Sleeve bend"
-        description: "How much do you want the sleeve to be bent at the elbow"
-        group: "fit"
-        type: "angle"
-        min: 0
-        max: 20
-        default: 10
     lengthBonus:
         title: "Length bonus"
         description: "Amount to lengthen the body. A negative value will shorten it."
@@ -102,6 +71,14 @@ options:
         min: -40
         max: 120
         default: 0
+    sleeveBend:
+        title: "Sleeve bend"
+        description: "How much do you want the sleeve to be bent at the elbow"
+        group: "fit"
+        type: "angle"
+        min: 0
+        max: 20
+        default: 10
     sleeveLengthBonus:
         title: "Sleeve length bonus"
         description: "Amount to lengthen the sleeve. A negative value will shorten it."
@@ -110,3 +87,29 @@ options:
         min: -40
         max: 80
         default: 0
+# Advanced group
+    armholeDepthFactor:
+        title: "Armhole depth factor"
+        description: "A factor that influences the depth of the armhole"
+        group: "advanced"
+        type: "percent"
+        min: 50
+        max: 65
+        default: 60
+    sleevecapEase:
+        title: "Sleevecap ease"
+        description: "The ease on the sleevecap"
+        group: "advanced"
+        type: "measure"
+        min: 0
+        max: 35
+        default: 20
+    sleevecapHeightFactor:
+        title: "Sleevecap height factor"
+        description: "A factor that influences the height of the sleevecap"
+        group: "advanced"
+        type: "percent"
+        min: 45
+        max: 60
+        default: 50
+

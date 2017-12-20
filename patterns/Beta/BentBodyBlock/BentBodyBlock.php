@@ -58,7 +58,7 @@ class BentBodyBlock extends \Freesewing\Patterns\Core\BrianBodyBlock
         
         // Hide the sleeveBlock
         $this->parts['sleeveBlock']->setRender(false);
-        
+
         // Is this a paperless pattern?
         if ($this->isPaperless) {
             // Add paperless info to all parts
@@ -88,7 +88,17 @@ class BentBodyBlock extends \Freesewing\Patterns\Core\BrianBodyBlock
         $this->draftBackBlock($model);
         $this->draftFrontBlock($model);
         
-        $this->draftSleeveBlock($model);
+        $this->draftBackBlock($model);
+        $this->finalizeBackBlock($model);
+        
+        $this->draftFrontBlock($model);
+        $this->finalizeFrontBlock($model);
+
+        // Tweak the sleeve until it fits the armhole
+        do {
+            $this->draftSleeveBlock($model);
+        } while (abs($this->armholeDelta()) > 1 && $this->v('sleeveTweakRun') < 50);
+        $this->msg('After '.$this->v('sleeveTweakRun').' attemps, the sleeve head is '.round($this->armholeDelta(),1).'mm off.');
         $this->draftTopsleeveBlock($model);
         $this->draftUndersleeveBlock($model);
         
@@ -132,6 +142,7 @@ class BentBodyBlock extends \Freesewing\Patterns\Core\BrianBodyBlock
 
         // Sleeve frame
         $p->newPoint('sleeveTop', 0, 0, 'Top of the sleeve');
+        $p->clonePoint('sleeveTop','gridAnchor');
         $p->newPoint('sleeveRightTop', $this->v('sleevecapSeamLength')/6 + 10, 0, 'Right top of the sleeve frame');
         $p->addPoint('sleeveLeftTop', $p->flipX('sleeveRightTop'), 'Left top of the sleeve frame');
         $p->newPoint('sleeveBottom', 0, $model->m('shoulderToWrist') + $this->o('sleeveLengthBonus'), 'Center-cuff of the sleeve');
@@ -205,7 +216,6 @@ class BentBodyBlock extends \Freesewing\Patterns\Core\BrianBodyBlock
         $p->newPath('topsleeve', 'M topsleeveWristRight L elbowRight C elbowRightCpTop topsleeveRightEdgeCpBottom topsleeveRightEdge C topsleeveRightEdgeCpTop backPitchPoint backPitchPoint C backPitchPoint sleeveTopCpRight sleeveTop C sleeveTopCpLeft frontPitchPointCpTop frontPitchPoint C frontPitchPointCpBottom topsleeveLeftEdgeCpRight topsleeveLeftEdge C topsleeveLeftEdge topsleeveElbowLeftCpTop topsleeveElbowLeft L topsleeveWristLeft z');
 
         $p->newPath('undersleeve', 'M undersleeveWristRight elbowRight C elbowRightCpTop undersleeveRightEdgeCpBottom undersleeveRightEdge C undersleeveRightEdgeCpTop undersleeveTip undersleeveTip C undersleeveTipCpBottom undersleeveLeftEdgeCpRight undersleeveLeftEdgeRight L undersleeveLeftEdge C undersleeveLeftEdge undersleeveElbowLeftCpTop undersleeveElbowLeft L undersleeveWristLeft z');
-        
         
         
         $p-> newPath('centerLine', 'M sleeveLeftTop L sleeveRightTop L sleeveRightBottom L sleeveLeftBottom z M sleeveTop L sleeveBottom M elbowLeft L elbowRight M underarmLeft L underarmRight', ['class' => 'helpline']);

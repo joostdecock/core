@@ -1,7 +1,6 @@
-hidden: false
 info:
     name: "Carlton Coat"
-    description: "If it's good enough for Sherlock Holmes..."
+    description: "For Sherlock Holmes cosplay, or just a really nice coat"
     handle: "carlton"
     version: "1.0"
     date: 20170203
@@ -39,17 +38,17 @@ measurements:
     bicepsCircumference: 350
     centerBackNeckToWaist: 560
     chestCircumference: 1060
+    naturalWaist: 930
+    naturalWaistToFloor: 1310 
     naturalWaistToHip: 150
+    naturalWaistToSeat: 280
     neckCircumference: 390
     seatCircumference: 1130
+    shoulderToElbow: 380 
     shoulderToShoulder: 470
     shoulderSlope: 55
     shoulderToWrist: 650
     wristCircumference: 180
-    shoulderToElbow: 380 
-    naturalWaistToFloor: 1310 
-    naturalWaistToSeat: 280
-    naturalWaist: 930
 
 options:
     chestEase:
@@ -81,7 +80,7 @@ options:
         description: "The amount of ease at your wrist."
         group: "fit"
         type: measure
-        min: 0
+        min: 100
         max: 180
         default: 140
     sleeveBend:

@@ -14,6 +14,30 @@
 ##Fixed
 ##Security
 
+
+## 1.2.9
+
+**Release date**: 2018-12-20
+
+## Added
+
+### Carlton
+
+The Carlton Coat pattern has been added. The iconic coat worn by benedict cumberbatch in the Sherlock Holmes series.
+
+### Bent
+
+ - The Bent Body Block pattern has been added. A two-part sleeve variation of the Brian Body block.
+
+## Changed
+
+ - The model name is now added to the draft
+
+## Fixed
+
+ - The `OptionsSampler` new clones a model for every sample iteration, avoiding cumulative side effects if the pattern changes a model
+
+
 ## 1.2.8
 
 **Release date**: 2017-12-14

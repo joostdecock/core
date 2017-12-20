@@ -384,7 +384,11 @@ class Part
         $class = str_replace('-',' ',$mode);
         $title = str_replace("\n", " ", $title);  /* Remove any newline characters from the Title */
         $lineHeight = ((strpos($mode, 'small') !== false) ? 6 : 11); /* setting the line-height attribute, depending on thesize of the Title */
-        if($noPatternPrefix === false) $patternTitle = '__DRAFTHANDLE__ for __MODELNAME__';
+        if($noPatternPrefix === false) {
+            $patternTitle = "__TITLE__";
+        }
+        $meta = "Model: __MODELNAME__\nRef: __DRAFTHANDLE__";
+
 
         if($mode == 'vertical' || $mode == 'vertical-small' || $mode == 'vertical-extrasmall') {
             /* Moving the Title slightly on the horizontal pane. 
@@ -417,6 +421,10 @@ class Part
                 'partMsg', $anchorKey, $msg, 
                 ['class' => "part-msg $class", 'transform' => "translate(-5, 10)", 'writing-mode' => 'tb-rl', 'line-height' => $lineHeight]
             );
+            $this->newText(
+                'partMeta', $anchorKey, $meta, 
+                ['class' => "part-meta $class", 'transform' => "translate(-5, 10)", 'writing-mode' => 'tb-rl', 'line-height' => $lineHeight]
+            );
         } else {
             if(strpos($class, 'xtrasmall')) $shift = 0.6;
             elseif(strpos($class, 'mall')) $shift = 1;
@@ -427,6 +435,10 @@ class Part
             $this->newText(
                 'partMsg', $anchorKey, $msg, 
                 ['class' => "part-msg $class", 'transform' => 'translate(0, '.(7.5*$shift).')', 'line-height' => $lineHeight]
+            );
+            $this->newText(
+                'partMeta', $anchorKey, $meta, 
+                ['class' => "part-meta $class", 'transform' => 'translate(0, '.(14*$shift).')', 'line-height' => $lineHeight]
             );
         }
     }

@@ -88,8 +88,8 @@ abstract class Theme
 
         $pattern->replace('__SCALEBOX_METRIC__', $pattern->t('__SCALEBOX_METRIC__'));
         $pattern->replace('__SCALEBOX_IMPERIAL__', $pattern->t('__SCALEBOX_IMPERIAL__'));
-        if(isset($_REQUEST['draftHandle'])) $pattern->replace('__DRAFTHANDLE__', $_REQUEST['draftHandle']);
-        if(isset($_REQUEST['modelName'])) $pattern->replace('__MODELNAME__', $_REQUEST['modelName']);
+        $pattern->replace('__DRAFTHANDLE__', $_REQUEST['draftHandle']);
+        $pattern->replace('__MODELNAME__', $_REQUEST['modelName']);
     }
 
     /**

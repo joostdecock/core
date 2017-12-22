@@ -4,7 +4,8 @@ info:
     handle: "penelope"
     tags:
         - womens wear
-        
+        - skirt
+
 languages:
     en: "English"
 
@@ -14,13 +15,31 @@ parts:
     waistBand: "Waist band"
 
 measurements:
-    hipsCircumference: 1054
-    naturalWaist: 902
-    naturalWaistToHip: 229
-    naturalWaistToKnee: 622    
-    
+    naturalWaist: 724  #699  #670    #810
+    hipsCircumference:  927  #889  #830   #965
+    seatCircumference: 1003  #952  #980  #1070
+    naturalWaistToHip: 114  #115  #60  #100
+    naturalWaistToSeat: 178  #215  #235  #200
+    naturalWaistToKnee: 622
+
 options:
     # Style group
+    lengthBonus:
+        title: "Length bonus"
+        description: "Additional length of the skirt"
+        group: "style"
+        type: "measure"
+        min: -100
+        max: 100
+        default: 0
+    hemBonus:
+        title: "Hem bonus"
+        description: "Additional width at the hem"
+        group: "style"
+        type: "measure"
+        min: -100
+        max: 0
+        default: 0
     vent:
         title: "Vent"
         description: "Vent at the back seam"
@@ -40,15 +59,15 @@ options:
         default: 200
         dependsOn: vent
         onlyOn: [1]
-    waistBand:
-        title: "Waist band"
-        description: "Waist Band"
-        group: "style"
-        type: "chooseOne"
-        options:
-            no: "No"
-            yes: "Yes"
-        default: "no"
+#    waistBand:
+#        title: "Waist band"
+#        description: "Waist Band"
+#        group: "style"
+#        type: "chooseOne"
+#        options:
+#            no: "No"
+#            yes: "Yes"
+#        default: "no"
     zipper:
         title: "Zipper placement"
         description: "Zipper placement"
@@ -60,11 +79,20 @@ options:
         default: "side"
         dependsOn: vent
         onlyOn: [0]
-        
+    nrOfDarts:
+        title: "Number of darts"
+        description: "Number of darts on each part"
+        group: "style"
+        type: "chooseOne"
+        options:
+            2: "2"
+            1: "1"
+        default: "2"
+
     # Fit group
-    hipEase:
-        title: "Hip ease"
-        description: "The amount of ease at the hip"
+    seatEase:
+        title: "Seat ease"
+        description: "The amount of ease at the largest part of your bum"
         group: "ease"
         type: "measure"
         min: 0
@@ -77,21 +105,36 @@ options:
         type: "measure"
         min: 0
         max: 60
+        default: 10
+    waistSideSeamRaise:
+        title: "Waist Side Seam Raise"
+        description: "Raise of the waist at the side seam"
+        group: "fit"
+        type: "measure"
+        min: 0
+        max: 25
         default: 0
     backDartDepthFactor:
         title: "Back Dart Depth Factor"
         description: "The Depth of the back dart as a percentage of the Waist to Hip measurement"
         group: "fit"
         type: "percent"
-        min: 45
+        min: 35
         max: 70
-        default: 60
+        default: 50
     frontDartDepthFactor:
         title: "Front Dart Depth Factor"
         description: "The Depth of the front dart as a percentage of the Waist to Hip measurement"
         group: "fit"
         type: "percent"
-        min: 40
+        min: 30
         max: 65
-        default: 55
-
+        default: 45
+    dartToSideSeamFactor:
+        title: "Dart to Side Seam Factor"
+        description: "Shifts the intake from the darts to the side seam and visa versa"
+        group: "fit"
+        type: "percent"
+        min: 30
+        max: 70
+        default: 50

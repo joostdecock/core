@@ -18,6 +18,7 @@ const DART_BACK_3 = 5;
 const HIP_CURVE_DIV_UP = 3;
 const HIP_CURVE_DIV_DOWN = 40;
 const HEM_DEPTH = 25;
+const WAIST_BAND_OVERLAP = 25;
 
 /**
  * The Penelope Pencil Skirt pattern
@@ -155,7 +156,7 @@ class PenelopePencilSkirt extends \Freesewing\Patterns\Core\Pattern
         //The back will try to match the sideseam length of the front
         $this->draftPart($model, 'front');
         $this->draftPart($model, 'back');
-        if( $this->o('waistBand') ) {
+        if( $this->o('waistBand') == 'yes') {
             $this->draftWaistBand($model);
         }
     }
@@ -178,6 +179,10 @@ class PenelopePencilSkirt extends \Freesewing\Patterns\Core\Pattern
         $this->finalizePart( $model, 1, 'Front' );
         $this->finalizePart( $model, 2, 'Back' );
 
+        if( $this->o('waistBand') == 'yes') {
+            $this->finalizeWaistBand( $model );
+        }
+        
         // Is this a paperless pattern?
         if ($this->isPaperless) {
             #$this->paperlessBowTie( $model, 'bowTie1' );
@@ -508,6 +513,25 @@ class PenelopePencilSkirt extends \Freesewing\Patterns\Core\Pattern
     public function draftWaistBand($model)
     {
         $p = $this->parts['waistBand'];
+
+        $waist = $model->m('naturalWaist');
+        $waistEase = $this->o('waistEase');
+        $waist += $waistEase;
+
+        $p->newPoint('pA', 0, 0, 'Origin');
+        $p->newPoint('pB', 0, $waist/2 +(WAIST_BAND_OVERLAP*2));
+        $p->newPoint('pC', $this->o('waistBandHeight') *2, 0 );
+        $p->newPoint('pD', $this->o('waistBandHeight') *2, $waist/2 +(WAIST_BAND_OVERLAP*2));
+
+        $p->newPath('outline', "M pA L pB L pD L pC Z", ['class' => 'fabric']);
+
+        if( $this->o('zipper') == 'side' ) {
+            // Not quite sure what kind of notches to add in this orientation
+        } else {
+            $p->addPoint('pSideSeamA', $p->shift('pA', 270, $waist/4 +6 +WAIST_BAND_OVERLAP));
+            $p->addPoint('pSideSeamC', $p->shift('pC', 270, $waist/4 +6 +WAIST_BAND_OVERLAP));
+            $p->notch(['pSideSeamA','pSideSeamC']);
+        }
     }
 
 
@@ -539,7 +563,7 @@ class PenelopePencilSkirt extends \Freesewing\Patterns\Core\Pattern
         $p->newGrainline('grainlineTop', 'grainlineBottom', $this->t('Grainline'));
 
         if( $this->o('sa') ) {
-            $p->offsetPath('seamAllowance', 'outlineSA', 16, true, ['class' => 'fabric sa'] );
+            $p->offsetPath('seamAllowance', 'outlineSA', $this->o('sa'), true, ['class' => 'fabric sa'] );
 
             if( $partName == 'Front' || $this->o('zipper') == 'side' ) {
                 $sa = $p->paths['seamAllowance'];
@@ -574,6 +598,42 @@ class PenelopePencilSkirt extends \Freesewing\Patterns\Core\Pattern
     public function finalizeWaistBand($model)
     {
         $p = $this->parts['waistBand'];
+
+        $p->addPoint('pCB1', $p->shift('pA', 270, WAIST_BAND_OVERLAP));
+        $p->addPoint('pCB2', $p->shift('pC', 270, WAIST_BAND_OVERLAP));
+
+        $p->newPath('CBLine', 'M pCB1 L pCB2', ['class' => 'helpline']);
+        $p->newTextOnPath('CBLinetext', $p->paths['CBLine']->getPathstring(), "Center\nback", ['class' => 'text-center'], FALSE);
+
+        if( $this->o('sa') ) {
+            $p->offsetPath('seamAllowance', 'outline', -1 *$this->o('sa'), true, ['class' => 'fabric sa'] );
+        }
+
+        // Title
+        $p->newPoint('titleAnchor', $p->x('pA') +$this->o('waistBandHeight'), $p->y('pA') +55 , 'Title point');
+        $p->addTitle('titleAnchor', 3, 'Waistband', '1x cut on fold '.$this->t('from fabric'), 'vertical-extrasmall');
+
+        // logo
+        $p->addPoint('logoAnchor', $p->shift('titleAnchor', 270, 75));
+        $p->newSnippet('logo', 'logo-sm', 'logoAnchor');
+
+        $p->newPoint('grainlineTop',    $p->x('pA') +4, $p->y('logoAnchor') +15 );
+        $p->newPoint('grainlineBottom', $p->x('pB') +4, $p->y('pB') -50 );
+
+        $p->newGrainline('grainlineTop', 'grainlineBottom', $this->t('Grainline'));
+
+        $p->addPoint('pF1', $p->shift('logoAnchor', 270, 8));
+        $p->addPoint('pF2', $p->shift('pB', 0, $this->o('waistBandHeight')));
+        $p->addPoint('pF3', $p->shift('pA', 0, $this->o('waistBandHeight')));
+        $p->addPoint('pF4', $p->shift('pF3', 270, WAIST_BAND_OVERLAP +4));
+
+        $p->newPath('foldLine1', 'M pF1 L pF2', ['class' => 'helpline']);
+        $p->newPath('foldLine2', 'M pF3 L pF4', ['class' => 'helpline']);
+        $p->newTextOnPath('foldLinetext', $p->paths['foldLine1']->getPathstring(), 'Fold line', ['class' => 'text-center'], FALSE);
+
+        $p->newPoint('COFLeft',   $p->x('pB') +3, $p->y('pB'));
+        $p->newPoint('COFRight',  $p->x('pD') -3, $p->y('pD'));
+        $p->newCutonfold('COFLeft', 'COFRight', $this->t('Cut on fold'), -10) ;
     }
 
 

@@ -59,15 +59,26 @@ options:
         default: 200
         dependsOn: vent
         onlyOn: [1]
-#    waistBand:
-#        title: "Waist band"
-#        description: "Waist Band"
-#        group: "style"
-#        type: "chooseOne"
-#        options:
-#            no: "No"
-#            yes: "Yes"
-#        default: "no"
+    waistBand:
+        title: "Waist band"
+        description: "Waist Band"
+        group: "style"
+        type: "chooseOne"
+        options:
+            no: "No"
+            yes: "Yes"
+        default: "no"
+    waistBandHeight:
+        title: "Waist band height"
+        description: "Waist Band height"
+        group: "style"
+        type: "measure"
+        min: 10
+        max: 100
+        default: 25
+        dependsOn: waistBand
+        onlyOn: [yes]
+
     zipper:
         title: "Zipper placement"
         description: "Zipper placement"

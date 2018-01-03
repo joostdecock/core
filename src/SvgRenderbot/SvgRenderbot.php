@@ -36,13 +36,7 @@ class SvgRenderbot
      */
     public function render($pattern)
     {
-        // 90dpi/25.4 = 3.54330709
-        $scale = new \Freesewing\Transform('scale', 3.54330709);
-
-        $svg = $this->openGroup(
-            'patternScaleContainer',
-            \Freesewing\Transform::asSvgParameter(array($scale))
-        );
+        $svg = $this->openGroup('patternContainer');
 
         if (isset($pattern->parts) && count($pattern->parts) > 0) :
             foreach ($pattern->parts as $partKey => $part) {

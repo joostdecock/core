@@ -86,6 +86,7 @@ abstract class Theme
         $this->messages = $pattern->getMessages();
         $this->debug = $pattern->getDebug();
 
+        $pattern->replace('__VERSION__', $pattern->getVersion());
         $pattern->replace('__SCALEBOX_METRIC__', $pattern->t('__SCALEBOX_METRIC__'));
         $pattern->replace('__SCALEBOX_IMPERIAL__', $pattern->t('__SCALEBOX_IMPERIAL__'));
         if(isset($_REQUEST['draftHandle'])) $pattern->replace('__DRAFTHANDLE__', $_REQUEST['draftHandle']);

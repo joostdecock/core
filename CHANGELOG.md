@@ -11,7 +11,23 @@
 ##Changed
 ##Deprecated
 ##Removed
-##Fixed
+## Fixed
+##Security
+
+## Unreleased
+
+**Release date**: Unreleased
+
+##Added
+##Changed
+##Deprecated
+##Removed
+## Fixed
+
+### Hugo
+
+ - Fixed the `ribbingStretchFactor` option that wasn't properly configured and calculated
+
 ##Security
 
 

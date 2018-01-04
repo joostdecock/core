@@ -16,7 +16,7 @@
 
 ## 1.3.0
 
-**Release date**: Unreleased
+**Release date**: 2018-01-04
 
 This release addresses 
 [issue #204 : Inkscape changes in default units means patterns aren't scaled correctly](https://github.com/freesewing/core/issues/204) 
@@ -24,7 +24,7 @@ This release addresses
 The fix involves changes in the SVG namespace, units and scaling. 
 There's also additional methods to retrieve the core version, as we store that in the SVG now.
 
-In addition to these changes, that make this a minor release, there is a fix for the Hugo pattern.
+In addition to these changes, there is a fix for the Hugo pattern.
 
 ### Added
 
@@ -74,7 +74,7 @@ For this, we've added a custom `freesewing` namespace to the SVG, and we set two
 
 ## 1.2.9
 
-**Release date**: 2018-12-20
+**Release date**: 2017-12-20
 
 ### Added
 

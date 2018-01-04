@@ -92,11 +92,11 @@ options:
         max: 80
         default: 0
     ribbingStretchFactor:
-        title: "Ribbing stretch factor"
-        description: "The amount of negative ease for the cuffs and hem ribbing. 100% means no negative ease, 90% means 10% negative ease."
+        title: "Ribbing stretch"
+        description: "Determines the negative ease for the ribbing."
         group: "fit"
         type: percent
         min: 0
-        max: 40
-        default: 20
+        max: 10
+        default: 5
 

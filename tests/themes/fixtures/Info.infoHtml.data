@@ -1,4 +1,5 @@
-<h3>Services</h3>
+<h3>Core version</h3>
+<ul class='version'><li>phpunit</li></ul><h3>Services</h3>
 <ul class="servicelist">
 <li class="service">service 1</li>
 <li class="service">service 2</li>

@@ -7,33 +7,90 @@
 
 **Release date**: Unreleased
 
-##Added
-##Changed
-##Deprecated
-##Removed
-##Fixed
-##Security
+### Added
+### Changed
+### Deprecated
+### Removed
+### Fixed
+### Security
+
+## 1.3.0
+
+**Release date**: 2018-01-04
+
+This release addresses 
+[issue #204 : Inkscape changes in default units means patterns aren't scaled correctly](https://github.com/freesewing/core/issues/204) 
+
+The fix involves changes in the SVG namespace, units and scaling. 
+There's also additional methods to retrieve the core version, as we store that in the SVG now.
+
+In addition to these changes, there is a fix for the Hugo pattern.
+
+### Added
+
+ - The `Pattern::setVersion()` and `pattern::getVersion()` methods
+ - The `freesewing` namespace in the SVG output, including the `freesewing:version` and `freesewing:origin` attributes
+ - The `BasicJson` and `PaperlessJson` themes in core are version of the `Basic` and `Paperless` theme that return info in JSON format
+
+### Changed
+
+#### SVG Units
+
+The release of Inkscape 0.92 changes their internal handling of userspace units from 90DPI to 96DPI.
+The change was made to align themselves with the CSS standard.
+
+This means that when opening one of our patterns in Inkscape version 0.92 or newer, the pattern
+will be incorrectly scaled.  
+In addition, we use inkscape internally (in freesewing data) to get from SVG patterns to PDF files.
+So our own patterns would be at risk of being incorrectly scaled.
+
+To remediate this matter, we can't simply switch to assume 96DPI as that would mean patterns
+would scale incorrectly on older Inkscape versions.
+
+Instead, we are now setting a fixed size in mm for the SVG, and map the viewBox so that 1 user unit
+equals 1 mm. We really should have done this from the start.
+
+This also removes the need to scale the entire pattern.
+
+#### Custom SVG namespace
+
+We wanted a way to know what specific core version drafted a given SVG.
+
+For this, we've added a custom `freesewing` namespace to the SVG, and we set two attributes:
+
+ - `freesewing::version` : the version of core that generated this SVG. Note that this value is read from the core config file.
+ - `freesewing::origin`: the host on which core is running, as supplied by `Request->getInfo()`.
+
+### Removed
+
+ - The `SCALE` static in `SvgRenderbot` as we no longer scale the pattern.
+
+### Fixed
+
+#### Hugo
+
+ - Fixed the `ribbingStretchFactor` option that wasn't properly configured and calculated
 
 
 ## 1.2.9
 
-**Release date**: 2018-12-20
+**Release date**: 2017-12-20
 
-## Added
+### Added
 
-### Carlton
+#### Carlton
 
 The Carlton Coat pattern has been added. The iconic coat worn by benedict cumberbatch in the Sherlock Holmes series.
 
-### Bent
+#### Bent
 
  - The Bent Body Block pattern has been added. A two-part sleeve variation of the Brian Body block.
 
-## Changed
+### Changed
 
  - The model name and draft reference is now added to the part titles
 
-## Fixed
+### Fixed
 
  - The `OptionsSampler` new clones a model for every sample iteration, avoiding cumulative side effects if the pattern changes a model
 
@@ -44,7 +101,7 @@ The Carlton Coat pattern has been added. The iconic coat worn by benedict cumber
 
 This is a bugfix release with two small fixes
 
-## Fixed
+### Fixed
 
  - Fix for [Issue #197: Timezone warning in core](https://github.com/freesewing/core/issues/197)
  - Fix for [Issue #198:
@@ -58,18 +115,18 @@ This is a bugfix release with two small fixes
 
 This release includes the updated freesewing logo and small bugfixes to Benjaming and FLorent.
 
-## Changed
+### Changed
 
  - The logo has been updated in `Theme` 
 
-## Fixed
+### Fixed
 
-### Florent
+#### Florent
 
  - Clarified that the `Cap top` part can also be cut on the fold
  - A missing space has been added
 
-### Benjamin
+#### Benjamin
 
  - Fix for an incorrect `dependsOn` value in the config file (only impacts the frontend)
 
@@ -80,7 +137,7 @@ This release includes the updated freesewing logo and small bugfixes to Benjamin
 This release includes the Florent Flat Cap pattern by @QuentinFelix, 
 currently in Beta
 
-## Added
+### Added
 
  - Florent is a new pattern, a flat cap. Currently in the Beta namespace
 
@@ -93,11 +150,11 @@ default option was not the first in the list (which is somewhat counter-intuitiv
 
 Apart from that, the only change is a typo in the Huey config file. 
 
-## Changed
+### Changed
 
 - Changed order in Benjamin `bowStyle` option so that the default option is the first option
 
-## Fixed
+### Fixed
 
 - Fixed a typo in the Huey config file
 

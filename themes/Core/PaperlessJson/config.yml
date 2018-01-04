@@ -1,0 +1,9 @@
+settings:
+    partMargin: 15
+    gridMargin: 10
+    isPaperless: true
+
+options:
+    - parts
+    - forceParts
+    - embedFluid

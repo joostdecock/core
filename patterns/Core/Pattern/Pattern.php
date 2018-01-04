@@ -270,7 +270,7 @@ abstract class Pattern
      */
     public function getWidth()
     {
-        return $this->width;
+        return round($this->width);
     }
 
     /**
@@ -290,7 +290,7 @@ abstract class Pattern
      */
     public function getHeight()
     {
-        return $this->height;
+        return round($this->height);
     }
 
     /**
@@ -301,6 +301,32 @@ abstract class Pattern
     public function setPartMargin($margin)
     {
         $this->partMargin = $margin;
+    }
+
+    /**
+     * Sets the version property
+     *
+     * The pattern doesn't have its own version, so this is the core version
+     * number
+     *
+     * @param string $version The core version number
+     */
+    public function setVersion($version)
+    {
+        $this->version = $version;
+    }
+
+    /**
+     * Gets the version property
+     *
+     * The pattern doesn't have its own version, so this is the core version
+     * number
+     *
+     * @return string $version The core version number
+     */
+    public function getVersion()
+    {
+        return $this->version;
     }
 
     /**

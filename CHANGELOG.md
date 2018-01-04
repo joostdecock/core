@@ -30,6 +30,7 @@ In addition to these changes, that make this a minor release, there is a fix for
 
  - The `Pattern::setVersion()` and `pattern::getVersion()` methods
  - The `freesewing` namespace in the SVG output, including the `freesewing:version` and `freesewing:origin` attributes
+ - The `BasicJson` and `PaperlessJson` themes in core are version of the `Basic` and `Paperless` theme that return info in JSON format
 
 ### Changed
 

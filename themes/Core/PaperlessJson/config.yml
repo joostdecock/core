@@ -1,6 +1,3 @@
-templates:
-    css: 
-        - "css/paperless.css"
 settings:
     partMargin: 15
     gridMargin: 10

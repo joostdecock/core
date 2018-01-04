@@ -83,7 +83,9 @@ class Info
      */
     private function renderInfo($list)
     {
-        $html = "<h3>Services</h3>\n";
+        $html = "<h3>Core version</h3>\n";
+        $html .= "<ul class='version'><li>".$list['version']."</li></ul>";
+        $html .= "<h3>Services</h3>\n";
         $html .= '<ul class="servicelist">';
         foreach ($list['services'] as $name) {
             $html .= "\n<li class=\"service\">$name</li>";

@@ -54,6 +54,7 @@ class InfoService extends Service
                 $info['patterns'] = $this->getPatternList($context);
                 $info['channels'] = $this->getChannelList($context);
                 $info['themes'] = $this->getThemeList($context);
+                $info['version'] = $context->getConfig()['version'];
 
                 $context->setResponse($context->getTheme()->themeInfo($info, $format));
             }

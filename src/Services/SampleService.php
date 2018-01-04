@@ -49,6 +49,7 @@ class SampleService extends DraftService
             $context->getPattern()->setTranslator($context->getTranslator());
 
             $context->getPattern()->setPartMargin($context->getTheme()->config['settings']['partMargin']);
+            $context->getPattern()->setVersion($context->getConfig()['version']);
             $context->getTheme()->setOptions($context->getRequest());
 
             if ($context->getRequest()

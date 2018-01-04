@@ -35,6 +35,7 @@ class InfoTest extends \PHPUnit\Framework\TestCase
     {
         $theme = new \Freesewing\Themes\Core\Info();
         $data = [
+            'version' => 'phpunit',
             'services' => ['service 1','service 2'],
             'patterns' => ['Core' => ['pattern 1','pattern 2']],
             'channels' => ['Core' => ['channel 1','channel 2']],

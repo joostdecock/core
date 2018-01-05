@@ -27,3 +27,6 @@ themeNamespaces:
 
 channelNamespaces:
     - Core
+
+integrations:
+    rollbar: false

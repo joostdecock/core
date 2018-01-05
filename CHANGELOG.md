@@ -14,7 +14,7 @@
 ### Fixed
 ### Security
 
-## 1.3.1
+## 1.4.0
 
 **Release date**: 2018-01-05
 

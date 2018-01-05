@@ -8,6 +8,9 @@ else
         if [ "$TRAVIS_PHP_VERSION" = "7.0" ]; then
             echo "Deploying PHP version $TRAVIS_PHP_VERSION build.";
             cd $TRAVIS_BUILD_DIR
+            if [ "$TRAVIS_BRANCH" = "master" ]; then
+                replace "rollbar: false" "rollbar: true" -- config.yml
+            fi
             mkdir build
             mv channels src themes patterns vendor index.php config.yml build/
             tar -czf freesewing.tgz build

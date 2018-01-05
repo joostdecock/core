@@ -27,6 +27,7 @@ if($context->getConfig()['integrations']['rollbar'] !== false) {
     Rollbar::init([
         'access_token' => getenv('ROLLBAR_ACCESS_TOKEN'),
         'environment' => getenv('ROLLBAR_ENVIRONMENT'),
+        'included_errno' => (E_ERROR | E_WARNING | E_PARSE | E_CORE_ERROR | E_USER_ERROR | E_RECOVERABLE_ERROR | E_NOTICE)
     ]);
 }
 

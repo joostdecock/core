@@ -21,10 +21,10 @@ $context->setRequest(new \Freesewing\Request($_REQUEST));
 $context->configure();
 
 // Rollbar integration
+use \Rollbar\Rollbar;
+use \Rollbar\Payload\Level;
 if($context->getConfig()['integrations']['rollbar'] !== false) {
-//    use \Rollbar\Rollbar;
-  //  use \Rollbar\Payload\Level;
-    \Rollbar\Rollbar::init([
+    Rollbar::init([
         'access_token' => getenv('ROLLBAR_ACCESS_TOKEN'),
         'environment' => getenv('ROLLBAR_ENVIRONMENT'),
     ]);

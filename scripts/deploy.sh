@@ -8,6 +8,10 @@ else
         if [ "$TRAVIS_PHP_VERSION" = "7.0" ]; then
             echo "Deploying PHP version $TRAVIS_PHP_VERSION build.";
             cd $TRAVIS_BUILD_DIR
+            if [ "$TRAVIS_BRANCH" = "master" ]; then
+                replace "rollbar: false" "rollbar: true" -- config.yml
+                curl https://api.rollbar.com/api/1/deploy/ -F access_token=$ROLLBAR_ACCESS_TOKEN -F environment=core.freesewing.org -F revision=$TRAVIS_COMMIT -F local_username=travis
+            fi
             mkdir build
             mv channels src themes patterns vendor index.php config.yml build/
             tar -czf freesewing.tgz build

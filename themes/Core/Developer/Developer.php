@@ -25,8 +25,8 @@ class Developer extends Theme
     public function themeResponse(Context $context)
     {
         ob_start();
-        \Kint::$maxLevels = 0;
-        \Kint::dump($context);
+//        \Kint::$maxLevels = 0;
+        + \Kint::dump($context);
         $debug = ob_get_clean();
 
         $response = new \Freesewing\Response();

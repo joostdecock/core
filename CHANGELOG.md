@@ -20,7 +20,7 @@
 
 This release adds Rollbar integration to freesewing core. It is disabled by default.
 
-It also fixes a missing template file in the `PaperlessJson` theme.
+It also fixes a missing template file in the `PaperlessJson` theme and svg attributes in the `Sampler` theme..
 
 ### Added
 
@@ -30,8 +30,8 @@ Note that Rollbar integration is disabled by default.
 
 ### Fixed
 
-Fixed a missing template file for the grids in the `PaperlessJson` theme
-
+ - Fixed a missing template file for the grids in the `PaperlessJson` theme
+ - Fixed SVG attributes in the `Sampler` theme
 
 ## 1.3.0
 

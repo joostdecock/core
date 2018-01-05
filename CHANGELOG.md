@@ -14,6 +14,20 @@
 ### Fixed
 ### Security
 
+## 1.3.1
+
+**Release date**: 2018-01-05
+
+This release adds Rollbar integration to freesewing core. It is disabled by default.
+
+There are no changes to the code, only to the way errors are handled.
+
+### Added
+
+We are now using [Rollbar](https://rollbar.com/) to monitor errors in our application.
+
+Note that Rollbar integration is disabled by default.
+
 ## 1.3.0
 
 **Release date**: 2018-01-04

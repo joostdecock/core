@@ -13,8 +13,8 @@
     "require": {
         "symfony/translation": "3.1.*",
         "symfony/yaml": "3.1.*",
-        "raveren/kint": "1.*",
-        "rollbar/rollbar": "~1.1"
+        "rollbar/rollbar": "~1.1",
+        "kint-php/kint": "^2.2"
     },
     "require-dev": {
         "phpunit/phpunit": "5.5.*"

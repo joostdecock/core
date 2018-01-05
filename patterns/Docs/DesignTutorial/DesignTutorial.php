@@ -111,7 +111,7 @@ class DesignTutorial extends \Freesewing\Patterns\Core\Pattern
         // Basic box
         $p->newPoint('topLeft', $p->x('left1')-$strap, $p->y('top1')-$strap);
         $p->addPoint('topRight', $p->flipX('topLeft', 0));
-        $p->newPoint('bottomLeft', $p->x('topLeft'), $p->y(1)+$model->m('chestCircumference')/3 + $this->o('lengthBonus'));
+        $p->newPoint('bottomLeft', $p->x('topLeft'), $p->y(1)+$model->m('chestCircumference')/3);
         $p->addPoint('bottomRight', $p->flipX('bottomLeft', 0));
         
         // Draw the bounding box as a helpline

@@ -14,19 +14,24 @@
 ### Fixed
 ### Security
 
-## 1.3.1
+## 1.4.0
 
 **Release date**: 2018-01-05
 
 This release adds Rollbar integration to freesewing core. It is disabled by default.
 
-There are no changes to the code, only to the way errors are handled.
+It also fixes a missing template file in the `PaperlessJson` theme.
 
 ### Added
 
 We are now using [Rollbar](https://rollbar.com/) to monitor errors in our application.
 
 Note that Rollbar integration is disabled by default.
+
+### Fixed
+
+Fixed a missing template file for the grids in the `PaperlessJson` theme
+
 
 ## 1.3.0
 

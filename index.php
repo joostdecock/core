@@ -28,9 +28,6 @@ if($context->getConfig()['integrations']['rollbar'] !== false) {
         'access_token' => getenv('ROLLBAR_ACCESS_TOKEN'),
         'environment' => getenv('ROLLBAR_ENVIRONMENT'),
     ]);
-
-    \Rollbar\Rollbar::log(\Rollbar\Payload\Level::info(), 'Test info message');
-    throw new Exception('Test exception');
 }
 
 $context->runService();

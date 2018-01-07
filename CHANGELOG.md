@@ -14,11 +14,21 @@
 ### Fixed
 ### Security
 
-## 1.4.1
+## 1.4.0
 
 **Release date**: 2018-01-07
 
-This release fixes a few minor issues, and changes the default armhole depth of Carlton.
+This release adds Rollbar integration to freesewing core, but keeps it is disabled by default.
+We've also replaced the abandoned `raveren/kint` with its successor `kint-php/kint` and moved
+this package to `require-dev` section as it's only used by the `Developer` theme.
+
+Apart from that, this release fixes a few minor issues, and changes the default armhole depth of Carlton.
+
+### Added
+
+We are now using [Rollbar](https://rollbar.com/) to monitor errors in our application.
+
+Note that Rollbar integration is disabled by default. To enable it, set `rollbar: true` in `config.yml` 
 
 ### Changed
 
@@ -29,27 +39,11 @@ This release fixes a few minor issues, and changes the default armhole depth of 
 
 ### Fixed
 
- - Fixes a wrong use of `Part::shift` instead of `Part::shiftTowards` in Bent
- - Fixes a `undefined index: lengthBonus` notice being raised in the DesignTutorial pattern 
-
-## 1.4.0
-
-**Release date**: 2018-01-05
-
-This release adds Rollbar integration to freesewing core. It is disabled by default.
-
-It also fixes a missing template file in the `PaperlessJson` theme and svg attributes in the `Sampler` theme..
-
-### Added
-
-We are now using [Rollbar](https://rollbar.com/) to monitor errors in our application.
-
-Note that Rollbar integration is disabled by default.
-
-### Fixed
-
  - Fixed a missing template file for the grids in the `PaperlessJson` theme
  - Fixed SVG attributes in the `Sampler` theme
+ - Fixes a wrong use of `Part::shift` instead of `Part::shiftTowards` in Bent
+ - Fixes a `undefined index: lengthBonus` notice being raised in the DesignTutorial pattern 
+ - Fixed the user of `isset()` on a function call in the `DraftService` class
 
 ## 1.3.0
 

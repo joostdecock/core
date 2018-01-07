@@ -115,7 +115,9 @@ class DraftService extends Service
         
         // Set freesewing specific attributes
         $context->getSvgDocument()->svgAttributes->add('freesewing:version ="' . $context->getPattern()->getVersion() . '"');
-        if(isset($context->getRequest()->getInfo()['host'])) $context->getSvgDocument()->svgAttributes->add('freesewing:origin ="' . $context->getRequest()->getInfo()['host'] . '"');
+        $reqInfo = $context->getRequest()->getInfo();
+        if(isset($reqInfo['host'])) $context->getSvgDocument()->svgAttributes->add('freesewing:origin ="' . $reqInfo['host'] . '"');
+        else $context->getSvgDocument()->svgAttributes->add('freesewing:origin ="no_host_set"');
 
         // render SVG
         $context->getSvgDocument()->setSvgBody($context->getRenderbot()->render($context->getPattern()));

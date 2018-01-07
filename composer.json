@@ -8,16 +8,16 @@
             "name": "Joost De Cock",
             "email": "joost@decock.org",
             "homepage": "http://joost.decock.org/",
-            "role": "Developer"
+            "role": "Maintainer"
         }],
     "require": {
         "symfony/translation": "3.1.*",
         "symfony/yaml": "3.1.*",
-        "rollbar/rollbar": "~1.1",
-        "kint-php/kint": "^2.2"
+        "rollbar/rollbar": "~1.1"
     },
     "require-dev": {
-        "phpunit/phpunit": "5.5.*"
+        "phpunit/phpunit": "5.5.*",
+        "kint-php/kint": "^2.2"
     },
     "autoload": {
         "psr-4": {

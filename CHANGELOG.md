@@ -18,9 +18,18 @@
 
 **Release date**: 2018-01-07
 
-This release fixes a PHP notice being thrown in the DesignTutorial pattern
+This release fixes a few minor issues, and changes the default armhole depth of Carlton.
+
+### Changed
+
+#### Carlton
+
+ - The standard value for the `armholeDepth` option in Carlton was changed from 67 to 71, making the 
+   armhole slightly deeper by default.
 
 ### Fixed
+
+ - Fixes a wrong use of `Part::shift` instead of `Part::shiftTowards` in Bent
  - Fixes a `undefined index: lengthBonus` notice being raised in the DesignTutorial pattern 
 
 ## 1.4.0

@@ -9,13 +9,21 @@
 For all info on what freesewing does/is/provides, please check [the about page](https://freesewing.org/about/) or  [documentation](https://freesewing.org/docs/).
 
 ## System Requirements
-* PHP 5.6 (I recommend PHP 7)
+* PHP 5.6 or newer
 * composer
 
 ## Installation
 
 Full install instructions are available at [freesewing.org/docs/core/install](https://freesewing.org/docs/core/install)
 but here's the gist of it:
+
+> ##### A note about installing on PHP 5.6
+>
+> Core uses a Developer theme that requires PHP 7.0 or newer. However, that theme is only 
+> useful for hacking core. So if you just want to run this and maybe design some patterns
+> install without the dev requirements. 
+>
+> In other words, to install on PHP 5.6, pass `--no-dev` to composer
 
 ### From packagist
 ```

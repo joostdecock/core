@@ -8,7 +8,7 @@ addons:
     packages:
     - sshpass
 install:
-- composer install --no-interaction
+- composer install --no-interaction --no-dev
 - composer dump-autoload -o
 env:
   global:

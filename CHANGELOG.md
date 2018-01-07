@@ -24,6 +24,14 @@ this package to `require-dev` section as it's only used by the `Developer` theme
 
 Apart from that, this release fixes a few minor issues, and changes the default armhole depth of Carlton.
 
+> ##### A note about installing on PHP 5.6
+>
+> Core uses a Developer theme that now requires PHP 7.0 or newer. However, that theme is only 
+> useful for hacking core. So if you just want to run this and maybe design some patterns
+> install without the dev requirements. 
+>
+> In other words, to install on PHP 5.6, pass `--no-dev` to composer
+
 ### Added
 
 We are now using [Rollbar](https://rollbar.com/) to monitor errors in our application.

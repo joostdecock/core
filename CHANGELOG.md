@@ -14,6 +14,15 @@
 ### Fixed
 ### Security
 
+## 1.4.1
+
+**Release date**: 2018-01-07
+
+This release fixes a PHP notice being thrown in the DesignTutorial pattern
+
+### Fixed
+ - Fixes a `undefined index: lengthBonus` notice being raised in the DesignTutorial pattern 
+
 ## 1.4.0
 
 **Release date**: 2018-01-05

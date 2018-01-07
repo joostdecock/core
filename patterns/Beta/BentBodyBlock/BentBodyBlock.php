@@ -179,8 +179,8 @@ class BentBodyBlock extends \Freesewing\Patterns\Core\BrianBodyBlock
         
         $p->newPoint('topsleeveWristLeftHelperBottom', $p->x('topsleeveWristRight')-$topWrist/2, $p->y('topsleeveWristRight'));
         $p->newPoint('undersleeveWristLeftHelperBottom', $p->x('undersleeveWristRight')-$underWrist/2, $p->y('undersleeveWristRight'));
-        $p->addPoint('topsleeveWristLeftHelperTop', $p->shift('topsleeveElbowLeft', 'elbowRight', $p->distance('topsleeveElbowLeft', 'elbowRight')/2));
-        $p->addPoint('undersleeveWristLeftHelperTop', $p->shift('undersleeveElbowLeft', 'elbowRight', $p->distance('undersleeveElbowLeft', 'elbowRight')/2));
+        $p->addPoint('topsleeveWristLeftHelperTop', $p->shiftTowards('topsleeveElbowLeft', 'elbowRight', $p->distance('topsleeveElbowLeft', 'elbowRight')/2));
+        $p->addPoint('undersleeveWristLeftHelperTop', $p->shiftTowards('undersleeveElbowLeft', 'elbowRight', $p->distance('undersleeveElbowLeft', 'elbowRight')/2));
         $topsleeveWristAngle = $p->angle('topsleeveWristLeftHelperBottom','topsleeveWristLeftHelperTop');
         $undersleeveWristAngle = $p->angle('undersleeveWristLeftHelperBottom','undersleeveWristLeftHelperTop');
         

@@ -106,7 +106,7 @@ options:
         type: "percent"
         min: 65
         max: 75
-        default: 67
+        default: 71
     sleevecapEase:
         title: "Sleevecap ease"
         description: "The amount by which your sleevhead is longer than the armhole."

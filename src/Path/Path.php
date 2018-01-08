@@ -98,7 +98,7 @@ class Path
      */
     public function setPathstring($path)
     {
-        $this->pathstring = trim(preg_replace('/ {2,}/', ' ', $path));
+        $this->pathstring = trim(preg_replace('/ {2,}/', ' ', str_replace(["\t","\n"], ' ', $path)));
     }
 
     /**

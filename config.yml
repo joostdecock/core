@@ -1,3 +1,4 @@
+version: 1.4.0
 defaults:
     service: draft
     channel: Freesewing
@@ -26,3 +27,6 @@ themeNamespaces:
 
 channelNamespaces:
     - Core
+
+integrations:
+    rollbar: false

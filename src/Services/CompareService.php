@@ -51,6 +51,7 @@ class CompareService extends DraftService
 
             $context->getPattern()
                 ->setPartMargin($context->getTheme()->config['settings']['partMargin']);
+            $context->getPattern()->setVersion($context->getConfig()['version']);
             $context->getTheme()
                 ->setOptions($context->getRequest());
 

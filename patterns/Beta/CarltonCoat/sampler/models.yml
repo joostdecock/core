@@ -1,0 +1,41 @@
+measurements:
+    naturalWaist: 
+        joost   : 700 
+        usSize34: 700 
+        usSize36: 700 
+        usSize38: 700 
+        usSize40: 700 
+        usSize42: 700 
+        usSize44: 700 
+    seatCircumference: 
+        joost   : 950 
+        usSize34: 950 
+        usSize36: 950 
+        usSize38: 950 
+        usSize40: 950 
+        usSize42: 950 
+        usSize44: 950 
+    shoulderToElbow: 
+        joost   : 340 
+        usSize34: 340 
+        usSize36: 340 
+        usSize38: 340 
+        usSize40: 340 
+        usSize42: 340 
+        usSize44: 340 
+    naturalWaistToFloor: 
+        joost   : 1060 
+        usSize34: 1060 
+        usSize36: 1060 
+        usSize38: 1060 
+        usSize40: 1060 
+        usSize42: 1060 
+        usSize44: 1060 
+    naturalWaistToSeat: 
+        joost   : 230 
+        usSize34: 230 
+        usSize36: 230 
+        usSize38: 230 
+        usSize40: 230 
+        usSize42: 230 
+        usSize44: 230 

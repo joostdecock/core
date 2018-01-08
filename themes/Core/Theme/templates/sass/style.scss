@@ -116,7 +116,13 @@ text.part-msg {
     text-anchor: middle; 
 }
 
+text.part-meta {
+    font-size: $font-lg;
+    text-anchor: middle; 
+}
+
 text.part-msg.horizontal,
+text.part-meta.horizontal,
 text.part-title.vertical,
 text.part-msg.vertical { 
     text-anchor: start; 
@@ -138,6 +144,10 @@ text.part-msg.small {
     font-size: $font-part-subtitle-sm; 
 }
 
+text.part-meta.small {
+    font-size: $font; 
+}
+
 text.part-nr.extrasmall {
     font-size: $font-part-nr-xs; 
 }
@@ -152,6 +162,10 @@ text.pattern-title.extrasmall {
 
 text.part-msg.extrasmall {
     font-size: $font-part-subtitle-xs; 
+}
+
+text.part-meta.extrasmall {
+    font-size: $font-xs; 
 }
 
 /* Notes */

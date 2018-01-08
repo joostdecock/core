@@ -86,15 +86,11 @@ abstract class Theme
         $this->messages = $pattern->getMessages();
         $this->debug = $pattern->getDebug();
 
+        $pattern->replace('__VERSION__', $pattern->getVersion());
         $pattern->replace('__SCALEBOX_METRIC__', $pattern->t('__SCALEBOX_METRIC__'));
         $pattern->replace('__SCALEBOX_IMPERIAL__', $pattern->t('__SCALEBOX_IMPERIAL__'));
-        /* FIXME
-         * accesing the _REQUEST superglobal like this is not cool
-         * this should come from the request object, but that's not
-         * available here and I'm tired so I'll leave this like this until
-         * I fix this properly
-         */
-        if(isset($_REQUEST['reference'])) $pattern->replace('__REFERENCE__', $_REQUEST['reference']);
+        if(isset($_REQUEST['draftHandle'])) $pattern->replace('__DRAFTHANDLE__', $_REQUEST['draftHandle']);
+        if(isset($_REQUEST['modelName'])) $pattern->replace('__MODELNAME__', $_REQUEST['modelName']);
     }
 
     /**

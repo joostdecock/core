@@ -69,11 +69,7 @@ abstract class Pattern
             $this->setUnits($units);
             $this->loadParts();
             $this->replace('__TITLE__', isset($this->config['info']['name']) ? $this->config['info']['name'] : NULL);
-            $this->replace('__VERSION__', isset($this->config['info']['version']) ? $this->config['info']['version'] : NULL);
-            $this->replace('__COMPANY__', isset($this->config['info']['company']) ? $this->config['info']['company'] : NULL);
-            $this->replace('__AUTHOR__', isset($this->config['info']['author']) ? $this->config['info']['author'] : NULL);
         }
-        $this->replace('__DATE__', date('l j F Y') !=  null ? date('l j F Y') : NULL);
 
         return $this;
     }
@@ -274,7 +270,7 @@ abstract class Pattern
      */
     public function getWidth()
     {
-        return $this->width;
+        return round($this->width);
     }
 
     /**
@@ -294,7 +290,7 @@ abstract class Pattern
      */
     public function getHeight()
     {
-        return $this->height;
+        return round($this->height);
     }
 
     /**
@@ -305,6 +301,32 @@ abstract class Pattern
     public function setPartMargin($margin)
     {
         $this->partMargin = $margin;
+    }
+
+    /**
+     * Sets the version property
+     *
+     * The pattern doesn't have its own version, so this is the core version
+     * number
+     *
+     * @param string $version The core version number
+     */
+    public function setVersion($version)
+    {
+        $this->version = $version;
+    }
+
+    /**
+     * Gets the version property
+     *
+     * The pattern doesn't have its own version, so this is the core version
+     * number
+     *
+     * @return string $version The core version number
+     */
+    public function getVersion()
+    {
+        return $this->version;
     }
 
     /**

@@ -15,11 +15,6 @@ class DraftService extends Service
 {
 
     /**
-     * Scale factor for SVG Rendering.
-     */
-    const SCALE = 3.54330709;
-
-    /**
      * Returns the name of the service
      *
      * This is used to load the default theme for the service when no theme is specified
@@ -58,6 +53,7 @@ class DraftService extends Service
 
             $context->getTheme()->setOptions($context->getRequest());
 
+            $context->getPattern()->setVersion($context->getConfig()['version']);
             $context->getPattern()->draft($context->getModel());
             $context->getPattern()->setPartMargin($context->getTheme()->config['settings']['partMargin']);
 
@@ -100,21 +96,28 @@ class DraftService extends Service
      */
     protected function svgRender(\Freesewing\Context $context)
     {
-        // Don't set size for themes with embedFluid options set to true, allows for responsive embedding
-        if(!$context->getTheme()->getOption('embedFluid')) {
-            $context->getSvgDocument()->svgAttributes->add('width ="' . ($context->getPattern()->getWidth() * self::SCALE) . '"');
-            $context->getSvgDocument()->svgAttributes->add('height ="' . ($context->getPattern()->getHeight() * self::SCALE) . '"');
-        }
-
+        // format specific themeing
+        $context->getTheme()->themeSvg($context->getSvgDocument());
+        
+        // Size and viewbox
         $viewbox = $context->getRequest()->getData('viewbox');
         if ($viewbox !== null) {
             $viewbox = Utils::asScrubbedArray($viewbox, ',');
-            $context->getSvgDocument()->svgAttributes->add('viewbox ="' . $viewbox[0] . ' ' . $viewbox[1] . ' ' . $viewbox[2] . ' ' . $viewbox[3] . '"');
+            $context->getSvgDocument()->svgAttributes->add('viewBox ="' . $viewbox[0] . ' ' . $viewbox[1] . ' ' . $viewbox[2] . ' ' . $viewbox[3] . '"');
         } else {
-            $context->getSvgDocument()->svgAttributes->add('viewbox ="0 0 ' . ($context->getPattern()->getWidth() * self::SCALE) . ' ' . ($context->getPattern()->getHeight() * self::SCALE) . '"');
+            $context->getSvgDocument()->svgAttributes->add('viewBox ="0 0 ' . $context->getPattern()->getWidth() . ' ' . $context->getPattern()->getHeight() . '"');
         }
-        // format specific themeing
-        $context->getTheme()->themeSvg($context->getSvgDocument());
+        // Don't set size for themes with embedFluid options set to true, allows for responsive embedding
+        if(!$context->getTheme()->getOption('embedFluid')) {
+            $context->getSvgDocument()->svgAttributes->add('width ="' . $context->getPattern()->getWidth() . 'mm"');
+            $context->getSvgDocument()->svgAttributes->add('height ="' . $context->getPattern()->getHeight() . 'mm"');
+        }
+        
+        // Set freesewing specific attributes
+        $context->getSvgDocument()->svgAttributes->add('freesewing:version ="' . $context->getPattern()->getVersion() . '"');
+        $reqInfo = $context->getRequest()->getInfo();
+        if(isset($reqInfo['host'])) $context->getSvgDocument()->svgAttributes->add('freesewing:origin ="' . $reqInfo['host'] . '"');
+        else $context->getSvgDocument()->svgAttributes->add('freesewing:origin ="no_host_set"');
 
         // render SVG
         $context->getSvgDocument()->setSvgBody($context->getRenderbot()->render($context->getPattern()));

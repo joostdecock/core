@@ -182,7 +182,7 @@ class PenelopePencilSkirt extends \Freesewing\Patterns\Core\Pattern
         if( $this->o('waistBand') == 'yes') {
             $this->finalizeWaistBand( $model );
         }
-        
+
         // Is this a paperless pattern?
         if ($this->isPaperless) {
             #$this->paperlessBowTie( $model, 'bowTie1' );
@@ -330,9 +330,9 @@ class PenelopePencilSkirt extends \Freesewing\Patterns\Core\Pattern
 
             $this->msg("[$iteration] Delta is: $waistDelta ($waistFactor) $seamDelta ($seamFactor)");
             //printf("[$iteration] Delta is: $waistDelta ($waistFactor) $seamDelta ($seamFactor)\n");
-        } while ((abs($waistDelta) > 1 || abs($seamDelta) > 1) && $iteration++ < 100);
+        } while ((abs($waistDelta) > 1 || abs($seamDelta) > 1) && $iteration++ < 200);
 
-        if( $iteration >= 100 ) {
+        if( $iteration >= 200 ) {
             die('oh shit');
         }
 

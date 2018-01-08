@@ -14,13 +14,22 @@ parts:
     back: "Back part"
     waistBand: "Waist band"
 
+# @miniaram
 measurements:
-    naturalWaist: 724  #699  #670    #810
-    hipsCircumference:  927  #889  #830   #965
-    seatCircumference: 1003  #952  #980  #1070
-    naturalWaistToHip: 114  #115  #60  #100
-    naturalWaistToSeat: 178  #215  #235  #200
-    naturalWaistToKnee: 622
+    naturalWaist: 760
+    hipsCircumference:  880
+    seatCircumference: 1060
+    naturalWaistToHip: 110
+    naturalWaistToSeat: 240
+    naturalWaistToKnee: 520
+
+#measurements:
+#    naturalWaist: 724  #699  #670    #810
+#    hipsCircumference:  927  #889  #830   #965
+#    seatCircumference: 1003  #952  #980  #1070
+#    naturalWaistToHip: 114  #115  #60  #100
+#    naturalWaistToSeat: 178  #215  #235  #200
+#    naturalWaistToKnee: 622
 
 options:
     # Style group
@@ -98,7 +107,7 @@ options:
         options:
             2: "2"
             1: "1"
-        default: "2"
+        default: "1"
 
     # Fit group
     seatEase:

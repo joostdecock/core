@@ -50,4 +50,29 @@ class BasicTest extends \PHPUnit\Framework\TestCase
         $this->assertTrue($pattern->parts['part2']->getRender());
         $this->assertFalse($pattern->parts['part3']->getRender());
     }
+
+    /**
+     * Tests the ithemeSvg method
+     */
+    public function testThemeSvg()
+    {
+        $svgDocument = new \Freesewing\SvgDocument(
+            new \Freesewing\SvgComments(),
+            new \Freesewing\SvgAttributes(),
+            new \Freesewing\SvgCss(),
+            new \Freesewing\SvgScript(),
+            new \Freesewing\SvgDefs(),
+            new \Freesewing\SvgComments()
+        );
+        
+        $theme = new \Freesewing\Themes\Core\Basic();
+        $theme->messages = 'message 1';
+        $theme->debug = 'debug 1';
+
+        $theme->themeSvg($svgDocument);
+
+        $comments = $svgDocument->footerComments;
+        $this->assertTrue(is_int(strpos("$comments", 'message 1')));
+        $this->assertTrue(is_int(strpos("$comments", 'debug 1')));
+    }
 }

@@ -30,7 +30,7 @@ class DraftServiceTest extends \PHPUnit\Framework\TestCase
     /**
      * Tests the run method for basic draft
      */
-    public function testRunBasic()
+    public function estRunBasic()
     {
         $context = new \Freesewing\Context();
         $context->setRequest(new \Freesewing\Request(['service' => 'draft', 'pattern' => 'TestPattern']));
@@ -46,7 +46,7 @@ class DraftServiceTest extends \PHPUnit\Framework\TestCase
     /**
      * Tests the run method for basic draft with viewbox
      */
-    public function testRunBasicWithViewbox()
+    public function estRunBasicWithViewbox()
     {
         $context = new \Freesewing\Context();
         $context->setRequest(new \Freesewing\Request(['service' => 'draft', 'pattern' => 'TestPattern', 'viewbox' => '10,10,200,200', 'theme' => 'Paperless']));

@@ -4,21 +4,21 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "62c03b5a3ed75dced47b4c2af483b63d",
-    "content-hash": "e8d7635ba3c50b9c4e5ac823f7b71407",
+    "hash": "fb4bd88a1d45950a800f88e902d1f47e",
+    "content-hash": "a38cef17afa2a92dcc55b9667bfec43a",
     "packages": [
         {
             "name": "freesewing/bail",
-            "version": "v0.1.0",
+            "version": "v0.2.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/freesewing/bail.git",
-                "reference": "7b69900b8e24579aa0205980d14d6fc793870ccb"
+                "reference": "ff4eba4a969fa08e5db05d46c88cdd19dfb7f2fd"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/freesewing/bail/zipball/7b69900b8e24579aa0205980d14d6fc793870ccb",
-                "reference": "7b69900b8e24579aa0205980d14d6fc793870ccb",
+                "url": "https://api.github.com/repos/freesewing/bail/zipball/ff4eba4a969fa08e5db05d46c88cdd19dfb7f2fd",
+                "reference": "ff4eba4a969fa08e5db05d46c88cdd19dfb7f2fd",
                 "shasum": ""
             },
             "require": {
@@ -46,9 +46,9 @@
                     "role": "Developer"
                 }
             ],
-            "description": "Minimal error tracking & crash reporting for the freesewing frontend",
+            "description": "Minimal error tracking & crash reporting - A poor man's rollbar",
             "homepage": "https://freesewing.org/",
-            "time": "2018-01-17 09:14:37"
+            "time": "2018-01-17 19:49:17"
         },
         {
             "name": "guzzlehttp/guzzle",

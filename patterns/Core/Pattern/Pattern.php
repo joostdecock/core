@@ -597,15 +597,17 @@ abstract class Pattern
         $order = array();
         foreach ($parts as $key => $part) {
             if ($part->getRender() === true) {
-                $order[$key] = @$part->boundary->maxSize; // FIXME Sample service issues a warning here
+                if(isset($part->boundary->maxSize)) $order[$key] = $part->boundary->maxSize;
             }
         }
         arsort($order);
         foreach ($order as $key => $maxSize) {
-            $layoutBlock = new \Freesewing\LayoutBlock();
-            $layoutBlock->w = @$parts[$key]->boundary->width; // FIXME Sample service issues a warning here
-            $layoutBlock->h = @$parts[$key]->boundary->height;// FIXME Sample service issues a warning here
-            $sorted[$key] = $layoutBlock;
+            if(isset($parts[$key]->boundary->width) && isset($parts[$key]->boundary->height)) {
+                $layoutBlock = new \Freesewing\LayoutBlock();
+                $layoutBlock->w = $parts[$key]->boundary->width;
+                $layoutBlock->h = $parts[$key]->boundary->height;
+                $sorted[$key] = $layoutBlock;
+            }
         }
         
         return $sorted;

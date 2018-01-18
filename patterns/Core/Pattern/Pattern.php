@@ -355,10 +355,13 @@ abstract class Pattern
         if (isset($this->parts) && count($this->parts) > 0) {
             foreach ($this->parts as $part) {
                 if ($part->getRender() === true) {
-                    $offsetX = @$part->boundary->topLeft->x * -1; // FIXME Sample service issues a warning here
-                    $offsetY = @$part->boundary->topLeft->y * -1; // FIXME Sample service issues a warning here
-                    $transform = new \Freesewing\Transform('translate', $offsetX, $offsetY);
-                    $part->addTransform('#pileParts', $transform);
+                    // don't add (0,0) transforms
+                    if(isset($part->boundary->topLeft->x) && isset($part->boundary->topLeft->y)) {
+                        $offsetX = $part->boundary->topLeft->x * -1; 
+                        $offsetY = $part->boundary->topLeft->y * -1; 
+                        $transform = new \Freesewing\Transform('translate', $offsetX, $offsetY);
+                        $part->addTransform('#pileParts', $transform);
+                    }
                 }
             }
         }

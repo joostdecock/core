@@ -30,6 +30,6 @@ channelNamespaces:
 
 integrations:
     bail: 
-        enable: true
-        api: 'https://joost.data.freesewing.org/error'
+        bail_enabled: false
+        api: 'https://data.freesewing.org/error'
         origin: 'core.freesewing.org'

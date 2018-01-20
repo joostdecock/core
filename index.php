@@ -22,7 +22,7 @@ $context->configure();
 
 // Use bail for error handling?
 use Freesewing\Bail\ErrorHandler;
-if($context->getConfig()['integrations']['bail']['enable'] === true) {
+if($context->getConfig()['integrations']['bail']['bail_enabled'] === true) {
     ErrorHandler::init(
         $context->getConfig()['integrations']['bail']['api'],
         $context->getConfig()['integrations']['bail']['origin']

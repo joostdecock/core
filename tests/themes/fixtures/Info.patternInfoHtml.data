@@ -22,6 +22,7 @@
 		<li>measureOption<ul><li>Type &raquo; measure</li><li>Min &raquo; 10</li>
                         <li>Max &raquo; 50</li>
                         <li>Default &raquo; 30</li></ul></li>
+		<li>angleOption<ul><li>Type &raquo; angle</li></ul></li>
 		<li>percentOption<ul><li>Type &raquo; percent</li><li>Default &raquo; 50</li></ul></li>
 		<li>chooseOneOption<ul><li>Type &raquo; chooseOne</li></ul></li>
 	</ul>

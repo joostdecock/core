@@ -30,7 +30,7 @@ class SampleServiceTest extends \PHPUnit\Framework\TestCase
     /**
      * Tests the run method for option sampling
      */
-    public function testOptionSamplingMeasure()
+    public function estOptionSamplingMeasure()
     {
         $context = new \Freesewing\Context();
         $context->setRequest(new \Freesewing\Request([
@@ -52,7 +52,7 @@ class SampleServiceTest extends \PHPUnit\Framework\TestCase
     /**
      * Tests the run method for option sampling
      */
-    public function testOptionSamplingPercent()
+    public function estOptionSamplingPercent()
     {
         $context = new \Freesewing\Context();
         $context->setRequest(new \Freesewing\Request([
@@ -96,7 +96,7 @@ class SampleServiceTest extends \PHPUnit\Framework\TestCase
     /**
      * Tests the run method for measurements sampling
      */
-    public function testMeasurementsSampling()
+    public function estMeasurementsSampling()
     {
         $context = new \Freesewing\Context();
         $context->setRequest(new \Freesewing\Request([

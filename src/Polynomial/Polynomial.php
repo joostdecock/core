@@ -123,6 +123,7 @@ class Polynomial
      */
     public function bisection($min, $max)
     {
+        $result = false;
         $minValue = $this->evalu($min);
         $maxValue = $this->evalu($max);
 
@@ -153,7 +154,7 @@ class Polynomial
             }
         }
 
-        return @$result;
+        return $result;
     }
 
     /**

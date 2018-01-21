@@ -29,4 +29,7 @@ channelNamespaces:
     - Core
 
 integrations:
-    rollbar: false
+    bail: 
+        bail_enabled: false
+        api: 'https://data.freesewing.org/error'
+        origin: 'core.freesewing.org'

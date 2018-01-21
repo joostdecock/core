@@ -14,6 +14,22 @@
 ### Fixed
 ### Security
 
+## 1.5.0
+
+**Release date**: 2018-01-21
+
+### Added
+
+ - We now use [freesewing bail](https://github.com/freesewing/bail) as a custom error handler
+
+### Deprecated
+ 
+ - The Developer theme has been deprecated. It will be removed at some point in the future.
+
+### Removed
+
+ - We no longer use Rollbar. Its dependency has been removed in favor of Bail.
+
 ## 1.4.0
 
 **Release date**: 2018-01-07

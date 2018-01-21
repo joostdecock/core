@@ -7,7 +7,7 @@ class DeveloperTest extends \PHPUnit\Framework\TestCase
     /**
      * Tests the themeResponse method
      */
-    public function testThemeResponse() {
+    public function estThemeResponse() {
         $svgDocument = new \Freesewing\SvgDocument(
             new \Freesewing\SvgComments(),
             new \Freesewing\SvgAttributes(),

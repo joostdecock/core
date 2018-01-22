@@ -22,7 +22,11 @@ class SimonShirt extends BrianBodyBlock
        |___|_| |_|_|\__|_|\__,_|_|_|___/\___|
 
       Things we need to do before we can draft a pattern
-    */
+     */
+
+    /** Minimum shaping before we add back darts = 4cm */
+    const MINIMUM_SHAPING_FOR_BACK_DARTS = 40;
+
 
     /**
      * Sets up options and values for our draft
@@ -47,10 +51,10 @@ class SimonShirt extends BrianBodyBlock
         $this->setOptionIfUnset('sa', 0);
 
         // Depth of the armhole
-        $this->setValue('armholeDepth', $model->m('shoulderSlope') / 2 + $model->m('bicepsCircumference') * $this->o('armholeDepthFactor'));
+        $this->setValue('armholeDepth', $model->m('shoulderSlope') / 2 + ( $model->m('bicepsCircumference') + $this->o('bicepsEase') ) * $this->o('armholeDepthFactor'));
 
         // Heigth of the sleevecap
-        $this->setValue('sleevecapHeight', $model->m('bicepsCircumference') * $this->o('sleevecapHeightFactor'));
+        $this->setValue('sleevecapHeight', ($model->m('bicepsCircumference') + $this->o('bicepsEase')) * $this->o('sleevecapHeightFactor'));
          
         // Collar widht and depth
         $this->setValue('collarWidth', ($model->getMeasurement('neckCircumference') / self::PI) / 2 + 5);
@@ -398,7 +402,7 @@ class SimonShirt extends BrianBodyBlock
         // Shaping of side seam
         /* Only shape side seams if we're reducing less than 10cm 
          * Also add back darts if we're reducing 10cm or more */
-        if ($this->v('waistReduction') <= 100) $in = $this->v('waistReduction')/4;
+        if ($this->v('waistReduction') <= self::MINIMAL_SHAPING_FOR_BACK_DARTS) $in = $this->v('waistReduction')/4;
         else  $in = ($this->v('waistReduction')*0.6)/4;
         
         $p->addPoint(8000, $p->shift(4,90,$this->o('lengthBonus')), 'Hips height');        
@@ -828,7 +832,7 @@ class SimonShirt extends BrianBodyBlock
         $p->newPoint('centerTop', 0, $p->y(10));
         $p->addPoint(8000, $p->shift(4,90,$this->o('lengthBonus')), 'Hips height');        
         $p->newPoint(8001, $p->x(6), $p->y(8000), 'Hips height');        
-        if ($this->v('waistReduction') <= 100) { // Only shape side seams
+        if ($this->v('waistReduction') <= self::MINIMAL_SHAPING_FOR_BACK_DARTS) { // Only shape side seams
           $in = $this->v('waistReduction')/4;
         } else { // Back darts too
           $in = ($this->v('waistReduction')*0.6)/4;
@@ -917,7 +921,7 @@ class SimonShirt extends BrianBodyBlock
         }
         $outline .= 'L centerTop z';
 
-        if ($this->v('waistReduction') > 100) { 
+        if ($this->v('waistReduction') > self::MINIMAL_SHAPING_FOR_BACK_DARTS) { 
             $darts = 'M 6300 C 6300 6114 6122 C 6112 6110 6110 C 6110 6111 6121 C 6113 6300 6300 z ';
             $p->newPath('darts', $darts, ['class' => 'fabric']);
         }

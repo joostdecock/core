@@ -81,7 +81,7 @@ options:
         type: "measure"
         min: 40
         max: 120
-        default: 40
+        default: 60
     collarEase:
         title: "Collar ease"
         description: "The amount of ease around your neck with a closed collar"
@@ -416,7 +416,7 @@ options:
         type: "percent"
         min: 45
         max: 60
-        default: 50
+        default: 45
     sleevecapEase:
         title: "Sleevecap ease"
         description: "The amount by which the sleevecap seam is longer than the armhole seam"

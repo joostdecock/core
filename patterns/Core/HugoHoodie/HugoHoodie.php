@@ -21,11 +21,11 @@ class HugoHoodie extends BrianBodyBlock
       Things we need to do before we can draft a pattern
     */
 
-    /** Armhole depth factor = 60% */
-    const ARMHOLE_DEPTH_FACTOR = 0.6;
+    /** Armhole depth factor = 50% */
+    const ARMHOLE_DEPTH_FACTOR = 0.5;
 
-    /** Sleevecap height factor = 55% */
-    const SLEEVECAP_HEIGHT_FACTOR = 0.55;
+    /** Sleevecap height factor = 45% */
+    const SLEEVECAP_HEIGHT_FACTOR = 0.45;
 
     /**
      * Sets up options and values for our draft

@@ -897,8 +897,12 @@ class SimonShirt extends BrianBodyBlock
         // Yoke dart
         if($this->o('yokeDart') > 0) {
             $p->curveCrossesY(10,18,15,14,$p->y(10)+$this->o('yokeDart'),'yokeDart'); // Adds yokeDart1 point
-            $p->newPoint('yokeDart2', ($p->x(5)-$this->v('waistReduction')/4)*0.55 , $p->y(10)); //HERE
-            $p->newPoint('yokeDart3', $p->x(10)*0.8, $p->y(10));
+            $p->newPoint('yokeDart2', $p->x(10)/2, $p->y(10));
+            $p->addPoint('yokeDart3', $p->shiftFractionTowards('yokeDart2',10,0.5));
+            // Need to adapt angle of armhole curve
+            $p->addPoint('.angleHelper', $p->shiftAlong('yokeDart1','yokeDart1','yokeDart2','yokeDart3', 2));
+            $angle = $p->angle('yokeDart1', '.angleHelper');
+            $p->addPoint(18, $p->rotate(18, 'yokeDart1', $angle-180)); 
         }
 
         // Paths

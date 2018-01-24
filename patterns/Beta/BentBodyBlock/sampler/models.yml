@@ -13,10 +13,10 @@ groups:
 measurements:
     shoulderToElbow: 
         joost   : 340 
-        usSize34: 340 
+        usSize34: 330 
         usSize36: 340 
-        usSize38: 340 
-        usSize40: 340 
-        usSize42: 340 
-        usSize44: 340 
+        usSize38: 350 
+        usSize40: 360 
+        usSize42: 370 
+        usSize44: 380 
 

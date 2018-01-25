@@ -41,6 +41,22 @@ options:
         min: -40
         max: 160
         default: 30
+    bicepsEase:
+        title: "Biceps ease"
+        description: "The amount of ease at your upper arm"
+        group: "fit"
+        type: "measure"
+        min: 30
+        max: 80
+        default: 50
+    cuffEase:
+        title: "Cuff ease"
+        description: "The amount of ease at your wrist"
+        group: "fit"
+        type: "measure"
+        min: 0
+        max: 100
+        default: 45
     lengthBonus:
         title: "Length bonus"
         description: "Amount to lengthen the body. A negative value will shorten it."
@@ -57,14 +73,6 @@ options:
         min: -40
         max: 80
         default: 0
-    cuffEase:
-        title: "Cuff ease"
-        description: "The amount of ease at your wrist"
-        group: "fit"
-        type: "measure"
-        min: 0
-        max: 100
-        default: 45
 
 # advanced group
     armholeDepthFactor:
@@ -74,7 +82,7 @@ options:
         type: "percent"
         min: 50
         max: 65
-        default: 60
+        default: 50
     sleevecapHeightFactor:
         title: "Sleevecap height factor"
         description: "A factor that influences the height of the sleevecap"

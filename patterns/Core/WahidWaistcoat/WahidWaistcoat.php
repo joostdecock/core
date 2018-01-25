@@ -27,6 +27,13 @@ class WahidWaistcoat extends BrianBodyBlock
     const COLLAR_EASE = 15;
 
     /**
+     * Fix biceps ease to 5cm. 
+     * Just to suppress a warning because Brian expects
+     * the biceps ease option to be set.
+     */
+    const BICEPS_EASE = 50;
+
+    /**
      * Fix sleevecap ease to 1.5cm
      */
     const SLEEVECAP_EASE = 15;
@@ -75,15 +82,14 @@ class WahidWaistcoat extends BrianBodyBlock
     {
         // Options that are fixed yet needed for Brian
         $this->setOptionIfUnset('collarEase', self::COLLAR_EASE);
+        $this->setOptionIfUnset('bicepsEase', self::BICEPS_EASE);
         $this->setOptionIfUnset('sleevecapEase', self::SLEEVECAP_EASE);
         $this->setOptionIfUnset('backNeckCutout', self::BACK_NECK_CUTOUT);
         $this->setOptionIfUnset('armholeDepthFactor', self::ARMHOLE_DEPTH_FACTOR);
         $this->setValue('shoulderSlope', $model->m('shoulderSlope')); 
 
         // Depth of the armhole
-        $this->setValue('armholeDepth', 290 - self::BACK_NECK_CUTOUT + ($model->m('shoulderSlope') / 2 - 27.5) + ($model->m('bicepsCircumference') / 10));
-        // Depth of the armhole
-        $this->setValue('armholeDepth', $model->m('shoulderSlope') / 2 + $model->m('bicepsCircumference') * $this->o('armholeDepthFactor'));
+        $this->setValue('armholeDepth', $model->m('shoulderSlope') / 2 + ( $model->m('bicepsCircumference') + $this->o('bicepsEase') ) * $this->o('armholeDepthFactor'));
 
         // Collar widht and depth
         $this->setValue('collarWidth', ($model->getMeasurement('neckCircumference') / self::PI) / 2 + 5);

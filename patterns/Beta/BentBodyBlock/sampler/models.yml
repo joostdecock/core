@@ -19,4 +19,8 @@ measurements:
         usSize40: 360 
         usSize42: 370 
         usSize44: 380 
+        ukSize10: 330
+        ukSize12: 335
+        ukSize14: 340 
+        ukSize16: 345
 

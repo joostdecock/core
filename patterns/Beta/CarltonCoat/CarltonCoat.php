@@ -1569,9 +1569,6 @@ class CarltonCoat extends BentBodyBlock
         $p->newWidthDimension('hemFrontEdge','flbBottom', $p->y('hemFrontEdge')+30+$sa*5);
         $p->newWidthDimension('hemFrontEdge','hemSide', $p->y('hemFrontEdge')+45+$sa*5);
 
-        
-
-
         // Main pocket
         $p->newHeightDimension('pocketBottomRightLeft', 'pocketTopRight', $p->x('pocketBottomRightLeft')-10);
         $p->newHeightDimension('pocketFlapBottomLeftRight', 'pocketFlapTopLeft', $p->x('pocketFlapBottomLeftRight')+10);

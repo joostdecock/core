@@ -7,6 +7,10 @@ measurements:
         usSize40: 871
         usSize42: 929
         usSize44: 987
+        ukSize10: 610
+        ukSize12: 610
+        ukSize14: 610
+        ukSize16: 610
     seatCircumference: 
         joost   : 950 
         usSize34: 920 
@@ -15,6 +19,10 @@ measurements:
         usSize40: 1025 
         usSize42: 1060 
         usSize44: 1095 
+        ukSize10: 870
+        ukSize12: 920
+        ukSize14: 970
+        ukSize16: 1020
     naturalWaistToFloor: 
         joost   : 1060 
         usSize34: 940 
@@ -23,6 +31,10 @@ measurements:
         usSize40: 1000 
         usSize42: 1020 
         usSize44: 1040 
+        ukSize10: 975
+        ukSize12: 990
+        ukSize14: 1005
+        ukSize16: 1020
     naturalWaistToSeat: 
         joost   : 230 
         usSize34: 160 
@@ -31,3 +43,8 @@ measurements:
         usSize40: 190 
         usSize42: 200 
         usSize44: 210 
+        ukSize10: 217
+        ukSize12: 220
+        ukSize14: 223
+        ukSize16: 226
+

@@ -45,9 +45,6 @@ class CarltonCoat extends BentBodyBlock
     /** Belt height is 7cm */
     const BELT_HEIGHT = 70;
 
-    /** Shoulder to shoulder increase  = 6.38% */
-    const SHOULDER_INCREASE = 1.0638;    
-
     /** Vertical button distance = 5.425% of chest circumference */
     const VERTICAL_BUTTON_DIST = 0.05425;
 
@@ -105,11 +102,11 @@ class CarltonCoat extends BentBodyBlock
         // Make collarEdgeHeightFactor 8.6% of chest circumference
         $this->setOptionIfUnset('collarEdgeHeightFactor', self::COLLAR_EDGE_HEIGHT_FACTOR);
         
-        // Make shoulderToShoulder measurement 106.38% of original because coat
-        $model->setMeasurement('shoulderToShoulder', $model->m('shoulderToShoulder') * self::SHOULDER_INCREASE);
+        // Make shoulderToShoulder measurement larger because coat
+        $model->setMeasurement('shoulderToShoulder', $model->m('shoulderToShoulder') + $this->o('shoulderEase'));
         
-        // Make acrossBack measurement 106.38% of original because coat
-        $model->setMeasurement('acrossBack', $model->m('acrossBack') * self::SHOULDER_INCREASE);
+        // Make acrossBack measurement larger because coat
+        $model->setMeasurement('acrossBack', $model->m('acrossBack') + $this->o('shoulderEase'));
 
 
         // Waist shaping

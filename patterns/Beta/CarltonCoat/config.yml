@@ -83,6 +83,14 @@ options:
         min: 100
         max: 180
         default: 140
+    shoulderEase:
+        title: "Shoulder ease"
+        description: "The amount of ease at your shoulder. This increases the shoulder to shoulder and across back distance to accomodate what you're wearing under your coat."
+        group: "fit"
+        type: measure
+        min: 0
+        max: 30
+        default: 15
     sleeveBend:
         title: "Sleeve bend"
         description: "How much do you want the sleeve to be bent at the elbow"

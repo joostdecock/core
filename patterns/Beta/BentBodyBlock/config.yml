@@ -44,9 +44,9 @@ options:
         description: "The amount of ease at your upper arm"
         group: "fit"
         type: measure
-        min: 0
-        max: 80
-        default: 30
+        min: 40
+        max: 100
+        default: 70
     chestEase:
         title: "Chest ease"
         description: "The amount of ease at your chest"
@@ -60,9 +60,9 @@ options:
         description: "The amount of ease at your wrist"
         group: "fit"
         type: measure
-        min: 0
-        max: 100
-        default: 50
+        min: 60
+        max: 120
+        default: 120
     lengthBonus:
         title: "Length bonus"
         description: "Amount to lengthen the body. A negative value will shorten it."

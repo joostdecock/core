@@ -32,11 +32,11 @@ class SvenSweatshirt extends BrianBodyBlock
     /** No sleevecap ease, this is for knitwear */
     const SLEEVECAP_EASE = 0;
 
-    /** Armhole depth factor = 70% */
-    const ARMHOLE_DEPTH_FACTOR = 0.7;
+    /** Armhole depth factor = 55% */
+    const ARMHOLE_DEPTH_FACTOR = 0.55;
 
-    /** Sleevecap height factor = 55% */
-    const SLEEVECAP_HEIGHT_FACTOR = 0.55;
+    /** Sleevecap height factor = 45% */
+    const SLEEVECAP_HEIGHT_FACTOR = 0.45;
 
     /**
      * Sets up options and values for our draft
@@ -66,10 +66,10 @@ class SvenSweatshirt extends BrianBodyBlock
         $this->setValue('shoulderSlope', $model->m('shoulderSlope')); 
 
         // Depth of the armhole
-        $this->setValue('armholeDepth', $model->m('shoulderSlope') / 2 + $model->m('bicepsCircumference') * $this->o('armholeDepthFactor'));
+        $this->setValue('armholeDepth', $model->m('shoulderSlope') / 2 + ( $model->m('bicepsCircumference') + $this->o('bicepsEase') ) * $this->o('armholeDepthFactor'));
 
         // Heigth of the sleevecap
-        $this->setValue('sleevecapHeight', $model->m('bicepsCircumference') * $this->o('sleevecapHeightFactor'));
+        $this->setValue('sleevecapHeight', ($model->m('bicepsCircumference') + $this->o('bicepsEase')) * $this->o('sleevecapHeightFactor'));
         
         // Collar width and depth
         $widerFactor = 1.2;

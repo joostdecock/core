@@ -19,6 +19,10 @@ measurements:
         usSize40: 410
         usSize42: 420
         usSize44: 430
+        ukSize10: 318
+        ukSize12: 330
+        ukSize14: 342
+        ukSize16: 356
     
     bicepsCircumference:
         joost   : 335
@@ -28,6 +32,10 @@ measurements:
         usSize40: 320
         usSize42: 335
         usSize44: 350
+        ukSize10: 247
+        ukSize12: 265
+        ukSize14: 283
+        ukSize16: 301
     
     centerBackNeckToWaist:
         joost   : 480
@@ -37,6 +45,10 @@ measurements:
         usSize40: 498
         usSize42: 501
         usSize44: 505
+        ukSize10: 404
+        ukSize12: 410
+        ukSize14: 416
+        ukSize16: 422
     
     chestCircumference:
         joost   : 1080
@@ -46,6 +58,10 @@ measurements:
         usSize40: 1023
         usSize42: 1081
         usSize44: 1139
+        ukSize10: 810
+        ukSize12: 860
+        ukSize14: 910
+        ukSize16: 960
     
     naturalWaistToHip:
         joost   : 120
@@ -55,6 +71,10 @@ measurements:
         usSize40: 115
         usSize42: 120
         usSize44: 125
+        ukSize10: 120
+        ukSize12: 125
+        ukSize14: 130
+        ukSize16: 135
     
     neckCircumference:
         joost   : 420
@@ -64,6 +84,10 @@ measurements:
         usSize40: 404
         usSize42: 416
         usSize44: 429
+        ukSize10: 350
+        ukSize12: 360
+        ukSize14: 370
+        ukSize16: 380
     
     shoulderSlope:
         joost   : 55
@@ -73,6 +97,10 @@ measurements:
         usSize40: 52
         usSize42: 55
         usSize44: 58
+        ukSize10: 34
+        ukSize12: 37
+        ukSize14: 40
+        ukSize16: 43
 
     shoulderToShoulder: 
         joost   : 470
@@ -82,6 +110,10 @@ measurements:
         usSize40: 457
         usSize42: 470
         usSize44: 483
+        ukSize10: 410
+        ukSize12: 415
+        ukSize14: 420
+        ukSize16: 425
     
     hipsCircumference:
         joost   :  950
@@ -91,6 +123,10 @@ measurements:
         usSize40:  896
         usSize42:  954
         usSize44: 1012
+        ukSize10: 810
+        ukSize12: 860
+        ukSize14: 910
+        ukSize16: 960
     
     shoulderToWrist:
         joost   : 700
@@ -100,6 +136,10 @@ measurements:
         usSize40: 685
         usSize42: 690
         usSize44: 700
+        ukSize10: 571
+        ukSize12: 580
+        ukSize14: 589
+        ukSize16: 598
     
     wristCircumference:
         joost   : 190
@@ -109,3 +149,8 @@ measurements:
         usSize40: 190
         usSize42: 195
         usSize44: 200
+        ukSize10: 152
+        ukSize12: 160
+        ukSize14: 168
+        ukSize16: 176
+

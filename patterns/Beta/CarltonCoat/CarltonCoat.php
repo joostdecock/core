@@ -108,7 +108,6 @@ class CarltonCoat extends BentBodyBlock
         // Make acrossBack measurement larger because coat
         $model->setMeasurement('acrossBack', $model->m('acrossBack') + $this->o('shoulderEase'));
 
-
         // Waist shaping
         $this->setValueIfUnset('waistReduction', 
             ( $model->m('chestCircumference') + $this->o('chestEase') ) - 
@@ -409,6 +408,7 @@ class CarltonCoat extends BentBodyBlock
 
         // Mark path for sample service
         $p->paths['outline']->setSample(true);
+        $p->clonePoint('frontEdge', 'gridAnchor');
 
 
         // Calculate collar length
@@ -456,6 +456,7 @@ class CarltonCoat extends BentBodyBlock
 
         // Mark path for sample service
         $p->paths['outline']->setSample(true);
+        $p->clonePoint('bpBottom', 'gridAnchor');
 
     }
 
@@ -512,6 +513,11 @@ class CarltonCoat extends BentBodyBlock
             M leftPleat3 L leftPleat3-3
         ', ['class' => 'dashed']);
         $p->newPath('dots', 'M leftTop-1 L leftTop-2 M waistTop-1 L waistTop-2', ['class' => 'help sa']);
+
+        // Mark path for sample service
+        $p->paths['seamline1']->setSample(true);
+        $p->paths['seamline2']->setSample(true);
+        $p->clonePoint('leftTop', 'gridAnchor');
     }
 
     /**
@@ -653,9 +659,6 @@ class CarltonCoat extends BentBodyBlock
             z 
         "); 
 
-        // Mark path for sample service
-        $p->paths['outline']->setSample(true);
-
         $p->addPoint('tmp', $p->shift('standCenterTopCpRight', 90, 35));
         /*
         $p->newPath('acrSegments','
@@ -679,6 +682,10 @@ class CarltonCoat extends BentBodyBlock
 
         //$p->newPath('stand', 'M leftBottom C leftBottom standCenterTopCpLeft standCenterTop C standCenterTopCpRight rightBottom rightBottom', ['class' => 'debug']);
          */
+        
+        // Mark path for sample service
+        $p->paths['outline']->setSample(true);
+        $p->clonePoint('centerTop', 'gridAnchor');
     }
 
     /**
@@ -705,7 +712,9 @@ class CarltonCoat extends BentBodyBlock
 
         // Mark path for sample service
         $p->paths['outline']->setSample(true);
+        $p->clonePoint('standCenterTop', 'gridAnchor');
     }
+
     protected function collarDelta() {
         /** @var \Freesewing\Part $s */
         $s = $this->parts['collarStand'];
@@ -746,7 +755,7 @@ class CarltonCoat extends BentBodyBlock
         $this->setValue('topCuffWidth', $p->distance('topsleeveWristRight','topsleeveWristLeft'));
 
         // Paths
-        $p->newPath('outline', '
+        $p->newPath('prollem', '
             M elbowRight 
             C elbowRightCpTop topsleeveRightEdgeCpBottom topsleeveRightEdge 
             C topsleeveRightEdgeCpTop backPitchPoint backPitchPoint 
@@ -760,11 +769,12 @@ class CarltonCoat extends BentBodyBlock
             C cuffBottomRightCpLeft cuffBottomRightCpTop cuffBottomRightTop
             L topsleeveWristRight
             z
-        ', ['class' => 'fabric']);
+        ', ['class' => 'fabric', 'flag' => 'prollem']);
         $p->newPath('tmp', 'M topsleeveWristLeft L topsleeveWristRight ', ['class' => 'hint']); 
 
         // Mark path for sample service
-        $p->paths['outline']->setSample(true);
+        $p->paths['prollem']->setSample(true);
+        $p->clonePoint('topsleeveWristRight', 'gridAnchor');
     }
 
     /**
@@ -852,6 +862,7 @@ class CarltonCoat extends BentBodyBlock
 
         // Mark path for sample service
         $p->paths['outline']->setSample(true);
+        $p->addPoint('gridAnchor', $p->shiftFractionTowards('topLeft','topRight', 0.5));
     }
 
     /**
@@ -926,6 +937,7 @@ class CarltonCoat extends BentBodyBlock
 
         // Mark path for sample service
         $p->paths['outline']->setSample(true);
+        $p->addPoint('gridAnchor', $p->shiftFractionTowards('pocketTopLeft','pocketTopRight', 0.5));
     }
 
     /**
@@ -952,6 +964,7 @@ class CarltonCoat extends BentBodyBlock
 
         // Mark path for sample service
         $p->paths['outline']->setSample(true);
+        $p->addPoint('gridAnchor', $p->shiftFractionTowards('pocketFlapTopLeft','pocketFlapTopRight', 0.5));
     }
 
     /**
@@ -1554,9 +1567,6 @@ class CarltonCoat extends BentBodyBlock
         $p->newWidthDimension('hemFrontEdge','hemMiddle', $p->y('hemFrontEdge')+15+$sa*5);
         $p->newWidthDimension('hemFrontEdge','flbBottom', $p->y('hemFrontEdge')+30+$sa*5);
         $p->newWidthDimension('hemFrontEdge','hemSide', $p->y('hemFrontEdge')+45+$sa*5);
-
-        
-
 
         // Main pocket
         $p->newHeightDimension('pocketBottomRightLeft', 'pocketTopRight', $p->x('pocketBottomRightLeft')-10);

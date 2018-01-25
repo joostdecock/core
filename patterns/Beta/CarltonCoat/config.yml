@@ -75,6 +75,14 @@ options:
         min: 180
         max: 320
         default: 240
+    bicepsEase:
+        title: "Biceps ease"
+        description: "The amount of ease at your upper arm."
+        group: "fit"
+        type: measure
+        min: 40
+        max: 110
+        default: 60
     cuffEase:
         title: "Cuff ease"
         description: "The amount of ease at your wrist."

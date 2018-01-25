@@ -127,7 +127,7 @@ class BentBodyBlock extends \Freesewing\Patterns\Core\BrianBodyBlock
                     $this->setValue('sleeveTweakFactor', $this->v('sleeveTweakFactor')*1.01);
                 } else {
                     //  Armhole is smaller than sleeve head + sleevecap ease. Decrease tweak factor
-                    $this->setValue('sleeveTweakFactor', $this->v('sleeveTweakFactor')*0.99);
+                    $this->setValue('sleeveTweakFactor', $this->v('sleeveTweakFactor')*0.97);
                 }
                 // Include debug message
                 $this->dbg('Sleeve tweak run '.$this->v('sleeveTweakRun').'. Sleeve head is '.$this->armholeDelta().'mm off');
@@ -135,7 +135,6 @@ class BentBodyBlock extends \Freesewing\Patterns\Core\BrianBodyBlock
             // Keep track of tweak runs because why not
             $this->setValue('sleeveTweakRun', $this->v('sleeveTweakRun')+1);
         }
-
 
 
         $this->setValue('sleevecapSeamLength', ($this->armholeLen() + $this->o('sleevecapEase'))*$this->v('sleeveTweakFactor'));
@@ -148,7 +147,7 @@ class BentBodyBlock extends \Freesewing\Patterns\Core\BrianBodyBlock
         $p->newPoint('sleeveBottom', 0, $model->m('shoulderToWrist') + $this->o('sleeveLengthBonus'), 'Center-cuff of the sleeve');
         $p->newPoint('sleeveRightBottom', $p->x('sleeveRightTop'), $p->y('sleeveBottom'), 'Right bottom of the sleeve frame');
         $p->addPoint('sleeveLeftBottom', $p->flipX('sleeveRightBottom'), 'Left bottom of the sleeve frame');
-        $p->newPoint('underarmCenter', 0, $this->v('sleevecapHeight'),'Height of the underarm line');
+        $p->newPoint('underarmCenter', 0, $this->v('sleevecapHeight') * $this->v('sleeveTweakFactor'),'Height of the underarm line');
         $p->newPoint('underarmRight', $p->x('sleeveRightTop'), $p->y('underarmCenter'),'Height of the underarm line, right');
         $p->newPoint('underarmLeft', $p->x('sleeveLeftTop'), $p->y('underarmCenter'),'Height of the underarm line, left');
         $p->newPoint('elbowCenter', 0, $model->m('shoulderToElbow'),'Height of the elbow line');
@@ -240,6 +239,8 @@ class BentBodyBlock extends \Freesewing\Patterns\Core\BrianBodyBlock
         
         // Mark path for sample service
         $p->paths['topsleeve']->setSample(true);
+        $p->clonePoint('topsleeveWristRight', 'gridAnchor');
+
     }
 
     /**
@@ -261,6 +262,7 @@ class BentBodyBlock extends \Freesewing\Patterns\Core\BrianBodyBlock
         
         // Mark path for sample service
         $p->paths['undersleeve']->setSample(true);
+        $p->clonePoint('undersleeveWristRight', 'gridAnchor');
     }
 
     protected function armholeLen()

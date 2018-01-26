@@ -1,0 +1,157 @@
+info:
+    name: "Carlita Coat"
+    description: "The womenswear version of our Carlton coat, aka Sherlock Holmes coat"
+    handle: "carlita"
+    tags:
+        - womenswear
+        - coat
+
+seamAllowance:
+    metric: 2
+    imperial: 0.5 
+
+parts:
+  backBlock: ".Back block"
+  frontBlock: ".Front block"
+  sleeveBlock: ".Sleeve block"
+  topsleeveBlock: ".Topsleeve block"
+  undersleeveBlock: ".Undersleeve block"
+  front: "Front"
+  frontPs: ".Front princess seam base"
+  frontPanel: "Front panel"
+  sidePanel: "Side panel"
+  back: "Back"
+  tail: "Tail"
+  topsleeve: "Topsleeve"
+  undersleeve: "Undersleeve"
+  belt: "Belt"
+  collarStand: "Collar stand"
+  collar: "Collar"
+  cuffFacing: "Cuff facing"
+  pocket: "Pocket"
+  pocketFlap: "Pocket flap"
+  chestPocketWelt: "Chest pocket welt"
+
+languages:
+    en: English
+
+measurements:
+    acrossBack: 380
+    bicepsCircumference: 270
+    centerBackNeckToWaist: 390
+    chestCircumference: 920
+    naturalWaistToHip: 130
+    neckCircumference: 360
+    shoulderToShoulder: 420
+    shoulderSlope: 40
+    shoulderToWrist: 580
+    wristCircumference: 170
+    naturalWaist: 700
+    seatCircumference: 950
+    shoulderToElbow: 340 
+    naturalWaistToFloor: 1060 
+    naturalWaistToSeat: 230
+
+    # these are female
+    highBust: 850
+    bustSpan: 170
+    highPointShoulderToBust: 285
+    
+
+
+options:
+    chestEase:
+        title: "Chest ease"
+        description: "The amount of ease at your chest."
+        group: "fit"
+        type: measure
+        min: 180
+        max: 320
+        default: 240
+    waistEase:
+        title: "Waist ease"
+        description: "The amount of ease at your waist."
+        group: "fit"
+        type: measure
+        min: 80
+        max: 220
+        default: 100
+    seatEase:
+        title: "Seat ease"
+        description: "The amount of ease at your butt."
+        group: "fit"
+        type: measure
+        min: 180
+        max: 320
+        default: 240
+    bicepsEase:
+        title: "Biceps ease"
+        description: "The amount of ease at your upper arm."
+        group: "fit"
+        type: measure
+        min: 40
+        max: 110
+        default: 60
+    shoulderEase:
+        title: "Shoulder ease"
+        description: "The amount of ease at your shoulder. This increases the shoulder to shoulder and across back distance to accomodate what you're wearing under your coat."
+        group: "fit"
+        type: measure
+        min: 0
+        max: 30
+        default: 15
+    cuffEase:
+        title: "Cuff ease"
+        description: "The amount of ease at your wrist."
+        group: "fit"
+        type: measure
+        min: 0
+        max: 180
+        default: 140
+    sleeveBend:
+        title: "Sleeve bend"
+        description: "How much do you want the sleeve to be bent at the elbow"
+        group: "fit"
+        type: "angle"
+        min: 0
+        max: 20
+        default: 10
+    sleeveLengthBonus:
+        title: "Sleeve length bonus"
+        description: "Amount to lengthen the sleeve. A negative value will shorten it."
+        group: "fit"
+        type: "measure"
+        min: 0
+        max: 120
+        default: 70
+    armholeDepthFactor:
+        title: "Armhole depth factor"
+        description: "Controls the depth of the armhole. Higher values make a deeper armhole."
+        group: "advanced"
+        type: "percent"
+        min: 65
+        max: 80
+        default: 75
+    sleevecapEase:
+        title: "Sleevecap ease"
+        description: "The amount by which your sleevhead is longer than the armhole."
+        group: "advanced"
+        type: measure
+        min: 0
+        max: 35
+        default: 17.5
+    sleevecapHeightFactor:
+        title: "Sleevecap height factor"
+        description: "Controls the height of the sleevecap. Higher values make a higher narrower sleevecap."
+        group: "advanced"
+        type: "percent"
+        min: 45
+        max: 55
+        default: 50
+    princessSeamSmoothFactor:
+        title: "Princess seam smooth factor"
+        description: "Controls how sharply the princess seam will correct once it's passed the fullness of your breasts. A high factor will smooth the curve, resulting in a less fitted coat that's easier to sew. A low factor will sharpen the curve, resulting in a harder to sew seam, and a more fitted coat."
+        group: "advanced"
+        type: percent
+        default: 50
+

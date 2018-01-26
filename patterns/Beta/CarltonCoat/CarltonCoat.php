@@ -102,12 +102,11 @@ class CarltonCoat extends BentBodyBlock
         // Make collarEdgeHeightFactor 8.6% of chest circumference
         $this->setOptionIfUnset('collarEdgeHeightFactor', self::COLLAR_EDGE_HEIGHT_FACTOR);
         
-        // Add shoulder ease to the shoulderToShoulder measurement 
+        // Make shoulderToShoulder measurement larger because coat
         $model->setMeasurement('shoulderToShoulder', $model->m('shoulderToShoulder') + $this->o('shoulderEase'));
         
-        // Make acrossBack measurement 106.38% of original because coat
+        // Make acrossBack measurement larger because coat
         $model->setMeasurement('acrossBack', $model->m('acrossBack') + $this->o('shoulderEase'));
-
 
         // Waist shaping
         $this->setValueIfUnset('waistReduction', 

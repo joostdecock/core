@@ -45,7 +45,10 @@ class CarlitaCoat extends CarltonCoat
         // We want this coat with the high bust, so let's trick Carlton
         $this->setValue('bust', $model->m('chestCircumference'));
         $model->setMeasurement('chestCircumference', $model->m('highBust'));
-        
+
+        // Make princessSeamSmoothFactor a value between 2 and 8
+        $this->setOption('princessSeamSmoothFactor', 2 + 6*$this->o('princessSeamSmoothFactor'));
+              
         parent::initialize($model); 
     }
 

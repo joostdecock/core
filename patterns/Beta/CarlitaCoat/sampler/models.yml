@@ -1,0 +1,25 @@
+default: 
+    group: ukFemaleSizes
+groups:
+    ukFemaleSizes:
+        - ukSize10
+        - ukSize12
+        - ukSize14
+        - ukSize16
+measurements:
+    highBust: 
+        ukSize10: 774
+        ukSize12: 810
+        ukSize14: 846
+        ukSize16: 882
+    bustSpan: 
+        ukSize10: 178
+        ukSize12: 190
+        ukSize14: 202
+        ukSize16: 214
+    highPointShoulderToBust: 
+        ukSize10: 265
+        ukSize12: 275
+        ukSize14: 285
+        ukSize16: 295
+

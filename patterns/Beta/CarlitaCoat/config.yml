@@ -1,15 +1,14 @@
 info:
-    name: "Carlton Coat"
-    description: "For Sherlock Holmes cosplay, or just a really nice coat"
-    handle: "carlton"
-    version: "1.0"
-    date: 20170203
-    author: "Joost De Cock"
-    email: "joost@decock.org"
-    company: "freesewing.org"
+    name: "Carlita Coat"
+    description: "The womenswear version of our Carlton coat, aka Sherlock Holmes coat"
+    handle: "carlita"
     tags:
-        - menswear
+        - womenswear
         - coat
+
+seamAllowance:
+    metric: 2
+    imperial: 0.5 
 
 parts:
   backBlock: ".Back block"
@@ -18,6 +17,9 @@ parts:
   topsleeveBlock: ".Topsleeve block"
   undersleeveBlock: ".Undersleeve block"
   front: "Front"
+  frontPs: ".Front princess seam base"
+  frontPanel: "Front panel"
+  sidePanel: "Side panel"
   back: "Back"
   tail: "Tail"
   topsleeve: "Topsleeve"
@@ -34,21 +36,28 @@ languages:
     en: English
 
 measurements:
-    acrossBack: 420
-    bicepsCircumference: 350
-    centerBackNeckToWaist: 560
-    chestCircumference: 1060
-    naturalWaist: 930
-    naturalWaistToFloor: 1310 
-    naturalWaistToHip: 150
-    naturalWaistToSeat: 280
-    neckCircumference: 390
-    seatCircumference: 1130
-    shoulderToElbow: 380 
-    shoulderToShoulder: 470
-    shoulderSlope: 55
-    shoulderToWrist: 650
-    wristCircumference: 180
+    acrossBack: 380
+    bicepsCircumference: 270
+    centerBackNeckToWaist: 390
+    chestCircumference: 920
+    naturalWaistToHip: 130
+    neckCircumference: 360
+    shoulderToShoulder: 420
+    shoulderSlope: 40
+    shoulderToWrist: 580
+    wristCircumference: 170
+    naturalWaist: 700
+    seatCircumference: 950
+    shoulderToElbow: 340 
+    naturalWaistToFloor: 1060 
+    naturalWaistToSeat: 230
+
+    # these are female
+    highBust: 850
+    bustSpan: 170
+    highPointShoulderToBust: 285
+    
+
 
 options:
     chestEase:
@@ -83,14 +92,6 @@ options:
         min: 40
         max: 110
         default: 60
-    cuffEase:
-        title: "Cuff ease"
-        description: "The amount of ease at your wrist."
-        group: "fit"
-        type: measure
-        min: 100
-        max: 180
-        default: 140
     shoulderEase:
         title: "Shoulder ease"
         description: "The amount of ease at your shoulder. This increases the shoulder to shoulder and across back distance to accomodate what you're wearing under your coat."
@@ -99,6 +100,14 @@ options:
         min: 0
         max: 30
         default: 15
+    cuffEase:
+        title: "Cuff ease"
+        description: "The amount of ease at your wrist."
+        group: "fit"
+        type: measure
+        min: 0
+        max: 180
+        default: 140
     sleeveBend:
         title: "Sleeve bend"
         description: "How much do you want the sleeve to be bent at the elbow"
@@ -121,8 +130,8 @@ options:
         group: "advanced"
         type: "percent"
         min: 65
-        max: 75
-        default: 71
+        max: 80
+        default: 75
     sleevecapEase:
         title: "Sleevecap ease"
         description: "The amount by which your sleevhead is longer than the armhole."
@@ -139,3 +148,10 @@ options:
         min: 45
         max: 55
         default: 50
+    princessSeamSmoothFactor:
+        title: "Princess seam smooth factor"
+        description: "Controls how sharply the princess seam will correct once it's passed the fullness of your breasts. A high factor will smooth the curve, resulting in a less fitted coat that's easier to sew. A low factor will sharpen the curve, resulting in a harder to sew seam, and a more fitted coat."
+        group: "advanced"
+        type: percent
+        default: 50
+

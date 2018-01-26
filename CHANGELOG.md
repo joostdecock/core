@@ -14,6 +14,39 @@
 ### Fixed
 ### Security
 
+## 1.6.0
+
+**Release date**: 2018-01-26
+
+This release adds the Carlita Coat pattern. The womenswear version of our Carlton Coat.
+
+It also adds small improvments/fixes in some other patterns.
+
+### Added
+
+ - The Carlita Coat pattern
+
+### Changed
+
+#### Brian
+
+ - Brian and patterns that extend it now take a *bicepsEase* option
+
+#### Simon
+
+ - We've reduced the minimal shaping to add back darts from 10cm to 4cm
+
+### Fixed
+
+#### Carlton
+
+ - We've fixed an issue with sampling/comparing due to incorrect configuration of the sampler
+
+#### Simon
+
+ - We've tweaked the yoke dart to address issue #219 and increased its maximum value to 2cm
+
+
 ## 1.5.0
 
 **Release date**: 2018-01-21

@@ -14,6 +14,18 @@
 ### Fixed
 ### Security
 
+## 1.6.1
+
+**Release date**: 2018-01-29
+
+This is a bugfix release with some small tweaks in Carlton/Carlita
+
+#### Carlton/Carlita
+
+ - Only half pf the *Chest pocket welt* part was drawn.
+ - The hems on the front, tail, and pockets have been straightened
+ - Cutting instructions have been updated to include lining
+
 ## 1.6.0
 
 **Release date**: 2018-01-26

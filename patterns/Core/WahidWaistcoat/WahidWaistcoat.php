@@ -818,7 +818,7 @@ class WahidWaistcoat extends BrianBodyBlock
 
         // Title
         $p->newPoint('titleAnchor', -30, $p->y(3)/2);
-        $p->addTitle('titleAnchor', 5, $this->t($p->title), '2x '.$this->t('from main fabric'), 'horizontal-small');
+        $p->addTitle('titleAnchor', 5, $this->t($p->title), '2x '.$this->t('from main fabric'), ['scale' => 50, 'align'=>'left']);
 
         // Grainline
         $p->addPoint('grainlineBottom', $p->shift(3,135,5));
@@ -849,7 +849,7 @@ class WahidWaistcoat extends BrianBodyBlock
 
         // Title
         $p->newPoint('titleAnchor', -30, $p->y(3)/2+5);
-        $p->addTitle('titleAnchor', 6, $this->t($p->title), '2x '.$this->t('from interfacing'), 'horizontal-small');
+        $p->addTitle('titleAnchor', 6, $this->t($p->title), '2x '.$this->t('from interfacing'), ['scale' => 50, 'align'=>'left']);
 
         // Notches
         $p->newSnippet('notchRight', 'notch', 1);
@@ -874,7 +874,7 @@ class WahidWaistcoat extends BrianBodyBlock
 
         // Title
         $p->newPoint('titleAnchor', -30, $p->y(3)/2+5);
-        $p->addTitle('titleAnchor', 7, $this->t($p->title), '2x '.$this->t('from main fabric'), 'horizontal-small');
+        $p->addTitle('titleAnchor', 7, $this->t($p->title), '2x '.$this->t('from main fabric'), ['scale' => 50, 'align'=>'left']);
 
         // Grainline
         $p->addPoint('grainlineBottom', $p->shift(3,135,5));
@@ -905,7 +905,7 @@ class WahidWaistcoat extends BrianBodyBlock
 
         // Title
         $p->newPoint('titleAnchor', -30, $p->y(3)/2+5);
-        $p->addTitle('titleAnchor', 8, $this->t($p->title), '2x '.$this->t('from lining'), 'horizontal-small');
+        $p->addTitle('titleAnchor', 8, $this->t($p->title), '2x '.$this->t('from lining'), ['scale' => 50, 'align'=>'left']);
 
         // No seam allowance note
         $p->newPoint('noSaAnchor', $p->x(-3),$p->y(-1)+60);

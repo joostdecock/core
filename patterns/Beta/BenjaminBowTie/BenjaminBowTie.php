@@ -279,7 +279,7 @@ class BenjaminBowTie extends \Freesewing\Patterns\Core\Pattern
 
         // Title
         $p->newPoint('titleAnchor', $p->x(5), $p->y('Origin') +6, 'Title point');
-        $p->addTitle('titleAnchor', substr($part, -1), $this->t($p->title), $copies.'x '.$this->t('from fabric').', '.$copies.'x '.$this->t('from interfacing'), 'extrasmall');
+        $p->addTitle('titleAnchor', substr($part, -1), $this->t($p->title), $copies.'x '.$this->t('from fabric').', '.$copies.'x '.$this->t('from interfacing'), ['scale' => 50]);
 
         if( $part == 'bowTie1' ) {
             // Scalebox
@@ -318,7 +318,7 @@ class BenjaminBowTie extends \Freesewing\Patterns\Core\Pattern
         $p->newPoint('titleAnchor', $p->x('Origin') +50, $p->y('Origin') +5, 'Title point');
 
         // Title
-        $p->addTitle('titleAnchor', ($this->o('adjustmentRibbon') ? 4 : 2), $this->t($p->title), '2x '.$this->t('from fabric').', 2x '.$this->t('from interfacing'), 'extrasmall');
+        $p->addTitle('titleAnchor', ($this->o('adjustmentRibbon') ? 4 : 2), $this->t($p->title), '2x '.$this->t('from fabric').', 2x '.$this->t('from interfacing'), ['scale' => 40, 'align'=>'left']);
     }
 
 

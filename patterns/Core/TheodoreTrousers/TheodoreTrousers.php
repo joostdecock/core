@@ -926,7 +926,7 @@ class TheodoreTrousers extends Pattern
 
         // Title
         $p->newPoint('titleAnchor', $p->x(2)/2, 135);
-        $p->addTitle('titleAnchor', '3a', $this->t($p->title), '1x '.$this->t('from interfacing'),'vertical-small');
+        $p->addTitle('titleAnchor', '3a', $this->t($p->title), '1x '.$this->t('from interfacing'), ['scale' => 50, 'align' => 'left', 'rotate' => -90]);
     }
 
     /**
@@ -943,7 +943,7 @@ class TheodoreTrousers extends Pattern
 
         // Title
         $p->newPoint('titleAnchor', $p->x(2)/2, 135);
-        $p->addTitle('titleAnchor', '3b', $this->t($p->title), '1x '.$this->t('from interfacing'),'vertical-small');
+        $p->addTitle('titleAnchor', '3b', $this->t($p->title), '1x '.$this->t('from interfacing'), ['scale' => 50, 'align' => 'left', 'rotate' => -90]);
     }
 
     /**
@@ -960,7 +960,7 @@ class TheodoreTrousers extends Pattern
 
         // Title
         $p->newPoint('titleAnchor', $p->x(2)/2, 135);
-        $p->addTitle('titleAnchor', '4a', $this->t($p->title), '1x '.$this->t('from fabric'),'vertical-small');
+        $p->addTitle('titleAnchor', '4a', $this->t($p->title), '1x '.$this->t('from fabric'), ['scale' => 50, 'align' => 'left', 'rotate' => -90]);
 
         // Grainline 
         $p->addPoint('grainlineLeft', $p->shift(3,90,50));
@@ -985,7 +985,7 @@ class TheodoreTrousers extends Pattern
 
         // Title
         $p->newPoint('titleAnchor', $p->x(2)/2, 135);
-        $p->addTitle('titleAnchor', '4b', $this->t($p->title), '1x '.$this->t('from fabric'),'vertical-small');
+        $p->addTitle('titleAnchor', '4b', $this->t($p->title), '1x '.$this->t('from fabric'), ['scale' => 50, 'align' => 'left', 'rotate' => -90]);
 
         // Grainline 
         $p->addPoint('grainlineLeft', $p->shift(3,90,50));
@@ -1011,7 +1011,7 @@ class TheodoreTrousers extends Pattern
 
         // Title
         $p->newPoint('titleAnchor', $p->x(2)/2-40, 135);
-        $p->addTitle('titleAnchor', '5a', $this->t($p->title), '1x '.$this->t('from lining'),'vertical');
+        $p->addTitle('titleAnchor', '5a', $this->t($p->title), '1x '.$this->t('from lining'), ['align' => 'left', 'rotate' => -90]);
 
         // Grainline 
         $p->addPoint('grainlineLeft', $p->shift(3,90,50));
@@ -1036,7 +1036,7 @@ class TheodoreTrousers extends Pattern
 
         // Title
         $p->newPoint('titleAnchor', $p->x(2)/2-40, 135);
-        $p->addTitle('titleAnchor', '5b', $this->t($p->title), '1x '.$this->t('from lining'),'vertical');
+        $p->addTitle('titleAnchor', '5b', $this->t($p->title), '1x '.$this->t('from lining'), ['align' => 'left', 'rotate' => -90]);
 
         // Grainline 
         $p->addPoint('grainlineLeft', $p->shift(3,90,50));
@@ -1061,7 +1061,7 @@ class TheodoreTrousers extends Pattern
 
         // Title
         $p->newPoint('titleAnchor', $p->x(-100101)+20, $p->y(-100101)+40);
-        $p->addTitle('titleAnchor', '6', $this->t($p->title), '2x '.$this->t('from fabric'),'vertical-small');
+        $p->addTitle('titleAnchor', '6', $this->t($p->title), '2x '.$this->t('from fabric'), ['scale' => 50, 'align' => 'left', 'rotate' => -90]);
 
         // Grain line
         $p->addPoint('grainlineTop', $p->shift(-100101,-45,10));
@@ -1086,7 +1086,7 @@ class TheodoreTrousers extends Pattern
 
         // Title
         $p->newPoint('titleAnchor', $p->x('leftTop')+30, $p->y(-100101)+40);
-        $p->addTitle('titleAnchor', '7', $this->t($p->title), '1x '.$this->t('from lining'),'vertical-small');
+        $p->addTitle('titleAnchor', '7', $this->t($p->title), '1x '.$this->t('from lining'), ['scale' => 50, 'align' => 'left', 'rotate' => -90]);
 
         // Grain line
         $p->addPoint('grainlineTop', $p->shift('leftTop',-45,10));
@@ -1111,7 +1111,7 @@ class TheodoreTrousers extends Pattern
 
         // Title
         $p->addPoint('titleAnchor', $p->shift(60,-75, 50));
-        $p->addTitle('titleAnchor', '8', $this->t($p->title), '2x '.$this->t('from fabric'),'vertical-small');
+        $p->addTitle('titleAnchor', '8', $this->t($p->title), '2x '.$this->t('from fabric'), ['scale' => 50, 'align' => 'left', 'rotate' => -90]);
 
         // Grain line
         $p->addPoint('grainlineTop', $p->shift(-1102,-135, 10));
@@ -1165,7 +1165,7 @@ class TheodoreTrousers extends Pattern
 
         // Title
         $p->newPoint('titleAnchor',0,100);
-        $p->addTitle('titleAnchor', 10, $this->t($p->title), '2x '.$this->t('from lining'), 'small');
+        $p->addTitle('titleAnchor', 10, $this->t($p->title), '2x '.$this->t('from lining'), ['scale' => 75]);
 
         // Logo
         $p->addPoint('logoAnchor', $p->shift('titleAnchor',-90,60));
@@ -1197,7 +1197,7 @@ class TheodoreTrousers extends Pattern
 
         // Title
         $p->newPoint('titleAnchor',0,100);
-        $p->addTitle('titleAnchor', 11, $this->t($p->title), '2x '.$this->t('from lining'),'small');
+        $p->addTitle('titleAnchor', 11, $this->t($p->title), '2x '.$this->t('from lining'), ['scale' => 75]);
 
         // Logo
         $p->addPoint('logoAnchor', $p->shift('titleAnchor',-90,60));
@@ -1229,7 +1229,7 @@ class TheodoreTrousers extends Pattern
 
         // Title
         $p->newPoint('titleAnchor', 0, 70);
-        $p->addTitle('titleAnchor', 12, $this->t($p->title), '4x '.$this->t('from fabric'),'small');
+        $p->addTitle('titleAnchor', 12, $this->t($p->title), '4x '.$this->t('from fabric'), ['scale' => 75]);
 
         // Grain line
         $p->newPoint('grainlineTop', 50,10);
@@ -1254,7 +1254,7 @@ class TheodoreTrousers extends Pattern
 
         // Title
         $p->newPoint('titleAnchor', 0, 50);
-        $p->addTitle('titleAnchor', 13, $this->t($p->title), '4x '.$this->t('from interfacing'),'small');
+        $p->addTitle('titleAnchor', 13, $this->t($p->title), '4x '.$this->t('from interfacing'), ['scale' => 75]);
 
         // Grain line
         $p->newPoint('grainlineTop', 50,5);
@@ -1279,7 +1279,7 @@ class TheodoreTrousers extends Pattern
 
         // Title
         $p->newPoint('titleAnchor', 10, 40);
-        $p->addTitle('titleAnchor', 14, $this->t($p->title), '8x '.$this->t('from fabric'), 'vertical-small');
+        $p->addTitle('titleAnchor', 14, $this->t($p->title), '8x '.$this->t('from fabric'), ['scale' => 40, 'rotate' => -90, 'align' => 'left']);
 
         // Grain line
         $p->newPoint('grainlineTop', 10,5);

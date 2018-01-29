@@ -1373,7 +1373,7 @@ class CarltonCoat extends BentBodyBlock
         
         // Title
         $p->addPoint('titleAnchor', $p->shiftFractionTowards('standCenterTop','centerBottom',0.5));
-        $p->addTitle('titleAnchor', 7, $this->t($p->title), '2x '.$this->t('from fabric'), 'small');
+        $p->addTitle('titleAnchor', 7, $this->t($p->title), '2x '.$this->t('from fabric'), ['scale' => 40]);
 
         // Seam allowance
         if($this->o('sa')) {
@@ -1395,8 +1395,8 @@ class CarltonCoat extends BentBodyBlock
         $p = $this->parts['collar'];
         
         // Title
-        $p->newPoint('titleAnchor', $p->x('rot-4-cutBottom2'),$p->y('shapedTip'));
-        $p->addTitle('titleAnchor', 8, $this->t($p->title), '2x '.$this->t('from fabric'), 'horizontal-small');
+        $p->newPoint('titleAnchor', $p->x('rot-4-cutBottom2'),$p->y('shapedTip')-20);
+        $p->addTitle('titleAnchor', 8, $this->t($p->title), '2x '.$this->t('from fabric'), ['scale' => 75, 'align'=>'left']);
 
         // Cut on fold
         $p->newPoint('cofTop', $p->x('centerTop'), $p->y('centerTop')+10);
@@ -1438,7 +1438,7 @@ class CarltonCoat extends BentBodyBlock
         
         // Title
         $p->newPoint('titleAnchor', $p->x('bottomRight')/2, $p->y('bottomRight')/2);
-        $p->addTitle('titleAnchor', 9, $this->t($p->title), '2x '.$this->t('from fabric'), 'small');
+        $p->addTitle('titleAnchor', 9, $this->t($p->title), '2x '.$this->t('from fabric'));
 
         // Grainline
         $p->newPoint('grainlineTop', $p->x('topLeft')+50, $p->y('topLeft')+5);
@@ -1471,7 +1471,7 @@ class CarltonCoat extends BentBodyBlock
             $this->t('from fabric').
             "\n2x ".
             $this->t('from lining')
-        , 'small');
+        );
 
         // Grainline
         $p->newPoint('grainlineTop', $p->x('pocketTopLeft')+50, $p->y('pocketTopLeft')+5);
@@ -1511,7 +1511,7 @@ class CarltonCoat extends BentBodyBlock
             $this->t('from fabric').
             "\n2x ".
             $this->t('from lining')
-        , 'small');
+        , ['scale' => 50, 'align'=>'left']);
 
         // Grainline
         $p->newPoint('grainlineTop', $p->x('pocketTopLeft')+50, $p->y('pocketTopLeft')-5);

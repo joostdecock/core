@@ -1723,7 +1723,7 @@ class SimonShirt extends BrianBodyBlock
 
         // Title
         $p->newPoint('titleAnchor', $p->x(2042), $p->y(2)+50);
-        $p->addTitle('titleAnchor', '1b', $this->t($p->title), '1x '.$this->t('from fabric'), 'vertical-small');
+        $p->addTitle('titleAnchor', '1b', $this->t($p->title), '1x '.$this->t('from fabric'), ['scale' => 50, 'rotate' => -90, 'align' => 'left']);
 
         // Grainline
         $p->addPoint('grainlineTop', $p->shift(2042,-45,10));
@@ -1776,7 +1776,7 @@ class SimonShirt extends BrianBodyBlock
             // Title
             if($this->o('buttonholePlacketStyle') == 2) $p->newPoint('titleAnchor', $p->x(41086), $p->y(2)+50);
             else $p->newPoint('titleAnchor', $p->x(4100), $p->y(2)+50);
-            $p->addTitle('titleAnchor', '2b', $this->t($p->title), '1x '.$this->t('from fabric'), 'vertical-small');
+            $p->addTitle('titleAnchor', '2b', $this->t($p->title), '1x '.$this->t('from fabric'), ['scale' => 50, 'rotate' => -90, 'align' => 'left']);
             
             // Extra hem allowance
             if($this->o('buttonholePlacketStyle') == 1) $shiftThese = ['sa-endPoint', 'sa-line-4007TO4008', 'sa-line-4008TO4007', 'sa-line-4008TO4108XllXsa-line-4008TO4007'];
@@ -1987,7 +1987,7 @@ class SimonShirt extends BrianBodyBlock
         
         // Title
         $p->addPoint('titleAnchor', $p->shift(56,0,30));
-        $p->addTitle('titleAnchor', 6, $this->t($p->title), '2x '.$this->t('from fabric')." + ".'2x '.$this->t('from interfacing'), 'horizontal-small');
+        $p->addTitle('titleAnchor', 6, $this->t($p->title), '2x '.$this->t('from fabric')." + ".'2x '.$this->t('from interfacing'), ['scale' => 50, 'align' => 'left']);
 
         // Notches
         $p->addPoint('collarStandNotch1', $p->shiftAlong(42,43,6,61,$this->v('yokeCollarOpeningLength')/2));
@@ -2015,7 +2015,7 @@ class SimonShirt extends BrianBodyBlock
 
         // Title
         $p->addPoint('titleAnchor', $p->shift(10,0,40));
-        $p->addTitle('titleAnchor', 7, $this->t($p->title), '1x '.$this->t('from fabric').' + 1x '.$this->t('from interfacing'),'small');
+        $p->addTitle('titleAnchor', 7, $this->t($p->title), '1x '.$this->t('from fabric').' + 1x '.$this->t('from interfacing'),['scale' => 50, 'align' => 'left']);
     }
 
     /**
@@ -2038,7 +2038,7 @@ class SimonShirt extends BrianBodyBlock
         
         // Title
         $p->addPoint('titleAnchor', $p->shift(10,0,40));
-        $p->addTitle('titleAnchor', 8, $this->t($p->title), '1x '.$this->t('from fabric').' + 1x '.$this->t('from interfacing'),'small');
+        $p->addTitle('titleAnchor', 8, $this->t($p->title), '1x '.$this->t('from fabric').' + 1x '.$this->t('from interfacing'), ['scale' => 50, 'align' => 'left']);
     }
 
     /**
@@ -2061,7 +2061,7 @@ class SimonShirt extends BrianBodyBlock
 
         // Title
         $p->addPoint('titleAnchor', $p->shift(8,0,25));
-        $p->addTitle('titleAnchor', 10, $this->t($p->title), '2x '.$this->t('from fabric'),'horizontal-small');
+        $p->addTitle('titleAnchor', 10, $this->t($p->title), '2x '.$this->t('from fabric'), ['scale' => 50, 'align' => 'left']);
     }
 
     /**
@@ -2083,7 +2083,7 @@ class SimonShirt extends BrianBodyBlock
         
         // Title
         $p->addPoint('titleAnchor', $p->shift(20,-35,30));
-        $p->addTitle('titleAnchor', 11, $this->t($p->title), '2x '.$this->t('from fabric'),'horizontal-small');
+        $p->addTitle('titleAnchor', 11, $this->t($p->title), '2x '.$this->t('from fabric'), ['scale' => 50, 'align' => 'left']);
     }
 
 
@@ -2104,7 +2104,7 @@ class SimonShirt extends BrianBodyBlock
 
         // Title
         $p->newPoint('titleAnchor', 0, $p->y(-8));
-        $p->addTitle('titleAnchor', 11, $this->t($p->title), '4x '.$this->t('from fabric').' + 2x '.$this->t('from interfacing'), 'small');
+        $p->addTitle('titleAnchor', 11, $this->t($p->title), '4x '.$this->t('from fabric').' + 2x '.$this->t('from interfacing'), ['scale' => 50]);
     }
 
     /**

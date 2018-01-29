@@ -536,7 +536,7 @@ class HueyHoodie extends \Freesewing\Patterns\Core\BrianBodyBlock
 
         // Title
         $p->newPoint('titleAnchor', $p->x('pouch4') / 2, $p->y('pouch3'), 'Title anchor');
-        $p->addTitle('titleAnchor', 4, $this->t($p->title), '2x '.$this->t('from fabric'));
+        $p->addTitle('titleAnchor', 5, $this->t($p->title), '2x '.$this->t('from fabric'));
     }
 
 

@@ -472,7 +472,14 @@ class CarlitaCoat extends CarltonCoat
 
         // Title
         $p->newPoint('titleAnchor', $p->x(9), $p->y('bustPoint'));
-        $p->addTitle('titleAnchor', '1a', $this->t($p->title), '2x '.$this->t('from fabric'));
+        $p->addTitle('titleAnchor', '1a', $this->t($p->title), 
+            '2x '.
+            $this->t('from fabric').
+            "\n2x ".
+            $this->t('facing from fabric').
+            "\n2x ".
+            $this->t('non-facing from lining')
+        );
 
         // Logo
         $p->newSnippet('logo','logo', 3);
@@ -510,6 +517,8 @@ class CarlitaCoat extends CarltonCoat
         $p->newPath('lining', 'M bustPoint L liningTop', ['class' => 'lining lashed']);
         $p->newTextOnPath(1, 'M bustPoint L liningTop', $this->t('Facing/Lining boundary - Facing side'), ['dy' => -2, 'class' => 'fill-fabric'], false);
         $p->newTextOnPath(2, 'M liningTop L bustPoint', $this->t('Facing/Lining boundary - Lining side'), ['dy' => -2, 'class' => 'fill-lining'], false);
+        $p->newPoint('facingNoteAnchor', $p->x('liningTop'), $p->y(9));
+        $p->newNote('flb', 'facingNoteAnchor', $this->t('Add seam allowance at the facing/lining border'), 4, 20 );
 
         // Notches
         $p->notch(['bustPoint', 'chestPocketTopLeft', 'chestPocketBottomLeft']);
@@ -525,6 +534,9 @@ class CarlitaCoat extends CarltonCoat
             $p->addPoint('noteAnchor2', $p->shift('psFrontBottom', 180, 120));
             $p->newNote('sa1', 'noteAnchor1', $this->t('Standard seam allowance')."\n(".$p->unit($this->o('sa')).')', 10, 40, $this->o('sa')*-0.5);
             $p->newNote('sa2', 'noteAnchor2', $this->t('Hem allowance')."\n(".$p->unit($this->o('sa')*5).')', 12, 30, $this->o('sa')*-2.5);
+            // Straighten hem
+            $p->newPoint('sa-line-hemFrontEdgeTOpsFrontBottom', $p->x('sa-line-hemFrontEdgeTOcollarBendPoint'), $p->y('sa-line-hemFrontEdgeTOpsFrontBottom'));
+            $p->newPoint('sa-line-psFrontBottomTOhemFrontEdge', $p->x('sa-line-psFrontBottomTObustPoint'), $p->y('sa-line-psFrontBottomTOhemFrontEdge'));
         }
     }
 
@@ -542,7 +554,12 @@ class CarlitaCoat extends CarltonCoat
 
         // Title
         $p->addPoint('titleAnchor', $p->shiftFractionTowards('bottomSeatSide', 'bottomPsFrontBottom', 0.5));
-        $p->addTitle('titleAnchor', '1b', $this->t($p->title), '2x '.$this->t('from fabric'));
+        $p->addTitle('titleAnchor', '1b', $this->t($p->title), 
+            '2x '.
+            $this->t('from fabric').
+            "\n2x ".
+            $this->t('from lining')
+        );
 
         // Logo
         $p->addPoint('logoAnchor', $p->shift('titleAnchor', 90, 70));
@@ -588,6 +605,9 @@ class CarlitaCoat extends CarltonCoat
             $p->addPoint('noteAnchor2', $p->shift('bottomHemSide', 180, 120));
             $p->newNote('sa1', 'noteAnchor1', $this->t('Standard seam allowance')."\n(".$p->unit($this->o('sa')).')', 10, 40, $this->o('sa')*-0.5);
             $p->newNote('sa2', 'noteAnchor2', $this->t('Hem allowance')."\n(".$p->unit($this->o('sa')*5).')', 12, 30, $this->o('sa')*-2.5);
+            // Straighten hem
+            $p->newPoint('sa-line-bottomHemSideTObottomPsFrontBottom', $p->x('sa-line-bottomHemSideTObottomSeatSide'), $p->y('sa-line-bottomHemSideTObottomPsFrontBottom'));
+            $p->newPoint('sa-line-bottomPsFrontBottomTObottomHemSide', $p->x('sa-line-bottomPsFrontBottomTOpsWaist'), $p->y('sa-line-bottomPsFrontBottomTObottomHemSide'));
         }
     }
 

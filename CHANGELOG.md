@@ -14,6 +14,44 @@
 ### Fixed
 ### Security
 
+## 1.6.1
+
+**Release date**: 2018-01-29
+
+This is a bugfix release:
+
+ - A fix for [issue #203](https://github.com/freesewing/core/issues/203)
+ - Some small tweaks in Carlton/Carlita
+
+### Fixed
+
+#### Title formatting
+
+The `Part::addTitle` method has been rewritten to handle title formatting in all use cases
+(fixes [issue #203](https://github.com/freesewing/core/issues/203)).
+
+Rather than specifying one layout option (like `vertical-small`) you can now pass an array
+with options:
+
+ - `scale` : Default is 100. Increase/decrease for larger/smaller title
+ - `rotate` : Default is 0. Given a number to rotate by that many degrees
+ - `align` : One of `left`, `right`, or the default `center`
+
+You can combine these options to get pretty much whatever title you like.
+
+In addition, we will properly handle linebreaks in part nr, part title, or message.
+
+#### Carlton/Carlita
+
+ - Only half of the *Chest pocket welt* part was drawn.
+ - The hems on the front, tail, and pockets have been straightened
+ - Cutting instructions have been updated to include lining
+
+#### Huey
+
+ - There were two parts numbered `4`, that is fixed now.
+
+
 ## 1.6.0
 
 **Release date**: 2018-01-26

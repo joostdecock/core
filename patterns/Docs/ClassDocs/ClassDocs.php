@@ -447,35 +447,54 @@ class ClassDocs extends \Freesewing\Patterns\Core\Pattern
      */
     private function example_Part_addTitle($p, $model)
     {
-        $modes = [
-            'default',
-            'vertical',
-            'horizontal',
-            'small',
-            'vertical-small',
-            'horizontal-small',
-            'extrasmall',
-            'vertical-extrasmall',
-            'horizontal-extrasmall'
-        ];
+        // Default
+        $this->newPart("title1");
+        $p = $this->parts["title1"];
+        $p->newPoint (1, 50, 50);
+        $p->addTitle(1, 1,"Part name", "This is a \ndefault title");
+        $this->addBox($p,100,100);
         
-        foreach($modes as $mode) {
-            // Only one title per part, so we need a part for each mode
-            $this->newPart($mode);
-            /** @var \Freesewing\Part $p */
-            $p = $this->parts[$mode];
-            $p->newPoint(1, 30, 80);
-            $p->addTitle(1, 3, 'Title', $mode, $mode);
-
-            if(strpos($mode,'mall')) {
-                if(strpos($mode,'tical')) $this->addBox($p,135,50);
-                else $this->addBox($p,125,60);
-            } else {
-                if(strpos($mode,'tical')) $this->addBox($p,130,50);
-                else $this->addBox($p,110,70);
-            }
-        }
+        // Scale: 150
+        $this->newPart("title2");
+        $p = $this->parts["title2"];
+        $p->newPoint (1, 50, 50);
+        $p->addTitle(1, 2,"Part name", "This uses the scale option\nhere, it is set to 125\n(default is 100)", ['scale' => 125]);
+        $this->addBox($p,100,100);
         
+        // Scale: 50
+        $this->newPart("title3");
+        $p = $this->parts["title3"];
+        $p->newPoint (1, 50, 50);
+        $p->addTitle(1, 3,"Part name", "This uses the scale option\nhere, it is set to 75\n(default is 100)", ['scale' => 75]);
+        $this->addBox($p,100,100);
+        
+        // Align: left
+        $this->newPart("title4");
+        $p = $this->parts["title4"];
+        $p->newPoint (1, 10, 50);
+        $p->addTitle(1, 4,"Part name", "This uses the align option\nhere, it is set to left\n(default is center)", ['align' => 'left']);
+        $this->addBox($p,100,100);
+        
+        // Align: right
+        $this->newPart("title5");
+        $p = $this->parts["title5"];
+        $p->newPoint (1, 90, 50);
+        $p->addTitle(1, 5,"Part name", "This uses the align option\nhere, it is set to right\n(default is center)", ['align' => 'right']);
+        $this->addBox($p,100,100);
+        
+        // Rotate: 90
+        $this->newPart("title6");
+        $p = $this->parts["title6"];
+        $p->newPoint (1, 50, 50);
+        $p->addTitle(1, 6,"Part name", "This uses the rotate option\nhere, it is set to 180\n(default is 0)", ['rotate' => 180]);
+        $this->addBox($p,100,100);
+        
+        // Combo
+        $this->newPart("title7");
+        $p = $this->parts["title7"];
+        $p->newPoint (1, 100, 10);
+        $p->addTitle(1, "Combo\nexample","Part\nname", "You can also\ncombine these options\nin addition, line breaks\nwill be handled for you", ['rotate' => -90, 'scale' => 150, 'align' => 'right']);
+        $this->addBox($p,200,200);
     }
 
     /**

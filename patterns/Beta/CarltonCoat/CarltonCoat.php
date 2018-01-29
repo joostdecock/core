@@ -980,12 +980,16 @@ class CarltonCoat extends BentBodyBlock
         $p = $this->parts['chestPocketWelt'];
 
         $p->newPoint('topLeft', 0, 0);
-        $p->newPoint('topRight', $this->v('chestPocketWidth'), 0);
-        $p->newPoint('bottomRight', $this->v('chestPocketWidth'), $this->v('chestPocketHeight'));
-        $p->newPoint('bottomLeft', 0, $this->v('chestPocketHeight'));
+        $p->newPoint('topRight', $this->v('chestPocketWidth')*2, 0);
+        $p->newPoint('bottomRight', $p->x('topRight'), $this->v('chestPocketHeight'));
+        $p->newPoint('bottomLeft', 0, $p->y('bottomRight'));
+        $p->newPoint('midTop', $p->x('topRight')/2, 0);
+        $p->newPoint('midBottom', $p->x('midTop'), $p->y('bottomRight'));
+
 
         // Path
         $p->newPath('outline', 'M topLeft L topRight L bottomRight L bottomLeft L topLeft z', ['class' => 'fabric']);
+        $p->newPath('foldline', 'M midTop L midBottom', ['class' => 'hint']);
 
         // Mark path for sample service
         $p->paths['outline']->setSample(true);
@@ -1016,7 +1020,14 @@ class CarltonCoat extends BentBodyBlock
 
         // Title
         $p->newPoint('titleAnchor', $p->x(21), $p->y(10));
-        $p->addTitle('titleAnchor', 1, $this->t($p->title), '2x '.$this->t('from fabric'));
+        $p->addTitle('titleAnchor', 1, $this->t($p->title), 
+            '2x '.
+            $this->t('from fabric').
+            "\n2x ".
+            $this->t('facing from fabric').
+            "\n2x ".
+            $this->t('non-facing from lining')
+        );
 
         // Scalebox
         $p->newPoint('scaleboxAnchor', $p->x(21), $p->y(5));
@@ -1054,6 +1065,8 @@ class CarltonCoat extends BentBodyBlock
         $p->newPath('fldLining', 'M flbTop L flbBottom',['class' => 'lining lashed']);
         $p->newTextOnPath(1, 'M flbTop L flbBottom', $this->t('Facing/Lining boundary - Lining side'), ['dy' => -2, 'class' => 'fill-lining'], false);
         $p->newTextOnPath(2, 'M flbBottom L flbTop', $this->t('Facing/Lining boundary - Facing side'), ['dy' => -2, 'class' => 'fill-fabric'], false);
+        $p->newPoint('facingNoteAnchor', $p->x('flbBottom'), $p->y('seatSide'));
+        $p->newNote('flb', 'facingNoteAnchor', $this->t('Add seam allowance at the facing/lining border'), 4, 40 );
 
         // Notches
         $p->notch(['collarBendPoint', 10, 'waistSide']);
@@ -1072,6 +1085,9 @@ class CarltonCoat extends BentBodyBlock
             $p->addPoint('noteAnchor2', $p->shift('hemSide', 180, 120));
             $p->newNote('sa1', 'noteAnchor1', $this->t('Standard seam allowance')."\n(".$p->unit($this->o('sa')).')', 10, 40, $this->o('sa')*-0.5);
             $p->newNote('sa2', 'noteAnchor2', $this->t('Hem allowance')."\n(".$p->unit($this->o('sa')*5).')', 12, 30, $this->o('sa')*-2.5);
+            // Straighten hem
+            $p->newPoint('sa-line-hemFrontEdgeTOhemSide', $p->x('sa-line-hemFrontEdgeTOcollarBendPoint'), $p->y('sa-line-hemFrontEdgeTOhemSide'));
+            $p->newPoint('sa-line-hemSideTOhemFrontEdge', $p->x('sa-line-hemSideTOseatSide'), $p->y('sa-line-hemSideTOhemFrontEdge'));
         }
 
         // Store length to sleeve notch
@@ -1092,7 +1108,12 @@ class CarltonCoat extends BentBodyBlock
 
         // Title
         $p->newPoint('titleAnchor', $p->x(8), $p->y(18));
-        $p->addTitle('titleAnchor', 2, $this->t($p->title), '2x '.$this->t('from fabric'));
+        $p->addTitle('titleAnchor', 2, $this->t($p->title), 
+            '2x '.
+            $this->t('from fabric').
+            "\n2x ".
+            $this->t('from lining')
+        );
 
         // Logo
         $p->newSnippet('logo','logo', 21);
@@ -1139,7 +1160,12 @@ class CarltonCoat extends BentBodyBlock
 
         // Title
         $p->newPoint('titleAnchor', $p->x('waistTop')/2, $p->y('leftTop-3')/2);
-        $p->addTitle('titleAnchor', 3, $this->t($p->title), '2x '.$this->t('from fabric'));
+        $p->addTitle('titleAnchor', 3, $this->t($p->title), 
+            '2x '.
+            $this->t('from fabric').
+            "\n2x ".
+            $this->t('from lining')
+        );
 
         // Logo
         $p->newPoint('logoAnchor', $p->x('leftPleat2')/2, $p->y('leftTop-3')/2);
@@ -1159,6 +1185,9 @@ class CarltonCoat extends BentBodyBlock
             $p->addPoint('noteAnchor2', $p->shift('leftPleat3-3', -90, 12));
             $p->newNote('sa1', 'noteAnchor1', $this->t('Standard seam allowance')."\n(".$p->unit($this->o('sa')).')', 9, 10, $this->o('sa')*-0.5);
             $p->newNote('sa2', 'noteAnchor2', $this->t('Hem allowance')."\n(".$p->unit($this->o('sa')*5).')', 2, 40);
+            // Straighten hem
+            $p->newPoint('sa-line-waistTop-3TOleftTop-3', $p->x('sa-line-waistTop-3TOwaistTop'), $p->y('sa-line-waistTop-3TOleftTop-3'));
+            $p->newPoint('sa-line-leftTop-3TOwaistTop-3', $p->x('sa-line-leftTop-3TOleftTop'), $p->y('sa-line-leftTop-3TOwaistTop-3'));
         }
     }
 
@@ -1176,7 +1205,12 @@ class CarltonCoat extends BentBodyBlock
         
         // Title
         $p->newPoint('titleAnchor', $p->x('sleeveTop'), $p->y('topsleeveRightEdge')+80);
-        $p->addTitle('titleAnchor', 4, $this->t($p->title), '2x '.$this->t('from fabric'));
+        $p->addTitle('titleAnchor', 4, $this->t($p->title), 
+            '2x '.
+            $this->t('from fabric').
+            "\n2x ".
+            $this->t('from lining')
+        );
 
         // Logo
         $p->newPoint('logoAnchor', $p->x('sleeveTop'), $p->y('elbowRight')-25);
@@ -1246,7 +1280,12 @@ class CarltonCoat extends BentBodyBlock
         $p = $this->parts['undersleeve'];
         
         // Title
-        $p->addTitle('undersleeveWristLeftHelperTop', 5, $this->t($p->title), '2x '.$this->t('from fabric'));
+        $p->addTitle('undersleeveWristLeftHelperTop', 5, $this->t($p->title), 
+            '2x '.
+            $this->t('from fabric').
+            "\n2x ".
+            $this->t('from lining')
+        );
 
         // Logo
         $p->addPoint('logoAnchor', $p->shift('undersleeveWristLeftHelperTop', 90, 100));
@@ -1334,7 +1373,7 @@ class CarltonCoat extends BentBodyBlock
         
         // Title
         $p->addPoint('titleAnchor', $p->shiftFractionTowards('standCenterTop','centerBottom',0.5));
-        $p->addTitle('titleAnchor', 7, $this->t($p->title), '2x '.$this->t('from fabric'), 'small');
+        $p->addTitle('titleAnchor', 7, $this->t($p->title), '2x '.$this->t('from fabric'), ['scale' => 40]);
 
         // Seam allowance
         if($this->o('sa')) {
@@ -1356,8 +1395,8 @@ class CarltonCoat extends BentBodyBlock
         $p = $this->parts['collar'];
         
         // Title
-        $p->newPoint('titleAnchor', $p->x('rot-4-cutBottom2'),$p->y('shapedTip'));
-        $p->addTitle('titleAnchor', 8, $this->t($p->title), '2x '.$this->t('from fabric'), 'horizontal-small');
+        $p->newPoint('titleAnchor', $p->x('rot-4-cutBottom2'),$p->y('shapedTip')-20);
+        $p->addTitle('titleAnchor', 8, $this->t($p->title), '2x '.$this->t('from fabric'), ['scale' => 75, 'align'=>'left']);
 
         // Cut on fold
         $p->newPoint('cofTop', $p->x('centerTop'), $p->y('centerTop')+10);
@@ -1399,7 +1438,7 @@ class CarltonCoat extends BentBodyBlock
         
         // Title
         $p->newPoint('titleAnchor', $p->x('bottomRight')/2, $p->y('bottomRight')/2);
-        $p->addTitle('titleAnchor', 9, $this->t($p->title), '2x '.$this->t('from fabric'), 'small');
+        $p->addTitle('titleAnchor', 9, $this->t($p->title), '2x '.$this->t('from fabric'));
 
         // Grainline
         $p->newPoint('grainlineTop', $p->x('topLeft')+50, $p->y('topLeft')+5);
@@ -1427,7 +1466,12 @@ class CarltonCoat extends BentBodyBlock
         
         // Title
         $p->addPoint('titleAnchor', $p->shift('pocketTopLeft',-40,120));
-        $p->addTitle('titleAnchor', 10, $this->t($p->title), '2x '.$this->t('from fabric'), 'small');
+        $p->addTitle('titleAnchor', 10, $this->t($p->title), 
+            '2x '.
+            $this->t('from fabric').
+            "\n2x ".
+            $this->t('from lining')
+        );
 
         // Grainline
         $p->newPoint('grainlineTop', $p->x('pocketTopLeft')+50, $p->y('pocketTopLeft')+5);
@@ -1442,6 +1486,9 @@ class CarltonCoat extends BentBodyBlock
             $p->addPoint('note1anchor', $p->shift('pocketTopRight', 180, 60));
             $p->newNote('sa1', 'note1anchor', $this->t('Twice the standard seam allowance')."\n(".$p->unit($this->o('sa')*2).')', 6, 20, $this->o('sa')*-1);
             $p->newNote('sa2', 'pocketBottomRightTop', $this->t('Half of the standard seam allowance')."\n(".$p->unit($this->o('sa')/2).')', 9, 20, $this->o('sa')/-4);
+            // Straighten HEM 
+            $p->newPoint('sa-line-pocketTopLeftTOpocketTopRight', $p->x('sa-endPoint'), $p->y('sa-line-pocketTopLeftTOpocketTopRight'));
+            $p->newPoint('sa-line-pocketTopRightTOpocketTopLeft', $p->x('sa-line-pocketTopRightTOpocketBottomRightTop'), $p->y('sa-line-pocketTopRightTOpocketTopLeft'));
         }
     }
 
@@ -1459,7 +1506,12 @@ class CarltonCoat extends BentBodyBlock
         
         // Title
         $p->addPoint('titleAnchor', $p->shift('pocketTopLeft',-10,100));
-        $p->addTitle('titleAnchor', 11, $this->t($p->title), '2x '.$this->t('from fabric'), 'small');
+        $p->addTitle('titleAnchor', 11, $this->t($p->title), 
+            '2x '.
+            $this->t('from fabric').
+            "\n2x ".
+            $this->t('from lining')
+        , ['scale' => 50, 'align'=>'left']);
 
         // Grainline
         $p->newPoint('grainlineTop', $p->x('pocketTopLeft')+50, $p->y('pocketTopLeft')-5);

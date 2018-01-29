@@ -1,7 +1,7 @@
 {
     "name": "freesewing/core",
     "description": "Freesewing is an open source platform for made-to-measure sewing patterns",
-    "license": "GPL-3.0",
+    "license": "GPL-3.0-or-later",
     "homepage": "https://freesewing.org/",
     "authors": [
         {

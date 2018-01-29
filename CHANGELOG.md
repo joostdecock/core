@@ -20,8 +20,8 @@
 
 This is a bugfix release:
 
- - Some small tweaks in Carlton/Carlita
  - A fix for [issue #203](https://github.com/freesewing/core/issues/203)
+ - Some small tweaks in Carlton/Carlita
 
 ### Fixed
 
@@ -43,7 +43,7 @@ In addition, we will properly handle linebreaks in part nr, part title, or messa
 
 #### Carlton/Carlita
 
- - Only half pf the *Chest pocket welt* part was drawn.
+ - Only half of the *Chest pocket welt* part was drawn.
  - The hems on the front, tail, and pockets have been straightened
  - Cutting instructions have been updated to include lining
 

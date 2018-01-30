@@ -106,7 +106,7 @@ class CarltonCoat extends BentBodyBlock
         $model->setMeasurement('shoulderToShoulder', $model->m('shoulderToShoulder') + $this->o('shoulderEase'));
         
         // Make acrossBack measurement larger because coat
-        $model->setMeasurement('acrossBack', $model->m('acrossBack') + $this->o('shoulderEase'));
+        $model->setMeasurement('acrossBack', $model->m('acrossBack') + $this->o('shoulderEase')/2);
 
         // Waist shaping
         $this->setValueIfUnset('waistReduction', 

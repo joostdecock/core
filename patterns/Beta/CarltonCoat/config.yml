@@ -80,9 +80,9 @@ options:
         description: "The amount of ease at your upper arm."
         group: "fit"
         type: measure
-        min: 40
-        max: 110
-        default: 60
+        min: 20
+        max: 80
+        default: 50
     cuffEase:
         title: "Cuff ease"
         description: "The amount of ease at your wrist."
@@ -97,8 +97,8 @@ options:
         group: "fit"
         type: measure
         min: 0
-        max: 30
-        default: 15
+        max: 20
+        default: 10
     sleeveBend:
         title: "Sleeve bend"
         description: "How much do you want the sleeve to be bent at the elbow"

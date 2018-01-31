@@ -218,6 +218,7 @@ class CarltonCoat extends BentBodyBlock
         $this->draftPocket($model);
         $this->draftPocketFlap($model);
         $this->draftChestPocketWelt($model);
+        $this->draftInnerPocketWelt($model);
         
         // Hide the sleeveBlocks, frontBlock, and backBlock
         $this->parts['sleeveBlock']->setRender(false);
@@ -257,6 +258,7 @@ class CarltonCoat extends BentBodyBlock
         $this->finalizePocket($model);
         $this->finalizePocketFlap($model);
         $this->finalizeChestPocketWelt($model);
+        $this->finalizeInnerPocketWelt($model);
 
         // Is this a paperless pattern?
         if ($this->isPaperless) {
@@ -395,6 +397,25 @@ class CarltonCoat extends BentBodyBlock
 
         $p->newPath('chestPocket', 'M chestPocketTopLeft L chestPocketTopRight L chestPocketBottomRight L chestPocketBottomLeft z', ['class' => 'help']);
 
+        // Inner pocket
+        // Width = 12 cm, unless coat is really small
+        if($p->distance('pocketTopLeft', 'pocketTopRight') < 150) $this->setValue('innerPocketWidth',100);
+        else $this->setValue('innerPocketWidth', 125);
+
+        $p->newPoint('innerPocketLeft', $p->x('pocketTopLeft')+12.5, $p->y('waistSide')-2*$p->deltaY('button3Right','waistSide'));
+        $p->addPoint('innerPocketRight', $p->shift('innerPocketLeft',0,$this->v('innerPocketWidth')));
+        $p->addPoint('innerPocketTopLeft', $p->shift('innerPocketLeft', 90, 5));
+        $p->addPoint('innerPocketBottomLeft', $p->shift('innerPocketLeft', -90, 5));
+        $p->addPoint('innerPocketTopRight', $p->shift('innerPocketRight', 90, 5));
+        $p->addPoint('innerPocketBottomRight', $p->shift('innerPocketRight', -90, 5));
+
+        // Inner pocket path
+        $p->newPath('innerPocket', 'M innerPocketTopLeft L innerPocketTopRight
+            L innerPocketBottomRight L innerPocketBottomLeft z
+            M innerPocketLeft L innerPocketRight'
+        , ['class' => 'help']);
+
+        
 
 
         // Paths 
@@ -995,6 +1016,39 @@ class CarltonCoat extends BentBodyBlock
         $p->paths['outline']->setSample(true);
     }
 
+    /**
+     * Drafts the inner pocket welt
+     *
+     * @param \Freesewing\Model $model The model to draft for
+     *
+     * @return void
+     */
+    public function draftInnerPocketWelt($model)
+    {
+        /** @var \Freesewing\Part $p */
+        $p = $this->parts['innerPocketWelt'];
+
+        $p->newPoint('left', -20, 0);
+        $p->newPoint('leftTopWelt', $p->x('left')+20, $p->y('left')-5);
+        $p->newPoint('leftBottomWelt', $p->x('left')+20, $p->y('left')+5);
+        $p->newPoint('leftTopCorner', $p->x('left'), $p->y('left')-15);
+        $p->newPoint('leftBottomCorner', $p->x('left'), $p->y('left')+15);
+
+        $p->newPoint('right', $this->v('innerPocketWidth')+20, 0);
+        $p->newPoint('rightTopWelt', $p->x('right')-20, $p->y('right')-5);
+        $p->newPoint('rightBottomWelt', $p->x('right')-20, $p->y('right')+5);
+        $p->newPoint('rightTopCorner', $p->x('right'), $p->y('right')-15);
+        $p->newPoint('rightBottomCorner', $p->x('right'), $p->y('right')+15);
+
+        // Path
+        $p->newPath('outline', 'M leftTopCorner L rightTopCorner L rightBottomCorner L leftBottomCorner z', ['class' => 'lining']);
+        $p->newPath('foldline', 'M left L right', ['class' => 'help']);
+        $p->newPath('seamline', 'M leftTopWelt L rightTopWelt M leftBottomWelt L rightBottomWelt', ['class' => 'hint']);
+
+        // Mark path for sample service
+        $p->paths['outline']->setSample(true);
+    }
+
 
     /*
        _____ _             _ _
@@ -1552,6 +1606,23 @@ class CarltonCoat extends BentBodyBlock
         }
     }
 
+    /**
+     * Finalizes the inner pocket welt
+     *
+     * @param \Freesewing\Model $model The model to draft for
+     *
+     * @return void
+     */
+    public function finalizeInnerPocketWelt($model)
+    {
+        /** @var \Freesewing\Part $p */
+        $p = $this->parts['innerPocketWelt'];
+        
+        // Title
+        $p->newPoint('titleAnchor', $p->x('rightTopWelt')/2, 0);
+        $p->addTitle('titleAnchor', 13, $this->t($p->title), '4x '.$this->t('from lining'), 'vertical-small');
+    }
+
 
     /*
         ____                       _
@@ -1632,6 +1703,11 @@ class CarltonCoat extends BentBodyBlock
         $p->newLinearDimension('chestPocketBottomRight','chestPocketTopRight', 15);
         $p->newNote(1, 'chestPocketTopRight', $this->v('chestPocketRotation').' '.$this->t('degree').' '.$this->t('slant'), 1, 30, -20);
         $p->newWidthDimension(3, 'chestPocketTopLeft', $p->y('chestPocketTopLeft')+15);
+
+        // Inner pocket
+        $p->newWidthDimension(3, 'innerPocketBottomLeft', $p->y('innerPocketBottomLeft')+15);
+        $p->newWidthDimension('innerPocketBottomLeft', 'innerPocketBottomRight', $p->y('innerPocketBottomLeft')+15);
+        $p->newHeightDimension('waistSide', 'innerPocketRight', $p->x('innerPocketRight')+15);
     }
     
     /**

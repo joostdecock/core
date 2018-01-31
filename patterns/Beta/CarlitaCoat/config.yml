@@ -89,17 +89,17 @@ options:
         description: "The amount of ease at your upper arm."
         group: "fit"
         type: measure
-        min: 40
-        max: 110
-        default: 60
+        min: 20
+        max: 80
+        default: 40
     shoulderEase:
         title: "Shoulder ease"
         description: "The amount of ease at your shoulder. This increases the shoulder to shoulder and across back distance to accomodate what you're wearing under your coat."
         group: "fit"
         type: measure
         min: 0
-        max: 30
-        default: 15
+        max: 20
+        default: 10
     cuffEase:
         title: "Cuff ease"
         description: "The amount of ease at your wrist."

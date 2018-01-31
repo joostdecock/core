@@ -14,6 +14,20 @@
 ### Fixed
 ### Security
 
+## 1.6.2
+
+**Release date**: 2018-01-31
+
+This release includes some tweaks to the shoulder of Carlton/Carlita.
+
+### Changed
+
+#### Carlton/Carlita
+
+ - Lowered the default biceps ease
+ - Lowered the default shoulder ease
+ - Used only half the shoulder ease across back
+
 ## 1.6.1
 
 **Release date**: 2018-01-29

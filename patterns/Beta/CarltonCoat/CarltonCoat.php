@@ -274,6 +274,7 @@ class CarltonCoat extends BentBodyBlock
             $this->paperlessPocket($model);
             $this->paperlessPocketFlap($model);
             $this->paperlessChestPocketWelt($model);
+            $this->paperlessInnerPocketWelt($model);
         }
     }
 
@@ -1396,7 +1397,7 @@ class CarltonCoat extends BentBodyBlock
         
         // Title
         $p->newPoint('titleAnchor', $p->x('bottomRight')/2, $p->y('bottomRight')/2);
-        $p->addTitle('titleAnchor', 6, $this->t($p->title), '4x '.$this->t('from fabric'), 'small');
+        $p->addTitle('titleAnchor', 6, $this->t($p->title), '4x '.$this->t('from fabric'), ['scale'=> 80]);
 
         // Button
         $p->newSnippet('button','button-lg','button');
@@ -1593,7 +1594,7 @@ class CarltonCoat extends BentBodyBlock
         
         // Title
         $p->newPoint('titleAnchor', $p->x('bottomRight')/2, $p->y('bottomRight')/2);
-        $p->addTitle('titleAnchor', 12, $this->t($p->title), '2x '.$this->t('from fabric'), 'vertical-small');
+        $p->addTitle('titleAnchor', 12, $this->t($p->title), '2x '.$this->t('from fabric'), ['scale' => 60, 'rotate' => -90]);
 
         // Grainline
         $p->newPoint('grainlineTop', $p->x('topLeft')+10, $p->y('topLeft')+5);
@@ -1620,7 +1621,11 @@ class CarltonCoat extends BentBodyBlock
         
         // Title
         $p->newPoint('titleAnchor', $p->x('rightTopWelt')/2, 0);
-        $p->addTitle('titleAnchor', 13, $this->t($p->title), '4x '.$this->t('from lining'), 'vertical-small');
+        $p->addTitle('titleAnchor', 13, $this->t($p->title), '4x '.$this->t('from lining'), ['scale' => 50]);
+
+        // Note
+        $p->addPoint('noteAnchor', $p->shift('leftBottomCorner', 0, 30));
+        $p->newNote('sa', 'noteAnchor', $this->t('Cut out without seam allowance'), 4, 20);
     }
 
 
@@ -1988,5 +1993,22 @@ class CarltonCoat extends BentBodyBlock
         $p = $this->parts['chestPocketWelt'];
         $p->newHeightDimension('bottomRight','topRight', $p->x('topRight')+15+$this->o('sa')/2);
         $p->newWidthDimension('bottomLeft','bottomRight', $p->y('bottomLeft')+15+$this->o('sa')/2);
+    }
+    
+    /**
+     * Adds paperless info for the inner pocket welt part
+     *
+     * @param \Freesewing\Model $model The model to draft for
+     *
+     * @return void
+     */
+    public function paperlessInnerPocketWelt($model)
+    {
+        /** @var \Freesewing\Part $p */
+        $p = $this->parts['innerPocketWelt'];
+        $p->newWidthDimension('leftBottomWelt','rightBottomWelt', $p->y('leftBottomCorner')+25);
+        $p->newWidthDimension('leftBottomCorner','rightBottomCorner', $p->y('leftBottomCorner')+40);
+        $p->newHeightDimensionSm('rightBottomWelt','rightTopWelt', $p->x('rightTopCorner')+15);
+        $p->newHeightDimension('rightBottomCorner','rightTopCorner', $p->x('rightTopCorner')+30);
     }
 }

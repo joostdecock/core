@@ -218,6 +218,9 @@ class CarltonCoat extends BentBodyBlock
         $this->draftPocket($model);
         $this->draftPocketFlap($model);
         $this->draftChestPocketWelt($model);
+        $this->draftInnerPocketWelt($model);
+        $this->draftInnerPocketBag($model);
+        $this->draftInnerPocketTab($model);
         
         // Hide the sleeveBlocks, frontBlock, and backBlock
         $this->parts['sleeveBlock']->setRender(false);
@@ -257,6 +260,9 @@ class CarltonCoat extends BentBodyBlock
         $this->finalizePocket($model);
         $this->finalizePocketFlap($model);
         $this->finalizeChestPocketWelt($model);
+        $this->finalizeInnerPocketWelt($model);
+        $this->finalizeInnerPocketBag($model);
+        $this->finalizeInnerPocketTab($model);
 
         // Is this a paperless pattern?
         if ($this->isPaperless) {
@@ -272,6 +278,9 @@ class CarltonCoat extends BentBodyBlock
             $this->paperlessPocket($model);
             $this->paperlessPocketFlap($model);
             $this->paperlessChestPocketWelt($model);
+            $this->paperlessInnerPocketWelt($model);
+            $this->paperlessInnerPocketBag($model);
+            $this->paperlessInnerPocketTab($model);
         }
     }
 
@@ -395,6 +404,25 @@ class CarltonCoat extends BentBodyBlock
 
         $p->newPath('chestPocket', 'M chestPocketTopLeft L chestPocketTopRight L chestPocketBottomRight L chestPocketBottomLeft z', ['class' => 'help']);
 
+        // Inner pocket
+        // Width = 12 cm, unless coat is really small
+        if($p->distance('pocketTopLeft', 'pocketTopRight') < 150) $this->setValue('innerPocketWidth',100);
+        else $this->setValue('innerPocketWidth', 125);
+
+        $p->newPoint('innerPocketLeft', $p->x('pocketTopLeft')+12.5, $p->y('waistSide')-2*$p->deltaY('button3Right','waistSide'));
+        $p->addPoint('innerPocketRight', $p->shift('innerPocketLeft',0,$this->v('innerPocketWidth')));
+        $p->addPoint('innerPocketTopLeft', $p->shift('innerPocketLeft', 90, 5));
+        $p->addPoint('innerPocketBottomLeft', $p->shift('innerPocketLeft', -90, 5));
+        $p->addPoint('innerPocketTopRight', $p->shift('innerPocketRight', 90, 5));
+        $p->addPoint('innerPocketBottomRight', $p->shift('innerPocketRight', -90, 5));
+
+        // Inner pocket path
+        $p->newPath('innerPocket', 'M innerPocketTopLeft L innerPocketTopRight
+            L innerPocketBottomRight L innerPocketBottomLeft z
+            M innerPocketLeft L innerPocketRight'
+        , ['class' => 'help']);
+
+        
 
 
         // Paths 
@@ -995,6 +1023,94 @@ class CarltonCoat extends BentBodyBlock
         $p->paths['outline']->setSample(true);
     }
 
+    /**
+     * Drafts the inner pocket welt
+     *
+     * @param \Freesewing\Model $model The model to draft for
+     *
+     * @return void
+     */
+    public function draftInnerPocketWelt($model)
+    {
+        /** @var \Freesewing\Part $p */
+        $p = $this->parts['innerPocketWelt'];
+
+        $p->newPoint('left', -20, 0);
+        $p->newPoint('leftTopWelt', $p->x('left')+20, $p->y('left')-5);
+        $p->newPoint('leftBottomWelt', $p->x('left')+20, $p->y('left')+5);
+        $p->newPoint('leftTopCorner', $p->x('left'), $p->y('left')-15);
+        $p->newPoint('leftBottomCorner', $p->x('left'), $p->y('left')+15);
+
+        $p->newPoint('right', $this->v('innerPocketWidth')+20, 0);
+        $p->newPoint('rightTopWelt', $p->x('right')-20, $p->y('right')-5);
+        $p->newPoint('rightBottomWelt', $p->x('right')-20, $p->y('right')+5);
+        $p->newPoint('rightTopCorner', $p->x('right'), $p->y('right')-15);
+        $p->newPoint('rightBottomCorner', $p->x('right'), $p->y('right')+15);
+
+        // Path
+        $p->newPath('outline', 'M leftTopCorner L rightTopCorner L rightBottomCorner L leftBottomCorner z', ['class' => 'lining']);
+        $p->newPath('foldline', 'M left L right', ['class' => 'help']);
+        $p->newPath('seamline', 'M leftTopWelt L rightTopWelt M leftBottomWelt L rightBottomWelt', ['class' => 'hint']);
+
+        // Mark path for sample service
+        $p->paths['outline']->setSample(true);
+    }
+
+
+    /**
+     * Drafts the inner pocket bag
+     *
+     * @param \Freesewing\Model $model The model to draft for
+     *
+     * @return void
+     */
+    public function draftInnerPocketBag($model)
+    {
+        /** @var \Freesewing\Part $p */
+        $p = $this->parts['innerPocketBag'];
+        
+        $p->newPoint('topLeft', 0, 0);
+        $p->newPoint('topRight', $this->v('innerPocketWidth')+40, 0);
+        $p->addPoint('midTopLeft', $p->shift('topLeft', -90, 30));
+        $p->addPoint('midTopRight', $p->shift('topRight', -90, 30));
+        $p->addPoint('midBottomLeft', $p->shift('topLeft', -90, 60));
+        $p->addPoint('midBottomRight', $p->shift('topRight', -90, 60));
+        $p->addPoint('bottomLeft', $p->shift('topLeft', -90, 90));
+        $p->addPoint('bottomRight', $p->shift('topRight', -90, 90));
+
+        $p->newPath('outline', 'M midTopLeft L topLeft L topRight L midTopRight
+            M midBottomLeft L bottomLeft L bottomRight L midBottomRight'
+        , ['class' => 'lining']);
+        $p->newPath('help', 'M midTopLeft L midBottomLeft M midTopRight L midBottomRight', ['class' => 'help']);
+        
+        // Mark path for sample service
+        $p->paths['outline']->setSample(true);
+    }
+
+    /**
+     * Drafts the inner pocket tab
+     *
+     * @param \Freesewing\Model $model The model to draft for
+     *
+     * @return void
+     */
+    public function draftInnerPocketTab($model)
+    {
+        /** @var \Freesewing\Part $p */
+        $p = $this->parts['innerPocketTab'];
+
+        $p->newPoint('topLeft', 0, 0);
+        $p->newPoint('topRight', $this->v('innerPocketWidth')/2+10, 0);
+        $p->newPoint('bottomLeft', 0, $this->v('innerPocketWidth')/2+10);
+        $p->newPoint('bottomRight', $p->x('topRight'), $p->y('bottomLeft'));
+        
+        $p->newPath('outline', 'M topLeft L topRight L bottomRight L bottomLeft z', ['class' => 'lining']);
+        $p->newPath('foldline', 'M topLeft L bottomRight', ['class' => 'help']);
+        
+        // Mark path for sample service
+        $p->paths['outline']->setSample(true);
+    }
+
 
     /*
        _____ _             _ _
@@ -1342,7 +1458,7 @@ class CarltonCoat extends BentBodyBlock
         
         // Title
         $p->newPoint('titleAnchor', $p->x('bottomRight')/2, $p->y('bottomRight')/2);
-        $p->addTitle('titleAnchor', 6, $this->t($p->title), '4x '.$this->t('from fabric'), 'small');
+        $p->addTitle('titleAnchor', 6, $this->t($p->title), '4x '.$this->t('from fabric'), ['scale'=> 80]);
 
         // Button
         $p->newSnippet('button','button-lg','button');
@@ -1539,7 +1655,7 @@ class CarltonCoat extends BentBodyBlock
         
         // Title
         $p->newPoint('titleAnchor', $p->x('bottomRight')/2, $p->y('bottomRight')/2);
-        $p->addTitle('titleAnchor', 12, $this->t($p->title), '2x '.$this->t('from fabric'), 'vertical-small');
+        $p->addTitle('titleAnchor', 12, $this->t($p->title), '2x '.$this->t('from fabric'), ['scale' => 60, 'rotate' => -90]);
 
         // Grainline
         $p->newPoint('grainlineTop', $p->x('topLeft')+10, $p->y('topLeft')+5);
@@ -1550,6 +1666,78 @@ class CarltonCoat extends BentBodyBlock
         if($this->o('sa')) {
             $p->offsetPath('sa','outline', $this->o('sa')/2,1,['class' => 'sa fabric']);
         }
+    }
+
+    /**
+     * Finalizes the inner pocket welt
+     *
+     * @param \Freesewing\Model $model The model to draft for
+     *
+     * @return void
+     */
+    public function finalizeInnerPocketWelt($model)
+    {
+        /** @var \Freesewing\Part $p */
+        $p = $this->parts['innerPocketWelt'];
+        
+        // Title
+        $p->newPoint('titleAnchor', $p->x('rightTopWelt')/2, 0);
+        $p->addTitle('titleAnchor', 13, $this->t($p->title), '4x '.$this->t('from lining'), ['scale' => 50]);
+
+        // Note
+        $p->addPoint('noteAnchor', $p->shift('leftBottomCorner', 0, 30));
+        $p->newNote('sa', 'noteAnchor', $this->t('Cut out without seam allowance'), 4, 20);
+    }
+
+    /**
+     * Finalizes the inner pocket bag
+     *
+     * @param \Freesewing\Model $model The model to draft for
+     *
+     * @return void
+     */
+    public function finalizeInnerPocketBag($model)
+    {
+        /** @var \Freesewing\Part $p */
+        $p = $this->parts['innerPocketBag'];
+        
+        // Title
+        $p->newPoint('titleAnchor', $p->x('bottomRight')/2, $p->y('bottomRight')/2);
+        $p->addTitle('titleAnchor', 14, $this->t($p->title), '2x '.$this->t('from lining'), ['scale' => 75]);
+
+        // Note
+        $p->addPoint('noteAnchor', $p->shift('bottomLeft', 0, 30));
+        $p->newNote('sa', 'noteAnchor', $this->t('Cut out without seam allowance'), 2, 20);
+
+        // Height
+        $p->newHeightDimension('bottomLeft','topLeft',$p->x('topLeft')+20, $p->unit(350));
+    }
+
+    /**
+     * Finalizes the inner pocket tab
+     *
+     * @param \Freesewing\Model $model The model to draft for
+     *
+     * @return void
+     */
+    public function finalizeInnerPocketTab($model)
+    {
+        /** @var \Freesewing\Part $p */
+        $p = $this->parts['innerPocketTab'];
+
+        // Title
+        $p->newPoint('titleAnchor', $p->x('bottomRight')/2, $p->y('bottomRight')/2);
+        $p->addTitle('titleAnchor', 15, $this->t($p->title), '2x '.$this->t('from lining'), ['scale' => 50]);
+
+        // Buttonhole
+        $p->addPoint('buttonholeAnchor1', $p->shift('bottomLeft', 45, 15));
+        $p->addPoint('buttonholeAnchor2', $p->shift('topRight', -135, 15));
+        $p->newSnippet('btn1','buttonhole','buttonholeAnchor1', ['transform' => 'rotate(45, '.$p->x('buttonholeAnchor1').', '.$p->y('buttonholeAnchor1').')']);
+        $p->newSnippet('btn2','buttonhole','buttonholeAnchor2', ['transform' => 'rotate(45, '.$p->x('buttonholeAnchor2').', '.$p->y('buttonholeAnchor2').')', 'opacity' => 0.2]);
+
+        // Note
+        $p->addPoint('noteAnchor', $p->shift('bottomLeft', 0, 5));
+        $p->newNote('sa', 'noteAnchor', $this->t('Cut out without seam allowance'), 4, 8, 0);
     }
 
 
@@ -1632,6 +1820,11 @@ class CarltonCoat extends BentBodyBlock
         $p->newLinearDimension('chestPocketBottomRight','chestPocketTopRight', 15);
         $p->newNote(1, 'chestPocketTopRight', $this->v('chestPocketRotation').' '.$this->t('degree').' '.$this->t('slant'), 1, 30, -20);
         $p->newWidthDimension(3, 'chestPocketTopLeft', $p->y('chestPocketTopLeft')+15);
+
+        // Inner pocket
+        $p->newWidthDimension(3, 'innerPocketBottomLeft', $p->y('innerPocketBottomLeft')+15);
+        $p->newWidthDimension('innerPocketBottomLeft', 'innerPocketBottomRight', $p->y('innerPocketBottomLeft')+15);
+        $p->newHeightDimension('waistSide', 'innerPocketRight', $p->x('innerPocketRight')+15);
     }
     
     /**
@@ -1912,5 +2105,54 @@ class CarltonCoat extends BentBodyBlock
         $p = $this->parts['chestPocketWelt'];
         $p->newHeightDimension('bottomRight','topRight', $p->x('topRight')+15+$this->o('sa')/2);
         $p->newWidthDimension('bottomLeft','bottomRight', $p->y('bottomLeft')+15+$this->o('sa')/2);
+    }
+    
+    /**
+     * Adds paperless info for the inner pocket welt part
+     *
+     * @param \Freesewing\Model $model The model to draft for
+     *
+     * @return void
+     */
+    public function paperlessInnerPocketWelt($model)
+    {
+        /** @var \Freesewing\Part $p */
+        $p = $this->parts['innerPocketWelt'];
+        $p->newWidthDimension('leftBottomWelt','rightBottomWelt', $p->y('leftBottomCorner')+25);
+        $p->newWidthDimension('leftBottomCorner','rightBottomCorner', $p->y('leftBottomCorner')+40);
+        $p->newHeightDimensionSm('rightBottomWelt','rightTopWelt', $p->x('rightTopCorner')+15);
+        $p->newHeightDimension('rightBottomCorner','rightTopCorner', $p->x('rightTopCorner')+30);
+    }
+    
+    /**
+     * Adds paperless info for the inner pocket bag part
+     *
+     * @param \Freesewing\Model $model The model to draft for
+     *
+     * @return void
+     */
+    public function paperlessInnerPocketBag($model)
+    {
+        /** @var \Freesewing\Part $p */
+        $p = $this->parts['innerPocketBag'];
+
+        $p->newWidthDimension('bottomLeft', 'bottomRight', $p->y('bottomLeft')+15);
+    }
+
+    /**
+     * Adds paperless info for the inner pocket tab part
+     *
+     * @param \Freesewing\Model $model The model to draft for
+     *
+     * @return void
+     */
+    public function paperlessInnerPocketTab($model)
+    {
+        /** @var \Freesewing\Part $p */
+        $p = $this->parts['innerPocketTab'];
+
+        $p->newWidthDimension('bottomLeft', 'bottomRight', $p->y('bottomLeft')+20);
+        $p->newHeightDimension('bottomRight', 'topRight', $p->x('bottomRight')+15);
+
     }
 }

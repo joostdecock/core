@@ -102,6 +102,9 @@ class CarlitaCoat extends CarltonCoat
         $this->draftPocket($model);
         $this->draftPocketFlap($model);
         $this->draftChestPocketWelt($model);
+        $this->draftInnerPocketWelt($model);
+        $this->draftInnerPocketBag($model);
+        $this->draftInnerPocketTab($model);
 
         // Female stuff
         $this->draftFrontPs($model);
@@ -149,6 +152,9 @@ class CarlitaCoat extends CarltonCoat
         $this->finalizePocket($model);
         $this->finalizePocketFlap($model);
         $this->finalizeChestPocketWelt($model);
+        $this->finalizeInnerPocketWelt($model);
+        $this->finalizeInnerPocketBag($model);
+        $this->finalizeInnerPocketTab($model);
 
         // Female stuff
         $this->finalizeFrontPanel($model);
@@ -169,6 +175,9 @@ class CarlitaCoat extends CarltonCoat
             $this->paperlessPocket($model);
             $this->paperlessPocketFlap($model);
             $this->paperlessChestPocketWelt($model);
+            $this->paperlessInnerPocketWelt($model);
+            $this->paperlessInnerPocketBag($model);
+            $this->paperlessInnerPocketTab($model);
         }
     }
 
@@ -394,6 +403,12 @@ class CarlitaCoat extends CarltonCoat
         /** @var \Freesewing\Part $p */
         $p = $this->parts['frontPanel'];
 
+        // Inner pocket path
+        $p->newPath('innerPocket', 'M innerPocketTopLeft L innerPocketTopRight
+            L innerPocketBottomRight L innerPocketBottomLeft z
+            M innerPocketLeft L innerPocketRight'
+        , ['class' => 'help']);
+        
         $p->newPath('outline', 'M collarTip
             C collarTip collarBendPointCpTop collarBendPoint
             L hemFrontEdge 
@@ -677,6 +692,11 @@ class CarlitaCoat extends CarltonCoat
         $p->newLinearDimension('chestPocketBottomRight','chestPocketTopRight', 15);
         $p->newNote(1, 'chestPocketBottomRight', $this->t('Integrate pocket in seam'), 5, 20, -5);
         $p->newWidthDimension(3, 'chestPocketTopLeft', $p->y('chestPocketTopLeft')+15);
+        
+        // Inner pocket
+        $p->newWidthDimension(3, 'innerPocketBottomLeft', $p->y('innerPocketBottomLeft')+15);
+        $p->newWidthDimension('innerPocketBottomLeft', 'innerPocketBottomRight', $p->y('innerPocketBottomLeft')-20);
+        $p->newHeightDimension('waistPsRight', 'innerPocketRight', $p->x('innerPocketLeft')-10);
     }
     
     /**

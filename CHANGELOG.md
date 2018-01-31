@@ -14,6 +14,20 @@
 ### Fixed
 ### Security
 
+## 1.6.3
+
+**Release date**: 2018-01-31
+
+This release adds inner pockets to Carlton/Carlita
+
+### Added
+
+#### Carlton/Carlita
+
+ - The `innerPocketWelt` part
+ - The `innerPocketBag` part
+ - The `innerPocketTab` part
+
 ## 1.6.2
 
 **Release date**: 2018-01-31

@@ -84,6 +84,10 @@ class SvenSweatshirt extends BrianBodyBlock
         $this->setValue('frontCollarTweakRun', 0); 
         $this->setValue('sleeveTweakFactor', 1); 
         $this->setValue('sleeveTweakRun', 0); 
+
+        // Hem factor depends on ribbing
+        $this->setValue('hemFactor', $this->o('ribbing') ? 1 : 3); 
+
     }
 
     /*
@@ -131,6 +135,11 @@ class SvenSweatshirt extends BrianBodyBlock
             $this->draftSleeve($model);
         }
         
+        if($this->o('ribbing')) {
+            $this->draftHemRibbing($model);
+            $this->draftSleeveRibbing($model);
+        }
+
         // Hide parent blocks
         $this->parts['frontBlock']->setRender(false);
         $this->parts['backBlock']->setRender(false);
@@ -165,12 +174,21 @@ class SvenSweatshirt extends BrianBodyBlock
         $this->finalizeBack($model);
         $this->finalizeSleeve($model);
         
+        if($this->o('ribbing')) {
+            $this->finalizeHemRibbing($model);
+            $this->finalizeSleeveRibbing($model);
+        } 
+
         // Is this a paperless pattern?
         if ($this->isPaperless) {
             // Add paperless info to all parts
             $this->paperlessFront($model);
             $this->paperlessBack($model);
             $this->paperlessSleeve($model);
+            if($this->o('ribbing')) {
+                $this->paperlessHemRibbing($model);
+                $this->paperlessSleeveRibbing($model);
+            }
         }
     }
 
@@ -186,6 +204,12 @@ class SvenSweatshirt extends BrianBodyBlock
         /** @var \Freesewing\Part $p */
         $p = $this->parts['front'];
 
+        if($this->o('ribbing')) {
+            // Take ribbing into account for length
+            $p->addPoint(6, $p->shift(6,90,$this->o('ribbingHeight')));
+            $p->addPoint(4, $p->shift(4,90,$this->o('ribbingHeight')));
+        }
+
         // Make armhole less cut-out
         $shift = [10,18,17]; // Points to shift
         $deltaX = $p->deltaX(10,12)/2; // How far?
@@ -196,15 +220,16 @@ class SvenSweatshirt extends BrianBodyBlock
         if($maxReduce > 40) $maxReduce = 40;
         $p->newPoint('waist', $p->x(5)-$maxReduce, $p->y(3), 'waist');
         $p->addPoint('waistCpTop', $p->shift('waist', 90, $p->deltaY(5,'waist')/2));
-        $p->addPoint('waistCpBottom', $p->shift('waist', -90, ($p->deltaY('waist',6)-$this->o('lengthBonus'))/2));
+        $p->addPoint('waistCpBottom', $p->shift('waist', -90, ($p->deltaY('waist',6)/3)));
         $this->setValue('waistMaxReduce', $maxReduce);
         
         // Hips with 15cm ease
         $maxReduce = $p->x(6) - ($model->m('hipsCircumference')+150)/4;
         if($maxReduce > 40) $maxReduce = 40;
         $p->newPoint(6, $p->x(6)-$maxReduce, $p->y(6), 'hips');
-        $p->addPoint('hemAtHips', $p->shift(6,90,$this->o('lengthBonus')));
+        $p->addPoint('hemAtHips', $p->shift(6,90,$p->deltaY('waist',6)/3));
         $this->setValue('hipsMaxReduce', $maxReduce);
+
 
         // Paths
         $path = 'M 9 L 2 L 3 L 4 L 6 C hemAtHips waistCpBottom waist C waistCpTop 5 5 C 13 16 14 C 15 18 10 C 17 19 12 L 8 C 20 21 9 z';
@@ -238,18 +263,24 @@ class SvenSweatshirt extends BrianBodyBlock
         /** @var \Freesewing\Part $p */
         $p = $this->parts['back'];
 
+        if($this->o('ribbing')) {
+            // Take ribbing into account for length
+            $p->addPoint(6, $p->shift(6,90,$this->o('ribbingHeight')));
+            $p->addPoint(4, $p->shift(4,90,$this->o('ribbingHeight')));
+        }
+        
         // Waist with 15cm ease
         $maxReduce = $this->v('waistMaxReduce');
         $p->newPoint('waist', $p->x(5)-$maxReduce, $p->y(3), 'waist');
         $p->addPoint('waistCpTop', $p->shift('waist', 90, $p->deltaY(5,'waist')/2));
-        $p->addPoint('waistCpBottom', $p->shift('waist', -90, ($p->deltaY('waist',6)-$this->o('lengthBonus'))/2));
+        $p->addPoint('waistCpBottom', $p->shift('waist', -90, ($p->deltaY('waist',6)/3)));
         $p->addPoint('hemAtHips', $p->shift(6,90,$this->o('lengthBonus')));
         $this->setValue('waistMaxReduce', $maxReduce);
         
         // Hips with 15cm ease
         $maxReduce = $this->v('hipsMaxReduce');
         $p->newPoint(6, $p->x(6)-$maxReduce, $p->y(6), 'hips');
-        $p->addPoint('hemAtHips', $p->shift(6,90,$this->o('lengthBonus')));
+        $p->addPoint('hemAtHips', $p->shift(6,90,$p->deltaY('waist',6)/3));
         
         // Paths
         $path = 'M 1 L 2 L 3 L 4 L 6 C hemAtHips waistCpBottom waist C waistCpTop 5 5 C 13 16 14 C 15 18 10 C 17 19 12 L 8 C 20 1 1 z';
@@ -268,6 +299,9 @@ class SvenSweatshirt extends BrianBodyBlock
 
         // Mark paths for sample service
         $p->paths['seamline']->setSample(true);
+
+        // Store quarter hem length
+        $this->setValue('quarterHem', $p->distance(4,6));
     }
     
     /**
@@ -288,6 +322,12 @@ class SvenSweatshirt extends BrianBodyBlock
         /** @var Part $p */
         $p = $this->parts['sleeve'];
         
+        if($this->o('ribbing')) {
+            // Shorten sleeve to account for ribbing
+            $p->addPoint(31, $p->shift(31,90,$this->o('ribbingHeight')));
+            $p->addPoint(32, $p->shift(32,90,$this->o('ribbingHeight')));
+        }
+        
         $path = 'M 31 L -5 C -5 20 16 C 21 10 10 C 10 22 17 C 23 28 30 C 29 25 18 C 24 11 11 C 11 27 19 C 26 5 5 L 32';
         $p->newPath('seamline', $path.' z', ['class' => 'fabric']);
         // Store sa base paths
@@ -304,6 +344,10 @@ class SvenSweatshirt extends BrianBodyBlock
 
         // Mark paths for sample service
         $p->paths['seamline']->setSample(true);
+
+        // Store sleeve hem length
+        $this->setValue('sleeveHem', $p->distance(31,32));
+        
     }
 
     /**
@@ -317,6 +361,73 @@ class SvenSweatshirt extends BrianBodyBlock
     {
         $target = $this->v('armholeFrontLength') + $this->v('armholeBackLength') + $this->o('sleevecapEase');
         return ($target - $this->v('sleeveheadLength'));
+    }
+
+    /**
+     * Drafts the hem ribbing
+     *
+     * @param \Freesewing\Model $model The model to draft for
+     *
+     * @return void
+     */
+    public function draftHemRibbing($model)
+    {
+        /** @var Part $p */
+        $p = $this->parts['hemRibbing'];
+
+        $this->draftRibbing($p, $this->v('quarterHem')*4);
+    }
+
+    /**
+     * Drafts the sleeve ribbing
+     *
+     * @param \Freesewing\Model $model The model to draft for
+     *
+     * @return void
+     */
+    public function draftSleeveRibbing($model)
+    {
+        /** @var Part $p */
+        $p = $this->parts['sleeveRibbing'];
+        $this->draftRibbing($p, $this->v('sleeveHem'));
+    }
+
+    /**
+     * Drafts ribbing
+     *
+     * @param Part $p The part to draft this for
+     * @param float $length The length of the seam the ribbing goes on
+     *
+     * @return void
+     */
+    protected function draftRibbing($p, $length)
+    {
+        $lead = 50;
+        $space = 25;
+        $p->newPoint('topLeft', 0, 0);
+        $p->newPoint('topRight', $this->o('ribbingHeight')*2, 0);
+        $p->newPoint('topLeftMid', 0, $lead); 
+        $p->newPoint('topRightMid', $p->x('topRight'), $lead); 
+        $p->newPoint('bottomLeftMid', 0, $lead+$space); 
+        $p->newPoint('bottomRightMid', $p->x('topRight'), $lead+$space); 
+        $p->newPoint('bottomLeft', 0, $lead+$space+$lead);
+        $p->newPoint('bottomRight', $p->x('topRight'), $lead+$space+$lead);
+        $p->newPoint('topMid', $this->o('ribbingHeight'), 0);
+        $p->newPoint('bottomMid', $this->o('ribbingHeight'),  $lead+$space+$lead);
+
+        $p->newPath('outline', 'M topLeftMid L topLeft L topRight L topRightMid M bottomRightMid L bottomRight L bottomLeft L bottomLeftMid', ['class' => 'various']);
+        $p->newPath('help', 'M topLeftMid L bottomLeftMid M topRightMid L bottomRightMid', ['class' => 'various hint']);
+        $p->newPath('fold', 'M topMid L bottomMid', ['class' => 'various help']);
+
+        $p->newPath('saBase', 'M topLeft L bottomLeft L bottomRight L topRight z', false, 0);
+        $p->paths['saBase']->setRender(false);
+
+        $p->addPoint('dimensionAnchorTop', $p->shift('topRight', 180, 10));
+        $p->addPoint('dimensionAnchorBottom', $p->shift('bottomRight', 180, 10));
+        $p->newLinearDimension('bottomRight','topRight', -10, $p->unit($length*$this->stretchToScale($this->o('ribbingStretchFactor'))));
+
+        $p->newPoint('titleAnchor', $p->x('topRight')/2, $p->y('bottomRight')/4);
+
     }
 
     /*
@@ -342,7 +453,7 @@ class SvenSweatshirt extends BrianBodyBlock
         // Seam allowance 
         if($this->o('sa')) {
             $p->offsetPath('sa','saBase', $this->o('sa')*-1, 1, ['class' => 'fabric sa']);
-            $p->offsetPath('hemSa','hemBase', $this->o('sa')*-3, 1, ['class' => 'fabric sa']);
+            $p->offsetPath('hemSa','hemBase', $this->o('sa')*-1*$this->v('hemFactor'), 1, ['class' => 'fabric sa']);
             // Join ends
             $p->newPath('saJoints', 'M sa-endPoint L 9 M sa-startPoint L hemSa-endPoint M hemSa-startPoint L 4', ['class' => 'fabric sa']);
         }
@@ -353,7 +464,7 @@ class SvenSweatshirt extends BrianBodyBlock
 
         // Logo
         $p->addPoint('logoAnchor', $p->shift('titleAnchor', -90 ,90));
-        $p->newSnippet('logo','logo-sm','logoAnchor');
+        $p->newSnippet('logo','logo','logoAnchor');
 
         // Cut on fold
         $p->addPoint('cofTop', $p->shift(1,-90,20));
@@ -374,7 +485,7 @@ class SvenSweatshirt extends BrianBodyBlock
         // Seam allowance
         if($this->o('sa')) {
             $p->offsetPath('sa','saBase', $this->o('sa')*-1, 1, ['class' => 'fabric sa']);
-            $p->offsetPath('hemSa','hemBase', $this->o('sa')*-3, 1, ['class' => 'fabric sa']);
+            $p->offsetPath('hemSa','hemBase', $this->o('sa')*-1*$this->v('hemFactor'), 1, ['class' => 'fabric sa']);
             // Join ends
             $p->newPath('saJoints', 'M sa-endPoint L 9 M sa-startPoint L hemSa-endPoint M hemSa-startPoint L 4', ['class' => 'fabric sa']);
         }
@@ -385,7 +496,7 @@ class SvenSweatshirt extends BrianBodyBlock
 
         // Logo
         $p->addPoint('logoAnchor', $p->shift('titleAnchor', -90 ,90));
-        $p->newSnippet('logo','logo-sm','logoAnchor');
+        $p->newSnippet('logo','logo','logoAnchor');
 
         // Cut on fold
         $p->addPoint('cofTop', $p->shift(9,-90,20));
@@ -406,7 +517,7 @@ class SvenSweatshirt extends BrianBodyBlock
         // Seam allowance 
         if($this->o('sa')) {
             $p->offsetPath('sa','saBase', $this->o('sa'), 1, ['class' => 'fabric sa']);
-            $p->offsetPath('hemSa','hemBase', $this->o('sa')*-3, 1, ['class' => 'fabric sa']);
+            $p->offsetPath('hemSa','hemBase', $this->o('sa')*-1*$this->v('hemFactor'), 1, ['class' => 'fabric sa']);
             // Join ends
             $p->newPath('saJoints', 'M hemSa-startPoint L sa-startPoint M hemSa-endPoint L sa-endPoint', ['class' => 'fabric sa']);
         }
@@ -424,6 +535,44 @@ class SvenSweatshirt extends BrianBodyBlock
         $p->newSnippet('logo','logo','logoAnchor');
     }
     
+    /**
+     * Finalizes the hem ribbing
+     *
+     * @param \Freesewing\Model $model The model to draft for
+     */
+    public function finalizeHemRibbing($model)
+    {
+        /** @var \Freesewing\Part $p */
+        $p = $this->parts['hemRibbing'];
+
+        // Title
+        $p->addTitle('titleAnchor', 4, $this->t($p->title), '1x '.$this->t('from ribbing'), ['scale' => 75]);
+
+        // Seam allowance 
+        if($this->o('sa')) {
+            $p->offsetPath('sa','saBase', $this->o('sa')*-1, 1, ['class' => 'various sa']);
+        }
+    }
+
+    /**
+     * Finalizes the sleeve ribbing
+     *
+     * @param \Freesewing\Model $model The model to draft for
+     */
+    public function finalizeSleeveRibbing($model)
+    {
+        /** @var \Freesewing\Part $p */
+        $p = $this->parts['sleeveRibbing'];
+        
+        // Title
+        $p->addTitle('titleAnchor', 5, $this->t($p->title), '2x '.$this->t('from ribbing'), ['scale' => 75]);
+        
+        // Seam allowance 
+        if($this->o('sa')) {
+            $p->offsetPath('sa','saBase', $this->o('sa')*-1, 1, ['class' => 'various sa']);
+        }
+    }
+
     /*
         ____                       _
        |  _ \ __ _ _ __   ___ _ __| | ___  ___ ___
@@ -448,7 +597,7 @@ class SvenSweatshirt extends BrianBodyBlock
         $p = $this->parts['front'];
 
         // Width at the bottom
-        $p->newWidthDimension(4,6,$p->y(6)+25);
+        $p->newWidthDimension(4,6,$p->y(6)+15+(10*$this->v('hemFactor')));
 
         // Height at the right
         $xBase = $p->x(5);
@@ -485,7 +634,7 @@ class SvenSweatshirt extends BrianBodyBlock
         $p = $this->parts['back'];
 
         // Width at the bottom
-        $p->newWidthDimension(4,6,$p->y(6)+25);
+        $p->newWidthDimension(4,6,$p->y(6)+15+(10*$this->v('hemFactor')));
 
         // Height at the right
         $xBase = $p->x(5);
@@ -527,7 +676,7 @@ class SvenSweatshirt extends BrianBodyBlock
         $p->newHeightDimension(32,30,$xBase+35);
 
         // Width at the bottom
-        $p->newWidthDimension(31,32,$p->y(32)+25);
+        $p->newWidthDimension(31,32,$p->y(32)+15+(10*$this->v('hemFactor')));
 
         // Width at the top
         $p->newWidthDimension(-5,5,$p->y(1)-35);
@@ -545,4 +694,36 @@ class SvenSweatshirt extends BrianBodyBlock
             C 26 5 5
         ', 20);
     }
+    
+    /**
+     * Paperless instructions for the hem ribbing
+     *
+     * @param \Freesewing\Model $model The model to draft for
+     *
+     * @return void
+     */
+    public function paperlessHemRibbing($model)
+    {
+        /** @var \Freesewing\Part $p */
+        $p = $this->parts['hemRibbing'];
+
+        $p->newWidthDimension('bottomLeft', 'bottomRight', $p->y('bottomLeft')+15+$this->o('sa'));
+
+    }
+
+    /**
+     * Paperless instructions for the sleeve ribbing
+     *
+     * @param \Freesewing\Model $model The model to draft for
+     *
+     * @return void
+     */
+    public function paperlessSleeveRibbing($model)
+    {
+        /** @var \Freesewing\Part $p */
+        $p = $this->parts['sleeveRibbing'];
+        
+        $p->newWidthDimension('bottomLeft', 'bottomRight', $p->y('bottomLeft')+15+$this->o('sa'));
+    }
+
 }

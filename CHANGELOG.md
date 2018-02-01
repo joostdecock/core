@@ -14,6 +14,27 @@
 ### Fixed
 ### Security
 
+## 1.6.4
+
+**Release date**: 2018-02-01
+
+This release adds ribbing to Sven, and fixes the inner pocket tab of Carlton/Carlita
+
+### Added
+
+#### Sven
+
+Sven now takes ribbing options, and drafts the ribbing as needed.
+This also avoid confusion when people add ribbing to a Sven that's drafted without ribbing
+as that would make the body/sleeves too long.
+
+### Fixed
+
+#### Carlton/Carlita
+
+The shape of the inner pocket tab was incorrect, this has been fixed.
+
+
 ## 1.6.3
 
 **Release date**: 2018-01-31
@@ -28,6 +49,7 @@ This release adds inner pockets to Carlton/Carlita
  - The `innerPocketBag` part
  - The `innerPocketTab` part
 
+
 ## 1.6.2
 
 **Release date**: 2018-01-31
@@ -41,6 +63,7 @@ This release includes some tweaks to the shoulder of Carlton/Carlita.
  - Lowered the default biceps ease
  - Lowered the default shoulder ease
  - Used only half the shoulder ease across back
+
 
 ## 1.6.1
 

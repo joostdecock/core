@@ -77,7 +77,7 @@ options:
         default: 60
     ribbing:
         title: "Ribbing"
-        description: "Do you want to include ribbing at the arms and hem, or will your apply a classic hem?"
+        description: "Do you want to include ribbing at the arms and hem, or will you apply a classic hem?"
         group: "style"
         type: "chooseOne"
         options:

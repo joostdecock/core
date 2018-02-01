@@ -1100,12 +1100,12 @@ class CarltonCoat extends BentBodyBlock
         $p = $this->parts['innerPocketTab'];
 
         $p->newPoint('topLeft', 0, 0);
-        $p->newPoint('topRight', $this->v('innerPocketWidth')/2+10, 0);
-        $p->newPoint('bottomLeft', 0, $this->v('innerPocketWidth')/2+10);
-        $p->newPoint('bottomRight', $p->x('topRight'), $p->y('bottomLeft'));
+        $p->newPoint('topRight', $this->v('innerPocketWidth')+20, 0);
+        $p->newPoint('bottom', $this->v('innerPocketWidth')/2+10 , $this->v('innerPocketWidth')/2+10);
+        $p->newPoint('top', $this->v('innerPocketWidth')/2+10, 0);
         
-        $p->newPath('outline', 'M topLeft L topRight L bottomRight L bottomLeft z', ['class' => 'lining']);
-        $p->newPath('foldline', 'M topLeft L bottomRight', ['class' => 'help']);
+        $p->newPath('outline', 'M topLeft L topRight L bottom z', ['class' => 'lining']);
+        $p->newPath('foldline', 'M top L bottom', ['class' => 'help']);
         
         // Mark path for sample service
         $p->paths['outline']->setSample(true);
@@ -1726,17 +1726,17 @@ class CarltonCoat extends BentBodyBlock
         $p = $this->parts['innerPocketTab'];
 
         // Title
-        $p->newPoint('titleAnchor', $p->x('bottomRight')/2, $p->y('bottomRight')/2);
+        $p->newPoint('titleAnchor', $p->x('bottom'), $p->y('bottom')/2.5);
         $p->addTitle('titleAnchor', 15, $this->t($p->title), '2x '.$this->t('from lining'), ['scale' => 50]);
 
         // Buttonhole
-        $p->addPoint('buttonholeAnchor1', $p->shift('bottomLeft', 45, 15));
-        $p->addPoint('buttonholeAnchor2', $p->shift('topRight', -135, 15));
-        $p->newSnippet('btn1','buttonhole','buttonholeAnchor1', ['transform' => 'rotate(45, '.$p->x('buttonholeAnchor1').', '.$p->y('buttonholeAnchor1').')']);
+        $p->addPoint('buttonholeAnchor1', $p->shift('top', -45, 15));
+        $p->addPoint('buttonholeAnchor2', $p->shift('top', -135, 15));
+        $p->newSnippet('btn1','buttonhole','buttonholeAnchor1', ['transform' => 'rotate(-45, '.$p->x('buttonholeAnchor1').', '.$p->y('buttonholeAnchor1').')']);
         $p->newSnippet('btn2','buttonhole','buttonholeAnchor2', ['transform' => 'rotate(45, '.$p->x('buttonholeAnchor2').', '.$p->y('buttonholeAnchor2').')', 'opacity' => 0.2]);
 
         // Note
-        $p->addPoint('noteAnchor', $p->shift('bottomLeft', 0, 5));
+        $p->addPoint('noteAnchor', $p->shift('topLeft', 0, 15));
         $p->newNote('sa', 'noteAnchor', $this->t('Cut out without seam allowance'), 4, 8, 0);
     }
 
@@ -2151,8 +2151,8 @@ class CarltonCoat extends BentBodyBlock
         /** @var \Freesewing\Part $p */
         $p = $this->parts['innerPocketTab'];
 
-        $p->newWidthDimension('bottomLeft', 'bottomRight', $p->y('bottomLeft')+20);
-        $p->newHeightDimension('bottomRight', 'topRight', $p->x('bottomRight')+15);
+        $p->newWidthDimension('topLeft', 'topRight', $p->y('top')-15);
+        $p->newHeightDimension('bottom', 'topRight', $p->x('topRight')+15);
 
     }
 }

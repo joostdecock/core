@@ -1731,9 +1731,7 @@ class CarltonCoat extends BentBodyBlock
 
         // Buttonhole
         $p->addPoint('buttonholeAnchor1', $p->shift('top', -45, 15));
-        $p->addPoint('buttonholeAnchor2', $p->shift('top', -135, 15));
         $p->newSnippet('btn1','buttonhole','buttonholeAnchor1', ['transform' => 'rotate(-45, '.$p->x('buttonholeAnchor1').', '.$p->y('buttonholeAnchor1').')']);
-        $p->newSnippet('btn2','buttonhole','buttonholeAnchor2', ['transform' => 'rotate(45, '.$p->x('buttonholeAnchor2').', '.$p->y('buttonholeAnchor2').')', 'opacity' => 0.2]);
 
         // Note
         $p->addPoint('noteAnchor', $p->shift('topLeft', 0, 15));

@@ -14,6 +14,24 @@
 ### Fixed
 ### Security
 
+
+## 1.6.5
+
+**Release date**: 2018-02-02
+
+This is a bugfix release with updates for Carlton/Carlita.
+
+### Fixes
+
+#### Carlita
+
+ - Fixed a faulty control point location on the armole
+
+#### Carlton/Carlita
+
+ - Removed the opacity attribute from a snippet as it breaks PostScript export in inkscape
+
+
 ## 1.6.4
 
 **Release date**: 2018-02-01

@@ -273,6 +273,7 @@ class CarlitaCoat extends CarltonCoat
             'side16',
             'side13',
             'side5',
+            'bottomChestSideCp',
         ];
         $angle = $p->angle('bottomBustPoint', 'side5');
         foreach($final as $pid) {
@@ -452,7 +453,7 @@ class CarlitaCoat extends CarltonCoat
             L bottomHemSide
             L bottomSeatSide
             C bottomSeatSideCpTop bottomWaistSideCpBottom bottomWaistSide 
-            C bottomWaistSideCpTop bottomChestSideCp finalSide5
+            C bottomWaistSideCpTop finalBottomChestSideCp finalSide5
             z
             ', ['class' => 'fabric']);
         

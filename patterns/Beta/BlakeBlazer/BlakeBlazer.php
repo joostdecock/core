@@ -152,15 +152,6 @@ class BlakeBlazer extends \Freesewing\Patterns\Beta\BentBodyBlock
         $this->finalizeCollar($model);
         $this->finalizeCollarstand($model);
 
-        // Should we draw zebra stripes?
-        if ($this->o('zebra') == 1) {
-            $this->zebraBack($model);
-            $this->zebraSide($model);
-            $this->zebraFront($model);
-            $this->zebraTopsleeve($model);
-            $this->zebraUndersleeve($model);
-        }
-
         // Is this a paperless pattern?
         if ($this->isPaperless) {
             // Add paperless info to all parts
@@ -492,7 +483,6 @@ class BlakeBlazer extends \Freesewing\Patterns\Beta\BentBodyBlock
         }
 
 
-
         /*
          * Slash & spread chest.  This is one of those things that's simpler on paper
          *
@@ -553,8 +543,8 @@ class BlakeBlazer extends \Freesewing\Patterns\Beta\BentBodyBlock
         // Figure out how much we need to rotate
         $distance = $model->m('chestCircumference') * $this->o('chestShaping');
         $p->newPoint('.helper', $p->x('feTop'), $p->y(10) - $distance);
-        $angle = -1*(360-$p->angle(10, '.helper'))/$steps;
-        
+        $angle = -1*(360-$p->angle('.helper', 10))/$steps;
+
         // Rotate points in second loop, because we need them all before we can do this
         $steps++;
         $pathDown = [];
@@ -573,7 +563,7 @@ class BlakeBlazer extends \Freesewing\Patterns\Beta\BentBodyBlock
 
         // Now reconstruct the armhole in a proper curve
         $p->clonePoint('shoulderLineRight', 12);
-        $p->addPoint(19, $p->shift(12, $p->angle('shoulderLineLeft','shoulderLineRight')+90, 15));
+        $p->addPoint(19, $p->shift(12, $p->angle('shoulderLineLeft','shoulderLineRight')-90, 15));
         $p->addPoint(10, $p->shift(10, 0, 3));
         $p->addPoint(17, $p->shift(17, 0, 3));
         $p->addPoint(18, $p->shift(18, 0, 3));
@@ -588,9 +578,9 @@ class BlakeBlazer extends \Freesewing\Patterns\Beta\BentBodyBlock
         $p->newPath('sdfsdss', 'M breakPoint L cutawayPoint', ['class' => 'debug']);
         $p->addPoint('shoulderRoll', $p->shiftOutwards('shoulderLineRight','shoulderLineLeft', $this->o('rollLineCollarHeight')));
         $p->addPoint('shoulderRollCb', $p->shiftOutwards('breakPoint','shoulderRoll', $this->v('backCollarLength')));
-        $p->addPoint('collarCbHelp', $p->shift('shoulderRollCb', $p->angle('shoulderRoll','shoulderRollCb')+90, $this->o('rollLineCollarHeight')));
-        $p->addPoint('collarCbBottom', $p->shift('collarCbHelp', $p->angle('shoulderRoll','collarCbHelp')+90, $this->o('rollLineCollarHeight')));
-        $p->addPoint('collarCbTop',    $p->shift('collarCbHelp', $p->angle('shoulderRoll','collarCbHelp')-90,  $this->v('collarHeight')*2 - $this->o('rollLineCollarHeight')));
+        $p->addPoint('collarCbHelp', $p->shift('shoulderRollCb', $p->angle('shoulderRoll','shoulderRollCb')-90, $this->o('rollLineCollarHeight')));
+        $p->addPoint('collarCbBottom', $p->shift('collarCbHelp', $p->angle('shoulderRoll','collarCbHelp')-90, $this->o('rollLineCollarHeight')));
+        $p->addPoint('collarCbTop',    $p->shift('collarCbHelp', $p->angle('shoulderRoll','collarCbHelp')+90,  $this->v('collarHeight')*2 - $this->o('rollLineCollarHeight')));
         
         // Notch (prevent it from getting too deep)
         $maxNotch = $p->distance($this->v('cfTipPoint'), $this->v('cfTipPointNext'));
@@ -599,8 +589,8 @@ class BlakeBlazer extends \Freesewing\Patterns\Beta\BentBodyBlock
         $p->addPoint('notchPoint', $p->shiftTowards($this->v('cfTipPoint'), $this->v('cfTipPointNext'), $this->v('collarNotchDepth')));
         $p->addPoint('notchTip', $p->rotate($this->v('cfTipPoint'), 'notchPoint', -1 * $this->o('collarNotchAngle')));
         $p->addPoint('notchTip', $p->shiftTowards('notchPoint', 'notchTip', $this->v('collarNotchDepth') * $this->o('collarNotchReturn')));
-        $p->addPoint('notchTipCp', $p->shift('notchTip', $p->angle('notchPoint','notchTip')+90, $p->distance('notchTip', 'collarCbTop')/4));
-        $p->addPoint('collarCbTopCp', $p->shift('collarCbTop', $p->angle('collarCbBottom','collarCbTop')-90, $p->distance('notchTip', 'collarCbTop')/4));
+        $p->addPoint('notchTipCp', $p->shift('notchTip', $p->angle('notchPoint','notchTip')-90, $p->distance('notchTip', 'collarCbTop')/4));
+        $p->addPoint('collarCbTopCp', $p->shift('collarCbTop', $p->angle('collarCbBottom','collarCbTop')+90, $p->distance('notchTip', 'collarCbTop')/4));
 
         // Redraw front neck line
         $p->clonePoint($this->v('cfTipPoint'), 'cfRealTop');
@@ -614,7 +604,7 @@ class BlakeBlazer extends \Freesewing\Patterns\Beta\BentBodyBlock
         // Now adapt to fit the back neck curve length
         if($p->distance('shoulderLineRealLeft', 'collarCbBottom') != $this->v('backCollarLength')) {
             $delta = $p->distance('shoulderLineRealLeft', 'collarCbBottom') - $this->v('backCollarLength');
-            $angle = $p->angle('shoulderLineRealLeft', 'collarCbBottom');
+            $angle = $p->angle('collarCbBottom', 'shoulderLineRealLeft');
             $shiftThese = ['collarCbBottom','collarCbTop', 'collarCbTopCp'];
             foreach($shiftThese as $pid) $p->addPoint($pid, $p->shift($pid, $angle, $delta));
         }
@@ -780,7 +770,7 @@ class BlakeBlazer extends \Freesewing\Patterns\Beta\BentBodyBlock
             $p->splitCurve('hipsCenter','hipsCenterCpTop','waistCenterCpBottom','waistCenter','ventTip','ventSplit');
             $p->addPoint('ventFacingBase', $p->shiftAlong('ventTip','ventSplit3','ventSplit2','hipsCenter', 15));
             $p->splitCurve('hipsCenter','hipsCenterCpTop','waistCenterCpBottom','waistCenter','ventFacingBase','ventFacingSplit');
-            $p->offsetPathString('ventFacing', 'M hipsCenter C ventFacingSplit2 ventFacingSplit3 ventFacingBase', -40);
+            $p->offsetPathString('ventFacing', 'M hipsCenter C ventFacingSplit2 ventFacingSplit3 ventFacingBase', 40);
             $p->addPoint('ventFacingBottomLeft', $p->shift('hemCenter', 180, 40));
 
             $p->newPath('tmp', 'M hemCenter L hipsCenter C hipsCenterCpTop waistCenterCpBottom waistCenter', ['class' => 'hint']);
@@ -849,7 +839,7 @@ class BlakeBlazer extends \Freesewing\Patterns\Beta\BentBodyBlock
         foreach($cloneThese as $pid) $p->newPoint($pid, $front->x($pid), $front->y($pid));
         
         // Rotate entire part
-        $angle = $front->angle('collarCbTop','collarCbBottom');
+        $angle = $front->angle('collarCbBottom', 'collarCbTop');
         foreach($cloneThese as $pid) $p->addPoint($pid, $p->rotate($pid, 'collarCbTop', $angle*-1+90));
 
         // Tweak bottom shape
@@ -1056,749 +1046,6 @@ class BlakeBlazer extends \Freesewing\Patterns\Beta\BentBodyBlock
 
     }
 
-    /**
-     * Draws zebra stripes on the back
-     *
-     * @param \Freesewing\Model $model The model to draft for
-     *
-     * @return void
-     */
-    public function zebraBack($model)
-    {
-        /** @var \Freesewing\Part $p */
-        $p = $this->parts['back'];
-
-        if(1 || $this->o('zebra') == 0) {
-            $shiftThese = [
-                'centerBackNeck',
-                'chestCenterCpTop',
-                'chestCenter',
-                'chestCenterCpBottom',
-                'waistCenterCpTop',
-                'waistCenter',
-                'waistCenterCpBottom',
-                'hipsCenterCpTop',
-                'hipsCenter',
-                'hemCenter'
-            ];
-        }
-        // Shift center back
-        foreach($shiftThese as $pid) $p->addPoint('zCb'.ucfirst($pid), $p->shift($pid,0,$this->o('zebraCenterBackClearance')));
-
-        // Stripe marks 
-
-        // Neck opening, stripe 1
-        $len1 = $p->curveLen('centerBackNeck', 20, 8, 8);
-        $p->addPoint('z.1.Top', $p->shiftAlong('centerBackNeck', 20, 8, 8, $len1/3));
-        $p->addPoint('z.1.Bot', $p->shiftAlong('centerBackNeck', 20, 8, 8, $len1*0.9));
-
-        // Shoulder seam, stripes 2,3 
-        $p->addPoint('z.2.Top', $p->shiftFractionTowards(8,12,0.15));
-        $p->addPoint('z.2.Bot', $p->shiftFractionTowards(8,12,0.5));
-        $p->addPoint('z.3.Top', $p->shiftFractionTowards(8,12,0.7));
-
-        // Armhole, stripes 3,4,5 
-        $len1 = $p->curveLen(12, 19, 17, 10);
-        $p->addPoint('z.3.Bot', $p->shiftAlong(12, 19, 17, 10, $len1*0.3));
-        $p->addPoint('z.4.Top', $p->shiftAlong(12, 19, 17, 10, $len1*0.5));
-        $p->clonePoint(10,'z.4.Bot');
-        $len2 = $p->curveLen(10, 18, 15, 14);
-        $p->addPoint('z.5.Top', $p->shiftAlong(10, 18, 15, 14, $len2*0.2));
-        $p->addPoint('z.5.Bot', $p->shiftAlong(10, 18, 15, 14, $len2*0.9));
-        
-        // Side seam part 1, stripes 6,7,8 Rhytm = 0.1, 0.3, 0.4, 0.6, 0.7, 0.9
-        $len1 = $p->curveLen(14, 'slArmCpBottom', 'waistBackSideCpTop', 'waistBackSide');
-        $p->addPoint('z.6.Top', $p->shiftAlong(14, 'slArmCpBottom', 'waistBackSideCpTop', 'waistBackSide', $len1*0.1));
-        $p->addPoint('z.6.Bot', $p->shiftAlong(14, 'slArmCpBottom', 'waistBackSideCpTop', 'waistBackSide', $len1*0.3));
-        $p->addPoint('z.7.Top', $p->shiftAlong(14, 'slArmCpBottom', 'waistBackSideCpTop', 'waistBackSide', $len1*0.4));
-        $p->addPoint('z.7.Bot', $p->shiftAlong(14, 'slArmCpBottom', 'waistBackSideCpTop', 'waistBackSide', $len1*0.6));
-        $p->addPoint('z.8.Top', $p->shiftAlong(14, 'slArmCpBottom', 'waistBackSideCpTop', 'waistBackSide', $len1*0.7));
-        $p->addPoint('z.8.Bot', $p->shiftAlong(14, 'slArmCpBottom', 'waistBackSideCpTop', 'waistBackSide', $len1*0.9));
-        // Side seam part 2, stripes 9,10 Rhytm = 0.3, 0.5, 0.9
-        $len2 = $p->curveLen('waistBackSide', 'waistBackSideCpBottom','hipsBackSideCpTop','hipsBackSide');
-        $p->clonePoint('waistBackSide', 'z.9.Top');
-        $p->addPoint('z.9.Bot', $p->shiftAlong('waistBackSide', 'waistBackSideCpBottom','hipsBackSideCpTop','hipsBackSide', $len2*0.3));
-        $p->addPoint('z.10.Top', $p->shiftAlong('waistBackSide', 'waistBackSideCpBottom','hipsBackSideCpTop','hipsBackSide', $len2*0.5));
-        $p->addPoint('z.10.Bot', $p->shiftAlong('waistBackSide', 'waistBackSideCpBottom','hipsBackSideCpTop','hipsBackSide', $len2*0.9));
-        // Side seam part 3, stripe 11 Rhytm = 0.5
-        $p->addPoint('z.11.Top', $p->shiftFractionTowards('hipsBackSide','hemBackSide', 0.5));
-        // Hem, stripes 11,12 Rhytm = 0.2, 0.4, 0.7
-        $p->addPoint('z.11.Bot', $p->shiftFractionTowards('hemEdgeBackSide', 'hemEdgeCenter',0.2));
-        $p->addPoint('z.12.Top', $p->shiftFractionTowards('hemEdgeBackSide', 'hemEdgeCenter',0.4));
-        $p->addPoint('z.12.Bot', $p->shiftFractionTowards('hemEdgeBackSide', 'hemEdgeCenter',0.7));
-
-        // Stripe tips
-        $p->clonePoint('zCbChestCenterCpTop', 'z.1.Tip');
-        $p->addPoint('z.2.Tip', $p->shiftFractionTowards('zCbChestCenter', 'zCbChestCenterCpTop', 0.5));
-        $p->clonePoint('zCbChestCenter', 'z.3.Tip');
-        $len1 = $p->curveLen('zCbChestCenter','zCbChestCenterCpBottom','zCbWaistCenterCpTop','zCbWaistCenter');
-        $p->addPoint('z.4.Tip', $p->shiftAlong('zCbChestCenter','zCbChestCenterCpBottom','zCbWaistCenterCpTop','zCbWaistCenter', $len1*0.15));
-        $p->addPoint('z.5.Tip', $p->shiftAlong('zCbChestCenter','zCbChestCenterCpBottom','zCbWaistCenterCpTop','zCbWaistCenter', $len1*0.35));
-        $p->addPoint('z.6.Tip', $p->shiftAlong('zCbChestCenter','zCbChestCenterCpBottom','zCbWaistCenterCpTop','zCbWaistCenter', $len1*0.51));
-        $p->addPoint('z.7.Tip', $p->shiftAlong('zCbChestCenter','zCbChestCenterCpBottom','zCbWaistCenterCpTop','zCbWaistCenter', $len1*0.67));
-        $p->addPoint('z.8.Tip', $p->shiftAlong('zCbChestCenter','zCbChestCenterCpBottom','zCbWaistCenterCpTop','zCbWaistCenter', $len1*0.83));
-        $p->addPoint('z.9.Tip', $p->shiftAlong('zCbChestCenter','zCbChestCenterCpBottom','zCbWaistCenterCpTop','zCbWaistCenter', $len1*0.99));
-        $len2 = $p->curveLen('zCbWaistCenter','zCbWaistCenterCpBottom','zCbHipsCenterCpTop','zCbHipsCenter');
-        $p->addPoint('z.10.Tip', $p->shiftAlong('zCbWaistCenter','zCbWaistCenterCpBottom','zCbHipsCenterCpTop','zCbHipsCenter', $len2*0.3));
-        $p->addPoint('z.11.Tip', $p->shiftAlong('zCbWaistCenter','zCbWaistCenterCpBottom','zCbHipsCenterCpTop','zCbHipsCenter', $len2*0.6));
-        $p->addPoint('z.12.Tip', $p->shiftAlong('zCbWaistCenter','zCbWaistCenterCpBottom','zCbHipsCenterCpTop','zCbHipsCenter', $len2*0.9));
-
-
-        // Make stripes a bit more organic
-        for($s=1;$s<=12;$s++) {
-            if($s == 1) $p->addPoint('.helper', $p->shiftTowards("z.$s.Tip", "z.$s.Top", 20));
-            else $p->addPoint('.helper', $p->shiftTowards("z.$s.Tip", "z.$s.Top", 30));
-            $p->addPoint("z.$s.TipCpTop", $p->rotate('.helper', "z.$s.Tip", 40));
-            $p->addPoint("z.$s.TipCpBot", $p->rotate("z.$s.TipCpTop", "z.$s.Tip", -90));
-            
-            $p->addPoint("z.$s.TopA", $p->shiftFractionTowards("z.$s.Tip", "z.$s.Top", 0.3));
-            $p->addPoint("z.$s.TopACpTip", $p->shiftFractionTowards("z.$s.Tip", "z.$s.Top", 0.2));
-            $p->addPoint("z.$s.TopACpTip", $p->rotate("z.$s.TopACpTip", "z.$s.TopA", -15));
-            $p->addPoint("z.$s.TopACpTop", $p->rotate("z.$s.TopACpTip", "z.$s.TopA", 180));
-            $p->addPoint("z.$s.TopB", $p->shiftFractionTowards("z.$s.Tip", "z.$s.Top", 0.7));
-            $p->addPoint("z.$s.TopBCpTip", $p->shiftFractionTowards("z.$s.Tip", "z.$s.Top", 0.6));
-            $p->addPoint("z.$s.TopBCpTip", $p->rotate("z.$s.TopBCpTip", "z.$s.TopB", -15));
-            $p->addPoint("z.$s.TopBCpTop", $p->rotate("z.$s.TopBCpTip", "z.$s.TopB", 180));
-
-            $p->addPoint("z.$s.BotA", $p->shiftFractionTowards("z.$s.Tip", "z.$s.Bot", 0.4));
-            $p->addPoint("z.$s.BotA", $p->shift("z.$s.BotA",-90,15));
-            $p->addPoint("z.$s.BotACpTip", $p->shiftFractionTowards("z.$s.Tip", "z.$s.Bot", 0.3));
-            if($s == 1) $p->addPoint("z.$s.BotACpTip", $p->rotate("z.$s.BotACpTip", "z.$s.BotA", 80));
-            else $p->addPoint("z.$s.BotACpTip", $p->rotate("z.$s.BotACpTip", "z.$s.BotA", 20));
-            $p->addPoint("z.$s.BotACpBot", $p->rotate("z.$s.BotACpTip", "z.$s.BotA", 180));
-            $p->addPoint("z.$s.BotB", $p->shiftFractionTowards("z.$s.Tip", "z.$s.Bot", 0.7));
-            $p->addPoint("z.$s.BotB", $p->shift("z.$s.BotB",-90,15));
-            $p->addPoint("z.$s.BotBCpTip", $p->shiftFractionTowards("z.$s.Tip", "z.$s.Bot", 0.6));
-            if($s == 1) $p->addPoint("z.$s.BotBCpTip", $p->rotate("z.$s.BotBCpTip", "z.$s.BotB", 65));
-            else $p->addPoint("z.$s.BotBCpTip", $p->rotate("z.$s.BotBCpTip", "z.$s.BotB", 25));
-            $p->addPoint("z.$s.BotBCpBot", $p->rotate("z.$s.BotBCpTip", "z.$s.BotB", 180));
-
-            $p->clonePoint("z.$s.Top", "z.$s.TopCp");
-            $p->clonePoint("z.$s.Bot", "z.$s.BotCp");
-
-            $p->newPath("stripe$s", "
-                M z.$s.Tip 
-                C z.$s.TipCpTop z.$s.TopACpTip z.$s.TopA
-                C z.$s.TopACpTop z.$s.TopBCpTip z.$s.TopB
-                C z.$s.TopBCpTop z.$s.TopCp z.$s.Top 
-                M z.$s.Bot 
-                C z.$s.BotCp z.$s.BotBCpBot z.$s.BotB
-                C z.$s.BotBCpTip z.$s.BotACpBot z.$s.BotA
-                C z.$s.BotACpTip z.$s.TipCpBot z.$s.Tip 
-            ", ['class' => 'fabric hint zebra']);
-
-            // Basic triangles
-            //$p->newPath("stripe$s", "M z.$s.Tip L z.$s.Top L z.$s.Bot z", ['style' => 'stroke: #fff']);
-        }
-
-        // Some manual tweaks
-        $p->addPoint('z.2.TopCp', $p->shift('z.2.TopCp', $p->angle(8,12)+90, 15));
-        $p->addPoint('z.2.BotCp', $p->shift('z.2.BotCp', $p->angle(8,12)+90, 10));
-        $p->addPoint('z.3.TopCp', $p->shift('z.3.TopCp', $p->angle(8,12)+90, 15));
-        $p->addPoint('z.3.BotCp', $p->shift('z.3.BotCp', $p->angle(12,19)+90, 10));
-        $p->addPoint('z.4.TopCp', $p->shift('z.4.TopCp', $p->angle(12,19)+90, 15));
-        $p->addPoint('z.4.BotCp', $p->shift('z.4.BotCp', 180, 10));
-        $p->addPoint('z.5.TopCp', $p->shift('z.5.TopCp', 180, 15));
-        $p->addPoint('z.5.BotCp', $p->shift('z.5.BotCp', $p->angle('z.5.BotCp',14)+90, 15));
-        $p->addPoint('z.6.TopCp', $p->shift('z.6.TopCp', $p->angle(14,'z.6.TopCp')+90, 15));
-        $p->addPoint('z.6.BotCp', $p->shift('z.6.BotCp', $p->angle('z.6.TopCp','z.6.BotCp')+90, 20));
-        $p->addPoint('z.7.TopCp', $p->shift('z.7.TopCp', $p->angle('z.6.Bot','z.7.Top')+90, 15));
-        $p->addPoint('z.7.BotCp', $p->shift('z.7.BotCp', $p->angle('z.7.Top','z.7.Bot')+90, 20));
-        $p->addPoint('z.8.TopCp', $p->shift('z.8.TopCp', $p->angle('z.7.Bot','z.8.Top')+90, 15));
-        $p->addPoint('z.8.BotCp', $p->shift('z.8.BotCp', $p->angle('z.8.Top','z.8.Bot')+90, 20));
-        $p->addPoint('z.9.TopCp', $p->shift('z.9.TopCp', $p->angle('z.8.Bot','z.9.Top')+90, 15));
-        $p->addPoint('z.9.BotCp', $p->shift('z.9.BotCp', $p->angle('z.9.Top','z.9.Bot')+90, 20));
-        $p->addPoint('z.10.TopCp', $p->shift('z.10.TopCp', $p->angle('z.9.Bot','z.10.Top')+90, 15));
-        $p->addPoint('z.10.BotCp', $p->shift('z.10.BotCp', $p->angle('z.10.Top','z.10.Bot')+90, 20));
-        $p->addPoint('z.11.TopCp', $p->shift('z.11.TopCp', 180, 15));
-
-        // Store this for the undersleeve stripe
-        $p->splitCurve(10,18,15,14,'z.5.Top','tmp');
-        $this->setValue('backSleevePitchToJoint', $p->distance(10, 'sleeveJoint'));
-        $this->setValue('backSleeveJointToStartStripe', $p->curveLen('tmp1','tmp2','tmp3','tmp4') - $p->distance(10, 'sleeveJoint'));
-        $this->setValue('backSleeveJointToEndStripe', $p->curveLen('tmp5','tmp6','tmp7','tmp8') - $p->distance(14, 'z.5.Bot') + $this->v('backSleeveJointToStartStripe'));
-    }
-
-    /**
-     * Draws zebra stripes on the side
-     *
-     * @param \Freesewing\Model $model The model to draft for
-     *
-     * @return void
-     */
-    public function zebraSide($model)
-    {
-        /** @var \Freesewing\Part $p */
-        $p = $this->parts['side'];
-
-        // Right side
-        // Side seam part 1, stripes 6,7,8 Rhytm = 0.1, 0.3, 0.4, 0.6, 0.7, 0.9
-        $len = $p->curveLen('side14','sideSlArmCpBottom','sideWaistSideBackCpTop','sideWaistSideBack');
-        $p->addPoint('rz.6.Top', $p->shiftAlong('side14','sideSlArmCpBottom','sideWaistSideBackCpTop','sideWaistSideBack', $len*0.1)); 
-        $p->addPoint('rz.6.Bot', $p->shiftAlong('side14','sideSlArmCpBottom','sideWaistSideBackCpTop','sideWaistSideBack', $len*0.3)); 
-        $p->addPoint('rz.7.Top', $p->shiftAlong('side14','sideSlArmCpBottom','sideWaistSideBackCpTop','sideWaistSideBack', $len*0.4)); 
-        $p->addPoint('rz.7.Bot', $p->shiftAlong('side14','sideSlArmCpBottom','sideWaistSideBackCpTop','sideWaistSideBack', $len*0.6)); 
-        $p->addPoint('rz.8.Top', $p->shiftAlong('side14','sideSlArmCpBottom','sideWaistSideBackCpTop','sideWaistSideBack', $len*0.7)); 
-        $p->addPoint('rz.8.Bot', $p->shiftAlong('side14','sideSlArmCpBottom','sideWaistSideBackCpTop','sideWaistSideBack', $len*0.9)); 
-        // Side seam part 2, stripes 9,10 Rhytm = 0.3, 0.5, 0.9
-        $len = $p->curveLen('sideWaistSideBack','sideWaistSideBackCpBottom','sideHipsSideBackCpTop','sideHipsSideBack');
-        $p->clonePoint('sideWaistSideBack','rz.9.Top');
-        $p->addPoint('rz.9.Bot', $p->shiftAlong('sideWaistSideBack','sideWaistSideBackCpBottom','sideHipsSideBackCpTop','sideHipsSideBack', $len*0.3)); 
-        $p->addPoint('rz.10.Top', $p->shiftAlong('sideWaistSideBack','sideWaistSideBackCpBottom','sideHipsSideBackCpTop','sideHipsSideBack', $len*0.5)); 
-        $p->addPoint('rz.10.Bot', $p->shiftAlong('sideWaistSideBack','sideWaistSideBackCpBottom','sideHipsSideBackCpTop','sideHipsSideBack', $len*0.9)); 
-        // Side seam part 3, stripe 11 Rhytm = 0.5
-        $p->addPoint('rz.11.Top', $p->shiftFractionTowards('sideHipsSideBack','sideHemSideBack', 0.5)); 
-
-        // Left side
-        // Side seam part 1, stripes 6,7,8 Rhytm = 0.1, 0.3, 0.4, 0.6, 0.7, 0.9
-        $len = $p->curveLen('slArm','slArm','waistSideBackCpTop','waistSideBack');
-        $p->addPoint('lz.6.Top', $p->shiftAlong('slArm','slArm','waistSideBackCpTop','waistSideBack', $len*0.1)); 
-        $p->addPoint('lz.6.Bot', $p->shiftAlong('slArm','slArm','waistSideBackCpTop','waistSideBack', $len*0.3)); 
-        $p->addPoint('lz.7.Top', $p->shiftAlong('slArm','slArm','waistSideBackCpTop','waistSideBack', $len*0.4)); 
-        $p->addPoint('lz.7.Bot', $p->shiftAlong('slArm','slArm','waistSideBackCpTop','waistSideBack', $len*0.6)); 
-        $p->addPoint('lz.8.Top', $p->shiftAlong('slArm','slArm','waistSideBackCpTop','waistSideBack', $len*0.7)); 
-        $p->addPoint('lz.8.Bot', $p->shiftAlong('slArm','slArm','waistSideBackCpTop','waistSideBack', $len*0.9)); 
-        // Side seam part 2, stripes 9,10 Rhytm = 0.3, 0.5, 0.9
-        $len = $p->curveLen('waistSideBack','waistSideBackCpBottom','hipsSideBackCpTop','hipsSideBack');
-        $p->clonePoint('waistSideBack','lz.9.Top');
-        $p->addPoint('lz.9.Bot',  $p->shiftAlong('waistSideBack','waistSideBackCpBottom','hipsSideBackCpTop','hipsSideBack', $len*0.3)); 
-        $p->addPoint('lz.10.Top', $p->shiftAlong('waistSideBack','waistSideBackCpBottom','hipsSideBackCpTop','hipsSideBack', $len*0.5)); 
-        $p->addPoint('lz.10.Bot', $p->shiftAlong('waistSideBack','waistSideBackCpBottom','hipsSideBackCpTop','hipsSideBack', $len*0.9)); 
-        // Side seam part 3, stripe 11 Rhytm = 0.5
-        $p->addPoint('lz.11.Top', $p->shiftFractionTowards('hipsSideBack','hemSideBack', 0.5)); 
-
-        // Make stripes a bit more organic
-        for($s=6;$s<=10;$s++) {
-            $p->addPoint("rz.$s.TopCp", $p->shift("rz.$s.Top", 180, 15));
-            $p->addPoint("rz.$s.BotCp", $p->shift("rz.$s.Bot", 180, 15));
-            $p->addPoint("lz.$s.TopCp", $p->shift("lz.$s.Top", 0, 15));
-            $p->addPoint("lz.$s.BotCp", $p->shift("lz.$s.Bot", 0, 15));
-
-            $p->addPoint("z.$s.TopMid", $p->shiftFractionTowards("rz.$s.Top","lz.$s.Top", 0.5));
-            $p->addPoint("z.$s.TopMid", $p->shift("z.$s.TopMid", -90, 10));
-            $p->addPoint("z.$s.TopMidCpR", $p->shiftFractionTowards("rz.$s.Top","lz.$s.Top", 0.35));
-            $p->addPoint("z.$s.TopMidCpR", $p->shift("z.$s.TopMidCpR", -90, 10));
-            $p->addPoint("z.$s.TopMidCpR", $p->rotate("z.$s.TopMidCpR", "z.$s.TopMid", 10));
-            $p->addPoint("z.$s.TopMidCpL", $p->rotate("z.$s.TopMidCpR", "z.$s.TopMid", 180));
-
-            $p->addPoint("z.$s.BotMid", $p->shiftFractionTowards("rz.$s.Bot","lz.$s.Bot", 0.5));
-            $p->addPoint("z.$s.BotMid", $p->shift("z.$s.BotMid", -90, 5));
-            $p->addPoint("z.$s.BotMidCpR", $p->shiftFractionTowards("rz.$s.Bot","lz.$s.Bot", 0.35));
-            $p->addPoint("z.$s.BotMidCpR", $p->shift("z.$s.BotMidCpR", -90, 10));
-            $p->addPoint("z.$s.BotMidCpR", $p->rotate("z.$s.BotMidCpR", "z.$s.BotMid", 10));
-            $p->addPoint("z.$s.BotMidCpL", $p->rotate("z.$s.BotMidCpR", "z.$s.BotMid", 180));
-
-            $p->newPath("stripe$s", "
-                M lz.$s.Top 
-                C lz.$s.TopCp z.$s.TopMidCpL z.$s.TopMid 
-                C z.$s.TopMidCpR rz.$s.TopCp rz.$s.Top
-                M rz.$s.Bot 
-                C rz.$s.BotCp z.$s.BotMidCpR z.$s.BotMid
-                C z.$s.BotMidCpL lz.$s.BotCp lz.$s.Bot
-            ", ['class' => 'fabric hint zebra']);
-        }
-        // Stripe11 only has a top
-        $s = 11;
-        $p->addPoint("rz.$s.TopCp", $p->shift("rz.$s.Top", 180, 15));
-        $p->addPoint("lz.$s.TopCp", $p->shift("lz.$s.Top", 0, 15));
-        $p->addPoint("z.$s.TopMid", $p->shiftFractionTowards("rz.$s.Top","lz.$s.Top", 0.5));
-        $p->addPoint("z.$s.TopMid", $p->shift("z.$s.TopMid", -90, 5));
-        $p->addPoint("z.$s.TopMidCpR", $p->shiftFractionTowards("rz.$s.Top","lz.$s.Top", 0.35));
-        $p->addPoint("z.$s.TopMidCpR", $p->shift("z.$s.TopMidCpR", -90, 10));
-        $p->addPoint("z.$s.TopMidCpR", $p->rotate("z.$s.TopMidCpR", "z.$s.TopMid", 10));
-        $p->addPoint("z.$s.TopMidCpL", $p->rotate("z.$s.TopMidCpR", "z.$s.TopMid", 180));
-
-        $p->newPath("stripe$s", "
-            M lz.$s.Top 
-            C lz.$s.TopCp z.$s.TopMidCpL z.$s.TopMid 
-            C z.$s.TopMidCpR rz.$s.TopCp rz.$s.Top
-        ", ['class' => 'fabric hint zebra']);
-    }
-
-    /**
-     * Draws zebra stripes on the front
-     *
-     * @param \Freesewing\Model $model The model to draft for
-     *
-     * @return void
-     */
-    public function zebraFront($model)
-    {
-        /** @var \Freesewing\Part $p */
-        $p = $this->parts['front'];
-        /** @var \Freesewing\Part $p */
-        $side = $this->parts['side'];
-
-        /** @var \Freesewing\Part $p */
-        $back = $this->parts['back'];
-
-        // Shoulder seam, stripes 2,3 
-        $p->addPoint('z.2.Top', $p->shiftTowards('shoulderLineRight', 'shoulderLineRealLeft', $back->distance(12, 'z.2.Top')));   
-        $p->addPoint('z.2.Bot', $p->shiftTowards('shoulderLineRight', 'shoulderLineRealLeft', $back->distance(12, 'z.2.Bot')));   
-        $p->addPoint('z.3.Top', $p->shiftTowards('shoulderLineRight', 'shoulderLineRealLeft', $back->distance(12, 'z.3.Top')));   
-        // Armhole, stripes 3,4,5 
-        $len1 = $p->curveLen(12, 19, 17, 10);
-        $p->addPoint('z.3.Bot', $p->shiftAlong(12, 19, 17, 10, $len1*0.3));
-        $p->addPoint('z.4.Top', $p->shiftAlong(12, 19, 17, 10, $len1*0.5));
-        $p->clonePoint(10,'z.4.Bot');
-        $len2 = $p->curveLen(10, 18, 15, 14);
-        $p->addPoint('z.5.Top', $p->shiftAlong(10, 18, 15, 14, $len2*0.3));
-        $p->clonePoint(14,'z.5.Bot');
-        // Side seam part 1, stripes 6,7,8 Rhytm = 0.1, 0.3, 0.4, 0.6, 0.7, 0.9
-        $len = $side->curveLen('slArm','slArm','waistSideBackCpTop','waistSideBack');
-        $p->addPoint('z.6.Top', $p->shiftAlong('slArm','slArm','waistBackSideCpTop','waistBackSide', $len*0.1)); 
-        $p->addPoint('z.6.Bot', $p->shiftAlong('slArm','slArm','waistBackSideCpTop','waistBackSide', $len*0.3)); 
-        $p->addPoint('z.7.Top', $p->shiftAlong('slArm','slArm','waistBackSideCpTop','waistBackSide', $len*0.4)); 
-        $p->addPoint('z.7.Bot', $p->shiftAlong('slArm','slArm','waistBackSideCpTop','waistBackSide', $len*0.6)); 
-        $p->addPoint('z.8.Top', $p->shiftAlong('slArm','slArm','waistBackSideCpTop','waistBackSide', $len*0.7)); 
-        $p->addPoint('z.8.Bot', $p->shiftAlong('slArm','slArm','waistBackSideCpTop','waistBackSide', $len*0.9)); 
-        // Side seam part 2, stripes 9,10 Rhytm = 0.3, 0.5, 0.9
-        $len = $side->curveLen('sideWaistSideBack','sideWaistSideBackCpBottom','sideHipsSideBackCpTop','sideHipsSideBack');
-        $p->clonePoint('waistBackSide','z.9.Top');
-        $p->addPoint('z.9.Bot', $p->shiftAlong('waistBackSide','waistBackSideCpBottom','hipsBackSideCpTop','hipsBackSide', $len*0.3)); 
-        $p->addPoint('z.10.Top', $p->shiftAlong('waistBackSide','waistBackSideCpBottom','hipsBackSideCpTop','hipsBackSide', $len*0.5)); 
-        $p->addPoint('z.10.Bot', $p->shiftAlong('waistBackSide','waistBackSideCpBottom','hipsBackSideCpTop','hipsBackSide', $len*0.9)); 
-        // Side seam part 3, stripe 11 Rhytm = 0.5
-        $p->addPoint('z.11.Top', $p->shiftFractionTowards('hipsBackSide','hemBackSide', 0.5)); 
-        // Hem, stripes 11,12 Rhytm = 0.2, 0.4, 0.7
-        $p->addPoint('z.11.Bot', $p->shiftFractionTowards('frontSideHemEdge', 'cfHemEdge',0.2));
-        $p->addPoint('z.12.Top', $p->shiftFractionTowards('frontSideHemEdge', 'cfHemEdge',0.4));
-        $p->addPoint('z.12.Bot', $p->shiftFractionTowards('frontSideHemEdge', 'cfHemEdge',0.7));
-
-        // Stripe tips
-        // Zebra edge line
-        $p->addPoint('zlineBot', $p->shift('cfHem',0,10));
-        $p->addPoint('zlineTop', $p->shift('centerBackNeck',0,30));
-        $p->addPoint('z.2.Tip',  $p->shiftFractionTowards('zlineTop', 'zlineBot', 0.18));
-        $p->addPoint('z.3.Tip',  $p->shiftFractionTowards('zlineTop', 'zlineBot', 0.26));
-        $p->addPoint('z.4.Tip',  $p->shiftFractionTowards('zlineTop', 'zlineBot', 0.35));
-        $p->addPoint('z.5.Tip',  $p->shiftFractionTowards('zlineTop', 'zlineBot', 0.44));
-        $p->addPoint('z.6.Tip',  $p->shiftFractionTowards('zlineTop', 'zlineBot', 0.5));
-        $p->addPoint('z.7.Tip',  $p->shiftFractionTowards('zlineTop', 'zlineBot', 0.57));
-        $p->addPoint('z.8.Tip',  $p->shiftFractionTowards('zlineTop', 'zlineBot', 0.64));
-        $p->addPoint('z.9.Tip',  $p->shiftFractionTowards('zlineTop', 'zlineBot', 0.7));
-        $p->addPoint('z.10.Tip', $p->shiftFractionTowards('zlineTop', 'zlineBot', 0.76));
-        $p->addPoint('z.11.Tip', $p->shiftFractionTowards('zlineTop', 'zlineBot', 0.82));
-        $p->addPoint('z.12.Tip', $p->shiftFractionTowards('zlineTop', 'zlineBot', 0.9));
-
-        // Make stripes a bit more organic
-        for($s=2;$s<=12;$s++) {
-            $p->addPoint('.helper', $p->shiftTowards("z.$s.Tip", "z.$s.Top", 30));
-            $p->addPoint("z.$s.TipCpTop", $p->rotate('.helper', "z.$s.Tip", 40));
-            $p->addPoint("z.$s.TipCpBot", $p->rotate("z.$s.TipCpTop", "z.$s.Tip", -90));
-            $p->addPoint("z.$s.TopA", $p->shiftFractionTowards("z.$s.Tip", "z.$s.Top", 0.3));
-            $p->addPoint("z.$s.TopACpTip", $p->shiftFractionTowards("z.$s.Tip", "z.$s.Top", 0.2));
-            $p->addPoint("z.$s.TopACpTip", $p->rotate("z.$s.TopACpTip", "z.$s.TopA", -15));
-            $p->addPoint("z.$s.TopACpTop", $p->rotate("z.$s.TopACpTip", "z.$s.TopA", 180));
-            $p->addPoint("z.$s.TopB", $p->shiftFractionTowards("z.$s.Tip", "z.$s.Top", 0.7));
-            $p->addPoint("z.$s.TopBCpTip", $p->shiftFractionTowards("z.$s.Tip", "z.$s.Top", 0.6));
-            $p->addPoint("z.$s.TopBCpTip", $p->rotate("z.$s.TopBCpTip", "z.$s.TopB", -15));
-            $p->addPoint("z.$s.TopBCpTop", $p->rotate("z.$s.TopBCpTip", "z.$s.TopB", 180));
-
-            $p->addPoint("z.$s.BotA", $p->shiftFractionTowards("z.$s.Tip", "z.$s.Bot", 0.4));
-            $p->addPoint("z.$s.BotA", $p->shift("z.$s.BotA",-90,15));
-            $p->addPoint("z.$s.BotACpTip", $p->shiftFractionTowards("z.$s.Tip", "z.$s.Bot", 0.3));
-            $p->addPoint("z.$s.BotACpTip", $p->rotate("z.$s.BotACpTip", "z.$s.BotA", 20));
-            $p->addPoint("z.$s.BotACpBot", $p->rotate("z.$s.BotACpTip", "z.$s.BotA", 180));
-            $p->addPoint("z.$s.BotB", $p->shiftFractionTowards("z.$s.Tip", "z.$s.Bot", 0.7));
-            $p->addPoint("z.$s.BotB", $p->shift("z.$s.BotB",-90,15));
-            $p->addPoint("z.$s.BotBCpTip", $p->shiftFractionTowards("z.$s.Tip", "z.$s.Bot", 0.6));
-            $p->addPoint("z.$s.BotBCpTip", $p->rotate("z.$s.BotBCpTip", "z.$s.BotB", 25));
-            $p->addPoint("z.$s.BotBCpBot", $p->rotate("z.$s.BotBCpTip", "z.$s.BotB", 180));
-
-            $p->clonePoint("z.$s.Top", "z.$s.TopCp");
-            $p->clonePoint("z.$s.Bot", "z.$s.BotCp");
-
-            $p->newPath("stripe$s", "
-                M z.$s.Tip 
-                C z.$s.TipCpTop z.$s.TopACpTip z.$s.TopA
-                C z.$s.TopACpTop z.$s.TopBCpTip z.$s.TopB
-                C z.$s.TopBCpTop z.$s.TopCp z.$s.Top 
-                M z.$s.Bot 
-                C z.$s.BotCp z.$s.BotBCpBot z.$s.BotB
-                C z.$s.BotBCpTip z.$s.BotACpBot z.$s.BotA
-                C z.$s.BotACpTip z.$s.TipCpBot z.$s.Tip 
-            ", ['class' => 'fabric hint zebra']);
-            
-            // Basic triangles
-            //$p->newPath("stripe$s", "M z.$s.Tip L z.$s.Top L z.$s.Bot z", ['style' => 'stroke: #fff']);
-        }
-        
-        // Some manual tweaks
-        $p->addPoint('z.2.TopCp', $p->shift('z.2.TopCp', $p->angle('shoulderLineRealLeft','shoulderLineRight')+90, 15));
-        $p->addPoint('z.2.BotCp', $p->shift('z.2.BotCp', $p->angle('shoulderLineRealLeft','shoulderLineRight')+90, 10));
-        $p->addPoint('z.3.TopCp', $p->shift('z.3.TopCp', $p->angle('shoulderLineRealLeft','shoulderLineRight')+90, 15));
-        $p->addPoint('z.3.BotCp', $p->shift('z.3.BotCp', $p->angle('shoulderLineRight','z.3.Bot')+90, 10));
-        $p->addPoint('z.4.TopCp', $p->shift('z.4.TopCp', $p->angle('z.3.Bot','z.4.Top')+90, 15));
-        $p->addPoint('z.4.BotCp', $p->shift('z.4.BotCp', $p->angle('z.4.Top','z.4.Bot')+90, 10));
-        $p->addPoint('z.5.TopCp', $p->shift('z.5.TopCp', $p->angle('z.4.Bot','z.5.Top')+90, 15));
-        $p->addPoint('z.5.BotCp', $p->shift('z.5.BotCp', $p->angle('z.5.Top','z.5.Bot')+90, 10));
-        $p->addPoint('z.6.TopCp', $p->shift('z.6.TopCp', $p->angle('slArm','z.6.Top')+90, 35));
-        $p->addPoint('z.6.TopB', $p->shift('z.6.TopB',90,20));
-        $p->addPoint('z.6.TopBCpTop', $p->shift('z.6.TopBCpTop',90,20));
-        $p->addPoint('z.6.TopBCpTip', $p->shift('z.6.TopBCpTip',90,20));
-        $p->addPoint('z.6.BotCp', $p->shift('z.6.BotCp', $p->angle('z.6.Top','z.6.Bot')+90, 10));
-        $p->addPoint('z.7.TopCp', $p->shift('z.7.TopCp', $p->angle('z.6.Bot','z.7.Top')+90, 15));
-        $p->addPoint('z.7.BotCp', $p->shift('z.7.BotCp', $p->angle('z.7.Top','z.7.Bot')+90, 10));
-        $p->addPoint('z.8.TopCp', $p->shift('z.8.TopCp', $p->angle('z.7.Bot','z.8.Top')+90, 15));
-        $p->addPoint('z.8.BotCp', $p->shift('z.8.BotCp', $p->angle('z.8.Top','z.8.Bot')+90, 10));
-        $p->addPoint('z.9.TopCp', $p->shift('z.9.TopCp', $p->angle('z.8.Bot','z.9.Top')+90, 15));
-        $p->addPoint('z.9.BotCp', $p->shift('z.9.BotCp', $p->angle('z.9.Top','z.9.Bot')+90, 10));
-        $p->addPoint('z.10.TopCp', $p->shift('z.10.TopCp', $p->angle('z.9.Bot','z.10.Top')+90, 15));
-        $p->addPoint('z.10.BotCp', $p->shift('z.10.BotCp', $p->angle('z.10.Top','z.10.Bot')+90, 10));
-        $p->addPoint('z.11.TopCp', $p->shift('z.11.TopCp', $p->angle('z.10.Bot','z.11.Top')+90, 15));
-        
-        // Handle dart in stripe 6
-        $p->newPoint('z.6.BotA', $p->x('frontDartTop'), $p->y('z.6.BotA'));
-        $p->addPoint('z.6.BotACpBot', $p->shift('z.6.BotA', 0, 20));
-
-        // Handle dart in stripe 7, top part
-        $p->curvesCross('z.7.TopB','z.7.TopBCpTip','z.7.TopACpTop','z.7.TopA','frontDartTop','frontDartTop', 'frontDartRightCpTop','frontDartRight','stripe7x');
-        $p->splitCurve('z.7.TopB','z.7.TopBCpTip','z.7.TopACpTop','z.7.TopA','stripe7x1','topSplit7');
-        $p->addPoint('topSplit78', $p->flipX('topSplit78', $p->x('frontDartTop')));
-        $p->addPoint('topSplit77', $p->shift('topSplit77', 180, $p->distance('topSplit78','topSplit74')));
-        // Handle dart in stripe 7, bottom part
-        $p->curvesCross('z.7.BotB','z.7.BotBCpTip','z.7.BotACpBot','z.7.BotA','frontDartTop','frontDartTop', 'frontDartRightCpTop','frontDartRight','stripe7x');
-        $p->splitCurve( 'z.7.BotB','z.7.BotBCpTip','z.7.BotACpBot','z.7.BotA','stripe7x1','botSplit7');
-        $p->addPoint('botSplit78', $p->flipX('botSplit78', $p->x('frontDartTop')));
-        $p->addPoint('botSplit77', $p->shift('botSplit77', 180, $p->distance('botSplit78','botSplit74')));
-        // Redraw stripe 7 
-        $p->newPath("stripe7", "
-            M z.7.Tip 
-            C z.7.TipCpTop z.7.TopACpTip z.7.TopA
-            C topSplit76 topSplit77 topSplit78
-            L topSplit74
-            C topSplit73 topSplit72 topSplit71 
-            C z.7.TopBCpTop z.7.TopCp z.7.Top 
-            M z.7.Bot 
-            C z.7.BotCp z.7.BotBCpBot z.7.BotB
-            C botSplit72 botSplit73 botSplit74
-            L botSplit78
-            C botSplit77 botSplit76 botSplit75
-            C z.7.BotACpTip z.7.TipCpBot z.7.Tip 
-        ", ['class' => 'fabric hint zebra']);
-
-        // Handle dart in stripe 8, top part
-        $p->curvesCross('z.8.TopB','z.8.TopBCpTip','z.8.TopACpTop','z.8.TopA','frontDartTop','frontDartTop', 'frontDartRightCpTop','frontDartRight','stripe8x');
-        $p->splitCurve('z.8.TopB','z.8.TopBCpTip','z.8.TopACpTop','z.8.TopA','stripe8x1','topSplit8');
-        $p->addPoint('topSplit88', $p->flipX('topSplit88', $p->x('frontDartTop')));
-        $p->addPoint('topSplit87', $p->shift('topSplit87', 180, $p->distance('topSplit88','topSplit84')));
-        // Handle dart in stripe 8, bottom part
-        $p->curvesCross('z.8.BotB','z.8.BotBCpTip','z.8.BotACpBot','z.8.BotA','frontDartTop','frontDartTop', 'frontDartRightCpTop','frontDartRight','stripe8x');
-        $p->splitCurve( 'z.8.BotB','z.8.BotBCpTip','z.8.BotACpBot','z.8.BotA','stripe8x1','botSplit8');
-        $p->addPoint('botSplit88', $p->flipX('botSplit88', $p->x('frontDartTop')));
-        $p->addPoint('botSplit87', $p->shift('botSplit87', 180, $p->distance('botSplit88','botSplit84')));
-        // Redraw stripe 8 
-        $p->newPath("stripe8", "
-            M z.8.Tip 
-            C z.8.TipCpTop z.8.TopACpTip z.8.TopA
-            C topSplit86 topSplit87 topSplit88
-            L topSplit84
-            C topSplit83 topSplit82 topSplit81 
-            C z.8.TopBCpTop z.8.TopCp z.8.Top 
-            M z.8.Bot 
-            C z.8.BotCp z.8.BotBCpBot z.8.BotB
-            C botSplit82 botSplit83 botSplit84
-            L botSplit88
-            C botSplit87 botSplit86 botSplit85
-            C z.8.BotACpTip z.8.TipCpBot z.8.Tip 
-        ", ['class' => 'fabric hint zebra']);
-        
-        // Handle dart in stripe 9
-        $p->addPoint('z.9.TopA', $p->shift('z.9.TopA',90,6));
-        $p->addPoint('z.9.TopACpTop', $p->shift('z.9.TopACpTop',90,6));
-        $p->addPoint('z.9.TopACpTip', $p->shift('z.9.TopACpTip',90,6));
-    }
-
-    /**
-     * Draws zebra stripes on the topsleeve
-     *
-     * @param \Freesewing\Model $model The model to draft for
-     *
-     * @return void
-     */
-    public function zebraTopsleeve($model)
-    {
-        
-        /** @var \Freesewing\Part $p */
-        $p = $this->parts['topsleeve'];
-
-        /** @var \Freesewing\Part $front */
-        $front = $this->parts['front'];
-
-        /** @var \Freesewing\Part $back */
-        $back = $this->parts['back'];
-
-        // Along sleevecap front
-        $len1 = $front->curveLen(12,19,17,10);
-        $full1 = $len1 + $this->o('sleevecapEase')/2;
-        $factor = $full1/$len1;
-        $p->addPoint('z.3.BotIn', $p->shiftalong('sleeveTop','sleeveTopCpLeft','frontPitchPointCpTop','frontPitchPoint', ($len1*0.3)*$factor));
-        $p->addPoint('z.4.TopIn', $p->shiftalong('sleeveTop','sleeveTopCpLeft','frontPitchPointCpTop','frontPitchPoint', ($len1*0.5)*$factor));
-        $p->clonePoint('frontSleeveNotch','z.4.BotIn');
-
-        $len2 = $front->curveLen(10, 18, 15, 14);
-        $limit1 = $p->curveLen('sleeveTop','sleeveTopCpLeft','frontPitchPointCpTop','frontPitchPoint');
-        $limit2 = $p->curveLen('frontPitchPoint','frontPitchPointCpBottom','topsleeveLeftEdgeCpRight','topsleeveLeftEdge');
-
-        // Does this fall in the first or second curve?
-        if($len2*0.3 + $full1 == $limit1) $p->clonePoint('frontPitchPoint', 'z.5.TopIn');
-        elseif ($len2*0.3 + $full1 < $limit1) $p->addPoint('z.5.TopIn', $p->shiftalong('sleeveTop','sleeveTopCpLeft','frontPitchPointCpTop','frontPitchPoint', $len2*0.3 + $full1));
-        else $p->addPoint('z.5.TopIn', $p->shiftalong('frontPitchPoint','frontPitchPointCpBottom','topsleeveLeftEdgeCpRight','topsleeveLeftEdge', ($len2*0.3 + $full1)-$limit1));
-
-        if($len2 + $full1 == $limit1) $p->clonePoint('frontPitchPoint', 'z.5.BotIn');
-        elseif ($len2 + $full1 < $limit1) $p->addPoint('z.5.BotIn', $p->shiftalong('sleeveTop','sleeveTopCpLeft','frontPitchPointCpTop','frontPitchPoint', $len2 + $full1));
-        else $p->addPoint('z.5.BotIn', $p->shiftalong('frontPitchPoint','frontPitchPointCpBottom','topsleeveLeftEdgeCpRight','topsleeveLeftEdge', ($len2 + $full1)-$limit1));
-
-
-        // Along sleevecap back
-        $len1 = $back->curveLen(12,19,17,10);
-        $full1 = $len1 + $this->o('sleevecapEase')/2;
-        $factor = $full1/$len1;
-        $p->addPoint('z.3.BotOut', $p->shiftalong('sleeveTop','sleeveTopCpRight','backPitchPoint','backPitchPoint', ($len1*0.3)*$factor));
-        $p->addPoint('z.4.TopOut', $p->shiftalong('sleeveTop','sleeveTopCpRight','backPitchPoint','backPitchPoint', ($len1*0.5)*$factor));
-
-
-        if($p->isPoint('backSleeveNotch')) {
-            $p->clonePoint('backSleeveNotch','z.4.BotOut');
-            $p->newPath('stripe4', 'M z.4.TopIn L z.4.TopOut L  z.4.BotOut L z.4.BotIn z', ['class' => 'fabric;']);
-        }
-
-        $p->curveCrossesY('topsleeveRightEdge', 'topsleeveRightEdgeCpTop', 'backPitchPoint', 'backPitchPoint', $p->y('z.5.TopIn')-5, 'z.5.TopOut');
-        $p->clonePoint('z.5.TopOut1','z.5.TopOut');
-        $p->curveCrossesY('topsleeveRightEdge', 'topsleeveRightEdgeCpTop', 'backPitchPoint', 'backPitchPoint', $p->y('z.5.BotIn')-5, 'z.5.BotOut');
-        $p->clonePoint('z.5.BotOut1','z.5.BotOut');
-        
-        $p->newPath('stripe5', 'M z.5.TopIn L z.5.TopOut L  z.5.BotOut L z.5.BotIn z', ['class' => 'fabric']);
-
-        // straight down, left side
-        $p->addPoint('z.6.TopIn', $p->shiftFractionAlong('topsleeveLeftEdge', 'topsleeveLeftEdge', 'topsleeveElbowLeftCpTop','topsleeveElbowLeft', 0.13));
-        $p->addPoint('z.6.BotIn', $p->shiftFractionAlong('topsleeveLeftEdge', 'topsleeveLeftEdge', 'topsleeveElbowLeftCpTop','topsleeveElbowLeft', 0.37));
-        $p->addPoint('z.7.TopIn', $p->shiftFractionAlong('topsleeveLeftEdge', 'topsleeveLeftEdge', 'topsleeveElbowLeftCpTop','topsleeveElbowLeft', 0.48));
-        $p->addPoint('z.7.BotIn', $p->shiftFractionAlong('topsleeveLeftEdge', 'topsleeveLeftEdge', 'topsleeveElbowLeftCpTop','topsleeveElbowLeft', 0.67));
-        $p->addPoint('z.8.TopIn', $p->shiftFractionAlong('topsleeveLeftEdge', 'topsleeveLeftEdge', 'topsleeveElbowLeftCpTop','topsleeveElbowLeft', 0.78));
-        $p->clonePoint('topsleeveElbowLeft', 'z.8.BotIn');
-        $p->addPoint('z.9.TopIn', $p->shiftFractionTowards('topsleeveElbowLeft', 'topsleeveWristLeft', 0.13));
-        $p->addPoint('z.9.BotIn', $p->shiftFractionTowards('topsleeveElbowLeft', 'topsleeveWristLeft', 0.37));
-        $p->addPoint('z.10.TopIn', $p->shiftFractionTowards('topsleeveElbowLeft', 'topsleeveWristLeft', 0.48));
-        $p->addPoint('z.10.BotIn', $p->shiftFractionTowards('topsleeveElbowLeft', 'topsleeveWristLeft', 0.72));
-        $p->addPoint('z.11.TopIn', $p->shiftFractionTowards('topsleeveElbowLeft', 'topsleeveWristLeft', 0.82));
-        $p->clonePoint('topsleeveWristLeft', 'z.11.BotIn');
-        
-        // straight down, right side
-        $p->addPoint('z.6.TopOut', $p->shiftFractionAlong('topsleeveRightEdge','topsleeveRightEdgeCpBottom','elbowRightCpTop','elbowRight', 0.17));
-        $p->addPoint('z.6.BotOut', $p->shiftFractionAlong('topsleeveRightEdge','topsleeveRightEdgeCpBottom','elbowRightCpTop','elbowRight', 0.33));
-        $p->addPoint('z.7.TopOut', $p->shiftFractionAlong('topsleeveRightEdge','topsleeveRightEdgeCpBottom','elbowRightCpTop','elbowRight', 0.52));
-        $p->addPoint('z.7.BotOut', $p->shiftFractionAlong('topsleeveRightEdge','topsleeveRightEdgeCpBottom','elbowRightCpTop','elbowRight', 0.63));
-        $p->addPoint('z.8.TopOut', $p->shiftFractionAlong('topsleeveRightEdge','topsleeveRightEdgeCpBottom','elbowRightCpTop','elbowRight', 0.82));
-        $p->clonePoint('elbowRight', 'z.8.BotOut');
-        $p->addPoint('z.9.TopOut', $p->shiftFractionTowards('elbowRight', 'topsleeveWristRight', 0.17));
-        $p->addPoint('z.9.BotOut', $p->shiftFractionTowards('elbowRight', 'topsleeveWristRight', 0.33));
-        $p->addPoint('z.10.TopOut', $p->shiftFractionTowards('elbowRight', 'topsleeveWristRight', 0.52));
-        $p->addPoint('z.10.BotOut', $p->shiftFractionTowards('elbowRight', 'topsleeveWristRight', 0.68));
-        $p->addPoint('z.11.TopOut', $p->shiftFractionTowards('elbowRight', 'topsleeveWristRight', 0.87));
-        $p->clonePoint('topsleeveWristRight', 'z.11.BotOut');
-
-        // Simple stripes
-        //for($s=6;$s<=11;$s++) $p->newPath("stripe$s", "M z.$s.TopIn L z.$s.TopOut L  z.$s.BotOut L z.$s.BotIn z", ['style' => 'fill: #000;']);
-
-        // Make stripes more organic
-        for($s=4;$s<=11;$s++) {
-            // Control points for tweaking later
-            $p->clonePoint("z.$s.TopIn", "z.$s.TopInCp");
-            $p->clonePoint("z.$s.BotIn", "z.$s.BotInCp");
-            $p->clonePoint("z.$s.TopOut", "z.$s.TopOutCp");
-            $p->clonePoint("z.$s.BotOut", "z.$s.BotOutCp");
-            
-            // Tweak control points
-            if ($s<8) $outAngle = 180;
-            else $outAngle = $p->angle('elbowRight','topsleeveWristRight')+90;
-            $p->addPoint("z.$s.TopInCp", $p->shift("z.$s.TopInCp", $p->angle('topsleeveElbowLeft','topsleeveWristLeft')-90, 15));
-            $p->addPoint("z.$s.BotInCp", $p->shift("z.$s.BotInCp", $p->angle('topsleeveElbowLeft','topsleeveWristLeft')-90, 10));
-            $p->addPoint("z.$s.TopOutCp", $p->shift("z.$s.TopOutCp", $outAngle, 25));
-            $p->addPoint("z.$s.BotOutCp", $p->shift("z.$s.BotOutCp", $outAngle, 25));
-
-            $p->addPoint("z.$s.TopA", $p->shiftFractionTowards("z.$s.TopIn", "z.$s.TopOut", 0.3));
-            $p->addPoint("z.$s.TopACpIn", $p->shiftFractionTowards("z.$s.TopIn", "z.$s.TopOut", 0.1));
-            $p->addPoint("z.$s.TopB", $p->shiftFractionTowards("z.$s.TopIn", "z.$s.TopOut", 0.7));
-            $p->addPoint("z.$s.TopB", $p->shift("z.$s.TopB", -90, 10));
-            $p->addPoint("z.$s.TopBCpIn", $p->shiftFractionTowards("z.$s.TopIn", "z.$s.TopOut", 0.6));
-
-            $p->addPoint("z.$s.BotA", $p->shiftFractionTowards("z.$s.BotIn", "z.$s.BotOut", 0.3));
-            $p->addPoint("z.$s.BotACpIn", $p->shiftFractionTowards("z.$s.BotIn", "z.$s.BotOut", 0.2));
-            $p->addPoint("z.$s.BotB", $p->shiftFractionTowards("z.$s.BotIn", "z.$s.BotOut", 0.7));
-            $p->addPoint("z.$s.BotB", $p->shift("z.$s.BotB", -90, 10));
-            $p->addPoint("z.$s.BotBCpIn", $p->shiftFractionTowards("z.$s.BotIn", "z.$s.BotOut", 0.6));
-
-            $p->addPoint("z.$s.TopACpIn", $p->rotate("z.$s.TopACpIn", "z.$s.TopA", 10));
-            $p->addPoint("z.$s.TopACpOut", $p->rotate("z.$s.TopACpIn", "z.$s.TopA", 180));
-            $p->addPoint("z.$s.BotACpIn", $p->rotate("z.$s.BotACpIn", "z.$s.BotA", -15));
-            $p->addPoint("z.$s.BotACpOut", $p->rotate("z.$s.BotACpIn", "z.$s.BotA", 180));
-
-            $p->addPoint("z.$s.TopBCpIn", $p->rotate("z.$s.TopBCpIn", "z.$s.TopB", 10));
-            $p->addPoint("z.$s.TopBCpOut", $p->rotate("z.$s.TopBCpIn", "z.$s.TopB", 180));
-            $p->addPoint("z.$s.BotBCpIn", $p->rotate("z.$s.BotBCpIn", "z.$s.BotB", 15));
-            $p->addPoint("z.$s.BotBCpOut", $p->rotate("z.$s.BotBCpIn", "z.$s.BotB", 180));
-
-
-            $p->newPath("stripe$s", "
-                M z.$s.TopIn 
-                C z.$s.TopInCp z.$s.TopACpIn z.$s.TopA
-                C z.$s.TopACpOut z.$s.TopBCpIn z.$s.TopB
-                C z.$s.TopBCpOut z.$s.TopOutCp z.$s.TopOut
-                M z.$s.BotOut
-                C z.$s.BotOutCp z.$s.BotBCpOut z.$s.BotB
-                C z.$s.BotBCpIn z.$s.BotACpOut z.$s.BotA
-                C z.$s.BotACpIn z.$s.BotInCp z.$s.BotIn
-            ", ['class' => 'fabric hint zebra']);
-        }
-
-        // Manually tweak top and bottom stripes
-        $p->addPoint('z.4.TopInCp', $p->shift('z.4.TopIn', $p->angle('z.3.BotIn','z.4.TopIn')-90, 5));
-        $p->addPoint('z.4.BotInCp', $p->shift('z.4.BotIn', $p->angle('z.4.BotIn','z.5.TopIn')-90, 15));
-        $p->addPoint('z.4.TopOutCp', $p->shift('z.4.TopOut', $p->angle('z.3.BotOut','z.4.TopOut')+90, 5));
-        $p->addPoint('z.4.BotOutCp', $p->shift('z.4.BotOut', $p->angle('z.4.BotOut','z.5.TopOut')+90, 15));
-        $p->addPoint('z.4.TopBCpIn', $p->rotate('z.4.TopBCpIn','z.4.TopB',35));
-        $p->addPoint('z.4.TopBCpOut', $p->rotate('z.4.TopBCpIn','z.4.TopB',180));
-        $shiftThese = ['z.4.TopACpIn','z.4.TopA','z.4.TopACpOut','z.4.TopBCpIn','z.4.TopB','z.4.TopBCpOut'];
-        foreach($shiftThese as $pid) $p->addPoint($pid, $p->shift($pid, -90, 10));
-
-        $p->addPoint('z.3.BotA', $p->shiftFractionTowards('z.3.BotIn','z.3.BotOut', 0.7));
-        $p->addPoint('z.3.BotACpIn', $p->shiftFractionTowards('z.3.BotIn','z.3.BotOut', 0.5));
-        $p->addPoint('z.3.BotACpOut', $p->shiftFractionTowards('z.3.BotIn','z.3.BotOut', 0.8));
-        $p->addPoint('z.3.BotA', $p->shift('z.3.BotA', -90, 10));
-        $p->addPoint('z.3.BotACpIn', $p->shift('z.3.BotACpIn', -90, 10));
-        $p->addPoint('z.3.BotACpIn', $p->rotate('z.3.BotACpIn','z.3.BotA',-15));
-        $p->addPoint('z.3.BotACpOut', $p->rotate('z.3.BotACpIn','z.3.BotA',180));
-        $p->addPoint('z.3.BotInCp', $p->shift('z.3.BotIn', $p->angle('z.3.BotIn','sleeveTop')+90, 10));
-        $p->addPoint('z.3.BotOutCp', $p->shift('z.3.BotOut', $p->angle('sleeveTop','z.3.BotOut')+90, 10));
-        
-        $p->newPath('stripe3', '
-            M z.3.BotIn 
-            C z.3.BotInCp z.3.BotACpIn z.3.BotA
-            C z.3.BotACpOut z.3.BotOutCp z.3.BotOut
-        ', ['class' => 'fabric hint zebra']);
-        
-        $p->newPath('stripe11', '
-            M z.11.TopIn 
-            C z.11.TopInCp z.11.TopACpIn z.11.TopA
-            C z.11.TopACpOut z.11.TopBCpIn z.11.TopB
-            C z.11.TopBCpOut z.11.TopOutCp z.11.TopOut
-        ', ['class' => 'fabric hint zebra']);
-
-    }
-
-    /**
-     * Draws zebra stripes on the undersleeve
-     *
-     * @param \Freesewing\Model $model The model to draft for
-     *
-     * @return void
-     */
-    public function zebraUndersleeve($model)
-    {
-        /** @var \Freesewing\Part $p */
-        $p = $this->parts['undersleeve'];
-
-        if($this->v('stripe5InUndersleeve') !== false) {
-            // FIXME: Handle this
-        }
-
-        // straight down, left side
-        $p->addPoint('z.6.TopIn', $p->shiftFractionAlong('undersleeveLeftEdge', 'undersleeveLeftEdge', 'undersleeveElbowLeftCpTop','undersleeveElbowLeft', 0.13));
-        $p->addPoint('z.6.BotIn', $p->shiftFractionAlong('undersleeveLeftEdge', 'undersleeveLeftEdge', 'undersleeveElbowLeftCpTop','undersleeveElbowLeft', 0.37));
-        $p->addPoint('z.7.TopIn', $p->shiftFractionAlong('undersleeveLeftEdge', 'undersleeveLeftEdge', 'undersleeveElbowLeftCpTop','undersleeveElbowLeft', 0.48));
-        $p->addPoint('z.7.BotIn', $p->shiftFractionAlong('undersleeveLeftEdge', 'undersleeveLeftEdge', 'undersleeveElbowLeftCpTop','undersleeveElbowLeft', 0.67));
-        $p->addPoint('z.8.TopIn', $p->shiftFractionAlong('undersleeveLeftEdge', 'undersleeveLeftEdge', 'undersleeveElbowLeftCpTop','undersleeveElbowLeft', 0.78));
-        $p->clonePoint('undersleeveElbowLeft', 'z.8.BotIn');
-        $p->addPoint('z.9.TopIn', $p->shiftFractionTowards('undersleeveElbowLeft', 'undersleeveWristLeft', 0.13));
-        $p->addPoint('z.9.BotIn', $p->shiftFractionTowards('undersleeveElbowLeft', 'undersleeveWristLeft', 0.37));
-        $p->addPoint('z.10.TopIn', $p->shiftFractionTowards('undersleeveElbowLeft', 'undersleeveWristLeft', 0.48));
-        $p->addPoint('z.10.BotIn', $p->shiftFractionTowards('undersleeveElbowLeft', 'undersleeveWristLeft', 0.72));
-        $p->addPoint('z.11.TopIn', $p->shiftFractionTowards('undersleeveElbowLeft', 'undersleeveWristLeft', 0.82));
-        $p->clonePoint('undersleeveWristLeft', 'z.11.BotIn');
-
-        // straight down, right side
-        $p->addPoint('z.6.TopOut', $p->shiftFractionAlong('undersleeveRightEdge','undersleeveRightEdgeCpBottom','elbowRightCpTop','elbowRight', 0.17));
-        $p->addPoint('z.6.BotOut', $p->shiftFractionAlong('undersleeveRightEdge','undersleeveRightEdgeCpBottom','elbowRightCpTop','elbowRight', 0.33));
-        $p->addPoint('z.7.TopOut', $p->shiftFractionAlong('undersleeveRightEdge','undersleeveRightEdgeCpBottom','elbowRightCpTop','elbowRight', 0.52));
-        $p->addPoint('z.7.BotOut', $p->shiftFractionAlong('undersleeveRightEdge','undersleeveRightEdgeCpBottom','elbowRightCpTop','elbowRight', 0.63));
-        $p->addPoint('z.8.TopOut', $p->shiftFractionAlong('undersleeveRightEdge','undersleeveRightEdgeCpBottom','elbowRightCpTop','elbowRight', 0.82));
-        $p->clonePoint('elbowRight', 'z.8.BotOut');
-        $p->addPoint('z.9.TopOut', $p->shiftFractionTowards('elbowRight', 'undersleeveWristRight', 0.17));
-        $p->addPoint('z.9.BotOut', $p->shiftFractionTowards('elbowRight', 'undersleeveWristRight', 0.33));
-        $p->addPoint('z.10.TopOut', $p->shiftFractionTowards('elbowRight', 'undersleeveWristRight', 0.52));
-        $p->addPoint('z.10.BotOut', $p->shiftFractionTowards('elbowRight', 'undersleeveWristRight', 0.68));
-        $p->addPoint('z.11.TopOut', $p->shiftFractionTowards('elbowRight', 'undersleeveWristRight', 0.87));
-        $p->clonePoint('undersleeveWristRight', 'z.11.BotOut');
-
-        // Simple stripes
-        //for($s=6;$s<=11;$s++) $p->newPath("stripe$s", "M z.$s.TopIn L z.$s.TopOut L  z.$s.BotOut L z.$s.BotIn z", ['style' => 'fill: #000;']);
-
-        // Make stripes more organic
-        for($s=6;$s<=11;$s++) {
-            // Control points for tweaking later
-            $p->clonePoint("z.$s.TopIn", "z.$s.TopInCp");
-            $p->clonePoint("z.$s.BotIn", "z.$s.BotInCp");
-            $p->clonePoint("z.$s.TopOut", "z.$s.TopOutCp");
-            $p->clonePoint("z.$s.BotOut", "z.$s.BotOutCp");
-            
-            // Tweak control points
-            if ($s<8) $leftAngle = $p->angle('undersleeveRightEdge','z.7.BotOut')+90;
-            else $leftAngle = $p->angle('elbowRight','undersleeveWristRight')+90;
-            $p->addPoint("z.$s.TopInCp", $p->shift("z.$s.TopInCp",   $p->angle('undersleeveLeftEdge','undersleeveWristLeft')-90, 15));
-            $p->addPoint("z.$s.BotInCp", $p->shift("z.$s.BotInCp",   $p->angle('undersleeveLeftEdge','undersleeveWristLeft')-90, 10));
-            $p->addPoint("z.$s.TopOutCp", $p->shift("z.$s.TopOutCp", $leftAngle, 25));
-            $p->addPoint("z.$s.BotOutCp", $p->shift("z.$s.BotOutCp", $leftAngle, 25));
-
-            $p->addPoint("z.$s.TopA", $p->shiftFractionTowards("z.$s.TopIn", "z.$s.TopOut", 0.3));
-            $p->addPoint("z.$s.TopACpIn", $p->shiftFractionTowards("z.$s.TopIn", "z.$s.TopOut", 0.1));
-            $p->addPoint("z.$s.TopB", $p->shiftFractionTowards("z.$s.TopIn", "z.$s.TopOut", 0.7));
-            $p->addPoint("z.$s.TopB", $p->shift("z.$s.TopB", -90, 10));
-            $p->addPoint("z.$s.TopBCpIn", $p->shiftFractionTowards("z.$s.TopIn", "z.$s.TopOut", 0.6));
-
-            $p->addPoint("z.$s.BotA", $p->shiftFractionTowards("z.$s.BotIn", "z.$s.BotOut", 0.3));
-            $p->addPoint("z.$s.BotACpIn", $p->shiftFractionTowards("z.$s.BotIn", "z.$s.BotOut", 0.2));
-            $p->addPoint("z.$s.BotB", $p->shiftFractionTowards("z.$s.BotIn", "z.$s.BotOut", 0.7));
-            $p->addPoint("z.$s.BotB", $p->shift("z.$s.BotB", -90, 10));
-            $p->addPoint("z.$s.BotBCpIn", $p->shiftFractionTowards("z.$s.BotIn", "z.$s.BotOut", 0.6));
-
-            $p->addPoint("z.$s.TopACpIn", $p->rotate("z.$s.TopACpIn", "z.$s.TopA", 10));
-            $p->addPoint("z.$s.TopACpOut", $p->rotate("z.$s.TopACpIn", "z.$s.TopA", 180));
-            $p->addPoint("z.$s.BotACpIn", $p->rotate("z.$s.BotACpIn", "z.$s.BotA", -15));
-            $p->addPoint("z.$s.BotACpOut", $p->rotate("z.$s.BotACpIn", "z.$s.BotA", 180));
-
-            $p->addPoint("z.$s.TopBCpIn", $p->rotate("z.$s.TopBCpIn", "z.$s.TopB", 10));
-            $p->addPoint("z.$s.TopBCpOut", $p->rotate("z.$s.TopBCpIn", "z.$s.TopB", 180));
-            $p->addPoint("z.$s.BotBCpIn", $p->rotate("z.$s.BotBCpIn", "z.$s.BotB", 15));
-            $p->addPoint("z.$s.BotBCpOut", $p->rotate("z.$s.BotBCpIn", "z.$s.BotB", 180));
-
-
-            $p->newPath("stripe$s", "
-                M z.$s.TopIn 
-                C z.$s.TopInCp z.$s.TopACpIn z.$s.TopA
-                C z.$s.TopACpOut z.$s.TopBCpIn z.$s.TopB
-                C z.$s.TopBCpOut z.$s.TopOutCp z.$s.TopOut
-                M z.$s.BotOut
-                C z.$s.BotOutCp z.$s.BotBCpOut z.$s.BotB
-                C z.$s.BotBCpIn z.$s.BotACpOut z.$s.BotA
-                C z.$s.BotACpIn z.$s.BotInCp z.$s.BotIn
-            ", ['class' => 'fabric hint zebra']);
-        }
-
-        // Now that one that's partial
-        $p->addPoint("z.5.TopIn", $p->shiftAlong('undersleeveTip', 'undersleeveTipCpBottom', 'undersleeveLeftEdgeCpRight', 'undersleeveLeftEdgeRight', $this->v('backSleeveJointToStartStripe')));
-        $p->addPoint("z.5.BotIn", $p->shiftAlong('undersleeveTip', 'undersleeveTipCpBottom', 'undersleeveLeftEdgeCpRight', 'undersleeveLeftEdgeRight', $this->v('backSleeveJointToEndStripe')));
-        $top = $this->parts['topsleeve'];
-        $p->addPoint("z.5.TopOut", $p->shiftAlong('undersleeveTip','undersleeveTip','undersleeveRightEdgeCpTop','undersleeveRightEdge', $top->distance('backPitchPoint','z.5.TopOut')));  
-        $p->addPoint("z.5.BotOut", $p->shiftAlong('undersleeveTip','undersleeveTip','undersleeveRightEdgeCpTop','undersleeveRightEdge', $top->distance('backPitchPoint','z.5.TopOut') + $top->distance('z.5.TopOut','z.5.BotOut')));  
-        $p->addPoint('z.5.TopInCp', $p->shift('z.5.TopIn', -10, 10));
-        $p->addPoint('z.5.TopOutCp', $p->shift('z.5.TopOut', 190, 10));
-        $p->addPoint('z.5.BotInCp', $p->shift('z.5.BotIn', -45, 30));
-        $p->addPoint('z.5.BotOutCp', $p->shift('z.5.BotOut', 190, 40));
-        $p->newPath("stripe5", "M z.5.TopIn C z.5.TopInCp z.5.TopOutCp z.5.TopOut M z.5.BotOut C z.5.BotOutCp z.5.BotInCp z.5.BotIn", ['class' => 'fabric hint zebra']);
-
-    }
     /*
        _____ _             _ _
       |  ___(_)_ __   __ _| (_)_______
@@ -1872,7 +1119,7 @@ class BlakeBlazer extends \Freesewing\Patterns\Beta\BentBodyBlock
                 C slArmCpBottom waistBackSideCpTop waistBackSide 
                 C waistBackSideCpBottom hipsBackSideCpTop hipsBackSide 
                 L hemBackSide 
-            ', $this->o('sa')*-1, 1, ['class' => 'fabric sa']);
+            ', $this->o('sa'), 1, ['class' => 'fabric sa']);
             $p->newPoint('hemSaLeft', $p->x('sa1-startPoint'), $p->y('hemEdgeCenter'));
             $p->newPoint('hemSaRight', $p->x('sa1-endPoint'), $p->y('hemEdgeCenter'));
             $p->newPath('sa2', 'M sa1-startPoint L hemSaLeft L hemEdgeCenter L hemEdgeBackSide L hemSaRight L sa1-endPoint', ['class' => 'fabric sa']);
@@ -1944,7 +1191,7 @@ class BlakeBlazer extends \Freesewing\Patterns\Beta\BentBodyBlock
                 C 14CpRight slArmCpLeft slArm 
                 C slArm waistBackSideCpTop waistBackSide 
                 C waistBackSideCpBottom hipsBackSideCpTop hipsBackSide 
-                L frontSideHem', $this->o('sa')*-1,1, ['class' => 'fabric sa']);
+                L frontSideHem', $this->o('sa'),1, ['class' => 'fabric sa']);
             $p->newPoint('hemRight', $p->x('sa1-endPoint'), $p->y('frontSideHemEdge'));
             $p->newPath('sa2', 'M sa1-startPoint L roundedHem L frontSideHemEdge L hemRight L sa1-endPoint', ['class' => 'fabric sa']);
         }
@@ -2014,7 +1261,7 @@ class BlakeBlazer extends \Freesewing\Patterns\Beta\BentBodyBlock
                 C sideSlArmCpBottom sideWaistSideBackCpTop sideWaistSideBack
                 C sideWaistSideBackCpBottom sideHipsSideBackCpTop sideHipsSideBack
                 L sideHemSideBack
-            ', $this->o('sa')*-1,1, ['class' => 'fabric sa']);
+            ', $this->o('sa'),1, ['class' => 'fabric sa']);
             $p->newPoint('hemLeft', $p->x('sa1-startPoint'), $p->y('hemEdgeFrontSide'));
             $p->newPoint('hemRight', $p->x('sa1-endPoint'), $p->y('hemEdgeBackSide'));
             $p->newPath('sa2', 'M sa1-startPoint L hemLeft L hemRight L sa1-endPoint', ['class' => 'fabric sa']);
@@ -2072,16 +1319,16 @@ class BlakeBlazer extends \Freesewing\Patterns\Beta\BentBodyBlock
         
         if($this->o('sa')) {
             // 4cm extra hem allowance
-            $p->offsetPathString('hemsa','M topsleeveWristLeft L topsleeveWristRight',$this->o('sa')*-4,0);
+            $p->offsetPathString('hemsa','M topsleeveWristLeft L topsleeveWristRight',$this->o('sa')*4,0);
             $p->addPoint('hemSaLeftIn', $p->beamsCross('topsleeveWristLeft','topsleeveElbowLeft', 'hemsa-startPoint', 'hemsa-endPoint'));
-            $angleLeft = $p->angle('topsleeveWristLeft', 'hemSaLeftIn') - $p->angle('topsleeveWristLeft', 'topsleeveWristRight');
+            $angleLeft = $p->angle('hemSaLeftIn', 'topsleeveWristLeft') - $p->angle('topsleeveWristRight', 'topsleeveWristLeft');
             $p->addPoint('hemSaLeft', $p->rotate('hemSaLeftIn', 'topsleeveWristLeft', $angleLeft*-2));
             $p->addPoint('hemSaRightIn', $p->beamsCross('ventBottomRight','ventTopRight', 'hemsa-startPoint', 'hemsa-endPoint'));
             $angleRight = $p->angle('ventBottomRight', 'hemSaRightIn') - $p->angle('topsleeveWristLeft', 'topsleeveWristRight');
             $p->addPoint('hemSaRight', $p->rotate('hemSaRightIn', 'ventBottomRight', $angleRight*-2));
             
             // Seam allowance
-            $p->offsetPathString('sa1', 'M elbowRight C elbowRightCpTop topsleeveRightEdgeCpBottom topsleeveRightEdge C topsleeveRightEdgeCpTop backPitchPoint backPitchPoint C backPitchPoint sleeveTopCpRight sleeveTop C sleeveTopCpLeft frontPitchPointCpTop frontPitchPoint C frontPitchPointCpBottom topsleeveLeftEdgeCpRight topsleeveLeftEdge C topsleeveLeftEdge topsleeveElbowLeftCpTop topsleeveElbowLeft L topsleeveWristLeft L hemSaLeft L hemSaRight L ventBottomRight L ventTopRight L ventTopLeft L elbowRight z', $this->o('sa'), 1, ['class' => 'fabric sa']);
+            $p->offsetPathString('sa1', 'M elbowRight C elbowRightCpTop topsleeveRightEdgeCpBottom topsleeveRightEdge C topsleeveRightEdgeCpTop backPitchPoint backPitchPoint C backPitchPoint sleeveTopCpRight sleeveTop C sleeveTopCpLeft frontPitchPointCpTop frontPitchPoint C frontPitchPointCpBottom topsleeveLeftEdgeCpRight topsleeveLeftEdge C topsleeveLeftEdge topsleeveElbowLeftCpTop topsleeveElbowLeft L topsleeveWristLeft L hemSaLeft L hemSaRight L ventBottomRight L ventTopRight L ventTopLeft L elbowRight z', $this->o('sa')*-1, 1, ['class' => 'fabric sa']);
             $p->newPath('hemHint', 'M topsleeveWristLeft L hemSaLeft L hemSaRight L ventBottomRight', ['class' => 'hint']);
         }
 
@@ -2122,7 +1369,7 @@ class BlakeBlazer extends \Freesewing\Patterns\Beta\BentBodyBlock
 
         if($this->o('sa')) {
             // 4cm extra hem allowance
-            $p->offsetPathString('hemsa','M undersleeveWristLeft L undersleeveWristRight',$this->o('sa')*-4,0);
+            $p->offsetPathString('hemsa','M undersleeveWristLeft L undersleeveWristRight',$this->o('sa')*4,0);
             $p->addPoint('hemSaLeftIn', $p->beamsCross('undersleeveWristLeft','undersleeveElbowLeft', 'hemsa-startPoint', 'hemsa-endPoint'));
             $p->addPoint('hemSaRightIn', $p->beamsCross('ventBottomRight','ventTopRight', 'hemsa-startPoint', 'hemsa-endPoint'));
             $angleLeft = $p->angle('undersleeveWristLeft', 'hemSaLeftIn') - $p->angle('undersleeveWristLeft', 'undersleeveWristRight');
@@ -2131,7 +1378,7 @@ class BlakeBlazer extends \Freesewing\Patterns\Beta\BentBodyBlock
             $p->addPoint('hemSaRight', $p->rotate('hemSaRightIn', 'undersleeveWristRight', $angleRight*-2));
 
             // Seam allowance
-            $p->offsetPathString('sa1', 'M elbowRight C elbowRightCpTop undersleeveRightEdgeCpBottom undersleeveRightEdge C undersleeveRightEdgeCpTop undersleeveTip undersleeveTip C undersleeveTipCpBottom undersleeveLeftEdgeCpRight undersleeveLeftEdgeRight L undersleeveLeftEdge C undersleeveLeftEdge undersleeveElbowLeftCpTop undersleeveElbowLeft L undersleeveWristLeft L hemSaLeft L hemSaRight L ventBottomRight L ventTopRight L ventTopLeft L elbowRight z', $this->o('sa'),1, ['class' => 'fabric sa']);
+            $p->offsetPathString('sa1', 'M elbowRight C elbowRightCpTop undersleeveRightEdgeCpBottom undersleeveRightEdge C undersleeveRightEdgeCpTop undersleeveTip undersleeveTip C undersleeveTipCpBottom undersleeveLeftEdgeCpRight undersleeveLeftEdgeRight L undersleeveLeftEdge C undersleeveLeftEdge undersleeveElbowLeftCpTop undersleeveElbowLeft L undersleeveWristLeft L hemSaLeft L hemSaRight L ventBottomRight L ventTopRight L ventTopLeft L elbowRight z', $this->o('sa')*-1,1, ['class' => 'fabric sa']);
             $p->newPath('hemHint', 'M undersleeveWristLeft L hemSaLeft L hemSaRight L ventBottomRight', ['class' => 'hint']);
         } 
 
@@ -2166,8 +1413,8 @@ class BlakeBlazer extends \Freesewing\Patterns\Beta\BentBodyBlock
 
         // Seam allowance
         if($this->o('sa')) {
-            $p->offsetPathString('sa1', 'M bottomLeft L notchPoint L notchTip', $this->o('sa')*-1, 1, ['class' => 'various sa']);
-            $p->offsetPathString('sa2', 'M m.bottomLeft L m.notchPoint L m.notchTip', $this->o('sa'), 1, ['class' => 'various sa']);
+            $p->offsetPathString('sa1', 'M bottomLeft L notchPoint L notchTip', $this->o('sa'), 1, ['class' => 'various sa']);
+            $p->offsetPathString('sa2', 'M m.bottomLeft L m.notchPoint L m.notchTip', $this->o('sa')*-1, 1, ['class' => 'various sa']);
             $p->newPath('sa3', 'M notchTip L sa1-endPoint M bottomLeft L sa1-startPoint M m.bottomLeft L sa2-startPoint M m.notchTip L sa2-endPoint', ['class' => 'various sa']);
         }
 
@@ -2191,7 +1438,7 @@ class BlakeBlazer extends \Freesewing\Patterns\Beta\BentBodyBlock
         $p = $this->parts['collar'];
 
         // Seam allowance
-        if($this->o('sa')) $p->offsetPath('sa', 'outline', $this->o('sa'), 1, ['class' => 'fabric sa']);
+        if($this->o('sa')) $p->offsetPath('sa', 'outline', $this->o('sa')*-1, 1, ['class' => 'fabric sa']);
     
         // Grainline
         $p->newGrainline('ucTop','collarCbTop', $this->t('Grainline'));
@@ -2214,7 +1461,7 @@ class BlakeBlazer extends \Freesewing\Patterns\Beta\BentBodyBlock
         $p = $this->parts['collarstand'];
 
         // Seam allowance
-        if($this->o('sa')) $p->offsetPath('sa', 'outline', $this->o('sa')*-1, 1, ['class' => 'fabric sa']);
+        if($this->o('sa')) $p->offsetPath('sa', 'outline', $this->o('sa'), 1, ['class' => 'fabric sa']);
     
         // Grainline
         $p->newGrainline('collarCbBottom','ucTop', $this->t('Grainline'));
@@ -2359,6 +1606,8 @@ class BlakeBlazer extends \Freesewing\Patterns\Beta\BentBodyBlock
      */
     public function paperlessSide($model)
     {
+        return true;
+        
         /** @var \Freesewing\Part $p */
         $p = $this->parts[''];
     }
@@ -2372,8 +1621,12 @@ class BlakeBlazer extends \Freesewing\Patterns\Beta\BentBodyBlock
      */
     public function paperlessTopsleeve($model)
     {
+        return true;
+        
         /** @var \Freesewing\Part $p */
-        $p = $this->parts[''];
+        $p = $this->parts['topsleeve'];
+
+        $p->newLinearDimension('topsleeveLeftEdge','topsleeveRightEdge');
     }
 
     /**
@@ -2385,8 +1638,12 @@ class BlakeBlazer extends \Freesewing\Patterns\Beta\BentBodyBlock
      */
     public function paperlessUndersleeve($model)
     {
+        return true;
+        
         /** @var \Freesewing\Part $p */
-        $p = $this->parts[''];
+        $p = $this->parts['undersleeve'];
+
+        $p->newLinearDimension('undersleeveLeftEdge','undersleeveRightEdge');
     }
 
     /**
@@ -2398,6 +1655,8 @@ class BlakeBlazer extends \Freesewing\Patterns\Beta\BentBodyBlock
      */
     public function paperlessUndercollar($model)
     {
+        return true;
+        
         /** @var \Freesewing\Part $p */
         $p = $this->parts[''];
     }
@@ -2411,6 +1670,8 @@ class BlakeBlazer extends \Freesewing\Patterns\Beta\BentBodyBlock
      */
     public function paperlessCollar($model)
     {
+        return true;
+        
         /** @var \Freesewing\Part $p */
         $p = $this->parts[''];
     }
@@ -2424,6 +1685,8 @@ class BlakeBlazer extends \Freesewing\Patterns\Beta\BentBodyBlock
      */
     public function paperlessCollarstand($model)
     {
+        return true;
+        
         /** @var \Freesewing\Part $p */
         $p = $this->parts[''];
     }

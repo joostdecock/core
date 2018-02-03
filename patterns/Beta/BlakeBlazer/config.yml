@@ -3,10 +3,6 @@ info:
     name: "Blake Blazer"
     description: "A blazer or single-breasted jacket"
     handle: "blake"
-    version: "0.3"
-    author: "Joost De Cock"
-    company: "freesewing.org"
-    link: "freesewing.org/pattern/blake"
     tags:
         - menswear
         - top
@@ -190,7 +186,7 @@ options:
         type: "percent"
         min: 0
         max: 5
-        default: 2
+        default: 1
     chestPocketWidth:
         title: "Chest pocket width"
         description: "The width of the chest pocket, as a factor of your chest circumference."

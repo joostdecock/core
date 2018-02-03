@@ -1206,10 +1206,10 @@ class BlakeBlazer extends \Freesewing\Patterns\Beta\BentBodyBlock
         $p->newTextOnPath('rollLine', 'M breakPoint L rollLineTop', $this->t('Roll line'), false, false);
 
         // Title and logo
-        $p->addPoint('titleAnchor', $p->shift('frontDartLeftCpTop', 180, 40));
+        $p->addPoint('titleAnchor', $p->shift('frontDartLeftCpTop', 160, 50));
         $p->addTitle('titleAnchor', 1, $this->t($p->title), '2x '.$this->t('from fabric')."\n".$this->t('Lining part').' 2x '.$this->t('from lining')."\n".$this->t('Facing part').' 2x '.$this->t('from fabric'));
-        $p->addPoint('logoAnchor', $p->shift('frontDartBottom', -90, 40));
-        $p->newSnippet('logo', 'logo-sm', 'logoAnchor');
+        $p->addPoint('logoAnchor', $p->shift('frontDartBottom', -90, 50));
+        $p->newSnippet('logo', 'logo', 'logoAnchor');
         
         // Notes
         $p->addPoint('foldBack', $p->shiftAlong('shoulderLineRight',19,17,10,30));
@@ -1277,9 +1277,9 @@ class BlakeBlazer extends \Freesewing\Patterns\Beta\BentBodyBlock
 
         // Title and logo
         $p->addPoint('titleAnchor', $p->shiftFractionTowards('grainlineBottom', 'grainlineTop',0.2));
-        $p->addTitle('titleAnchor', 3, $this->t($p->title), '2x '.$this->t('from fabric')."\n".' 2x '.$this->t('from lining'));
+        $p->addTitle('titleAnchor', 3, $this->t($p->title), '2x '.$this->t('from fabric')."\n".' 2x '.$this->t('from lining'), ['scale' => 75]);
         $p->addPoint('logoAnchor', $p->shiftFractionTowards('grainlineBottom', 'grainlineTop',0.8));
-        $p->newSnippet('logo', 'logo-sm', 'logoAnchor');
+        $p->newSnippet('logo', 'logo', 'logoAnchor');
 
         // Notes
         if($this->o('sa')) {
@@ -1342,7 +1342,7 @@ class BlakeBlazer extends \Freesewing\Patterns\Beta\BentBodyBlock
         }
         // Title and logo
         $p->addTitle('underarmCenter', 4, $this->t($p->title), '2x '.$this->t('from fabric')."\n".' 2x '.$this->t('from lining'));
-        $p->newSnippet('logo', 'logo-sm', 'elbowCenter');
+        $p->newSnippet('logo', 'logo', 'elbowCenter');
 
         // Grainline 
         $p->newPoint('grainlineBottom', $p->x('sleeveTop'), $p->y('topsleeveWristLeft'));
@@ -1390,7 +1390,7 @@ class BlakeBlazer extends \Freesewing\Patterns\Beta\BentBodyBlock
         $p->addPoint('titleAnchor', $p->shiftFractionTowards('grainlineBottom','undersleeveLeftEdgeCpRight',0.8));
         $p->addTitle('titleAnchor', 5, $this->t($p->title), '2x '.$this->t('from fabric')."\n".' 2x '.$this->t('from lining'));
         $p->addPoint('logoAnchor', $p->shiftFractionTowards('grainlineBottom','undersleeveLeftEdgeCpRight',0.3));
-        $p->newSnippet('logo', 'logo-sm', 'logoAnchor');
+        $p->newSnippet('logo', 'logo', 'logoAnchor');
         
         // Notes
         if($this->o('sa')) {
@@ -1422,7 +1422,8 @@ class BlakeBlazer extends \Freesewing\Patterns\Beta\BentBodyBlock
         $p->newGrainline('collarCbBottom','collarCbTop', $this->t('Grainline'));
 
         // Title
-        $p->addTitle('ucTop', 6, $this->t($p->title), '1x '.$this->t('from fixme'));
+        $p->addPoint('titleAnchor', $p->shiftFractionTowards('collarCbTop','m.shoulderLineRealLeft', 0.5));
+        $p->addTitle('titleAnchor', 6, $this->t($p->title), '1x '.$this->t('from fixme'), ['scale' => 75]);
     }
 
     /**
@@ -1444,8 +1445,8 @@ class BlakeBlazer extends \Freesewing\Patterns\Beta\BentBodyBlock
         $p->newGrainline('ucTop','collarCbTop', $this->t('Grainline'));
         
         // Title
-        $p->addPoint('titleAnchor', $p->shiftFractionTowards('ucTop','collarCbTop', 0.4));
-        $p->addTitle('titleAnchor', 7, $this->t($p->title), '1x '.$this->t('from fabric'),'horizontal-small');
+        $p->addPoint('titleAnchor', $p->shiftFractionTowards('collarCbTop','m.bottomLeft', 0.3));
+        $p->addTitle('titleAnchor', 7, $this->t($p->title), '1x '.$this->t('from fabric'),['scale' => 50]);
     }
 
     /**
@@ -1467,7 +1468,8 @@ class BlakeBlazer extends \Freesewing\Patterns\Beta\BentBodyBlock
         $p->newGrainline('collarCbBottom','ucTop', $this->t('Grainline'));
         
         // Title
-        $p->addTitle('collarCbBottom', 7, $this->t($p->title), '1x '.$this->t('from fabric'),'horizontal-small');
+        $p->addPoint('titleAnchor', $p->shiftFractionTowards('ucTop','m.ucBottomCurve6', 0.6));
+        $p->addTitle('titleAnchor', 7, $this->t($p->title), '1x '.$this->t('from fabric'),['scale' => 30]);
     }
 
 

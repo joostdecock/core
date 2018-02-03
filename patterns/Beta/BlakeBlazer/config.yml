@@ -1,4 +1,3 @@
-hidden: true
 info:
     name: "Blake Blazer"
     description: "A blazer or single-breasted jacket"
@@ -324,25 +323,6 @@ options:
         min: 0
         max: 30
         default: 15
-    zebra:
-        title: "Zebra stripes"
-        description: "Do you want to include a zebra striped pattern in your draft?"
-        group: "zebra"
-        type: "chooseOne"
-        options:
-            0: "No stripes"
-            1: "Zebra!"
-        default: 0
-    zebraCenterBackClearance:
-        title: "Zebra stripes center back clearance"
-        description: "How much the zebra stripes should stay clear of the center back seam."
-        group: "zebra"
-        type: "measure"
-        dependsOn: 'zebra'
-        onlyOn: [1]
-        min: 10
-        max: 50
-        default: 10
     frontCutawayAngle:
         title: "Front opening bototm cutaway angle"
         description: "How much do you want the front to open up below the lower button."

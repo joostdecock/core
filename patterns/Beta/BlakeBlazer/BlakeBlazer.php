@@ -687,6 +687,7 @@ class BlakeBlazer extends \Freesewing\Patterns\Beta\BentBodyBlock
         $p->addPoint('roundedHem', $p->shift('roundRight',-90, $this->o('sa')*3));
 
         // Mark path for sample service
+        $p->clonePoint('feBottomHemEdge', 'gridAnchor');
         $p->paths['front']->setSample(true);
         $p->paths['chestPocket']->setSample(true);
         $p->paths['frontPocket']->setSample(true);
@@ -709,13 +710,6 @@ class BlakeBlazer extends \Freesewing\Patterns\Beta\BentBodyBlock
         /** @var \Freesewing\Part $p */
         $p = $this->parts['side'];
         
-        /*
-        $this->setValue('fpTopWidth', $p->distance('fpHelpTop1', 'fpTopRight'));
-        $this->setValue('fpBottomWidth', $p->deltaX('hipsBackSide', 'fpBottomRight'));
-        $this->setValue('fpHeight', $p->deltaY('fpTopRight', 'fpBottomRight'));
-        $this->setValue('fpStartY', $p->y('fpTopRight'));
-        */
-
         // Front pocket
         $p->curveCrossesY('waistSideBack','waistSideBackCpBottom','hipsSideBackCpTop','hipsSideBack',$this->v('fpStartY'), 'fpHelp');
         $p->clonePoint('fpHelp1','fpTopLeft');
@@ -743,6 +737,10 @@ class BlakeBlazer extends \Freesewing\Patterns\Beta\BentBodyBlock
             L sideFrontHem
             z
             ', ['class' => 'fabric']);
+        
+        // Mark path for sample service
+        $p->clonePoint('hemEdgeFrontSide','gridAnchor');
+        $p->paths['side']->setSample(true);
 
     }
 
@@ -804,6 +802,9 @@ class BlakeBlazer extends \Freesewing\Patterns\Beta\BentBodyBlock
             C chestCenterCpTop centerBackNeck centerBackNeck
             z
             ', ['class' => 'fabric']);
+
+        // Mark path for sample service
+        $p->paths['back']->setSample(true);
 
         // Store lenght of the sleeve cap to the pitch point notch
         $this->setValue('backSleevecapToNotch', $p->curveLen(12, 19, 17, 10)); 
@@ -907,8 +908,12 @@ class BlakeBlazer extends \Freesewing\Patterns\Beta\BentBodyBlock
             L notchPoint
             z
             ', ['class' => 'fabric']);
+        
+        // Mark path for sample service
+        $p->clonePoint('ucTop','gridAnchor');
+        $p->paths['outline']->setSample(true);
     }
-
+    
     /** 
      * Checks the difference in length between the original straight collar and bended collar
      */
@@ -945,6 +950,10 @@ class BlakeBlazer extends \Freesewing\Patterns\Beta\BentBodyBlock
             C ucBottomCurve6 ucBottomCurve7 ucBottomLeft
             z
             ', ['class' => 'fabric']);
+        
+        // Mark path for sample service
+        $p->clonePoint('collarCbBottom','gridAnchor');
+        $p->paths['outline']->setSample(true);
     }
 
     /**
@@ -978,7 +987,10 @@ class BlakeBlazer extends \Freesewing\Patterns\Beta\BentBodyBlock
             C ucBottomLeft ucTopCpLeft ucTop
             C ucTopCpRight m.ucBottomLeft m.ucBottomLeft
             ', ['class' => 'hint']);
-
+        
+        // Mark path for sample service
+        $p->clonePoint('collarCbBottom','gridAnchor');
+        $p->paths['outline']->setSample(true);
     }
 
     /**

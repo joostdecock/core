@@ -24,8 +24,8 @@ class BlakeBlazer extends \Freesewing\Patterns\Beta\BentBodyBlock
       Things we need to do before we can draft a pattern
     */
 
-    /** Lenght bonus below hips as factor as fraction of neck to hip = 13.33% */
-    const LENGTHEN_FACTOR = 0.1333;
+    /** Lenght bonus below hips as factor as fraction of neck to hip = 19% */
+    const LENGTHEN_FACTOR = 0.19;
 
     /** Front extention as factor of chest circumference = 2% */
     const FRONT_EXTENSION = 0.02;
@@ -59,7 +59,7 @@ class BlakeBlazer extends \Freesewing\Patterns\Beta\BentBodyBlock
         $this->setValueIfUnset('lengthBase', $model->m('centerBackNeckToWaist') + $model->m('naturalWaistToHip'));
         $this->setValueIfUnset('lengthBonus', $this->v('lengthBase') * self::LENGTHEN_FACTOR + $this->o('lengthBonus'));
         // Overwrite lengthBonus option with new value
-        $this->setOptionIfUnset('lengthBonus', $this->v('lengthBonus'));
+        $this->setOption('lengthBonus', $this->v('lengthBonus'));
 
         // Front extension
         $this->setValueIfUnset('frontExtension', self::FRONT_EXTENSION);

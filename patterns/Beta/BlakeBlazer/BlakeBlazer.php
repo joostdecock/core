@@ -27,12 +27,17 @@ class BlakeBlazer extends \Freesewing\Patterns\Beta\BentBodyBlock
     /** Lenght bonus below hips as factor as fraction of neck to hip = 19% */
     const LENGTHEN_FACTOR = 0.19;
 
-    /** Front extention as factor of chest circumference = 2% */
+    /** Front extension as factor of chest circumference = 2% */
     const FRONT_EXTENSION = 0.02;
 
     /** Sleeve vent */
     const SLEEVE_VENT_LENGTH = 100;
     const SLEEVE_VENT_WIDTH = 40;
+
+    /** Inner pocket */
+    const INNER_POCKET_WIDTH = 125;
+    const INNER_POCKET_DEPTH = 160;
+    const INNER_POCKET_WELT = 5;
 
     /**
      * Sets up options and values for our draft
@@ -151,6 +156,13 @@ class BlakeBlazer extends \Freesewing\Patterns\Beta\BentBodyBlock
         $this->finalizeUndercollar($model);
         $this->finalizeCollar($model);
         $this->finalizeCollarstand($model);
+        
+        $this->finalizePocket($model);
+        $this->finalizeChestPocketWelt($model);
+        $this->finalizeChestPocketBag($model);
+        $this->finalizeInnerPocketWelt($model);
+        $this->finalizeInnerPocketBag($model);
+        $this->finalizeInnerPocketFacingExtension($model);
 
         // Is this a paperless pattern?
         if ($this->isPaperless) {
@@ -163,6 +175,12 @@ class BlakeBlazer extends \Freesewing\Patterns\Beta\BentBodyBlock
             $this->paperlessUndercollar($model);
             $this->paperlessCollar($model);
             $this->paperlessCollarstand($model);
+            $this->paperlessPocket($model);
+            $this->paperlessChestPocketWelt($model);
+            $this->paperlessChestPocketBag($model);
+            $this->paperlessInnerPocketWelt($model);
+            $this->paperlessInnerPocketBag($model);
+            $this->paperlessInnerPocketFacingExtension($model);
         }
     }
     
@@ -209,6 +227,13 @@ class BlakeBlazer extends \Freesewing\Patterns\Beta\BentBodyBlock
         $this->draftCollar($model);
         $this->draftCollarstand($model);
         $this->draftUndercollar($model);
+        
+        $this->draftPocket($model);
+        $this->draftChestPocketWelt($model);
+        $this->draftChestPocketBag($model);
+        $this->draftInnerPocketWelt($model);
+        $this->draftInnerPocketBag($model);
+        $this->draftInnerPocketFacingExtension($model);
         
         // Draft sleeve 
         // Tweak the sleeve until it fits the armhole
@@ -462,7 +487,13 @@ class BlakeBlazer extends \Freesewing\Patterns\Beta\BentBodyBlock
             $p->addPoint('cpBottomRight', $p->rotate('cpBottomRight', 'cpBottomLeft', $this->o('chestPocketAngle')));
             $p->addPoint('cpTopRight', $p->rotate('cpTopRight', 'cpBottomLeft', $this->o('chestPocketAngle')));
             $p->addPoint('cpTopLeft', $p->rotate('cpTopLeft', 'cpBottomLeft', $this->o('chestPocketAngle')));
+            // Make pocket parallelogram rather than rectangle
+            $p->addPoint('.help', $p->shift('cpBottomLeft', 90, 5));
+            $p->addPoint('cpTopLeft', $p->beamsCross('cpBottomLeft','.help','cpTopLeft','cpTopRight'));
+            $p->clonePoint('cpTopRight', 'cpTopRightOrig');
+            $p->addPoint('cpTopRight', $p->shiftTowards('cpTopLeft','cpTopRight', $this->o('chestPocketWidth')));
         }
+        
 
         // Front pocket (fp)
         $width = $model->m('chestCircumference') * $this->o('frontPocketWidth');
@@ -470,6 +501,8 @@ class BlakeBlazer extends \Freesewing\Patterns\Beta\BentBodyBlock
         $p->addPoint('fpBottomLeft', $p->shift('fpTopLeft', -90, ($p->deltaY('frontDartMid', 'slHem') * $this->o('frontPocketDepth'))));
         $p->addPoint('fpTopRight', $p->shift('fpTopLeft', 0, $width));
         $p->addPoint('fpBottomRight', $p->shift('fpBottomLeft', 0, $width));
+        // Store front pocket depth
+        $this->setValue('frontPocketDepth', $p->distance('fpTopLeft','fpBottomLeft'));
         // Adapt width according to dart
         if($p->y('fpTopLeft') < $p->y('frontDartBottom')) {
             $p->curveCrossesY('frontDartLeft', 'frontDartLeftCpBottom', 'frontDartBottom', 'frontDartBottom', $p->y('fpTopLeft'), 'dartPocketLeft');
@@ -481,6 +514,14 @@ class BlakeBlazer extends \Freesewing\Patterns\Beta\BentBodyBlock
         } else {
             $p->newPath('frontPocket', 'M fpTopLeft L fpTopRight M fpBottomRight L fpBottomLeft L fpTopLeft', ['class' => 'help']);
         }
+
+        // Inner pocket
+        $p->newPoint('ipTopLeft', $p->x('waistBackSide')/2 - self::INNER_POCKET_WIDTH/2, $p->y('frontDartTop')-20);
+        $p->addPoint('ipTopRight', $p->shift('ipTopLeft', 0, self::INNER_POCKET_WIDTH));
+        $p->addPoint('ipMidLeft', $p->shift('ipTopLeft', -90, self::INNER_POCKET_WELT));
+        $p->addPoint('ipBotLeft', $p->shift('ipMidLeft', -90, self::INNER_POCKET_WELT));
+        $p->addPoint('ipMidRight', $p->shift('ipTopRight', -90, self::INNER_POCKET_WELT));
+        $p->addPoint('ipBotRight', $p->shift('ipMidRight', -90, self::INNER_POCKET_WELT));
 
 
         /*
@@ -570,8 +611,6 @@ class BlakeBlazer extends \Freesewing\Patterns\Beta\BentBodyBlock
         $p->newPath('test', 'M 12 C 19 17 10 C 18 15 14', ['class' => 'debug']);
 
 
-
-
         // Lapel break point and roll line
         $p->newPoint('breakPoint', $p->x('feBottom'), $p->y(3) - ($p->distance(2,3) * $this->o('lapelStart')));
         $p->addPoint('cutawayPoint', $p->shift('breakPoint',-90,$p->distance(2,3) * $this->o('lapelStart') + 10/$this->o('lapelStart')));
@@ -649,6 +688,33 @@ class BlakeBlazer extends \Freesewing\Patterns\Beta\BentBodyBlock
         // Facing/lining boundary
         $p->addPoint('facingTop', $p->shiftFractionTowards('shoulderLineRealLeft','shoulderLineRight',0.2));    
 
+        // Inner pocket facing extension (ipfe)
+        $ipfeRadius = 20;
+        $p->addPoint('.help1', $p->shift('ipMidLeft', 90, $ipfeRadius));
+        $p->addPoint('.help2', $p->shift('ipMidRight', 90, $ipfeRadius));
+        $p->addPoint('ipfeTopLeft', $p->beamsCross('facingTop','roundRight','.help1','.help2'));
+        $p->addPoint('.help1', $p->shift('ipMidLeft', -90, $ipfeRadius));
+        $p->addPoint('.help2', $p->shift('ipMidRight', -90, $ipfeRadius));
+        $p->addPoint('ipfeBotLeft', $p->beamsCross('facingTop','roundRight','.help1','.help2'));
+        $p->newPoint('ipfeTopRight', $p->x('ipMidRight')+$ipfeRadius, $p->y('ipfeTopLeft'));
+        $p->newPoint('ipfeBotRight', $p->x('ipfeTopRight'), $p->y('ipfeBotLeft'));
+        $p->addPoint('ipfeTopRightTop', $p->shift('ipfeTopRight', 180, $ipfeRadius));
+        $p->addPoint('ipfeTopRightBot', $p->shift('ipfeTopRight', -90, $ipfeRadius));
+        $p->addPoint('ipfeTopRightCpTop', $p->shift('ipfeTopRightTop', 0, BezierToolbox::bezierCircle($ipfeRadius)));
+        $p->addPoint('ipfeTopRightCpBot', $p->shift('ipfeTopRightBot', 90, BezierToolbox::bezierCircle($ipfeRadius)));
+        $p->addPoint('ipfeBotRightBot', $p->shift('ipfeBotRight', 180, $ipfeRadius));
+        $p->addPoint('ipfeBotRightTop', $p->shift('ipfeBotRight', 90, $ipfeRadius));
+        $p->addPoint('ipfeBotRightCpTop', $p->shift('ipfeBotRightTop', -90, BezierToolbox::bezierCircle($ipfeRadius)));
+        $p->addPoint('ipfeBotRightCpBot', $p->shift('ipfeBotRightBot', 0, BezierToolbox::bezierCircle($ipfeRadius)));
+        $p->addPoint('ipfeTopLeftTop', $p->shiftTowards('ipfeTopLeft','facingTop', $ipfeRadius));
+        $p->addPoint('ipfeTopLeftBot', $p->shiftTowards('ipfeTopLeft','ipfeTopRight', $ipfeRadius));
+        $p->addPoint('ipfeTopLeftTopCp', $p->shiftTowards('ipfeTopLeftTop', 'ipfeTopLeft', BezierToolbox::bezierCircle($ipfeRadius)));
+        $p->addPoint('ipfeTopLeftBotCp', $p->shift('ipfeTopLeftBot', 180, BezierToolbox::bezierCircle($ipfeRadius)));
+        $p->addPoint('ipfeBotLeftBot', $p->shiftTowards('ipfeBotLeft','roundRight', $ipfeRadius));
+        $p->addPoint('ipfeBotLeftTop', $p->shift('ipfeBotLeft', 0, $ipfeRadius));
+        $p->addPoint('ipfeBotLeftBotCp', $p->shiftTowards('ipfeBotLeftBot','ipfeBotLeft', BezierToolbox::bezierCircle($ipfeRadius)));
+        $p->addPoint('ipfeBotLeftTopCp', $p->shift('ipfeBotLeftTop', 180, BezierToolbox::bezierCircle($ipfeRadius)));
+        
         // Paths
         $p->newPath('front', '
             M breakPoint 
@@ -682,6 +748,16 @@ class BlakeBlazer extends \Freesewing\Patterns\Beta\BentBodyBlock
         $p->newPath('rolline', 'M breakPoint L rollLineTop', ['class' => 'help']);
         $p->newPath('lining', 'M facingTop L roundRight', ['class' => 'lining']);
         $p->newPath('facing', 'M facingTop L roundRight', ['class' => 'fabric', 'stroke-dasharray' => '10,10']);
+        $p->newPath('ipfe', 'M ipfeTopLeftTop 
+            C ipfeTopLeftTopCp ipfeTopLeftBotCp ipfeTopLeftBot
+            L ipfeTopRightTop
+            C ipfeTopRightCpTop ipfeTopRightCpBot ipfeTopRightBot
+            C ipfeBotRightCpTop ipfeBotRightCpBot ipfeBotRightBot
+            L ipfeBotLeftTop
+            C ipfeBotLeftTopCp ipfeBotLeftBotCp ipfeBotLeftBot 
+        ', ['class' => 'hint']);
+        $p->newPath('innerPocket', 'M ipTopLeft L ipTopRight L ipBotRight L ipBotLeft z M ipMidLeft L ipMidRight', ['class' => 'help']); 
+
 
         // 3cm extra hem allowance
         $p->addPoint('roundedHem', $p->shift('roundRight',-90, $this->o('sa')*3));
@@ -1056,6 +1132,199 @@ class BlakeBlazer extends \Freesewing\Patterns\Beta\BentBodyBlock
         // Mark path for sample service
         $p->paths['undersleeve']->setSample(true);
 
+    }
+
+    /**
+     * Drafts the pocket
+     *
+     * @param \Freesewing\Model $model The model to draft for
+     *
+     * @return void
+     */
+    public function draftPocket($model)
+    {
+        /** @var \Freesewing\Part $p */
+        $p = $this->parts['pocket'];
+
+        $w = $model->m('chestCircumference') * $this->o('frontPocketWidth');
+        $h = $this->v('frontPocketDepth');
+        $r = $w/5;
+        $br = BezierToolbox::BezierCircle($r);
+
+        $p->newPoint('topLeft', 0, 0);
+        $p->newPoint('topRight', $w, 0);
+        $p->newPoint('bottomLeft', 0, $h);
+        $p->newPoint('bottomRight', $w, $h);
+
+        $p->addPoint('leftArcTop', $p->shift('bottomLeft', 90, $r));
+        $p->addPoint('leftArcBot', $p->shift('bottomLeft', 0, $r));
+        $p->addPoint('leftArcTopCp', $p->shift('leftArcTop', -90, $br));
+        $p->addPoint('leftArcBotCp', $p->shift('leftArcBot', 180, $br));
+
+        $p->addPoint('rightArcTop', $p->shift('bottomRight', 90, $r));
+        $p->addPoint('rightArcBot', $p->shift('bottomRight', 180, $r));
+        $p->addPoint('rightArcTopCp', $p->shift('rightArcTop', -90, $br));
+        $p->addPoint('rightArcBotCp', $p->shift('rightArcBot', 0, $br));
+
+        $p->newPath('outline', 'M topLeft L leftArcTop 
+            C leftArcTopCp leftArcBotCp leftArcBot
+            L rightArcBot 
+            C rightArcBotCp rightArcTopCp rightArcTop
+            L topRight z', ['class' => 'fabric']);
+
+
+    }
+
+    /**
+     * Drafts the chest pocket welt
+     *
+     * @param \Freesewing\Model $model The model to draft for
+     *
+     * @return void
+     */
+    public function draftChestPocketWelt($model)
+    {
+        /** @var \Freesewing\Part $p */
+        $p = $this->parts['chestPocketWelt'];
+        
+        $w = $this->o('chestPocketWidth');
+        $h = $this->o('chestPocketWeltSize');
+        
+        $p->newPoint('midLeft', 0, 0);
+        $p->newPoint('midRight', $w, 0);
+        $p->newPoint('topLeft', 0, $h*-1);
+        $p->newPoint('.help',0, -20);
+        $p->addPoint('.help', $p->rotate('.help','midLeft',$this->o('chestPocketAngle')));
+        $p->newPoint('topLeft', 0, $h*-1);
+        $p->newPoint('topRight', $w, $h*-1);
+
+        //Fix real location of top corners
+        $p->addPoint('topLeft', $p->beamsCross('topLeft','topRight','midLeft','.help'));
+        $p->addPoint('topRight', $p->shiftTowards('topLeft','topRight', $w));
+
+        // Bottom corners
+        $p->newPoint('botLeft', $p->x('topLeft'), $h);
+        $p->newPoint('botRight', $p->x('topRight'), $h);
+
+        $p->newPath('outline', 'M midLeft L botLeft L botRight L midRight L topRight L topLeft z', ['class' => 'fabric']);
+        $p->newPath('foldline', 'M midLeft L midRight', ['class' => 'fabric help']);
+
+    }
+
+    /**
+     * Drafts the chest pocket bag
+     *
+     * @param \Freesewing\Model $model The model to draft for
+     *
+     * @return void
+     */
+    public function draftChestPocketBag($model)
+    {
+        /** @var \Freesewing\Part $p */
+        $p = $this->parts['chestPocketBag'];
+
+        $w = $this->o('chestPocketWidth') + 30;
+        $h = 240;
+
+        $p->newPoint('topLeft', 0, 0);
+        $p->newPoint('topRight', $w, 0);
+
+        $p->newPoint('midTopLeft', 0, 40);
+        $p->newPoint('midTopRight', $w, 40);
+        $p->newPoint('midBotLeft', 0, 60);
+        $p->newPoint('midBotRight', $w, 60);
+
+        $p->newPoint('botLeft', 0, 100);
+        $p->newPoint('botRight', $w, 100);
+
+        $p->newPath('outline', 'M midTopLeft L topLeft L topRight L midTopRight M midBotRight L botRight L botLeft L midBotLeft', ['class' => 'lining']);
+        $p->newPath('hint', 'M midTopLeft L midBotLeft M midTopRight L midBotRight', ['class' => 'lining hint']); 
+
+        $p->newHeightDimension('botLeft','topLeft',30, $p->unit(240));
+    }
+
+    /**
+     * Drafts the inner pocket welt
+     *
+     * @param \Freesewing\Model $model The model to draft for
+     *
+     * @return void
+     */
+    public function draftInnerPocketWelt($model)
+    {
+        /** @var \Freesewing\Part $p */
+        $p = $this->parts['innerPocketWelt'];
+
+        $w = self::INNER_POCKET_WIDTH + 30;
+        $h = self::INNER_POCKET_WELT;
+        
+        $p->newPoint('topLeft', 0, 0);
+        $p->newPoint('topRight', $w, 0);
+        $p->newPoint('midLeft', 0, $h);
+        $p->newPoint('midRight', $w, $h);
+        $p->newPoint('botLeft', 0, $h*2);
+        $p->newPoint('botRight', $w, $h*2);
+        
+        $p->newPath('outline', 'M topLeft L topRight L botRight L botLeft z', ['class' => 'fabric']);
+        $p->newPath('foldline', 'M midLeft L midRight', ['class' => 'fabric help']); 
+    }
+
+    /**
+     * Drafts the inner pocket bag
+     *
+     * @param \Freesewing\Model $model The model to draft for
+     *
+     * @return void
+     */
+    public function draftInnerPocketBag($model)
+    {
+        /** @var \Freesewing\Part $p */
+        $p = $this->parts['innerPocketBag'];
+
+        $w = self::INNER_POCKET_WIDTH + 30;
+        $h = self::INNER_POCKET_DEPTH *2 + 15;
+
+        $p->newPoint('topLeft', 0, 0);
+        $p->newPoint('topRight', $w, 0);
+
+        $p->newPoint('midTopLeft', 0, 40);
+        $p->newPoint('midTopRight', $w, 40);
+        $p->newPoint('midBotLeft', 0, 60);
+        $p->newPoint('midBotRight', $w, 60);
+
+        $p->newPoint('botLeft', 0, 100);
+        $p->newPoint('botRight', $w, 100);
+
+        $p->newPath('outline', 'M midTopLeft L topLeft L topRight L midTopRight M midBotRight L botRight L botLeft L midBotLeft', ['class' => 'lining']);
+        $p->newPath('hint', 'M midTopLeft L midBotLeft M midTopRight L midBotRight', ['class' => 'lining hint']); 
+
+        $p->newHeightDimension('botLeft','topLeft',30, $p->unit($h));
+    }
+
+
+    /**
+     * Drafts the inner pocket facing extension
+     *
+     * @param \Freesewing\Model $model The model to draft for
+     *
+     * @return void
+     */
+    public function draftInnerPocketfacingExtension($model)
+    {
+        $this->clonePoints('front', 'innerPocketFacingExtension');
+
+        /** @var \Freesewing\Part $p */
+        $p = $this->parts['innerPocketFacingExtension'];
+
+        
+        $p->newPath('outline', 'M ipfeTopLeftTop 
+            C ipfeTopLeftTopCp ipfeTopLeftBotCp ipfeTopLeftBot
+            L ipfeTopRightTop
+            C ipfeTopRightCpTop ipfeTopRightCpBot ipfeTopRightBot
+            C ipfeBotRightCpTop ipfeBotRightCpBot ipfeBotRightBot
+            L ipfeBotLeftTop
+            C ipfeBotLeftTopCp ipfeBotLeftBotCp ipfeBotLeftBot 
+        ', ['class' => 'fabric']);
     }
 
     /*
@@ -1484,6 +1753,85 @@ class BlakeBlazer extends \Freesewing\Patterns\Beta\BentBodyBlock
         $p->addTitle('titleAnchor', 7, $this->t($p->title), '1x '.$this->t('from fabric'),['scale' => 30]);
     }
 
+    /**
+     * Finalizes the pocket
+     *
+     * @param \Freesewing\Model $model The model to draft for
+     *
+     * @return void
+     */
+    public function finalizePocket($model)
+    {
+        /** @var \Freesewing\Part $p */
+        $p = $this->parts['pocket'];
+    }
+
+    /**
+     * Finalizes the chest pocket welt
+     *
+     * @param \Freesewing\Model $model The model to draft for
+     *
+     * @return void
+     */
+    public function finalizeChestPocketWelt($model)
+    {
+        /** @var \Freesewing\Part $p */
+        $p = $this->parts['chestPocketWelt'];
+    }
+
+    /**
+     * Finalizes the chest pocket bag
+     *
+     * @param \Freesewing\Model $model The model to draft for
+     *
+     * @return void
+     */
+    public function finalizeChestPocketBag($model)
+    {
+        /** @var \Freesewing\Part $p */
+        $p = $this->parts['chestPocketBag'];
+    }
+
+    /**
+     * Finalizes the inner pocket welt
+     *
+     * @param \Freesewing\Model $model The model to draft for
+     *
+     * @return void
+     */
+    public function finalizeInnerPocketWelt($model)
+    {
+        /** @var \Freesewing\Part $p */
+        $p = $this->parts['innerPocketWelt'];
+    }
+
+    /**
+     * Finalizes the inner pocket bag
+     *
+     * @param \Freesewing\Model $model The model to draft for
+     *
+     * @return void
+     */
+    public function finalizeInnerPocketBag($model)
+    {
+        /** @var \Freesewing\Part $p */
+        $p = $this->parts['innerPocketBag'];
+    }
+
+    /**
+     * Finalizes the inner pocket facing extension
+     *
+     * @param \Freesewing\Model $model The model to draft for
+     *
+     * @return void
+     */
+    public function finalizeInnerPocketFacingExtension($model)
+    {
+        /** @var \Freesewing\Part $p */
+        $p = $this->parts['innerPocketFacingExtension'];
+    }
+
+
 
     /*
         ____                       _
@@ -1608,7 +1956,7 @@ class BlakeBlazer extends \Freesewing\Patterns\Beta\BentBodyBlock
         $p->newHeightDimensionSm('fpTopRight', 'waistBackSide', $xBase);
         $p->newHeightDimension('fpBottomRight','fpTopRight', $xBase);
         $p->newLinearDimension('cpTopLeft','cpTopRight', -10);
-        $p->newLinearDimensionSm('cpBottomRight','cpTopRight', 10);
+        $p->newLinearDimensionSm('cpBottomRight','cpTopRightOrig', 10);
     }
 
     /**
@@ -1703,5 +2051,95 @@ class BlakeBlazer extends \Freesewing\Patterns\Beta\BentBodyBlock
         
         /** @var \Freesewing\Part $p */
         $p = $this->parts[''];
+    }
+
+    /**
+     * Adds paperless info for the pocket
+     *
+     * @param \Freesewing\Model $model The model to draft for
+     *
+     * @return void
+     */
+    public function paperlessPocket($model)
+    {
+        return true;
+        
+        /** @var \Freesewing\Part $p */
+        $p = $this->parts['pocket'];
+    }
+    
+    /**
+     * Adds paperless info for the chest pocket welt
+     *
+     * @param \Freesewing\Model $model The model to draft for
+     *
+     * @return void
+     */
+    public function paperlessChestPocketWelt($model)
+    {
+        return true;
+        
+        /** @var \Freesewing\Part $p */
+        $p = $this->parts['chestPocketWelt'];
+    }
+    
+    /**
+     * Adds paperless info for the chest pocket bag
+     *
+     * @param \Freesewing\Model $model The model to draft for
+     *
+     * @return void
+     */
+    public function paperlessChestPocketBag($model)
+    {
+        return true;
+        
+        /** @var \Freesewing\Part $p */
+        $p = $this->parts['chestPocketBag'];
+    }
+    
+    /**
+     * Adds paperless info for the inner pocket welt
+     *
+     * @param \Freesewing\Model $model The model to draft for
+     *
+     * @return void
+     */
+    public function paperlessInnerPocketWelt($model)
+    {
+        return true;
+        
+        /** @var \Freesewing\Part $p */
+        $p = $this->parts['innerPocketWelt'];
+    }
+    
+    /**
+     * Adds paperless info for the inner pocket bag
+     *
+     * @param \Freesewing\Model $model The model to draft for
+     *
+     * @return void
+     */
+    public function paperlessInnerPocketBag($model)
+    {
+        return true;
+        
+        /** @var \Freesewing\Part $p */
+        $p = $this->parts['innerPocketBag'];
+    }
+    
+    /**
+     * Adds paperless info for the inner pocket facingExtension
+     *
+     * @param \Freesewing\Model $model The model to draft for
+     *
+     * @return void
+     */
+    public function paperlessInnerPocketFacingExtension($model)
+    {
+        return true;
+        
+        /** @var \Freesewing\Part $p */
+        $p = $this->parts['innerPocketFacingExtension'];
     }
 }

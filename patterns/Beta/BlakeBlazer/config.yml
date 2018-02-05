@@ -22,6 +22,12 @@ parts:
   undercollar: "Undercollar"
   topsleeve: "Topsleeve"
   undersleeve: "Undersleeve"
+  pocket: "Pocket"
+  chestPocketWelt: "Chest pocket welt"
+  chestPocketBag: "Chest pocket welt"
+  innerPocketWelt: "Inner pocket welt"
+  innerPocketBag: "Inner pocket welt"
+  innerPocketFacingExtension: "Inner pocket facing extension"
 
 languages:
     en: "English"

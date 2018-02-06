@@ -1690,7 +1690,8 @@ class BlakeBlazer extends \Freesewing\Patterns\Beta\BentBodyBlock
 
         // Grainline
         $p->newPoint('grainlineBottom', $p->x('undersleeveLeftEdgeCpRight'), $p->y('undersleeveWristLeft'));
-        $p->newGrainline('grainlineBottom','undersleeveLeftEdgeCpRight', $this->t('Grainline'));
+        $p->clonePoint('undersleeveLeftEdgeCpRight','grainlineTop');
+        $p->newGrainline('grainlineBottom','grainlineTop', $this->t('Grainline'));
         
         // Title and logo
         $p->addPoint('titleAnchor', $p->shiftFractionTowards('grainlineBottom','undersleeveLeftEdgeCpRight',0.8));
@@ -1701,7 +1702,7 @@ class BlakeBlazer extends \Freesewing\Patterns\Beta\BentBodyBlock
         // Notes
         if($this->o('sa')) {
             $p->newNote( $p->newId(), 'elbowRight', $this->t("Standard seam allowance")."\n(".$p->unit($this->o('sa')).')', 8, 20, -3);
-            $p->newNote( $p->newId(), 'grainlineBottom', $this->t("Extra hem allowance")."\n(".$p->unit($this->o('sa')*4).')', 1, 40, -20);
+            $p->newNote( $p->newId(), 'grainlineBottom', $this->t("Extra hem allowance")."\n(".$p->unit($this->o('sa')*5).')', 1, 40, -20);
         }
     }
 
@@ -2142,12 +2143,34 @@ class BlakeBlazer extends \Freesewing\Patterns\Beta\BentBodyBlock
      */
     public function paperlessUndersleeve($model)
     {
-        return true;
-        
         /** @var \Freesewing\Part $p */
         $p = $this->parts['undersleeve'];
+        
+        // Heigh left side
+        $xBase = $p->x('undersleeveElbowLeft') - 15;
+        if($this->o('sa')) {
+            $xBase -= $this->o('sa');
+            $sa = $this->o('sa');
+        } else $sa = 0;
+        // Height left
+        $p->newHeightDimension('undersleeveLeftEdge', 'undersleeveTip', $xBase-15);
+        $p->newHeightDimension('undersleeveElbowLeft', 'undersleeveLeftEdge', $xBase);
 
+        $p->newWidthDimension('undersleeveLeftEdge','grainlineTop', $p->y('undersleeveTip')-$sa-15);
+        $p->newWidthDimension('grainlineTop','undersleeveTip', $p->y('undersleeveTip')-$sa-15);
+        $p->newWidthDimension('undersleeveLeftEdge','undersleeveTip', $p->y('undersleeveTip')-$sa-30);
         $p->newLinearDimension('undersleeveLeftEdge','undersleeveRightEdge');
+        $p->addPoint('rightEdge', $p->curveEdge('elbowRight','elbowRightCpTop','undersleeveRightEdgeCpBottom','undersleeveRightEdge','right'));
+        $p->newWidthDimension('undersleeveLeftEdge','rightEdge', $p->y('undersleeveTip')-$sa-45);
+        $p->newLinearDimension('undersleeveElbowLeft','elbowRight');
+        $p->newLinearDimension('undersleeveWristLeft','undersleeveWristRight', -15);
+        $p->newLinearDimension('undersleeveWristLeft', 'undersleeveElbowLeft', -15-$sa/2);
+        $p->newLinearDimension('undersleeveWristRight', 'elbowRight', 15+$sa/2);
+        $p->newLinearDimension('undersleeveWristLeft', 'ventBottomRight', 15+5*$sa);
+        $p->newLinearDimension('ventBottomRight', 'ventTopRight', 15+$sa);
+        
+        // Note
+        $p->newNote(1, 'topsleeveWristLeftHelperBottom', $this->o('sleeveBend').' '.$this->t('degree').' '.$this->t('slant'), 6, 30);
     }
 
     /**

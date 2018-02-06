@@ -2068,10 +2068,28 @@ class BlakeBlazer extends \Freesewing\Patterns\Beta\BentBodyBlock
      */
     public function paperlessSide($model)
     {
-        return true;
-        
         /** @var \Freesewing\Part $p */
-        $p = $this->parts[''];
+        $p = $this->parts['side'];
+
+        // Height on the right
+        $xBase = $p->x('sideHemSideBack');
+        if($this->o('sa')) $xBase += $this->o('sa');
+        $p->newHeightDimension('sideHemSideBack', 'sideWaistSideBack',$xBase+15);
+        $p->newHeightDimension('sideWaistSideBack', 'side14',$xBase+15);
+
+        // Height on the left
+        $xBase = $p->x('sideFrontHem');
+        if($this->o('sa')) $xBase -= $this->o('sa');
+        $p->newHeightDimension('sideFrontHem', 'waistSideBack',$xBase-15);
+        $p->newHeightDimension('waistSideBack', 'slArm',$xBase-15);
+
+        // Widths
+        $p->newWidthDimension('sideFrontHem','sideHemSideBack', $p->y('sideFrontHem')+3*$this->o('sa')+15);
+        $p->newWidthDimension('waistSideBack','sideWaistSideBack', $p->y('sideWaistSideBack')-15);
+        $p->newWidthDimension('slArm','side14', $p->y('side14')-15-$this->o('sa'));
+        $p->addPoint('outerRight', $p->curveEdge('side14','sideSlArmCpBottom','sideWaistSideBackCpTop','sideWaistSideBack','right'));
+        $p->newWidthDimension('slArm','outerRight', $p->y('side14')-30-$this->o('sa'));
+
     }
 
     /**

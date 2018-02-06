@@ -1,18 +1,18 @@
 <?php
-/** Freesewing\Patterns\Beta\BlakeBlazer class */
+/** Freesewing\Patterns\Beta\JaegerJacket class */
 namespace Freesewing\Patterns\Beta;
 
 use Freesewing\Utils;
 use Freesewing\BezierToolbox;
 
 /**
- * A single-breasted jacket pattern
+ * A sport coat or single-breasted jacket pattern
  *
  * @author Joost De Cock <joost@decock.org>
  * @copyright 2017 Joost De Cock
  * @license http://opensource.org/licenses/GPL-3.0 GNU General Public License, Version 3
  */
-class BlakeBlazer extends \Freesewing\Patterns\Beta\BentBodyBlock
+class JaegerJacket extends \Freesewing\Patterns\Beta\BentBodyBlock
 {
     /*
         ___       _ _   _       _ _

@@ -1,7 +1,7 @@
 info:
-    name: "Blake Blazer"
-    description: "A blazer or single-breasted jacket"
-    handle: "blake"
+    name: "Jaeger Jacket"
+    description: "A sport coat; A single-breasted jacket with a less format cut than a suit jacket."
+    handle: "jaeger"
     tags:
         - menswear
         - top

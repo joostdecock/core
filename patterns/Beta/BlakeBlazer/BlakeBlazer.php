@@ -2182,10 +2182,22 @@ class BlakeBlazer extends \Freesewing\Patterns\Beta\BentBodyBlock
      */
     public function paperlessUndercollar($model)
     {
-        return true;
-        
         /** @var \Freesewing\Part $p */
-        $p = $this->parts[''];
+        $p = $this->parts['undercollar'];
+
+
+        // Width
+        $p->newWidthDimension('bottomLeft','m.bottomLeft',$p->y('bottomLeft')+15);
+        $p->newWidthDimension('notchPoint','m.notchPoint',$p->y('bottomLeft')+30);
+        $p->newWidthDimension('notchTip','m.notchTip',$p->y('collarCbTop')-15);
+
+        //Height
+        $p->newLinearDimension('collarCbBottom','collarCbTop', 15);
+        $xBase = $p->x('m.notchPoint')+$this->o('sa');
+        $p->newHeightDimension('m.notchTip','collarCbTop', $xBase+15);
+        $p->newHeightDimension('m.notchPoint','collarCbTop', $xBase+30);
+        $p->newHeightDimension('m.bottomLeft','collarCbTop', $xBase+45);
+
     }
 
     /**

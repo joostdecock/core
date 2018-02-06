@@ -2185,7 +2185,6 @@ class BlakeBlazer extends \Freesewing\Patterns\Beta\BentBodyBlock
         /** @var \Freesewing\Part $p */
         $p = $this->parts['undercollar'];
 
-
         // Width
         $p->newWidthDimension('bottomLeft','m.bottomLeft',$p->y('bottomLeft')+15);
         $p->newWidthDimension('notchPoint','m.notchPoint',$p->y('bottomLeft')+30);
@@ -2209,10 +2208,22 @@ class BlakeBlazer extends \Freesewing\Patterns\Beta\BentBodyBlock
      */
     public function paperlessCollar($model)
     {
-        return true;
-        
         /** @var \Freesewing\Part $p */
-        $p = $this->parts[''];
+        $p = $this->parts['collar'];
+
+        // Width
+        $p->newWidthDimension('ucBottomLeft','m.ucBottomLeft',$p->y('bottomLeft')+15);
+        $p->newWidthDimension('bottomLeft','m.bottomLeft',$p->y('bottomLeft')+30);
+        $p->newWidthDimension('notchPoint','m.notchPoint',$p->y('bottomLeft')+45);
+        $p->newWidthDimension('notchTip','m.notchTip',$p->y('collarCbTop')-15);
+
+        //Height
+        $p->newLinearDimension('ucTop','collarCbTop', 15);
+        $xBase = $p->x('m.notchPoint')+$this->o('sa');
+        $p->newHeightDimension('m.notchTip','collarCbTop', $xBase+15);
+        $p->newHeightDimension('m.notchPoint','collarCbTop', $xBase+30);
+        $p->newHeightDimension('m.ucBottomLeft','collarCbTop', $xBase+45);
+        $p->newHeightDimension('m.bottomLeft','collarCbTop', $xBase+60);
     }
 
     /**

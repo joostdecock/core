@@ -1644,7 +1644,7 @@ class BlakeBlazer extends \Freesewing\Patterns\Beta\BentBodyBlock
         else $p->newNote( $p->newId(), 'backPitchPoint', $this->t("Work in sleevecap ease\nfrom this point onwards"), 8, 20, 5);
         if($this->o('sa')) {
             $p->newNote( $p->newId(), 'topsleeveRightEdgeCpBottom', $this->t("Standard seam allowance")."\n(".$p->unit($this->o('sa')).')', 8, 20, -3);
-            $p->newNote( $p->newId(), 'topsleeveWristLeftHelperBottom', $this->t("Extra hem allowance")."\n(".$p->unit($this->o('sa')*4).')', 12, 40, -20);
+            $p->newNote( $p->newId(), 'topsleeveWristLeftHelperBottom', $this->t("Extra hem allowance")."\n(".$p->unit($this->o('sa')*5).')', 12, 40, -20);
         }
         // Title and logo
         $p->addTitle('underarmCenter', 4, $this->t($p->title), '2x '.$this->t('from fabric')."\n".' 2x '.$this->t('from lining'));
@@ -2101,12 +2101,36 @@ class BlakeBlazer extends \Freesewing\Patterns\Beta\BentBodyBlock
      */
     public function paperlessTopsleeve($model)
     {
-        return true;
-        
         /** @var \Freesewing\Part $p */
         $p = $this->parts['topsleeve'];
 
-        $p->newLinearDimension('topsleeveLeftEdge','topsleeveRightEdge');
+        // Heigh left side
+        $xBase = $p->x('topsleeveLeftEdge') - 15;
+        if($this->o('sa')) {
+            $xBase -= $this->o('sa');
+            $sa = $this->o('sa');
+        } else $sa = 0;
+        // Height left
+        $p->newHeightDimension('topsleeveWristLeft', 'topsleeveLeftEdge', $xBase);
+        $p->newHeightDimension('topsleeveLeftEdge', 'sleeveTop', $xBase);
+        $p->newHeightDimension('topsleeveRightEdge', 'sleeveTop', $p->x('topsleeveRightEdge')+15+$sa);
+        $p->newHeightDimension('elbowRight', 'topsleeveRightEdge', $p->x('topsleeveRightEdge')+15+$sa);
+
+        $p->newWidthDimension('topsleeveLeftEdge','sleeveTop', $p->y('sleeveTop')-15-$sa);
+        $p->newWidthDimension('sleeveTop', 'backPitchPoint', $p->y('sleeveTop')-15-$sa);
+        $p->newWidthDimension('sleeveTop', 'topsleeveRightEdge', $p->y('sleeveTop')-30-$sa);
+        $p->newWidthDimension('topsleeveLeftEdge', 'topsleeveRightEdge', $p->y('sleeveTop')-45-$sa);
+
+        // Linear
+        $p->newLinearDimension('topsleeveLeftEdge', 'topsleeveRightEdge');
+        $p->newLinearDimension('topsleeveElbowLeft', 'elbowRight');
+        $p->newLinearDimension('undersleeveWristRight', 'elbowRight', 15+$sa);
+        $p->newLinearDimension('topsleeveWristLeft', 'topsleeveElbowLeft', -15-$sa);
+        $p->newLinearDimension('topsleeveWristLeft', 'topsleeveWristRight', -15);
+        $p->newLinearDimension('ventBottomRight', 'ventTopRight', 15+$sa);
+        $p->newLinearDimension('topsleeveWristLeft', 'ventBottomRight', 15+5*$sa);
+
+
     }
 
     /**

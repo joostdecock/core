@@ -40,6 +40,9 @@ class BlakeBlazer extends \Freesewing\Patterns\Beta\BentBodyBlock
     const INNER_POCKET_WELT = 5;
     
     /** Inner pocket */
+    const CHEST_POCKET_DEPTH = 120;
+    
+    /** Pocket */
     const POCKET_FOLDOVER = 40;
 
     /**
@@ -1233,7 +1236,6 @@ class BlakeBlazer extends \Freesewing\Patterns\Beta\BentBodyBlock
         $p = $this->parts['chestPocketBag'];
 
         $w = $this->o('chestPocketWidth') + 30;
-        $h = 240;
 
         $p->newPoint('topLeft', 0, 0);
         $p->newPoint('topRight', $w, 0);
@@ -1253,8 +1255,6 @@ class BlakeBlazer extends \Freesewing\Patterns\Beta\BentBodyBlock
 
         $p->newPath('outline', 'M midTopLeft L topLeft L topRight L midTopRight M midBotRight L botRight L botLeft L midBotLeft', ['class' => 'lining']);
         $p->newPath('hint', 'M midTopLeft L midBotLeft M midTopRight L midBotRight', ['class' => 'lining hint']); 
-
-        $p->newHeightDimension('botLeft','topLeft',20, $p->unit(240));
     }
 
     /**
@@ -1852,6 +1852,8 @@ class BlakeBlazer extends \Freesewing\Patterns\Beta\BentBodyBlock
         // Title
         $p->addPoint('titleAnchor', $p->shiftFractionTowards('topLeft','botRight', 0.5));
         $p->addTitle('titleAnchor', 11, $this->t($p->title), '2x '.$this->t('from lining'),['scale' => 75]);
+
+        $p->newHeightDimension('botLeft','topLeft',20, $p->unit(self::CHEST_POCKET_DEPTH*2));
     }
 
     /**
@@ -2286,10 +2288,11 @@ class BlakeBlazer extends \Freesewing\Patterns\Beta\BentBodyBlock
      */
     public function paperlessChestPocketBag($model)
     {
-        return true;
-        
         /** @var \Freesewing\Part $p */
         $p = $this->parts['chestPocketBag'];
+
+        $p->newLinearDimension('botRight','topRight', -15, $p->unit(2 * (self::CHEST_POCKET_DEPTH + $p->deltaY('topRight','topLeft'))));
+        $p->newWidthDimension('botLeft','botRight',$p->y('botRight')+15+$this->o('sa'));
     }
     
     /**
@@ -2301,10 +2304,11 @@ class BlakeBlazer extends \Freesewing\Patterns\Beta\BentBodyBlock
      */
     public function paperlessInnerPocketWelt($model)
     {
-        return true;
-        
         /** @var \Freesewing\Part $p */
         $p = $this->parts['innerPocketWelt'];
+        
+        $p->newWidthDimension('botLeft','botRight',$p->y('botRight')+15+$this->o('sa'));
+        $p->newHeightDimension('botRight','topRight',$p->x('botRight')+15+$this->o('sa'));
     }
     
     /**
@@ -2316,10 +2320,10 @@ class BlakeBlazer extends \Freesewing\Patterns\Beta\BentBodyBlock
      */
     public function paperlessInnerPocketBag($model)
     {
-        return true;
-        
         /** @var \Freesewing\Part $p */
         $p = $this->parts['innerPocketBag'];
+
+        $p->newWidthDimension('botLeft','botRight',$p->y('botRight')+15+$this->o('sa'));
     }
     
     /**
@@ -2331,9 +2335,10 @@ class BlakeBlazer extends \Freesewing\Patterns\Beta\BentBodyBlock
      */
     public function paperlessInnerPocketFacingExtension($model)
     {
-        return true;
-        
         /** @var \Freesewing\Part $p */
         $p = $this->parts['innerPocketFacingExtension'];
+        
+        $p->newWidthDimension('weltMid','ipfeBotRightTop',$p->y('ipfeBotLeftBot')+15+$this->o('sa'));
+        $p->newHeightDimension('ipfeBotRightBot','ipfeTopRightTop', $p->x('ipfeBotRightTop')+15+$this->o('sa'));
     }
 }

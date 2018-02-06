@@ -2235,10 +2235,12 @@ class BlakeBlazer extends \Freesewing\Patterns\Beta\BentBodyBlock
      */
     public function paperlessCollarstand($model)
     {
-        return true;
-        
         /** @var \Freesewing\Part $p */
-        $p = $this->parts[''];
+        $p = $this->parts['collarstand'];
+
+        $p->newLinearDimensionSm('collarCbBottom','ucTop',15);
+        $p->newWidthDimension('ucBottomLeft','m.ucBottomLeft', $p->y('ucBottomLeft')+15+$this->o('sa'));
+        $p->newHeightDimension('m.ucBottomLeft','ucTop',$p->x('m.ucBottomLeft')+15+$this->o('sa'));
     }
 
     /**

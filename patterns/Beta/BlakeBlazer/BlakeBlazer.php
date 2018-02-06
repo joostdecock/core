@@ -2252,10 +2252,12 @@ class BlakeBlazer extends \Freesewing\Patterns\Beta\BentBodyBlock
      */
     public function paperlessPocket($model)
     {
-        return true;
-        
         /** @var \Freesewing\Part $p */
         $p = $this->parts['pocket'];
+
+        $p->newWidthDimension('leftArcTop','rightArcTop', $p->y('leftArcBot')+15+$this->o('sa'));
+        $p->newHeightDimension('topRight','edgeRight', $p->x('topRight')+15+$this->o('sa'));
+        $p->newHeightDimension('rightArcBot','edgeRight', $p->x('topRight')+30+$this->o('sa'));
     }
     
     /**

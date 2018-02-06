@@ -38,6 +38,9 @@ class BlakeBlazer extends \Freesewing\Patterns\Beta\BentBodyBlock
     const INNER_POCKET_WIDTH = 125;
     const INNER_POCKET_DEPTH = 160;
     const INNER_POCKET_WELT = 5;
+    
+    /** Inner pocket */
+    const POCKET_FOLDOVER = 40;
 
     /**
      * Sets up options and values for our draft
@@ -746,16 +749,18 @@ class BlakeBlazer extends \Freesewing\Patterns\Beta\BentBodyBlock
         $p->newPath('cf', 'M 9 L cfHem', ['class' => 'help']);
         $p->newPath('chestPocket', ' M cpBottomLeft L cpTopLeft L cpTopRight L cpBottomRight L cpBottomLeft z', ['class' => 'help']);
         $p->newPath('rolline', 'M breakPoint L rollLineTop', ['class' => 'help']);
-        $p->newPath('lining', 'M facingTop L roundRight', ['class' => 'lining']);
-        $p->newPath('facing', 'M facingTop L roundRight', ['class' => 'fabric', 'stroke-dasharray' => '10,10']);
-        $p->newPath('ipfe', 'M ipfeTopLeftTop 
+        $p->newPath('facing', 'M facingTop 
+            L ipfeTopLeftTop 
             C ipfeTopLeftTopCp ipfeTopLeftBotCp ipfeTopLeftBot
             L ipfeTopRightTop
             C ipfeTopRightCpTop ipfeTopRightCpBot ipfeTopRightBot
             C ipfeBotRightCpTop ipfeBotRightCpBot ipfeBotRightBot
             L ipfeBotLeftTop
             C ipfeBotLeftTopCp ipfeBotLeftBotCp ipfeBotLeftBot 
-        ', ['class' => 'hint']);
+            L roundRight'
+            , ['class' => 'fabric']);
+        $p->newPath('lining1', 'M facingTop L ipfeTopLeftTop M ipfeBotLeftBot L roundRight', ['class' => 'lining', 'stroke-dasharray' => '10,10']);
+        $p->newPath('lining2', 'M ipfeTopLeftTop L ipfeBotLeftBot', ['class' => 'lining']);
         $p->newPath('innerPocket', 'M ipTopLeft L ipTopRight L ipBotRight L ipBotLeft z M ipMidLeft L ipMidRight', ['class' => 'help']); 
 
 
@@ -1155,6 +1160,9 @@ class BlakeBlazer extends \Freesewing\Patterns\Beta\BentBodyBlock
         $p->newPoint('topRight', $w, 0);
         $p->newPoint('bottomLeft', 0, $h);
         $p->newPoint('bottomRight', $w, $h);
+        $p->newPoint('edgeLeft', 0, self::POCKET_FOLDOVER*-1);
+        $p->newPoint('edgeRight', $w, self::POCKET_FOLDOVER*-1);
+
 
         $p->addPoint('leftArcTop', $p->shift('bottomLeft', 90, $r));
         $p->addPoint('leftArcBot', $p->shift('bottomLeft', 0, $r));
@@ -1166,11 +1174,12 @@ class BlakeBlazer extends \Freesewing\Patterns\Beta\BentBodyBlock
         $p->addPoint('rightArcTopCp', $p->shift('rightArcTop', -90, $br));
         $p->addPoint('rightArcBotCp', $p->shift('rightArcBot', 0, $br));
 
-        $p->newPath('outline', 'M topLeft L leftArcTop 
+        $p->newPath('outline', 'M edgeLeft L leftArcTop 
             C leftArcTopCp leftArcBotCp leftArcBot
             L rightArcBot 
             C rightArcBotCp rightArcTopCp rightArcTop
-            L topRight z', ['class' => 'fabric']);
+            L edgeRight z', ['class' => 'fabric']);
+        $p->newPath('foldline', 'M topLeft L topRight', ['class' => 'help']); 
 
 
     }
@@ -1206,7 +1215,7 @@ class BlakeBlazer extends \Freesewing\Patterns\Beta\BentBodyBlock
         $p->newPoint('botLeft', $p->x('topLeft'), $h);
         $p->newPoint('botRight', $p->x('topRight'), $h);
 
-        $p->newPath('outline', 'M midLeft L botLeft L botRight L midRight L topRight L topLeft z', ['class' => 'fabric']);
+        $p->newPath('outline', 'M botLeft L botRight L midRight L topRight L topLeft L midLeft z', ['class' => 'fabric']);
         $p->newPath('foldline', 'M midLeft L midRight', ['class' => 'fabric help']);
 
     }
@@ -1228,6 +1237,9 @@ class BlakeBlazer extends \Freesewing\Patterns\Beta\BentBodyBlock
 
         $p->newPoint('topLeft', 0, 0);
         $p->newPoint('topRight', $w, 0);
+        $p->newPoint('.help1', $w, 10);
+        $p->addPoint('.help2', $p->rotate('topRight','topLeft', $this->o('chestPocketAngle')));
+        $p->addPoint('topRight', $p->beamsCross('topLeft','.help2','.help1','topRight'));
 
         $p->newPoint('midTopLeft', 0, 40);
         $p->newPoint('midTopRight', $w, 40);
@@ -1236,11 +1248,13 @@ class BlakeBlazer extends \Freesewing\Patterns\Beta\BentBodyBlock
 
         $p->newPoint('botLeft', 0, 100);
         $p->newPoint('botRight', $w, 100);
+        $p->addPoint('.help3', $p->rotate('botRight','botLeft', $this->o('chestPocketAngle')*-1));
+        $p->addPoint('botRight', $p->beamsCross('botLeft','.help3','botRight','topRight'));
 
         $p->newPath('outline', 'M midTopLeft L topLeft L topRight L midTopRight M midBotRight L botRight L botLeft L midBotLeft', ['class' => 'lining']);
         $p->newPath('hint', 'M midTopLeft L midBotLeft M midTopRight L midBotRight', ['class' => 'lining hint']); 
 
-        $p->newHeightDimension('botLeft','topLeft',30, $p->unit(240));
+        $p->newHeightDimension('botLeft','topLeft',20, $p->unit(240));
     }
 
     /**
@@ -1265,7 +1279,7 @@ class BlakeBlazer extends \Freesewing\Patterns\Beta\BentBodyBlock
         $p->newPoint('botLeft', 0, $h*2);
         $p->newPoint('botRight', $w, $h*2);
         
-        $p->newPath('outline', 'M topLeft L topRight L botRight L botLeft z', ['class' => 'fabric']);
+        $p->newPath('outline', 'M topLeft L topRight L botRight L botLeft z', ['class' => 'lining']);
         $p->newPath('foldline', 'M midLeft L midRight', ['class' => 'fabric help']); 
     }
 
@@ -1316,6 +1330,16 @@ class BlakeBlazer extends \Freesewing\Patterns\Beta\BentBodyBlock
         /** @var \Freesewing\Part $p */
         $p = $this->parts['innerPocketFacingExtension'];
 
+        $p->addPoint('tabTop', $p->shift('ipfeTopLeftTop', 180, 10));
+        $p->addPoint('tabBot', $p->shift('ipfeBotLeftBot', 180, 10));
+
+        $p->addPoint('weltTop', $p->shift('ipTopRight',180, 10));
+        $p->addPoint('weltTop', $p->beamsCross('ipfeTopLeftTop','ipfeBotLeftBot','ipTopRight','weltTop'));
+        $p->addPoint('weltMid', $p->shift('ipMidRight',180, 10));
+        $p->addPoint('weltMid', $p->beamsCross('ipfeTopLeftTop','ipfeBotLeftBot','ipMidRight','weltMid'));
+        $p->addPoint('weltBot', $p->shift('ipBotRight',180, 10));
+        $p->addPoint('weltBot', $p->beamsCross('ipfeTopLeftTop','ipfeBotLeftBot','ipBotRight','weltBot'));
+
         
         $p->newPath('outline', 'M ipfeTopLeftTop 
             C ipfeTopLeftTopCp ipfeTopLeftBotCp ipfeTopLeftBot
@@ -1323,8 +1347,9 @@ class BlakeBlazer extends \Freesewing\Patterns\Beta\BentBodyBlock
             C ipfeTopRightCpTop ipfeTopRightCpBot ipfeTopRightBot
             C ipfeBotRightCpTop ipfeBotRightCpBot ipfeBotRightBot
             L ipfeBotLeftTop
-            C ipfeBotLeftTopCp ipfeBotLeftBotCp ipfeBotLeftBot 
+            C ipfeBotLeftTopCp ipfeBotLeftBotCp ipfeBotLeftBot  z
         ', ['class' => 'fabric']);
+        $p->newPath('welts', 'M weltTop L ipTopRight L ipBotRight L weltBot M weltMid L ipMidRight', ['class' => 'hint']);
     }
 
     /*
@@ -1508,7 +1533,7 @@ class BlakeBlazer extends \Freesewing\Patterns\Beta\BentBodyBlock
         $p->newGrainline('grainlineBottom','grainlineTop', $this->t('Grainline'));
 
         // Notches
-        $p->notch(['foldBack','waistBackSide',3]);
+        $p->notch(['foldBack','waistBackSide',3, 'ipMidRight','ipMidLeft']);
 
         // Buttons
         $p->newPoint('topButton', $p->x(3), $p->y('breakPoint'));
@@ -1750,7 +1775,7 @@ class BlakeBlazer extends \Freesewing\Patterns\Beta\BentBodyBlock
         
         // Title
         $p->addPoint('titleAnchor', $p->shiftFractionTowards('ucTop','m.ucBottomCurve6', 0.6));
-        $p->addTitle('titleAnchor', 7, $this->t($p->title), '1x '.$this->t('from fabric'),['scale' => 30]);
+        $p->addTitle('titleAnchor', 8, $this->t($p->title), '1x '.$this->t('from fabric'),['scale' => 30]);
     }
 
     /**
@@ -1764,6 +1789,22 @@ class BlakeBlazer extends \Freesewing\Patterns\Beta\BentBodyBlock
     {
         /** @var \Freesewing\Part $p */
         $p = $this->parts['pocket'];
+
+        // Seam allowance
+        if($this->o('sa')) $p->offsetPath('sa', 'outline', $this->o('sa')*-1, 1, ['class' => 'fabric sa']);
+
+        // Grainline 
+        $p->addPoint('glBot', $p->shift('leftArcBot', 0, 10));
+        $p->newPoint('glTop', $p->x('glBot'), $p->y('edgeLeft'));
+        $p->newGrainline('glBot','glTop', $this->t('Grainline'));
+
+        // Fold over here text
+        $p->newTextOnPath('fold', 'M topLeft L topRight', $this->t('Fold over along this line'), ['text-anchor' => 'middle', 'dy' => -2], false);
+
+        // Title
+        $p->addPoint('titleAnchor', $p->shiftFractionTowards('topLeft','bottomRight', 0.5));
+        $p->addTitle('titleAnchor', 9, $this->t($p->title), '2x '.$this->t('from fabric'),['scale' => 100]);
+
     }
 
     /**
@@ -1777,6 +1818,19 @@ class BlakeBlazer extends \Freesewing\Patterns\Beta\BentBodyBlock
     {
         /** @var \Freesewing\Part $p */
         $p = $this->parts['chestPocketWelt'];
+        
+        // Seam allowance
+        if($this->o('sa')) $p->offsetPath('sa', 'outline', $this->o('sa')*-1, 1, ['class' => 'fabric sa']);
+
+        // Grainline
+        $p->addPoint('glBot', $p->shift('botLeft', 0, 15));
+        $p->addPoint('glTop', $p->shift('midLeft', 0, 15));
+        $p->addPoint('glTop', $p->beamsCross('glBot','glTop','topLeft', 'topRight'));
+        $p->newGrainline('glBot','glTop', $this->t('Grainline'));
+        
+        // Title
+        $p->addPoint('titleAnchor', $p->shiftFractionTowards('topLeft','botRight', 0.5));
+        $p->addTitle('titleAnchor', 10, $this->t($p->title), '2x '.$this->t('from fabric'),['scale' => 50]);
     }
 
     /**
@@ -1790,6 +1844,13 @@ class BlakeBlazer extends \Freesewing\Patterns\Beta\BentBodyBlock
     {
         /** @var \Freesewing\Part $p */
         $p = $this->parts['chestPocketBag'];
+
+        // Seam allowance
+        if($this->o('sa')) $p->offsetPathString('sa', 'M topLeft L topRight L botRight L botLeft z', $this->o('sa'), 1, ['class' => 'lining sa']);
+
+        // Title
+        $p->addPoint('titleAnchor', $p->shiftFractionTowards('topLeft','botRight', 0.5));
+        $p->addTitle('titleAnchor', 11, $this->t($p->title), '2x '.$this->t('from lining'),['scale' => 75]);
     }
 
     /**
@@ -1803,6 +1864,20 @@ class BlakeBlazer extends \Freesewing\Patterns\Beta\BentBodyBlock
     {
         /** @var \Freesewing\Part $p */
         $p = $this->parts['innerPocketWelt'];
+        
+        // Seam allowance
+        if($this->o('sa')) {
+            $p->offsetPathString('sa', 'M topLeft L topRight L botRight L botLeft z', $this->o('sa'), 1, ['class' => 'lining sa']);
+            // Straighten corners
+            $p->newPoint('sa-line-topLeftTOtopRight', $p->x('topLeft')-$this->o('sa'), $p->y('topLeft')-$this->o('sa'));
+            $p->newPoint('sa-line-topRightTOtopLeft', $p->x('topRight')+$this->o('sa'), $p->y('topLeft')-$this->o('sa'));
+            $p->newPoint('sa-line-botLeftTObotRight', $p->x('botLeft')-$this->o('sa'), $p->y('botLeft')+$this->o('sa'));
+            $p->newPoint('sa-line-botRightTObotLeft', $p->x('botRight')+$this->o('sa'), $p->y('botLeft')+$this->o('sa'));
+        }
+        
+        // Title
+        $p->addPoint('titleAnchor', $p->shiftFractionTowards('topLeft','botRight', 0.5));
+        $p->addTitle('titleAnchor', 12, $this->t($p->title), '2x '.$this->t('from lining'),['scale' => 40]);
     }
 
     /**
@@ -1816,6 +1891,14 @@ class BlakeBlazer extends \Freesewing\Patterns\Beta\BentBodyBlock
     {
         /** @var \Freesewing\Part $p */
         $p = $this->parts['innerPocketBag'];
+
+        // Seam allowance
+        if($this->o('sa')) $p->offsetPathString('sa', 'M topLeft L topRight L botRight L botLeft z', $this->o('sa'), 1, ['class' => 'lining sa']);
+
+        // Title
+        $p->addPoint('titleAnchor', $p->shiftFractionTowards('topLeft','botRight', 0.5));
+        $p->addTitle('titleAnchor', 11, $this->t($p->title), '2x '.$this->t('from lining'),['scale' => 75]);
+
     }
 
     /**
@@ -1829,6 +1912,22 @@ class BlakeBlazer extends \Freesewing\Patterns\Beta\BentBodyBlock
     {
         /** @var \Freesewing\Part $p */
         $p = $this->parts['innerPocketFacingExtension'];
+        
+        // Seam allowance
+        if($this->o('sa')) {
+            $p->offsetPath('sa', 'outline', $this->o('sa'), 1, ['class' => 'fabric sa']);
+            // Fix SA at tabs
+            $tabLength = $p->distance('ipfeBotLeftBot','ipfeTopLeftTop');
+            $angle = $p->angle('ipfeBotLeftBot','ipfeTopLeftTop');
+            $p->addPoint('sa-line-ipfeTopLeftTopTOipfeBotLeftBot', $p->shift('sa-line-ipfeTopLeftTopTOipfeBotLeftBot', $angle, $this->o('sa')));
+            $p->addPoint('sa-curve-ipfeTopLeftTopTOipfeTopLeftBot', $p->shift('sa-curve-ipfeTopLeftTopTOipfeTopLeftBot', $angle, $this->o('sa')));
+            $p->addPoint('sa-line-ipfeBotLeftBotTOipfeTopLeftTop', $p->shift('sa-line-ipfeBotLeftBotTOipfeTopLeftTop', $angle, $this->o('sa')*-1));
+            $p->addPoint('sa-curve-ipfeBotLeftBotTOipfeBotLeftTop', $p->shift('sa-curve-ipfeBotLeftBotTOipfeBotLeftTop', $angle, $this->o('sa')*-1));
+        }
+        
+        // Title
+        $p->addPoint('titleAnchor', $p->shiftFractionTowards('weltTop','ipTopRight', 0.5));
+        $p->addTitle('titleAnchor', '', $this->t($p->title), $this->t('Attach to front facing prior to cutting'),['scale' => 65, 'noPatternTitle' => true]);
     }
 
 
@@ -1957,6 +2056,7 @@ class BlakeBlazer extends \Freesewing\Patterns\Beta\BentBodyBlock
         $p->newHeightDimension('fpBottomRight','fpTopRight', $xBase);
         $p->newLinearDimension('cpTopLeft','cpTopRight', -10);
         $p->newLinearDimensionSm('cpBottomRight','cpTopRightOrig', 10);
+        $p->newHeightDimension('frontDartRight', 'ipMidRight', $p->x('frontDartRight')+30);
     }
 
     /**

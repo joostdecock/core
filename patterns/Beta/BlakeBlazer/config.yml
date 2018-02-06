@@ -24,9 +24,9 @@ parts:
   undersleeve: "Undersleeve"
   pocket: "Pocket"
   chestPocketWelt: "Chest pocket welt"
-  chestPocketBag: "Chest pocket welt"
+  chestPocketBag: "Chest pocket bag"
   innerPocketWelt: "Inner pocket welt"
-  innerPocketBag: "Inner pocket welt"
+  innerPocketBag: "Inner pocket bag"
   innerPocketFacingExtension: "Inner pocket facing extension"
 
 languages:

@@ -2269,10 +2269,12 @@ class BlakeBlazer extends \Freesewing\Patterns\Beta\BentBodyBlock
      */
     public function paperlessChestPocketWelt($model)
     {
-        return true;
-        
         /** @var \Freesewing\Part $p */
         $p = $this->parts['chestPocketWelt'];
+
+        $p->newWidthDimension('botLeft','botRight', $p->y('botLeft')+15+$this->o('sa'));
+        $p->newHeightDimension('botRight','topRight', $p->x('midRight')+15+$this->o('sa'));
+        $p->newNote('slant','glTop',$this->t('Grainline slanted by ').$this->o('chestPocketAngle').$this->t('degrees'),2,14);
     }
     
     /**

@@ -129,7 +129,8 @@ options:
         type: "chooseOne"
         options:
             0: "No back vent"
-            1: "Central back vent"
+            1: "Single back vent"
+            2: "Double back vent"
         default: 1
     backVentLength:
         title: "Back vent length"

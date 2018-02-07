@@ -228,8 +228,8 @@ class JaegerJacket extends \Freesewing\Patterns\Beta\BentBodyBlock
         
         // Draft front and back parts
         $this->draftFront($model);
-        $this->draftSide($model);
         $this->draftBack($model);
+        $this->draftSide($model);
         $this->draftCollar($model);
         $this->draftCollarstand($model);
         $this->draftUndercollar($model);
@@ -805,10 +805,31 @@ class JaegerJacket extends \Freesewing\Patterns\Beta\BentBodyBlock
         $p->addPoint('hemEdgeBackSide', $p->shift('sideHemSideBack', -90, $this->o('sa')*3));
         $p->addPoint('hemEdgeFrontSide', $p->shift('sideFrontHem', -90, $this->o('sa')*3));
         
+        // Back vent
+        if($this->o('backVent') == 2) {
+            // Vent tip
+            $p->addPoint('ventTip', $p->shiftAlong('sideWaistSideBack','sideWaistSideBackCpBottom','sideHipsSideBackCpTop','sideHipsSideBack', $this->v('waistToBackVent')));
+            // Vent facing
+            $p->splitCurve('sideWaistSideBack','sideWaistSideBackCpBottom','sideHipsSideBackCpTop','sideHipsSideBack','ventTip','ventSplit');
+            $p->addPoint('ventFacingBase', $p->shiftAlong('ventTip','ventSplit7','ventSplit6','sideHipsSideBack', 15));
+            $p->splitCurve('sideWaistSideBack','sideWaistSideBackCpBottom','sideHipsSideBackCpTop','sideHipsSideBack','ventFacingBase','ventFacingSplit');
+            $p->offsetPathString('ventFacing', 'M ventFacingBase C ventFacingSplit7 ventFacingSplit6 sideHipsSideBack', 40);
+            $p->addPoint('.help-ventFacingBottomRight', $p->shiftTowards('sideHemSideBack', 'sideFrontHem', 40));
+            $p->newPoint('ventFacingBottomRight', $p->x('sideHemSideBack')+40, $p->y('.help-ventFacingBottomRight'));
+            $p->newPath('tmp', 'M sideHemSideBack L sideHipsSideBack C ventSplit6 ventSplit7 ventTip', ['class' => 'hint']);
+            $path2 = 'C ventSplit2 ventSplit3 ventTip
+                L ventFacing-startPoint
+                C ventFacing-cp1--ventFacingBase.ventFacingSplit7.ventFacingSplit6.sideHipsSideBack ventFacing-cp2--ventFacingBase.ventFacingSplit7.ventFacingSplit6.sideHipsSideBack ventFacing-curve-sideHipsSideBackTOventFacingBase
+                L ventFacingBottomRight
+                L sideHemSideBack';
+        } else {
+            $path2 = 'C sideWaistSideBackCpBottom sideHipsSideBackCpTop sideHipsSideBack L sideHemSideBack';
+        }
+
 
         $p->newPath('pocket', 'M fpTopLeft L fpTopRight L fpBottomRight L fpBottomLeft', ['class' => 'help']);
 
-        $p->newPath('side','
+        $p->newPath('outline','
             M sideFrontHem
             L hipsSideBack
             C hipsSideBackCpTop waistSideBackCpBottom waistSideBack
@@ -816,15 +837,14 @@ class JaegerJacket extends \Freesewing\Patterns\Beta\BentBodyBlock
             C slArmCpRight 5CpLeft 5
             C side13 side16 side14
             C sideSlArmCpBottom sideWaistSideBackCpTop sideWaistSideBack
-            C sideWaistSideBackCpBottom sideHipsSideBackCpTop sideHipsSideBack
-            L sideHemSideBack
+            '.$path2.'
             L sideFrontHem
             z
             ', ['class' => 'fabric']);
         
         // Mark path for sample service
         $p->clonePoint('hemEdgeFrontSide','gridAnchor');
-        $p->paths['side']->setSample(true);
+        $p->paths['outline']->setSample(true);
 
     }
 
@@ -844,7 +864,7 @@ class JaegerJacket extends \Freesewing\Patterns\Beta\BentBodyBlock
         $p = $this->parts['back'];
 
         // Back vent
-        if($this->o('backVent') == 1) {
+        if($this->o('backVent') == 1) { // Single back vent
             // Vent tip
             $p->curveCrossesY('hipsCenter','hipsCenterCpTop','waistCenterCpBottom','waistCenter',$p->y('hipsCenter') - $p->deltaY('waistCenter','hipsCenter') * $this->o('backVentLength'), 'vent');
             $p->clonePoint('vent1', 'ventTip');
@@ -857,13 +877,36 @@ class JaegerJacket extends \Freesewing\Patterns\Beta\BentBodyBlock
 
             $p->newPath('tmp', 'M hemCenter L hipsCenter C hipsCenterCpTop waistCenterCpBottom waistCenter', ['class' => 'hint']);
             
-            $path = 'L ventFacingBottomLeft 
+            $path1 = 'L ventFacingBottomLeft 
                     L ventFacing-startPoint 
                     C ventFacing-cp1--hipsCenter.ventFacingSplit2.ventFacingSplit3.ventFacingBase ventFacing-cp2--hipsCenter.ventFacingSplit2.ventFacingSplit3.ventFacingBase ventFacing-endPoint 
                     L ventTip
                     C ventSplit7 ventSplit6 waistCenter';
+            $path2 = 'C waistBackSideCpBottom hipsBackSideCpTop hipsBackSide L hemBackSide';
+        } else if($this->o('backVent') == 2) { // Double back vent
+            // Vent tip
+            $p->curveCrossesY('waistBackSide','waistBackSideCpBottom','hipsBackSideCpTop','hipsBackSide',$p->y('hipsCenter') - $p->deltaY('waistCenter','hipsCenter') * $this->o('backVentLength'), 'vent');
+            $p->clonePoint('vent1', 'ventTip');
+            // Vent facing
+            $p->splitCurve('waistBackSide','waistBackSideCpBottom','hipsBackSideCpTop','hipsBackSide','ventTip','ventSplit');
+            $p->splitCurve('hipsBackSide','hipsBackSideCpTop','waistBackSideCpBottom','waistBackSide','ventTip','ventSplit');
+            $p->addPoint('ventFacingBase', $p->shiftAlong('ventTip','ventSplit3','ventSplit2','hipsCenter', 15));
+            $p->splitCurve('waistBackSide','waistBackSideCpBottom','hipsBackSideCpTop','hipsBackSide','ventFacingBase','ventFacingSplit');
+            $p->offsetPathString('ventFacing', 'M hipsBackSide C ventFacingSplit6 ventFacingSplit7 ventFacingBase', -40);
+            $p->addPoint('ventFacingBottomRight', $p->shift('hemBackSide', 0, 40));
+            $p->newPath('tmp', 'M hemBackSide L hipsBackSide C ventSplit6 ventSplit7 ventTip', ['class' => 'hint']);
+            
+            $path2 = 'C ventSplit6 ventSplit7 ventTip
+                L ventFacing-endPoint
+                C ventFacing-cp2--hipsBackSide.ventFacingSplit6.ventFacingSplit7.ventFacingBase ventFacing-cp1--hipsBackSide.ventFacingSplit6.ventFacingSplit7.ventFacingBase ventFacing-startPoint
+                L ventFacingBottomRight';
+            $path1 = 'L hipsCenter C hipsCenterCpTop waistCenterCpBottom waistCenter';
+
+            // Store distance to vent start for side
+            $this->setValue('waistToBackVent', $p->curveLen('waistBackSide','ventSplit6','ventSplit7','ventTip'));
         } else {
-            $path = 'L hipsCenter C hipsCenterCpTop waistCenterCpBottom waistCenter';
+            $path1 = 'L hipsCenter C hipsCenterCpTop waistCenterCpBottom waistCenter';
+            $path2 = 'C waistBackSideCpBottom hipsBackSideCpTop hipsBackSide L hemBackSide';
         }
 
         // Add extra hem allowance (3*SA)
@@ -871,24 +914,23 @@ class JaegerJacket extends \Freesewing\Patterns\Beta\BentBodyBlock
         $p->addPoint('hemEdgeCenter', $p->shift('hemCenter', -90, $this->o('sa')*3));
         if($this->o('backVent') == 1) $p->addPoint('hemEdgeVent', $p->shift('ventFacingBottomLeft',-90,$this->o('sa')*3));
 
-        $p->newPath('back','
+        $p->newPath('outline','
             M centerBackNeck 
             C centerBackNeck 20 8
             L 12
             C 19 17 10
             C 18 15 14
             C slArmCpBottom waistBackSideCpTop waistBackSide
-            C waistBackSideCpBottom hipsBackSideCpTop hipsBackSide
-            L hemBackSide
+            '.$path2.'
             L hemCenter
-            '.$path.'
+            '.$path1.'
             C waistCenterCpTop chestCenterCpBottom chestCenter
             C chestCenterCpTop centerBackNeck centerBackNeck
             z
             ', ['class' => 'fabric']);
 
         // Mark path for sample service
-        $p->paths['back']->setSample(true);
+        $p->paths['outline']->setSample(true);
 
         // Store lenght of the sleeve cap to the pitch point notch
         $this->setValue('backSleevecapToNotch', $p->curveLen(12, 19, 17, 10)); 
@@ -1400,35 +1442,20 @@ class JaegerJacket extends \Freesewing\Patterns\Beta\BentBodyBlock
 
         // Seam allowance
         if($this->o('sa')) {
+            $p->offsetPath('sa', 'outline', $this->o('sa'), 1, ['class' => 'fabric sa']);
+            // Extra hem allowance
             if($this->o('backVent') == 1) {
-                $start = '
-                M ventFacingBottomLeft 
-                L ventFacing-startPoint 
-                C ventFacing-cp1--hipsCenter.ventFacingSplit2.ventFacingSplit3.ventFacingBase ventFacing-cp2--hipsCenter.ventFacingSplit2.ventFacingSplit3.ventFacingBase ventFacing-endPoint
-                L ventTip 
-                C ventSplit7 ventSplit6 waistCenter
-                ';
+                $p->newPoint('sa-line-hemBackSideTOhemCenter', $p->x('hemBackSide')+$this->o('sa'), $p->y('hemBackSide')+$this->o('sa')*3);
+                $p->newPoint('sa-line-hemCenterTOventFacingBottomLeft', $p->x('sa-line-hemCenterTOventFacingBottomLeft'), $p->y('sa-line-hemBackSideTOhemCenter'));
+                $p->clonePoint('sa-line-hemCenterTOventFacingBottomLeft','sa-line-hemCenterTOhemBackSide');
+                $p->newPoint('sa-line-ventFacingBottomLeftTOhemCenter', $p->x('ventFacingBottomLeft')-$this->o('sa'), $p->y('ventFacingBottomLeft')+$this->o('sa')*3);
+            } else if($this->o('backVent') == 2) {
+                $p->newPoint('sa-line-ventFacingBottomRightTOhemCenter', $p->x('ventFacingBottomRight')+$this->o('sa'), $p->y('ventFacingBottomRight')+$this->o('sa')*3);
+                $p->newPoint('sa-line-hemCenterTOventFacingBottomRight', $p->x('hemCenter')-$this->o('sa'), $p->y('hemCenter')+$this->o('sa')*3);
             } else {
-                $start = '
-                M hemCenter 
-                L hipsCenter 
-                C hipsCenterCpTop waistCenterCpBottom waistCenter 
-                ';
+                $p->newPoint('sa-line-hemBackSideTOhemCenter', $p->x('hemBackSide')+$this->o('sa'), $p->y('hemBackSide')+$this->o('sa')*3);
+                $p->newPoint('sa-line-hemCenterTOhemBackSide', $p->x('hemCenter')-$this->o('sa'), $p->y('hemCenter')+$this->o('sa')*3);
             }
-            $p->offsetPathString('sa1', $start.' 
-                C waistCenterCpTop chestCenterCpBottom chestCenter 
-                C 9 centerBackNeck  centerBackNeck 
-                C centerBackNeck 20 8
-                L 12
-                C 19 17 10
-                C 18 15 slArm 
-                C slArmCpBottom waistBackSideCpTop waistBackSide 
-                C waistBackSideCpBottom hipsBackSideCpTop hipsBackSide 
-                L hemBackSide 
-            ', $this->o('sa'), 1, ['class' => 'fabric sa']);
-            $p->newPoint('hemSaLeft', $p->x('sa1-startPoint'), $p->y('hemEdgeCenter'));
-            $p->newPoint('hemSaRight', $p->x('sa1-endPoint'), $p->y('hemEdgeCenter'));
-            $p->newPath('sa2', 'M sa1-startPoint L hemSaLeft L hemEdgeCenter L hemEdgeBackSide L hemSaRight L sa1-endPoint', ['class' => 'fabric sa']);
         }
 
         $p->newPath('waistLine', 'M waistCenter L waistBackSide',['class' => 'help']);
@@ -1557,20 +1584,26 @@ class JaegerJacket extends \Freesewing\Patterns\Beta\BentBodyBlock
 
         if($this->o('sa')) {
             // Seam allowance
-            $p->offsetPathstring('sa1','
-                M sideFrontHem
-                L hipsSideBack
-                C hipsSideBackCpTop waistSideBackCpBottom waistSideBack
-                C waistSideBackCpTop slArm slArm
-                C slArmCpRight 5CpLeft 5
-                C side13 side16 side14
-                C sideSlArmCpBottom sideWaistSideBackCpTop sideWaistSideBack
-                C sideWaistSideBackCpBottom sideHipsSideBackCpTop sideHipsSideBack
-                L sideHemSideBack
-            ', $this->o('sa'),1, ['class' => 'fabric sa']);
-            $p->newPoint('hemLeft', $p->x('sa1-startPoint'), $p->y('hemEdgeFrontSide'));
-            $p->newPoint('hemRight', $p->x('sa1-endPoint'), $p->y('hemEdgeBackSide'));
-            $p->newPath('sa2', 'M sa1-startPoint L hemLeft L hemRight L sa1-endPoint', ['class' => 'fabric sa']);
+            $p->offsetPath('sa','outline', $this->o('sa'), 1, ['class' => 'fabric sa']);
+            // Extra hem allowance
+            if($this->o('backVent') == 2) {
+                $p->newPoint('sa-line-ventFacingBottomRightTOsideHemSideBack', $p->x('ventFacingBottomRight'), $p->y('ventFacingBottomRight')+$this->o('sa')*3);
+                $p->newPoint('sa-line-ventFacingBottomRightTOventFacing-curve-sideHipsSideBackTOventFacingBase', 
+                    $p->x('sa-line-ventFacingBottomRightTOventFacing-curve-sideHipsSideBackTOventFacingBase'), 
+                    $p->y('sa-line-ventFacingBottomRightTOsideHemSideBack')
+                );
+                $p->newPoint('intersection-2', 
+                    $p->x('sa-line-sideHemSideBackTOsideFrontHem'),
+                    $p->y('sa-line-sideHemSideBackTOsideFrontHem')+$this->o('sa')*2
+                );
+                $p->newPoint('sa-line-sideFrontHemTOsideHemSideBack', 
+                    $p->x('sideFrontHem')-$this->o('sa'),
+                    $p->y('sideFrontHem')+$this->o('sa')*3
+                );
+            } else {
+                $p->newPoint('sa-line-sideHemSideBackTOsideFrontHem', $p->x('sideHemSideBack')+$this->o('sa'), $p->y('sideHemSideBack')+$this->o('sa')*3);
+                $p->newPoint('sa-line-sideFrontHemTOsideHemSideBack', $p->x('sideFrontHem')-$this->o('sa'), $p->y('sideFrontHem')+$this->o('sa')*3);
+            }
         }
         $p->newPath('waistLine', 'M sideWaistSideBack L waistSideBack', ['class' => 'help']);
         $p->newTextOnPath('waistLine', 'M waistSideBack L sideWaistSideBack', $this->t('Waistline'), false, false);

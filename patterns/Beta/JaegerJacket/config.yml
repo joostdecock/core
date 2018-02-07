@@ -131,7 +131,7 @@ options:
             0: "No back vent"
             1: "Single back vent"
             2: "Double back vent"
-        default: 1
+        default: 2
     backVentLength:
         title: "Back vent length"
         description: "Controls the length of the back vent. Lower numbers result in a shorter vent."

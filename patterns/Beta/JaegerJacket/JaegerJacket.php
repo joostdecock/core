@@ -2013,6 +2013,12 @@ class JaegerJacket extends \Freesewing\Patterns\Beta\BentBodyBlock
         $p->newHeightDimension('slArm',12,$xBase+45);
         $p->newHeightDimension('slArm',8,$xBase+60);
         $p->newHeightDimension('waistBackSide','slArm',$xBase+15);
+        if($this->o('backVent') == 2) {
+            $p->newHeightDimension('ventTip','slArm', $xBase+30);
+            $p->newHeightDimension('ventFacing-endPoint','slArm', $xBase+45);
+            $xBase+=30;
+            $p->newWidthDimension('hemBackSide','ventFacingBottomRight', $p->y('ventFacingBottomRight')+15+$this->o('sa')*3);
+        }
         $p->newHeightDimension('hemBackSide','slArm',$xBase+30);
 
         // Widths
@@ -2110,8 +2116,15 @@ class JaegerJacket extends \Freesewing\Patterns\Beta\BentBodyBlock
         // Height on the right
         $xBase = $p->x('sideHemSideBack');
         if($this->o('sa')) $xBase += $this->o('sa');
-        $p->newHeightDimension('sideHemSideBack', 'sideWaistSideBack',$xBase+15);
         $p->newHeightDimension('sideWaistSideBack', 'side14',$xBase+15);
+        if($this->o('backVent') == 2) {
+            $xBase = $p->x('ventFacingBottomRight')+15+$this->o('sa');
+            $p->newHeightDimension('sideHemSideBack', 'ventFacing-startPoint',$xBase);
+            $p->newHeightDimension('sideHemSideBack', 'ventTip',$xBase+15);
+            $xBase += 15;
+            $p->newWidthDimension('sideHemSideBack', 'ventFacingBottomRight', $p->y('ventFacingBottomRight')+15+$this->o('sa')*3);
+        }
+        $p->newHeightDimension('sideHemSideBack', 'sideWaistSideBack',$xBase+15);
 
         // Height on the left
         $xBase = $p->x('sideFrontHem');

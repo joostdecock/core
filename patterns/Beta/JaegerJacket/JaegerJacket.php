@@ -751,7 +751,7 @@ class JaegerJacket extends \Freesewing\Patterns\Beta\BentBodyBlock
 
         $p->newPath('cf', 'M 9 L cfHem', ['class' => 'help']);
         $p->newPath('chestPocket', ' M cpBottomLeft L cpTopLeft L cpTopRight L cpBottomRight L cpBottomLeft z', ['class' => 'help']);
-        $p->newPath('rolline', 'M breakPoint L rollLineTop', ['class' => 'help']);
+        $p->newPath('rollline', 'M breakPoint L rollLineTop', ['class' => 'help']);
         $p->newPath('facing', 'M facingTop 
             L ipfeTopLeftTop 
             C ipfeTopLeftTopCp ipfeTopLeftBotCp ipfeTopLeftBot
@@ -766,7 +766,6 @@ class JaegerJacket extends \Freesewing\Patterns\Beta\BentBodyBlock
         $p->newPath('lining2', 'M ipfeTopLeftTop L ipfeBotLeftBot', ['class' => 'lining']);
         $p->newPath('innerPocket', 'M ipTopLeft L ipTopRight L ipBotRight L ipBotLeft z M ipMidLeft L ipMidRight', ['class' => 'help']); 
 
-
         // 3cm extra hem allowance
         $p->addPoint('roundedHem', $p->shift('roundRight',-90, $this->o('sa')*3));
 
@@ -775,6 +774,7 @@ class JaegerJacket extends \Freesewing\Patterns\Beta\BentBodyBlock
         $p->paths['front']->setSample(true);
         $p->paths['chestPocket']->setSample(true);
         $p->paths['frontPocket']->setSample(true);
+        $p->paths['rollline']->setSample(true);
 
         // Store lenght of the sleeve cap to the pitch point notch
         $this->setValue('frontSleevecapToNotch', $p->curveLen('shoulderLineRight', 19, 17, 10)); 
@@ -1226,7 +1226,9 @@ class JaegerJacket extends \Freesewing\Patterns\Beta\BentBodyBlock
             L edgeRight z', ['class' => 'fabric']);
         $p->newPath('foldline', 'M topLeft L topRight', ['class' => 'help']); 
 
-
+        // Mark path for sample service
+        $p->clonePoint('edgeLeft','gridAnchor');
+        $p->paths['outline']->setSample(true);
     }
 
     /**
@@ -1260,9 +1262,13 @@ class JaegerJacket extends \Freesewing\Patterns\Beta\BentBodyBlock
         $p->newPoint('botLeft', $p->x('topLeft'), $h);
         $p->newPoint('botRight', $p->x('topRight'), $h);
 
+        // Paths
         $p->newPath('outline', 'M botLeft L botRight L midRight L topRight L topLeft L midLeft z', ['class' => 'fabric']);
         $p->newPath('foldline', 'M midLeft L midRight', ['class' => 'fabric help']);
 
+        // Mark path for sample service
+        $p->clonePoint('topLeft','gridAnchor');
+        $p->paths['outline']->setSample(true);
     }
 
     /**
@@ -1295,8 +1301,13 @@ class JaegerJacket extends \Freesewing\Patterns\Beta\BentBodyBlock
         $p->addPoint('.help3', $p->rotate('botRight','botLeft', $this->o('chestPocketAngle')*-1));
         $p->addPoint('botRight', $p->beamsCross('botLeft','.help3','botRight','topRight'));
 
+        // Paths
         $p->newPath('outline', 'M midTopLeft L topLeft L topRight L midTopRight M midBotRight L botRight L botLeft L midBotLeft', ['class' => 'lining']);
         $p->newPath('hint', 'M midTopLeft L midBotLeft M midTopRight L midBotRight', ['class' => 'lining hint']); 
+        
+        // Mark path for sample service
+        $p->clonePoint('topLeft','gridAnchor');
+        $p->paths['outline']->setSample(true);
     }
 
     /**
@@ -1321,8 +1332,13 @@ class JaegerJacket extends \Freesewing\Patterns\Beta\BentBodyBlock
         $p->newPoint('botLeft', 0, $h*2);
         $p->newPoint('botRight', $w, $h*2);
         
+        // Paths
         $p->newPath('outline', 'M topLeft L topRight L botRight L botLeft z', ['class' => 'lining']);
         $p->newPath('foldline', 'M midLeft L midRight', ['class' => 'fabric help']); 
+        
+        // Mark path for sample service
+        $p->clonePoint('topLeft','gridAnchor');
+        $p->paths['outline']->setSample(true);
     }
 
     /**
@@ -1351,10 +1367,15 @@ class JaegerJacket extends \Freesewing\Patterns\Beta\BentBodyBlock
         $p->newPoint('botLeft', 0, 100);
         $p->newPoint('botRight', $w, 100);
 
+        // Paths
         $p->newPath('outline', 'M midTopLeft L topLeft L topRight L midTopRight M midBotRight L botRight L botLeft L midBotLeft', ['class' => 'lining']);
         $p->newPath('hint', 'M midTopLeft L midBotLeft M midTopRight L midBotRight', ['class' => 'lining hint']); 
 
         $p->newHeightDimension('botLeft','topLeft',30, $p->unit($h));
+        
+        // Mark path for sample service
+        $p->clonePoint('topLeft','gridAnchor');
+        $p->paths['outline']->setSample(true);
     }
 
 
@@ -1933,7 +1954,7 @@ class JaegerJacket extends \Freesewing\Patterns\Beta\BentBodyBlock
 
         // Title
         $p->addPoint('titleAnchor', $p->shiftFractionTowards('topLeft','botRight', 0.5));
-        $p->addTitle('titleAnchor', 11, $this->t($p->title), '2x '.$this->t('from lining'),['scale' => 75]);
+        $p->addTitle('titleAnchor', 13, $this->t($p->title), '2x '.$this->t('from lining'),['scale' => 75]);
 
     }
 

@@ -1,6 +1,6 @@
 info:
     name: "Jaeger Jacket"
-    description: "A sport coat; A single-breasted jacket with a less format cut than a suit jacket."
+    description: "Jeager is a sport coat style jacket with two buttons and patch pockets."
     handle: "jaeger"
     tags:
         - menswear
@@ -137,11 +137,11 @@ options:
         description: "Controls the length of the back vent. Lower numbers result in a shorter vent."
         group: "style"
         type: "percent"
-        min: 0
-        max: 100
-        default: 75
+        min: 40
+        max: 80
+        default: 60
     frontCutawayAngle:
-        title: "Front opening botom cutaway angle"
+        title: "Front opening bottom cutaway angle"
         description: "How much do you want the front to open up below the lower button."
         group: "style"
         type: "angle"
@@ -149,7 +149,7 @@ options:
         max: 4
         default: 2.5
     frontCutawayStart:
-        title: "Front opening botom cutaway start"
+        title: "Front opening bottom cutaway start"
         description: "How much do you want the front to open up below the lower button."
         group: "style"
         type: "percent"
@@ -309,8 +309,8 @@ options:
         description: "The vertical amount to slash & spread the upper front panel to shape the chest, as a factor of your chest circumference."
         group: "advanced"
         type: "percent"
-        min: 0
-        max: 5
+        min: 1
+        max: 3
         default: 1
     rollLineCollarHeight:
         title: "Roll line collar height"

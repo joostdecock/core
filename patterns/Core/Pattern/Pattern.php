@@ -170,7 +170,8 @@ abstract class Pattern
      */
     public function getOption($key)
     {
-        return $this->options[$key];
+        if(isset($this->options[$key])) return $this->options[$key];
+        else return null;
     }
 
     /**
@@ -182,7 +183,8 @@ abstract class Pattern
      */
     public function getValue($key)
     {
-        return $this->values[$key];
+        if(isset($this->values[$key])) return $this->values[$key];
+        else return null;
     }
 
     /**

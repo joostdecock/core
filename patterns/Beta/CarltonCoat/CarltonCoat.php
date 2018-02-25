@@ -81,6 +81,9 @@ class CarltonCoat extends BentBodyBlock
     /* Distance between pocket and chest pocket = 6.6% of chest */
     const INTER_POCKET_DISTANCE = 0.066;
 
+    /* Fusible interfacing strip width = 3cm */
+    const FUSIBLE_WIDTH = 30;
+
     /**
      * Sets up options and values for our draft
      *
@@ -165,6 +168,9 @@ class CarltonCoat extends BentBodyBlock
         // Add ease to the accross back measurement
         $model->setMeasurement('acrossBack', $model->m('acrossBack') + $this->o('chestEase')/6);
         
+        // Width of the fusible interfacing strips
+        $this->setValueIfUnset('fusibleWidth' , self::FUSIBLE_WIDTH);
+
         parent::initialize($model); 
     }
 
@@ -1134,6 +1140,26 @@ class CarltonCoat extends BentBodyBlock
         /** @var \Freesewing\Part $p */
         $p = $this->parts['front'];
 
+        // Fusible interfacing armhole
+        $fw = $this->getValue("fusibleWidth");
+        $p->offsetPathString('fuse', 'M 8 L 12 C 19 17 10 C 18 15 14 C 16 13 5', (-1 * $fw), 1, ['class' => 'help']);
+        $p->newTextOnPath('fuse1', 'M 12 C 19 17 10 C 18 15 14 C 16 13 5', $this->t('Apply fusible interfacing here'), ['dy' => $fw/2], 0);
+        $p->newTextOnPath('fuse2', 'M  8 L 12', $this->t('Apply fusible interfacing here'), ['dy' => $fw/2], 0);
+
+        // Breakline
+        $p->addPoint('rollLineEdge', $p->shiftOutwards(12, 8, 20));
+        $p->newPoint('rollLineBot',$p->x('frontEdge'), $p->y('button3Left'));
+        $p->curveCrossesLine(9, 21, 20, 8, 'rollLineBot', 'rollLineEdge', 'bl');
+        $p->clonePoint('bl1', 'rollLineTop');
+        $p->newPath('rollLine', 'M rollLineTop L rollLineBot', ['class' => 'help']);
+        $p->newTextOnPath('rollLine', 'M rollLineBot L rollLineTop', $this->t('Roll line'), ['dy' => -1],0);
+        $p->newTextOnPath('csp1', 'M rollLineTop L rollLineBot', $this->t('Canvas chest piece'), ['dy' => -1],0);
+
+        // Shoulder canvas piece
+        $p->addPoint('csp1', $p->shift('rollLineBot', $p->angle('rollLineBot', 'rollLineEdge')-110, $p->distance(3,'waistSide')/2));
+        $p->addPoint('csp2', $p->beamsCross(5, 'waistSideCpTop', 3, 'waistSide'));
+        $p->newPath('canvasShoulderPiece', 'M rollLineBot C csp1 csp2 5', ['class' => 'help']);
+        $p->newTextOnPath('csp', 'M rollLineBot C csp1 csp2 5', $this->t('Canvas chest piece'), ['dy' => -1],0);
         // Title
         $p->newPoint('titleAnchor', $p->x(21), $p->y(10));
         $p->addTitle('titleAnchor', 1, $this->t($p->title), 
@@ -1222,6 +1248,19 @@ class CarltonCoat extends BentBodyBlock
         /** @var \Freesewing\Part $p */
         $p = $this->parts['back'];
 
+        // Back stay
+        $p->addPoint('backStay1', $p->shiftFractionTowards('bpTopIn', 10, 0.5));
+        $p->addPoint('backStay2', $p->shiftAlong(5, 'chestSideCp', 'waistSideCpTop', 'waistSide', 30));
+        $p->addPoint('backStay3', $p->shift('backStay2', 180, $p->distance('backStay2','dartTip')/2));
+        $p->newPath('backStay', 'M bpTopIn C backStay1 backStay3 backStay2', ['class' => 'help']);
+        $p->newTextOnPath('backStaye','M bpTopIn C backStay1 backStay3 backStay2', $this->t('Back stay'), ['dy' => -1], 0);
+
+        // Fusible interfacing armhole
+        $fw = $this->v('fusibleWidth');
+        $p->offsetPathString('fuse', 'M 1 C 1 7 8 L 12 C 19 17 10 C 18 15 14 C 16 13 5', (-1 * $fw), 1, ['class' => 'help']);
+        $p->newTextOnPath('fuse1', 'M 12 C 19 17 10 C 18 15 14 C 16 13 5', $this->t('Apply fusible interfacing here'), ['dy' => $fw/2], 0);
+        $p->newTextOnPath('fuse2', 'M  1 C 1 7 8 L 12', $this->t('Apply fusible interfacing here'), ['dy' =>  $fw/2], 0);
+            
         // Title
         $p->newPoint('titleAnchor', $p->x(8), $p->y(18));
         $p->addTitle('titleAnchor', 2, $this->t($p->title), 
@@ -1319,6 +1358,15 @@ class CarltonCoat extends BentBodyBlock
         /** @var \Freesewing\Part $p */
         $p = $this->parts['topsleeve'];
         
+        // Fusible interfacing armhole
+        $fw = $this->getValue("fusibleWidth");
+        $fp = 'M topsleeveLeftEdge C topsleeveLeftEdgeCpRight frontPitchPointCpBottom frontPitchPoint C frontPitchPointCpTop sleeveTopCpLeft sleeveTop C sleeveTopCpRight backPitchPoint backPitchPoint';
+        $p->offsetPathString('fuse', $fp, (-1 * $fw), 1, ['class' => 'help']);
+        $p->addPoint('fuse1', $p->shiftAlong('backPitchPoint', 'backPitchPoint', 'topsleeveRightEdgeCpTop', 'topsleeveRightEdge', $fw));
+        $p->newPoint('fuse2',$p->x('fuse-endPoint'), $p->y('fuse1'));
+        $p->newPath('fuseClosing', 'M fuse-endPoint C fuse-endPoint fuse2 fuse1', ['class' => 'help']);
+        $p->newTextOnPath('fuse1', $fp, $this->t('Apply fusible interfacing here'), ['dy' => $fw/2], 0);
+
         // Title
         $p->newPoint('titleAnchor', $p->x('sleeveTop'), $p->y('topsleeveRightEdge')+80);
         $p->addTitle('titleAnchor', 4, $this->t($p->title), 
@@ -1395,6 +1443,20 @@ class CarltonCoat extends BentBodyBlock
         /** @var \Freesewing\Part $p */
         $p = $this->parts['undersleeve'];
         
+        // Fusible interfacing armhole
+        $fw = $this->getValue("fusibleWidth");
+        $fp = 'M undersleeveLeftEdgeRight C undersleeveLeftEdgeCpRight undersleeveTipCpBottom undersleeveTip';
+        $p->addPoint('fuseSplit', $p->shiftAlong('undersleeveTip', 'undersleeveTipCpBottom', 'undersleeveLeftEdgeCpRight', 'undersleeveLeftEdgeRight', $fw*2));
+        $p->splitCurve('undersleeveLeftEdgeRight', 'undersleeveLeftEdgeCpRight', 'undersleeveTipCpBottom', 'undersleeveTip', 'fuseSplit', 'fuseSplit');
+        $p->offsetPathString('fuse', 'M undersleeveLeftEdgeRight C fuseSplit2 fuseSplit3 fuseSplit', (-1 * $fw), 1, ['class' => 'help']);
+        $p->curveCrossesY('undersleeveElbowLeft', 'undersleeveElbowLeftCpTop', 'undersleeveLeftEdge', 'undersleeveLeftEdge', $p->y('fuse-startPoint'), '.fuse');
+        $p->clonePoint('.fuse1', 'fuseLeftEdge');
+        $p->addPoint('.fuse2', $p->shiftOutwards('fuse-cp2--undersleeveLeftEdgeRight.fuseSplit2.fuseSplit3.fuseSplit', 'fuse-curve-fuseSplitTOundersleeveLeftEdgeRight', 200));
+        $p->curveCrossesLine('undersleeveTip', 'undersleeveTip', 'undersleeveRightEdgeCpTop', 'undersleeveRightEdge', '.fuse2', 'fuse-curve-fuseSplitTOundersleeveLeftEdgeRight', '.fuse');
+        $p->clonePoint('.fuse1', 'fuseRightEdge');
+        $p->newPath('fuseClosing', 'M fuse-endPoint L fuseRightEdge M fuse-startPoint L fuseLeftEdge', ['class' => 'help']);
+        $p->newTextOnPath('fuse1', $fp, $this->t('Apply fusible interfacing here'), ['dy' => $fw/2], 0);
+
         // Title
         $p->addTitle('undersleeveWristLeftHelperTop', 5, $this->t($p->title), 
             '2x '.
@@ -1554,7 +1616,7 @@ class CarltonCoat extends BentBodyBlock
         
         // Title
         $p->newPoint('titleAnchor', $p->x('bottomRight')/2, $p->y('bottomRight')/2);
-        $p->addTitle('titleAnchor', 9, $this->t($p->title), '2x '.$this->t('from fabric'));
+        $p->addTitle('titleAnchor', 9, $this->t($p->title), '2x '.$this->t('from fabric')."\n".'2x '.$this->t("from fusible interfacing"));
 
         // Grainline
         $p->newPoint('grainlineTop', $p->x('topLeft')+50, $p->y('topLeft')+5);

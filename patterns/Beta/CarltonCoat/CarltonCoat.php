@@ -1253,12 +1253,12 @@ class CarltonCoat extends BentBodyBlock
         $p->addPoint('backStay2', $p->shiftAlong(5, 'chestSideCp', 'waistSideCpTop', 'waistSide', 30));
         $p->addPoint('backStay3', $p->shift('backStay2', 180, $p->distance('backStay2','dartTip')/2));
         $p->newPath('backStay', 'M bpTopIn C backStay1 backStay3 backStay2', ['class' => 'help']);
-        $p->newTextOnPath('backStaye','M bpTopIn C backStay1 backStay3 backStay2', $this->t('Back stay'), ['dy' => -1], 0);
+        $p->newTextOnPath('backStaye','M bpTopIn C backStay1 backStay3 backStay2', $this->t('Back stay'), ['dy' => -1, 'class' => 'center'], 0);
 
         // Fusible interfacing armhole
         $fw = $this->v('fusibleWidth');
         $p->offsetPathString('fuse', 'M 1 C 1 7 8 L 12 C 19 17 10 C 18 15 14 C 16 13 5', (-1 * $fw), 1, ['class' => 'help']);
-        $p->newTextOnPath('fuse1', 'M 12 C 19 17 10 C 18 15 14 C 16 13 5', $this->t('Apply fusible interfacing here'), ['dy' => $fw/2], 0);
+        $p->newTextOnPath('fuse1', 'M 12 C 19 17 10 C 18 15 14 C 16 13 5', $this->t('Apply fusible interfacing here'), ['dy' => $fw/2, 'class' => 'center'], 0);
         $p->newTextOnPath('fuse2', 'M  1 C 1 7 8 L 12', $this->t('Apply fusible interfacing here'), ['dy' =>  $fw/2], 0);
             
         // Title
@@ -1455,7 +1455,7 @@ class CarltonCoat extends BentBodyBlock
         $p->curveCrossesLine('undersleeveTip', 'undersleeveTip', 'undersleeveRightEdgeCpTop', 'undersleeveRightEdge', '.fuse2', 'fuse-curve-fuseSplitTOundersleeveLeftEdgeRight', '.fuse');
         $p->clonePoint('.fuse1', 'fuseRightEdge');
         $p->newPath('fuseClosing', 'M fuse-endPoint L fuseRightEdge M fuse-startPoint L fuseLeftEdge', ['class' => 'help']);
-        $p->newTextOnPath('fuse1', $fp, $this->t('Apply fusible interfacing here'), ['dy' => $fw/2], 0);
+        $p->newTextOnPath('fuse1', $fp, $this->t('Apply fusible interfacing here'), ['dy' => $fw/2, 'class' => 'center'], 0);
 
         // Title
         $p->addTitle('undersleeveWristLeftHelperTop', 5, $this->t($p->title), 

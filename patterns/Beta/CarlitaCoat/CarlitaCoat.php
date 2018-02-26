@@ -486,6 +486,15 @@ class CarlitaCoat extends CarltonCoat
         /** @var \Freesewing\Part $p */
         $p = $this->parts['frontPanel'];
 
+        // Fusible interfacing at sleeve
+        $fw = $this->getValue("fusibleWidth");
+        $p->offsetPathString('fuse1', 'M 10 C 17 19 12', $fw, 1, ['class' => 'help']);
+        $p->newTextOnPath('fuse1', 'M 10 C 17 19 12', $this->t('Apply fusible interfacing here'), ['dy' => $fw/-2, 'class' => 'center'], 0);
+        $p->addPoint('fuseExtended',$p->rotate('fuse1-cp1--10.17.19.12', 'fuse1-curve-10TO12', 180));
+        $p->curveCrossesLine('side10', 'psFrontCpRight', 'psFrontCpTop', 'bustPoint', 'fuse1-curve-10TO12', 'fuseExtended', '.fuseExt');
+        $p->clonePoint('.fuseExt1', 'fuseEnd');
+        $p->newPath('fuse2', 'M fuse1-curve-10TO12 L fuseEnd', ['class' => 'help']);
+
         // Title
         $p->newPoint('titleAnchor', $p->x(9), $p->y('bustPoint'));
         $p->addTitle('titleAnchor', '1a', $this->t($p->title), 
@@ -567,6 +576,16 @@ class CarlitaCoat extends CarltonCoat
     {
         /** @var \Freesewing\Part $p */
         $p = $this->parts['sidePanel'];
+
+        // Fusible interfacing at sleeve
+        $fw = $this->getValue("fusibleWidth");
+        $fstring = 'M final10 C finalSide18 finalSide15 finalSide14 C finalSide16 finalSide13 finalSide5';
+        $p->offsetPathString('fuse1', $fstring, $fw*-1, 1, ['class' => 'help']);
+        $p->newTextOnPath('fuse1', $fstring, $this->t('Apply fusible interfacing here'), ['dy' => $fw/2, 'class' => 'center'], 0);
+        //$p->addPoint('fuseExtended',$p->rotate('fuse1-cp1--10.17.19.12', 'fuse1-curve-10TO12', 180));
+        //$p->curveCrossesLine('side10', 'psFrontCpRight', 'psFrontCpTop', 'bustPoint', 'fuse1-curve-10TO12', 'fuseExtended', '.fuseExt');
+        //$p->clonePoint('.fuseExt1', 'fuseEnd');
+        //$p->newPath('fuse2', 'M fuse1-curve-10TO12 L fuseEnd', ['class' => 'help']);
 
         // Title
         $p->addPoint('titleAnchor', $p->shiftFractionTowards('bottomSeatSide', 'bottomPsFrontBottom', 0.5));

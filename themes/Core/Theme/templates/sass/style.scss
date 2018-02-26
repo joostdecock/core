@@ -77,6 +77,10 @@ text {
     font-weight: 200;
 }
 
+text.center {
+    text-anchor: middle;
+}
+
 /* Titles */
 
 text.part-nr {

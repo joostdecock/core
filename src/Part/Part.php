@@ -1006,7 +1006,7 @@ class Part
      *
      * @param string|bool $prefix Prefix to check for
      */
-    private function purgePoints($prefix = false)
+    public function purgePoints($prefix = false)
     {
         if ($prefix !== false) {
             $len = strlen($prefix);

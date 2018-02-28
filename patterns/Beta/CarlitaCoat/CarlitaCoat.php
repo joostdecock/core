@@ -504,6 +504,12 @@ class CarlitaCoat extends CarltonCoat
         $p->clonePoint('.fuseExt1', 'fuseEnd');
         $p->newPath('fuse2', 'M fuse1-curve-10TO12 L fuseEnd', ['class' => 'help']);
 
+        // Fusible interfacing at hem
+        $p->addPoint('fuseHemLeft',$p->shift('hemFrontEdge', 90, $fw));
+        $p->addPoint('fuseHemRight',$p->shift('psFrontBottom', 90, $fw));
+        $p->newPath('fuseHem', 'M fuseHemLeft L fuseHemRight', ['class' => 'fabric help']);
+        $p->newTextOnPath('fuseHem', 'M fuseHemLeft L fuseHemRight', $this->t('Apply fusible interfacing here'), ['dy' => $fw/2, 'class' => 'center'], 0);
+
         // Title
         $p->newPoint('titleAnchor', $p->x(9), $p->y('bustPoint'));
         $p->addTitle('titleAnchor', '1a', $this->t($p->title), 
@@ -591,11 +597,13 @@ class CarlitaCoat extends CarltonCoat
         $fstring = 'M final10 C finalSide18 finalSide15 finalSide14 C finalSide16 finalSide13 finalSide5';
         $p->offsetPathString('fuse1', $fstring, $fw*-1, 1, ['class' => 'help']);
         $p->newTextOnPath('fuse1', $fstring, $this->t('Apply fusible interfacing here'), ['dy' => $fw/2, 'class' => 'center'], 0);
-        //$p->addPoint('fuseExtended',$p->rotate('fuse1-cp1--10.17.19.12', 'fuse1-curve-10TO12', 180));
-        //$p->curveCrossesLine('side10', 'psFrontCpRight', 'psFrontCpTop', 'bustPoint', 'fuse1-curve-10TO12', 'fuseExtended', '.fuseExt');
-        //$p->clonePoint('.fuseExt1', 'fuseEnd');
-        //$p->newPath('fuse2', 'M fuse1-curve-10TO12 L fuseEnd', ['class' => 'help']);
-
+        
+        // Fusible interfacing at hem
+        $p->addPoint('fuseHemLeft', $p->shift('bottomPsFrontBottom', 90, $fw));
+        $p->addPoint('fuseHemRight', $p->shift('bottomHemSide', 90, $fw));
+        $p->newPath('fuseHem', 'M fuseHemLeft L fuseHemRight', ['class' => 'fabric help']);
+        $p->newTextOnPath('fuseHem', 'M fuseHemLeft L fuseHemRight', $this->t('Apply fusible interfacing here'), ['dy' => $fw/2, 'class' => 'center'], 0);
+        
         // Title
         $p->addPoint('titleAnchor', $p->shiftFractionTowards('bottomSeatSide', 'bottomPsFrontBottom', 0.5));
         $p->addTitle('titleAnchor', '1b', $this->t($p->title), 

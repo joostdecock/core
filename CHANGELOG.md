@@ -3,6 +3,7 @@
 > All notable changes to freesewing core should be be documented in this file.
 > Freesewing uses [Semantic Versioning](http://semver.org/).
 
+<!-- version template
 ## Unreleased
 
 **Release date**: Unreleased
@@ -13,7 +14,7 @@
 ### Removed
 ### Fixed
 ### Security
-
+-->
 ## 1.7.0
 
 **Release date**: 2018-02-28

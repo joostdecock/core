@@ -118,8 +118,8 @@ class CarlitaCoat extends CarltonCoat
         $this->parts['undersleeveBlock']->setRender(false);
         $this->parts['frontBlock']->setRender(false);
         $this->parts['backBlock']->setRender(false);
-//        $this->parts['frontPs']->setRender(false);
-//        $this->parts['front']->setRender(false);
+        $this->parts['frontPs']->setRender(false);
+        $this->parts['front']->setRender(false);
     }
 
     /**

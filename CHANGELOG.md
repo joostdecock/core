@@ -3,6 +3,7 @@
 > All notable changes to freesewing core should be be documented in this file.
 > Freesewing uses [Semantic Versioning](http://semver.org/).
 
+<!-- version template
 ## Unreleased
 
 **Release date**: Unreleased
@@ -13,7 +14,41 @@
 ### Removed
 ### Fixed
 ### Security
+-->
+## 1.7.0
 
+**Release date**: 2018-02-28
+
+While this is mainly a bugfix release, it also exposes the `Part::purgePoints()` method
+which used to be private but is now public. The standard theme now also supports centered text.
+
+These changes is the reason for the minor version bump. Apart from that, it's a bugfix release and a 
+new option for Sven.
+
+### Added
+
+ - Sven now has ribbing options to choose whether to add ruibbing to the pattern of not
+ - The `center` class causes text to be centered in the standard theme
+
+### Changed
+
+ - The `part:purgePoints()` method had been made public to make Wouter happy
+
+### Fixed
+
+#### Sven
+
+ - Fixed a typo in the sven config file
+
+#### Carlita
+
+ - Fixed a misplaced curve control point at the armhole
+ - Removed use of opacity as it break PostScript export in Inkscape
+ - Fix issue where pocket width as marked on the side panel was not adapt to bust adjustment
+
+#### Carlton/Carlita
+
+ - Added extra markings to help with construction, such as backstay, and fusible interfacing
 
 ## 1.6.5
 

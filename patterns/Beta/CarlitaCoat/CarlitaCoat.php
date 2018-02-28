@@ -362,7 +362,7 @@ class CarlitaCoat extends CarltonCoat
             'pocketBottomLeftTop',
             'pocketBottomRightTop',
             'pocketBottomLeftTopCp',
-            'pocketBottomRightTop',
+            'pocketBottomRightTopCp',
             'pocketBottomLeftRightCp',
             'pocketBottomRightLeftCp',
             'pocketBottomLeftRight',
@@ -388,6 +388,15 @@ class CarlitaCoat extends CarltonCoat
         $p->addPoint('chestPocketBottomLeft', $p->shift('chestPocketTopLeft', -90, $pocketHeight));
         $p->addPoint('chestPocketTopRight', $p->shift('chestPocketTopLeft', 0, $pocketWidth));
         $p->addPoint('chestPocketBottomRight', $p->shift('chestPocketBottomLeft', 0, $pocketWidth));
+
+        // Shift front pocket sideways to keep its width
+        $delta = $p->deltaX('bustPoint', 'bottomBustPoint');
+        foreach(array_merge($this->pocket, $this->pocketFlap) as $pid) {
+            // Shift only points right of bust point
+            if($p->x($pid) > $p->x('bustPoint')) {
+                $p->addPoint($pid,$p->shift($pid, 0, $delta));
+            } 
+        }
     }
 
     /**
@@ -486,6 +495,21 @@ class CarlitaCoat extends CarltonCoat
         /** @var \Freesewing\Part $p */
         $p = $this->parts['frontPanel'];
 
+        // Fusible interfacing at sleeve
+        $fw = $this->getValue("fusibleWidth");
+        $p->offsetPathString('fuse1', 'M 10 C 17 19 12', $fw, 1, ['class' => 'help']);
+        $p->newTextOnPath('fuse1', 'M 10 C 17 19 12', $this->t('Apply fusible interfacing here'), ['dy' => $fw/-2, 'class' => 'center'], 0);
+        $p->addPoint('fuseExtended',$p->rotate('fuse1-cp1--10.17.19.12', 'fuse1-curve-10TO12', 180));
+        $p->curveCrossesLine('side10', 'psFrontCpRight', 'psFrontCpTop', 'bustPoint', 'fuse1-curve-10TO12', 'fuseExtended', '.fuseExt');
+        $p->clonePoint('.fuseExt1', 'fuseEnd');
+        $p->newPath('fuse2', 'M fuse1-curve-10TO12 L fuseEnd', ['class' => 'help']);
+
+        // Fusible interfacing at hem
+        $p->addPoint('fuseHemLeft',$p->shift('hemFrontEdge', 90, $fw));
+        $p->addPoint('fuseHemRight',$p->shift('psFrontBottom', 90, $fw));
+        $p->newPath('fuseHem', 'M fuseHemLeft L fuseHemRight', ['class' => 'fabric help']);
+        $p->newTextOnPath('fuseHem', 'M fuseHemLeft L fuseHemRight', $this->t('Apply fusible interfacing here'), ['dy' => $fw/2, 'class' => 'center'], 0);
+
         // Title
         $p->newPoint('titleAnchor', $p->x(9), $p->y('bustPoint'));
         $p->addTitle('titleAnchor', '1a', $this->t($p->title), 
@@ -568,6 +592,18 @@ class CarlitaCoat extends CarltonCoat
         /** @var \Freesewing\Part $p */
         $p = $this->parts['sidePanel'];
 
+        // Fusible interfacing at sleeve
+        $fw = $this->getValue("fusibleWidth");
+        $fstring = 'M final10 C finalSide18 finalSide15 finalSide14 C finalSide16 finalSide13 finalSide5';
+        $p->offsetPathString('fuse1', $fstring, $fw*-1, 1, ['class' => 'help']);
+        $p->newTextOnPath('fuse1', $fstring, $this->t('Apply fusible interfacing here'), ['dy' => $fw/2, 'class' => 'center'], 0);
+        
+        // Fusible interfacing at hem
+        $p->addPoint('fuseHemLeft', $p->shift('bottomPsFrontBottom', 90, $fw));
+        $p->addPoint('fuseHemRight', $p->shift('bottomHemSide', 90, $fw));
+        $p->newPath('fuseHem', 'M fuseHemLeft L fuseHemRight', ['class' => 'fabric help']);
+        $p->newTextOnPath('fuseHem', 'M fuseHemLeft L fuseHemRight', $this->t('Apply fusible interfacing here'), ['dy' => $fw/2, 'class' => 'center'], 0);
+        
         // Title
         $p->addPoint('titleAnchor', $p->shiftFractionTowards('bottomSeatSide', 'bottomPsFrontBottom', 0.5));
         $p->addTitle('titleAnchor', '1b', $this->t($p->title), 

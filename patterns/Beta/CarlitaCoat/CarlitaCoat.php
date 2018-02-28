@@ -118,8 +118,8 @@ class CarlitaCoat extends CarltonCoat
         $this->parts['undersleeveBlock']->setRender(false);
         $this->parts['frontBlock']->setRender(false);
         $this->parts['backBlock']->setRender(false);
-        $this->parts['frontPs']->setRender(false);
-        $this->parts['front']->setRender(false);
+//        $this->parts['frontPs']->setRender(false);
+//        $this->parts['front']->setRender(false);
     }
 
     /**
@@ -362,7 +362,7 @@ class CarlitaCoat extends CarltonCoat
             'pocketBottomLeftTop',
             'pocketBottomRightTop',
             'pocketBottomLeftTopCp',
-            'pocketBottomRightTop',
+            'pocketBottomRightTopCp',
             'pocketBottomLeftRightCp',
             'pocketBottomRightLeftCp',
             'pocketBottomLeftRight',
@@ -388,6 +388,15 @@ class CarlitaCoat extends CarltonCoat
         $p->addPoint('chestPocketBottomLeft', $p->shift('chestPocketTopLeft', -90, $pocketHeight));
         $p->addPoint('chestPocketTopRight', $p->shift('chestPocketTopLeft', 0, $pocketWidth));
         $p->addPoint('chestPocketBottomRight', $p->shift('chestPocketBottomLeft', 0, $pocketWidth));
+
+        // Shift front pocket sideways to keep its width
+        $delta = $p->deltaX('bustPoint', 'bottomBustPoint');
+        foreach(array_merge($this->pocket, $this->pocketFlap) as $pid) {
+            // Shift only points right of bust point
+            if($p->x($pid) > $p->x('bustPoint')) {
+                $p->addPoint($pid,$p->shift($pid, 0, $delta));
+            } 
+        }
     }
 
     /**

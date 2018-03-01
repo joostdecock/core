@@ -407,19 +407,21 @@ class Part
         $titleLines = count(explode("\n", $title));
         $msgLines = count(explode("\n", $msg));
 
-        $this->newText('patternTitle', $anchorKey, '__TITLE__', [
-            'class' => 'pattern-title default', 
-            'line-height' => $baseFontSize, 
-            'style' => 
-                'font-size: '.($baseFontSize/4).'px; '.
-                "text-anchor: $anchor; ".
-                "fill: #666; ".
-                "font-weight: 700 ",
-            'transform' => 
-                "rotate($rotation, $x, $y) ".
-                'translate(0, '.$baseFontSize*-1*($nrLines).') '
-            , 
-        ]);
+        if(!isset($options['noPatternTitle'])) {
+            $this->newText('patternTitle', $anchorKey, '__TITLE__', [
+                'class' => 'pattern-title default', 
+                'line-height' => $baseFontSize, 
+                'style' => 
+                    'font-size: '.($baseFontSize/4).'px; '.
+                    "text-anchor: $anchor; ".
+                    "fill: #666; ".
+                    "font-weight: 700 ",
+                'transform' => 
+                    "rotate($rotation, $x, $y) ".
+                    'translate(0, '.$baseFontSize*-1*($nrLines).') '
+                , 
+            ]);
+        }
         $this->newText('partNumber', $anchorKey, $nr, [
             'class' => "part-nr default", 
             'line-height' => $baseFontSize,

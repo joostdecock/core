@@ -48,11 +48,11 @@ measurements:
 
 options:
 
-# ease group
+# fit group
     chestEase:
         title: "Chest ease"
         description: "The amount of ease at your chest."
-        group: "ease"
+        group: "fit"
         type: measure
         min: -40
         max: 160
@@ -60,7 +60,7 @@ options:
     bicepsEase:
         title: "Biceps ease"
         description: "The amount of ease at your upper arm."
-        group: "ease"
+        group: "fit"
         type: measure
         min: 0
         max: 80
@@ -68,13 +68,11 @@ options:
     cuffEase:
         title: "Cuff ease"
         description: "The amount of ease at your wrist."
-        group: "ease"
+        group: "fit"
         type: measure
         min: 0
         max: 100
         default: 35
-
-# fit group
     lengthBonus:
         title: "Length bonus"
         description: "Amount to lengthen the body."

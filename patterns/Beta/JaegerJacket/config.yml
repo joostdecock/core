@@ -195,7 +195,7 @@ options:
         description: "The height where the front pocket starts, as a factor of your natural waist to hip measurement."
         group: "pockets"
         type: "percent"
-        min: 0
+        min: 1
         max: 15
         default: 7.5
     frontPocketDepth:

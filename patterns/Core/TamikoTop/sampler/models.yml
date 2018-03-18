@@ -6,8 +6,6 @@ groups:
         - sorcha
 
 measurements:
-    acrossBack: 
-        sorcha: 330
     chestCircumference: 
         sorcha: 1050
     centerBackNeckToWaist: 

@@ -25,7 +25,6 @@ languages:
     nl: "Nederlands"
 
 measurements:
-    acrossBack: 450
     bicepsCircumference: 335
     centerBackNeckToWaist: 480
     chestCircumference: 1080
@@ -185,3 +184,12 @@ options:
         min: 15
         max: 45
         default: 30
+    acrossBackFactor:
+        title: "Across back factor"
+        description: "Constrols your across back width as a factor of your shoulder to shoulder measurement"
+        group: "advanced"
+        type: "percent"
+        min: 93
+        max: 99
+        default: 96
+

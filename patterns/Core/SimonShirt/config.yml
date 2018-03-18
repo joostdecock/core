@@ -34,7 +34,6 @@ languages:
     de: "Deutsch"
 
 measurements:
-    acrossBack: 450
     bicepsCircumference: 335
     centerBackNeckToWaist: 520
     chestCircumference: 1080
@@ -425,4 +424,13 @@ options:
         min: 0
         max: 20
         default: 5
+    acrossBackFactor:
+        title: "Across back factor"
+        description: "Constrols your across back width as a factor of your shoulder to shoulder measurement"
+        group: "advanced"
+        type: "percent"
+        min: 93
+        max: 99
+        default: 96
+
 

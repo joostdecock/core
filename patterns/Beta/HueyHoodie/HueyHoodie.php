@@ -57,9 +57,6 @@ class HueyHoodie extends \Freesewing\Patterns\Core\BrianBodyBlock
         $this->setOptionIfUnset('sleevecapHeightFactor', self::SLEEVECAP_HEIGHT_FACTOR);
         $this->setOptionIfUnset('sleevecapEase', self::SLEEVECAP_EASE);
 
-        // Trick brian into giving us some extra across back ease
-        $model->setMeasurement('acrossBack', $model->m('acrossBack') + $this->o('chestEase')/20);
-
         parent::initialize($model);
     }
 

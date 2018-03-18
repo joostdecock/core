@@ -108,9 +108,6 @@ class CarltonCoat extends BentBodyBlock
         // Make shoulderToShoulder measurement larger because coat
         $model->setMeasurement('shoulderToShoulder', $model->m('shoulderToShoulder') + $this->o('shoulderEase'));
         
-        // Make acrossBack measurement larger because coat
-        $model->setMeasurement('acrossBack', $model->m('acrossBack') + $this->o('shoulderEase')/2);
-
         // Waist shaping
         $this->setValueIfUnset('waistReduction', 
             ( $model->m('chestCircumference') + $this->o('chestEase') ) - 
@@ -165,9 +162,6 @@ class CarltonCoat extends BentBodyBlock
         // Belt height
         $this->setValueIfUnset('beltHeight' , self::BELT_HEIGHT);
 
-        // Add ease to the accross back measurement
-        $model->setMeasurement('acrossBack', $model->m('acrossBack') + $this->o('chestEase')/6);
-        
         // Width of the fusible interfacing strips
         $this->setValueIfUnset('fusibleWidth' , self::FUSIBLE_WIDTH);
 

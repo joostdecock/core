@@ -113,7 +113,7 @@ options:
         default: 50
     acrossBackFactor:
         title: "Across back factor"
-        description: "Constrols your across back width as a factor of your shoulder to shoulder measurement"
+        description: "Controls your across back width as a factor of your shoulder to shoulder measurement"
         group: "advanced"
         type: "percent"
         min: 93

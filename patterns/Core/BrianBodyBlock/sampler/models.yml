@@ -11,19 +11,6 @@ groups:
         - usSize42
         - usSize44
 measurements:
-    acrossBack:
-        joost   : 450
-        usSize34: 380
-        usSize36: 390
-        usSize38: 400
-        usSize40: 410
-        usSize42: 420
-        usSize44: 430
-        ukSize10: 318
-        ukSize12: 330
-        ukSize14: 342
-        ukSize16: 356
-    
     bicepsCircumference:
         joost   : 335
         usSize34: 275

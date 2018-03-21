@@ -230,7 +230,7 @@ class BrianBodyBlock extends Pattern
         $p->newPoint(9, 0, $p->y(1) + $this->v('collarDepth') * $this->v('frontCollarTweakFactor'), 'Center front collar depth');
 
         // Armhole
-        $p->newPoint(10, $model->getMeasurement('acrossBack') / 2, $p->y(1) + $p->deltaY(1, 2) / 2, 'Armhole pitch point');
+        $p->newPoint(10, ($model->getMeasurement('shoulderToShoulder') * $this->o('acrossBackFactor')) / 2, $p->y(1) + $p->deltaY(1, 2) / 2, 'Armhole pitch point');
         $p->newPoint(11, $p->x(10), $p->y(2), 'Armhole pitch width @ armhole depth');
         $p->newPoint(12, $model->m('shoulderToShoulder')/2, $this->v('shoulderSlope') / 2, 'Shoulder tip');
 

@@ -13,6 +13,10 @@ use Freesewing\Part;
  */
 class AaronAshirt extends BrianBodyBlock
 {
+
+    /** Across back factor is irrelevant here, but required by Brian */
+    const ACROSS_BACK_FACTOR= 0.96;
+
     /*
         ___       _ _   _       _ _
        |_ _|_ __ (_) |_(_) __ _| (_)___  ___
@@ -46,6 +50,7 @@ class AaronAshirt extends BrianBodyBlock
         $this->setOptionIfUnset('collarEase', self::COLLAR_EASE);
         $this->setOptionIfUnset('backNeckCutout', self::NECK_CUTOUT);
         $this->setOptionIfUnset('sleevecapEase', self::SLEEVECAP_EASE);
+        $this->setOptionIfUnset('acrossBackFactor', self::ACROSS_BACK_FACTOR);
 
         // Values needed for BrianBodyBlock (but irrelevant here)
         $this->setValue('frontCollarTweakFactor', 1); 

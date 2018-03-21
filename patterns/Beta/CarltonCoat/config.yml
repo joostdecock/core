@@ -37,7 +37,6 @@ languages:
     en: English
 
 measurements:
-    acrossBack: 420
     bicepsCircumference: 350
     centerBackNeckToWaist: 560
     chestCircumference: 1060
@@ -96,7 +95,7 @@ options:
         default: 140
     shoulderEase:
         title: "Shoulder ease"
-        description: "The amount of ease at your shoulder. This increases the shoulder to shoulder and across back distance to accomodate what you're wearing under your coat."
+        description: "The amount of ease at your shoulder. This increases the shoulder to shoulder distance to accomodate what you're wearing under your coat."
         group: "fit"
         type: measure
         min: 0
@@ -142,3 +141,12 @@ options:
         min: 45
         max: 55
         default: 50
+    acrossBackFactor:
+        title: "Across back factor"
+        description: "Controls your across back width as a factor of your shoulder to shoulder measurement"
+        group: "advanced"
+        type: "percent"
+        min: 93
+        max: 99
+        default: 98
+

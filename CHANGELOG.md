@@ -15,6 +15,30 @@
 ### Fixed
 ### Security
 -->
+
+## 1.8.0
+
+**Release date**: 1018-03-20
+
+This release adds a new pattern, the **Jaeger Jacket** and removed the `acrossBack` measurement in favor of an `acrossBackFactor` option that controls the across back as a fraction of the `shoulderToShoulder` measurement.
+
+### Added
+
+ - The Jaeger Jacket is now available in Beta
+
+### Changed
+
+ - The `acrossBack` measurement has been removed from all patterns in favor of and `acrossBackFactor` option
+
+### Deprecated
+
+ - Do not use an `acrossBack` measurement in your patterns as it's too hard to measure. Use are fraction of the `shoulderToShoulder` measurement instead (0.96 is a good default).
+
+### Removed
+
+ - The `acrossBack` measurement was removed from `brian` and all patterns that extend it.
+  
+
 ## 1.7.0
 
 **Release date**: 2018-02-28

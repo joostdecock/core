@@ -1,5 +1,4 @@
 info:
-    lab: true
     name: "Jaeger Jacket"
     description: "Jeager is a sport coat style jacket with two buttons and patch pockets."
     handle: "jaeger"
@@ -34,7 +33,6 @@ languages:
     en: "English"
 
 measurements:
-    acrossBack: 440
     bicepsCircumference: 335
     centerBackNeckToWaist: 470
     chestCircumference: 1080
@@ -195,7 +193,7 @@ options:
         description: "The height where the front pocket starts, as a factor of your natural waist to hip measurement."
         group: "pockets"
         type: "percent"
-        min: 0
+        min: 1
         max: 15
         default: 7.5
     frontPocketDepth:
@@ -353,4 +351,12 @@ options:
         min: 45
         max: 60
         default: 50
+    acrossBackFactor:
+        title: "Across back factor"
+        description: "Controls your across back width as a factor of your shoulder to shoulder measurement"
+        group: "advanced"
+        type: "percent"
+        min: 93
+        max: 99
+        default: 96
 

@@ -24,7 +24,6 @@ languages:
     fr: "French"
 
 measurements:
-    acrossBack: 450
     bicepsCircumference: 335
     centerBackNeckToWaist: 480
     chestCircumference: 1080

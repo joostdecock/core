@@ -1,15 +1,7 @@
 info:
     name:    "Bruce Boxer Briefs"
-    description: "Bruce are comfortable yet stylish boxer briefs"
+    description: "Bruce are comfortable yet stylish boxer briefs."
     handle:  "bruce"
-    version: "2.0"
-    author:  "Joost De Cock"
-    company: "freesewing"
-    link:    "freesewing.org/pattern/bruce"
-    tags:
-        - menswear
-        - underwear
-        - bottom
 
 parts:
     block: ".Block"
@@ -73,7 +65,7 @@ options:
         default: 14
     legStretch:
         title: "Leg stretch"
-        description: "For best results, you want to fit your legs a but more snugly -  say no to gaping"
+        description: "For best results, you want to fit your legs a but more snugly — say no to gaping."
         group: "advanced"
         type: "percent"
         min: 25

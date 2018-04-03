@@ -1,11 +1,7 @@
 info:
   name:     "Tamiko Top"
-  description: "Tamiko is a zero-waste top"
+  description: "Tamiko is a zero-waste top."
   handle: "tamiko"
-  tags:
-      - womenswear
-      - menswear
-      - top
 
 parts:
   top:   "Tamiko Top"
@@ -23,7 +19,7 @@ measurements:
 options:
     lengthBonus:
         title: "Length bonus"
-        description: "The amount to lengthen the body. Negative values shorten it."
+        description: "The amount to lengthen the garment. A negative value will shorten it."
         group: "style"
         type: "measure"
         min: -150

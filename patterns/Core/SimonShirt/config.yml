@@ -1,11 +1,7 @@
 info:
     name: "Simon Shirt"
-    description: "Simon is a highly adaptable shirt pattern for men"
+    description: "Simon is a highly adaptable shirt pattern for men."
     handle: "simon"
-    tags:
-        - menswear
-        - top
-        - shirt
 
 parts:
     backBlock: ".Back block"
@@ -15,8 +11,8 @@ parts:
     frontAndBackBlock: ".Front and back block"
     frontRight: "Front right"
     frontLeft: "Front left"
-    buttonPlacket: "Button placket"
-    buttonholePlacket: "Buttonhole placket"
+    buttonPlacket: "Button placket."
+    buttonholePlacket: "Buttonhole placket."
     yoke: "Yoke"
     back: "Back"
     sleeve: "Sleeve"
@@ -51,7 +47,7 @@ options:
 # ease group
     chestEase:
         title: "Chest ease"
-        description: "The amount of ease at the chest"
+        description: "The amount of ease at your chest."
         group: "ease"
         type: "measure"
         min: 80
@@ -59,7 +55,7 @@ options:
         default: 160
     waistEase:
         title: "Waist ease"
-        description: "The amount of ease at the natural waist"
+        description: "The amount of ease at your (natural) waist."
         group: "ease"
         type: "measure"
         min: 80
@@ -67,7 +63,7 @@ options:
         default: 160
     hipsEase:
         title: "Hips ease"
-        description: "The amount of ease at the hips"
+        description: "The amount of ease at your hips."
         group: "ease"
         type: "measure"
         min: 80
@@ -75,7 +71,7 @@ options:
         default: 160
     bicepsEase:
         title: "Biceps ease"
-        description: "The amount of ease at your upper arm. Note while we try to respect this, fitting the sleeve to the armhole takes precedence over respecting the exact amount of ease."
+        description: "The amount of ease at your upper arm. Note that while we try to respect this, fitting the sleeve to the armhole takes precedence over respecting the exact amount of ease."
         group: "ease"
         type: "measure"
         min: 40
@@ -83,7 +79,7 @@ options:
         default: 60
     collarEase:
         title: "Collar ease"
-        description: "The amount of ease around your neck with a closed collar"
+        description: "The amount of ease around your neck."
         group: "ease"
         type: "measure"
         min: 0
@@ -91,7 +87,7 @@ options:
         default: 15
     cuffEase:
         title: "Cuff ease"
-        description: "The amount of ease around your wrist"
+        description: "The amount of ease at your wrist."
         group: "ease"
         type: "measure"
         min: 20
@@ -100,16 +96,16 @@ options:
 
 # fit group
     lengthBonus:
-        title: "Extra length"
-        description: "The amount to lengthen the shirt beyond your hip line"
+        title: "Length bonus"
+        description: "The amount to lengthen the garment. A negative value will shorten it."
         group: "fit"
         type: "measure"
         min: 0
         max: 250
         default: 150
     sleeveLengthBonus:
-        title: "Extra sleeve length"
-        description: "The amount to lengthen the sleeve beyond your wrist"
+        title: "Sleeve length bonus"
+        description: "The amount to lengthen the sleeve. A negative value will shorten it."
         group: "fit"
         type: "measure"
         min: 20
@@ -117,7 +113,7 @@ options:
         default: 40
     yokeDart:
         title: "Yoke dart"
-        description: "Whether to include a dart at the sides of the yoke to fit a rounder back"
+        description: "Whether to include a dart at the sides of the yoke to fit a rounder back."
         group: "fit"
         type: "measure"
         min: 0
@@ -125,7 +121,7 @@ options:
         default: 5
     hipFlare:
         title: "Hip flare"
-        description: "The amount to widen the shirt below the waist"
+        description: "The amount to widen the shirt below the waist."
         group: "fit"
         type: "measure"
         min: 10
@@ -133,7 +129,7 @@ options:
         default: 10
     buttonfreeLength:
         title: "Button free length"
-        description: "How much of the bottom of the front closure to keep button-free"
+        description: "How much of the bottom of the front closure to keep button-free."
         group: "fit"
         type: "measure"
         min: -50
@@ -143,7 +139,7 @@ options:
 # style group
     hemStyle:
         title: "Hem style"
-        description: "The style of the shirt hem"
+        description: "The style of the shirt hem."
         group: "style"
         type: "chooseOne"
         options:
@@ -153,7 +149,7 @@ options:
         default: 1
     hemCurve:
         title: "Hem curve"
-        description: "The height of the curve on a curved hem"
+        description: "The height of the curve on a curved hem."
         group: "style"
         type: "measure"
         min: 40
@@ -163,7 +159,7 @@ options:
         onlyOn: [2,3]
     buttons:
         title: "Number of buttons"
-        description: "The number of buttons on the front closure"
+        description: "The number of buttons on the front closure."
         group: "style"
         type: "chooseOne"
         options:
@@ -179,7 +175,7 @@ options:
         default: 7
     extraTopButton:
         title: "Extra top button"
-        description: "Whether or not to include an extra top button on the front closure"
+        description: "Whether or not to include an extra top button on the front closure."
         group: "style"
         type: "chooseOne"
         options:
@@ -188,7 +184,7 @@ options:
         default: 1
     splitYoke:
         title: "Split yoke"
-        description: "Whether to draft a split or regular yoke"
+        description: "Whether to draft a split or regular yoke."
         group: "style"
         type: "chooseOne"
         options:
@@ -199,7 +195,7 @@ options:
 # packets group
     buttonPlacketType:
         title: "Button placket type"
-        description: "Type of the button placket"
+        description: "Type of the button placket."
         group: "plackets"
         type: "chooseOne"
         options:
@@ -208,7 +204,7 @@ options:
         default: 1
     buttonPlacketStyle:
         title: "Button placket style"
-        description: "Style of the button placket"
+        description: "Style of the button placket."
         group: "plackets"
         type: "chooseOne"
         options:
@@ -219,7 +215,7 @@ options:
         onlyOn: 1
     buttonPlacketWidth:
         title: "Button placket width"
-        description: "Width of the button placket"
+        description: "Width of the button placket."
         group: "plackets"
         type: "measure"
         min: 10
@@ -227,7 +223,7 @@ options:
         default: 20
     buttonholePlacketType:
         title: "Buttonhole placket type"
-        description: "Type of the buttonhole placket"
+        description: "Type of the buttonhole placket."
         group: "plackets"
         type: "chooseOne"
         options:
@@ -236,7 +232,7 @@ options:
         default: 1
     buttonholePlacketStyle:
         title: "Buttonhole placket style"
-        description: "Style of the buttonhole placket"
+        description: "Style of the buttonhole placket."
         group: "plackets"
         type: "chooseOne"
         options:
@@ -247,7 +243,7 @@ options:
         onlyOn: 1
     buttonholePlacketWidth:
         title: "Buttonhole placket width"
-        description: "Width of the butonhole placket"
+        description: "Width of the butonhole placket."
         group: "plackets"
         type: "measure"
         min: 20
@@ -255,7 +251,7 @@ options:
         default: 35
     buttonholePlacketFoldWidth:
         title: "Buttonhole placket fold width"
-        description: "Width of the buttonhole placket fold"
+        description: "Width of the buttonhole placket fold."
         group: "plackets"
         type: "measure"
         min: 3
@@ -265,7 +261,7 @@ options:
         onlyOn: 1
     sleevePlacketWidth:
         title: "Sleeve placket width"
-        description: "The width of the sleeve placket"
+        description: "The width of the sleeve placket."
         group: "plackets"
         type: "measure"
         min: 15
@@ -273,7 +269,7 @@ options:
         default: 25
     sleevePlacketLength:
         title: "Sleeve placket length"
-        description: "The length of the sleeve placket"
+        description: "The length of the sleeve placket."
         group: "plackets"
         type: "measure"
         min: 130
@@ -283,7 +279,7 @@ options:
 # collar group
     collarStandWidth:
         title: "Collar stand width"
-        description: "Widht of the collar stand"
+        description: "Widht of the collar stand."
         group: "collar"
         type: "measure"
         min: 15
@@ -291,7 +287,7 @@ options:
         default: 35
     collarStandBend:
         title: "Collar stand bend"
-        description: "The bend of the collar stand"
+        description: "The bend of the collar stand."
         group: "collar"
         type: "measure"
         min: 0
@@ -299,7 +295,7 @@ options:
         default: 5
     collarStandCurve:
         title: "Collar stand curve"
-        description: "The curve of the collar stand"
+        description: "The curve of the collar stand."
         group: "collar"
         type: "measure"
         min: 0
@@ -307,7 +303,7 @@ options:
         default: 5
     collarGap:
         title: "Collar gap"
-        description: "The gap between the the two collar ends"
+        description: "The gap between the the two collar ends."
         group: "collar"
         type: "measure"
         min: 5
@@ -315,7 +311,7 @@ options:
         default: 25
     collarBend:
         title: "Collar bend"
-        description: "The bend of the collar"
+        description: "The bend of the collar."
         group: "collar"
         type: "measure"
         min: 5
@@ -323,7 +319,7 @@ options:
         default: 15
     collarFlare:
         title: "Collar flare"
-        description: "The flare of the collar tips"
+        description: "The flare of the collar tips."
         group: "collar"
         type: "measure"
         min: 0
@@ -331,7 +327,7 @@ options:
         default: 10
     collarAngle:
         title: "Collar angle"
-        description: "The angle of the collar tips"
+        description: "The angle of the collar tips."
         group: "collar"
         type: "angle"
         min: 60
@@ -339,7 +335,7 @@ options:
         default: 85
     collarRoll:
         title: "Collar roll"
-        description: "The amount by which the top collar is larger than the undercollar"
+        description: "The amount by which the top collar is larger than the undercollar."
         group: "collar"
         type: "measure"
         min: 0
@@ -349,7 +345,7 @@ options:
 # cuffs group 
     cuffStyle:
         title: "Cuff style"
-        description: "The style of the cuffs"
+        description: "The style of the cuffs."
         group: "cuffs"
         type: "chooseOne"
         options:
@@ -362,7 +358,7 @@ options:
         default: 2
     cuffLength:
         title: "Cuff length"
-        description: "The length of the cuffs"
+        description: "The length of the cuffs."
         group: "cuffs"
         type: "measure"
         min: 30
@@ -370,7 +366,7 @@ options:
         default: 65
     cuffButtonRows:
         title: "Cuff button rows"
-        description: "Whether to draft a single or double row of cuff buttons. This option is only relevant for barrel cuffs"
+        description: "Whether to draft a single or double row of cuff buttons. This option is only relevant for barrel cuffs."
         group: "cuffs"
         type: "chooseOne"
         options:
@@ -381,7 +377,7 @@ options:
         onlyOn: [1, 2, 3]
     barrelcuffNarrowButton:
         title: "Cuff narrow button"
-        description: "Whether to include a button to tie the cuffs more narrow. This option is only relevant for barrel cuffs"
+        description: "Whether to include a button to tie the cuffs more narrow. This option is only relevant for barrel cuffs."
         group: "cuffs"
         type: "chooseOne"
         options:
@@ -392,7 +388,7 @@ options:
         onlyOn: [1, 2, 3]
     cuffDrape:
         title: "Cuff drape"
-        description: "The amount by which the sleeve is wider than the cuff where the are joined"
+        description: "The amount by which the sleeve is wider than the cuff where the are joined."
         group: "cuffs"
         type: "measure"
         min: 0
@@ -401,16 +397,16 @@ options:
 
 # advanced group
     armholeDepthFactor:
-        title: "Armhole depth"
-        description: "A factor that controls the depth of the armhole"
+        title: "Armhole depth factor"
+        description: "Controls the depth of the armhole. Higher values make a deeper armhole."
         group: "advanced"
         type: "percent"
         min: 50
         max: 65
         default: 60
     sleevecapHeightFactor:
-        title: "Sleevecap height"
-        description: "A factor that controls the height of the sleevecap. Note: make it too high and it will narrow the sleeve width to the point where it might not fit your arm."
+        title: "Sleevecap height factor"
+        description: "Controls the height of the sleevecap. A higher value results in a higher and more narrow sleevecap."
         group: "advanced"
         type: "percent"
         min: 45
@@ -418,7 +414,7 @@ options:
         default: 45
     sleevecapEase:
         title: "Sleevecap ease"
-        description: "The amount by which the sleevecap seam is longer than the armhole seam"
+        description: "The amount by which the sleevecap seam is longer than the armhole seam."
         group: "advanced"
         type: "measure"
         min: 0
@@ -426,7 +422,7 @@ options:
         default: 5
     acrossBackFactor:
         title: "Across back factor"
-        description: "Constrols your across back width as a factor of your shoulder to shoulder measurement"
+        description: "Controls your across back width as a factor of your shoulder to shoulder measurement."
         group: "advanced"
         type: "percent"
         min: 93

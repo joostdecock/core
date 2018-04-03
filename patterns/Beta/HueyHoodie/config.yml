@@ -1,7 +1,7 @@
 hidden: false
 info:
     name: "Huey Hoodie"
-    description: "Huey is a zip-up hoodie with optional front pockets"
+    description: "Huey is a zip-up hoodie with optional front pockets."
     handle: "huey"
     tags:
         - menswear
@@ -47,7 +47,7 @@ options:
         default: 1
     ribbingWidth:
         title: "Ribbing width"
-        description: "The width of the ribbing you want to use"
+        description: "The width of the ribbing you want to use."
         group: "style"
         type: "measure"
         min: 30
@@ -55,7 +55,7 @@ options:
         default: 60
     lengthBonus:
         title: "Length bonus"
-        description: "Amount to lengthen the body. A negative value will shorten it."
+        description: "The amount to lengthen the garment. A negative value will shorten it."
         group: "style"
         type: "measure"
         min: -40
@@ -63,7 +63,7 @@ options:
         default: 70
     sleeveLengthBonus:
         title: "Sleeve length bonus"
-        description: "Amount to lengthen the sleeve beyond the basic sleeve block."
+        description: "The amount to lengthen the sleeve. A negative value will shorten it."
         group: "style"
         type: "measure"
         min: 40
@@ -73,7 +73,7 @@ options:
 # fit group
     chestEase:
         title: "Chest ease"
-        description: "The amount of ease at your chest"
+        description: "The amount of ease at your chest."
         group: "fit"
         type: "measure"
         min: 40
@@ -81,7 +81,7 @@ options:
         default: 140
     hipsEase:
         title: "Hips ease"
-        description: "The amount of ease at your hips"
+        description: "The amount of ease at your hips."
         group: "fit"
         type: "measure"
         min: 40
@@ -89,7 +89,7 @@ options:
         default: 140
     cuffEase:
         title: "Cuff ease"
-        description: "The amount of ease at your wrist"
+        description: "The amount of ease at your wrist."
         group: "fit"
         type: "measure"
         min: 0
@@ -99,7 +99,7 @@ options:
 # advanced group
     armholeDepthFactor:
         title: "Armhole depth factor"
-        description: "A factor that influences the depth of the armhole"
+        description: "Controls the depth of the armhole. Higher values make a deeper armhole."
         group: "advanced"
         type: "percent"
         min: 60
@@ -107,7 +107,7 @@ options:
         default: 70
     acrossBackFactor:
         title: "Across back factor"
-        description: "Controls your across back width as a factor of your shoulder to shoulder measurement"
+        description: "Controls your across back width as a factor of your shoulder to shoulder measurement."
         group: "advanced"
         type: "percent"
         min: 93

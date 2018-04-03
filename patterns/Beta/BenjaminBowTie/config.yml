@@ -35,7 +35,7 @@ options:
         onlyOn: [diamond,buterfly,widesquare]
     knotWidth:
         title: "Knot width"
-        description: "The width of the bow tie at the knot/middle."
+        description: "The width of the tie at the knot/middle."
         group: "style"
         type: measure
         min: 24
@@ -51,7 +51,7 @@ options:
         default: 120
     bowStyle:
         title: "Bow style"
-        description: "The style of the bow"
+        description: "The style of the bow."
         group: "style"
         type: "chooseOne"
         options:
@@ -62,7 +62,7 @@ options:
         default: "diamond"
     endStyle:
         title: "End style"
-        description: "The style of the end of the tie"
+        description: "The style of the end of the tie."
         group: "style"
         type: "chooseOne"
         options:
@@ -74,7 +74,7 @@ options:
     # Fit group
     collarEase:
         title: "Collar ease"
-        description: "The amount of ease in the collar of your shirts"
+        description: "The amount of ease around your neck."
         group: "ease"
         type: "measure"
         min: 0
@@ -82,7 +82,7 @@ options:
         default: 15
     adjustmentRibbon:
         title: "Adjustment Ribbon"
-        description: "Add a ribbon to make the tie adjustable"
+        description: "Add a ribbon to make the tie adjustable."
         group: "sewing"
         type: "chooseOne"
         options:

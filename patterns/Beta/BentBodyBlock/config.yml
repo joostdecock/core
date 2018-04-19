@@ -2,10 +2,7 @@ info:
     name: "Bent Body Block"
     description: "This two-part sleeve block is the basis of our coat and jacket patterns."
     handle: "bent"
-    version: "0.3"
-    author: "Joost De Cock"
-    company: "freesewing.org"
-    link: "freesewing.org/pattern/bent"
+    level: 6
     tags:
         - menswear
         - top

@@ -2,11 +2,7 @@ info:
     name: "Carlton Coat"
     description: "For Sherlock Holmes cosplay, or just a really nice coat."
     handle: "carlton"
-    version: "1.0"
-    date: 20170203
-    author: "Joost De Cock"
-    email: "joost@decock.org"
-    company: "freesewing.org"
+    level: 9
     tags:
         - menswear
         - coat

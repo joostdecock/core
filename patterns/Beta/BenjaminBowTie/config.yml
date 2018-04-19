@@ -2,6 +2,7 @@ info:
     name: "Benjamin Bow Tie"
     description: "Benjamin is a bow tie pattern with four different shape options."
     handle: "benjamin"
+    level: 4
     tags:
         - accessories
         

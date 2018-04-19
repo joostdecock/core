@@ -2,6 +2,11 @@ info:
     name: "Simon Shirt"
     description: "Simon is a highly adaptable shirt pattern for men."
     handle: "simon"
+    level: 7
+    tags:
+        - menswear
+        - top
+        - shirt
 
 parts:
     backBlock: ".Back block"

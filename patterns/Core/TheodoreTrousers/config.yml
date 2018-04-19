@@ -2,6 +2,11 @@ info:
     name: "Theodore trousers"
     description: "Thedore are classic trousers by the (Aldrich) book."
     handle: "theodore"
+    level: 8
+    tags:
+        - menswear
+        - trousers
+        - bottom
 
 parts:
     back: "Back"

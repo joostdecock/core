@@ -2,6 +2,11 @@ info:
     name:    "Bruce Boxer Briefs"
     description: "Bruce are comfortable yet stylish boxer briefs."
     handle:  "bruce"
+    level: 4
+    tags:
+        - menswear
+        - underwear
+        - bottom
 
 parts:
     block: ".Block"

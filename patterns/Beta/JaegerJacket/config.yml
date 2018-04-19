@@ -1,6 +1,7 @@
 info:
     name: "Jaeger Jacket"
     description: "Jeager is a sport coat style jacket with two buttons and patch pockets."
+    level: 9
     handle: "jaeger"
     tags:
         - menswear

@@ -2,6 +2,11 @@ info:
      name:     "Cathrin Corset"
      description: "Cathrin is an underbust corset or waist trainer."
      handle: "cathrin"
+     level: 7
+     tags:
+         - womenswear
+         - underwear
+         - corset
 
 parts:
     base: ".Base block"

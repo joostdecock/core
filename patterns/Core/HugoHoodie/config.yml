@@ -2,6 +2,12 @@ info:
     name:       "Hugo Hoodie"
     description: "Hugo is a hooded jumper with raglan sleeves."
     handle:     "hugo"
+    level: 5
+    tags:
+        - menswear
+        - hoodie
+        - sweater
+        - top
     inMemoryOf:
         name: "Hugo De Cock"
         link: "https://www.instagram.com/p/p6CnG3rpir/"

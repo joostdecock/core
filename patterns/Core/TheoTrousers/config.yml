@@ -2,6 +2,11 @@ info:
     name: "Theo trousers"
     description: "Theo is Theodore with a more slim cut."
     handle: "theo"
+    level: 8
+    tags:
+        - menswear
+        - trousers
+        - bottom
 
 parts:
     back: "Back"

@@ -2,6 +2,11 @@ info:
   name:     "Tamiko Top"
   description: "Tamiko is a zero-waste top."
   handle: "tamiko"
+  level: 2
+  tags:
+      - womenswear
+      - menswear
+      - top
 
 parts:
   top:   "Tamiko Top"

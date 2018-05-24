@@ -2,6 +2,7 @@ info:
     name: "Carlita Coat"
     description: "The womenswear version of our Carlton coat, aka Sherlock Holmes coat."
     handle: "carlita"
+    level: 9
     tags:
         - womenswear
         - coat

@@ -2,6 +2,9 @@ info:
   name:     "Trayvon Tie"
   description: "Trayvon is a tie that cuts no corners for a professional result."
   handle:   "trayvon"
+  level: 3
+  tags:
+      - accessories
 
   inMemoryOf:
     name: "Trayvon Martin"

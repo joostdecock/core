@@ -2,6 +2,11 @@ info:
   name: "Sven Sweatshirt"
   description: "Sven is a straightforward sweater."
   handle: "sven"
+  level: 5
+  tags:
+      - menswear
+      - top
+      - sweater
 
 parts:
   backBlock: ".Back block"

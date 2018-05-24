@@ -2,6 +2,12 @@ info:
     name: "Aaron A-Shirt"
     description: "Aaron is an athletic shirt or tank top."
     handle: "aaron"
+    level: 3
+    tags:
+        - top
+        - underwear
+        - menswear
+        - womenswear
     inMemoryOf:
         name: "Aaron Swartz"
         link: "https://en.wikipedia.org/wiki/Aaron_Swartz"

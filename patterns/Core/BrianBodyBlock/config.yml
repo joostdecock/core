@@ -2,6 +2,11 @@ info:
   name: "Brian Body Block"
   description: "Brian is a basic body block for men."
   handle: "brian"
+  level: 3
+  tags:
+    - menswear
+    - top
+    - block
 
 parts:
   backBlock: "Back block"

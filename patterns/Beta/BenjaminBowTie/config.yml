@@ -87,6 +87,6 @@ options:
         group: "sewing"
         type: "chooseOne"
         options:
-            0: "None"
-            1: "13½\" - 18\""
+            0: "Do not include ribbon"
+            1: "Include ribbon"
         default: 0

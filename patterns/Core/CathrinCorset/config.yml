@@ -41,9 +41,9 @@ options:
         group: "fit"
         type: chooseOne
         options:
-            11: 11
-            13: 13
-        default: 13
+            11: '11 panels'
+            13: '13 panels'
+        default: 13 
 
 # style group
     backOpening:

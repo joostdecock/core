@@ -141,15 +141,15 @@ options:
         group: "style"
         type: "chooseOne"
         options:
-            4: 4
-            5: 5
-            6: 6
-            7: 7
-            8: 8
-            9: 9
-            10: 10
-            11: 11
-            12: 12
+            4: '4 buttons'
+            5: '5 buttons'
+            6: '6 buttons'
+            7: '7 buttons'
+            8: '8 buttons'
+            9: '9 buttons'
+            10: '10 buttons'
+            11: '11 buttons'
+            12: '12 buttons'
         default: 6
  
 # insets group

@@ -1,7 +1,8 @@
 info:
     name: "Wahid Waistcoat"
     handle: "wahid"
-    description: "Wahid is a classic fitted waistcoat"
+    description: "Wahid is a classic fitted waistcoat."
+    level: 6
     tags:
         - menswear
         - top
@@ -40,7 +41,7 @@ options:
 
     chestEase:
         title: "Chest ease"
-        description: "Amount of ease at the chest."
+        description: "The amount of ease at your chest."
         group: "ease"
         type: "measure"
         min: 0
@@ -48,7 +49,7 @@ options:
         default: 20
     waistEase:
         title: "Waist ease"
-        description: "Amount of ease at the waist."
+        description: "The amount of ease at your (natural) waist."
         group: "ease"
         type: "measure"
         min: 0
@@ -56,7 +57,7 @@ options:
         default: 80
     hipsEase:
         title: "Hips ease"
-        description: "Amount of ease at the hips."
+        description: "The amount of ease at your hips."
         group: "ease"
         type: "measure"
         min: 0
@@ -65,8 +66,8 @@ options:
 
  # fit group
     lengthBonus:
-        title: "Lenght bonus"
-        description: "Amount by which to lengthen the waistcoat."
+        title: "Length bonus"
+        description: "The amount to lengthen the garment. A negative value will shorten it."
         group: "fit"
         type: "measure"
         min:  0
@@ -135,20 +136,20 @@ options:
         dependsOn: "hemStyle"
         onlyOn: 2
     buttons:
-        title: "Buttons"
-        description: "The number of buttons on the front."
+        title: "Number of buttons"
+        description: "The number of buttons on the front closure."
         group: "style"
         type: "chooseOne"
         options:
-            4: 4
-            5: 5
-            6: 6
-            7: 7
-            8: 8
-            9: 9
-            10: 10
-            11: 11
-            12: 12
+            4: '4 buttons'
+            5: '5 buttons'
+            6: '6 buttons'
+            7: '7 buttons'
+            8: '8 buttons'
+            9: '9 buttons'
+            10: '10 buttons'
+            11: '11 buttons'
+            12: '12 buttons'
         default: 6
  
 # insets group
@@ -186,7 +187,7 @@ options:
         default: 30
     acrossBackFactor:
         title: "Across back factor"
-        description: "Controls your across back width as a factor of your shoulder to shoulder measurement"
+        description: "Controls your across back width as a factor of your shoulder to shoulder measurement."
         group: "advanced"
         type: "percent"
         min: 93

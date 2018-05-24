@@ -16,9 +16,20 @@
 ### Security
 -->
 
+## 1.8.1
+
+**Release date**: 2018-05-24
+
+This release has no functional changes, but merely some differences in the phrasing of options
+that were required for the v2 release of our frontend.
+
+### Changed
+
+ - Made a few small tweaks in pattern configuration files in preparation of our v2 website
+
 ## 1.8.0
 
-**Release date**: 1018-03-20
+**Release date**: 2018-03-20
 
 This release adds a new pattern, the **Jaeger Jacket** and removed the `acrossBack` measurement in favor of an `acrossBackFactor` option that controls the across back as a fraction of the `shoulderToShoulder` measurement.
 

@@ -1,7 +1,8 @@
 info:
      name:     "Cathrin Corset"
-     description: "Cathrin is an underbust corset or waist trainer"
+     description: "Cathrin is an underbust corset or waist trainer."
      handle: "cathrin"
+     level: 7
      tags:
          - womenswear
          - underwear
@@ -40,9 +41,9 @@ options:
         group: "fit"
         type: chooseOne
         options:
-            11: 11
-            13: 13
-        default: 13
+            11: '11 panels'
+            13: '13 panels'
+        default: 13 
 
 # style group
     backOpening:

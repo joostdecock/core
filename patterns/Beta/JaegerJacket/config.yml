@@ -1,6 +1,7 @@
 info:
     name: "Jaeger Jacket"
     description: "Jeager is a sport coat style jacket with two buttons and patch pockets."
+    level: 9
     handle: "jaeger"
     tags:
         - menswear
@@ -50,7 +51,7 @@ options:
 # Fit group
     chestEase:
         title: "Chest ease"
-        description: "The amount of ease at your chest"
+        description: "The amount of ease at your chest."
         group: "fit"
         type: measure
         min: 40
@@ -58,7 +59,7 @@ options:
         default: 120
     waistEase:
         title: "Waist ease"
-        description: "The amount of ease at your waist"
+        description: "The amount of ease at your (natural) waist."
         group: "fit"
         type: measure
         min: 40
@@ -66,7 +67,7 @@ options:
         default: 80
     hipsEase:
         title: "Hips ease"
-        description: "The amount of ease at your hips"
+        description: "The amount of ease at your hips."
         group: "fit"
         type: measure
         min: 40
@@ -74,7 +75,7 @@ options:
         default: 120
     cuffEase:
         title: "Cuff ease"
-        description: "The amount of ease at your wrist"
+        description: "The amount of ease at your wrist."
         group: "fit"
         type: measure
         min: 50
@@ -82,7 +83,7 @@ options:
         default: 90
     lengthBonus:
         title: "Length bonus"
-        description: "Amount to lengthen the body. A negative value will shorten it."
+        description: "The amount to lengthen the garment. A negative value will shorten it."
         group: "fit"
         type: "measure"
         min: -40
@@ -90,7 +91,7 @@ options:
         default: 0
     sleeveLengthBonus:
         title: "Sleeve length bonus"
-        description: "Amount to lengthen the sleeve. A negative value will shorten it."
+        description: "The amount to lengthen the sleeve. A negative value will shorten it."
         group: "fit"
         type: "measure"
         min: -40
@@ -98,7 +99,7 @@ options:
         default: 30
     sleeveBend:
         title: "Sleeve bend"
-        description: "How much do you want the sleeve to be bent at the elbow"
+        description: "How much do you want the sleeve to be bent at the elbow."
         group: "fit"
         type: "angle"
         min: 0
@@ -106,7 +107,7 @@ options:
         default: 10
     neckReduction:
         title: "Center back neck dart"
-        description: "Neck shaping at center back as percent of chest circumference"
+        description: "Neck shaping at center back as percent of chest circumference."
         group: "fit"
         type: percent
         min: 0
@@ -206,7 +207,7 @@ options:
         default: 75
     chestPocketAngle:
         title: "Chest pocket angle"
-        description: "The angle of the chest pocket"
+        description: "The angle of the chest pocket."
         group: "pockets"
         type: "angle"
         min: 5
@@ -214,7 +215,7 @@ options:
         default: 7.5
     chestPocketWeltSize:
         title: "Chest pocket welt height"
-        description: "The height of the chest pocket welt"
+        description: "The height of the chest pocket welt."
         group: "pockets"
         type: "measure"
         min: 10
@@ -329,7 +330,7 @@ options:
         default: 15
     sleevecapEase:
         title: "Sleevecap ease"
-        description: "The ease on the sleevecap"
+        description: "The amount by which the sleevecap seam is longer than the armhole seam."
         group: "advanced"
         type: "measure"
         min: 0
@@ -337,7 +338,7 @@ options:
         default: 10
     armholeDepthFactor:
         title: "Armhole depth factor"
-        description: "A factor that influences the depth of the armhole"
+        description: "Controls the depth of the armhole. Higher values make a deeper armhole."
         group: "advanced"
         type: "percent"
         min: 60
@@ -345,7 +346,7 @@ options:
         default: 65
     sleevecapHeightFactor:
         title: "Sleevecap height factor"
-        description: "A factor that influences the height of the sleevecap"
+        description: "Controls the height of the sleevecap. A higher value results in a higher and more narrow sleevecap."
         group: "advanced"
         type: "percent"
         min: 45
@@ -353,7 +354,7 @@ options:
         default: 50
     acrossBackFactor:
         title: "Across back factor"
-        description: "Controls your across back width as a factor of your shoulder to shoulder measurement"
+        description: "Controls your across back width as a factor of your shoulder to shoulder measurement."
         group: "advanced"
         type: "percent"
         min: 93

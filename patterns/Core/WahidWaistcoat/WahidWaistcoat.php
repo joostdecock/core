@@ -252,7 +252,7 @@ class WahidWaistcoat extends BrianBodyBlock
         $p = $this->parts['waistcoatFrontBlock'];
 
         // Neck cutout
-        $p->newPoint(  300, $p->x(1)-$this->v('frontOverlap'), $p->y(5) - 80 + $this->o('frontDrop'), 'Neck cutout base point');
+        $p->newPoint(  300, $p->x(1)-$this->v('frontOverlap'), $p->y(5) - 80 + $this->o('necklineDrop'), 'Neck cutout base point');
         if ($this->o('frontStyle') == 2) {
             $p->newPoint(  301, $p->x(8), $p->y(300), 'Neck cutout control point');
         } else {

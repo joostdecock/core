@@ -99,7 +99,7 @@ options:
         default: 5
 
  # style group
-    frontDrop:
+    necklineDrop:
         title: "Neckline drop"
         description: "The amount the front neckline is lowered. Negative values raise the neckline."
         group: "style"

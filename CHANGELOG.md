@@ -20,7 +20,13 @@
 
 **Release date**: 2018-06-02
 
-This release removes the `acrossBackFactor` option from Wahid.
+This release removes the `acrossBackFactor` option from Wahid and renamed its
+frontDrop option to necklineDrop.
+
+### Changed
+
+The frontDrop options has been renamed to necklineDrop in Wahid to prevent 
+a translation conflict with the frontDrop option inCathrin
 
 ### Removed
 

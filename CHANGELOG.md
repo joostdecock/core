@@ -16,6 +16,17 @@
 ### Security
 -->
 
+## 1.8.2
+
+**Release date**: 2018-06-02
+
+This release removes the `acrossBackFactor` option from Wahid.
+
+### Removed
+
+Removed the acrossBackFactor option from Wahid.
+This option is useless for this pattern as it has its own backInset option.
+
 ## 1.8.1
 
 **Release date**: 2018-05-24

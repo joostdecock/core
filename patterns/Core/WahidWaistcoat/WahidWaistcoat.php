@@ -61,6 +61,9 @@ class WahidWaistcoat extends BrianBodyBlock
     /** Armhole depth factor = 81% */
     const ARMHOLE_DEPTH_FACTOR = 0.81;
 
+    /** Across back factor = 96% */
+    const ACROSS_BACK_FACTOR = 0.96;
+
     /**
      * Sets up options and values for our draft
      *
@@ -86,6 +89,7 @@ class WahidWaistcoat extends BrianBodyBlock
         $this->setOptionIfUnset('sleevecapEase', self::SLEEVECAP_EASE);
         $this->setOptionIfUnset('backNeckCutout', self::BACK_NECK_CUTOUT);
         $this->setOptionIfUnset('armholeDepthFactor', self::ARMHOLE_DEPTH_FACTOR);
+        $this->setOptionIfUnset('acrossBackFactor', self::ACROSS_BACK_FACTOR);
         $this->setValue('shoulderSlope', $model->m('shoulderSlope')); 
 
         // Depth of the armhole

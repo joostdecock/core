@@ -1,0 +1,102 @@
+info:
+    name: "Sandy Skirt"
+    description: "Sandy is an adaptable patter for circle skirts"
+    handle: "sandy"
+    tags:
+        - womenswear
+        - skirt
+
+parts:
+    skirt: "Skirt"
+    curvedWaistband: "Curved waistband"
+    straightWaistband: "Straight waistband"
+
+languages:
+    en: "English"
+
+measurements:
+    naturalWaistToHip: 130
+    hipsCircumference: 803
+    naturalWaist: 670
+
+options:
+
+# fit group
+    waistbandPosition:
+        title: "Waistband position"
+        description: "Where the waistband sits. 0% makes it sit on the natural waist, 100% makes it sit on the hips"
+        group: "fit"
+        type: "percent"
+        min: 0
+        max: 100
+        default: 50
+
+# style group
+    length:
+        title: "Skirt length"
+        description: "The length of the skirt"
+        group: "style"
+        type: "measure"
+        min: 200
+        max: 2000
+        default: 400
+    circlePercent:
+        title: "Circle percent"
+        description: "The percent of a circle skirt. 100% makes a full circle skirt, 50% makes a half circle skirt"
+        group: "style"
+        type: "percent"
+        min: 20
+        max: 100
+        default: 50
+    waistbandWidth:
+        title: "Waistband width"
+        description: "The width of the waistband"
+        group: "style"
+        type: "measure"
+        min: 10
+        max: 100
+        default: 40
+    waistbandShape:
+        title: "Waistband shape"
+        description: "The shape of the waistband. Straight makes things easier, but a rounded waistband adapts to your body if you have a fair difference between waist and hips circumferences"
+        group: "style"
+        type: "chooseOne"
+        options:
+            0: "Straight"
+            1: "Curved"
+        default: 1
+    waistbandOverlap:
+        title: "Waistband overlap"
+        description: "The length of the overlap between the ends of the waistband, to allow a button. 0 means no overlap, for example to place a zipper that goes all the way to the top of the waistband"
+        group: "style"
+        type: "measure"
+        min: 0
+        max: 100
+        default: 20
+    extraWaist:
+        title: "Extra waist"
+        description: "The percent by which the top of the skirt is longer than the bottom of the waistband. Give a value higher than 0 to pleat the skirt"
+        group: "style"
+        type: "percent"
+        min: 0
+        max: 200
+        default: 0
+
+# fit sewing
+    seamlessFullCircle:
+        title: "Seamless full circle"
+        description: "Select 'yes' for a seamless circle, which is cut on a double fold. Since it has no openings, you'll need an elastic waistband. This produces a full circle ignoring the 'circle percent' option"
+        group: "sewing"
+        type: "chooseOne"
+        options:
+            0: 'No'
+            1: 'Yes'
+        default: 0
+    hemWidth:
+        title: "Hem width"
+        description: "The width of the hem"
+        group: "sewing"
+        type: "measure"
+        min: 0
+        max: 100
+        default: 30

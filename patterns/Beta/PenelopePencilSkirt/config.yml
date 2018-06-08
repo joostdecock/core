@@ -14,12 +14,31 @@ parts:
     back: "Back part"
     waistBand: "Waist band"
 
+
+# @miniaram mannequin
+#measurements:
+#    naturalWaist: 590
+#    hipsCircumference:  855
+#    seatCircumference: 880
+#    naturalWaistToHip: 150
+#    naturalWaistToSeat: 220
+#    naturalWaistToKnee: 630
+
+# @miniaram mother
+#measurements:
+#    naturalWaist: 1050
+#    hipsCircumference:  1080
+#    seatCircumference: 1120
+#    naturalWaistToHip: 130
+#    naturalWaistToSeat: 260
+#    naturalWaistToKnee: 580
+
 # @miniaram
 measurements:
-    naturalWaist: 760
-    hipsCircumference:  880
-    seatCircumference: 1060
-    naturalWaistToHip: 110
+    naturalWaist: 670
+    hipsCircumference:  800
+    seatCircumference: 920
+    naturalWaistToHip: 130
     naturalWaistToSeat: 240
     naturalWaistToKnee: 520
 
@@ -33,6 +52,14 @@ measurements:
 
 options:
     # Style group
+    sa:
+        title: "Length bonus"
+        description: "Additional length of the skirt"
+        group: "style"
+        type: "measure"
+        min: 0
+        max: 100
+        default: 0
     lengthBonus:
         title: "Length bonus"
         description: "Additional length of the skirt"
@@ -107,7 +134,7 @@ options:
         options:
             2: "2"
             1: "1"
-        default: "1"
+        default: "2"
 
     # Fit group
     seatEase:

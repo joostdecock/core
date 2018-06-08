@@ -9,12 +9,12 @@ use Freesewing\BezierToolbox;
 const OFFSET = 15;
 
 const DART_MIN_WIDTH = 6;
-const DART_MIN_DIFF = 150;
-const DART_MAX_DIFF = 250;
-const DART_MIN_SIDE = 1.25;
+const DART_MIN_DIFF = 180;
+const DART_MAX_DIFF = 300;
+const DART_MIN_SIDE = 10;
 const DART_BACK_1 = 100;
-const DART_BACK_2 = 6;
-const DART_BACK_3 = 5;
+const DART_BACK_2 = 5;
+const DART_BACK_3 = 4;
 const HIP_CURVE_DIV_UP = 3;
 const HIP_CURVE_DIV_DOWN = 40;
 const HEM_DEPTH = 25;
@@ -59,27 +59,6 @@ class PenelopePencilSkirt extends \Freesewing\Patterns\Core\Pattern
      */
     public function initialize($model)
     {
-        /*
-        $this->dartCalc( 760, 15, 610, 5 );
-        $this->dartCalc( 860, 15, 650, 5 );
-        $this->dartCalc( 850, 15, 640, 5 );
-        $this->dartCalc( 920, 15, 690, 5 );
-        $this->dartCalc( 930, 15, 670, 5 );
-        $this->dartCalc( 970, 15, 660, 5 );
-        $this->dartCalc( 890, 15, 660, 5 );
-        $this->dartCalc( 860, 15, 640, 5 );
-        $this->dartCalc( 940, 15, 720, 5 );
-        $this->dartCalc( 980, 15, 710, 5 );
-        $this->dartCalc( 930, 15, 710, 5 );
-        $this->dartCalc( 950, 15, 680, 5 );
-        $this->dartCalc( 940, 15, 810, 5 );
-        $this->dartCalc(1160, 15, 760, 5 );
-        $this->dartCalc( 910, 15, 760 ,5 );
-        $this->dartCalc( 940, 15, 740 ,5 );
-        $this->dartCalc( 990, 15, 810 ,5 );
-        $this->dartCalc(1120, 15, 910, 5 );
-        */
-
         // Calculate the number of darts and their sizes. Add values to the $part
         $this->dartCalc( $model->m('seatCircumference'), $this->o('seatEase'), $model->m('naturalWaist'), $this->o('waistEase'));
 
@@ -100,31 +79,46 @@ class PenelopePencilSkirt extends \Freesewing\Patterns\Core\Pattern
     {
         $seat += $seatEase;
         $waist += $waistEase;
-
         $seatWaistDiff = max( $seat - $waist, 0 );
         $this->setValueIfUnset('seatWaistDiff', $seatWaistDiff );
 
-        $frontDartSize = DART_MIN_WIDTH + ((max(min($seatWaistDiff, DART_MAX_DIFF), DART_MIN_DIFF) -DART_MIN_DIFF) /4);
+        $nrOfDarts = $this->o('nrOfDarts') ;
 
-        if( $frontDartSize < DART_MIN_WIDTH ) {
+        //$this->msg("Seat: $seat"); $this->msg("Waist: $waist"); $this->msg("nrOfDarts: $nrOfDarts");
+
+        $frontDartSize = (DART_MIN_WIDTH + ((max(min($seatWaistDiff, DART_MAX_DIFF), DART_MIN_DIFF) -DART_MIN_DIFF) /4)) /$nrOfDarts;
+        //$this->msg("frontDartSize: $frontDartSize");
+        if( $frontDartSize <= DART_MIN_WIDTH *$nrOfDarts && $nrOfDarts > 1 ) {
+            $nrOfDarts --;
+            $frontDartSize = (DART_MIN_WIDTH + ((max(min($seatWaistDiff, DART_MAX_DIFF), DART_MIN_DIFF) -DART_MIN_DIFF) /4)) /$nrOfDarts;
+        }
+        //$this->msg("frontDartSize: $frontDartSize");
+        if( $seatWaistDiff/4 -$frontDartSize < DART_MIN_SIDE ) {
             $frontDartSize = 0;
         }
+        //$this->msg("frontDartSize: $frontDartSize");
 
-        if( $seatWaistDiff/4 -$frontDartSize < DART_MIN_SIDE || $frontDartSize < DART_MIN_WIDTH *3 || $this->o('nrOfDarts') == 1 ) {
+        if( $seatWaistDiff/4 -$frontDartSize < DART_MIN_SIDE || $frontDartSize < DART_MIN_WIDTH *$nrOfDarts ) {
             $nrOfDarts = 1;
-        } else {
-            $nrOfDarts = 2;
         }
+        //$this->msg("nrOfDarts: $nrOfDarts");
 
-        $backDartSize = (DART_MIN_WIDTH + ($seatWaistDiff -DART_BACK_1 -(($seatWaistDiff -DART_BACK_1)/DART_BACK_2)) /DART_BACK_3) *(.5 +$this->o('dartToSideSeamFactor')) ;
+        $backDartSize = ((DART_MIN_WIDTH + ($seatWaistDiff -DART_BACK_1 -(($seatWaistDiff -DART_BACK_1)/DART_BACK_2)) /DART_BACK_3)/$nrOfDarts) *(.5 +$this->o('dartToSideSeamFactor')) ;
+        if( $backDartSize < DART_MIN_WIDTH *$nrOfDarts && $nrOfDarts > 1 )
+        {
+            $nrOfDarts = 1;
+            $frontDartSize = (DART_MIN_WIDTH + ((max(min($seatWaistDiff, DART_MAX_DIFF), DART_MIN_DIFF) -DART_MIN_DIFF) /4)) /$nrOfDarts;
+            $backDartSize = ((DART_MIN_WIDTH + ($seatWaistDiff -DART_BACK_1 -(($seatWaistDiff -DART_BACK_1)/DART_BACK_2)) /DART_BACK_3)/$nrOfDarts) *(.5 +$this->o('dartToSideSeamFactor')) ;
+        }
+        //$this->msg("frontDartSize: $frontDartSize"); $this->msg("backDartSize: $backDartSize"); $this->msg("nrOfDarts: $nrOfDarts");
 
-        $this->setValueIfUnset('nrOfDarts', $nrOfDarts);
-        $this->setValueIfUnset('frontDartSize', $frontDartSize );
-        $this->setValueIfUnset('backDartSize', $backDartSize );
+        $this->setValue('frontDartSize', $frontDartSize);
+        $this->setValue('backDartSize', $backDartSize);
+        $this->setValue('nrOfDarts', $nrOfDarts );
 
-        //printf("seat: $seat, seatEase: $seatEase, waist: $waist, waistEase: $waistEase, seatWaistDiff: $seatWaistDiff, frontDartSize: $frontDartSize \n\r");
-        $this->msg("$seat, $seatEase, $waist, $waistEase, $seatWaistDiff, $nrOfDarts, $frontDartSize, $backDartSize");
+        //$this->msg("$seat, $seatEase, $waist, $waistEase, $seatWaistDiff, $nrOfDarts, $frontDartSize, $backDartSize");
     }
+
 
     /*
         ____             __ _
@@ -154,8 +148,9 @@ class PenelopePencilSkirt extends \Freesewing\Patterns\Core\Pattern
 
         //Always draft the back after the front.
         //The back will try to match the sideseam length of the front
-        $this->draftPart($model, 'front');
-        $this->draftPart($model, 'back');
+        $this->draftPart($model, 'front', $this->v('frontDartSize'));
+        $this->draftPart($model, 'back', $this->v('backDartSize'));
+
         if( $this->o('waistBand') == 'yes') {
             $this->draftWaistBand($model);
         }
@@ -197,148 +192,106 @@ class PenelopePencilSkirt extends \Freesewing\Patterns\Core\Pattern
      *
      * @return void
      */
-    public function draftPart($model, $partName)
+    public function draftPart($model, $part, $dartSize)
     {
-        $p = $this->parts[$partName];
-
-        $this->setValue('skirtLength', $model->m('naturalWaistToKnee') +$this->o('lengthBonus'));
+        $p = $this->parts[$part];
+        $waistEase = $this->o('waistEase');
+        $seatEase  = $this->o('seatEase');
+        $dartDepthFactor = $this->o($part.'DartDepthFactor');
 
         $pathString = 'M ';
 
         $waist = $model->m('naturalWaist');
         $seat  = $model->m('seatCircumference') > $waist ? $model->m('seatCircumference') : $waist;
         $hip   = $model->m('hipsCircumference')  > $waist ? $model->m('hipsCircumference')  : $waist;
-        $waistEase = $this->o('waistEase');
-        $seatEase  = $this->o('seatEase');
 
-        $dartSize = $this->v($partName.'DartSize');
-        $dartDepthFactor = $this->o($partName.'DartDepthFactor');
+        $sideSeamShift = ( $part == 'front' ) ? -6 : 6 ;
 
-        $this->msg("waist: $waist, hip: $hip, seat: $seat");
-
+        $seat += $seatEase;
         $waist += $waistEase;
-        $seat  += $seatEase;
-        $hipEase = (abs($seatEase -$waistEase) / $model->m('naturalWaistToSeat')) * $model->m('naturalWaistToHip') +$waistEase;
-        $hip   += $hipEase;
-        $this->msg("waist: $waist, hip: $hip, seat: $seat");
 
-        $sideSeamShift = ( $partName == 'front' ) ? 6 : -6 ;
         $sideSeam = ($seat/4) +$sideSeamShift;
         $hipSeam  = ($hip /4) +$sideSeamShift;
-        $this->msg("sideseam: $sideSeam, hipSeam: $hipSeam");
 
-        $p->newPoint('pA',          0, 0, 'Origin');
-        $p->newPoint('pB',          0, $this->v('skirtLength') -$this->o('waistSideSeamRaise'));
-        $p->newPoint('pC',  $sideSeam, 0 );
-        $p->newPoint('pD',  $sideSeam, $this->v('skirtLength') -$this->o('waistSideSeamRaise'));
-        $p->newPoint('pD1', $sideSeam +$this->o('hemBonus'), $this->v('skirtLength') -$this->o('waistSideSeamRaise'));
+        $p->newPoint('pA1',          0, 0, 'Origin');
+        $p->newPoint('pB1',          0, $model->m('naturalWaistToKnee') );
+        $p->newPoint('pA2',  $sideSeam, 0 );
+        $p->newPoint('pB2',  $sideSeam, $model->m('naturalWaistToKnee') );
+        $p->newPoint('pC1',          0, $model->m('naturalWaistToSeat') );
+        $p->newPoint('pC2',  $sideSeam, $model->m('naturalWaistToSeat') );
+        $p->newPoint('pA2c', $sideSeam, $model->m('naturalWaistToSeat')/3 );
+        $p->newPoint('pC2c', $sideSeam, ($model->m('naturalWaistToSeat')/3)*2 );
 
-        $p->addPoint('pBt', $p->shift( 'pB',  90, HEM_DEPTH )); // Temporary point for creating the hem
-        $p->addPoint('pBh', $p->shift( 'pB', 270, HEM_DEPTH )); // Point for the hem.
-        $p->addPoint('pDt', $p->shift( 'pD',  90, HEM_DEPTH )); // Temporary point for creating the hem
-
-        $p->newPoint('pE',          0, $model->m('naturalWaistToHip')  -$this->o('waistSideSeamRaise'));
-        $p->newPoint('pF',   $hipSeam, $model->m('naturalWaistToHip')  -$this->o('waistSideSeamRaise'));
-
-        $p->newPoint('pG',          0, $model->m('naturalWaistToSeat') -$this->o('waistSideSeamRaise'));
-        $p->newPoint('pH',  $sideSeam, $model->m('naturalWaistToSeat') -$this->o('waistSideSeamRaise'));
-
-        // Control points for the curve around the hip
-        $p->addPoint('pHc1', $p->shift('pH',  90, ($model->m('naturalWaistToSeat') - $model->m('naturalWaistToHip'))/HIP_CURVE_DIV_UP));
-        $p->addPoint('pHc2', $p->shift('pH', 270, ($model->m('naturalWaistToSeat') - $model->m('naturalWaistToHip'))*(abs($this->o('hemBonus'))/HIP_CURVE_DIV_DOWN)));
-
-        $totalDartIntake = $this->v($partName.'DartSize');
-        if( $this->v('nrOfDarts') > 1) {
-            $dartSize1 = $dartSize2 = ($totalDartIntake-DART_MIN_WIDTH) /2;
-            $dartSize1 += DART_MIN_WIDTH;
-        } else {
-            $dartSize1 = $totalDartIntake;
-        }
-
-        $hipAdjustment = (($model->m('naturalWaistToSeat') - $model->m('naturalWaistToHip'))/$model->m('naturalWaistToSeat'))/2;
-        $p->newPoint('pF1',   $hipSeam +($hipAdjustment *$totalDartIntake), $model->m('naturalWaistToHip')-$this->o('waistSideSeamRaise') );
-        $this->msg("[$hipSeam] [$hipAdjustment] [$totalDartIntake]");
+        $p->newPoint('pH',    $sideSeam, $model->m('naturalWaistToHip') -$this->o('waistSideSeamRaise'));
 
         $waistFactor = 0.99;
-        $waistDelta  = 1;
-        $seamFactor  = 0.99;
-        $seamDelta   = 1;
-        $iteration   = 0;
+        $wdelta = 1;
+        $sideFactor = 0.97;
+        $sdelta = 1;
+        $iteration = 0;
         do {
-            if($waistDelta < -1) {
+            if($wdelta < -1) {
                 $waistFactor *= 0.9995;
-            } else if($waistDelta > 1){
+            } else if($wdelta > 1){
                 $waistFactor *= 1.01;
             }
-            if($seamDelta < -1) {
-                $seamFactor *= 0.9995;
-            } else if($seamDelta > 1){
-                $seamFactor *= 1.01;
+            if($sdelta < -1) {
+                $sideFactor *= 0.995;
+            } else if($sdelta > 1){
+                $sideFactor *= 1.01;
+            }
+            $p->addPoint('pZ2t1', $p->shift('pA1',    0, ($waist/4)*$waistFactor));
+            $p->addPoint('pZ2t2', $p->shift('pZ2t1',  0, $dartSize*$this->v('nrOfDarts')));
+            $p->addPoint('pZ2',   $p->shift('pZ2t2', 90, 16 * $sideFactor));
+            $p->addPoint('pA1c',  $p->shift('pA1',    0, $seat/12));
+            $p->addPoint('pZ2c',  $p->shift('pZ2', $p->angle('pZ2', 'pA2c') -90, $waist/16));
+
+			if( $dartSize > 0 ) {
+                $this->addDartToCurve( $p, 'pA1', 'pA1c', 'pZ2c', 'pZ2', ($seat/4) /2.4, $dartSize, $model->m('naturalWaistToSeat') * $dartDepthFactor, 'Dart_1_' );
+            } else {
+                $p->clonePoint( 'pA1',  'Dart_1_1' );
+                $p->clonePoint( 'pA1c', 'Dart_1_2' );
+                $p->clonePoint( 'pZ2c', 'Dart_1_3' );
+                $p->clonePoint( 'pZ2',  'Dart_1_4' );
+                $p->clonePoint( 'pZ2',  'Dart_1_5' );
+                $p->clonePoint( 'pZ2',  'Dart_1_6' );
+                $p->clonePoint( 'pZ2',  'Dart_1_7' );
+                $p->clonePoint( 'pZ2',  'Dart_1_8' );
+                $p->clonePoint( 'pZ2',  'Dart_1_Bottom' );
             }
 
-            // Creating the new point at the waist/sideseam
-            $p->addPoint('pZ2t1', $p->shift('pA',     0, (($waist/4)+$sideSeamShift)*$waistFactor));
-            $p->addPoint('pZ2t2', $p->shift('pZ2t1',  0, $totalDartIntake));
-            $p->addPoint('pZ2',   $p->shift('pZ2t2', 90, max($this->o('waistSideSeamRaise'),0.5) * $seamFactor));
-            $p->addPoint('pAc',   $p->shift('pA',     0, $seat/12)); // One third from the mid point
-            $p->addPoint('pZ2c',  $p->shift('pZ2',    $p->angle('pZ2', 'pF1') -90, $waist/16));
-
-            $this->addDartToCurve( $p, 'pA', 'pAc', 'pZ2c', 'pZ2', ($waist) / (8.6), $dartSize1, $model->m('naturalWaistToSeat') * $dartDepthFactor, 'Dart1_' );
-
-            $waistLength = $p->curveLen( 'Dart1_1', 'Dart1_2', 'Dart1_3', 'Dart1_4' );
-
-            // If the high hip line is higher than the lowest part of the dart, we need to
-            // move the point of the high hip at the sideseam out by the amount that the dart
-            // takes up. This variable keeps track of that.
-            $hipSeamDartMove = 0;
+			$waistLength = $p->curveLen( 'Dart_1_1', 'Dart_1_2', 'Dart_1_3', 'Dart_1_4' );
 
             if( $this->v('nrOfDarts') > 1 ) {
-                $this->addDartToCurve( $p, 'Dart1_5', 'Dart1_6', 'Dart1_7', 'Dart1_8', 32, $dartSize2, $model->m('naturalWaistToSeat') * $dartDepthFactor * 0.80, 'Dart2_' );
-                $waistLength += $p->curveLen( 'Dart2_1', 'Dart2_2', 'Dart2_3', 'Dart2_4' );
-                $waistLength += $p->curveLen( 'Dart2_5', 'Dart2_6', 'Dart2_7', 'Dart2_8' );
+				$this->addDartToCurve( $p, 'Dart_1_5', 'Dart_1_6', 'Dart_1_7', 'Dart_1_8', 32, $dartSize, $model->m('naturalWaistToSeat') * $dartDepthFactor * 0.80, 'Dart_2_' );
+                $waistLength += $p->curveLen( 'Dart_2_1', 'Dart_2_2', 'Dart_2_3', 'Dart_2_4' );
+                $waistLength += $p->curveLen( 'Dart_2_5', 'Dart_2_6', 'Dart_2_7', 'Dart_2_8' );
 
-                $p->clonePoint( 'Dart2_8', 'pTopRight' );
-
-                if( $pIntersect1 = $p->linesCross('pE', 'pF', 'Dart2_4', 'Dart2_Bottom')) {
-                    $pIntersect2 = $p->linesCross('pE', 'pF', 'Dart2_5', 'Dart2_Bottom');
-                    $hipSeamDartMove += $pIntersect2->x -$pIntersect1->x;
-                }
+                $p->clonePoint( 'Dart_2_8', 'pTopRight' );
             } else {
-                $waistLength += $p->curveLen( 'Dart1_5', 'Dart1_6', 'Dart1_7', 'Dart1_8' );
-
-                $p->clonePoint( 'Dart1_8', 'pTopRight' );
+                $waistLength += $p->curveLen( 'Dart_1_5', 'Dart_1_6', 'Dart_1_7', 'Dart_1_8' );
+                $p->clonePoint( 'Dart_1_8', 'pTopRight' );
             }
 
-            if( $pIntersect1 = $p->linesCross('pE', 'pF', 'Dart1_4', 'Dart1_Bottom')) {
-                $pIntersect2 = $p->linesCross('pE', 'pF', 'Dart1_5', 'Dart1_Bottom');
-                $hipSeamDartMove += $pIntersect2->x -$pIntersect1->x;
-            }
-            // Redraw the high hip point at the side seam
-            $p->newPoint('pF',   $hipSeam +$hipSeamDartMove, $model->m('naturalWaistToHip') -$this->o('waistSideSeamRaise'));
-            $p->newPoint('pF1',  $hipSeam +($hipAdjustment *$totalDartIntake), $model->m('naturalWaistToHip')-$this->o('waistSideSeamRaise') );
+            $wdelta = ($waist/4) - $waistLength;
 
-            $waistDelta = (($waist/4)+$sideSeamShift) - $waistLength;
-
-            if( $partName == 'front' ) {
-                $seamDelta = 0;
+            if( $part == 'front' ) {
+                $sdelta = 0;
             } else {
-                $sideSeamLength = $p->curveLen( 'pTopRight', 'pF1', 'pHc1', 'pH' );
-                $sideSeamLength += $p->distance( 'pH', 'pD' );
+                $sideSeamLength = $p->curveLen( 'pTopRight', 'pA2c', /*'p1C2c'*/ 'pH', 'pC2' );
+                $sideSeamLength += $p->distance( 'pC2', 'pB2' );
 
-                $seamDelta = $this->sideSeamLength - $sideSeamLength;
+                $sdelta = $this->sideSeamLength - $sideSeamLength;
             }
 
-            $this->msg("[$iteration] Delta is: $waistDelta ($waistFactor) $seamDelta ($seamFactor)");
-            //printf("[$iteration] Delta is: $waistDelta ($waistFactor) $seamDelta ($seamFactor)\n");
-        } while ((abs($waistDelta) > 1 || abs($seamDelta) > 1) && $iteration++ < 200);
-
-        if( $iteration >= 200 ) {
-            die('oh shit');
+            $this->msg("[$iteration] Delta is: $wdelta ($waistFactor) $sdelta ($sideFactor)");
+        } while ((abs($wdelta) > 1 || abs($sdelta) > 1) && $iteration++ < 100);
+        if( $iteration >= 100 ) {
+            die("oh shit\n");
         }
-
-        if( $partName == 'front' ) {
-            $sideSeamLength = $p->curveLen( 'pTopRight', 'pF1', 'pHc1', 'pH' );
-            $sideSeamLength += $p->distance( 'pH', 'pD' );
+        if( $part == 'front' ) {
+            $sideSeamLength = $p->curveLen( 'pTopRight', 'pC2c', 'pC2c', 'pC2' );
+            $sideSeamLength += $p->distance( 'pC2', 'pB2' );
 
             $this->sideSeamLength = $sideSeamLength;
 
@@ -347,75 +300,41 @@ class PenelopePencilSkirt extends \Freesewing\Patterns\Core\Pattern
             $this->msg( "Back length: $sideSeamLength" );
         }
 
-        $pathString .= 'Dart1_1 C Dart1_2 Dart1_3 Dart1_4 L Dart1_Bottom L ';
+
+        $pathString .= 'Dart_1_1 C Dart_1_2 Dart_1_3 Dart_1_4 L Dart_1_Bottom L ';
 
         if( $this->v('nrOfDarts') > 1 ) {
-            $pathString .= 'Dart2_1 C Dart2_2 Dart2_3 Dart2_4 L Dart2_Bottom L ';
-            $pathString .= 'Dart2_5 C Dart2_6 Dart2_7 pTopRight ';
+            $pathString .= 'Dart_2_1 C Dart_2_2 Dart_2_3 Dart_2_4 L Dart_2_Bottom L ';
+            $pathString .= 'Dart_2_5 C Dart_2_6 Dart_2_7 pTopRight ';
         } else {
-            $pathString .= 'Dart1_5 C Dart1_6 Dart1_7 pTopRight ';
+            $pathString .= 'Dart_1_5 C Dart_1_6 Dart_1_7 pTopRight ';
         }
 
-        $p->curveCrossesLine('pH', 'pHc2', 'pD1', 'pD1', 'pBt', 'pDt', 'pDth');
-        $p->addPoint('pD1h', $p->flipY('pDth1',$p->y('pD1')));
-
-        if( $partName == 'back' && $this->o('vent') ) {
-            /* I don't care what you're trying to create, the vent will not go higher than your seat. */
-            $ventSize = min( $model->m('naturalWaistToKnee') -$model->m('naturalWaistToSeat'), $this->o('ventSize'));
-
-            $p->addPoint('pV1', $p->shift('pB',  180, 50));
-            $p->addPoint('pVh', $p->shift('pV1', 270, HEM_DEPTH));
+        if( $part == 'back' && $this->o('vent') ) {
+            /* I don't care what you're trying to create, the vent will not go higher than your hips. */
+            $ventSize = min( $model->m('naturalWaistToKnee') -$model->m('naturalWaistToHip'), $this->o('ventSize'));
+            $p->addPoint('pV1', $p->shift('pB1', 180, 50));
             $p->addPoint('pV2', $p->shift('pV1',  90, $ventSize));
-            $p->addPoint('pVt', $p->shift('pV2',   0, 50));
-            $p->addPoint('pV3', $p->shift('pVt',  90, 50));
+            $p->addPoint('pVtemp', $p->shift('pV2',   0, 50));
+            $p->addPoint('pV3', $p->shift('pVtemp',  90, 50));
 
-            $pathString .= 'C pF1 pHc1 pH C pHc2 pD1 pD1 L pD1h L pBh L pVh L pV2 L pV3 L pG Z';
-            $p->newPath('hemLine', 'M pV1 L pD1', ['class' => 'helpline']);
+            $pathString .= 'C pH pH pC2 L pB2 L pB1 L pV1 L pV2 L pV3 L pC1 Z';
         }
         else {
-            $pathString .= 'C pF1 pHc1 pH C pHc2 pD1 pD1 L pD1h L pBh L pG Z';
-            $p->newPath('hemLine', 'M pB L pD1', ['class' => 'helpline']);
+            $pathString .= 'C pH pH pC2 L pB2 L pB1 L pC1 Z';
         }
 
-        $p->newPath('outline', $pathString, ['class' => 'fabric']);
+        $p->newPath('outline', $pathString, ['class' => 'fabric SA']);
 
-        if( $partName == 'front' || $this->o('zipper') == 'side' ) {
-            $p->newPath('outlineSA', str_replace( 'Dart1_Bottom L ','', str_replace( 'Dart2_Bottom L ','', str_replace( 'L pG Z','',$pathString ))), ['class' => 'hidden']);
+        if( $part == 'front' || $this->o('zipper') == 'side' ) {
+            $p->newPath('outlineSA', str_replace( 'Dart_1_Bottom L ','', str_replace( 'Dart_2_Bottom L ','', str_replace( 'L pC1 Z','',$pathString ))), ['class' => 'hidden']);
         } else {
-            $p->newPath('outlineSA', str_replace( 'Dart1_Bottom L ','', str_replace( 'Dart2_Bottom L ','', $pathString )), ['class' => 'hidden']);
+            $p->newPath('outlineSA', str_replace( 'Dart_1_Bottom L ','', str_replace( 'Dart_2_Bottom L ','', $pathString )), ['class' => 'hidden']);
         }
 
         // Mark for sampler
         $p->paths['outline']->setSample(true);
         $p->paths['outlineSA']->setSample(false);
-        $p->paths['hemLine']->setSample(true);
-
-        $p->newTextOnPath('hemLinetext', $p->paths['hemLine']->getPathstring(), 'Hem line', ['class' => 'text-center'], FALSE);
-
-        /* Helper lines during design process
-        $p->newPath('hipLine', 'M pE L pF', ['class' => 'helpline']);
-        $p->newPath('seatLine', 'M pG L pH', ['class' => 'helpline']);
-
-        $p->paths['hipLine']->setSample(true);
-        $p->paths['seatLine']->setSample(true);
-        */
-
-        /* Print Data about calculations on the part
-        $p->newPoint('tAnchor', $model->m('naturalWaist')/5, $model->m('naturalWaistToHip'), 'text point');
-
-        $dartDepth = $model->m('naturalWaistToSeat') * $dartDepthFactor;
-        $seat = $model->m('seatCircumference');
-        $seatEase = $this->o('seatEase');
-        $waist = $model->m('naturalWaist');
-        $waistEase = $this->o('waistEase');
-        $seat += $seatEase;
-        $waist += $waistEase;
-
-        $seatWaistDiff = max( $seat - $waist, 0 );
-
-        $p->newText('thelp', 'tAnchor', "Dart Width: $totalDartIntake\nDart Depth: $dartDepth\ndart1: $dartSize1\ndart2: $dartSize2\nwaist: $waist\nwaistEase: $waistEase\nhip: $hip\nhipEase: $hipEase\nseat: $seat\nseatEase: $seatEase\nSeatWaistDiff: $seatWaistDiff\nwaistLength: $waistLength\nhipSeamDartMove: $hipSeamDartMove");
-        */
-
     }
 
     /**
@@ -557,8 +476,8 @@ class PenelopePencilSkirt extends \Freesewing\Patterns\Core\Pattern
     {
         $p = $this->parts[ strtolower($partName) ];
 
-        $p->newPoint('grainlineTop',    $p->x('pA') +50, $p->y('pA') +50 );
-        $p->newPoint('grainlineBottom', $p->x('pB') +50, $p->y('pB') -50 );
+        $p->newPoint('grainlineTop',    $p->x('pA1') +50, $p->y('pA1') +50 );
+        $p->newPoint('grainlineBottom', $p->x('pB1') +50, $p->y('pB1') -50 );
 
         $p->newGrainline('grainlineTop', 'grainlineBottom', $this->t('Grainline'));
 
@@ -567,10 +486,10 @@ class PenelopePencilSkirt extends \Freesewing\Patterns\Core\Pattern
 
             if( $partName == 'Front' || $this->o('zipper') == 'side' ) {
                 $sa = $p->paths['seamAllowance'];
-                $sa->setPathstring( str_replace( 'M ', 'M pA L ', $sa->getPathstring()).' L pBh');
+                //$sa->setPathstring( str_replace( 'M ', 'M p1A1 L ', $sa->getPathstring()).' L pBh');
 
-                $p->newPoint('COFTop',    $p->x('pA'), $p->y('pA') +100 );
-                $p->newPoint('COFBottom', $p->x('pB'), $p->y('pB') -100 );
+                $p->newPoint('COFTop',    $p->x('pA1'), $p->y('pA1') +100 );
+                $p->newPoint('COFBottom', $p->x('pB1'), $p->y('pB1') -100 );
                 $p->newCutonfold('COFTop', 'COFBottom', $this->t('Cut on fold'), -20) ;
             }
         }
@@ -585,7 +504,7 @@ class PenelopePencilSkirt extends \Freesewing\Patterns\Core\Pattern
 
         // Scalebox
         if( $partName == 'Front' ) {
-            $p->newPoint('scaleboxAnchor', $p->x('pB') +150, $p->y('pB') -100);
+            $p->newPoint('scaleboxAnchor', $p->x('pB1') +150, $p->y('pB1') -100);
             $p->newSnippet('scalebox', 'scalebox', 'scaleboxAnchor');
         }
 

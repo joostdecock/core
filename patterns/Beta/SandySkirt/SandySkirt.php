@@ -500,7 +500,7 @@ class SandySkirt extends \Freesewing\Patterns\Core\Pattern
             // Buttonhole
             $p->newPoint('buttonholeAnchor', ($p->x('flip1') + $p->x('flip6'))/2, ($p->y('flip1') + $p->y('flip6'))/2);
             $p->addPoint('buttonholeAnchor', $p->shift('buttonholeAnchor', 90+$buttonAngle, $this->o('waistbandOverlap')/2));
-            $p->newSnippet($p->newId('buttonhole'), 'buttonhole', 'buttonholeAnchor', ['transform' => 'rotate('.(-$angle).' '.$p->x('buttonholeAnchor').' '.$p->y('buttonholeAnchor').')']);
+            $p->newSnippet($p->newId('buttonhole'), 'buttonhole', 'buttonholeAnchor', ['transform' => 'rotate('.(-$buttonAngle).' '.$p->x('buttonholeAnchor').' '.$p->y('buttonholeAnchor').')']);
 
             // Button
             $p->newPoint('buttonAnchor', ($p->x('in2') + $p->x('ex2'))/2, ($p->y('in2') + $p->y('ex2'))/2);

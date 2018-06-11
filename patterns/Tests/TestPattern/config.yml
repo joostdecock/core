@@ -19,9 +19,16 @@ options:
         min: 10
         max: 50
         default: 30
+    angleOption:
+        type: "angle"
+        default: 45
+        min: 10
+        max: 50
     percentOption:
         type: "percent"
         default: 50
+        min: 10
+        max: 50
     chooseOneOption:
         type: "chooseOne"
         options:

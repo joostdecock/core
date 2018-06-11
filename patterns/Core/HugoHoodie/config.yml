@@ -1,7 +1,8 @@
 info:
     name:       "Hugo Hoodie"
-    description: "Hugo is a hooded jumper with raglan sleeves"
+    description: "Hugo is a hooded jumper with raglan sleeves."
     handle:     "hugo"
+    level: 5
     tags:
         - menswear
         - hoodie
@@ -33,7 +34,6 @@ languages:
     fr: French
 
 measurements:
-    acrossBack: 450
     bicepsCircumference: 335
     centerBackNeckToWaist: 480
     chestCircumference: 1080
@@ -48,19 +48,19 @@ measurements:
 
 options:
 
-# ease group
+# fit group
     chestEase:
         title: "Chest ease"
         description: "The amount of ease at your chest."
-        group: "ease"
+        group: "fit"
         type: measure
         min: -40
         max: 160
         default: 60
     bicepsEase:
         title: "Biceps ease"
-        description: "The amount of ease at your upper arm."
-        group: "ease"
+        description: "The amount of ease at your upper arm. Note that while we try to respect this, fitting the sleeve to the armhole takes precedence over respecting the exact amount of ease."
+        group: "fit"
         type: measure
         min: 0
         max: 80
@@ -68,16 +68,14 @@ options:
     cuffEase:
         title: "Cuff ease"
         description: "The amount of ease at your wrist."
-        group: "ease"
+        group: "fit"
         type: measure
         min: 0
         max: 100
         default: 35
-
-# fit group
     lengthBonus:
         title: "Length bonus"
-        description: "Amount to lengthen the body."
+        description: "The amount to lengthen the garment. A negative value will shorten it."
         group: "fit"
         type: measure
         min: 0
@@ -85,18 +83,26 @@ options:
         default: 70
     sleeveLengthBonus:
         title: "Sleeve length bonus"
-        description: "Amount to lengthen the sleeves."
+        description: "The amount to lengthen the sleeve. A negative value will shorten it."
         group: "fit"
         type: "measure"
         min: -40
         max: 80
         default: 0
     ribbingStretchFactor:
-        title: "Ribbing stretch"
+        title: "Ribbing stretch factor"
         description: "Determines the negative ease for the ribbing."
         group: "fit"
         type: percent
         min: 0
         max: 10
         default: 5
+    acrossBackFactor:
+        title: "Across back factor"
+        description: "Controls your across back width as a factor of your shoulder to shoulder measurement."
+        group: "advanced"
+        type: "percent"
+        min: 93
+        max: 99
+        default: 96
 

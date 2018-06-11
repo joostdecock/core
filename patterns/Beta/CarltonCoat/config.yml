@@ -1,12 +1,8 @@
 info:
     name: "Carlton Coat"
-    description: "For Sherlock Holmes cosplay, or just a really nice coat"
+    description: "For Sherlock Holmes cosplay, or just a really nice coat."
     handle: "carlton"
-    version: "1.0"
-    date: 20170203
-    author: "Joost De Cock"
-    email: "joost@decock.org"
-    company: "freesewing.org"
+    level: 9
     tags:
         - menswear
         - coat
@@ -29,12 +25,14 @@ parts:
   pocket: "Pocket"
   pocketFlap: "Pocket flap"
   chestPocketWelt: "Chest pocket welt"
+  innerPocketWelt: "Inner pocket welt"
+  innerPocketBag: "Inner pocket bag"
+  innerPocketTab: "Inner pocket tab"
 
 languages:
     en: English
 
 measurements:
-    acrossBack: 420
     bicepsCircumference: 350
     centerBackNeckToWaist: 560
     chestCircumference: 1060
@@ -61,7 +59,7 @@ options:
         default: 240
     waistEase:
         title: "Waist ease"
-        description: "The amount of ease at your waist."
+        description: "The amount of ease at your (natural) waist."
         group: "fit"
         type: measure
         min: 80
@@ -75,6 +73,14 @@ options:
         min: 180
         max: 320
         default: 240
+    bicepsEase:
+        title: "Biceps ease"
+        description: "The amount of ease at your upper arm. Note that while we try to respect this, fitting the sleeve to the armhole takes precedence over respecting the exact amount of ease."
+        group: "fit"
+        type: measure
+        min: 20
+        max: 80
+        default: 50
     cuffEase:
         title: "Cuff ease"
         description: "The amount of ease at your wrist."
@@ -83,9 +89,17 @@ options:
         min: 100
         max: 180
         default: 140
+    shoulderEase:
+        title: "Shoulder ease"
+        description: "The amount of ease at your shoulder. This increases the shoulder to shoulder distance to accomodate what you're wearing under your coat."
+        group: "fit"
+        type: measure
+        min: 0
+        max: 20
+        default: 10
     sleeveBend:
         title: "Sleeve bend"
-        description: "How much do you want the sleeve to be bent at the elbow"
+        description: "How much do you want the sleeve to be bent at the elbow."
         group: "fit"
         type: "angle"
         min: 0
@@ -93,7 +107,7 @@ options:
         default: 10
     sleeveLengthBonus:
         title: "Sleeve length bonus"
-        description: "Amount to lengthen the sleeve. A negative value will shorten it."
+        description: "The amount to lengthen the sleeve. A negative value will shorten it."
         group: "fit"
         type: "measure"
         min: 0
@@ -109,7 +123,7 @@ options:
         default: 71
     sleevecapEase:
         title: "Sleevecap ease"
-        description: "The amount by which your sleevhead is longer than the armhole."
+        description: "The amount by which the sleevecap seam is longer than the armhole seam."
         group: "advanced"
         type: measure
         min: 0
@@ -117,9 +131,18 @@ options:
         default: 17.5
     sleevecapHeightFactor:
         title: "Sleevecap height factor"
-        description: "Controls the height of the sleevecap. Higher values make a higher narrower sleevecap."
+        description: "Controls the height of the sleevecap. A higher value results in a higher and more narrow sleevecap."
         group: "advanced"
         type: "percent"
         min: 45
         max: 55
         default: 50
+    acrossBackFactor:
+        title: "Across back factor"
+        description: "Controls your across back width as a factor of your shoulder to shoulder measurement."
+        group: "advanced"
+        type: "percent"
+        min: 93
+        max: 99
+        default: 98
+

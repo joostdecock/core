@@ -73,7 +73,7 @@ class InfoTest extends \PHPUnit\Framework\TestCase
 
     private function saveFixture($fixture, $data)
     {
-        return true;
+//        return true;
         $dir = \Freesewing\Utils::getApiDir().'/tests/themes/fixtures';
         $file = "$dir/Info.$fixture.data";
         $f = fopen($file,'w');

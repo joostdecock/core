@@ -27,6 +27,13 @@ class WahidWaistcoat extends BrianBodyBlock
     const COLLAR_EASE = 15;
 
     /**
+     * Fix biceps ease to 5cm. 
+     * Just to suppress a warning because Brian expects
+     * the biceps ease option to be set.
+     */
+    const BICEPS_EASE = 50;
+
+    /**
      * Fix sleevecap ease to 1.5cm
      */
     const SLEEVECAP_EASE = 15;
@@ -54,6 +61,9 @@ class WahidWaistcoat extends BrianBodyBlock
     /** Armhole depth factor = 81% */
     const ARMHOLE_DEPTH_FACTOR = 0.81;
 
+    /** Across back factor = 96% */
+    const ACROSS_BACK_FACTOR = 0.96;
+
     /**
      * Sets up options and values for our draft
      *
@@ -75,15 +85,15 @@ class WahidWaistcoat extends BrianBodyBlock
     {
         // Options that are fixed yet needed for Brian
         $this->setOptionIfUnset('collarEase', self::COLLAR_EASE);
+        $this->setOptionIfUnset('bicepsEase', self::BICEPS_EASE);
         $this->setOptionIfUnset('sleevecapEase', self::SLEEVECAP_EASE);
         $this->setOptionIfUnset('backNeckCutout', self::BACK_NECK_CUTOUT);
         $this->setOptionIfUnset('armholeDepthFactor', self::ARMHOLE_DEPTH_FACTOR);
+        $this->setOptionIfUnset('acrossBackFactor', self::ACROSS_BACK_FACTOR);
         $this->setValue('shoulderSlope', $model->m('shoulderSlope')); 
 
         // Depth of the armhole
-        $this->setValue('armholeDepth', 290 - self::BACK_NECK_CUTOUT + ($model->m('shoulderSlope') / 2 - 27.5) + ($model->m('bicepsCircumference') / 10));
-        // Depth of the armhole
-        $this->setValue('armholeDepth', $model->m('shoulderSlope') / 2 + $model->m('bicepsCircumference') * $this->o('armholeDepthFactor'));
+        $this->setValue('armholeDepth', $model->m('shoulderSlope') / 2 + ( $model->m('bicepsCircumference') + $this->o('bicepsEase') ) * $this->o('armholeDepthFactor'));
 
         // Collar widht and depth
         $this->setValue('collarWidth', ($model->getMeasurement('neckCircumference') / self::PI) / 2 + 5);
@@ -242,7 +252,7 @@ class WahidWaistcoat extends BrianBodyBlock
         $p = $this->parts['waistcoatFrontBlock'];
 
         // Neck cutout
-        $p->newPoint(  300, $p->x(1)-$this->v('frontOverlap'), $p->y(5) - 80 + $this->o('frontDrop'), 'Neck cutout base point');
+        $p->newPoint(  300, $p->x(1)-$this->v('frontOverlap'), $p->y(5) - 80 + $this->o('necklineDrop'), 'Neck cutout base point');
         if ($this->o('frontStyle') == 2) {
             $p->newPoint(  301, $p->x(8), $p->y(300), 'Neck cutout control point');
         } else {
@@ -812,7 +822,7 @@ class WahidWaistcoat extends BrianBodyBlock
 
         // Title
         $p->newPoint('titleAnchor', -30, $p->y(3)/2);
-        $p->addTitle('titleAnchor', 5, $this->t($p->title), '2x '.$this->t('from main fabric'), 'horizontal-small');
+        $p->addTitle('titleAnchor', 5, $this->t($p->title), '2x '.$this->t('from main fabric'), ['scale' => 50, 'align'=>'left']);
 
         // Grainline
         $p->addPoint('grainlineBottom', $p->shift(3,135,5));
@@ -843,7 +853,7 @@ class WahidWaistcoat extends BrianBodyBlock
 
         // Title
         $p->newPoint('titleAnchor', -30, $p->y(3)/2+5);
-        $p->addTitle('titleAnchor', 6, $this->t($p->title), '2x '.$this->t('from interfacing'), 'horizontal-small');
+        $p->addTitle('titleAnchor', 6, $this->t($p->title), '2x '.$this->t('from interfacing'), ['scale' => 50, 'align'=>'left']);
 
         // Notches
         $p->newSnippet('notchRight', 'notch', 1);
@@ -868,7 +878,7 @@ class WahidWaistcoat extends BrianBodyBlock
 
         // Title
         $p->newPoint('titleAnchor', -30, $p->y(3)/2+5);
-        $p->addTitle('titleAnchor', 7, $this->t($p->title), '2x '.$this->t('from main fabric'), 'horizontal-small');
+        $p->addTitle('titleAnchor', 7, $this->t($p->title), '2x '.$this->t('from main fabric'), ['scale' => 50, 'align'=>'left']);
 
         // Grainline
         $p->addPoint('grainlineBottom', $p->shift(3,135,5));
@@ -899,7 +909,7 @@ class WahidWaistcoat extends BrianBodyBlock
 
         // Title
         $p->newPoint('titleAnchor', -30, $p->y(3)/2+5);
-        $p->addTitle('titleAnchor', 8, $this->t($p->title), '2x '.$this->t('from lining'), 'horizontal-small');
+        $p->addTitle('titleAnchor', 8, $this->t($p->title), '2x '.$this->t('from lining'), ['scale' => 50, 'align'=>'left']);
 
         // No seam allowance note
         $p->newPoint('noSaAnchor', $p->x(-3),$p->y(-1)+60);

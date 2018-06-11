@@ -170,7 +170,8 @@ abstract class Pattern
      */
     public function getOption($key)
     {
-        return $this->options[$key];
+        if(isset($this->options[$key])) return $this->options[$key];
+        else return null;
     }
 
     /**
@@ -182,7 +183,8 @@ abstract class Pattern
      */
     public function getValue($key)
     {
-        return $this->values[$key];
+        if(isset($this->values[$key])) return $this->values[$key];
+        else return null;
     }
 
     /**
@@ -355,10 +357,13 @@ abstract class Pattern
         if (isset($this->parts) && count($this->parts) > 0) {
             foreach ($this->parts as $part) {
                 if ($part->getRender() === true) {
-                    $offsetX = @$part->boundary->topLeft->x * -1; // FIXME Sample service issues a warning here
-                    $offsetY = @$part->boundary->topLeft->y * -1; // FIXME Sample service issues a warning here
-                    $transform = new \Freesewing\Transform('translate', $offsetX, $offsetY);
-                    $part->addTransform('#pileParts', $transform);
+                    // don't add (0,0) transforms
+                    if(isset($part->boundary->topLeft->x) && isset($part->boundary->topLeft->y)) {
+                        $offsetX = $part->boundary->topLeft->x * -1; 
+                        $offsetY = $part->boundary->topLeft->y * -1; 
+                        $transform = new \Freesewing\Transform('translate', $offsetX, $offsetY);
+                        $part->addTransform('#pileParts', $transform);
+                    }
                 }
             }
         }
@@ -594,15 +599,17 @@ abstract class Pattern
         $order = array();
         foreach ($parts as $key => $part) {
             if ($part->getRender() === true) {
-                $order[$key] = @$part->boundary->maxSize; // FIXME Sample service issues a warning here
+                if(isset($part->boundary->maxSize)) $order[$key] = $part->boundary->maxSize;
             }
         }
         arsort($order);
         foreach ($order as $key => $maxSize) {
-            $layoutBlock = new \Freesewing\LayoutBlock();
-            $layoutBlock->w = @$parts[$key]->boundary->width; // FIXME Sample service issues a warning here
-            $layoutBlock->h = @$parts[$key]->boundary->height;// FIXME Sample service issues a warning here
-            $sorted[$key] = $layoutBlock;
+            if(isset($parts[$key]->boundary->width) && isset($parts[$key]->boundary->height)) {
+                $layoutBlock = new \Freesewing\LayoutBlock();
+                $layoutBlock->w = $parts[$key]->boundary->width;
+                $layoutBlock->h = $parts[$key]->boundary->height;
+                $sorted[$key] = $layoutBlock;
+            }
         }
         
         return $sorted;

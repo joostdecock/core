@@ -21,11 +21,11 @@ class HugoHoodie extends BrianBodyBlock
       Things we need to do before we can draft a pattern
     */
 
-    /** Armhole depth factor = 60% */
-    const ARMHOLE_DEPTH_FACTOR = 0.6;
+    /** Armhole depth factor = 50% */
+    const ARMHOLE_DEPTH_FACTOR = 0.5;
 
-    /** Sleevecap height factor = 55% */
-    const SLEEVECAP_HEIGHT_FACTOR = 0.55;
+    /** Sleevecap height factor = 45% */
+    const SLEEVECAP_HEIGHT_FACTOR = 0.45;
 
     /**
      * Sets up options and values for our draft
@@ -645,7 +645,7 @@ class HugoHoodie extends BrianBodyBlock
         $p->addTitle('titleAnchor', 2, $this->t($p->title), '1x '.$this->t('from fabric')."\n".$this->t('Cut on fold'));
 
         // Scalebox
-        $p->addPoint('scaleboxAnchor', $p->shift('titleAnchor', -90, 30));
+        $p->addPoint('scaleboxAnchor', $p->shift('titleAnchor', -90, 50));
         $p->newSnippet('scalebox', 'scalebox', 'scaleboxAnchor');
 
         // Logo
@@ -758,7 +758,7 @@ class HugoHoodie extends BrianBodyBlock
 
         // Title
         $p->newPoint('titleAnchor', $p->x(111) + $p->deltaX(111, 103)/2, $p->y(111)+35);
-        $p->addTitle('titleAnchor', 5, $this->t($p->title), '2x '.$this->t('from fabric')."\n".$this->t('Good sides together'), 'vertical-small');
+        $p->addTitle('titleAnchor', 5, $this->t($p->title), '2x '.$this->t('from fabric')."\n".$this->t('Good sides together'), ['scale' => 50, 'rotate' => -90, 'align' => 'left']);
 
         // Seam allowance
         if($this->o('sa')) $p->offsetPath('sa', 'seamline', $this->o('sa')*-1, true, ['class' => 'sa fabric']);
@@ -851,7 +851,7 @@ class HugoHoodie extends BrianBodyBlock
      */
     public function finalizeNeckBinding($model, $p)
     {
-        $this->finalizeRectangle($model, $p, 10, '1x '.$this->t('from fabric'), 'vertical');
+        $this->finalizeRectangle($model, $p, 10, '1x '.$this->t('from fabric'));
     }
 
     private function textAttr($dy)
@@ -868,7 +868,7 @@ class HugoHoodie extends BrianBodyBlock
      *
      * @return void
      */
-    public function finalizeRectangle($model, $p, $nr, $cut, $titleOption = '')
+    public function finalizeRectangle($model, $p, $nr, $cut)
     {
         // Grainline
         $p->newPoint( 'grainlineTop', $p->x(1)+5, $p->y(3)/1.5);
@@ -877,7 +877,9 @@ class HugoHoodie extends BrianBodyBlock
 
         // Title
         $p->newPoint('titleAnchor', $p->x(2)/2, $p->y(3)/4);
-        $p->addTitle('titleAnchor', $nr, $this->t($p->title), $cut, $titleOption);
+        if($nr == 10) $options = ['rotate' => -90, 'scale' => 50, 'align' => 'left'];
+        else $options = false;
+        $p->addTitle('titleAnchor', $nr, $this->t($p->title), $cut, $options);
 
         // Seam allowance
         if($this->o('sa')) $p->offsetPath('sa', 'seamline', $this->o('sa'), true, ['class' => 'sa fabric']);

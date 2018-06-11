@@ -3,6 +3,7 @@
 > All notable changes to freesewing core should be be documented in this file.
 > Freesewing uses [Semantic Versioning](http://semver.org/).
 
+<!-- version template
 ## Unreleased
 
 **Release date**: Unreleased
@@ -13,6 +14,248 @@
 ### Removed
 ### Fixed
 ### Security
+-->
+
+## 1.8.2
+
+**Release date**: 2018-06-02
+
+This release removes the `acrossBackFactor` option from Wahid and renamed its
+frontDrop option to necklineDrop.
+
+### Changed
+
+The frontDrop options has been renamed to necklineDrop in Wahid to prevent 
+a translation conflict with the frontDrop option inCathrin
+
+### Removed
+
+Removed the acrossBackFactor option from Wahid.
+This option is useless for this pattern as it has its own backInset option.
+
+## 1.8.1
+
+**Release date**: 2018-05-24
+
+This release has no functional changes, but merely some differences in the phrasing of options
+that were required for the v2 release of our frontend.
+
+### Changed
+
+ - Made a few small tweaks in pattern configuration files in preparation of our v2 website
+
+## 1.8.0
+
+**Release date**: 2018-03-20
+
+This release adds a new pattern, the **Jaeger Jacket** and removed the `acrossBack` measurement in favor of an `acrossBackFactor` option that controls the across back as a fraction of the `shoulderToShoulder` measurement.
+
+### Added
+
+ - The Jaeger Jacket is now available in Beta
+
+### Changed
+
+ - The `acrossBack` measurement has been removed from all patterns in favor of and `acrossBackFactor` option
+
+### Deprecated
+
+ - Do not use an `acrossBack` measurement in your patterns as it's too hard to measure. Use are fraction of the `shoulderToShoulder` measurement instead (0.96 is a good default).
+
+### Removed
+
+ - The `acrossBack` measurement was removed from `brian` and all patterns that extend it.
+  
+
+## 1.7.0
+
+**Release date**: 2018-02-28
+
+While this is mainly a bugfix release, it also exposes the `Part::purgePoints()` method
+which used to be private but is now public. The standard theme now also supports centered text.
+
+These changes is the reason for the minor version bump. Apart from that, it's a bugfix release and a 
+new option for Sven.
+
+### Added
+
+ - Sven now has ribbing options to choose whether to add ruibbing to the pattern of not
+ - The `center` class causes text to be centered in the standard theme
+
+### Changed
+
+ - The `part:purgePoints()` method had been made public to make Wouter happy
+
+### Fixed
+
+#### Sven
+
+ - Fixed a typo in the sven config file
+
+#### Carlita
+
+ - Fixed a misplaced curve control point at the armhole
+ - Removed use of opacity as it break PostScript export in Inkscape
+ - Fix issue where pocket width as marked on the side panel was not adapt to bust adjustment
+
+#### Carlton/Carlita
+
+ - Added extra markings to help with construction, such as backstay, and fusible interfacing
+
+## 1.6.5
+
+**Release date**: 2018-02-02
+
+This is a bugfix release with updates for Carlton/Carlita.
+
+### Fixes
+
+#### Carlita
+
+ - Fixed a faulty control point location on the armole
+
+#### Carlton/Carlita
+
+ - Removed the opacity attribute from a snippet as it breaks PostScript export in inkscape
+
+
+## 1.6.4
+
+**Release date**: 2018-02-01
+
+This release adds ribbing to Sven, and fixes the inner pocket tab of Carlton/Carlita
+
+### Added
+
+#### Sven
+
+Sven now takes ribbing options, and drafts the ribbing as needed.
+This also avoid confusion when people add ribbing to a Sven that's drafted without ribbing
+as that would make the body/sleeves too long.
+
+### Fixed
+
+#### Carlton/Carlita
+
+The shape of the inner pocket tab was incorrect, this has been fixed.
+
+
+## 1.6.3
+
+**Release date**: 2018-01-31
+
+This release adds inner pockets to Carlton/Carlita
+
+### Added
+
+#### Carlton/Carlita
+
+ - The `innerPocketWelt` part
+ - The `innerPocketBag` part
+ - The `innerPocketTab` part
+
+
+## 1.6.2
+
+**Release date**: 2018-01-31
+
+This release includes some tweaks to the shoulder of Carlton/Carlita.
+
+### Changed
+
+#### Carlton/Carlita
+
+ - Lowered the default biceps ease
+ - Lowered the default shoulder ease
+ - Used only half the shoulder ease across back
+
+
+## 1.6.1
+
+**Release date**: 2018-01-29
+
+This is a bugfix release:
+
+ - A fix for [issue #203](https://github.com/freesewing/core/issues/203)
+ - Some small tweaks in Carlton/Carlita
+
+### Fixed
+
+#### Title formatting
+
+The `Part::addTitle` method has been rewritten to handle title formatting in all use cases
+(fixes [issue #203](https://github.com/freesewing/core/issues/203)).
+
+Rather than specifying one layout option (like `vertical-small`) you can now pass an array
+with options:
+
+ - `scale` : Default is 100. Increase/decrease for larger/smaller title
+ - `rotate` : Default is 0. Given a number to rotate by that many degrees
+ - `align` : One of `left`, `right`, or the default `center`
+
+You can combine these options to get pretty much whatever title you like.
+
+In addition, we will properly handle linebreaks in part nr, part title, or message.
+
+#### Carlton/Carlita
+
+ - Only half of the *Chest pocket welt* part was drawn.
+ - The hems on the front, tail, and pockets have been straightened
+ - Cutting instructions have been updated to include lining
+
+#### Huey
+
+ - There were two parts numbered `4`, that is fixed now.
+
+
+## 1.6.0
+
+**Release date**: 2018-01-26
+
+This release adds the Carlita Coat pattern. The womenswear version of our Carlton Coat.
+
+It also adds small improvments/fixes in some other patterns.
+
+### Added
+
+ - The Carlita Coat pattern
+
+### Changed
+
+#### Brian
+
+ - Brian and patterns that extend it now take a *bicepsEase* option
+
+#### Simon
+
+ - We've reduced the minimal shaping to add back darts from 10cm to 4cm
+
+### Fixed
+
+#### Carlton
+
+ - We've fixed an issue with sampling/comparing due to incorrect configuration of the sampler
+
+#### Simon
+
+ - We've tweaked the yoke dart to address issue #219 and increased its maximum value to 2cm
+
+
+## 1.5.0
+
+**Release date**: 2018-01-21
+
+### Added
+
+ - We now use [freesewing bail](https://github.com/freesewing/bail) as a custom error handler
+
+### Deprecated
+ 
+ - The Developer theme has been deprecated. It will be removed at some point in the future.
+
+### Removed
+
+ - We no longer use Rollbar. Its dependency has been removed in favor of Bail.
 
 ## 1.4.0
 

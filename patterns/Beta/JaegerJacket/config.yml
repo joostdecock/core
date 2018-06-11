@@ -1,0 +1,363 @@
+info:
+    name: "Jaeger Jacket"
+    description: "Jeager is a sport coat style jacket with two buttons and patch pockets."
+    level: 9
+    handle: "jaeger"
+    tags:
+        - menswear
+        - top
+        - blazer
+
+parts:
+  backBlock: ".Back block"
+  frontBlock: ".Front block"
+  sleeveBlock: ".Sleeve block"
+  topsleeveBlock: "Topsleeve block"
+  undersleeveBlock: "Undersleeve block"
+  back: "Back"
+  front: "Front"
+  side: "Side"
+  back: "Back"
+  collar: "Collar"
+  collarstand: "Collarstand"
+  undercollar: "Undercollar"
+  topsleeve: "Topsleeve"
+  undersleeve: "Undersleeve"
+  pocket: "Pocket"
+  chestPocketWelt: "Chest pocket welt"
+  chestPocketBag: "Chest pocket bag"
+  innerPocketWelt: "Inner pocket welt"
+  innerPocketBag: "Inner pocket bag"
+  innerPocketFacingExtension: "Inner pocket facing extension"
+
+languages:
+    en: "English"
+
+measurements:
+    bicepsCircumference: 335
+    centerBackNeckToWaist: 470
+    chestCircumference: 1080
+    naturalWaistToHip: 145
+    neckCircumference: 420
+    shoulderToShoulder: 465
+    shoulderSlope: 55
+    hipsCircumference: 990
+    shoulderToWrist: 680
+    wristCircumference: 190
+    shoulderToElbow: 410 
+    naturalWaist: 925
+
+options:
+# Fit group
+    chestEase:
+        title: "Chest ease"
+        description: "The amount of ease at your chest."
+        group: "fit"
+        type: measure
+        min: 40
+        max: 200
+        default: 120
+    waistEase:
+        title: "Waist ease"
+        description: "The amount of ease at your (natural) waist."
+        group: "fit"
+        type: measure
+        min: 40
+        max: 200
+        default: 80
+    hipsEase:
+        title: "Hips ease"
+        description: "The amount of ease at your hips."
+        group: "fit"
+        type: measure
+        min: 40
+        max: 200
+        default: 120
+    cuffEase:
+        title: "Cuff ease"
+        description: "The amount of ease at your wrist."
+        group: "fit"
+        type: measure
+        min: 50
+        max: 130
+        default: 90
+    lengthBonus:
+        title: "Length bonus"
+        description: "The amount to lengthen the garment. A negative value will shorten it."
+        group: "fit"
+        type: "measure"
+        min: -40
+        max: 120
+        default: 0
+    sleeveLengthBonus:
+        title: "Sleeve length bonus"
+        description: "The amount to lengthen the sleeve. A negative value will shorten it."
+        group: "fit"
+        type: "measure"
+        min: -40
+        max: 60
+        default: 30
+    sleeveBend:
+        title: "Sleeve bend"
+        description: "How much do you want the sleeve to be bent at the elbow."
+        group: "fit"
+        type: "angle"
+        min: 0
+        max: 20
+        default: 10
+    neckReduction:
+        title: "Center back neck dart"
+        description: "Neck shaping at center back as percent of chest circumference."
+        group: "fit"
+        type: percent
+        min: 0
+        max: 3
+        default: 1
+# style group
+    centerFrontHemDrop:
+        title: "Center front hem drop"
+        description: "The hem at the front is lowered by this ratio of your neck to hips vertical measurements."
+        group: "style"
+        type: "percent"
+        min: 0
+        max: 6.66
+        default: 3.33
+    backVent:
+        title: "Back vent"
+        description: "Do you want a central back vent, or none at all?"
+        group: "style"
+        type: "chooseOne"
+        options:
+            0: "No back vent"
+            1: "Single back vent"
+            2: "Double back vent"
+        default: 2
+    backVentLength:
+        title: "Back vent length"
+        description: "Controls the length of the back vent. Lower numbers result in a shorter vent."
+        group: "style"
+        type: "percent"
+        min: 40
+        max: 80
+        default: 60
+    frontCutawayAngle:
+        title: "Front opening bottom cutaway angle"
+        description: "How much do you want the front to open up below the lower button."
+        group: "style"
+        type: "angle"
+        min: 1
+        max: 4
+        default: 2.5
+    frontCutawayStart:
+        title: "Front opening bottom cutaway start"
+        description: "How much do you want the front to open up below the lower button."
+        group: "style"
+        type: "percent"
+        min: 10
+        max: 70
+        default: 30
+# pockets group
+    chestPocketWidth:
+        title: "Chest pocket width"
+        description: "The width of the chest pocket, as a factor of your chest circumference."
+        group: "pockets"
+        type: "measure"
+        min: 90
+        max: 120
+        default: 105
+    chestPocketPlacement:
+        title: "Chest pocket placement"
+        description: "Location of the chest pocket as a proportion a quarter of your chest circumference. Higher numbers move it more to the side."
+        group: "pockets"
+        type: "percent"
+        min: 45
+        max: 55
+        default: 50
+    frontPocketPlacement:
+        title: "Front pocket placement"
+        description: "Location of the front pockets as a proportion of your chest circumference. Higher numbers move it more to the side."
+        group: "pockets"
+        type: "percent"
+        min: 13
+        max: 23
+        default: 18
+    frontPocketWidth:
+        title: "Front pocket width"
+        description: "The width of the front pocket, as a factor of your chest circumference."
+        group: "pockets"
+        type: "percent"
+        min: 12.5
+        max: 17.5
+        default: 15
+    frontPocketHeight:
+        title: "Front pocket height"
+        description: "The height where the front pocket starts, as a factor of your natural waist to hip measurement."
+        group: "pockets"
+        type: "percent"
+        min: 1
+        max: 15
+        default: 7.5
+    frontPocketDepth:
+        title: "Front pocket depth"
+        description: "The depth of the front pockets, as a factor of the space between your waist and hem."
+        group: "pockets"
+        type: "percent"
+        min: 40
+        max: 85
+        default: 75
+    chestPocketAngle:
+        title: "Chest pocket angle"
+        description: "The angle of the chest pocket."
+        group: "pockets"
+        type: "angle"
+        min: 5
+        max: 10
+        default: 7.5
+    chestPocketWeltSize:
+        title: "Chest pocket welt height"
+        description: "The height of the chest pocket welt."
+        group: "pockets"
+        type: "measure"
+        min: 10
+        max: 25
+        default: 15
+# lapel group
+    lapelStart:
+        title: "Lapel break point"
+        description: "Location of the lapel break point (where the front opening starts). Lower values are closer to the waistline, higher values closer to the chestline."
+        group: "lapel"
+        type: "percent"
+        min: 25
+        max: 45
+        default: 35
+    collarHeight:
+        title: "Collar height"
+        description: "This is the collar height at the back of the neck and can never be less than twice the roll line collar height."
+        group: "lapel"
+        type: "measure"
+        min: 30
+        max: 40
+        default: 35
+    collarNotchDepth:
+        title: "Collar notch depth"
+        description: "Depth of the collar notch."
+        group: "lapel"
+        type: "measure"
+        min: 15
+        max: 45
+        default: 30
+    collarNotchAngle:
+        title: "Collar notch angle"
+        description: "Angle of the collar notch."
+        group: "lapel"
+        type: "angle"
+        min: 30
+        max: 60
+        default: 45
+    collarNotchReturn:
+        title: "Collar notch return"
+        description: "Controls the length of the upper notch side. 100% = same as notch depth."
+        group: "lapel"
+        type: "percent"
+        min: 50
+        max: 100
+        default: 100
+# Balance group
+    waistReductionRatioBack:
+        title: "Waist reduction: back ratio"
+        description: "Proportion of the waist to be reduced in back panel shaping. Will also impact side panel shaping."
+        group: "balance"
+        type: "percent"
+        min: 0
+        max: 25
+        default: 15
+    waistReductionRatioFront:
+        title: "Waist reduction: front ratio"
+        description: "Proportion of the waist to be reduced in the front dart. Will also impact side panel shaping."
+        group: "balance"
+        type: "percent"
+        min: 10
+        max: 20
+        default: 15
+    hipsReductionRatioBack:
+        title: "Hips reduction: back ratio"
+        description: "Proportion of the hips to be reduced in back panel shaping. Will also impact side panel shaping."
+        group: "balance"
+        type: "percent"
+        min: 20
+        max: 30
+        default: 25
+    frontDartPlacement:
+        title: "Front dart placement"
+        description: "Location of the front dart as a proportion of your chest circumference. Higher numbers move it more to the side."
+        group: "balance"
+        type: "percent"
+        min: 11
+        max: 15
+        default: 13.33
+    sideFrontPlacement:
+        title: "Front side boundary placement"
+        description: "Location of the front/side boundary as a proportion of your chest circumference. Higher numbers make a wider side panel."
+        group: "balance"
+        type: "percent"
+        min: 1
+        max: 5
+        default: 3.33
+# advanced group
+    chestShaping:
+        title: "Chest shaping"
+        description: "The vertical amount to slash & spread the upper front panel to shape the chest, as a factor of your chest circumference."
+        group: "advanced"
+        type: "percent"
+        min: 1
+        max: 3
+        default: 1
+    rollLineCollarHeight:
+        title: "Roll line collar height"
+        description: "The amount by which the roll line hugs the neck."
+        group: "advanced"
+        type: "measure"
+        min: 15
+        max: 35
+        default: 25
+    shoulderSlopeReduction:
+        title: "Shoulder slope reduction"
+        description: "The amount by which the shoulder slope is reduced to allow for shoulder padding."
+        group: "advanced"
+        type: "measure"
+        min: 0
+        max: 30
+        default: 15
+    sleevecapEase:
+        title: "Sleevecap ease"
+        description: "The amount by which the sleevecap seam is longer than the armhole seam."
+        group: "advanced"
+        type: "measure"
+        min: 0
+        max: 35
+        default: 10
+    armholeDepthFactor:
+        title: "Armhole depth factor"
+        description: "Controls the depth of the armhole. Higher values make a deeper armhole."
+        group: "advanced"
+        type: "percent"
+        min: 60
+        max: 70
+        default: 65
+    sleevecapHeightFactor:
+        title: "Sleevecap height factor"
+        description: "Controls the height of the sleevecap. A higher value results in a higher and more narrow sleevecap."
+        group: "advanced"
+        type: "percent"
+        min: 45
+        max: 60
+        default: 50
+    acrossBackFactor:
+        title: "Across back factor"
+        description: "Controls your across back width as a factor of your shoulder to shoulder measurement."
+        group: "advanced"
+        type: "percent"
+        min: 93
+        max: 99
+        default: 96
+

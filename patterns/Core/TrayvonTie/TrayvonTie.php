@@ -153,7 +153,7 @@ class TrayvonTie extends Pattern
         $p->paths['outline']->setSample(true);
 
         // Anchors
-        $p->newPoint('titleAnchor', 0, $this->v('halfLength')/4, 'Title anchor point');
+        $p->newPoint('titleAnchor', 0, $this->v('halfLength')/5, 'Title anchor point');
         $p->newPoint('gridAnchor', 0, $p->y(7), 'Grid anchor point');
     }
 
@@ -233,7 +233,7 @@ class TrayvonTie extends Pattern
     public function finalizeInterfacingTip($model, $p)
     {
         // Title
-        $p->addTitle('titleAnchor', 1, $this->t($p->title), '1x '.$this->t('from tie interfacing'), 'vertical');
+        $p->addTitle('titleAnchor', 1, $this->t($p->title), '1x '.$this->t('from tie interfacing'), ['rotate' => -90, 'scale' => 50, 'align'=>'left']);
 
         // Override fabric class 
         $p->paths['outline']->setAttributes(['class' => 'interfacing']);
@@ -251,7 +251,7 @@ class TrayvonTie extends Pattern
     public function finalizeInterfacingTail($model, $p)
     {
         // Title
-        $p->addTitle('titleAnchor', 2, $this->t($p->title), '1x '.$this->t('from tie interfacing'), 'vertical');
+        $p->addTitle('titleAnchor', 2, $this->t($p->title), '1x '.$this->t('from tie interfacing'), ['rotate' => -90, 'scale' => 50, 'align'=>'left']);
 
         // Override fabric class 
         $p->paths['outline']->setAttributes(['class' => 'interfacing']);
@@ -392,7 +392,7 @@ class TrayvonTie extends Pattern
     public function finalizeLoop($model, $p)
     {
         // Title
-        $p->addTitle('titleAnchor', 7, $this->t($p->title), '1x '.$this->t('from fabric'), 'horizontal-small');
+        $p->addTitle('titleAnchor', 7, $this->t($p->title), '1x '.$this->t('from fabric'), ['scale' => 50, 'align'=>'left']);
     }
 
 

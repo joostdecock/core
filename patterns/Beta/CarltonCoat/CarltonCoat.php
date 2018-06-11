@@ -45,9 +45,6 @@ class CarltonCoat extends BentBodyBlock
     /** Belt height is 7cm */
     const BELT_HEIGHT = 70;
 
-    /** Shoulder to shoulder increase  = 6.38% */
-    const SHOULDER_INCREASE = 1.0638;    
-
     /** Vertical button distance = 5.425% of chest circumference */
     const VERTICAL_BUTTON_DIST = 0.05425;
 
@@ -84,6 +81,9 @@ class CarltonCoat extends BentBodyBlock
     /* Distance between pocket and chest pocket = 6.6% of chest */
     const INTER_POCKET_DISTANCE = 0.066;
 
+    /* Fusible interfacing strip width = 3cm */
+    const FUSIBLE_WIDTH = 30;
+
     /**
      * Sets up options and values for our draft
      *
@@ -105,13 +105,9 @@ class CarltonCoat extends BentBodyBlock
         // Make collarEdgeHeightFactor 8.6% of chest circumference
         $this->setOptionIfUnset('collarEdgeHeightFactor', self::COLLAR_EDGE_HEIGHT_FACTOR);
         
-        // Make shoulderToShoulder measurement 106.38% of original because coat
-        $model->setMeasurement('shoulderToShoulder', $model->m('shoulderToShoulder') * self::SHOULDER_INCREASE);
+        // Make shoulderToShoulder measurement larger because coat
+        $model->setMeasurement('shoulderToShoulder', $model->m('shoulderToShoulder') + $this->o('shoulderEase'));
         
-        // Make acrossBack measurement 106.38% of original because coat
-        $model->setMeasurement('acrossBack', $model->m('acrossBack') * self::SHOULDER_INCREASE);
-
-
         // Waist shaping
         $this->setValueIfUnset('waistReduction', 
             ( $model->m('chestCircumference') + $this->o('chestEase') ) - 
@@ -166,9 +162,9 @@ class CarltonCoat extends BentBodyBlock
         // Belt height
         $this->setValueIfUnset('beltHeight' , self::BELT_HEIGHT);
 
-        // Add ease to the accross back measurement
-        $model->setMeasurement('acrossBack', $model->m('acrossBack') + $this->o('chestEase')/6);
-        
+        // Width of the fusible interfacing strips
+        $this->setValueIfUnset('fusibleWidth' , self::FUSIBLE_WIDTH);
+
         parent::initialize($model); 
     }
 
@@ -222,6 +218,9 @@ class CarltonCoat extends BentBodyBlock
         $this->draftPocket($model);
         $this->draftPocketFlap($model);
         $this->draftChestPocketWelt($model);
+        $this->draftInnerPocketWelt($model);
+        $this->draftInnerPocketBag($model);
+        $this->draftInnerPocketTab($model);
         
         // Hide the sleeveBlocks, frontBlock, and backBlock
         $this->parts['sleeveBlock']->setRender(false);
@@ -261,6 +260,9 @@ class CarltonCoat extends BentBodyBlock
         $this->finalizePocket($model);
         $this->finalizePocketFlap($model);
         $this->finalizeChestPocketWelt($model);
+        $this->finalizeInnerPocketWelt($model);
+        $this->finalizeInnerPocketBag($model);
+        $this->finalizeInnerPocketTab($model);
 
         // Is this a paperless pattern?
         if ($this->isPaperless) {
@@ -276,6 +278,9 @@ class CarltonCoat extends BentBodyBlock
             $this->paperlessPocket($model);
             $this->paperlessPocketFlap($model);
             $this->paperlessChestPocketWelt($model);
+            $this->paperlessInnerPocketWelt($model);
+            $this->paperlessInnerPocketBag($model);
+            $this->paperlessInnerPocketTab($model);
         }
     }
 
@@ -399,6 +404,25 @@ class CarltonCoat extends BentBodyBlock
 
         $p->newPath('chestPocket', 'M chestPocketTopLeft L chestPocketTopRight L chestPocketBottomRight L chestPocketBottomLeft z', ['class' => 'help']);
 
+        // Inner pocket
+        // Width = 12 cm, unless coat is really small
+        if($p->distance('pocketTopLeft', 'pocketTopRight') < 150) $this->setValue('innerPocketWidth',100);
+        else $this->setValue('innerPocketWidth', 125);
+
+        $p->newPoint('innerPocketLeft', $p->x('pocketTopLeft')+12.5, $p->y('waistSide')-2*$p->deltaY('button3Right','waistSide'));
+        $p->addPoint('innerPocketRight', $p->shift('innerPocketLeft',0,$this->v('innerPocketWidth')));
+        $p->addPoint('innerPocketTopLeft', $p->shift('innerPocketLeft', 90, 5));
+        $p->addPoint('innerPocketBottomLeft', $p->shift('innerPocketLeft', -90, 5));
+        $p->addPoint('innerPocketTopRight', $p->shift('innerPocketRight', 90, 5));
+        $p->addPoint('innerPocketBottomRight', $p->shift('innerPocketRight', -90, 5));
+
+        // Inner pocket path
+        $p->newPath('innerPocket', 'M innerPocketTopLeft L innerPocketTopRight
+            L innerPocketBottomRight L innerPocketBottomLeft z
+            M innerPocketLeft L innerPocketRight'
+        , ['class' => 'lining help']);
+
+        
 
 
         // Paths 
@@ -412,6 +436,7 @@ class CarltonCoat extends BentBodyBlock
 
         // Mark path for sample service
         $p->paths['outline']->setSample(true);
+        $p->clonePoint('frontEdge', 'gridAnchor');
 
 
         // Calculate collar length
@@ -459,6 +484,7 @@ class CarltonCoat extends BentBodyBlock
 
         // Mark path for sample service
         $p->paths['outline']->setSample(true);
+        $p->clonePoint('bpBottom', 'gridAnchor');
 
     }
 
@@ -515,6 +541,11 @@ class CarltonCoat extends BentBodyBlock
             M leftPleat3 L leftPleat3-3
         ', ['class' => 'dashed']);
         $p->newPath('dots', 'M leftTop-1 L leftTop-2 M waistTop-1 L waistTop-2', ['class' => 'help sa']);
+
+        // Mark path for sample service
+        $p->paths['seamline1']->setSample(true);
+        $p->paths['seamline2']->setSample(true);
+        $p->clonePoint('leftTop', 'gridAnchor');
     }
 
     /**
@@ -656,9 +687,6 @@ class CarltonCoat extends BentBodyBlock
             z 
         "); 
 
-        // Mark path for sample service
-        $p->paths['outline']->setSample(true);
-
         $p->addPoint('tmp', $p->shift('standCenterTopCpRight', 90, 35));
         /*
         $p->newPath('acrSegments','
@@ -682,6 +710,10 @@ class CarltonCoat extends BentBodyBlock
 
         //$p->newPath('stand', 'M leftBottom C leftBottom standCenterTopCpLeft standCenterTop C standCenterTopCpRight rightBottom rightBottom', ['class' => 'debug']);
          */
+        
+        // Mark path for sample service
+        $p->paths['outline']->setSample(true);
+        $p->clonePoint('centerTop', 'gridAnchor');
     }
 
     /**
@@ -708,7 +740,9 @@ class CarltonCoat extends BentBodyBlock
 
         // Mark path for sample service
         $p->paths['outline']->setSample(true);
+        $p->clonePoint('standCenterTop', 'gridAnchor');
     }
+
     protected function collarDelta() {
         /** @var \Freesewing\Part $s */
         $s = $this->parts['collarStand'];
@@ -749,7 +783,7 @@ class CarltonCoat extends BentBodyBlock
         $this->setValue('topCuffWidth', $p->distance('topsleeveWristRight','topsleeveWristLeft'));
 
         // Paths
-        $p->newPath('outline', '
+        $p->newPath('prollem', '
             M elbowRight 
             C elbowRightCpTop topsleeveRightEdgeCpBottom topsleeveRightEdge 
             C topsleeveRightEdgeCpTop backPitchPoint backPitchPoint 
@@ -763,11 +797,12 @@ class CarltonCoat extends BentBodyBlock
             C cuffBottomRightCpLeft cuffBottomRightCpTop cuffBottomRightTop
             L topsleeveWristRight
             z
-        ', ['class' => 'fabric']);
+        ', ['class' => 'fabric', 'flag' => 'prollem']);
         $p->newPath('tmp', 'M topsleeveWristLeft L topsleeveWristRight ', ['class' => 'hint']); 
 
         // Mark path for sample service
-        $p->paths['outline']->setSample(true);
+        $p->paths['prollem']->setSample(true);
+        $p->clonePoint('topsleeveWristRight', 'gridAnchor');
     }
 
     /**
@@ -855,6 +890,7 @@ class CarltonCoat extends BentBodyBlock
 
         // Mark path for sample service
         $p->paths['outline']->setSample(true);
+        $p->addPoint('gridAnchor', $p->shiftFractionTowards('topLeft','topRight', 0.5));
     }
 
     /**
@@ -929,6 +965,7 @@ class CarltonCoat extends BentBodyBlock
 
         // Mark path for sample service
         $p->paths['outline']->setSample(true);
+        $p->addPoint('gridAnchor', $p->shiftFractionTowards('pocketTopLeft','pocketTopRight', 0.5));
     }
 
     /**
@@ -955,6 +992,7 @@ class CarltonCoat extends BentBodyBlock
 
         // Mark path for sample service
         $p->paths['outline']->setSample(true);
+        $p->addPoint('gridAnchor', $p->shiftFractionTowards('pocketFlapTopLeft','pocketFlapTopRight', 0.5));
     }
 
     /**
@@ -970,13 +1008,105 @@ class CarltonCoat extends BentBodyBlock
         $p = $this->parts['chestPocketWelt'];
 
         $p->newPoint('topLeft', 0, 0);
-        $p->newPoint('topRight', $this->v('chestPocketWidth'), 0);
-        $p->newPoint('bottomRight', $this->v('chestPocketWidth'), $this->v('chestPocketHeight'));
-        $p->newPoint('bottomLeft', 0, $this->v('chestPocketHeight'));
+        $p->newPoint('topRight', $this->v('chestPocketWidth')*2, 0);
+        $p->newPoint('bottomRight', $p->x('topRight'), $this->v('chestPocketHeight'));
+        $p->newPoint('bottomLeft', 0, $p->y('bottomRight'));
+        $p->newPoint('midTop', $p->x('topRight')/2, 0);
+        $p->newPoint('midBottom', $p->x('midTop'), $p->y('bottomRight'));
+
 
         // Path
         $p->newPath('outline', 'M topLeft L topRight L bottomRight L bottomLeft L topLeft z', ['class' => 'fabric']);
+        $p->newPath('foldline', 'M midTop L midBottom', ['class' => 'hint']);
 
+        // Mark path for sample service
+        $p->paths['outline']->setSample(true);
+    }
+
+    /**
+     * Drafts the inner pocket welt
+     *
+     * @param \Freesewing\Model $model The model to draft for
+     *
+     * @return void
+     */
+    public function draftInnerPocketWelt($model)
+    {
+        /** @var \Freesewing\Part $p */
+        $p = $this->parts['innerPocketWelt'];
+
+        $p->newPoint('left', -20, 0);
+        $p->newPoint('leftTopWelt', $p->x('left')+20, $p->y('left')-5);
+        $p->newPoint('leftBottomWelt', $p->x('left')+20, $p->y('left')+5);
+        $p->newPoint('leftTopCorner', $p->x('left'), $p->y('left')-15);
+        $p->newPoint('leftBottomCorner', $p->x('left'), $p->y('left')+15);
+
+        $p->newPoint('right', $this->v('innerPocketWidth')+20, 0);
+        $p->newPoint('rightTopWelt', $p->x('right')-20, $p->y('right')-5);
+        $p->newPoint('rightBottomWelt', $p->x('right')-20, $p->y('right')+5);
+        $p->newPoint('rightTopCorner', $p->x('right'), $p->y('right')-15);
+        $p->newPoint('rightBottomCorner', $p->x('right'), $p->y('right')+15);
+
+        // Path
+        $p->newPath('outline', 'M leftTopCorner L rightTopCorner L rightBottomCorner L leftBottomCorner z', ['class' => 'lining']);
+        $p->newPath('foldline', 'M left L right', ['class' => 'help']);
+        $p->newPath('seamline', 'M leftTopWelt L rightTopWelt M leftBottomWelt L rightBottomWelt', ['class' => 'hint']);
+
+        // Mark path for sample service
+        $p->paths['outline']->setSample(true);
+    }
+
+
+    /**
+     * Drafts the inner pocket bag
+     *
+     * @param \Freesewing\Model $model The model to draft for
+     *
+     * @return void
+     */
+    public function draftInnerPocketBag($model)
+    {
+        /** @var \Freesewing\Part $p */
+        $p = $this->parts['innerPocketBag'];
+        
+        $p->newPoint('topLeft', 0, 0);
+        $p->newPoint('topRight', $this->v('innerPocketWidth')+40, 0);
+        $p->addPoint('midTopLeft', $p->shift('topLeft', -90, 30));
+        $p->addPoint('midTopRight', $p->shift('topRight', -90, 30));
+        $p->addPoint('midBottomLeft', $p->shift('topLeft', -90, 60));
+        $p->addPoint('midBottomRight', $p->shift('topRight', -90, 60));
+        $p->addPoint('bottomLeft', $p->shift('topLeft', -90, 90));
+        $p->addPoint('bottomRight', $p->shift('topRight', -90, 90));
+
+        $p->newPath('outline', 'M midTopLeft L topLeft L topRight L midTopRight
+            M midBottomLeft L bottomLeft L bottomRight L midBottomRight'
+        , ['class' => 'lining']);
+        $p->newPath('help', 'M midTopLeft L midBottomLeft M midTopRight L midBottomRight', ['class' => 'help']);
+        
+        // Mark path for sample service
+        $p->paths['outline']->setSample(true);
+    }
+
+    /**
+     * Drafts the inner pocket tab
+     *
+     * @param \Freesewing\Model $model The model to draft for
+     *
+     * @return void
+     */
+    public function draftInnerPocketTab($model)
+    {
+        /** @var \Freesewing\Part $p */
+        $p = $this->parts['innerPocketTab'];
+
+        $p->newPoint('topLeft', 0, 0);
+        $p->newPoint('topRight', $this->v('innerPocketWidth')+20, 0);
+        $p->newPoint('bottom', $this->v('innerPocketWidth')/2+10 , $this->v('innerPocketWidth')/2+10);
+        $p->newPoint('top', $this->v('innerPocketWidth')/2+10, 0);
+        
+        $p->newPath('outline', 'M topLeft L topRight L bottom z', ['class' => 'lining']);
+        $p->newPath('foldline', 'M top L bottom', ['class' => 'help']);
+        
         // Mark path for sample service
         $p->paths['outline']->setSample(true);
     }
@@ -1004,9 +1134,50 @@ class CarltonCoat extends BentBodyBlock
         /** @var \Freesewing\Part $p */
         $p = $this->parts['front'];
 
+        // Fusible interfacing armhole
+        $fw = $this->getValue("fusibleWidth");
+        $p->offsetPathString('fuse', 'M 8 L 12 C 19 17 10 C 18 15 14 C 16 13 5', (-1 * $fw), 1, ['class' => 'help']);
+        $p->newTextOnPath('fuse1', 'M 12 C 19 17 10 C 18 15 14 C 16 13 5', $this->t('Apply fusible interfacing here'), ['dy' => $fw/2], 0);
+        $p->newTextOnPath('fuse2', 'M  8 L 12', $this->t('Apply fusible interfacing here'), ['dy' => $fw/2], 0);
+        
+        // Fusible interfacing inner pocket
+        $p->newPoint('fuseIpTopLeft', $p->x('innerPocketTopLeft')-15, $p->y('innerPocketTopLeft')-15);
+        $p->newPoint('fuseIpTopRight', $p->x('innerPocketTopRight')+15, $p->y('innerPocketTopLeft')-15);
+        $p->newPoint('fuseIpBotLeft', $p->x('innerPocketBottomLeft')-15, $p->y('innerPocketBottomLeft')+15);
+        $p->newPoint('fuseIpBotRight', $p->x('innerPocketBottomRight')+15, $p->y('innerPocketBottomLeft')+15);
+        $p->newPath('fuseIp', 'M fuseIpTopLeft L fuseIpTopRight L fuseIpBotRight L fuseIpBotLeft z', ['class' => 'lining help']);
+        $p->newTextOnPath('fuseIp', 'M fuseIpBotLeft L fuseIpBotRight', $this->t('Apply fusible interfacing here'), ['class' => 'center', 'dy' => -2], 0);
+        
+        // Fusible interfacing hem
+        $p->newPoint('fuseHemLeft', $p->x('hemFrontEdge'), $p->y('hemFrontEdge')-$fw);
+        $p->newPoint('fuseHemRight', $p->x('hemSide'), $p->y('hemFrontEdge')-$fw);
+        $p->newPath('fuseHem', 'M fuseHemLeft L fuseHemRight', ['class' => 'fabric help']);
+        $p->newTextOnPath('fuseHem', 'M fuseHemLeft L fuseHemRight', $this->t('Apply fusible interfacing here'), ['class' => 'center', 'dy' => $fw/2], 0);
+
+        // Breakline
+        $p->addPoint('rollLineEdge', $p->shiftOutwards(12, 8, 20));
+        $p->newPoint('rollLineBot',$p->x('frontEdge'), $p->y('button3Left'));
+        $p->curveCrossesLine(9, 21, 20, 8, 'rollLineBot', 'rollLineEdge', 'bl');
+        $p->clonePoint('bl1', 'rollLineTop');
+        $p->newPath('rollLine', 'M rollLineTop L rollLineBot', ['class' => 'canvas help']);
+        $p->newTextOnPath('rollLine', 'M rollLineBot L rollLineTop', $this->t('Roll line'), ['dy' => -1],0);
+        $p->newTextOnPath('csp1', 'M rollLineTop L rollLineBot', $this->t('Canvas chest piece'), ['dy' => -1],0);
+
+        // Shoulder canvas piece
+        $p->addPoint('csp1', $p->shift('rollLineBot', $p->angle('rollLineBot', 'rollLineEdge')-110, $p->distance(3,'waistSide')/2));
+        $p->addPoint('csp2', $p->beamsCross(5, 'waistSideCpTop', 3, 'waistSide'));
+        $p->newPath('canvasShoulderPiece', 'M rollLineBot C csp1 csp2 5', ['class' => 'help']);
+        $p->newTextOnPath('csp', 'M rollLineBot C csp1 csp2 5', $this->t('Canvas chest piece'), ['dy' => -1],0);
         // Title
         $p->newPoint('titleAnchor', $p->x(21), $p->y(10));
-        $p->addTitle('titleAnchor', 1, $this->t($p->title), '2x '.$this->t('from fabric'));
+        $p->addTitle('titleAnchor', 1, $this->t($p->title), 
+            '2x '.
+            $this->t('from fabric').
+            "\n2x ".
+            $this->t('facing from fabric').
+            "\n2x ".
+            $this->t('non-facing from lining')
+        );
 
         // Scalebox
         $p->newPoint('scaleboxAnchor', $p->x(21), $p->y(5));
@@ -1044,6 +1215,8 @@ class CarltonCoat extends BentBodyBlock
         $p->newPath('fldLining', 'M flbTop L flbBottom',['class' => 'lining lashed']);
         $p->newTextOnPath(1, 'M flbTop L flbBottom', $this->t('Facing/Lining boundary - Lining side'), ['dy' => -2, 'class' => 'fill-lining'], false);
         $p->newTextOnPath(2, 'M flbBottom L flbTop', $this->t('Facing/Lining boundary - Facing side'), ['dy' => -2, 'class' => 'fill-fabric'], false);
+        $p->newPoint('facingNoteAnchor', $p->x('flbBottom'), $p->y('seatSide'));
+        $p->newNote('flb', 'facingNoteAnchor', $this->t('Add seam allowance at the facing/lining border'), 4, 40 );
 
         // Notches
         $p->notch(['collarBendPoint', 10, 'waistSide']);
@@ -1062,6 +1235,9 @@ class CarltonCoat extends BentBodyBlock
             $p->addPoint('noteAnchor2', $p->shift('hemSide', 180, 120));
             $p->newNote('sa1', 'noteAnchor1', $this->t('Standard seam allowance')."\n(".$p->unit($this->o('sa')).')', 10, 40, $this->o('sa')*-0.5);
             $p->newNote('sa2', 'noteAnchor2', $this->t('Hem allowance')."\n(".$p->unit($this->o('sa')*5).')', 12, 30, $this->o('sa')*-2.5);
+            // Straighten hem
+            $p->newPoint('sa-line-hemFrontEdgeTOhemSide', $p->x('sa-line-hemFrontEdgeTOcollarBendPoint'), $p->y('sa-line-hemFrontEdgeTOhemSide'));
+            $p->newPoint('sa-line-hemSideTOhemFrontEdge', $p->x('sa-line-hemSideTOseatSide'), $p->y('sa-line-hemSideTOhemFrontEdge'));
         }
 
         // Store length to sleeve notch
@@ -1080,9 +1256,27 @@ class CarltonCoat extends BentBodyBlock
         /** @var \Freesewing\Part $p */
         $p = $this->parts['back'];
 
+        // Back stay
+        $p->addPoint('backStay1', $p->shiftFractionTowards('bpTopIn', 10, 0.5));
+        $p->addPoint('backStay2', $p->shiftAlong(5, 'chestSideCp', 'waistSideCpTop', 'waistSide', 30));
+        $p->addPoint('backStay3', $p->shift('backStay2', 180, $p->distance('backStay2','dartTip')/2));
+        $p->newPath('backStay', 'M bpTopIn C backStay1 backStay3 backStay2', ['class' => 'help']);
+        $p->newTextOnPath('backStaye','M bpTopIn C backStay1 backStay3 backStay2', $this->t('Back stay'), ['dy' => -1, 'class' => 'center'], 0);
+
+        // Fusible interfacing armhole
+        $fw = $this->v('fusibleWidth');
+        $p->offsetPathString('fuse', 'M 1 C 1 7 8 L 12 C 19 17 10 C 18 15 14 C 16 13 5', (-1 * $fw), 1, ['class' => 'help']);
+        $p->newTextOnPath('fuse1', 'M 12 C 19 17 10 C 18 15 14 C 16 13 5', $this->t('Apply fusible interfacing here'), ['dy' => $fw/2, 'class' => 'center'], 0);
+        $p->newTextOnPath('fuse2', 'M  1 C 1 7 8 L 12', $this->t('Apply fusible interfacing here'), ['dy' =>  $fw/2], 0);
+            
         // Title
         $p->newPoint('titleAnchor', $p->x(8), $p->y(18));
-        $p->addTitle('titleAnchor', 2, $this->t($p->title), '2x '.$this->t('from fabric'));
+        $p->addTitle('titleAnchor', 2, $this->t($p->title), 
+            '2x '.
+            $this->t('from fabric').
+            "\n2x ".
+            $this->t('from lining')
+        );
 
         // Logo
         $p->newSnippet('logo','logo', 21);
@@ -1127,9 +1321,21 @@ class CarltonCoat extends BentBodyBlock
         /** @var \Freesewing\Part $p */
         $p = $this->parts['tail'];
 
+        // Fusible interfacing tail
+        $fw = $this->getValue("fusibleWidth");
+        $p->addPoint('fuseLeft', $p->shift('leftTop-3', 90, $fw));
+        $p->addPoint('fuseRight', $p->shift('waistTop-3', 90, $fw));
+        $p->newPath('fuse', 'M fuseLeft L fuseRight', ['class' => 'fabric help']);
+        $p->newTextOnPath('fuse', 'M fuseLeft L fuseRight', $this->t('Apply fusible interfacing here'), ['dy' => $fw/2], 0);
+
         // Title
         $p->newPoint('titleAnchor', $p->x('waistTop')/2, $p->y('leftTop-3')/2);
-        $p->addTitle('titleAnchor', 3, $this->t($p->title), '2x '.$this->t('from fabric'));
+        $p->addTitle('titleAnchor', 3, $this->t($p->title), 
+            '2x '.
+            $this->t('from fabric').
+            "\n2x ".
+            $this->t('from lining')
+        );
 
         // Logo
         $p->newPoint('logoAnchor', $p->x('leftPleat2')/2, $p->y('leftTop-3')/2);
@@ -1149,6 +1355,9 @@ class CarltonCoat extends BentBodyBlock
             $p->addPoint('noteAnchor2', $p->shift('leftPleat3-3', -90, 12));
             $p->newNote('sa1', 'noteAnchor1', $this->t('Standard seam allowance')."\n(".$p->unit($this->o('sa')).')', 9, 10, $this->o('sa')*-0.5);
             $p->newNote('sa2', 'noteAnchor2', $this->t('Hem allowance')."\n(".$p->unit($this->o('sa')*5).')', 2, 40);
+            // Straighten hem
+            $p->newPoint('sa-line-waistTop-3TOleftTop-3', $p->x('sa-line-waistTop-3TOwaistTop'), $p->y('sa-line-waistTop-3TOleftTop-3'));
+            $p->newPoint('sa-line-leftTop-3TOwaistTop-3', $p->x('sa-line-leftTop-3TOleftTop'), $p->y('sa-line-leftTop-3TOwaistTop-3'));
         }
     }
 
@@ -1164,9 +1373,23 @@ class CarltonCoat extends BentBodyBlock
         /** @var \Freesewing\Part $p */
         $p = $this->parts['topsleeve'];
         
+        // Fusible interfacing armhole
+        $fw = $this->getValue("fusibleWidth");
+        $fp = 'M topsleeveLeftEdge C topsleeveLeftEdgeCpRight frontPitchPointCpBottom frontPitchPoint C frontPitchPointCpTop sleeveTopCpLeft sleeveTop C sleeveTopCpRight backPitchPoint backPitchPoint';
+        $p->offsetPathString('fuse', $fp, (-1 * $fw), 1, ['class' => 'help']);
+        $p->addPoint('fuse1', $p->shiftAlong('backPitchPoint', 'backPitchPoint', 'topsleeveRightEdgeCpTop', 'topsleeveRightEdge', $fw));
+        $p->newPoint('fuse2',$p->x('fuse-endPoint'), $p->y('fuse1'));
+        $p->newPath('fuseClosing', 'M fuse-endPoint C fuse-endPoint fuse2 fuse1', ['class' => 'help']);
+        $p->newTextOnPath('fuse1', $fp, $this->t('Apply fusible interfacing here'), ['dy' => $fw/2], 0);
+
         // Title
         $p->newPoint('titleAnchor', $p->x('sleeveTop'), $p->y('topsleeveRightEdge')+80);
-        $p->addTitle('titleAnchor', 4, $this->t($p->title), '2x '.$this->t('from fabric'));
+        $p->addTitle('titleAnchor', 4, $this->t($p->title), 
+            '2x '.
+            $this->t('from fabric').
+            "\n2x ".
+            $this->t('from lining')
+        );
 
         // Logo
         $p->newPoint('logoAnchor', $p->x('sleeveTop'), $p->y('elbowRight')-25);
@@ -1235,8 +1458,27 @@ class CarltonCoat extends BentBodyBlock
         /** @var \Freesewing\Part $p */
         $p = $this->parts['undersleeve'];
         
+        // Fusible interfacing armhole
+        $fw = $this->getValue("fusibleWidth");
+        $fp = 'M undersleeveLeftEdgeRight C undersleeveLeftEdgeCpRight undersleeveTipCpBottom undersleeveTip';
+        $p->addPoint('fuseSplit', $p->shiftAlong('undersleeveTip', 'undersleeveTipCpBottom', 'undersleeveLeftEdgeCpRight', 'undersleeveLeftEdgeRight', $fw*2));
+        $p->splitCurve('undersleeveLeftEdgeRight', 'undersleeveLeftEdgeCpRight', 'undersleeveTipCpBottom', 'undersleeveTip', 'fuseSplit', 'fuseSplit');
+        $p->offsetPathString('fuse', 'M undersleeveLeftEdgeRight C fuseSplit2 fuseSplit3 fuseSplit', (-1 * $fw), 1, ['class' => 'help']);
+        $p->curveCrossesY('undersleeveElbowLeft', 'undersleeveElbowLeftCpTop', 'undersleeveLeftEdge', 'undersleeveLeftEdge', $p->y('fuse-startPoint'), '.fuse');
+        $p->clonePoint('.fuse1', 'fuseLeftEdge');
+        $p->addPoint('.fuse2', $p->shiftOutwards('fuse-cp2--undersleeveLeftEdgeRight.fuseSplit2.fuseSplit3.fuseSplit', 'fuse-curve-fuseSplitTOundersleeveLeftEdgeRight', 200));
+        $p->curveCrossesLine('undersleeveTip', 'undersleeveTip', 'undersleeveRightEdgeCpTop', 'undersleeveRightEdge', '.fuse2', 'fuse-curve-fuseSplitTOundersleeveLeftEdgeRight', '.fuse');
+        $p->clonePoint('.fuse1', 'fuseRightEdge');
+        $p->newPath('fuseClosing', 'M fuse-endPoint L fuseRightEdge M fuse-startPoint L fuseLeftEdge', ['class' => 'help']);
+        $p->newTextOnPath('fuse1', $fp, $this->t('Apply fusible interfacing here'), ['dy' => $fw/2, 'class' => 'center'], 0);
+
         // Title
-        $p->addTitle('undersleeveWristLeftHelperTop', 5, $this->t($p->title), '2x '.$this->t('from fabric'));
+        $p->addTitle('undersleeveWristLeftHelperTop', 5, $this->t($p->title), 
+            '2x '.
+            $this->t('from fabric').
+            "\n2x ".
+            $this->t('from lining')
+        );
 
         // Logo
         $p->addPoint('logoAnchor', $p->shift('undersleeveWristLeftHelperTop', 90, 100));
@@ -1293,7 +1535,7 @@ class CarltonCoat extends BentBodyBlock
         
         // Title
         $p->newPoint('titleAnchor', $p->x('bottomRight')/2, $p->y('bottomRight')/2);
-        $p->addTitle('titleAnchor', 6, $this->t($p->title), '4x '.$this->t('from fabric'), 'small');
+        $p->addTitle('titleAnchor', 6, $this->t($p->title), '4x '.$this->t('from fabric'), ['scale'=> 80]);
 
         // Button
         $p->newSnippet('button','button-lg','button');
@@ -1324,7 +1566,7 @@ class CarltonCoat extends BentBodyBlock
         
         // Title
         $p->addPoint('titleAnchor', $p->shiftFractionTowards('standCenterTop','centerBottom',0.5));
-        $p->addTitle('titleAnchor', 7, $this->t($p->title), '2x '.$this->t('from fabric'), 'small');
+        $p->addTitle('titleAnchor', 7, $this->t($p->title), '2x '.$this->t('from fabric'), ['scale' => 40]);
 
         // Seam allowance
         if($this->o('sa')) {
@@ -1346,8 +1588,8 @@ class CarltonCoat extends BentBodyBlock
         $p = $this->parts['collar'];
         
         // Title
-        $p->newPoint('titleAnchor', $p->x('rot-4-cutBottom2'),$p->y('shapedTip'));
-        $p->addTitle('titleAnchor', 8, $this->t($p->title), '2x '.$this->t('from fabric'), 'horizontal-small');
+        $p->newPoint('titleAnchor', $p->x('rot-4-cutBottom2'),$p->y('shapedTip')-20);
+        $p->addTitle('titleAnchor', 8, $this->t($p->title), '2x '.$this->t('from fabric'), ['scale' => 75, 'align'=>'left']);
 
         // Cut on fold
         $p->newPoint('cofTop', $p->x('centerTop'), $p->y('centerTop')+10);
@@ -1389,7 +1631,7 @@ class CarltonCoat extends BentBodyBlock
         
         // Title
         $p->newPoint('titleAnchor', $p->x('bottomRight')/2, $p->y('bottomRight')/2);
-        $p->addTitle('titleAnchor', 9, $this->t($p->title), '2x '.$this->t('from fabric'), 'small');
+        $p->addTitle('titleAnchor', 9, $this->t($p->title), '2x '.$this->t('from fabric')."\n".'2x '.$this->t("from fusible interfacing"));
 
         // Grainline
         $p->newPoint('grainlineTop', $p->x('topLeft')+50, $p->y('topLeft')+5);
@@ -1414,10 +1656,19 @@ class CarltonCoat extends BentBodyBlock
     {
         /** @var \Freesewing\Part $p */
         $p = $this->parts['pocket'];
+
+        // Fusible interfacing
+        $p->newPath('fuse', 'M pocketFlapBottomLeft L pocketFlapBottomRight', ['class' => 'fusible help']);
+        $p->newTextOnPath('fuse', 'M pocketFlapBottomLeft L pocketFlapBottomRight', $this->t('Apply fusible interfacing above this line'), ['class' => 'center', 'dy' => -2], 0);
         
         // Title
         $p->addPoint('titleAnchor', $p->shift('pocketTopLeft',-40,120));
-        $p->addTitle('titleAnchor', 10, $this->t($p->title), '2x '.$this->t('from fabric'), 'small');
+        $p->addTitle('titleAnchor', 10, $this->t($p->title), 
+            '2x '.
+            $this->t('from fabric').
+            "\n2x ".
+            $this->t('from lining')
+        );
 
         // Grainline
         $p->newPoint('grainlineTop', $p->x('pocketTopLeft')+50, $p->y('pocketTopLeft')+5);
@@ -1432,6 +1683,9 @@ class CarltonCoat extends BentBodyBlock
             $p->addPoint('note1anchor', $p->shift('pocketTopRight', 180, 60));
             $p->newNote('sa1', 'note1anchor', $this->t('Twice the standard seam allowance')."\n(".$p->unit($this->o('sa')*2).')', 6, 20, $this->o('sa')*-1);
             $p->newNote('sa2', 'pocketBottomRightTop', $this->t('Half of the standard seam allowance')."\n(".$p->unit($this->o('sa')/2).')', 9, 20, $this->o('sa')/-4);
+            // Straighten HEM 
+            $p->newPoint('sa-line-pocketTopLeftTOpocketTopRight', $p->x('sa-endPoint'), $p->y('sa-line-pocketTopLeftTOpocketTopRight'));
+            $p->newPoint('sa-line-pocketTopRightTOpocketTopLeft', $p->x('sa-line-pocketTopRightTOpocketBottomRightTop'), $p->y('sa-line-pocketTopRightTOpocketTopLeft'));
         }
     }
 
@@ -1449,7 +1703,14 @@ class CarltonCoat extends BentBodyBlock
         
         // Title
         $p->addPoint('titleAnchor', $p->shift('pocketTopLeft',-10,100));
-        $p->addTitle('titleAnchor', 11, $this->t($p->title), '2x '.$this->t('from fabric'), 'small');
+        $p->addTitle('titleAnchor', 11, $this->t($p->title), 
+            '2x '.
+            $this->t('from fabric').
+            "\n2x ".
+            $this->t('from lining').
+            "\n2x ".
+            $this->t('from fusible interfacing')
+        , ['scale' => 70, 'align'=>'left']);
 
         // Grainline
         $p->newPoint('grainlineTop', $p->x('pocketTopLeft')+50, $p->y('pocketTopLeft')-5);
@@ -1477,17 +1738,90 @@ class CarltonCoat extends BentBodyBlock
         
         // Title
         $p->newPoint('titleAnchor', $p->x('bottomRight')/2, $p->y('bottomRight')/2);
-        $p->addTitle('titleAnchor', 12, $this->t($p->title), '2x '.$this->t('from fabric'), 'vertical-small');
+        $p->addTitle('titleAnchor', 12, $this->t($p->title), '2x '.$this->t('from fabric'), ['scale' => 60, 'rotate' => -90]);
 
         // Grainline
         $p->newPoint('grainlineTop', $p->x('topLeft')+10, $p->y('topLeft')+5);
         $p->newPoint('grainlineBottom', $p->x('grainlineTop'), $p->y('bottomLeft')-5);
         $p->newGrainline('grainlineBottom','grainlineTop', $this->t('grainline'));
 
+        // Note
+        $p->newNote('fuse', 'grainlineBottom', $this->t('Apply fusible interfacing')."\n".$this->t('to half of the welt'), 2, 20, 10);
+        
         // Seam allowance
         if($this->o('sa')) {
             $p->offsetPath('sa','outline', $this->o('sa')/2,1,['class' => 'sa fabric']);
         }
+    }
+
+    /**
+     * Finalizes the inner pocket welt
+     *
+     * @param \Freesewing\Model $model The model to draft for
+     *
+     * @return void
+     */
+    public function finalizeInnerPocketWelt($model)
+    {
+        /** @var \Freesewing\Part $p */
+        $p = $this->parts['innerPocketWelt'];
+        
+        // Title
+        $p->newPoint('titleAnchor', $p->x('rightTopWelt')/2, 0);
+        $p->addTitle('titleAnchor', 13, $this->t($p->title), '4x '.$this->t('from lining'), ['scale' => 50]);
+
+        // Note
+        $p->addPoint('noteAnchor', $p->shift('leftBottomCorner', 0, 30));
+        $p->newNote('sa', 'noteAnchor', $this->t('Cut out without seam allowance'), 4, 20);
+    }
+
+    /**
+     * Finalizes the inner pocket bag
+     *
+     * @param \Freesewing\Model $model The model to draft for
+     *
+     * @return void
+     */
+    public function finalizeInnerPocketBag($model)
+    {
+        /** @var \Freesewing\Part $p */
+        $p = $this->parts['innerPocketBag'];
+        
+        // Title
+        $p->newPoint('titleAnchor', $p->x('bottomRight')/2, $p->y('bottomRight')/2);
+        $p->addTitle('titleAnchor', 14, $this->t($p->title), '2x '.$this->t('from lining'), ['scale' => 75]);
+
+        // Note
+        $p->addPoint('noteAnchor', $p->shift('bottomLeft', 0, 30));
+        $p->newNote('sa', 'noteAnchor', $this->t('Cut out without seam allowance'), 2, 20);
+
+        // Height
+        $p->newHeightDimension('bottomLeft','topLeft',$p->x('topLeft')+20, $p->unit(350));
+    }
+
+    /**
+     * Finalizes the inner pocket tab
+     *
+     * @param \Freesewing\Model $model The model to draft for
+     *
+     * @return void
+     */
+    public function finalizeInnerPocketTab($model)
+    {
+        /** @var \Freesewing\Part $p */
+        $p = $this->parts['innerPocketTab'];
+
+        // Title
+        $p->newPoint('titleAnchor', $p->x('bottom'), $p->y('bottom')/2.5);
+        $p->addTitle('titleAnchor', 15, $this->t($p->title), '2x '.$this->t('from lining'), ['scale' => 50]);
+
+        // Buttonhole
+        $p->addPoint('buttonholeAnchor1', $p->shift('top', -45, 15));
+        $p->newSnippet('btn1','buttonhole','buttonholeAnchor1', ['transform' => 'rotate(-45, '.$p->x('buttonholeAnchor1').', '.$p->y('buttonholeAnchor1').')']);
+
+        // Note
+        $p->addPoint('noteAnchor', $p->shift('topLeft', 0, 15));
+        $p->newNote('sa', 'noteAnchor', $this->t('Cut out without seam allowance'), 4, 8, 0);
     }
 
 
@@ -1558,9 +1892,6 @@ class CarltonCoat extends BentBodyBlock
         $p->newWidthDimension('hemFrontEdge','flbBottom', $p->y('hemFrontEdge')+30+$sa*5);
         $p->newWidthDimension('hemFrontEdge','hemSide', $p->y('hemFrontEdge')+45+$sa*5);
 
-        
-
-
         // Main pocket
         $p->newHeightDimension('pocketBottomRightLeft', 'pocketTopRight', $p->x('pocketBottomRightLeft')-10);
         $p->newHeightDimension('pocketFlapBottomLeftRight', 'pocketFlapTopLeft', $p->x('pocketFlapBottomLeftRight')+10);
@@ -1573,6 +1904,11 @@ class CarltonCoat extends BentBodyBlock
         $p->newLinearDimension('chestPocketBottomRight','chestPocketTopRight', 15);
         $p->newNote(1, 'chestPocketTopRight', $this->v('chestPocketRotation').' '.$this->t('degree').' '.$this->t('slant'), 1, 30, -20);
         $p->newWidthDimension(3, 'chestPocketTopLeft', $p->y('chestPocketTopLeft')+15);
+
+        // Inner pocket
+        $p->newWidthDimension(3, 'innerPocketBottomLeft', $p->y('innerPocketBottomLeft')+15);
+        $p->newWidthDimension('innerPocketBottomLeft', 'innerPocketBottomRight', $p->y('innerPocketBottomLeft')+15);
+        $p->newHeightDimension('waistSide', 'innerPocketRight', $p->x('innerPocketRight')+15);
     }
     
     /**
@@ -1853,5 +2189,54 @@ class CarltonCoat extends BentBodyBlock
         $p = $this->parts['chestPocketWelt'];
         $p->newHeightDimension('bottomRight','topRight', $p->x('topRight')+15+$this->o('sa')/2);
         $p->newWidthDimension('bottomLeft','bottomRight', $p->y('bottomLeft')+15+$this->o('sa')/2);
+    }
+    
+    /**
+     * Adds paperless info for the inner pocket welt part
+     *
+     * @param \Freesewing\Model $model The model to draft for
+     *
+     * @return void
+     */
+    public function paperlessInnerPocketWelt($model)
+    {
+        /** @var \Freesewing\Part $p */
+        $p = $this->parts['innerPocketWelt'];
+        $p->newWidthDimension('leftBottomWelt','rightBottomWelt', $p->y('leftBottomCorner')+25);
+        $p->newWidthDimension('leftBottomCorner','rightBottomCorner', $p->y('leftBottomCorner')+40);
+        $p->newHeightDimensionSm('rightBottomWelt','rightTopWelt', $p->x('rightTopCorner')+15);
+        $p->newHeightDimension('rightBottomCorner','rightTopCorner', $p->x('rightTopCorner')+30);
+    }
+    
+    /**
+     * Adds paperless info for the inner pocket bag part
+     *
+     * @param \Freesewing\Model $model The model to draft for
+     *
+     * @return void
+     */
+    public function paperlessInnerPocketBag($model)
+    {
+        /** @var \Freesewing\Part $p */
+        $p = $this->parts['innerPocketBag'];
+
+        $p->newWidthDimension('bottomLeft', 'bottomRight', $p->y('bottomLeft')+15);
+    }
+
+    /**
+     * Adds paperless info for the inner pocket tab part
+     *
+     * @param \Freesewing\Model $model The model to draft for
+     *
+     * @return void
+     */
+    public function paperlessInnerPocketTab($model)
+    {
+        /** @var \Freesewing\Part $p */
+        $p = $this->parts['innerPocketTab'];
+
+        $p->newWidthDimension('topLeft', 'topRight', $p->y('top')-15);
+        $p->newHeightDimension('bottom', 'topRight', $p->x('topRight')+15);
+
     }
 }

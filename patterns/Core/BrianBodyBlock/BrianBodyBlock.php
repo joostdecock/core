@@ -82,12 +82,12 @@ class BrianBodyBlock extends Pattern
         $this->setValueIfUnset('shoulderSlope', $model->m('shoulderSlope') - $this->o('shoulderSlopeReduction'));
         
         // Depth of the armhole
-        $this->setValueIfUnset('armholeDepth', $this->v('shoulderSlope') / 2 + $model->m('bicepsCircumference') * $this->o('armholeDepthFactor'));
+        $this->setValueIfUnset('armholeDepth', $this->v('shoulderSlope') / 2 + ( $model->m('bicepsCircumference') + $this->o('bicepsEase') ) * $this->o('armholeDepthFactor'));
 
         // Heigth of the sleevecap
-        $this->setValueIfUnset('sleevecapHeight', $model->m('bicepsCircumference') * $this->o('sleevecapHeightFactor'));
+        $this->setValueIfUnset('sleevecapHeight', ($model->m('bicepsCircumference') + $this->o('bicepsEase')) * $this->o('sleevecapHeightFactor'));
         
-        // Collar widht and depth
+        // Collar width and depth
         $this->setValueIfUnset('collarWidth', ($model->getMeasurement('neckCircumference') / 2.42) / 2);
         $this->setValueIfUnset('collarDepth', ($model->getMeasurement('neckCircumference') + $this->getOption('collarEase')) / 5 - 8);
 
@@ -215,11 +215,11 @@ class BrianBodyBlock extends Pattern
         $p->newPoint(4, 0,
             $model->getMeasurement('centerBackNeckToWaist') + $model->getMeasurement('naturalWaistToHip') + $this->getOption('backNeckCutout') + $this->getOption('lengthBonus'),
             'Center back @ trouser waist');
+        $p->clonePoint(4, 'gridAnchor');
 
         // Side vertical axis
         $p->newPoint(5, $model->getMeasurement('chestCircumference') / 4 + $this->getOption('chestEase') / 4, $p->y(2),
             'Quarter chest @ armhole depth');
-        $p->clonePoint(5, 'gridAnchor');
         $p->newPoint(6, $p->x(5), $p->y(4), 'Quarter chest @ trouser waist');
 
         // Back collar
@@ -230,7 +230,7 @@ class BrianBodyBlock extends Pattern
         $p->newPoint(9, 0, $p->y(1) + $this->v('collarDepth') * $this->v('frontCollarTweakFactor'), 'Center front collar depth');
 
         // Armhole
-        $p->newPoint(10, $model->getMeasurement('acrossBack') / 2, $p->y(1) + $p->deltaY(1, 2) / 2, 'Armhole pitch point');
+        $p->newPoint(10, ($model->getMeasurement('shoulderToShoulder') * $this->o('acrossBackFactor')) / 2, $p->y(1) + $p->deltaY(1, 2) / 2, 'Armhole pitch point');
         $p->newPoint(11, $p->x(10), $p->y(2), 'Armhole pitch width @ armhole depth');
         $p->newPoint(12, $model->m('shoulderToShoulder')/2, $this->v('shoulderSlope') / 2, 'Shoulder tip');
 
@@ -472,10 +472,10 @@ class BrianBodyBlock extends Pattern
                 // No, this will be a tweaked draft. So let's tweak
                 if($this->armholeDelta($model) > 0) {
                     //  Armhole is larger than sleeve head. Increase tweak factor 
-                    $this->setValue('sleeveTweakFactor', $this->v('sleeveTweakFactor')*1.03);
+                    $this->setValue('sleeveTweakFactor', $this->v('sleeveTweakFactor')*1.01);
                 } else {
                     //  Armhole is smaller than sleeve head. Decrease tweak factor 
-                    $this->setValue('sleeveTweakFactor', $this->v('sleeveTweakFactor')*0.99);
+                    $this->setValue('sleeveTweakFactor', $this->v('sleeveTweakFactor')*0.95);
                 }
                 // Include debug message
                 $this->dbg('Sleeve tweak run '.$this->v('sleeveTweakRun').'. Sleeve head is '.$this->armholeDelta($model).'mm off');
@@ -486,13 +486,14 @@ class BrianBodyBlock extends Pattern
 
         // Sleeve center
         $p->newPoint(1, 0, 0, 'Origin (Center sleeve @ shoulder)');
+        $p->clonePoint(1, 'gridAnchor');
         $p->newPoint(2, 0, $this->v('sleevecapHeight')*$this->v('sleeveTweakFactor'), 'Center sleeve @ sleevecap start');
-        $p->clonePoint(2, 'gridAnchor');
         $p->newPoint(3, 0, $model->getMeasurement('shoulderToWrist') + $this->o('sleeveLengthBonus'), 'Center sleeve @ wrist');
 
-        // Sleeve half width
-        $p->newPoint(4, ($model->getMeasurement('bicepsCircumference') / 2 + $this->getOption('bicepsEase') / 2) * $this->v('sleeveTweakFactor'), 0,
-            'Half width of sleeve @ shoulder');
+        // Sleeve half width, limit impact of sleeveTweakFactor to 25% to avoid a too narrow sleeve
+        $halfWidth = $model->getMeasurement('bicepsCircumference') / 2 + $this->getOption('bicepsEase') / 2;
+        $halfWidth = ($halfWidth * 0.75) +  ($halfWidth * 0.25 * $this->v('sleeveTweakFactor'));
+        $p->newPoint(4, $halfWidth, 0, 'Half width of sleeve @ shoulder');
         $p->newPoint(5, $p->x(4), $p->y(2), 'Half width of sleeve @ sleevecap start');
         $p->newPoint(6, $p->x(4), $p->y(3), 'Half width of sleeve @ wrist');
 

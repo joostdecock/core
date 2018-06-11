@@ -1,7 +1,8 @@
 info:
     name: "Florent Flat Cap"
-    description: "Florent is a flat cap, a rounded cap with a small stiff brim in front"
+    description: "Florent is a flat cap, a rounded cap with a small stiff brim in front."
     handle: "florent"
+    level: 4
     tags:
         - menswear
         - womenswear
@@ -25,7 +26,7 @@ options:
     headEase:
         group: "fit"
         title: "Head ease"
-        description: "The amount of ease to fit the cap on your head"
+        description: "The amount of ease to fit the cap on your head."
         type: "measure"
         min: 0
         max: 25

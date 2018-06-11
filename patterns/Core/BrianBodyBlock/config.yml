@@ -1,7 +1,8 @@
 info:
   name: "Brian Body Block"
-  description: "Brian is a basic body block for men"
+  description: "Brian is a basic body block for men."
   handle: "brian"
+  level: 3
   tags:
     - menswear
     - top
@@ -18,7 +19,6 @@ languages:
     fr: "French"
 
 measurements:
-    acrossBack: 450
     bicepsCircumference: 335
     centerBackNeckToWaist: 480
     chestCircumference: 1080
@@ -35,15 +35,31 @@ options:
 # fit group
     chestEase:
         title: "Chest ease"
-        description: "The amount of ease at your chest"
+        description: "The amount of ease at your chest."
         group: "fit"
         type: "measure"
         min: -40
         max: 160
         default: 30
+    bicepsEase:
+        title: "Biceps ease"
+        description: "The amount of ease at your upper arm. Note that while we try to respect this, fitting the sleeve to the armhole takes precedence over respecting the exact amount of ease."
+        group: "fit"
+        type: "measure"
+        min: 30
+        max: 80
+        default: 50
+    cuffEase:
+        title: "Cuff ease"
+        description: "The amount of ease at your wrist."
+        group: "fit"
+        type: "measure"
+        min: 0
+        max: 100
+        default: 45
     lengthBonus:
         title: "Length bonus"
-        description: "Amount to lengthen the body. A negative value will shorten it."
+        description: "The amount to lengthen the garment. A negative value will shorten it."
         group: "fit"
         type: "measure"
         min: -40
@@ -51,35 +67,36 @@ options:
         default: 0
     sleeveLengthBonus:
         title: "Sleeve length bonus"
-        description: "Amount to lengthen the sleeve. A negative value will shorten it."
+        description: "The amount to lengthen the sleeve. A negative value will shorten it."
         group: "fit"
         type: "measure"
         min: -40
         max: 80
         default: 0
-    cuffEase:
-        title: "Cuff ease"
-        description: "The amount of ease at your wrist"
-        group: "fit"
-        type: "measure"
-        min: 0
-        max: 100
-        default: 45
 
 # advanced group
     armholeDepthFactor:
         title: "Armhole depth factor"
-        description: "A factor that influences the depth of the armhole"
+        description: "Controls the depth of the armhole. Higher values make a deeper armhole."
         group: "advanced"
         type: "percent"
         min: 50
         max: 65
-        default: 60
+        default: 50
     sleevecapHeightFactor:
         title: "Sleevecap height factor"
-        description: "A factor that influences the height of the sleevecap"
+        description: "Controls the height of the sleevecap. A higher value results in a higher and more narrow sleevecap."
         group: "advanced"
         type: "percent"
         min: 35
         max: 75
         default: 55
+    acrossBackFactor:
+        title: "Across back factor"
+        description: "Controls your across back width as a factor of your shoulder to shoulder measurement."
+        group: "advanced"
+        type: "percent"
+        min: 93
+        max: 99
+        default: 96
+

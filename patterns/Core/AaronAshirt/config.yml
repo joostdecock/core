@@ -1,7 +1,8 @@
 info:
     name: "Aaron A-Shirt"
-    description: "Aaron is an athletic shirt or tank top"
+    description: "Aaron is an athletic shirt or tank top."
     handle: "aaron"
+    level: 3
     tags:
         - top
         - underwear
@@ -24,7 +25,6 @@ languages:
     fr: "French"
 
 measurements:
-    acrossBack: 450
     bicepsCircumference: 335
     centerBackNeckToWaist: 480
     chestCircumference: 1080
@@ -39,7 +39,7 @@ options:
 # fit group
     chestEase:
         title: "Chest ease"
-        description: "The amount of ease at your chest"
+        description: "The amount of ease at your chest."
         group: "fit"
         type: "measure"
         min: -40
@@ -47,7 +47,7 @@ options:
         default: 30
     hipsEase:
         title: "Hips ease"
-        description: "The amount of ease at your hips"
+        description: "The amount of ease at your hips."
         group: "fit"
         type: "measure"
         min: -40
@@ -111,7 +111,7 @@ options:
         default: 45
     lengthBonus:
         title: "Length bonus"
-        description: "Lengthen the top. Negative values will shorten it."
+        description: "The amount to lengthen the garment. A negative value will shorten it."
         group: "style"
         type: "measure"
         min: -60

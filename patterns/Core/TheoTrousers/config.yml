@@ -1,7 +1,8 @@
 info:
     name: "Theo trousers"
-    description: "Theo is Theodore with a more slim cut"
+    description: "Theo is Theodore with a more slim cut."
     handle: "theo"
+    level: 8
     tags:
         - menswear
         - trousers
@@ -55,7 +56,7 @@ options:
         default: 40
     lengthBonus:
         title: "Length bonus"
-        description: "The amount by which to lengthen the legs. Negative values shorten them."
+        description: "The amount to lengthen the garment. A negative value will shorten it."
         group: "fit"
         type: "measure"
         min: -60

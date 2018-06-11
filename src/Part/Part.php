@@ -368,79 +368,97 @@ class Part
     /**
      * Adds a title to the part, made up of a nr, title and message
      *
-     * This takes 3 elements (a nr, a short title, and a longer message)
-     * and adds them as 3 texts to the patter anchored at $anchorKey
-     * Don't confuse this with the title attribute of a part, which is
-     * internal. This gets rendered on the pattern.
+     * Takes an optional array of options to control the display:
+     *
+     *   'align' => either 'left', 'right', or 'center' (default)
+     *   'scale' => Default is 100, go higher or lower to scale the title
+     *   'rotation' => 'default is 0, enter degrees to rotate the title
      *
      * @param string $anchorKey ID of the point to anchor the title on
      * @param string $nr        Number of the part to print on the pattern
      * @param string $title     Title of the part to print on the pattern
      * @param string $msg       Message to print on the pattern
-     * @param string $mode      Possible modes: default, small, horizontal, vertical, vertical-small 
+     * @param array  $options   Array of options that control the layout 
      */
-    public function addTitle($anchorKey, $nr, $title, $msg = '', $mode = 'default', $noPatternPrefix = false)
+    public function addTitle($anchorKey, $nr, $title = '', $msg = '', $options=false)
     {
-        $class = str_replace('-',' ',$mode);
-        $title = str_replace("\n", " ", $title);  /* Remove any newline characters from the Title */
-        $lineHeight = ((strpos($mode, 'small') !== false) ? 6 : 11); /* setting the line-height attribute, depending on thesize of the Title */
-        if($noPatternPrefix === false) {
-            $patternTitle = "__TITLE__";
-        }
-        $meta = "Model: __MODELNAME__\nRef: __DRAFTHANDLE__";
+        // Convert align to text-anchor
+        $align = [
+            'center' => 'middle',
+            'left' => 'start',
+            'right' => 'end',
+        ];
 
+        // Set base font size
+        $scale = isset($options['scale']) ? $options['scale'] : 100;
+        $baseFontSize = 0.24*$scale;
 
-        if($mode == 'vertical' || $mode == 'vertical-small' || $mode == 'vertical-extrasmall') {
-            /* Moving the Title slightly on the horizontal pane. 
-               If there is no msg under the Title, center it on the anchor point. 
-               Otherwise align the center between the Title and the msg with the anchor point */
-            $shift = ( $msg == '' ? 2 : ($mode == 'vertical-small' ? 5 : 10)); 
-            if($mode == 'vertical-extrasmall') $shift = 1;
-            $this->newText('partNumber', $anchorKey, $nr, ['class' => "part-nr $class"]);
-            if($noPatternPrefix === false) {
-                if($mode == 'vertical-small') {
-                    $move = -4;
-                    $len = strlen($patternTitle)*2.6;
-                } elseif ($mode == 'vertical-extrasmall') {
-                    $move = -1.4;
-                    $len = strlen($patternTitle)*1.6;
-                } else {
-                    $move = -9;
-                    $len = strlen($patternTitle)*5.2;
-                }
-                $this->newText(
-                    'patternTitle', $anchorKey, $patternTitle,
-                    ['class' => "pattern-title $class", 'transform' => "translate(".$shift.", ".-1*$len."), translate($move,0)", 'writing-mode' => 'tb-rl']
-                );
-            }
-            $this->newText(
-                'partTitle', $anchorKey, $title,
-                ['class' => "part-title $class", 'transform' => "translate(".$shift.", 10)", 'writing-mode' => 'tb-rl']
-            );
-            $this->newText(
-                'partMsg', $anchorKey, $msg, 
-                ['class' => "part-msg $class", 'transform' => "translate(-5, 10)", 'writing-mode' => 'tb-rl', 'line-height' => $lineHeight]
-            );
-            $this->newText(
-                'partMeta', $anchorKey, $meta, 
-                ['class' => "part-meta $class", 'transform' => "translate(-5, 10)", 'writing-mode' => 'tb-rl', 'line-height' => $lineHeight]
-            );
-        } else {
-            if(strpos($class, 'xtrasmall')) $shift = 0.6;
-            elseif(strpos($class, 'mall')) $shift = 1;
-            else $shift = 1.9;
-            $this->newText('partNumber', $anchorKey, $nr, ['class' => "part-nr $class", 'transform' => 'translate(0, '.(-10*$shift).')']);
-            if($noPatternPrefix === false) $this->newText('patternTitle', $anchorKey, $patternTitle, ['transform' => 'translate(0,'.(-22*$shift).')', 'class' => "pattern-title $class"]);
-            $this->newText('partTitle', $anchorKey, $title, ['class' => "part-title $class"]);
-            $this->newText(
-                'partMsg', $anchorKey, $msg, 
-                ['class' => "part-msg $class", 'transform' => 'translate(0, '.(7.5*$shift).')', 'line-height' => $lineHeight]
-            );
-            $this->newText(
-                'partMeta', $anchorKey, $meta, 
-                ['class' => "part-meta $class", 'transform' => 'translate(0, '.(14*$shift).')', 'line-height' => $lineHeight]
-            );
+        // Set text anchor
+        $anchor = isset($options['align']) && in_array($options['align'], array_keys($align)) ? $options['align'] : 'center';
+        $anchor = $align[$anchor];
+
+        // Set rotation
+        $rotation = isset($options['rotate']) ? $options['rotate'] : 0;
+        $x = $this->x($anchorKey);
+        $y = $this->y($anchorKey);
+
+        // How many lines in the different text spans?
+        $nrLines = count(explode("\n", $nr));
+        $titleLines = count(explode("\n", $title));
+        $msgLines = count(explode("\n", $msg));
+
+        if(!isset($options['noPatternTitle'])) {
+            $this->newText('patternTitle', $anchorKey, '__TITLE__', [
+                'class' => 'pattern-title default', 
+                'line-height' => $baseFontSize, 
+                'style' => 
+                    'font-size: '.($baseFontSize/4).'px; '.
+                    "text-anchor: $anchor; ".
+                    "fill: #666; ".
+                    "font-weight: 700 ",
+                'transform' => 
+                    "rotate($rotation, $x, $y) ".
+                    'translate(0, '.$baseFontSize*-1*($nrLines).') '
+                , 
+            ]);
         }
+        $this->newText('partNumber', $anchorKey, $nr, [
+            'class' => "part-nr default", 
+            'line-height' => $baseFontSize,
+            'style' => 
+                'font-size: '.($baseFontSize).'px; '.
+                "text-anchor: $anchor; ".
+                "font-weight: 400; ",
+            'transform' => 
+                "rotate($rotation, $x, $y) ".
+                'translate(0, '.$baseFontSize*-1*($nrLines-1).') '
+            , 
+        ]);
+        $this->newText('partTitle', $anchorKey, $title, [
+            'class' => "part-title default",
+            'line-height' => $baseFontSize/2,
+            'style' => 
+                'font-size: '.($baseFontSize/2).'px; '.
+                "text-anchor: $anchor; ".
+                "font-weight: 300; ",
+            'transform' => 
+                "rotate($rotation, $x, $y) ".
+                'translate(0, '.($baseFontSize/2).')'
+            ,
+        ]);
+        $this->newText('partMsg', $anchorKey, $msg, [
+            'class' => "part-msg default", 
+            'line-height' => $baseFontSize/3,
+            'style' => 
+                'font-size: '.($baseFontSize/3).'px; '.
+                "text-anchor: $anchor; ".
+                "fill: #666; ".
+                "font-weight: 300; ",
+            'transform' => 
+                "rotate($rotation, $x, $y) ".
+                'translate(0, '.$baseFontSize/2*($titleLines+1).')'
+            , 
+        ]);
     }
 
     /**
@@ -990,7 +1008,7 @@ class Part
      *
      * @param string|bool $prefix Prefix to check for
      */
-    private function purgePoints($prefix = false)
+    public function purgePoints($prefix = false)
     {
         if ($prefix !== false) {
             $len = strlen($prefix);

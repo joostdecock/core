@@ -30,7 +30,7 @@ class CompareServiceTest extends \PHPUnit\Framework\TestCase
     /**
      * Tests the run method for basic draft
      */
-    public function testRunBasic()
+    public function estRunBasic()
     {
         $context = new \Freesewing\Context();
         $context->setRequest(new \Freesewing\Request([

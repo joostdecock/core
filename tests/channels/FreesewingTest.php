@@ -44,16 +44,17 @@ class FreesewingTest extends \PHPUnit\Framework\TestCase
         $channel = new \Freesewing\Channels\Core\Freesewing();
         $pattern = new \Freesewing\Patterns\Tests\TestPattern();
         $pattern->setUnits(['in' => 'metric']);
-        $request = new \Freesewing\Request(['measureOption' => 4, 'chooseOneOption' => 2]);
+        $request = new \Freesewing\Request(['measureOption' => 4, 'chooseOneOption' => 2, 'angleOption' => 30]);
         $options = $channel->standardizePatternOptions($request,$pattern);
         $this->assertEquals($options['measureOption'], 40);
         $this->assertEquals($options['chooseOneOption'], 2);
+        $this->assertEquals($options['angleOption'], 30);
 
         $pattern = new \Freesewing\Patterns\Tests\TestPattern();
         $pattern->setUnits(['in' => 'metric']);
-        $request = new \Freesewing\Request(['percentOption' => 95]);
+        $request = new \Freesewing\Request(['percentOption' => 15]);
         $options = $channel->standardizePatternOptions($request,$pattern);
-        $this->assertEquals($options['percentOption'], 0.95);
+        $this->assertEquals(round(100*$options['percentOption']), 15);
         unset($pattern->config);
         $this->assertEquals($channel->standardizePatternOptions($request,$pattern),null);
     }

@@ -390,12 +390,56 @@ class NotationLegend extends \Freesewing\Patterns\Core\Pattern
      */
     private function example_title($p, $model)
     {
-        /** @var \Freesewing\Part $p */
-        $p->newPoint (1, 20, 40);
-        $p->addTitle('1', 1,'Front', 'Cut one');
-        $this->addBox($p,60,110);
+        // Default
+        $this->newPart("title1");
+        $p = $this->parts["title1"];
+        $p->newPoint (1, 50, 50);
+        $p->addTitle(1, 1,"Part name", "This is a \ndefault title");
+        $this->addBox($p,100,100);
+        
+        // Scale: 150
+        $this->newPart("title2");
+        $p = $this->parts["title2"];
+        $p->newPoint (1, 50, 50);
+        $p->addTitle(1, 2,"Part name", "This uses the scale option\nhere, it is set to 125\n(default is 100)", ['scale' => 125]);
+        $this->addBox($p,100,100);
+        
+        // Scale: 50
+        $this->newPart("title3");
+        $p = $this->parts["title3"];
+        $p->newPoint (1, 50, 50);
+        $p->addTitle(1, 3,"Part name", "This uses the scale option\nhere, it is set to 75\n(default is 100)", ['scale' => 75]);
+        $this->addBox($p,100,100);
+        
+        // Align: left
+        $this->newPart("title4");
+        $p = $this->parts["title4"];
+        $p->newPoint (1, 10, 50);
+        $p->addTitle(1, 4,"Part name", "This uses the align option\nhere, it is set to left\n(default is center)", ['align' => 'left']);
+        $this->addBox($p,100,100);
+        
+        // Align: right
+        $this->newPart("title5");
+        $p = $this->parts["title5"];
+        $p->newPoint (1, 90, 50);
+        $p->addTitle(1, 5,"Part name", "This uses the align option\nhere, it is set to right\n(default is center)", ['align' => 'right']);
+        $this->addBox($p,100,100);
+        
+        // Rotate: 90
+        $this->newPart("title6");
+        $p = $this->parts["title6"];
+        $p->newPoint (1, 50, 50);
+        $p->addTitle(1, 6,"Part name", "This uses the rotate option\nhere, it is set to 180\n(default is 0)", ['rotate' => 180]);
+        $this->addBox($p,100,100);
+        
+        // Combo
+        $this->newPart("title7");
+        $p = $this->parts["title7"];
+        $p->newPoint (1, 100, 10);
+        $p->addTitle(1, "Combo\nexample","Part\nname", "You can also\ncombine these options\nin addition, line breaks\nwill be handled for you", ['rotate' => -90, 'scale' => 150, 'align' => 'right']);
+        $this->addBox($p,200,200);
     }
-    
+
     /**
      * Note
      */

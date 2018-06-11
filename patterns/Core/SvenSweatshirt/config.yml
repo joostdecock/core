@@ -1,7 +1,8 @@
 info:
   name: "Sven Sweatshirt"
-  description: "Sven is a straightforward sweater"
+  description: "Sven is a straightforward sweater."
   handle: "sven"
+  level: 5
   tags:
       - menswear
       - top
@@ -14,12 +15,13 @@ parts:
   back: "Back"
   front: "Front"
   sleeve: "Sleeve"
+  hemRibbing: "Hem ribbing"
+  sleeveRibbing: "Sleeve ribbing"
 
 languages:
     en: "English"
 
 measurements:
-    acrossBack: 450
     bicepsCircumference: 335
     centerBackNeckToWaist: 480
     chestCircumference: 1080
@@ -43,7 +45,7 @@ options:
         default: 80
     bicepsEase:
         title: "Biceps ease"
-        description: "The amount of ease at your upper arm."
+        description: "The amount of ease at your upper arm. Note that while we try to respect this, fitting the sleeve to the armhole takes precedence over respecting the exact amount of ease."
         group: "fit"
         type: "measure"
         min: 40
@@ -59,7 +61,7 @@ options:
         default: 60
     lengthBonus:
         title: "Length bonus"
-        description: "The amount to lengthen the body."
+        description: "The amount to lengthen the garment. A negative value will shorten it."
         group: "fit"
         type: "measure"
         min: 0
@@ -67,10 +69,47 @@ options:
         default: 120
     sleeveLengthBonus:
         title: "Sleeve length bonus"
-        description: "The amount to lengthen the sleeves. Negative values shorten them."
+        description: "The amount to lengthen the sleeve. A negative value will shorten it."
         group: "fit"
         type: "measure"
         min: -40
         max: 80
         default: 60
+    ribbing:
+        title: "Ribbing"
+        description: "Do you want to include ribbing at the arms and hem, or will you apply a classic hem?"
+        group: "style"
+        type: "chooseOne"
+        options:
+            0: "Classic hem (No ribbing)"
+            1: "Ribbing hem"
+        default: 1
+    ribbingHeight:
+        title: "Ribbing height"
+        description: "The height of the ribbing band at the hem and wrists."
+        group: "style"
+        type: "measure"
+        min: 20
+        max: 100
+        default: 60
+        dependsOn: 'ribbing'
+        onlyOn: 1
+    ribbingStretchFactor:
+        title: "Ribbing stretch factor"
+        description: "Determines the negative ease for the ribbing."
+        group: "style"
+        type: "percent"
+        min: 0
+        max: 30
+        default: 15
+        dependsOn: 'ribbing'
+        onlyOn: 1
+    acrossBackFactor:
+        title: "Across back factor"
+        description: "Controls your across back width as a factor of your shoulder to shoulder measurement."
+        group: "advanced"
+        type: "percent"
+        min: 93
+        max: 99
+        default: 96
 

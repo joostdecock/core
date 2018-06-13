@@ -217,6 +217,9 @@ class PenelopePencilSkirt extends \Freesewing\Patterns\Core\Pattern
     public function draftPart($model, $part, $dartSize)
     {
         $p = $this->parts[$part];
+
+        $this->setValue('skirtLength', $model->m('naturalWaistToKnee') +$this->o('lengthBonus'));
+
         $waistEase = $this->o('waistEase');
         $seatEase  = $this->o('seatEase');
         $dartDepthFactor = $this->o($part.'DartDepthFactor');
@@ -236,9 +239,9 @@ class PenelopePencilSkirt extends \Freesewing\Patterns\Core\Pattern
         $hipSeam  = ($hip /4) +$sideSeamShift;
 
         $p->newPoint('pA1',          0, 0, 'Origin');
-        $p->newPoint('pB1',          0, $model->m('naturalWaistToKnee') );
+        $p->newPoint('pB1',          0, $this->v('skirtLength') );
         $p->newPoint('pA2',  $sideSeam, 0 );
-        $p->newPoint('pB2',  $sideSeam +$this->o('hemBonus'), $model->m('naturalWaistToKnee'));
+        $p->newPoint('pB2',  $sideSeam +$this->o('hemBonus'), $this->v('skirtLength'));
         $p->newPoint('pC1',          0, $model->m('naturalWaistToSeat') );
         $p->newPoint('pC2',  $sideSeam, $model->m('naturalWaistToSeat') );
         $p->newPoint('pA2c', $sideSeam, $model->m('naturalWaistToSeat')/3 );
@@ -342,7 +345,7 @@ class PenelopePencilSkirt extends \Freesewing\Patterns\Core\Pattern
 
         if( $part == 'back' && $this->o('vent') ) {
             /* I don't care what you're trying to create, the vent will not go higher than your hips. */
-            $ventSize = min( $model->m('naturalWaistToKnee') -$model->m('naturalWaistToHip'), $this->o('ventSize'));
+            $ventSize = min( $this->v('skirtLength') -$model->m('naturalWaistToHip'), $this->o('ventSize'));
             $p->addPoint('pV1',    $p->shift('pB1',    180, 50));
             $p->addPoint('pV2',    $p->shift('pV1',     90, $ventSize));
             $p->addPoint('pVtemp', $p->shift('pV2',      0, 50));
@@ -359,9 +362,9 @@ class PenelopePencilSkirt extends \Freesewing\Patterns\Core\Pattern
             $p->addPoint('pHemLL', $p->shift('pHemLD', 180, $this->o('sa')));
             $p->addPoint('pHemLU', $p->shift('pHemLL',  90, $this->o('sa')));
 
-            $pathString .= 'C pH pH pC2 C pC2d pB2 pB2 L pB1 L pC1 Z';
+            $pathString .= ' C pH pH pC2 C pC2d pB2 pB2 L pB1 L pC1 Z';
             if( $part == 'back' && $this->o('zipper') == 'back' ) {
-                $pathStringSA  = 'M pB1 L ' . str_replace( 'M', '', $pathStringSA ) . ' C pH pH pC2 c pC2d pB2 pB2 ';
+                $pathStringSA  = 'M pB1 L ' . str_replace( 'M', '', $pathStringSA ) . ' C pH pH pC2 C pC2d pB2 pB2 ';
             }
         }
 
@@ -636,6 +639,7 @@ class PenelopePencilSkirt extends \Freesewing\Patterns\Core\Pattern
         }
 
         $p->newHeightDimension('Dart_1_1','pB1',OFFSET);
+        $p->newWidthDimension('pC1','pC2',$p->y('pC2'));
 
         if( $partName == 'back' && $this->o('vent') )
         {

@@ -16,7 +16,7 @@ parts:
 
 measurements:
     naturalWaist: 670
-    hipsCircumference:  800
+    hipsCircumference: 800
     seatCircumference: 920
     naturalWaistToHip: 130
     naturalWaistToSeat: 240
@@ -25,22 +25,22 @@ measurements:
 
 options:
     # Style group
-    sa:
-        title: "Length bonus"
-        description: "Additional length of the skirt"
-        group: "style"
-        type: "measure"
-        min: 0
-        max: 100
-        default: 10
-    #lengthBonus:
+    #sa:
     #    title: "Length bonus"
     #    description: "Additional length of the skirt"
     #    group: "style"
     #    type: "measure"
-    #    min: -100
+    #    min: 0
     #    max: 100
-    #    default: 0
+    #    default: 10
+    lengthBonus:
+        title: "Length bonus"
+        description: "Additional length of the skirt"
+        group: "style"
+        type: "measure"
+        min: -100
+        max: 100
+        default: 0
     hemBonus:
         title: "Hem bonus"
         description: "Additional width at the hem"
@@ -57,7 +57,7 @@ options:
         options:
             1: "Yes"
             0: "No"
-        default: "1"
+        default: "0"
     ventSize:
         title: "Vertical size of the vent"
         description: "Vertical size of the vent"
@@ -131,7 +131,7 @@ options:
         group: "fit"
         type: "measure"
         min: 0
-        max: 25
+        max: 45
         default: 0
     backDartDepthFactor:
         title: "Back Dart Depth Factor"

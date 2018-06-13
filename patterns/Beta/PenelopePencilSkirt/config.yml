@@ -14,26 +14,6 @@ parts:
     back: "Back part"
     waistBand: "Waist band"
 
-
-# @miniaram mannequin
-#measurements:
-#    naturalWaist: 590
-#    hipsCircumference:  855
-#    seatCircumference: 880
-#    naturalWaistToHip: 150
-#    naturalWaistToSeat: 220
-#    naturalWaistToKnee: 630
-
-# @miniaram mother
-#measurements:
-#    naturalWaist: 1050
-#    hipsCircumference:  1080
-#    seatCircumference: 1120
-#    naturalWaistToHip: 130
-#    naturalWaistToSeat: 260
-#    naturalWaistToKnee: 580
-
-# @miniaram
 measurements:
     naturalWaist: 670
     hipsCircumference:  800
@@ -42,13 +22,6 @@ measurements:
     naturalWaistToSeat: 240
     naturalWaistToKnee: 520
 
-#measurements:
-#    naturalWaist: 724  #699  #670    #810
-#    hipsCircumference:  927  #889  #830   #965
-#    seatCircumference: 1003  #952  #980  #1070
-#    naturalWaistToHip: 114  #115  #60  #100
-#    naturalWaistToSeat: 178  #215  #235  #200
-#    naturalWaistToKnee: 622
 
 options:
     # Style group
@@ -59,21 +32,21 @@ options:
         type: "measure"
         min: 0
         max: 100
-        default: 0
-    lengthBonus:
-        title: "Length bonus"
-        description: "Additional length of the skirt"
-        group: "style"
-        type: "measure"
-        min: -100
-        max: 100
-        default: 0
+        default: 10
+    #lengthBonus:
+    #    title: "Length bonus"
+    #    description: "Additional length of the skirt"
+    #    group: "style"
+    #    type: "measure"
+    #    min: -100
+    #    max: 100
+    #    default: 0
     hemBonus:
         title: "Hem bonus"
         description: "Additional width at the hem"
         group: "style"
         type: "measure"
-        min: -100
+        min: -35
         max: 0
         default: 0
     vent:
@@ -84,7 +57,7 @@ options:
         options:
             1: "Yes"
             0: "No"
-        default: "yes"
+        default: "1"
     ventSize:
         title: "Vertical size of the vent"
         description: "Vertical size of the vent"
@@ -103,7 +76,7 @@ options:
         options:
             no: "No"
             yes: "Yes"
-        default: "no"
+        default: "yes"
     waistBandHeight:
         title: "Waist band height"
         description: "Waist Band height"
@@ -114,7 +87,6 @@ options:
         default: 25
         dependsOn: waistBand
         onlyOn: [yes]
-
     zipper:
         title: "Zipper placement"
         description: "Zipper placement"
@@ -123,7 +95,7 @@ options:
         options:
             side: "Side seam"
             back: "Back seam"
-        default: "side"
+        default: "back"
         dependsOn: vent
         onlyOn: [0]
     nrOfDarts:

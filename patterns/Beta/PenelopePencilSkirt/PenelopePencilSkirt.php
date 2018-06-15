@@ -306,7 +306,7 @@ class PenelopePencilSkirt extends \Freesewing\Patterns\Core\Pattern
                 $sdelta = 0;
             } else {
                 $sideSeamLength = $p->curveLen( 'pTopRight', 'pH', 'pH', 'pC2' );
-                $sideSeamLength = $p->curveLen( 'pC2', 'pC2d', 'pB2', 'pB2' );
+                $sideSeamLength += $p->curveLen( 'pC2', 'pC2d', 'pB2', 'pB2' );
 
                 $sdelta = $this->sideSeamLength - $sideSeamLength;
             }
@@ -319,7 +319,7 @@ class PenelopePencilSkirt extends \Freesewing\Patterns\Core\Pattern
 
         if( $part == 'front' ) {
             $sideSeamLength = $p->curveLen( 'pTopRight', 'pH', 'pH', 'pC2' );
-            $sideSeamLength = $p->curveLen( 'pC2', 'pC2d', 'pB2', 'pB2' );
+            $sideSeamLength += $p->curveLen( 'pC2', 'pC2d', 'pB2', 'pB2' );
 
             $this->sideSeamLength = $sideSeamLength;
 

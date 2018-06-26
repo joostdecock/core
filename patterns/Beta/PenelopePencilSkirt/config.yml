@@ -2,8 +2,9 @@ info:
     name: "Penelope Pencil Skirt"
     description: "Penelope is a simple pencil skirt pattern"
     handle: "penelope"
+    level: 3
     tags:
-        - womens wear
+        - womenswear
         - skirt
 
 languages:
@@ -24,18 +25,9 @@ measurements:
 
 
 options:
-    # Style group
-    #sa:
-    #    title: "Length bonus"
-    #    description: "Additional length of the skirt"
-    #    group: "style"
-    #    type: "measure"
-    #    min: 0
-    #    max: 100
-    #    default: 10
     lengthBonus:
         title: "Length bonus"
-        description: "Additional length of the skirt"
+        description: The amount to lengthen the garment. A negative value will shorten it.
         group: "style"
         type: "measure"
         min: -100
@@ -49,8 +41,8 @@ options:
         min: -35
         max: 0
         default: 0
-    vent:
-        title: "Vent"
+    backVent:
+        title: "Back vent"
         description: "Vent at the back seam"
         group: "style"
         type: "chooseOne"
@@ -58,7 +50,7 @@ options:
             1: "Yes"
             0: "No"
         default: "0"
-    ventSize:
+    backVentLength:
         title: "Vertical size of the vent"
         description: "Vertical size of the vent"
         group: "style"
@@ -66,7 +58,7 @@ options:
         min: 50
         max: 900
         default: 200
-        dependsOn: vent
+        dependsOn: backVent
         onlyOn: [1]
     waistBand:
         title: "Waist band"
@@ -77,7 +69,7 @@ options:
             no: "No"
             yes: "Yes"
         default: "yes"
-    waistBandHeight:
+    waistBandWidth:
         title: "Waist band height"
         description: "Waist Band height"
         group: "style"
@@ -87,7 +79,7 @@ options:
         default: 25
         dependsOn: waistBand
         onlyOn: [yes]
-    zipper:
+    zipperLocation:
         title: "Zipper placement"
         description: "Zipper placement"
         group: "style"
@@ -96,7 +88,7 @@ options:
             side: "Side seam"
             back: "Back seam"
         default: "back"
-        dependsOn: vent
+        dependsOn: backVent
         onlyOn: [0]
     nrOfDarts:
         title: "Number of darts"
@@ -111,7 +103,7 @@ options:
     # Fit group
     seatEase:
         title: "Seat ease"
-        description: "The amount of ease at the largest part of your bum"
+        description: "The amount of ease at the largest part of your bum."
         group: "ease"
         type: "measure"
         min: 0
@@ -119,7 +111,7 @@ options:
         default: 30
     waistEase:
         title: "Waist ease"
-        description: "The amount of ease at the waist"
+        description: "The amount of ease at your (natural) waist."
         group: "ease"
         type: "measure"
         min: 0

@@ -1,0 +1,159 @@
+info:
+    name: "Penelope Pencil Skirt"
+    description: "Penelope is a simple pencil skirt pattern"
+    handle: "penelope"
+    tags:
+        - womens wear
+        - skirt
+
+languages:
+    en: "English"
+
+parts:
+    front: "Front part"
+    back: "Back part"
+    waistBand: "Waist band"
+
+measurements:
+    naturalWaist: 670
+    hipsCircumference: 800
+    seatCircumference: 920
+    naturalWaistToHip: 130
+    naturalWaistToSeat: 240
+    naturalWaistToKnee: 520
+
+
+options:
+    # Style group
+    #sa:
+    #    title: "Length bonus"
+    #    description: "Additional length of the skirt"
+    #    group: "style"
+    #    type: "measure"
+    #    min: 0
+    #    max: 100
+    #    default: 10
+    lengthBonus:
+        title: "Length bonus"
+        description: "Additional length of the skirt"
+        group: "style"
+        type: "measure"
+        min: -100
+        max: 100
+        default: 0
+    hemBonus:
+        title: "Hem bonus"
+        description: "Additional width at the hem"
+        group: "style"
+        type: "measure"
+        min: -35
+        max: 0
+        default: 0
+    vent:
+        title: "Vent"
+        description: "Vent at the back seam"
+        group: "style"
+        type: "chooseOne"
+        options:
+            1: "Yes"
+            0: "No"
+        default: "0"
+    ventSize:
+        title: "Vertical size of the vent"
+        description: "Vertical size of the vent"
+        group: "style"
+        type: "measure"
+        min: 50
+        max: 900
+        default: 200
+        dependsOn: vent
+        onlyOn: [1]
+    waistBand:
+        title: "Waist band"
+        description: "Waist Band"
+        group: "style"
+        type: "chooseOne"
+        options:
+            no: "No"
+            yes: "Yes"
+        default: "yes"
+    waistBandHeight:
+        title: "Waist band height"
+        description: "Waist Band height"
+        group: "style"
+        type: "measure"
+        min: 10
+        max: 100
+        default: 25
+        dependsOn: waistBand
+        onlyOn: [yes]
+    zipper:
+        title: "Zipper placement"
+        description: "Zipper placement"
+        group: "style"
+        type: "chooseOne"
+        options:
+            side: "Side seam"
+            back: "Back seam"
+        default: "back"
+        dependsOn: vent
+        onlyOn: [0]
+    nrOfDarts:
+        title: "Number of darts"
+        description: "Number of darts on each part"
+        group: "style"
+        type: "chooseOne"
+        options:
+            2: "2"
+            1: "1"
+        default: "2"
+
+    # Fit group
+    seatEase:
+        title: "Seat ease"
+        description: "The amount of ease at the largest part of your bum"
+        group: "ease"
+        type: "measure"
+        min: 0
+        max: 60
+        default: 30
+    waistEase:
+        title: "Waist ease"
+        description: "The amount of ease at the waist"
+        group: "ease"
+        type: "measure"
+        min: 0
+        max: 60
+        default: 10
+    waistSideSeamRaise:
+        title: "Waist Side Seam Raise"
+        description: "Raise of the waist at the side seam"
+        group: "fit"
+        type: "measure"
+        min: 0
+        max: 45
+        default: 0
+    backDartDepthFactor:
+        title: "Back Dart Depth Factor"
+        description: "The Depth of the back dart as a percentage of the Waist to Hip measurement"
+        group: "fit"
+        type: "percent"
+        min: 35
+        max: 70
+        default: 50
+    frontDartDepthFactor:
+        title: "Front Dart Depth Factor"
+        description: "The Depth of the front dart as a percentage of the Waist to Hip measurement"
+        group: "fit"
+        type: "percent"
+        min: 30
+        max: 65
+        default: 45
+    dartToSideSeamFactor:
+        title: "Dart to Side Seam Factor"
+        description: "Shifts the intake from the darts to the side seam and visa versa"
+        group: "fit"
+        type: "percent"
+        min: 30
+        max: 70
+        default: 50

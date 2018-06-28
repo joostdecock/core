@@ -88,10 +88,7 @@ class BentBodyBlock extends \Freesewing\Patterns\Core\BrianBodyBlock
         $this->draftBackBlock($model);
         $this->draftFrontBlock($model);
         
-        $this->draftBackBlock($model);
         $this->finalizeBackBlock($model);
-        
-        $this->draftFrontBlock($model);
         $this->finalizeFrontBlock($model);
 
         // Tweak the sleeve until it fits the armhole

@@ -1,0 +1,26 @@
+default: 
+    group: maleStandardUsSizes
+groups:
+    realMen:
+        - joost
+    maleStandardUsSizes:
+        - usSize34
+        - usSize36
+        - usSize38
+        - usSize40
+        - usSize42
+        - usSize44
+measurements:
+    shoulderToElbow: 
+        joost   : 340 
+        usSize34: 330 
+        usSize36: 340 
+        usSize38: 350 
+        usSize40: 360 
+        usSize42: 370 
+        usSize44: 380 
+        ukSize10: 330
+        ukSize12: 335
+        ukSize14: 340 
+        ukSize16: 345
+

@@ -248,7 +248,7 @@ class PenelopePencilSkirt extends \Freesewing\Patterns\Core\Pattern
         $p->newPoint('pC2c', $sideSeam, ($model->m('naturalWaistToSeat')/3)*2 );
         $p->addPoint('pC2d', $p->shift('pC2', 270, ($model->m('naturalWaistToSeat') - $model->m('naturalWaistToHip'))*(abs($this->o('hemBonus'))/HIP_CURVE_DIV_DOWN)));
 
-        $p->newPoint('pH',   $sideSeam, $model->m('naturalWaistToHip') -$this->o('waistSideSeamRaise'));
+        $p->newPoint('pH',   $sideSeam, $model->m('naturalWaistToHip') -$this->o('waistSideSeamRise'));
 
         $waistFactor = 0.99;
         $sideFactor  = 0.97;

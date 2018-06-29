@@ -16,6 +16,24 @@
 ### Security
 -->
 
+## 1.9.0
+
+**Release date**: 2018-06-29
+
+This release includes a new pattern: Penelope
+
+### Added
+
+ - The Penelope Pencil Skirt is a new pattern
+
+### Changed
+ 
+ - The BezierToolbox::BezierCircle method now takes an extra parameter to indicate the corner
+
+### Fixed
+
+ - Fixed a small issue with the dart in Florent 
+
 ## 1.8.2
 
 **Release date**: 2018-06-02

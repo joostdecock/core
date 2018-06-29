@@ -47,17 +47,24 @@ class BezierToolbox
     }
 
     /**
-     * Returns the distance for a control point to approximate a circle
+     * Returns the distance for a control point to approximate a circle arc
      *
-     * Note that circle is not perfect, but close enough
+     * Note that circle is not perfect, but close enough.
+     * The approximation is better the smaller the angle of the
+     * arc, so if the angle is larger than 90º it's recommended
+     * to do as many quarters of circle as necessary and then the
+     * remaining arc of an agle smaller than 90º.
      *
      * @param float $radius The radius of the circle to aim for
+     * @param float $angle The angle of the arc to aim for
      *
-     * @return loat The distance to the control point
+     * @return float The distance to the control point
      */
-    public static function bezierCircle($radius)
+    public static function bezierCircle($radius, $angle=90)
     {
-        return $radius * 4 * (sqrt(2) - 1) / 3;
+        $argument = deg2rad($angle/2);
+
+        return $radius * 4 * (1 - cos($argument)) / sin($argument) / 3;
     }
 
     /**

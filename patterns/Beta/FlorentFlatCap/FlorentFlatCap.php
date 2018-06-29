@@ -147,8 +147,9 @@ class FlorentFlatCap extends \Freesewing\Patterns\Core\Pattern
 		$p->newPoint(12, $this->v('coef')*342, $this->v('coef')*110, 'Top side point ');
 		$p->addPoint(30, $p->shift (12, $p->angle(12, 3)+90, $this->v('coef')*15));
 		$p->addPoint(31, $p->shift (3, $p->angle(12, 3)+90, $this->v('coef')*15));
+		$p->addPoint(50, $p->shift (3, $p->angle(12, 3)+90, $this->v('coef')*5));
 		$p->addPoint(11, $p->shiftOutwards(12, 30, $this->v('coef')*8), 'handle');	
-		$p->addPoint(14, $p->shiftOutwards(3, 31, $this->v('coef')*34), 'handle');	
+		$p->addPoint(14, $p->shiftOutwards(3, 50, $this->v('coef')*34), 'handle');	
 		
 		$p->addPoint(33, $p->shiftFractionTowards(2,31,0.52), 'construction point for middle');
 		$p->addPoint(32, $p->shift(33, $p->angle(31, 2)-90, $this->v('coef')*13.5), 'middle point');
@@ -163,7 +164,7 @@ class FlorentFlatCap extends \Freesewing\Patterns\Core\Pattern
 		$p->addPoint(45, $p->shift(42, $p->angle(43, 42)-90, $this->v('coef')*5), 'middle point');
 		
 		
-		$path = 'M 1 L 2 C  13 34 32 C 35 14 31 L 3 L 12 L 30 C 11 10 9 C 8 44 42 C 45 7 6 C 5 4 1 Z ';
+		$path = 'M 1 L 2 C  13 34 32 C 35 14 50 L 3 L 12 L 30 C 11 10 9 C 8 44 42 C 45 7 6 C 5 4 1 Z ';
 		$p->newPath('seamline', $path, ['class' => 'fabric']);	
 		$p->paths['seamline']->setSample(true);
 		$this->setValue('topHeadCirc', 2*$p->distance(3,12));

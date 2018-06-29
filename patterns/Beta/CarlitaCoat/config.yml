@@ -81,7 +81,7 @@ options:
         default: 100
     seatEase:
         title: "Seat ease"
-        description: "The amount of ease at your butt."
+        description: "The amount of ease at the largest part of your bum."
         group: "fit"
         type: measure
         min: 180

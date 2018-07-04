@@ -1,12 +1,12 @@
 info:
-    name: "Breanna Body Block"
-    description: "This is a basic bodice block for women."
-    handle: "breanna"
-    level: 4
-    tags:
-        - womenswear
-        - top
-        - block
+  name: "Breanna Body Block"
+  description: "Breanna is a basic body block for women."
+  handle: "breanna"
+  level: 3
+  tags:
+    - womenswear
+    - top
+    - block
 
 parts:
   backBlock: "Back block"
@@ -14,8 +14,9 @@ parts:
   sleeveBlock: "Sleeve block"
 
 languages:
-    en: English
-    nl: Nederlands
+    en: "English"
+    nl: "Nederlands"
+    fr: "French"
 
 measurements:
     bicepsCircumference: 335
@@ -23,39 +24,39 @@ measurements:
     chestCircumference: 1080
     naturalWaistToHip: 120
     neckCircumference: 420
-    shoulderToShoulder: 470
     shoulderSlope: 55
+    shoulderToShoulder: 470
     hipsCircumference: 950
     shoulderToWrist: 700
     wristCircumference: 190
-    shoulderToElbow: 410 
 
 options:
-# Fit group
-    bicepsEase:
-        title: "Biceps ease"
-        description: "The amount of ease at your upper arm. Note that while we try to respect this, fitting the sleeve to the armhole takes precedence over respecting the exact amount of ease."
-        group: "fit"
-        type: measure
-        min: 40
-        max: 100
-        default: 70
+
+# fit group
     chestEase:
         title: "Chest ease"
         description: "The amount of ease at your chest."
         group: "fit"
-        type: measure
-        min: 40
+        type: "measure"
+        min: -40
         max: 160
-        default: 80
+        default: 30
+    bicepsEase:
+        title: "Biceps ease"
+        description: "The amount of ease at your upper arm. Note that while we try to respect this, fitting the sleeve to the armhole takes precedence over respecting the exact amount of ease."
+        group: "fit"
+        type: "measure"
+        min: 30
+        max: 80
+        default: 50
     cuffEase:
         title: "Cuff ease"
         description: "The amount of ease at your wrist."
         group: "fit"
-        type: measure
-        min: 60
-        max: 120
-        default: 120
+        type: "measure"
+        min: 0
+        max: 100
+        default: 45
     lengthBonus:
         title: "Length bonus"
         description: "The amount to lengthen the garment. A negative value will shorten it."
@@ -72,7 +73,8 @@ options:
         min: -40
         max: 80
         default: 0
-# Advanced group
+
+# advanced group
     armholeDepthFactor:
         title: "Armhole depth factor"
         description: "Controls the depth of the armhole. Higher values make a deeper armhole."
@@ -80,23 +82,15 @@ options:
         type: "percent"
         min: 50
         max: 65
-        default: 60
-    sleevecapEase:
-        title: "Sleevecap ease"
-        description: "The amount by which the sleevecap seam is longer than the armhole seam."
-        group: "advanced"
-        type: "measure"
-        min: 0
-        max: 35
-        default: 20
+        default: 50
     sleevecapHeightFactor:
         title: "Sleevecap height factor"
         description: "Controls the height of the sleevecap. A higher value results in a higher and more narrow sleevecap."
         group: "advanced"
         type: "percent"
-        min: 45
-        max: 60
-        default: 50
+        min: 35
+        max: 75
+        default: 55
     acrossBackFactor:
         title: "Across back factor"
         description: "Controls your across back width as a factor of your shoulder to shoulder measurement."

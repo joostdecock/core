@@ -1,4 +1,4 @@
-<a href="https://freesewing.org/"><img src="https://freesewing.org/img/logo/logo-black.svg" align="right" width=200 style="max-width: 20%;" /></a>
+<a href="https://freesewing.org/"><img src="https://freesewing.org/img/logo/black.svg" align="right" width=200 style="max-width: 20%;" /></a>
 [![Build Status](https://travis-ci.org/freesewing/core.svg?branch=master)](https://travis-ci.org/freesewing/core)
 
 # Freesewing core

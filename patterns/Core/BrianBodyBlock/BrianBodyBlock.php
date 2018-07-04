@@ -89,7 +89,7 @@ class BrianBodyBlock extends Pattern
         
         // Collar width and depth
         $this->setValueIfUnset('collarWidth', ($model->getMeasurement('neckCircumference') / 2.42) / 2);
-        $this->setValueIfUnset('collarDepth', ($model->getMeasurement('neckCircumference') + $this->getOption('collarEase')) / 5 - 8);
+        $this->setValueIfUnset('collarDepth', ($model->getMeasurement('neckCircumference') + $this->getOption('collarEase')) / 3.7);
 
         // Cut front armhole a bit deeper
         $this->setValueIfUnset('frontArmholeExtra', self::FRONT_ARMHOLE_EXTRA);
@@ -210,7 +210,7 @@ class BrianBodyBlock extends Pattern
 
         // Center vertical axis
         $p->newPoint(1, 0, $this->getOption('backNeckCutout'), 'Center back @ neck');
-        $p->newPoint(2, 0, $p->y(1) + $this->v('armholeDepth'), 'Center back @ armhole depth');
+        $p->newPoint(2, 0, $this->v('shoulderSlope') / 2 + $this->v('armholeDepth'), 'Center back @ armhole depth');
         $p->newPoint(3, 0, $p->y(1) + $model->getMeasurement('centerBackNeckToWaist'), 'Center back @ waist');
         $p->newPoint(4, 0,
             $model->getMeasurement('centerBackNeckToWaist') + $model->getMeasurement('naturalWaistToHip') + $this->getOption('backNeckCutout') + $this->getOption('lengthBonus'),
@@ -227,10 +227,10 @@ class BrianBodyBlock extends Pattern
         $p->newPoint(8, $p->x(7), $p->y(1) - $this->getOption('backNeckCutout'), 'Half collar width @ top of garment');
 
         // Front collar
-        $p->newPoint(9, 0, $p->y(1) + $this->v('collarDepth') * $this->v('frontCollarTweakFactor'), 'Center front collar depth');
+        $p->newPoint(9, 0, ($this->v('collarDepth')-$this->getOption('backNeckCutout')) * $this->v('frontCollarTweakFactor'), 'Center front collar depth');
 
         // Armhole
-        $p->newPoint(10, ($model->getMeasurement('shoulderToShoulder') * $this->o('acrossBackFactor')) / 2, $p->y(1) + $p->deltaY(1, 2) / 2, 'Armhole pitch point');
+        $p->newPoint(10, ($model->getMeasurement('shoulderToShoulder') * $this->o('acrossBackFactor')) / 2, $this->v('shoulderSlope') / 2 + $this->v('armholeDepth') / 2, 'Armhole pitch point');
         $p->newPoint(11, $p->x(10), $p->y(2), 'Armhole pitch width @ armhole depth');
         $p->newPoint(12, $model->m('shoulderToShoulder')/2, $this->v('shoulderSlope') / 2, 'Shoulder tip');
 

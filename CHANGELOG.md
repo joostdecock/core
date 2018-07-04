@@ -16,6 +16,43 @@
 ### Security
 -->
 
+## 1.9.1
+
+**Release date**: Unreleased
+
+### Changed
+ 
+### Brian
+
+The `backNeckCutout` option was set fixed to 20mm. Furthermore, changing
+it would cause issues with the pattern. This has been changed.
+While the option is still bolted down, you can change it in patterns
+extending Brian, and it will adapt correctly.
+
+### Fixed
+
+#### Brian
+
+The armhole depth in Brian now correctly takes the shoulder slope into account.
+
+## 1.9.0
+
+**Release date**: 2018-06-29
+
+This release includes a new pattern: Penelope
+
+### Added
+
+ - The Penelope Pencil Skirt is a new pattern
+
+### Changed
+ 
+ - The BezierToolbox::BezierCircle method now takes an extra parameter to indicate the corner
+
+### Fixed
+
+ - Fixed a small issue with the dart in Florent 
+
 ## 1.8.2
 
 **Release date**: 2018-06-02

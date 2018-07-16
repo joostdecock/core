@@ -16,13 +16,23 @@
 ### Security
 -->
 
-## 1.9.1
+## 1.9.2
 
-**Release date**: Unreleased
+**Release date**: 2018-07-16
 
 ### Changed
  
-### Brian
+#### Simon
+
+ - Increased the maximum length bonus to allow for shirt dresses
+
+## 1.9.1
+
+**Release date**: 2018-07-04
+
+### Changed
+ 
+#### Brian
 
 The `backNeckCutout` option was set fixed to 20mm. Furthermore, changing
 it would cause issues with the pattern. This has been changed.

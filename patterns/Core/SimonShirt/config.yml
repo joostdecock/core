@@ -106,7 +106,7 @@ options:
         group: "fit"
         type: "measure"
         min: 0
-        max: 250
+        max: 550
         default: 150
     sleeveLengthBonus:
         title: "Sleeve length bonus"

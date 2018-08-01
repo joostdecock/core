@@ -2,6 +2,7 @@ info:
     name: "Sandy Skirt"
     description: "Sandy is an adaptable pattern for circle skirts"
     handle: "sandy"
+    level: 3
     tags:
         - womenswear
         - skirt

@@ -16,6 +16,16 @@
 ### Security
 -->
 
+## 1.10.0
+
+**Release date**: 2018-08-01
+
+Announcing the Sandy skirt
+
+### Added
+
+ - The Sandy skirt pattern is now out in beta
+
 ## 1.9.2
 
 **Release date**: 2018-07-16

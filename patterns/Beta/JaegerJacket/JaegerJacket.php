@@ -751,7 +751,7 @@ class JaegerJacket extends \Freesewing\Patterns\Beta\BentBodyBlock
 
         $p->newPath('cf', 'M 9 L cfHem', ['class' => 'help']);
         $p->newPath('chestPocket', ' M cpBottomLeft L cpTopLeft L cpTopRight L cpBottomRight L cpBottomLeft z', ['class' => 'help']);
-        $p->newPath('rollline', 'M breakPoint L rollLineTop', ['class' => 'help']);
+        $p->newPath('rollline', 'M breakPoint L rollLineTop', ['class' => 'canvas help']);
         $p->newPath('facing', 'M facingTop 
             L ipfeTopLeftTop 
             C ipfeTopLeftTopCp ipfeTopLeftBotCp ipfeTopLeftBot
@@ -1527,7 +1527,9 @@ class JaegerJacket extends \Freesewing\Patterns\Beta\BentBodyBlock
         elseif($lenx < $len1) $p->addPoint('sleeveJoint', $p->shiftAlong(12,19,17,10,$lenx));
         elseif($lenx < $len2) $p->addPoint('sleeveJoint', $p->shiftAlong(10,18,15,14,$lenx-$len1));
         elseif($lenx < $len3) $p->addPoint('sleeveJoint', $p->shiftAlong(14,'14CpRight','slArmCpLeft','slArm',$lenx-$len2));
-        $p->notch(['sleeveJoint']);
+        $p->addPoint('cpTopNotchRight', $p->shiftTowards('cpTopRight', 'cpTopLeft', 5));
+        $p->addPoint('cpTopNotchLeft', $p->shiftTowards('cpTopLeft', 'cpTopRight', 5));
+        $p->notch(['sleeveJoint', 'cpBottomRight', 'cpBottomLeft', 'cpTopNotchRight','cpTopNotchLeft', 'cpTopRight','cpTopLeft']);
 
         if($this->o('sa')) {
             // Seam allowance
@@ -1561,7 +1563,7 @@ class JaegerJacket extends \Freesewing\Patterns\Beta\BentBodyBlock
 
         // Title and logo
         $p->addPoint('titleAnchor', $p->shift('frontDartLeftCpTop', 160, 50));
-        $p->addTitle('titleAnchor', 1, $this->t($p->title), '2x '.$this->t('from fabric')."\n".$this->t('Lining part').' 2x '.$this->t('from lining')."\n".$this->t('Facing part').' 2x '.$this->t('from fabric'));
+        $p->addTitle('titleAnchor', 1, $this->t($p->title), '2x '.$this->t('from fabric')."\n2x ".$this->t('from canvas')."\n".$this->t('Lining part').' 2x '.$this->t('from lining')."\n".$this->t('Facing part').' 2x '.$this->t('from fabric'));
         $p->addPoint('logoAnchor', $p->shift('frontDartBottom', -90, 50));
         $p->newSnippet('logo', 'logo', 'logoAnchor');
         
@@ -1573,7 +1575,12 @@ class JaegerJacket extends \Freesewing\Patterns\Beta\BentBodyBlock
         if($this->o('sa')) {
             $p->newNote( $p->newId(), 'hipsBackSideCpTop', $this->t("Standard seam allowance")."\n(".$p->unit(10).')', 8, 20, -3);
             $p->newNote( $p->newId(), 'frontSideHemEdge', $this->t("Extra hem allowance")."\n(".$p->unit(30).')', 11, 50, 23);
+
         }
+        // Canvas chest piece
+        $chestPiece =  'M breakPoint C cutawayPointCp waistBackSide slArm';
+        $p->newPath('chestPiece', $chestPiece, ['class' => 'help canvas']);
+        $p->newTextOnPath('chestPiece', $chestPiece, 'Chest piece, cut 2x from canvas', false, false);
 
         // Grainline
         $p->addPoint('grainlineTop', $p->shiftFractionTowards('shoulderLineRealLeft','shoulderLineRight', 0.5));
@@ -1885,7 +1892,7 @@ class JaegerJacket extends \Freesewing\Patterns\Beta\BentBodyBlock
         
         // Title
         $p->addPoint('titleAnchor', $p->shiftFractionTowards('topLeft','botRight', 0.5));
-        $p->addTitle('titleAnchor', 10, $this->t($p->title), '2x '.$this->t('from fabric'),['scale' => 50]);
+        $p->addTitle('titleAnchor', 10, $this->t($p->title), '1x '.$this->t('from fabric'),['scale' => 50]);
     }
 
     /**
@@ -1905,7 +1912,7 @@ class JaegerJacket extends \Freesewing\Patterns\Beta\BentBodyBlock
 
         // Title
         $p->addPoint('titleAnchor', $p->shiftFractionTowards('topLeft','botRight', 0.5));
-        $p->addTitle('titleAnchor', 11, $this->t($p->title), '2x '.$this->t('from lining'),['scale' => 75]);
+        $p->addTitle('titleAnchor', 11, $this->t($p->title), '1x '.$this->t('from lining'),['scale' => 75]);
 
         $p->newHeightDimension('botLeft','topLeft',20, $p->unit(self::CHEST_POCKET_DEPTH*2));
     }

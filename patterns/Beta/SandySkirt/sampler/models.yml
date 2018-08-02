@@ -1,28 +1,25 @@
 default: 
-    group: babies
+    group: ukFemaleSizes
 groups:
-    babies:
-        - newborn
-        - 3months
-        - 6months
-        - 9months
-        - 12months
-        - 18months
-        - 2years
+    ukFemaleSizes:
+        - ukSize10
+        - ukSize12
+        - ukSize14
+        - ukSize16
 measurements:
-    chestCircumference:
-        newborn : 420
-        3months : 438
-        6months : 451
-        9months : 464
-        12months: 483
-        18months: 508
-        2years  : 522
-    headCircumference:
-        newborn : 343
-        3months : 394
-        6months : 425
-        9months : 457   
-        12months: 470
-        18months: 476
-        2years  : 522
+    naturalWaistToHip:
+        ukSize10: 130
+        ukSize12: 135
+        ukSize14: 140
+        ukSize16: 145
+    hipsCircumference:
+        ukSize10: 935
+        ukSize12: 985
+        ukSize14: 1035
+        ukSize16: 1085
+    naturalWaist:
+        ukSize10: 700
+        ukSize12: 750
+        ukSize14: 800
+        ukSize16: 850
+

@@ -16,6 +16,18 @@
 ### Security
 -->
 
+## 1.10.1
+
+**Release date**: 2018-08-02
+
+This is a patch release to fix a incorrect sampler file for Sandy.
+
+### Fixed
+
+#### Sandy
+
+ - Corrected the Sandy sampler file which caused the compare service to fail
+
 ## 1.10.0
 
 **Release date**: 2018-08-01

@@ -220,7 +220,7 @@ options:
         type: "measure"
         min: 10
         max: 25
-        default: 15
+        default: 17.5
 # lapel group
     lapelStart:
         title: "Lapel break point"

@@ -16,6 +16,23 @@
 ### Security
 -->
 
+## 1.10.2
+
+**Release date**: 2018-08-03
+
+This is a patch release with some fixes for Jaeger. 
+These changes are not about fit, but about instructions, notches, and so on.
+
+### Fixed
+
+ - The chest pocket welt now says to cut it only once
+ - Same thing for the chest pocket bag, instructions updated to cut only 1
+ - I've increased the default chest pocket welt size to 17.5mm (from 15mm)
+ - Added the canvas chest piece to (the front part of) the pattern
+ - Added chest pocket notches
+ - Added shoulder seam notches
+
+
 ## 1.10.1
 
 **Release date**: 2018-08-02

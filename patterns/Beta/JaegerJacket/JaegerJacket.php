@@ -1438,7 +1438,7 @@ class JaegerJacket extends \Freesewing\Patterns\Beta\BentBodyBlock
         $p = $this->parts['back'];
 
         // Notches
-        $p->notch([10,'chestCenter','waistCenter', 'waistBackSide']);
+        $p->notch([10,'chestCenter','waistCenter', 'waistBackSide', 8, 12]);
         
         // Sleeve notch for top/under sleeve seam. But in what curve should it go?
         $len1 = $p->curveLen(12,19,17,10);
@@ -1513,7 +1513,7 @@ class JaegerJacket extends \Freesewing\Patterns\Beta\BentBodyBlock
         $p = $this->parts['front'];
 
         // Sleeve notch for start sleevecap ease
-        $p->notch([10]);
+        $p->notch([10, 'shoulderLineRealLeft', 'shoulderLineRight']);
 
         // Sleeve notch for top/under sleeve seam. But in what curve should it go?
         $len1 = $p->curveLen(12,19,17,10);
@@ -1791,7 +1791,7 @@ class JaegerJacket extends \Freesewing\Patterns\Beta\BentBodyBlock
 
         // Title
         $p->addPoint('titleAnchor', $p->shiftFractionTowards('collarCbTop','m.shoulderLineRealLeft', 0.5));
-        $p->addTitle('titleAnchor', 6, $this->t($p->title), '1x '.$this->t('from fixme'), ['scale' => 75]);
+        $p->addTitle('titleAnchor', 6, $this->t($p->title), '1x '.$this->t('from undercollar fabric'), ['scale' => 75]);
     }
 
     /**

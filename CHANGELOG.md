@@ -16,6 +16,21 @@
 ### Security
 -->
 
+## 1.10.3
+
+**Release date**: 2018-10-08
+
+This is a patch release that fixes an edge case in the Wahid waistcoat.
+
+### Changed
+
+#### Wahid
+
+ - Fixed an edge case where the lining -facing boundary would be incorrect
+ for situation where the dart is located to the right of the center of the 
+ shoulder seam.
+
+
 ## 1.10.2
 
 **Release date**: 2018-08-03

@@ -438,12 +438,13 @@ class WahidWaistcoat extends BrianBodyBlock
         // Facing/Lining boundary (flb)
         $p->addPoint('flbTop', $p->shiftTowards(8,'shoulderFront', $p->distance(8,'shoulderFront')/2));
         $p->addPoint('flbHelp', $p->rotate(8,'flbTop',90));
-        $p->addPoint('flbCp', $p->beamsCross('flbTop','flbHelp', 900,907));
+        $p->addPoint('flbCp', $p->shiftTowards('flbTop', 'flbHelp', $p->distance('flbTop', 'flbHelp') * 2));
+        $p->addPoint('dartTopCp', $p->shiftTowards(900, 907, $p->distance(900, 907)*1.3));
 
         // Paths
         $pocket = 'M 7001 L 7005 7006 7003 M 7004 L 7008 7007 7002';
         $p->newPath('pocket', $pocket, ['class' => 'help fabric']);
-        $flb = 'M flbTop C flbCp 907 907';
+        $flb = 'M flbTop C flbCp dartTopCp 907';
         $p->newPath('flb', $flb, ['class' => 'help lining']);
         $seamlineA = "M 300 L 4001 ";
         $seamlineB = " L 2910 C 2914 2906 2902 C 2904 2907 5 C 13 16 14 C 15 18 10 C 17 shoulderFrontCp shoulderFront L 8 C 20 301 300 z";

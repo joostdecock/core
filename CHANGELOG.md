@@ -16,6 +16,18 @@
 ### Security
 -->
 
+## 1.10.4
+
+**Release date**: 2018-09-01
+
+This is a patch release to increase the maximium rise in Bruce
+
+### Changed
+
+#### Bruce
+
+ - Increased the maximum for the rise uption after user feedback
+
 ## 1.10.3
 
 **Release date**: 2018-10-08

@@ -440,7 +440,7 @@ class HugoHoodie extends BrianBodyBlock
         $hw = $backNeckLen + $frontNeckLen; // Hood width
         $this->neckBindingLen = $hw*2;
         $hh = $front->y(9) - $back->y(1);  // Hood height
-        $ho = $model->m('headCircumference') * 1.35; // Hood opening
+        $ho = $model->m('headCircumference') * 1.1; // Hood opening
         $this->dbg(' head circ is '.$model->m('headCircumference'));
         $this->dbg(" backNeckLen  =  $backNeckLen  frontNeckLen = $frontNeckLen hh is $hh and ho is $ho");
         $p->newPoint(  1, 0, 0);
@@ -448,14 +448,14 @@ class HugoHoodie extends BrianBodyBlock
         $p->newPoint(  3, $p->x(1), ($ho-30)/-2, 'Center back neck point');
         $p->newPoint(  4, $p->x(2), $p->y(3));
         $p->newPoint(  5, $p->x(1), $hh);
-        $p->newPoint(  6, $p->x(2)+50, $p->y(5));
+        $p->newPoint(  6, $p->x(2), $p->y(5));
         $p->addPoint(  7, $p->shift(1, 0, $hw/2));
         $p->newPoint(  8, $p->x(7), $p->y(6));
         $p->addPoint( 11, $p->shift(1, 0, 30)); // 30 = half of mid panel
         $p->addPoint(  9, $p->shiftAlong(11, 7, 8, 6, $hw-30));
         $p->addPoint( 10, $p->shiftAlong(11, 7, 8, 6, $backNeckLen-30), 'Shoulder notch');
         $p->newPoint( 12, $p->x(10), $p->y(3)+30, 'Crown point');
-        $p->newPoint( 13, $p->x(6), $p->y(4)+105);
+        $p->newPoint( 13, $p->x(6), $p->y(12)*0.8);
         $p->addPoint( 14, $p->shift(12, 0, ($p->x(13)-$p->x(12))/2));
         $p->newPoint( 15, $p->x(1)-50, $p->y(12));
         $p->addPoint( 16, $p->rotate(12, 13, 80));
@@ -463,6 +463,7 @@ class HugoHoodie extends BrianBodyBlock
         $p->addPoint( 18, $p->shift(17, 90, 50));
         $p->addPoint( 19, $p->shift(17, -90, 20));
         $p->addPoint( 20, $p->shift(16, 180, 25));
+        $p->addPoint( 20, $p->shiftFractionTowards(13, 16, 0.85));
         $p->addPoint( 21, $p->shift(6, 90, 25));
         $p->addPoint( 23, $p->shiftTowards(17, 20, 25));
         $p->addPoint( 22, $p->rotate(23, 17, 180));

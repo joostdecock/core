@@ -16,6 +16,16 @@
 ### Security
 -->
 
+## 1.10.5
+
+**Release date**: 2018-09-12
+
+This is a patch release to address an issue with the hood of Hugo
+
+### Fixed
+
+ - Fixed an issue in the hood of Hugo where it was using absolute values, thereby drafting a hood far too large for smaller people
+
 ## 1.10.4
 
 **Release date**: 2018-09-01

@@ -1,0 +1,37 @@
+default: 
+    group: maleStandardUsSizes
+groups:
+    realMen:
+        - joost
+    maleStandardUsSizes:
+        - usSize34
+        - usSize36
+        - usSize38
+        - usSize40
+        - usSize42
+        - usSize44
+measurements:
+    hipsCircumference:
+        joost   :  960
+        usSize34:  722
+        usSize36:  780
+        usSize38:  838
+        usSize40:  896
+        usSize42:  954
+        usSize44: 1012
+    upperLegCircumference:
+        joost   : 600
+        usSize34: 520
+        usSize36: 540
+        usSize38: 560
+        usSize40: 580
+        usSize42: 600
+        usSize44: 620
+    hipsToUpperLeg:
+        joost   : 220
+        usSize34: 180
+        usSize36: 190
+        usSize38: 200
+        usSize40: 210
+        usSize42: 220
+        usSize44: 230

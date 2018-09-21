@@ -16,6 +16,16 @@
 ### Security
 -->
 
+## 1.10.6
+
+**Release date**: 2018-09-21
+
+This is a patch release to address an issue with the legBonus option in Bruce
+
+### Fixed
+
+ - Fixed an issue where the legBonus option in Bruce did not correctly adapt all pattern parts
+
 ## 1.10.5
 
 **Release date**: 2018-09-12

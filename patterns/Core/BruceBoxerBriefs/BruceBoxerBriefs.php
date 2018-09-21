@@ -183,7 +183,7 @@ class BruceBoxerBriefs extends Pattern
 
         // Gusset
         $p->newPoint('gussetTop', 0, $this->v('riseLength'));
-        $p->newPoint('gussetBottom', 0, $p->y('gussetTop') + $this->v('gusset'));
+        $p->newPoint('gussetBottom', 0, $p->y('gussetTop') + $this->v('gusset') + $this->o('legBonus'));
         $p->newPoint('gussetRight', $this->v('gusset')/2 , $p->y('gussetBottom'));
         $p->addPoint('gussetLeft', $p->flipX('gussetRight'));
         $p->newPoint('gussetCpRight', $p->x('gussetRight'), $p->y('gussetTop'));

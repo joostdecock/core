@@ -74,7 +74,18 @@ class ShinSwimTrunks extends Pattern
         $p->addPoint('reducedLegInner', $p->shiftFractionAlong('legSide', 'legSideCp', 'legInner', 'legInner', 1-$this->o('legReduction')));
         $p->addPoint('reducedLegInnerCp', $p->rotate('legInner', 'reducedLegInner', 90));
         $p->addPoint('reducedCrossSeam', $p->shiftFractionAlong('crossSeam', 'crossSeamCp', 'seatCp', 'seatCB', $this->o('legReduction')*2));
-        $split = $p->splitCurve('crossSeam', 'crossSeamCp', 'seatCp', 'seatCB', 'reducedCrossSeam', 'crossSeam');
+        $p->splitCurve('crossSeam', 'crossSeamCp', 'seatCp', 'seatCB', 'reducedCrossSeam', 'crossSeam');
+        // Lengthen legs
+        if($this->o('legBonus') > 0) {
+            $p->addPoint('legSide', $p->shift('legSide', -90, $model->m('hipsToUpperLeg') * $this->o('legBonus')));
+            $p->addPoint('legSideCp', $p->shift('legSideCp', -90, $model->m('hipsToUpperLeg') * $this->o('legBonus')));
+            $p->addPoint('reducedLegInner', $p->shift('reducedLegInner', -90, $model->m('hipsToUpperLeg') * $this->o('legBonus')));
+        }
+        // Rise
+        if($this->o('rise') > 0) {
+            $p->addPoint('hipSide', $p->shift('hipSide', 90, $model->m('hipsToUpperLeg') * $this->o('rise')));
+            $p->addPoint('hipCB', $p->shift('hipCB', 90, $model->m('hipsToUpperLeg') * $this->o('rise')));
+        }
         $p->newPath('seam', '
             M reducedCrossSeam 
             C reducedCrossSeam reducedLegInnerCp reducedLegInner
@@ -130,7 +141,18 @@ class ShinSwimTrunks extends Pattern
         $p->addPoint('reducedLegInner', $p->shiftFractionAlong('legSide', 'legSideCp', 'legInner', 'legInner', 1 - $this->o('legReduction')));
         $p->addPoint('reducedLegInnerCp', $p->rotate('legInner', 'reducedLegInner', 90));
         $p->addPoint('reducedCrossSeam', $p->shiftFractionAlong('crossSeam', 'crossSeamCp', 'seatCp', 'seatCB', $this->o('legReduction')*2));
-        $split = $p->splitCurve('crossSeam', 'crossSeamCp', 'seatCp', 'seatCB', 'reducedCrossSeam', 'crossSeam');
+        $p->splitCurve('crossSeam', 'crossSeamCp', 'seatCp', 'seatCB', 'reducedCrossSeam', 'crossSeam');
+        // Lengthen legs
+        if($this->o('legBonus') > 0) {
+            $p->addPoint('legSide', $p->shift('legSide', -90, $model->m('hipsToUpperLeg') * $this->o('legBonus')));
+            $p->addPoint('legSideCp', $p->shift('legSideCp', -90, $model->m('hipsToUpperLeg') * $this->o('legBonus')));
+            $p->addPoint('reducedLegInner', $p->shift('reducedLegInner', -90, $model->m('hipsToUpperLeg') * $this->o('legBonus')));
+        }
+        // Rise
+        if($this->o('rise') > 0) {
+            $p->addPoint('hipSide', $p->shift('hipSide', 90, $model->m('hipsToUpperLeg') * $this->o('rise')));
+            $p->addPoint('hipCB', $p->shift('hipCB', 90, $model->m('hipsToUpperLeg') * $this->o('rise')));
+        }
         $p->newPath('seam', '
             M reducedCrossSeam 
             C reducedCrossSeam reducedLegInnerCp reducedLegInner

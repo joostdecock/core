@@ -110,6 +110,9 @@ class ShinSwimTrunks extends Pattern
             C crossSeam2 crossSeam3 reducedCrossSeam
             ', ['class' => 'hint']);
          */
+        
+        // Mark path for sample service
+        $p->paths['seam']->setSample(true);
     }
 
     public function draftFront($model)
@@ -185,6 +188,9 @@ class ShinSwimTrunks extends Pattern
             C crossSeam2 crossSeam3 reducedCrossSeam
             ', ['class' => 'hint']);
          */
+        
+        // Mark path for sample service
+        $p->paths['seam']->setSample(true);
     }
 
     public function draftWaistband($model)
@@ -209,6 +215,9 @@ class ShinSwimTrunks extends Pattern
             M topMidLeft L topMidRight
             M bottomMidLeft L bottomMidRight
             ', ['class' => 'fabric dashed']);
+        
+        // Mark path for sample service
+        $p->paths['seam']->setSample(true);
     }
 
     public function finalizeBack($model)

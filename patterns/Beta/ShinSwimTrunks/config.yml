@@ -34,9 +34,9 @@ options:
         description: "The amount of negative ease."
         group: "fit"
         type: "percent"
-        min: 5
-        max: 25
-        default: 15
+        min: 10
+        max: 30
+        default: 20
     bulge:
         title: "Bulge"
         description: "Create some extra room in the front."
@@ -51,8 +51,8 @@ options:
         group: "fit"
         type: "percent"
         min: 0
-        max: 20
-        default: 15
+        max: 10
+        default: 5
     legBonus:
         title: "Leg bonus"
         description: "Increases the length of the legs."
@@ -69,3 +69,11 @@ options:
         min: 0
         max: 25
         default: 0
+    backRise:
+        title: "Back rise"
+        description: "How much to raise the trunks extra at the back."
+        group: "style"
+        type: "percent"
+        min: 0
+        max: 10
+        default: 5

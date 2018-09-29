@@ -86,15 +86,22 @@ class ShinSwimTrunks extends Pattern
             $p->addPoint('hipSide', $p->shift('hipSide', 90, $model->m('hipsToUpperLeg') * $this->o('rise')));
             $p->addPoint('hipCB', $p->shift('hipCB', 90, $model->m('hipsToUpperLeg') * $this->o('rise')));
         }
-        $p->newPath('seam', '
-            M reducedCrossSeam 
-            C reducedCrossSeam reducedLegInnerCp reducedLegInner
-            C reducedLegInner legSideCp legSide
-            L hipSide
-            L hipCB
-            L seatCB
-            C crossSeam6 crossSeam7 reducedCrossSeam
-            z', ['class' => 'fabric']);
+        // Back rise
+        if($this->o('backRise') > 0) {
+            $p->addPoint('hipCB', $p->shift('hipCB', 90, $model->m('hipsToUpperLeg') * $this->o('backRise')));
+            $p->addPoint('hipSide', $p->shift('hipSide', 90, $model->m('hipsToUpperLeg') * $this->o('backRise') / 2));
+            $p->newPoint('hipCBCp', $p->x('hipCB')/2, $p->y('hipCB')); 
+        }
+        $seam = "M reducedCrossSeam ";
+        $seam .= "C reducedCrossSeam reducedLegInnerCp reducedLegInner ";
+        $seam .= "C reducedLegInner legSideCp legSide ";
+        $seam .= "L hipSide ";
+        if($this->o('backRise') > 0) $seam .= "C hipSide hipCBCp hipCB ";
+        else $seam .= "L hipCB ";
+        $seam .= "L seatCB ";
+        $seam .= "C crossSeam6 crossSeam7 reducedCrossSeam ";
+        $seam .= "z";
+        $p->newPath('seam', $seam, ['class' => 'fabric']);
         /** Uncomment this to see the impact of the legReduction option 
         $p->newPath('reduction', '
             M reducedLegInner
@@ -153,17 +160,23 @@ class ShinSwimTrunks extends Pattern
             $p->addPoint('hipSide', $p->shift('hipSide', 90, $model->m('hipsToUpperLeg') * $this->o('rise')));
             $p->addPoint('hipCB', $p->shift('hipCB', 90, $model->m('hipsToUpperLeg') * $this->o('rise')));
         }
-        $p->newPath('seam', '
-            M reducedCrossSeam 
-            C reducedCrossSeam reducedLegInnerCp reducedLegInner
-            C reducedLegInner legSideCp legSide
-            C legSideCpTop midSideBulgeCpBottom midSideBulge
-            C midSideBulgeCpTop hipSideCpBottom hipSide
-            L hipCB
-            C midFrontCpTop bulgeCpTop midBulge
-            C bulgeCpBottom midFrontCpBottom seatCB
-            C crossSeam6 crossSeam7 reducedCrossSeam
-            z', ['class' => 'fabric']);
+        // Back rise
+        if($this->o('backRise') > 0) {
+            $p->addPoint('hipSide', $p->shift('hipSide', 90, $model->m('hipsToUpperLeg') * $this->o('backRise') / 2));
+            $p->newPoint('hipCBCp', $p->x('hipCB')/2, $p->y('hipCB'));
+        }
+        $seam = "M reducedCrossSeam ";
+        $seam .= "C reducedCrossSeam reducedLegInnerCp reducedLegInner ";
+        $seam .= "C reducedLegInner legSideCp legSide ";
+        $seam .= "C legSideCpTop midSideBulgeCpBottom midSideBulge ";
+        $seam .= "C midSideBulgeCpTop hipSideCpBottom hipSide ";
+        if($this->o('backRise') > 0) $seam .= "C hipSide hipCBCp hipCB ";
+        else $seam .= "L hipCB ";
+        $seam .= "C midFrontCpTop bulgeCpTop midBulge ";
+        $seam .= "C bulgeCpBottom midFrontCpBottom seatCB ";
+        $seam .= "C crossSeam6 crossSeam7 reducedCrossSeam ";
+        $seam .= "z";
+        $p->newPath('seam', $seam, ['class' => 'fabric']);
         /** Uncomment this to see the impact of the legReduction option 
         $p->newPath('reduction', '
             M reducedLegInner

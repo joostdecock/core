@@ -16,6 +16,18 @@
 ### Security
 -->
 
+## 1.11.0
+
+**Release date**: 2018-09-29
+
+This is a minor release brings a new pattern: The Shin swim trunks
+
+### Added
+
+#### Shin
+
+Shin are swim trunks.
+
 ## 1.10.6
 
 **Release date**: 2018-09-21

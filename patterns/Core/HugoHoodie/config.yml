@@ -80,7 +80,7 @@ options:
         type: measure
         min: 0
         max: 180
-        default: 70
+        default: 60
     sleeveLengthBonus:
         title: "Sleeve length bonus"
         description: "The amount to lengthen the sleeve. A negative value will shorten it."

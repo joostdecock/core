@@ -158,9 +158,6 @@ class HugoHoodie extends BrianBodyBlock
         $angle = $p->angle(8, 12);
         $p->addPoint(  8, $p->shift( 8, $angle, 20, 'Collar width @ top of garment'));
         $p->addPoint( 20, $p->shift(20, $angle, 20, 'Collar width @ top of garment'));
-        // Making garment longer
-        $p->addPoint(  4, $p->shift( 4, -90, 60), 'Center back at front bottom');
-        $p->addPoint(  6, $p->shift( 6, -90, 60), 'Quarter chest at front bottom');
 
         // Adding points from index 100 onwards
         $p->addPoint( 100, $p->shiftAlong(8, 20, 21, 9, $p->curveLen(8, 20, 21, 9)/3), 'Raglan front tip');
@@ -169,7 +166,7 @@ class HugoHoodie extends BrianBodyBlock
         // Add pocket points
         $p->newPoint( 101, $p->x(6)*0.65 - 25, $p->y(6));
         $p->newPoint( 102, $p->x(6)*0.65, $p->y(6)-50);
-        $p->newPoint( 103, $p->x(101), $p->y(4)-$p->x(101));
+        $p->newPoint( 103, $p->x(101), $p->y(6)-170);
         $p->addPoint( 104, $p->shift(103, 90, $p->deltaY(102, 103)*0.75));
         $p->newPoint( 105, 0, $p->y(103));
 
@@ -213,9 +210,6 @@ class HugoHoodie extends BrianBodyBlock
         $angle = $p->angle(8, 12);
         $p->addPoint(  8, $p->shift( 8, $angle, 20, 'Collar width @ top of garment'));
         $p->addPoint( 20, $p->shift(20, $angle, 20, 'Collar width @ top of garment'));
-        // Making garment longer
-        $p->addPoint(  4, $p->shift( 4, -90, 60), 'Center back at front bottom');
-        $p->addPoint(  6, $p->shift( 6, -90, 60), 'Quarter chest at front bottom');
 
         // Adding points from index 100 onwards
         $p->newPoint( 21, $p->x(21), $p->y(1), 'Control point for 1'); // Re-using point 21
@@ -508,7 +502,7 @@ class HugoHoodie extends BrianBodyBlock
         /** @var \Freesewing\Part $front */
         $front = $this->parts['front'];
         $len = $front->deltaX(4, 6) * 4 * $this->o('ribbingStretchFactor');
-        $this->draftRectangle(160, $len, $this->parts['waistband']);
+        $this->draftRectangle(120, $len, $this->parts['waistband']);
     }
 
     /**
@@ -524,7 +518,7 @@ class HugoHoodie extends BrianBodyBlock
         $sleeve = $this->parts['sleeve'];
         $len = $sleeve->deltaX(31, 32) * $this->o('ribbingStretchFactor');
 
-        $this->draftRectangle(160, $len, $this->parts['cuff']);
+        $this->draftRectangle(120, $len, $this->parts['cuff']);
     }
 
     /**

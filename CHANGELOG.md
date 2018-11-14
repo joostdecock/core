@@ -16,6 +16,22 @@
 ### Security
 -->
 
+## 1.11.1
+
+**Release date**: 2018-11-14
+
+This is a bugfix release to fix some issues in Hugo
+Note that these issues are all resolved in the JS version Hugo.
+
+### Fixed
+
+#### Hugo
+
+ - Fixed an issue where garment length was added twice
+ - Fixed an issue with the pocket getting to small on smaller torsos
+ - Changed the ribbing width to 6cm
+ - Changed the default length bonus to 6cm
+
 ## 1.11.0
 
 **Release date**: 2018-09-29

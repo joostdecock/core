@@ -1,3 +1,8 @@
+# DEPRECATED: Please see freesewing/freesewing instead
+
+FreeSewing v2 and up are maintained in the [freesewing](https://github.com/freesewing/freesewing) repository.
+
+
 <a href="https://freesewing.org/"><img src="https://freesewing.org/img/logo/black.svg" align="right" width=200 style="max-width: 20%;" /></a>
 [![Build Status](https://travis-ci.org/freesewing/core.svg?branch=master)](https://travis-ci.org/freesewing/core)
 
